@@ -1,0 +1,114 @@
+<!--aula
+{"disciplina": "fisica", "curso": "PISM I", "assunto": "Movimento uniforme", "aula": "Aula 1", "titulo": "A função horária", "scripts": ["animacoes-mu.js"]}
+-->
+
+<!-- 1. Capa -->
+<section class="slide capa" data-nome="Capa">
+  <div class="estrelas"></div>
+  <div class="texto-capa">
+    <span class="selo">Física · PISM I</span>
+    <p class="aula">Aula 1</p>
+    <h1>Movimento uniforme</h1>
+    <p class="sub">A função horária</p>
+  </div>
+  <svg class="emblema" viewBox="0 0 640 640" aria-hidden="true">
+    <g class="gira-lento"><ellipse cx="320" cy="320" rx="300" ry="128" fill="none" stroke="#fff" stroke-opacity=".38" stroke-width="2" transform="rotate(-10 320 320)"/></g>
+    <g class="gira"><ellipse cx="320" cy="320" rx="236" ry="196" fill="none" stroke="#FFD10C" stroke-opacity=".75" stroke-width="2.5" stroke-dasharray="3 14" stroke-linecap="round" transform="rotate(-8 320 320)"/>
+      <circle cx="84" cy="300" r="13" fill="var(--d)" stroke="#fff" stroke-width="3"/></g>
+    <circle cx="320" cy="320" r="132" fill="#FFD10C"/>
+    <image href="{{SYM_ROXO}}" x="238" y="238" width="164" height="164"/>
+  </svg>
+  <img class="logo-capa" src="{{LOGO_BRANCO}}" alt="Quarks">
+  <aside class="notas">
+    <p>Hoje: o movimento mais simples da Física. No fim, você escreve onde o corpo está em qualquer instante com uma fórmula só.</p>
+    <p>Pergunte: "um carro no piloto automático, a 90 km/h, onde ele vai estar daqui a 10 minutos?"</p>
+  </aside>
+</section>
+
+<!-- 4. O que é MU -->
+<section class="slide" data-nome="O que é MU">
+  <div class="conteudo">
+    <p class="olho">O que é movimento uniforme</p>
+    <h2 class="titulo">Distâncias iguais em tempos iguais</h2>
+    <div class="pistas" data-anima="mu-pistas" data-anima-passo="1" style="position:absolute;left:0;top:132px;width:1760px;height:520px"></div>
+    <div class="caixa caixa-fundamental" data-passo="2" style="position:absolute;left:560px;right:0;top:628px">
+      <span class="rotulo">Movimento uniforme (MU)</span>
+      <div class="texto">A velocidade é <b>constante</b> e diferente de zero. O corpo percorre <b>distâncias iguais em intervalos de tempo iguais</b>.</div>
+    </div>
+  </div>
+  <aside class="notas">
+    <p><b>Clique 1:</b> os dois carros saem juntos e chegam juntos aos 100 m. Peça para a turma olhar as marcas de cada segundo.</p>
+    <p>Em cima: 20 m, 20 m, 20 m… Embaixo: 4, 12, 20, 28, 36. Só o de cima é MU.</p>
+    <p><b>Clique 2:</b> a definição. No MU, a velocidade em qualquer instante é igual à velocidade média.</p>
+  </aside>
+</section>
+
+<!-- 12. Exemplo: ciclista -->
+<section class="slide" data-nome="Exemplo: ciclista">
+  <div class="conteudo">
+    <p class="olho">Exemplo</p>
+    <h2 class="titulo">Ciclista na ciclovia</h2>
+    <div class="caixa" style="position:absolute;left:820px;right:0;top:20px;display:flex;align-items:center;gap:34px;padding:16px 32px">
+      <span class="rotulo" style="margin:0">Dados</span>
+      <span class="texto" style="font-size:34px">\(s_0 = 200\ \text{m}\)</span>
+      <span class="texto" style="font-size:34px">\(v = 5\ \text{m/s}\)</span>
+      <span class="texto" style="font-size:34px">\(s = 200 + 5t\)</span>
+    </div>
+
+    <div style="position:absolute;left:0;width:780px;top:170px">
+      <p class="texto" style="margin:0 0 18px"><b>Onde ele está em \(t = 40\ \text{s}\)?</b></p>
+      <div class="contas">
+        <div class="eq" data-passo="1"><span>\(s\)</span><span>\(=\)</span><span>\(s_0 + v\,t\)</span></div>
+        <div class="eq" data-passo="2"><span>\(s\)</span><span>\(=\)</span><span>\(200 + 5 \cdot \color{#0F8B8D}{40}\)</span></div>
+        <div class="eq" data-passo="3"><span>\(s\)</span><span>\(=\)</span><span>\(200 + 200\)</span></div>
+        <div class="eq final" data-passo="4"><span>\(s\)</span><span>\(=\)</span><span>\(400\ \text{m}\)</span></div>
+      </div>
+    </div>
+
+    <div style="position:absolute;left:940px;right:0;top:170px" data-passo="5">
+      <p class="texto" style="margin:0 0 18px"><b>Quando passa pelo marco 600 m?</b></p>
+      <div class="contas">
+        <div class="eq" data-passo="5"><span>\(\color{#0F8B8D}{600}\)</span><span>\(=\)</span><span>\(200 + 5t\)</span></div>
+        <div class="eq" data-passo="6"><span>\(5t\)</span><span>\(=\)</span><span>\(600 - 200\)</span></div>
+        <div class="eq" data-passo="7"><span>\(5t\)</span><span>\(=\)</span><span>\(400\)</span></div>
+        <div class="eq final" data-passo="8"><span>\(t\)</span><span>\(=\)</span><span>\(80\ \text{s}\)</span></div>
+      </div>
+    </div>
+    <span class="pilula pilula-resposta" data-passo="9" style="position:absolute;right:0;bottom:90px">Marco 400 m em t = 40 s · marco 600 m em t = 80 s</span>
+  </div>
+  <aside class="notas">
+    <p>Mesma fórmula, duas perguntas. À esquerda a incógnita é a <b>posição</b>; à direita, o <b>tempo</b>.</p>
+    <p>Clique 2: destaque que só trocamos o \(t\) por 40. Clique 5: agora quem conhecemos é o \(s\).</p>
+    <p>Resposta: marco 400 m em 40 s; passa pelo 600 m em 80 s.</p>
+  </aside>
+</section>
+
+<!-- 14. Questão: robô aspirador -->
+<section class="slide questao" data-nome="Questão: robô aspirador">
+  <div class="conteudo">
+    <p class="olho">Questão · estilo PISM</p>
+    <span class="pilula pilula-pausa" style="position:absolute;right:0;top:0" data-em="1:some">Pause o vídeo e tente</span>
+    <div style="position:absolute;left:0;width:800px;top:56px">
+      <p class="texto" style="margin:0">Um robô aspirador anda em linha reta num corredor. A posição dele é dada por</p>
+      <div class="caixa" style="margin-top:18px;text-align:center;font-size:52px;padding:14px">\(s = 8 - 0{,}5\,t\ \ \text{(SI)}\)</div>
+      <p class="texto" style="margin:16px 0 0">É correto afirmar que o robô</p>
+      <div class="contas" style="margin-top:18px;font-size:38px;row-gap:8px">
+        <div class="eq" data-passo="1"><span>\(s\)</span><span>\(=\)</span><span>\(s_0 + v\,t\)</span></div>
+        <div class="eq" data-passo="1"><span>\(s\)</span><span>\(=\)</span><span>\(\color{#0F8B8D}{8} + (\color{#0F8B8D}{-0{,}5})\,t\)</span></div>
+      </div>
+      <p class="texto" data-passo="2" style="margin:10px 0 0;font-size:34px">\(v &lt; 0\): <b>retrógrado</b>, com \(|v|\) constante</p>
+    </div>
+    <ol class="alternativas">
+      <li data-em="3:apaga"><b>A</b><span>parte da posição 0,5 m e anda a 8 m/s, em movimento progressivo.</span><em data-passo="4">trocou \(s_0\) e \(v\)</em></li>
+      <li data-em="3:apaga"><b>B</b><span>parte da posição 8 m e anda a 0,5 m/s, em movimento progressivo.</span><em data-passo="4">ignorou o sinal de \(v\)</em></li>
+      <li data-em="3:certo"><b>C</b><span>parte da posição 8 m com velocidade de −0,5 m/s, em movimento retrógrado, e o módulo da velocidade não muda.</span></li>
+      <li data-em="3:apaga"><b>D</b><span>está freando, porque a sua velocidade é negativa.</span><em data-passo="4">\(v\) negativa não é freada</em></li>
+      <li data-em="3:apaga"><b>E</b><span>passa pela origem do corredor no instante t = 4 s.</span><em data-passo="4">\(0 = 8 - 0{,}5t\) dá \(t = 16\ \text{s}\)</em></li>
+    </ol>
+  </div>
+  <aside class="notas">
+    <p>Deixe a pergunta na tela uns segundos e peça para pausarem.</p>
+    <p><b>Cliques 1 e 2:</b> compare com \(s = s_0 + vt\): o número sozinho é \(s_0\); o que multiplica \(t\) é \(v\), <b>com o sinal</b>.</p>
+    <p><b>Clique 3:</b> gabarito C. <b>Clique 4:</b> o erro por trás de cada alternativa errada.</p>
+  </aside>
+</section>
