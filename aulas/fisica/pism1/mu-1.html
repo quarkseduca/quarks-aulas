@@ -1,13 +1,24 @@
 <!--aula
-{"disciplina": "fisica", "curso": "PISM I", "assunto": "Movimento uniforme", "aula": "Aula 1", "titulo": "A função horária", "scripts": ["animacoes-mu.js"]}
+{"disciplina": "fisica", "curso": "PISM I", "assunto": "Movimento uniforme", "parte": "Parte 1 de 4", "titulo": "A função horária", "scripts": ["animacoes-mu.js"]}
 -->
+<!-- Fonte: apostila PISM I, Física, cap. 2 (2.2 Movimento uniforme > Função horária do MU) e lote de questões pism1-fisica-movimento-uniforme (m001, m002). -->
+
+<svg width="0" height="0" style="position:absolute" aria-hidden="true">
+  <symbol id="carro" viewBox="-100 -80 104 80">
+    <rect x="-96" y="-52" width="96" height="34" rx="14" fill="currentColor"/>
+    <path d="M-78 -52 Q-70 -76 -48 -76 L-34 -76 Q-18 -76 -12 -52 Z" fill="currentColor"/>
+    <path d="M-68 -54 Q-63 -70 -50 -70 L-44 -70 L-44 -54 Z M-38 -54 L-38 -70 L-34 -70 Q-24 -70 -20 -54 Z" fill="#fff" opacity=".85"/>
+    <circle cx="-74" cy="-16" r="12" fill="#292B2C"/><circle cx="-22" cy="-16" r="12" fill="#292B2C"/>
+    <circle cx="-74" cy="-16" r="4.5" fill="#fff"/><circle cx="-22" cy="-16" r="4.5" fill="#fff"/>
+  </symbol>
+</svg>
 
 <!-- 1. Capa -->
 <section class="slide capa" data-nome="Capa">
   <div class="estrelas"></div>
   <div class="texto-capa">
     <span class="selo">Física · PISM I</span>
-    <p class="aula">Aula 1</p>
+    <p class="aula">Cinemática · Parte 1 de 4</p>
     <h1>Movimento uniforme</h1>
     <p class="sub">A função horária</p>
   </div>
@@ -21,7 +32,74 @@
   <img class="logo-capa" src="{{LOGO_BRANCO}}" alt="Quarks">
   <aside class="notas">
     <p>Hoje: o movimento mais simples da Física. No fim, você escreve onde o corpo está em qualquer instante com uma fórmula só.</p>
-    <p>Pergunte: "um carro no piloto automático, a 90 km/h, onde ele vai estar daqui a 10 minutos?"</p>
+  </aside>
+</section>
+
+<!-- 2. Gancho -->
+<section class="slide" data-nome="Piloto automático">
+  <div class="conteudo">
+    <p class="olho">Para começar</p>
+    <h2 class="titulo">Piloto automático a 90 km/h</h2>
+    <svg viewBox="0 0 1760 300" width="1760" height="300" style="position:absolute;left:0;top:150px;overflow:visible;font-family:Figtree,'Segoe UI',sans-serif" aria-hidden="true">
+      <line x1="40" y1="170" x2="1720" y2="170" stroke="#DCD6F3" stroke-width="12" stroke-linecap="round"/>
+      <g stroke="#C9C1EC" stroke-width="3">
+        <line x1="200" y1="160" x2="200" y2="180"/><line x1="300" y1="160" x2="300" y2="180"/><line x1="400" y1="160" x2="400" y2="180"/><line x1="500" y1="160" x2="500" y2="180"/><line x1="600" y1="160" x2="600" y2="180"/><line x1="700" y1="160" x2="700" y2="180"/><line x1="800" y1="160" x2="800" y2="180"/><line x1="900" y1="160" x2="900" y2="180"/><line x1="1000" y1="160" x2="1000" y2="180"/><line x1="1100" y1="160" x2="1100" y2="180"/><line x1="1200" y1="160" x2="1200" y2="180"/><line x1="1300" y1="160" x2="1300" y2="180"/><line x1="1400" y1="160" x2="1400" y2="180"/><line x1="1500" y1="160" x2="1500" y2="180"/><line x1="1600" y1="160" x2="1600" y2="180"/>
+      </g>
+      <use href="#carro" x="46" y="86" width="104" height="80" style="color:var(--d)"/>
+      <g text-anchor="middle" font-size="30" font-weight="800">
+        <g><circle cx="100" cy="170" r="13" fill="var(--d)"/><text x="100" y="232" fill="var(--d-forte)">km 0</text><text x="100" y="272" fill="#5E5A70" font-weight="700" font-size="28">0 min</text></g>
+        <g data-passo="1"><circle cx="250" cy="170" r="13" fill="var(--d)"/><text x="250" y="232" fill="var(--d-forte)">1,5 km</text><text x="250" y="272" fill="#5E5A70" font-weight="700" font-size="28">1 min</text></g>
+        <g data-passo="2"><circle cx="400" cy="170" r="13" fill="var(--d)"/><text x="400" y="232" fill="var(--d-forte)">3 km</text><text x="400" y="272" fill="#5E5A70" font-weight="700" font-size="28">2 min</text></g>
+        <g data-passo="3"><circle cx="700" cy="170" r="13" fill="var(--d)"/><text x="700" y="232" fill="var(--d-forte)">6 km</text><text x="700" y="272" fill="#5E5A70" font-weight="700" font-size="28">4 min</text></g>
+        <g data-passo="6"><circle cx="1600" cy="170" r="19" fill="#FFD10C" stroke="#fff" stroke-width="4"/><text x="1600" y="232" fill="#3F2FA0">15 km</text><text x="1600" y="272" fill="#5E5A70" font-weight="700" font-size="28">10 min</text></g>
+      </g>
+    </svg>
+    <div class="caixa caixa-fundamental" data-passo="4" style="position:absolute;left:0;width:1180px;top:470px;padding:22px 34px">
+      <div class="texto">A cada minuto, <b>1,5 km</b>. Distâncias iguais em tempos iguais.</div>
+    </div>
+    <span class="pilula pilula-pausa" data-passo="5" style="position:absolute;right:0;top:640px">E daqui a 10 minutos?</span>
+    <span class="pilula pilula-resposta" data-passo="6" style="position:absolute;right:0;top:740px">\(10 \cdot 1{,}5 = 15\ \text{km}\)</span>
+  </div>
+  <aside class="notas">
+    <p>90 km/h é 1,5 km por minuto (90 ÷ 60). Cliques 1 a 3: os marcos de 1, 2 e 4 minutos.</p>
+    <p>Clique 5: deixe a turma pensar. Clique 6: 15 km. Esse é o movimento mais simples que existe.</p>
+  </aside>
+</section>
+
+<!-- 3. Relembrando -->
+<section class="slide" data-nome="Relembrando">
+  <div class="conteudo">
+    <p class="olho">Relembrando</p>
+    <h2 class="titulo">Velocidade e unidades</h2>
+    <div style="position:absolute;left:0;width:800px;top:160px">
+      <div class="caixa" style="padding:26px 34px">
+        <span class="rotulo">Velocidade média</span>
+        <div style="font-size:60px;margin:6px 0 10px">\(v_m = \dfrac{\Delta s}{\Delta t}\)</div>
+        <div class="texto" style="font-size:32px">\(\Delta s = s - s_0\) é o deslocamento e \(\Delta t\) é o intervalo de tempo.</div>
+      </div>
+      <p class="texto" style="margin:20px 0 0;font-size:32px">No SI: <b>metro por segundo (m/s)</b>. No dia a dia: <b>km/h</b>.</p>
+    </div>
+    <div style="position:absolute;left:900px;right:0;top:160px">
+      <div class="caixa" data-passo="1" style="padding:26px 34px">
+        <span class="rotulo">Conversão</span>
+        <svg viewBox="0 0 760 200" width="760" height="200" style="display:block;font-family:Figtree,'Segoe UI',sans-serif" aria-hidden="true">
+          <rect x="0" y="62" width="190" height="76" rx="38" fill="var(--d-clara)"/><text x="95" y="113" text-anchor="middle" font-size="40" font-weight="800" fill="var(--d-forte)">km/h</text>
+          <rect x="570" y="62" width="190" height="76" rx="38" fill="var(--d-clara)"/><text x="665" y="113" text-anchor="middle" font-size="40" font-weight="800" fill="var(--d-forte)">m/s</text>
+          <path d="M215 80 Q380 20 545 80" fill="none" stroke="var(--d)" stroke-width="4"/><path d="M533 66 L547 81 L528 86" fill="none" stroke="var(--d)" stroke-width="4" stroke-linecap="round"/>
+          <text x="380" y="38" text-anchor="middle" font-size="36" font-weight="800" fill="#3F2FA0">÷ 3,6</text>
+          <path d="M545 120 Q380 180 215 120" fill="none" stroke="var(--d)" stroke-width="4"/><path d="M227 134 L213 119 L232 114" fill="none" stroke="var(--d)" stroke-width="4" stroke-linecap="round"/>
+          <text x="380" y="192" text-anchor="middle" font-size="36" font-weight="800" fill="#3F2FA0">× 3,6</text>
+        </svg>
+      </div>
+      <p class="texto" data-passo="2" style="margin:20px 0 0;font-size:32px">Por quê? \(1\ \text{km} = 1000\ \text{m}\) e \(1\ \text{h} = 3600\ \text{s}\), e \(3600 \div 1000 = 3{,}6\).</p>
+      <div class="contas" data-passo="3" style="margin-top:22px;font-size:42px">
+        <div class="eq final"><span>\(72\ \text{km/h}\)</span><span>\(=\)</span><span>\(\dfrac{72}{3{,}6} = 20\ \text{m/s}\)</span></div>
+      </div>
+    </div>
+  </div>
+  <aside class="notas">
+    <p>Revisão rápida do que o MU usa: velocidade média e a troca km/h ↔ m/s.</p>
+    <p>Clique 3: 72 km/h = 20 m/s. Vai aparecer nas questões.</p>
   </aside>
 </section>
 
@@ -33,13 +111,202 @@
     <div class="pistas" data-anima="mu-pistas" data-anima-passo="1" style="position:absolute;left:0;top:132px;width:1760px;height:520px"></div>
     <div class="caixa caixa-fundamental" data-passo="2" style="position:absolute;left:560px;right:0;top:628px">
       <span class="rotulo">Movimento uniforme (MU)</span>
-      <div class="texto">A velocidade é <b>constante</b> e diferente de zero. O corpo percorre <b>distâncias iguais em intervalos de tempo iguais</b>.</div>
+      <div class="texto">A velocidade é <b>constante</b> e diferente de zero. O corpo percorre <b>distâncias iguais em intervalos de tempo iguais</b>, e a velocidade em qualquer instante é igual à velocidade média.</div>
     </div>
   </div>
   <aside class="notas">
-    <p><b>Clique 1:</b> os dois carros saem juntos e chegam juntos aos 100 m. Peça para a turma olhar as marcas de cada segundo.</p>
+    <p><b>Clique 1:</b> os dois carros saem juntos e chegam juntos aos 100 m. Olhe as marcas de cada segundo.</p>
     <p>Em cima: 20 m, 20 m, 20 m… Embaixo: 4, 12, 20, 28, 36. Só o de cima é MU.</p>
-    <p><b>Clique 2:</b> a definição. No MU, a velocidade em qualquer instante é igual à velocidade média.</p>
+  </aside>
+</section>
+
+<!-- 5. A tabela do ciclista -->
+<section class="slide" data-nome="A tabela do ciclista">
+  <div class="conteudo">
+    <p class="olho">Construindo a regra</p>
+    <h2 class="titulo">O ciclista na ciclovia</h2>
+    <table class="tabela" style="position:absolute;left:0;top:160px">
+      <tr><th>\(t\) (s)</th><th>\(s\) (m)</th><th>variação</th></tr>
+      <tr><td>0</td><td>200</td><td></td></tr>
+      <tr data-passo="1"><td>10</td><td>250</td><td style="color:var(--d-forte);font-weight:800">+50 m</td></tr>
+      <tr data-passo="2"><td>20</td><td>300</td><td style="color:var(--d-forte);font-weight:800">+50 m</td></tr>
+      <tr data-passo="3"><td>40</td><td>400</td><td style="color:var(--d-forte);font-weight:800">+100 m</td></tr>
+    </table>
+    <div style="position:absolute;left:900px;right:0;top:160px">
+      <p class="texto" style="margin:0">Um ciclista passa pelo <b>marco 200 m</b> de uma ciclovia reta no instante em que o cronômetro é ligado e segue a <b>5 m/s</b> no sentido positivo.</p>
+      <div class="caixa caixa-fundamental" data-passo="4" style="margin-top:34px">
+        <span class="rotulo">O que se repete</span>
+        <div class="texto">A cada segundo, a posição aumenta <b>5 m</b>. Depois de \(t\) segundos, aumentou \(5t\) metros.</div>
+      </div>
+    </div>
+  </div>
+  <aside class="notas">
+    <p>Cliques 1 a 3: uma linha da tabela por vez. 50 m a cada 10 s; 100 m em 20 s. Sempre 5 m por segundo.</p>
+    <p>Clique 4: a ideia que vira fórmula no próximo slide.</p>
+  </aside>
+</section>
+
+<!-- 6. Da tabela à regra -->
+<section class="slide" data-nome="Da tabela à regra">
+  <div class="conteudo">
+    <p class="olho">Construindo a regra</p>
+    <h2 class="titulo">Onde começou + quanto andou</h2>
+    <div data-em="1:some" style="position:absolute;left:0;right:0;top:190px;text-align:center;font-size:90px">\(s = 200 + 5t\)</div>
+    <div data-passo="1" style="position:absolute;left:0;right:0;top:170px;text-align:center;font-size:90px">\(s = \underbrace{\color{#0F8B8D}{200}}_{\text{marco inicial}} + \underbrace{\color{#0F8B8D}{5t}}_{\text{o que andou}}\)</div>
+    <div class="caixa" data-passo="2" style="position:absolute;left:600px;right:0;top:500px;padding:24px 34px">
+      <span class="rotulo">Confira com a tabela</span>
+      <div class="contas" style="font-size:40px;grid-template-columns:auto auto auto auto 1fr">
+        <div class="eq"><span>\(t = 20\ \text{s}:\)</span><span>\(s = 200 + 5 \cdot 20\)</span><span>\(=\)</span><span>\(300\ \text{m}\)</span><span style="color:var(--certo);font-weight:800">✓</span></div>
+        <div class="eq" data-passo="3"><span>\(t = 40\ \text{s}:\)</span><span>\(s = 200 + 5 \cdot 40\)</span><span>\(=\)</span><span>\(400\ \text{m}\)</span><span style="color:var(--certo);font-weight:800">✓</span></div>
+      </div>
+    </div>
+  </div>
+  <aside class="notas">
+    <p>A posição é o marco inicial mais o aumento. Clique 1: os nomes de cada parte.</p>
+    <p>Cliques 2 e 3: a regra bate com a tabela.</p>
+  </aside>
+</section>
+
+<!-- 7. Dedução -->
+<section class="slide" data-nome="De onde vem a fórmula">
+  <div class="conteudo">
+    <p class="olho">A regra geral</p>
+    <h2 class="titulo">De onde vem a fórmula</h2>
+    <div class="contas" style="position:absolute;left:0;top:170px;font-size:52px;row-gap:22px">
+      <div class="eq" data-passo="1"><span>\(v\)</span><span>\(=\)</span><span>\(\dfrac{\Delta s}{\Delta t}\)</span></div>
+      <div class="eq" data-passo="2"><span>\(v\)</span><span>\(=\)</span><span>\(\dfrac{s - s_0}{t}\)</span></div>
+      <div class="eq" data-passo="3"><span>\(v\,t\)</span><span>\(=\)</span><span>\(s - s_0\)</span></div>
+      <div class="eq final" data-passo="4"><span>\(s\)</span><span>\(=\)</span><span>\(s_0 + v\,t\)</span></div>
+    </div>
+    <div style="position:absolute;left:900px;right:0;top:170px;display:flex;flex-direction:column;gap:24px">
+      <p class="texto" style="margin:0">Trocamos os números pelas letras. A regra vem direto da <b>definição de velocidade</b>.</p>
+      <div class="caixa caixa-fundamental" data-passo="2">
+        <span class="rotulo">Por que \(\Delta t = t\)?</span>
+        <div class="texto">O cronômetro começa em zero: \(\Delta t = t - 0 = t\).</div>
+      </div>
+      <div class="caixa" data-passo="3">
+        <span class="rotulo">Passo seguinte</span>
+        <div class="texto">Multiplique os dois lados por \(t\) e isole \(s\).</div>
+      </div>
+    </div>
+  </div>
+  <aside class="notas">
+    <p>Uma linha por clique. Destaque o clique 2: o relógio começa em zero, então Δt vira t.</p>
+  </aside>
+</section>
+
+<!-- 8. A fórmula -->
+<section class="slide" data-nome="Função horária do MU">
+  <div class="conteudo">
+    <p class="olho">Fórmula</p>
+    <h2 class="titulo">Função horária do MU</h2>
+    <div class="caixa caixa-fundamental" style="position:absolute;left:380px;right:380px;top:150px;text-align:center;font-size:104px;padding:18px">\(s = s_0 + v\,t\)</div>
+    <div class="letras" style="position:absolute;left:0;right:0;top:370px">
+      <div data-passo="1"><span class="simbolo">\(s\)</span>posição no instante \(t\)<br><span class="unidade">metro (m)</span></div>
+      <div data-passo="2"><span class="simbolo">\(s_0\)</span>posição em \(t = 0\), a posição inicial<br><span class="unidade">metro (m)</span></div>
+      <div data-passo="3"><span class="simbolo">\(v\)</span>velocidade, constante no MU<br><span class="unidade">metro por segundo (m/s)</span></div>
+      <div data-passo="4"><span class="simbolo">\(t\)</span>instante, contado a partir do zero<br><span class="unidade">segundo (s)</span></div>
+    </div>
+    <span class="pilula pilula-resposta" data-passo="5" style="position:absolute;right:0;top:700px">Onde está = onde começou + quanto andou</span>
+  </div>
+  <aside class="notas">
+    <p>Uma letra por clique, com a unidade do SI. Clique 5: a frase para lembrar.</p>
+  </aside>
+</section>
+
+<!-- 9. Sinal da velocidade -->
+<section class="slide" data-nome="Progressivo e retrógrado">
+  <div class="conteudo">
+    <p class="olho">O sinal da velocidade</p>
+    <h2 class="titulo">Progressivo e retrógrado</h2>
+    <div data-passo="1" style="position:absolute;left:0;right:0;top:150px">
+      <p class="texto" style="margin:0"><b>\(v &gt; 0\): progressivo.</b> Anda no sentido positivo e a posição <b>cresce</b>.</p>
+      <svg viewBox="0 0 1760 150" width="1760" height="150" style="display:block;overflow:visible;font-family:Figtree,'Segoe UI',sans-serif" aria-hidden="true">
+        <line x1="40" y1="110" x2="1700" y2="110" stroke="#BFB6E6" stroke-width="5"/><path d="M1690 98 L1712 110 L1690 122" fill="none" stroke="#BFB6E6" stroke-width="5" stroke-linecap="round"/>
+        <g font-size="26" font-weight="700" fill="#5E5A70" text-anchor="middle"><text x="200" y="146">0</text><text x="600" y="146">20</text><text x="1000" y="146">40</text><text x="1400" y="146">60</text><text x="1730" y="146">s (m)</text></g>
+        <g stroke="#BFB6E6" stroke-width="4"><line x1="200" y1="100" x2="200" y2="120"/><line x1="600" y1="100" x2="600" y2="120"/><line x1="1000" y1="100" x2="1000" y2="120"/><line x1="1400" y1="100" x2="1400" y2="120"/></g>
+        <g class="vai-dir"><use href="#carro" x="900" y="28" width="104" height="80" style="color:var(--d)"/><path d="M1030 64 L1110 64 M1092 50 L1112 64 L1092 78" fill="none" stroke="var(--d)" stroke-width="6" stroke-linecap="round"/></g>
+      </svg>
+    </div>
+    <div data-passo="2" style="position:absolute;left:0;right:0;top:390px">
+      <p class="texto" style="margin:0"><b>\(v &lt; 0\): retrógrado.</b> Anda contra a orientação e a posição <b>diminui</b>.</p>
+      <svg viewBox="0 0 1760 150" width="1760" height="150" style="display:block;overflow:visible;font-family:Figtree,'Segoe UI',sans-serif" aria-hidden="true">
+        <line x1="40" y1="110" x2="1700" y2="110" stroke="#BFB6E6" stroke-width="5"/><path d="M1690 98 L1712 110 L1690 122" fill="none" stroke="#BFB6E6" stroke-width="5" stroke-linecap="round"/>
+        <g font-size="26" font-weight="700" fill="#5E5A70" text-anchor="middle"><text x="1000" y="146">40</text><text x="1400" y="146">60</text><text x="1730" y="146">s (m)</text></g>
+        <g stroke="#BFB6E6" stroke-width="4"><line x1="1000" y1="100" x2="1000" y2="120"/><line x1="1400" y1="100" x2="1400" y2="120"/></g>
+        <g class="vai-esq"><g transform="translate(2004 0) scale(-1 1)"><use href="#carro" x="1000" y="28" width="104" height="80" style="color:#8C7BEA"/></g><path d="M884 64 L804 64 M822 50 L802 64 L822 78" fill="none" stroke="#8C7BEA" stroke-width="6" stroke-linecap="round"/></g>
+      </svg>
+    </div>
+    <div class="caixa caixa-fundamental" data-passo="3" style="position:absolute;left:600px;right:0;top:650px;padding:22px 34px">
+      <div class="texto">O sinal de \(v\) diz só o <b>sentido</b> em relação à orientação escolhida.</div>
+    </div>
+  </div>
+  <aside class="notas">
+    <p>Clique 1: progressivo, posição crescendo. Clique 2: retrógrado, posição diminuindo.</p>
+    <p>Clique 3: sinal é sentido, não "rapidez".</p>
+  </aside>
+</section>
+
+<!-- 10. Exemplo: passagem pela origem -->
+<section class="slide" data-nome="Exemplo: origem">
+  <div class="conteudo">
+    <p class="olho">Exemplo</p>
+    <h2 class="titulo">Quando passa pela origem?</h2>
+    <div style="position:absolute;left:0;width:820px;top:150px">
+      <p class="texto" style="margin:0">Um corpo parte do <b>marco 100 m</b> e volta <b>4 m a cada segundo</b>.</p>
+      <svg viewBox="0 0 820 170" width="820" height="170" style="display:block;margin-top:16px;overflow:visible;font-family:Figtree,'Segoe UI',sans-serif" aria-hidden="true">
+        <line x1="40" y1="120" x2="790" y2="120" stroke="#BFB6E6" stroke-width="5"/><path d="M780 108 L802 120 L780 132" fill="none" stroke="#BFB6E6" stroke-width="5" stroke-linecap="round"/>
+        <g stroke="#BFB6E6" stroke-width="4"><line x1="80" y1="110" x2="80" y2="130"/><line x1="245" y1="110" x2="245" y2="130"/><line x1="410" y1="110" x2="410" y2="130"/><line x1="575" y1="110" x2="575" y2="130"/><line x1="740" y1="110" x2="740" y2="130"/></g>
+        <g font-size="26" font-weight="700" fill="#5E5A70" text-anchor="middle"><text x="80" y="162">0</text><text x="245" y="162">25</text><text x="410" y="162">50</text><text x="575" y="162">75</text><text x="740" y="162">100</text></g>
+        <circle cx="80" cy="120" r="14" fill="#FFD10C" stroke="#fff" stroke-width="4"/><text x="80" y="76" text-anchor="middle" font-size="26" font-weight="800" fill="#3F2FA0">origem</text>
+        <g transform="translate(1480 0) scale(-1 1)"><use href="#carro" x="740" y="38" width="104" height="80" style="color:var(--d)"/></g>
+        <path d="M630 76 L560 76 M576 62 L556 76 L576 90" fill="none" stroke="var(--d)" stroke-width="6" stroke-linecap="round"/>
+      </svg>
+      <div class="caixa" style="margin-top:22px;display:flex;gap:40px;align-items:center;padding:20px 32px">
+        <span class="rotulo" style="margin:0">Dados</span>
+        <span class="texto" style="font-size:36px">\(s_0 = 100\ \text{m}\)</span>
+        <span class="texto" style="font-size:36px">\(v = -4\ \text{m/s}\)</span>
+      </div>
+    </div>
+    <div style="position:absolute;left:940px;right:0;top:150px">
+      <p class="texto" style="margin:0 0 18px"><b>Na origem, \(s = 0\):</b></p>
+      <div class="contas">
+        <div class="eq" data-passo="1"><span>\(s\)</span><span>\(=\)</span><span>\(s_0 + v\,t\)</span></div>
+        <div class="eq" data-passo="2"><span>\(\color{#0F8B8D}{0}\)</span><span>\(=\)</span><span>\(100 + (-4)\,t\)</span></div>
+        <div class="eq" data-passo="3"><span>\(0\)</span><span>\(=\)</span><span>\(100 - 4t\)</span></div>
+        <div class="eq" data-passo="4"><span>\(4t\)</span><span>\(=\)</span><span>\(100\)</span></div>
+        <div class="eq final" data-passo="5"><span>\(t\)</span><span>\(=\)</span><span>\(25\ \text{s}\)</span></div>
+      </div>
+    </div>
+  </div>
+  <aside class="notas">
+    <p>Volta = anda contra a orientação, então v é negativa. Passar pela origem é s = 0.</p>
+    <p>Uma linha por clique; resposta 25 s.</p>
+  </aside>
+</section>
+
+<!-- 11. Atenção -->
+<section class="slide" data-nome="Atenção: v negativa">
+  <div class="conteudo">
+    <p class="olho">Atenção</p>
+    <h2 class="titulo">Velocidade negativa não é freada</h2>
+    <div class="caixa caixa-atencao" style="position:absolute;left:0;right:0;top:160px">
+      <div class="texto">O sinal de \(v\) só diz o <b>sentido</b> em relação à orientação escolhida. Um corpo com \(v = -4\ \text{m/s}\) anda <b>tão depressa</b> quanto um com \(v = 4\ \text{m/s}\), só que no sentido contrário. No MU a velocidade nunca muda: <b>não há freada nenhuma</b>.</div>
+    </div>
+    <div data-passo="1" style="position:absolute;left:0;right:0;top:440px;display:grid;grid-template-columns:1fr 1fr;gap:40px">
+      <div class="caixa" style="display:flex;align-items:center;gap:30px;padding:20px 34px">
+        <svg viewBox="-100 -80 104 80" width="130" height="100" style="color:var(--d)" aria-hidden="true"><use href="#carro" x="-100" y="-80" width="104" height="80"/></svg>
+        <span class="texto" style="font-size:44px">\(v = +4\ \text{m/s}\ \rightarrow\)</span>
+      </div>
+      <div class="caixa" style="display:flex;align-items:center;gap:30px;padding:20px 34px">
+        <svg viewBox="-100 -80 104 80" width="130" height="100" style="color:#8C7BEA;transform:scaleX(-1)" aria-hidden="true"><use href="#carro" x="-100" y="-80" width="104" height="80"/></svg>
+        <span class="texto" style="font-size:44px">\(\leftarrow\ v = -4\ \text{m/s}\)</span>
+      </div>
+    </div>
+    <span class="pilula pilula-resposta" data-passo="2" style="position:absolute;right:0;top:700px">Mesma rapidez, sentidos opostos</span>
+  </div>
+  <aside class="notas">
+    <p>Erro clássico de prova: "a velocidade é negativa, então está freando". Freada é velocidade mudando, e no MU ela não muda.</p>
   </aside>
 </section>
 
@@ -54,7 +321,6 @@
       <span class="texto" style="font-size:34px">\(v = 5\ \text{m/s}\)</span>
       <span class="texto" style="font-size:34px">\(s = 200 + 5t\)</span>
     </div>
-
     <div style="position:absolute;left:0;width:780px;top:170px">
       <p class="texto" style="margin:0 0 18px"><b>Onde ele está em \(t = 40\ \text{s}\)?</b></p>
       <div class="contas">
@@ -64,7 +330,6 @@
         <div class="eq final" data-passo="4"><span>\(s\)</span><span>\(=\)</span><span>\(400\ \text{m}\)</span></div>
       </div>
     </div>
-
     <div style="position:absolute;left:940px;right:0;top:170px" data-passo="5">
       <p class="texto" style="margin:0 0 18px"><b>Quando passa pelo marco 600 m?</b></p>
       <div class="contas">
@@ -78,37 +343,120 @@
   </div>
   <aside class="notas">
     <p>Mesma fórmula, duas perguntas. À esquerda a incógnita é a <b>posição</b>; à direita, o <b>tempo</b>.</p>
-    <p>Clique 2: destaque que só trocamos o \(t\) por 40. Clique 5: agora quem conhecemos é o \(s\).</p>
-    <p>Resposta: marco 400 m em 40 s; passa pelo 600 m em 80 s.</p>
   </aside>
 </section>
 
-<!-- 14. Questão: robô aspirador -->
-<section class="slide questao" data-nome="Questão: robô aspirador">
+<!-- 13. Unidades -->
+<section class="slide" data-nome="Cuidado com as unidades">
   <div class="conteudo">
-    <p class="olho">Questão · estilo PISM</p>
-    <span class="pilula pilula-pausa" style="position:absolute;right:0;top:0" data-em="1:some">Pause o vídeo e tente</span>
-    <div style="position:absolute;left:0;width:800px;top:56px">
-      <p class="texto" style="margin:0">Um robô aspirador anda em linha reta num corredor. A posição dele é dada por</p>
-      <div class="caixa" style="margin-top:18px;text-align:center;font-size:52px;padding:14px">\(s = 8 - 0{,}5\,t\ \ \text{(SI)}\)</div>
-      <p class="texto" style="margin:16px 0 0">É correto afirmar que o robô</p>
-      <div class="contas" style="margin-top:18px;font-size:38px;row-gap:8px">
-        <div class="eq" data-passo="1"><span>\(s\)</span><span>\(=\)</span><span>\(s_0 + v\,t\)</span></div>
-        <div class="eq" data-passo="1"><span>\(s\)</span><span>\(=\)</span><span>\(\color{#0F8B8D}{8} + (\color{#0F8B8D}{-0{,}5})\,t\)</span></div>
-      </div>
-      <p class="texto" data-passo="2" style="margin:10px 0 0;font-size:34px">\(v &lt; 0\): <b>retrógrado</b>, com \(|v|\) constante</p>
+    <p class="olho">Atenção</p>
+    <h2 class="titulo">Cuidado com as unidades</h2>
+    <div style="position:absolute;left:0;width:800px;top:160px;display:flex;flex-direction:column;gap:22px">
+      <div class="caixa"><span class="rotulo">\(v\) em km/h</span><div class="texto">tempo em <b>horas</b>, posição em <b>km</b></div></div>
+      <div class="caixa"><span class="rotulo">\(v\) em m/s</span><div class="texto">tempo em <b>segundos</b>, posição em <b>metros</b></div></div>
     </div>
-    <ol class="alternativas">
-      <li data-em="3:apaga"><b>A</b><span>parte da posição 0,5 m e anda a 8 m/s, em movimento progressivo.</span><em data-passo="4">trocou \(s_0\) e \(v\)</em></li>
-      <li data-em="3:apaga"><b>B</b><span>parte da posição 8 m e anda a 0,5 m/s, em movimento progressivo.</span><em data-passo="4">ignorou o sinal de \(v\)</em></li>
-      <li data-em="3:certo"><b>C</b><span>parte da posição 8 m com velocidade de −0,5 m/s, em movimento retrógrado, e o módulo da velocidade não muda.</span></li>
-      <li data-em="3:apaga"><b>D</b><span>está freando, porque a sua velocidade é negativa.</span><em data-passo="4">\(v\) negativa não é freada</em></li>
-      <li data-em="3:apaga"><b>E</b><span>passa pela origem do corredor no instante t = 4 s.</span><em data-passo="4">\(0 = 8 - 0{,}5t\) dá \(t = 16\ \text{s}\)</em></li>
-    </ol>
+    <div style="position:absolute;left:900px;right:0;top:160px">
+      <p class="texto" style="margin:0"><b>Minutos para horas: divida por 60.</b></p>
+      <div class="contas" data-passo="1" style="margin-top:20px">
+        <div class="eq final"><span>\(15\ \text{min}\)</span><span>\(=\)</span><span>\(\dfrac{15}{60}\ \text{h} = 0{,}25\ \text{h}\)</span></div>
+      </div>
+      <p class="texto" data-passo="2" style="margin:22px 0 0">Um quarto de hora. <span class="riscado">\(0{,}15\ \text{h}\)</span> está errado.</p>
+      <table class="tabela" data-passo="3" style="margin-top:28px;font-size:34px">
+        <tr><th>minutos</th><th>horas</th></tr>
+        <tr><td>30 min</td><td>0,5 h</td></tr>
+        <tr><td>45 min</td><td>0,75 h</td></tr>
+        <tr><td>6 min</td><td>0,1 h</td></tr>
+      </table>
+    </div>
   </div>
   <aside class="notas">
-    <p>Deixe a pergunta na tela uns segundos e peça para pausarem.</p>
-    <p><b>Cliques 1 e 2:</b> compare com \(s = s_0 + vt\): o número sozinho é \(s_0\); o que multiplica \(t\) é \(v\), <b>com o sinal</b>.</p>
-    <p><b>Clique 3:</b> gabarito C. <b>Clique 4:</b> o erro por trás de cada alternativa errada.</p>
+    <p>As unidades precisam combinar. A pegadinha mais comum: ler 15 min como 0,15 h.</p>
   </aside>
+</section>
+
+<!-- 14. Questão 1 -->
+<section class="slide questao" data-nome="Questão 1">
+  <div class="conteudo">
+    <p class="olho">Questão 1 · estilo PISM</p>
+    <div class="area-resolucao" style="left:0;width:840px;top:60px;height:530px"></div>
+    <span class="pilula pilula-pausa" data-em="1:some" style="position:absolute;left:250px;top:290px">Pause o vídeo e tente</span>
+    <div style="position:absolute;left:900px;right:0;top:0">
+      <p class="enunciado">Um robô aspirador se desloca em linha reta pelo corredor de uma casa. Com o corredor orientado e o relógio zerado no início da observação, a posição do robô é dada por \(s = 8 - 0{,}5\,t\) (SI). Sobre esse movimento, é correto afirmar que o robô</p>
+      <ol class="alternativas" style="margin-top:20px">
+        <li data-em="2:apaga"><b>A</b><span>parte da posição 0,5 m e anda a 8 m/s, em movimento progressivo.</span></li>
+        <li data-em="2:apaga"><b>B</b><span>parte da posição 8 m e anda a 0,5 m/s, em movimento progressivo.</span></li>
+        <li data-em="2:certo"><b>C</b><span>parte da posição 8 m com velocidade de −0,5 m/s, em movimento retrógrado, e o módulo da velocidade não muda.</span></li>
+        <li data-em="2:apaga"><b>D</b><span>está freando, porque a sua velocidade é negativa.</span></li>
+        <li data-em="2:apaga"><b>E</b><span>passa pela origem do corredor no instante t = 4 s.</span></li>
+      </ol>
+    </div>
+  </div>
+  <aside class="notas">
+    <p>Clique 1 tira o aviso de pausa: resolva com a caneta (D) no quadro à esquerda. Clique 2: gabarito C.</p>
+    <p>Erros das outras: A troca s₀ e v; B ignora o sinal; D acha que v negativa é freada; E: 0 = 8 − 0,5t dá t = 16 s.</p>
+  </aside>
+</section>
+
+<!-- 15. Questão 2 -->
+<section class="slide questao" data-nome="Questão 2">
+  <div class="conteudo">
+    <p class="olho">Questão 2 · estilo PISM</p>
+    <div class="area-resolucao" style="left:0;width:840px;top:60px;height:530px"></div>
+    <span class="pilula pilula-pausa" data-em="1:some" style="position:absolute;left:250px;top:290px">Pause o vídeo e tente</span>
+    <div style="position:absolute;left:900px;right:0;top:0">
+      <p class="enunciado">Um caminhão passa pelo marco km 12 de uma rodovia e segue, com o piloto automático ligado, a 72 km/h constantes, no sentido em que a quilometragem aumenta. Mantida essa velocidade, 15 minutos depois o caminhão estará passando pelo marco</p>
+      <ol class="alternativas" style="margin-top:20px">
+        <li data-em="2:apaga"><b>A</b><span>km 18.</span></li>
+        <li data-em="2:apaga"><b>B</b><span>km 16,8.</span></li>
+        <li data-em="2:apaga"><b>C</b><span>km 22,8.</span></li>
+        <li data-em="2:apaga"><b>D</b><span>km 84.</span></li>
+        <li data-em="2:certo"><b>E</b><span>km 30.</span></li>
+      </ol>
+    </div>
+  </div>
+  <aside class="notas">
+    <p>15 min = 0,25 h; s = 12 + 72 · 0,25 = 30 km. Gabarito E.</p>
+    <p>Erros: A só o deslocamento; B 12 + 72/15; C 15 min lido como 0,15 h; D 12 + 72.</p>
+  </aside>
+</section>
+
+<!-- 16. Resumo -->
+<section class="slide" data-nome="Resumo">
+  <div class="conteudo">
+    <p class="olho">Resumo</p>
+    <h2 class="titulo">O essencial</h2>
+    <div class="resumo" style="position:absolute;left:0;right:0;top:150px">
+      <div><b>MU:</b> velocidade constante e diferente de zero; distâncias iguais em tempos iguais.</div>
+      <div><b>Função horária:</b> \(s = s_0 + v\,t\) (onde começou + quanto andou).</div>
+      <div>\(v &gt; 0\): <b>progressivo</b>. \(v &lt; 0\): <b>retrógrado</b>. O sinal é só o sentido.</div>
+      <div><b>Velocidade negativa não é freada:</b> no MU a velocidade nunca muda.</div>
+      <div><b>Unidades que combinam:</b> km/h com horas, m/s com segundos. 15 min = 0,25 h.</div>
+      <div><b>Conversão:</b> km/h ÷ 3,6 = m/s; m/s × 3,6 = km/h.</div>
+    </div>
+  </div>
+  <aside class="notas">
+    <p>Peça para tirarem um print desta tela.</p>
+  </aside>
+</section>
+
+<!-- 17. A seguir -->
+<section class="slide capa" data-nome="A seguir">
+  <div class="estrelas"></div>
+  <div class="texto-capa" style="top:250px">
+    <span class="selo">Física · PISM I</span>
+    <p class="aula">A seguir · Parte 2 de 4</p>
+    <h1>Gráficos do MU</h1>
+    <p class="sub">A reta que mostra a velocidade</p>
+  </div>
+  <svg class="emblema" viewBox="0 0 640 640" aria-hidden="true">
+    <path d="M110 540 L110 90 M110 540 L580 540" stroke="#fff" stroke-opacity=".8" stroke-width="5" stroke-linecap="round" fill="none"/>
+    <path d="M98 108 L110 86 L122 108 M560 528 L584 540 L560 552" stroke="#fff" stroke-opacity=".8" stroke-width="5" stroke-linecap="round" stroke-linejoin="round" fill="none"/>
+    <text x="130" y="100" fill="#fff" font-size="36" font-weight="800" font-family="Figtree,'Segoe UI',sans-serif">s</text>
+    <text x="560" y="590" fill="#fff" font-size="36" font-weight="800" font-family="Figtree,'Segoe UI',sans-serif">t</text>
+    <line x1="110" y1="440" x2="540" y2="150" stroke="#FFD10C" stroke-width="9" stroke-linecap="round"/>
+    <circle cx="110" cy="440" r="14" fill="var(--d)" stroke="#fff" stroke-width="4"/>
+    <circle cx="325" cy="295" r="14" fill="#FFD10C"/>
+  </svg>
+  <img class="logo-capa" src="{{LOGO_BRANCO}}" alt="Quarks">
+  <aside class="notas"><p>Próxima parte: os gráficos s × t e v × t do MU.</p></aside>
 </section>

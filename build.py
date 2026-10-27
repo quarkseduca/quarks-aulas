@@ -44,19 +44,11 @@ def estrelas(semente):
     return "".join(pontos)
 
 
-FUNDO = ('<svg class="fundo-orbitas" viewBox="0 0 1920 1080" aria-hidden="true"><g transform="rotate(-10 1890 30)">'
-         '<ellipse cx="1890" cy="30" rx="330" ry="120" fill="none" stroke="#6551D1" stroke-opacity=".08" stroke-width="2"/>'
-         '<ellipse cx="1890" cy="30" rx="250" ry="175" fill="none" stroke="#FFD10C" stroke-opacity=".45" stroke-width="2.5"'
-         ' stroke-dasharray="2 13" stroke-linecap="round"/></g></svg>')
+FUNDO = ""
 
 MOLDURA = '''<svg id="moldura" viewBox="0 0 1920 1080" aria-hidden="true">
   <defs><linearGradient id="gcam" x1="0" y1="1" x2="1" y2="0">
     <stop offset="0" style="stop-color:#6551D1"/><stop offset="1" style="stop-color:var(--d)"/></linearGradient></defs>
-  <g transform="rotate(-9 282 906)">
-    <ellipse class="orbita" cx="282" cy="906" rx="318" ry="170" fill="none" stroke-width="2.5" stroke-dasharray="2 12" stroke-linecap="round"/>
-    <circle cx="525.6" cy="796.7" r="9" fill="#FFD10C"/>
-    <circle cx="173.2" cy="746.3" r="6.5" style="fill:var(--d)"/>
-  </g>
   <rect class="cam-fundo" x="40" y="770" width="480" height="270" rx="26"/>
   <text class="cam-texto" x="280" y="913" text-anchor="middle">CÂMERA</text>
   <rect class="borda-cor" x="38" y="768" width="484" height="274" rx="28" fill="none" stroke="url(#gcam)" stroke-width="4"/>
@@ -67,7 +59,7 @@ AJUDA = '''<div id="ajuda" hidden><div class="janela"><h3>Atalhos da aula</h3><d
 <dt><kbd>→</kbd> <kbd>espaço</kbd></dt><dd>Avança (um clique por vez)</dd>
 <dt><kbd>←</kbd></dt><dd>Volta</dd>
 <dt><kbd>N</kbd></dt><dd>Abre as notas numa janela separada (só você vê)</dd>
-<dt><kbd>D</kbd> / <kbd>C</kbd></dt><dd>Liga ou desliga a caneta / apaga o que riscou</dd>
+<dt><kbd>D</kbd></dt><dd>Liga ou desliga a caneta</dd>\n<dt><kbd>1</kbd> <kbd>2</kbd> <kbd>3</kbd> <kbd>4</kbd></dt><dd>Cor da caneta: roxo, cor da matéria, carvão, vermelho</dd>\n<dt><kbd>Z</kbd> / <kbd>C</kbd></dt><dd>Desfaz o último traço / apaga tudo do slide</dd>
 <dt><kbd>B</kbd></dt><dd>Tela de pausa</dd>
 <dt><kbd>G</kbd></dt><dd>Modo gravação: tira o "CÂMERA" de dentro da moldura</dd>
 <dt><kbd>F</kbd></dt><dd>Tela cheia</dd>
@@ -87,7 +79,7 @@ def monta(caminho, previa=False):
     nome_disc = DISCIPLINAS[disc]
     sym_roxo, sym_branco, logo_branco = data_uri("sym-roxo.png"), data_uri("sym-branco.png"), data_uri("logo-branco.png")
 
-    cabeca = (f'<div class="cabeca"><span class="marca"><img src="{sym_roxo}" alt="">{meta["assunto"]} · {meta["aula"]}</span>'
+    cabeca = (f'<div class="cabeca"><span class="marca"><img src="{sym_roxo}" alt="">{meta["assunto"]} · {meta["titulo"]}</span>'
               f'<span class="selo">{nome_disc} · {meta["curso"]}</span></div>')
 
     def enfeita(mm):
@@ -102,7 +94,7 @@ def monta(caminho, previa=False):
     css = (MOTOR / "aula.css").read_text(encoding="utf-8")
     js_extra = "".join((caminho.parent / s).read_text(encoding="utf-8") + "\n" for s in meta.get("scripts", []))
     js = (MOTOR / "aula.js").read_text(encoding="utf-8")
-    titulo = f'{meta["assunto"]} · {meta["aula"]}'
+    titulo = f'{meta["assunto"]} · {meta["titulo"]}'
 
     corpo = f'''<div id="palco" data-disc="{disc}">
 {slides}

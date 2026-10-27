@@ -1,5 +1,5 @@
 /* Motor de slides do Quarks.
-   Teclas: → / espaço / PageDown avança; ← / PageUp volta; N notas; D caneta; C apaga a caneta;
+   Teclas: → / espaço / PageDown avança; ← / PageUp volta; N notas; D caneta (1-4 cores, Z desfaz, C apaga);
    B tela de pausa; G modo gravação (esconde o "câmera" da moldura); F tela cheia; ? ajuda. */
 (function () {
   "use strict";
@@ -54,7 +54,6 @@
         var a = animacoes[el.dataset.anima];
         if (a && el._rodou) { el._rodou = false; a.zera(el); }
       });
-      limpaCaneta();
     }
     atual = i;
     passo = Math.max(0, Math.min(maxPasso(slides[i]), p));
@@ -64,6 +63,7 @@
     document.querySelector("#progresso span").textContent = (i + 1) + " / " + slides.length;
     document.querySelector("#progresso .trilho b").style.width = ((i + 1) / slides.length * 100) + "%";
     try { history.replaceState(null, "", "#s" + (i + 1)); } catch (e) { /* sem histórico */ }
+    redesenha();
     atualizaNotas();
   }
 
@@ -77,27 +77,39 @@
     else if (atual > 0) mostra(atual - 1, maxPasso(slides[atual - 1]), true);
   }
 
-  /* ---------- Caneta ---------- */
+  /* ---------- Caneta (traços guardados por slide) ---------- */
   var tela = document.getElementById("caneta");
   var ctx = tela.getContext("2d");
-  var riscando = false;
+  var tracos = {};          // índice do slide -> lista de traços
+  var tracoAtual = null;
+  var cores = ["#3F2FA0", "var(--d)", "#292B2C", "#C2384F"];
+  var corCaneta = cores[0];
+  function corReal(c) { return c.indexOf("var(") === 0 ? (getComputedStyle(palco).getPropertyValue("--d").trim() || "#6551D1") : c; }
   function ponto(ev) {
     var r = tela.getBoundingClientRect();
-    return { x: (ev.clientX - r.left) / r.width * 1920, y: (ev.clientY - r.top) / r.height * 1080 };
+    return [(ev.clientX - r.left) / r.width * 1920, (ev.clientY - r.top) / r.height * 1080];
   }
-  function limpaCaneta() { ctx.clearRect(0, 0, 1920, 1080); }
+  function risca(t) {
+    ctx.strokeStyle = corReal(t.cor); ctx.lineWidth = 6; ctx.lineCap = "round"; ctx.lineJoin = "round";
+    ctx.beginPath();
+    t.p.forEach(function (q, i) { if (i) ctx.lineTo(q[0], q[1]); else ctx.moveTo(q[0], q[1]); });
+    if (t.p.length === 1) ctx.lineTo(t.p[0][0] + .1, t.p[0][1]);
+    ctx.stroke();
+  }
+  function redesenha() { ctx.clearRect(0, 0, 1920, 1080); (tracos[atual] || []).forEach(risca); }
+  function limpaCaneta() { tracos[atual] = []; redesenha(); }
+  function desfaz() { (tracos[atual] || []).pop(); redesenha(); }
   tela.addEventListener("pointerdown", function (ev) {
-    riscando = true; tela.setPointerCapture(ev.pointerId);
-    var q = ponto(ev);
-    ctx.strokeStyle = getComputedStyle(palco).getPropertyValue("--d").trim() || "#6551D1";
-    ctx.lineWidth = 7; ctx.lineCap = "round"; ctx.lineJoin = "round";
-    ctx.beginPath(); ctx.moveTo(q.x, q.y);
+    tela.setPointerCapture(ev.pointerId);
+    tracoAtual = { cor: corCaneta, p: [ponto(ev)] };
+    (tracos[atual] = tracos[atual] || []).push(tracoAtual);
+    risca(tracoAtual);
   });
   tela.addEventListener("pointermove", function (ev) {
-    if (!riscando) return;
-    var q = ponto(ev); ctx.lineTo(q.x, q.y); ctx.stroke();
+    if (!tracoAtual) return;
+    tracoAtual.p.push(ponto(ev)); redesenha();
   });
-  tela.addEventListener("pointerup", function () { riscando = false; });
+  tela.addEventListener("pointerup", function () { tracoAtual = null; });
 
   /* ---------- Notas do professor ---------- */
   var janelaNotas = null;
@@ -162,6 +174,8 @@
     else if (k === "n" || k === "N") abreNotas();
     else if (k === "d" || k === "D") palco.classList.toggle("desenhando");
     else if (k === "c" || k === "C") limpaCaneta();
+    else if (k === "z" || k === "Z") desfaz();
+    else if (k >= "1" && k <= "4") { corCaneta = cores[+k - 1]; palco.classList.add("desenhando"); }
     else if (k === "b" || k === "B") { var p = document.getElementById("pausa"); p.hidden = !p.hidden; }
     else if (k === "g" || k === "G") palco.classList.toggle("gravando");
     else if (k === "f" || k === "F") {

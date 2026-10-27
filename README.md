@@ -14,7 +14,7 @@ Slides das aulas teóricas gravadas do Quarks (OBS + Meet), um arquivo HTML por 
 | → ou espaço | avança (um clique por vez) |
 | ← | volta |
 | N | notas do professor |
-| D / C | caneta / apagar |
+| D | caneta (1 a 4 trocam a cor; Z desfaz; C apaga tudo do slide) |
 | B | tela de pausa |
 | G | modo gravação |
 | F | tela cheia |

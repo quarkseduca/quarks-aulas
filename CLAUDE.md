@@ -8,3 +8,7 @@
 - Tela de vídeo 1920x1080. **O canto inferior esquerdo é da câmera** (480x270 a 40 px das bordas; no OBS, X = 40, Y = 770). Nenhum conteúdo abaixo de y = 720 à esquerda de x = 620.
 - Visual: roxo do Quarks como base e a cor da disciplina como acento (`data-disc` no palco). Bricolage Grotesque nos títulos, Figtree no texto. Animações só com função, lentas; revelação por clique com `data-passo`.
 - Trabalhe em branch; o dono decide quando juntar no `main`.
+- **Nunca escreva "aula" nos slides** (o material pode ser usado em outro lugar). Use o assunto e a divisão: "Cinemática · Parte 1 de 4", "Movimento uniforme · A função horária".
+- **Conteúdo completo**: tudo o que a apostila traz daquele trecho entra nos slides (definições, deduções, exemplos, atenções, unidades e resumo).
+- **Exemplos** mostram a resolução passo a passo, um clique por linha. **Questões (PISM, IF, prática)** não trazem resolução: enunciado e alternativas de um lado e uma "área de resolução" vazia do outro, para o professor resolver com a caneta; o último clique só marca o gabarito.
+- Sem órbitas no fundo dos slides de conteúdo nem em volta da câmera (decisão do dono, 27/10/2026).

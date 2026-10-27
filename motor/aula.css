@@ -149,13 +149,40 @@ body {
 }
 
 /* ---------- Questões ---------- */
-.alternativas { position: absolute; left: 880px; right: 0; top: 84px; list-style: none; margin: 0; padding: 0; display: flex; flex-direction: column; gap: 14px; }
-.alternativas li { display: grid; grid-template-columns: 54px 1fr; column-gap: 20px; align-items: start; background: var(--branco); border: 2px solid var(--lilas-2); border-radius: 24px; padding: 14px 22px; font-size: 30px; line-height: 1.3; transition: background .4s, border-color .4s; }
-.alternativas li > b { width: 54px; height: 54px; border-radius: 50%; display: grid; place-items: center; background: var(--lilas); color: var(--roxo-titulo); font: 800 28px var(--fonte-titulo); transition: background .4s, color .4s; }
-.alternativas li > span { padding-top: 7px; transition: opacity .4s; }
+.alternativas { list-style: none; margin: 0; padding: 0; display: flex; flex-direction: column; gap: 14px; }
+.alternativas li { display: grid; grid-template-columns: 50px 1fr; column-gap: 18px; align-items: start; background: var(--branco); border: 2px solid var(--lilas-2); border-radius: 22px; padding: 10px 20px; font-size: 29px; line-height: 1.3; transition: background .4s, border-color .4s; }
+.alternativas li > b { width: 50px; height: 50px; border-radius: 50%; display: grid; place-items: center; background: var(--lilas); color: var(--roxo-titulo); font: 800 28px var(--fonte-titulo); transition: background .4s, color .4s; }
+.alternativas li > span { padding-top: 6px; transition: opacity .4s; }
 .alternativas li > em { grid-column: 2; font-style: normal; font-size: 24px; font-weight: 700; color: var(--erro); margin-top: 4px; }
 .alternativas li.apaga { background: var(--lilas-fundo); }
 .alternativas li.apaga > span { opacity: .5; }
 .alternativas li.certo { border-color: var(--certo); background: var(--certo-claro); }
 .alternativas li.certo > b { background: var(--certo); color: var(--branco); }
 .some { opacity: 0 !important; transition: opacity .4s; }
+
+.area-resolucao { position: absolute; border: 3px dashed var(--linha); border-radius: 32px; background: rgba(255, 255, 255, .6); }
+.area-resolucao::before { content: "Resolução"; position: absolute; top: 18px; left: 28px; font-weight: 800; font-size: 22px; letter-spacing: .12em; text-transform: uppercase; color: var(--roxo-claro); }
+.enunciado { font-size: 36px; line-height: 1.4; margin: 0; }
+
+/* Tabela de valores */
+.tabela { border-collapse: separate; border-spacing: 0; font-size: 40px; font-variant-numeric: tabular-nums; background: var(--branco); border: 2px solid var(--lilas-2); border-radius: 26px; overflow: hidden; }
+.tabela th { background: var(--d-clara); color: var(--d-forte); font-weight: 800; padding: 14px 54px; }
+.tabela td { padding: 12px 54px; text-align: center; border-top: 2px solid var(--lilas); }
+
+/* Rótulos das letras de uma fórmula */
+.letras { display: grid; grid-template-columns: repeat(4, 1fr); gap: 22px; }
+.letras > div { background: var(--branco); border: 2px solid var(--lilas-2); border-radius: 26px; padding: 22px 26px; font-size: 28px; line-height: 1.35; }
+.letras .simbolo { display: block; font-size: 50px; color: var(--d-forte); margin-bottom: 6px; }
+.letras .unidade { display: inline-block; margin-top: 10px; font-weight: 700; font-size: 22px; color: var(--d-forte); background: var(--d-clara); border-radius: 999px; padding: 3px 14px; }
+
+/* Listas do resumo */
+.resumo { display: grid; grid-template-columns: 1fr 1fr; gap: 20px 26px; }
+.resumo > div { background: var(--branco); border: 2px solid var(--lilas-2); border-radius: 26px; padding: 22px 28px; font-size: 31px; line-height: 1.35; }
+.resumo > div b { color: var(--roxo-titulo); }
+
+/* Carrinho que desliza quando aparece */
+@keyframes desliza-dir { from { transform: translateX(-260px); } to { transform: none; } }
+@keyframes desliza-esq { from { transform: translateX(260px); } to { transform: none; } }
+.mostra .vai-dir { animation: desliza-dir 2.4s ease-in-out both; }
+.mostra .vai-esq { animation: desliza-esq 2.4s ease-in-out both; }
+.riscado { text-decoration: line-through; text-decoration-color: var(--erro); text-decoration-thickness: 4px; color: var(--cinza); }
