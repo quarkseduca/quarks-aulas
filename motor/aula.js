@@ -1,12 +1,15 @@
 /* Motor de slides do Quarks.
    Teclas: → / espaço / PageDown avança; ← / PageUp volta; N notas; D caneta (1-4 cores, Z desfaz, C apaga);
-   E amplia a área de resolução; B tela de pausa; G modo gravação (esconde o "câmera" da moldura); F tela cheia; ? ajuda. */
+   E amplia a área de resolução; B tela de pausa; G modo gravação (esconde o "câmera" da moldura); S modo sala (sem câmera, letra maior);
+   F tela cheia; ? ajuda.
+   No sistema (window.QUARKS_SISTEMA), o apresentador do sistema cuida da caneta e das notas e conversa com o motor por window.QuarksSlides. */
 (function () {
   "use strict";
   var palco = document.getElementById("palco");
   var slides = Array.prototype.slice.call(document.querySelectorAll(".slide"));
   var animacoes = window.QuarksAnimacoes || {};
   var atual = 0, passo = 0, inicio = null;
+  var sistema = !!window.QUARKS_SISTEMA, ouvintes = [];
 
   /* ---------- Escala do palco ---------- */
   function escala() {
@@ -66,6 +69,7 @@
     contornaAreas();
     redesenha();
     atualizaNotas();
+    ouvintes.forEach(function (f) { try { f(atual, passo); } catch (e) { /* segue */ } });
   }
 
   function avanca() {
@@ -86,7 +90,7 @@
       var r = a.getBoundingClientRect();
       var x0 = (r.left - pr.left) / k, y0 = (r.top - pr.top) / k;
       var w = a.offsetWidth, h = a.offsetHeight, R = 30;
-      var nx = Math.max(0, CAM.x - x0), ny = CAM.y - y0; // tamanho do recorte, nas coordenadas da área
+      var nx = palco.classList.contains("sala") ? 0 : Math.max(0, CAM.x - x0), ny = CAM.y - y0; // tamanho do recorte, nas coordenadas da área (na sala não há câmera)
       var d;
       if (nx > 0 && ny < h && nx < w) {
         d = "M" + R + " 0H" + (w - R) + "Q" + w + " 0 " + w + " " + R + "V" + (h - R) + "Q" + w + " " + h + " " + (w - R) + " " + h +
@@ -103,6 +107,11 @@
     var s = slides[atual];
     if (!s.classList.contains("questao")) return;
     s.classList.toggle("amplia");
+    contornaAreas();
+    ouvintes.forEach(function (f) { try { f(atual, passo); } catch (e) { /* segue */ } });
+  }
+  function modoSala(v) {
+    palco.classList.toggle("sala", v === undefined ? !palco.classList.contains("sala") : !!v);
     contornaAreas();
   }
 
@@ -200,6 +209,7 @@
   /* ---------- Teclado e cliques ---------- */
   function tecla(ev) {
     var k = ev.key;
+    if (sistema && /^[nNdDcCzZ1-4?hH]$/.test(k)) return; // no sistema: caneta, notas e ajuda são do apresentador
     if (["ArrowRight", " ", "PageDown", "Enter", "ArrowDown"].indexOf(k) >= 0) { ev.preventDefault(); avanca(); }
     else if (["ArrowLeft", "PageUp", "Backspace", "ArrowUp"].indexOf(k) >= 0) { ev.preventDefault(); volta(); }
     else if (k === "Home") mostra(0, 0);
@@ -212,6 +222,7 @@
     else if (k === "b" || k === "B") { var p = document.getElementById("pausa"); p.hidden = !p.hidden; }
     else if (k === "e" || k === "E") ampliaQuestao();
     else if (k === "g" || k === "G") palco.classList.toggle("gravando");
+    else if (k === "s" || k === "S") modoSala();
     else if (k === "f" || k === "F") {
       if (document.fullscreenElement) document.exitFullscreen();
       else if (document.documentElement.requestFullscreen) document.documentElement.requestFullscreen().catch(function () {});
@@ -221,7 +232,7 @@
   }
   document.addEventListener("keydown", tecla);
   palco.addEventListener("click", function (ev) {
-    if (palco.classList.contains("desenhando")) return;
+    if (palco.classList.contains("desenhando") || palco.classList.contains("sem-clique")) return;
     var r = palco.getBoundingClientRect();
     if ((ev.clientX - r.left) / r.width < 0.3) volta(); else avanca();
   });
@@ -230,6 +241,27 @@
   var dica = document.getElementById("dica");
   setTimeout(function () { dica.style.opacity = "0"; }, 3500);
   setTimeout(function () { dica.hidden = true; }, 4200);
+
+  /* ---------- Ponte com o sistema (apresentador, controle no celular e espelho) ---------- */
+  window.QuarksSlides = {
+    total: slides.length,
+    atual: function () { return atual; },
+    passo: function () { return passo; },
+    max: function (i) { return slides[i] ? maxPasso(slides[i]) : 0; },
+    nome: function (i) { return slides[i] ? (slides[i].dataset.nome || "Slide " + (i + 1)) : ""; },
+    questao: function (i) { return !!(slides[i] && slides[i].classList.contains("questao")); },
+    mostra: function (i, p) { mostra(i, p, i < atual || (i === atual && p < passo)); },
+    avanca: avanca,
+    volta: volta,
+    amplia: function (v) { var s = slides[atual]; if (s.classList.contains("questao") && s.classList.contains("amplia") !== !!v) ampliaQuestao(); },
+    ampliada: function () { return slides[atual].classList.contains("amplia"); },
+    sala: modoSala,
+    pausa: function (v) { document.getElementById("pausa").hidden = !v; },
+    notas: function (i) { var s = slides[i]; var n = s && s.querySelector(".notas"), r = s && s.querySelector(".resolucao"); return { notas: n ? n.innerHTML : "", resolucao: r ? r.innerHTML : "" }; },
+    aoMudar: function (f) { ouvintes.push(f); },
+    contorna: contornaAreas
+  };
+  if (sistema) { dica.hidden = true; }
 
   /* ---------- Início ---------- */
   var m = /^#s(\d+)$/.exec(location.hash);

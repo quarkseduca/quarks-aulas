@@ -112,6 +112,11 @@ body {
 #palco.escuro #moldura .cam-fundo { fill: rgba(255, 255, 255, .08); }
 #palco.escuro #moldura .cam-texto { fill: rgba(255, 255, 255, .5); }
 #palco.gravando #moldura .cam-fundo, #palco.gravando #moldura .cam-texto { display: none; }
+/* Modo sala (tecla S ou botão do apresentador): na TV ou no projetor não há câmera; o slide usa a tela toda, com letra um pouco maior e mais contraste */
+#palco.sala #moldura { display: none; }
+#palco.sala { --cinza: #45405A; --lilas-2: #D3C9F5; --roxo-claro: #6F5CDB; }
+#palco.sala .slide:not(.capa) .conteudo { transform: scale(1.04); transform-origin: 0 0; }
+#palco.sala .questao .pilula-pausa { display: none; } /* "Pause o vídeo" é para quem assiste à gravação */
 #moldura .orbita { stroke: var(--roxo); opacity: .28; }
 #palco.escuro #moldura .orbita { stroke: #fff; opacity: .35; }
 #moldura .borda-clara { display: none; }

@@ -5,8 +5,13 @@ Uso:
   python3 build.py                 # monta todas as aulas em saida/
   python3 build.py aulas/fisica/pism1/mu-1.html
   python3 build.py --previa ...    # versão para a prévia no claude.ai (sem <html>/<head>/<body>)
+  python3 build.py --sistema ../quarks-gestao/slides
+                                   # versão para a aba Slides do sistema: partes, roteiros, catalogo.json e vendor/
+                                   # (fontes e MathJax ficam num arquivo só, servido pelo sistema; o sistema embute
+                                   #  tudo de novo quando o professor clica em Baixar)
 """
 import base64
+import hashlib
 import json
 import random
 import re
@@ -27,15 +32,30 @@ FONTES = ('<link rel="preconnect" href="https://fonts.googleapis.com">'
 MATHJAX_CONFIG = ("<script>window.MathJax={tex:{inlineMath:[['\\\\(','\\\\)']],displayMath:[['\\\\[','\\\\]']]},"
                   "svg:{fontCache:'local'},options:{enableMenu:false}};</script>")
 MATHJAX = MATHJAX_CONFIG + '<script src="https://cdn.jsdelivr.net/npm/mathjax@3.2.2/es5/tex-svg-full.js"></script>'
+# no sistema, __VENDOR__ vira o endereço do arquivo (api.php?a=slides_vendor&f=); Baixar troca as duas linhas pelo conteúdo
+FONTES_SISTEMA = '<link rel="stylesheet" href="__VENDOR__fontes.css">'
+MATHJAX_SISTEMA = MATHJAX_CONFIG + '<script src="__VENDOR__tex-svg-full.js"></script>'
+CURSOS = {"PISM I": "pism1", "PISM II": "pism2", "PISM III": "pism3"}
+
+
+def fontes_css():
+    css = (VENDOR / "fontes" / "fontes.css").read_text(encoding="utf-8")
+    return re.sub(r"url\(([\w.-]+\.woff2)\)", lambda m: "url(data:font/woff2;base64,"
+                  + base64.b64encode((VENDOR / "fontes" / m.group(1)).read_bytes()).decode() + ")", css)
 
 
 def offline():
     """Fontes e MathJax dentro do arquivo: a aula abre sem internet (vendor/ tem as cópias)."""
-    css = (VENDOR / "fontes" / "fontes.css").read_text(encoding="utf-8")
-    css = re.sub(r"url\(([\w.-]+\.woff2)\)", lambda m: "url(data:font/woff2;base64,"
-                 + base64.b64encode((VENDOR / "fontes" / m.group(1)).read_bytes()).decode() + ")", css)
     js = (VENDOR / "tex-svg-full.js").read_text(encoding="utf-8")
-    return f"<style>{css}</style>", f"{MATHJAX_CONFIG}<script>{js}</script>"
+    return f"<style>{fontes_css()}</style>", f"{MATHJAX_CONFIG}<script>{js}</script>"
+
+
+def recursos(modo):
+    if modo == "previa":
+        return FONTES, MATHJAX
+    if modo == "sistema":
+        return FONTES_SISTEMA, MATHJAX_SISTEMA
+    return offline()
 
 
 def data_uri(nome):
@@ -73,12 +93,13 @@ AJUDA = '''<div id="ajuda" hidden><div class="janela"><h3>Atalhos da aula</h3><d
 <dt><kbd>E</kbd></dt><dd>Nas questões: esconde o enunciado e a área de resolução ocupa a tela toda</dd>
 <dt><kbd>B</kbd></dt><dd>Tela de pausa</dd>
 <dt><kbd>G</kbd></dt><dd>Modo gravação: tira o "CÂMERA" de dentro da moldura</dd>
+<dt><kbd>S</kbd></dt><dd>Modo sala (TV ou projetor): sem o canto da câmera e com letra um pouco maior</dd>
 <dt><kbd>F</kbd></dt><dd>Tela cheia</dd>
 <dt><kbd>?</kbd></dt><dd>Mostra ou esconde esta ajuda</dd>
 </dl><p style="margin:14px 0 0;color:#5E5A70">No celular: toque à direita para avançar e à esquerda para voltar.</p></div></div>'''
 
 
-def monta(caminho, previa=False):
+def monta(caminho, modo="offline"):
     caminho = Path(caminho).resolve()
     fonte = caminho.read_text(encoding="utf-8")
     m = re.match(r"\s*<!--aula\s*(\{.*?\})\s*-->", fonte, re.S)
@@ -113,23 +134,26 @@ def monta(caminho, previa=False):
 <div id="progresso"><span></span><div class="trilho"><b></b></div></div>
 <div id="pausa" hidden><img src="{sym_roxo}" alt="Quarks"></div>
 <canvas id="caneta" width="1920" height="1080"></canvas>
+<!--QUARKS_PALCO-->
 </div>
 {AJUDA}
 <div id="notasPainel" hidden></div>
 <div id="dica">Aperte ? para ver os atalhos</div>
 <script>{js_extra}</script>
-<script>{js}</script>'''
+<!--QUARKS_ANTES_DO_MOTOR-->
+<script>{js}</script>
+<!--QUARKS_FIM-->'''
 
-    fontes, mathjax = (FONTES, MATHJAX) if previa else offline()
+    fontes, mathjax = recursos(modo)
     cabecalho = f'<title>{titulo}</title>{fontes}<style>{css}</style>{mathjax}'
-    if previa:
+    if modo == "previa":
         return cabecalho + "\n" + corpo + "\n"
     return (f'<!doctype html><html lang="pt-BR"><head><meta charset="utf-8">'
             f'<meta name="viewport" content="width=device-width,initial-scale=1">{cabecalho}</head>'
             f'<body data-disc="{disc}">{corpo}</body></html>\n')
 
 
-def roteiro(caminho, meta, slides):
+def roteiro(caminho, meta, slides, modo="offline"):
     """Roteiro do professor: cada questão da parte com gabarito e resolução passo a passo (sai de .resolucao)."""
     questoes = re.findall(r'<section class="slide questao".*?</section>', slides, re.S)
     if not any('class="resolucao"' in q for q in questoes):
@@ -154,7 +178,7 @@ def roteiro(caminho, meta, slides):
     css_aula = (MOTOR / "aula.css").read_text(encoding="utf-8")
     cores = css_aula[css_aula.index(":root"):css_aula.index("html, body")]
     css = cores + (MOTOR / "roteiro.css").read_text(encoding="utf-8")
-    fontes, mathjax = offline()
+    fontes, mathjax = recursos(modo)
     titulo = f'{meta["assunto"]} · {meta["titulo"]}'
     disc = meta["disciplina"]
     return (f'<!doctype html><html lang="pt-BR"><head><meta charset="utf-8">'
@@ -167,8 +191,139 @@ def roteiro(caminho, meta, slides):
             f'<ul class="gabaritos">{"".join(gabaritos)}</ul>{"".join(cartoes)}</div></body></html>\n')
 
 
+def ler(caminho):
+    fonte = Path(caminho).resolve().read_text(encoding="utf-8")
+    m = re.match(r"\s*<!--aula\s*(\{.*?\})\s*-->", fonte, re.S)
+    if not m:
+        sys.exit(f"{caminho}: falta o bloco <!--aula {{...}} -->")
+    return json.loads(m.group(1)), fonte[m.end():]
+
+
+def max_passo(sec):
+    """Mesmo cálculo do maxPasso do motor: o último clique do slide."""
+    m = 0
+    for v in re.findall(r'data-passo="(\d+)"', sec):
+        m = max(m, int(v))
+    for v in re.findall(r'data-em="([^"]*)"', sec):
+        for par in v.split():
+            m = max(m, int(par.split(":")[0]))
+    for v in re.findall(r'data-anima-passo="(\d+)"', sec):
+        m = max(m, int(v))
+    return m
+
+
+def info_slides(slides):
+    """Lista dos slides para o sistema: nome, tipo, último clique e, nas questões, as letras e o gabarito."""
+    out = []
+    for sec in re.findall(r'<section class="slide[^"]*"[^>]*>.*?</section>', slides, re.S):
+        abre = re.match(r'<section class="slide([^"]*)"([^>]*)>', sec)
+        cls = abre.group(1)
+        nome = re.search(r'data-nome="([^"]*)"', abre.group(2))
+        it = {"n": nome.group(1) if nome else "", "t": "capa" if "capa" in cls else "questao" if "questao" in cls else "conteudo",
+              "m": max_passo(sec)}
+        if it["t"] == "questao":
+            alts = re.search(r'<ol class="alternativas[^"]*"[^>]*>(.*?)</ol>', sec, re.S)
+            alts = alts.group(1) if alts else ""
+            it["letras"] = re.findall(r'<li[^>]*><b>([A-E])</b>', alts)
+            g = re.search(r'<li[^>]*data-em="[^"]*\bcerto\b[^"]*"[^>]*><b>([A-E])</b>', alts)
+            it["gab"] = g.group(1) if g else ""
+        out.append(it)
+    return out
+
+
+def notas_slides(slides):
+    """Notas e resolução de cada slide, para o controle no celular (só o professor vê)."""
+    out = []
+    for sec in re.findall(r'<section class="slide[^"]*"[^>]*>.*?</section>', slides, re.S):
+        n = re.search(r'<aside class="notas">(.*?)</aside>', sec, re.S)
+        r = re.search(r'<aside class="resolucao">(.*?)</aside>', sec, re.S)
+        out.append({"notas": n.group(1).strip() if n else "", "resolucao": r.group(1).strip() if r else ""})
+    return out
+
+
+def lugar_no_plano(meta, plano):
+    """Acha o capítulo e o item do cronograma (planejamento/cronograma.json) que este arquivo cumpre."""
+    parte = meta.get("parte", "")
+    for cap in plano:
+        if parte == "Questões do PISM" and meta["assunto"] == cap["t"]:
+            return cap["n"], "pism"
+        k = re.match(r"Parte (\d+) de (\d+)", parte)
+        alvo = meta["assunto"] if k else meta["titulo"]  # parte única: o subcapítulo vai no título
+        if not k and meta["assunto"] != cap["t"]:
+            continue
+        itens = [i for i, x in enumerate(cap["partes"]) if x["t"] == alvo]
+        if itens:
+            j = int(k.group(1)) - 1 if k else 0
+            if j < len(itens):
+                return cap["n"], cap["partes"][itens[j]]
+    return None, None
+
+
+def sistema(destino):
+    """Monta tudo o que a aba Slides do sistema precisa, em destino/ (por padrão ../quarks-gestao/slides)."""
+    destino = Path(destino).resolve()
+    plano = json.loads((RAIZ / "planejamento" / "cronograma.json").read_text(encoding="utf-8"))
+    partes, ligados = {}, {}
+    for a in sorted((RAIZ / "aulas").rglob("*.html")):
+        rel = a.relative_to(RAIZ / "aulas")
+        pid = str(rel.with_suffix("")).replace("\\", "/")
+        meta, slides = ler(a)
+        curso = CURSOS.get(meta["curso"], meta["curso"].lower().replace(" ", ""))
+        pasta = destino / "partes" / rel.parent
+        pasta.mkdir(parents=True, exist_ok=True)
+        (pasta / (rel.stem + ".html")).write_text(monta(a, "sistema"), encoding="utf-8")
+        (pasta / (rel.stem + ".notas.json")).write_text(json.dumps(notas_slides(slides), ensure_ascii=False), encoding="utf-8")
+        doc = roteiro(a, meta, slides, "sistema")
+        if doc:
+            (pasta / (rel.stem + "-professor.html")).write_text(doc, encoding="utf-8")
+        info = info_slides(slides)
+        cap, item = lugar_no_plano(meta, plano.get(f"{curso}/{meta['disciplina']}", []))
+        if cap is None:
+            print(f"aviso: {pid} não foi achado em planejamento/cronograma.json (vai para 'Outros')")
+        ligados[pid] = (cap, item)
+        partes[pid] = {"disc": meta["disciplina"], "curso": curso, "assunto": meta["assunto"], "parte": meta.get("parte", ""),
+                       "titulo": meta["titulo"], "slides": info, "questoes": sum(1 for x in info if x["t"] == "questao"),
+                       "roteiro": bool(doc)}
+        print("ok:", pid)
+    cursos = {}
+    for chave, caps in plano.items():
+        curso, disc = chave.split("/")
+        lista = []
+        for cap in caps:
+            itens, subs = [], []
+            for x in cap["partes"]:
+                if x["sub"] not in subs:
+                    subs.append(x["sub"])
+            for x in cap["partes"]:
+                mesmos = [y for y in cap["partes"] if y["sub"] == x["sub"]]
+                pid = next((p for p, (c, it) in ligados.items() if c == cap["n"] and it is x
+                            and partes[p]["disc"] == disc and partes[p]["curso"] == curso), None)
+                itens.append({"sub": f'{cap["n"]}.{subs.index(x["sub"]) + 1}', "t": x["t"], "k": mesmos.index(x) + 1,
+                              "de": len(mesmos), "top": x.get("top", []), "id": pid})
+            pism = next((p for p, (c, it) in ligados.items() if c == cap["n"] and it == "pism"
+                         and partes[p]["disc"] == disc and partes[p]["curso"] == curso), None)
+            itens.append({"pism": True, "t": "Questões do PISM", "id": pism})
+            lista.append({"n": cap["n"], "t": cap["t"], "itens": itens})
+        soltos = [p for p, (c, it) in ligados.items() if c is None and partes[p]["disc"] == disc and partes[p]["curso"] == curso]
+        if soltos:
+            lista.append({"n": 99, "t": "Outros", "itens": [{"sub": "", "t": partes[p]["assunto"], "k": 1, "de": 1, "top": [], "id": p} for p in soltos]})
+        cursos.setdefault(curso, {})[disc] = lista
+    vend = destino / "vendor"
+    vend.mkdir(parents=True, exist_ok=True)
+    (vend / "fontes.css").write_text(fontes_css(), encoding="utf-8")
+    (vend / "tex-svg-full.js").write_bytes((VENDOR / "tex-svg-full.js").read_bytes())
+    corpo = json.dumps({"disciplinas": DISCIPLINAS, "cursos": {v: k for k, v in CURSOS.items()}, "planos": cursos, "partes": partes},
+                       ensure_ascii=False, sort_keys=True)
+    versao = hashlib.sha1(corpo.encode() + (vend / "fontes.css").read_bytes() + (vend / "tex-svg-full.js").read_bytes()).hexdigest()[:10]  # muda junto com fontes e MathJax (cache do navegador)
+    (destino / "catalogo.json").write_text(json.dumps({"versao": versao, **json.loads(corpo)}, ensure_ascii=False, indent=1), encoding="utf-8")
+    print("ok: catalogo.json", versao, f"({len(partes)} partes)")
+
+
 def main():
     args = sys.argv[1:]
+    if "--sistema" in args:
+        i = args.index("--sistema")
+        return sistema(args[i + 1] if i + 1 < len(args) else RAIZ.parent / "quarks-gestao" / "slides")
     previa = "--previa" in args
     args = [a for a in args if a != "--previa"]
     aulas = [Path(a) for a in args] or sorted((RAIZ / "aulas").rglob("*.html"))
@@ -176,12 +331,11 @@ def main():
         rel = Path(a).resolve().relative_to(RAIZ / "aulas")
         destino = RAIZ / "saida" / (rel.with_name(rel.stem + "-previa.html") if previa else rel)
         destino.parent.mkdir(parents=True, exist_ok=True)
-        destino.write_text(monta(a, previa), encoding="utf-8")
+        destino.write_text(monta(a, "previa" if previa else "offline"), encoding="utf-8")
         print("ok:", destino.relative_to(RAIZ))
         if not previa:
-            fonte = Path(a).resolve().read_text(encoding="utf-8")
-            m = re.match(r"\s*<!--aula\s*(\{.*?\})\s*-->", fonte, re.S)
-            doc = roteiro(a, json.loads(m.group(1)), fonte[m.end():])
+            meta, slides = ler(a)
+            doc = roteiro(a, meta, slides)
             if doc:
                 rot = destino.with_name(destino.stem + "-professor.html")
                 rot.write_text(doc, encoding="utf-8")
