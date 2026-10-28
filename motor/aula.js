@@ -145,10 +145,11 @@
   var painel = document.getElementById("notasPainel");
   function textoNotas() {
     var s = slides[atual], prox = slides[atual + 1];
-    var n = s.querySelector(".notas");
+    var n = s.querySelector(".notas"), r = s.querySelector(".resolucao");
     return {
       cabeca: "Slide " + (atual + 1) + " de " + slides.length + " · clique " + passo + " de " + maxPasso(s),
-      notas: n ? n.innerHTML : "<i>Sem notas neste slide.</i>",
+      notas: (n ? n.innerHTML : "<i>Sem notas neste slide.</i>") +
+        (r ? '<div class="res"><h4>Resolução passo a passo</h4>' + r.innerHTML + "</div>" : ""),
       proximo: prox ? (prox.dataset.nome || "Slide " + (atual + 2)) : "Fim da aula"
     };
   }
@@ -181,7 +182,10 @@
       'header{display:flex;justify-content:space-between;align-items:center;font-weight:700;color:#5E5A70;font-size:16px}' +
       '#rel{font:800 34px "Bricolage Grotesque","Segoe UI",sans-serif;color:#3F2FA0;font-variant-numeric:tabular-nums}' +
       '#txt{background:#fff;border:1.5px solid #E4DEFB;border-radius:20px;padding:16px 20px;margin:14px 0}' +
-      'p{margin:.3em 0}footer{color:#5E5A70;font-size:16px}footer b{color:#3F2FA0}</style>' +
+      'p{margin:.3em 0}footer{color:#5E5A70;font-size:16px}footer b{color:#3F2FA0}' +
+      '.res{border-top:2px dashed #E4DEFB;margin-top:12px;padding-top:8px}.res h4{margin:0 0 6px;font-size:16px;color:#3F2FA0;text-transform:uppercase;letter-spacing:.04em}' +
+      '.res ol{margin:.3em 0;padding-left:1.4em}.res ol li{margin:.35em 0}.res ol li b{display:block;color:#3F2FA0}.res .erros{margin:.3em 0;padding-left:1.1em;color:#5E5A70;font-size:17px}' +
+      'mjx-assistive-mml{display:none!important}.res .resposta{background:#E3F6EC;border-radius:10px;padding:6px 10px}.res .atencao{background:#FFF6CC;border-radius:10px;padding:6px 10px}</style>' +
       '<header><span id="cab"></span><span id="rel">00:00</span></header><div id="txt"></div>' +
       '<footer><b>Próximo:</b> <span id="prox"></span> · use as setas aqui também</footer>');
     w.document.close();

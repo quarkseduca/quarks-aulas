@@ -25,4 +25,4 @@ Slides das aulas teóricas gravadas do Quarks (OBS + Meet), um arquivo HTML por 
 Cada subcapítulo é dividido em partes de cerca de 20 minutos ("Movimento uniforme · Parte 1 de 4"), na ordem da apostila do acompanhamento (veja `planejamento/cronograma.html`). No fim de cada capítulo há um bloco extra só com as questões do PISM daquele capítulo, com a área de resolução grande para o professor resolver.
 
 ## Para quem edita
-`python3 build.py` monta todas as aulas em `saida/`. Regras em `CLAUDE.md`.
+`python3 build.py` monta todas as aulas em `saida/` e, para cada parte com questões, o roteiro do professor (`*-professor.html`, com as resoluções passo a passo). Regras em `CLAUDE.md`.

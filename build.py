@@ -25,7 +25,7 @@ FONTES = ('<link rel="preconnect" href="https://fonts.googleapis.com">'
           '<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,600;12..96,800'
           '&family=Figtree:wght@400;600;700;800&display=swap">')
 MATHJAX_CONFIG = ("<script>window.MathJax={tex:{inlineMath:[['\\\\(','\\\\)']],displayMath:[['\\\\[','\\\\]']]},"
-                  "svg:{fontCache:'global'},options:{enableMenu:false}};</script>")
+                  "svg:{fontCache:'local'},options:{enableMenu:false}};</script>")
 MATHJAX = MATHJAX_CONFIG + '<script src="https://cdn.jsdelivr.net/npm/mathjax@3.2.2/es5/tex-svg-full.js"></script>'
 
 
@@ -129,6 +129,44 @@ def monta(caminho, previa=False):
             f'<body data-disc="{disc}">{corpo}</body></html>\n')
 
 
+def roteiro(caminho, meta, slides):
+    """Roteiro do professor: cada questão da parte com gabarito e resolução passo a passo (sai de .resolucao)."""
+    questoes = re.findall(r'<section class="slide questao".*?</section>', slides, re.S)
+    if not any('class="resolucao"' in q for q in questoes):
+        return None
+    cartoes, gabaritos = [], []
+    for i, q in enumerate(questoes, 1):
+        painel = re.search(r'<div class="painel-questao">(.*?)</div>\s*</div>\s*(?:<aside|</section)', q, re.S)
+        painel = painel.group(1) if painel else ""
+        painel = re.sub(r'data-em="\d+:certo"', 'class="certo"', painel)
+        painel = re.sub(r'\s*data-(?:em|passo)="[^"]*"', "", painel)
+        painel = re.sub(r'(<p class="enunciado")\s+style="[^"]*"', r"\1", painel)
+        olho = re.search(r'<p class="olho">(.*?)</p>', painel, re.S)
+        painel = painel.replace(olho.group(0), "", 1) if olho else painel
+        res = re.search(r'<aside class="resolucao">(.*?)</aside>', q, re.S)
+        gab = re.search(r'class="certo"><b>(\w)</b>', painel)
+        rotulo = olho.group(1) if olho else f"Questão {i}"
+        gabaritos.append(f"<li>{rotulo}: <b>{gab.group(1) if gab else '?'}</b></li>")
+        corpo = res.group(1) if res else "<p><i>Resolução ainda não escrita.</i></p>"
+        corpo = corpo.replace('<ul class="erros">', '<p class="erros-tit">Por que as outras estão erradas</p><ul class="erros">')
+        cartoes.append(f'<article class="q"><p class="olho">{rotulo}</p><div class="painel">{painel}</div>'
+                       f'<section class="resolucao"><h3>Resolução passo a passo</h3>{corpo}</section></article>')
+    css_aula = (MOTOR / "aula.css").read_text(encoding="utf-8")
+    cores = css_aula[css_aula.index(":root"):css_aula.index("html, body")]
+    css = cores + (MOTOR / "roteiro.css").read_text(encoding="utf-8")
+    fontes, mathjax = offline()
+    titulo = f'{meta["assunto"]} · {meta["titulo"]}'
+    disc = meta["disciplina"]
+    return (f'<!doctype html><html lang="pt-BR"><head><meta charset="utf-8">'
+            f'<meta name="viewport" content="width=device-width,initial-scale=1">'
+            f'<title>Roteiro do professor · {titulo}</title>{fontes}<style>{css}</style>{mathjax}</head>'
+            f'<body data-disc="{disc}"><div class="folha"><header class="topo"><img src="{data_uri("sym-roxo.png")}" alt="Quarks">'
+            f'<div><p class="kicker">Roteiro do professor</p><h1>{titulo}</h1></div>'
+            f'<span class="selo">{DISCIPLINAS[disc]} · {meta["curso"]}</span></header>'
+            f'<p class="aviso">Só para quem grava: não mostre este arquivo no vídeo. Ele é o mesmo texto da janela de notas (tecla N).</p>'
+            f'<ul class="gabaritos">{"".join(gabaritos)}</ul>{"".join(cartoes)}</div></body></html>\n')
+
+
 def main():
     args = sys.argv[1:]
     previa = "--previa" in args
@@ -140,6 +178,14 @@ def main():
         destino.parent.mkdir(parents=True, exist_ok=True)
         destino.write_text(monta(a, previa), encoding="utf-8")
         print("ok:", destino.relative_to(RAIZ))
+        if not previa:
+            fonte = Path(a).resolve().read_text(encoding="utf-8")
+            m = re.match(r"\s*<!--aula\s*(\{.*?\})\s*-->", fonte, re.S)
+            doc = roteiro(a, json.loads(m.group(1)), fonte[m.end():])
+            if doc:
+                rot = destino.with_name(destino.stem + "-professor.html")
+                rot.write_text(doc, encoding="utf-8")
+                print("ok:", rot.relative_to(RAIZ))
 
 
 if __name__ == "__main__":

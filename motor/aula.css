@@ -45,7 +45,7 @@ body {
 /* ---------- Slides ---------- */
 .slide { position: absolute; inset: 0; opacity: 0; visibility: hidden; transition: opacity .4s ease, visibility 0s .4s; }
 .slide.ativo { opacity: 1; visibility: visible; transition: opacity .4s ease; }
-.slide .notas { display: none; }
+.slide .notas, .slide .resolucao { display: none; }
 
 /* Fundo dos slides de conteúdo: lilás com órbitas bem apagadas no alto à direita */
 .fundo-orbitas { position: absolute; inset: 0; pointer-events: none; }
