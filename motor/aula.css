@@ -160,8 +160,24 @@ body {
 .alternativas li.certo > b { background: var(--certo); color: var(--branco); }
 .some { opacity: 0 !important; transition: opacity .4s; }
 
-.area-resolucao { position: absolute; border: 3px dashed var(--linha); border-radius: 32px; background: rgba(255, 255, 255, .6); }
-.area-resolucao::before { content: "Resolução"; position: absolute; top: 18px; left: 28px; font-weight: 800; font-size: 22px; letter-spacing: .12em; text-transform: uppercase; color: var(--roxo-claro); }
+/* Tela de questão: área de resolução grande à esquerda (em L, contornando a câmera) e o enunciado numa coluna à direita.
+   A tecla E esconde o enunciado e a área ocupa a largura toda. */
+.area-resolucao { position: absolute; left: 0; top: 0; width: 1190px; height: 880px; }
+.area-resolucao svg { position: absolute; inset: 0; overflow: visible; }
+.area-resolucao path { fill: rgba(255, 255, 255, .55); stroke: #C9C0F0; stroke-width: 3; stroke-dasharray: 14 12; }
+.area-resolucao::before { content: "Resolução"; position: absolute; z-index: 1; top: 20px; left: 30px; font-weight: 800; font-size: 22px; letter-spacing: .12em; text-transform: uppercase; color: var(--roxo-claro); }
+.questao .pilula-pausa { position: absolute; left: 595px; top: 330px; transform: translateX(-50%); transition: opacity .4s, left .4s; }
+.painel-questao { position: absolute; left: 1230px; right: 0; top: 0; bottom: 0; display: flex; flex-direction: column; gap: 16px; transition: opacity .35s, transform .35s; }
+.painel-questao .olho { margin: 0; }
+.painel-questao .enunciado { font-size: 27px; line-height: 1.4; }
+.painel-questao .alternativas { gap: 10px; }
+.painel-questao .alternativas li { grid-template-columns: 40px 1fr; column-gap: 14px; padding: 8px 16px; font-size: 24px; border-radius: 18px; }
+.painel-questao .alternativas li > b { width: 40px; height: 40px; font-size: 22px; }
+.painel-questao .alternativas li > span { padding-top: 4px; }
+.painel-questao .fonte { margin-top: auto; font-size: 18px; color: var(--cinza); }
+.questao.amplia .area-resolucao { width: 1760px; }
+.questao.amplia .pilula-pausa { left: 880px; }
+.questao.amplia .painel-questao { opacity: 0; transform: translateX(40px); pointer-events: none; }
 .enunciado { font-size: 36px; line-height: 1.4; margin: 0; }
 
 /* Tabela de valores */

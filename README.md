@@ -15,10 +15,14 @@ Slides das aulas teóricas gravadas do Quarks (OBS + Meet), um arquivo HTML por 
 | ← | volta |
 | N | notas do professor |
 | D | caneta (1 a 4 trocam a cor; Z desfaz; C apaga tudo do slide) |
+| E | nas questões: esconde o enunciado e a área de resolução ocupa a tela toda |
 | B | tela de pausa |
 | G | modo gravação |
 | F | tela cheia |
 | ? | ajuda |
+
+## Organização
+Cada capítulo é dividido em partes ("Cinemática · Parte 1 de 4"). No fim de cada capítulo há um bloco extra só com as questões do PISM daquele capítulo, com a área de resolução grande para o professor resolver.
 
 ## Para quem edita
 `python3 build.py` monta todas as aulas em `saida/`. Regras em `CLAUDE.md`.

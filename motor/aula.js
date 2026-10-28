@@ -1,6 +1,6 @@
 /* Motor de slides do Quarks.
    Teclas: → / espaço / PageDown avança; ← / PageUp volta; N notas; D caneta (1-4 cores, Z desfaz, C apaga);
-   B tela de pausa; G modo gravação (esconde o "câmera" da moldura); F tela cheia; ? ajuda. */
+   E amplia a área de resolução; B tela de pausa; G modo gravação (esconde o "câmera" da moldura); F tela cheia; ? ajuda. */
 (function () {
   "use strict";
   var palco = document.getElementById("palco");
@@ -63,6 +63,7 @@
     document.querySelector("#progresso span").textContent = (i + 1) + " / " + slides.length;
     document.querySelector("#progresso .trilho b").style.width = ((i + 1) / slides.length * 100) + "%";
     try { history.replaceState(null, "", "#s" + (i + 1)); } catch (e) { /* sem histórico */ }
+    contornaAreas();
     redesenha();
     atualizaNotas();
   }
@@ -75,6 +76,34 @@
   function volta() {
     if (passo > 0) mostra(atual, passo - 1, true);
     else if (atual > 0) mostra(atual - 1, maxPasso(slides[atual - 1]), true);
+  }
+
+  /* ---------- Área de resolução: desenha o contorno em L, desviando do canto da câmera ---------- */
+  var CAM = { x: 640, y: 700 }; // tudo à esquerda de x e abaixo de y é da câmera (coordenadas do palco)
+  function contornaAreas() {
+    var k = +palco.dataset.k || 1, pr = palco.getBoundingClientRect();
+    slides[atual].querySelectorAll(".area-resolucao").forEach(function (a) {
+      var r = a.getBoundingClientRect();
+      var x0 = (r.left - pr.left) / k, y0 = (r.top - pr.top) / k;
+      var w = a.offsetWidth, h = a.offsetHeight, R = 30;
+      var nx = Math.max(0, CAM.x - x0), ny = CAM.y - y0; // tamanho do recorte, nas coordenadas da área
+      var d;
+      if (nx > 0 && ny < h && nx < w) {
+        d = "M" + R + " 0H" + (w - R) + "Q" + w + " 0 " + w + " " + R + "V" + (h - R) + "Q" + w + " " + h + " " + (w - R) + " " + h +
+            "H" + (nx + R) + "Q" + nx + " " + h + " " + nx + " " + (h - R) + "V" + (ny + R) + "Q" + nx + " " + ny + " " + (nx - R) + " " + ny +
+            "H" + R + "Q0 " + ny + " 0 " + (ny - R) + "V" + R + "Q0 0 " + R + " 0Z";
+      } else {
+        d = "M" + R + " 0H" + (w - R) + "Q" + w + " 0 " + w + " " + R + "V" + (h - R) + "Q" + w + " " + h + " " + (w - R) + " " + h +
+            "H" + R + "Q0 " + h + " 0 " + (h - R) + "V" + R + "Q0 0 " + R + " 0Z";
+      }
+      a.innerHTML = '<svg width="' + w + '" height="' + h + '"><path d="' + d + '"/></svg>';
+    });
+  }
+  function ampliaQuestao() {
+    var s = slides[atual];
+    if (!s.classList.contains("questao")) return;
+    s.classList.toggle("amplia");
+    contornaAreas();
   }
 
   /* ---------- Caneta (traços guardados por slide) ---------- */
@@ -177,6 +206,7 @@
     else if (k === "z" || k === "Z") desfaz();
     else if (k >= "1" && k <= "4") { corCaneta = cores[+k - 1]; palco.classList.add("desenhando"); }
     else if (k === "b" || k === "B") { var p = document.getElementById("pausa"); p.hidden = !p.hidden; }
+    else if (k === "e" || k === "E") ampliaQuestao();
     else if (k === "g" || k === "G") palco.classList.toggle("gravando");
     else if (k === "f" || k === "F") {
       if (document.fullscreenElement) document.exitFullscreen();

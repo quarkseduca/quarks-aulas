@@ -60,6 +60,7 @@ AJUDA = '''<div id="ajuda" hidden><div class="janela"><h3>Atalhos da aula</h3><d
 <dt><kbd>←</kbd></dt><dd>Volta</dd>
 <dt><kbd>N</kbd></dt><dd>Abre as notas numa janela separada (só você vê)</dd>
 <dt><kbd>D</kbd></dt><dd>Liga ou desliga a caneta</dd>\n<dt><kbd>1</kbd> <kbd>2</kbd> <kbd>3</kbd> <kbd>4</kbd></dt><dd>Cor da caneta: roxo, cor da matéria, carvão, vermelho</dd>\n<dt><kbd>Z</kbd> / <kbd>C</kbd></dt><dd>Desfaz o último traço / apaga tudo do slide</dd>
+<dt><kbd>E</kbd></dt><dd>Nas questões: esconde o enunciado e a área de resolução ocupa a tela toda</dd>
 <dt><kbd>B</kbd></dt><dd>Tela de pausa</dd>
 <dt><kbd>G</kbd></dt><dd>Modo gravação: tira o "CÂMERA" de dentro da moldura</dd>
 <dt><kbd>F</kbd></dt><dd>Tela cheia</dd>
