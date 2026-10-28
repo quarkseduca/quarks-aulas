@@ -1,0 +1,342 @@
+<!--aula
+{"disciplina": "fisica", "curso": "PISM I", "assunto": "Notação científica e ordem de grandeza", "parte": "Parte 1 de 2", "titulo": "Notação científica"}
+-->
+<!-- Fonte: apostila PISM I, Física, cap. 1 (1.2 Notação científica e ordem de grandeza > Notação científica) e lote de questões pism1-fisica-notacao-cientifica-e-ordem-de-grandeza (m001, m002, m006). -->
+
+<!-- 1. Capa -->
+<section class="slide capa" data-nome="Capa">
+  <div class="estrelas"></div>
+  <div class="texto-capa" style="top:130px">
+    <span class="selo">Física · PISM I</span>
+    <p class="aula">Notação científica e ordem de grandeza · Parte 1 de 2</p>
+    <h1>Notação científica</h1>
+    <p class="sub">Sem contar zeros</p>
+  </div>
+  <svg class="emblema" viewBox="0 0 640 640" aria-hidden="true">
+    <g class="gira-lento"><ellipse cx="320" cy="320" rx="300" ry="128" fill="none" stroke="#fff" stroke-opacity=".38" stroke-width="2" transform="rotate(-10 320 320)"/></g>
+    <g class="gira"><ellipse cx="320" cy="320" rx="236" ry="196" fill="none" stroke="#FFD10C" stroke-opacity=".75" stroke-width="2.5" stroke-dasharray="3 14" stroke-linecap="round" transform="rotate(-8 320 320)"/>
+      <circle cx="84" cy="300" r="13" fill="var(--d)" stroke="#fff" stroke-width="3"/></g>
+    <circle cx="320" cy="320" r="132" fill="#FFD10C"/>
+    <image href="{{SYM_ROXO}}" x="238" y="238" width="164" height="164"/>
+  </svg>
+  <img class="logo-capa" src="{{LOGO_BRANCO}}" alt="Quarks">
+  <aside class="notas">
+    <p>Hoje: escrever números muito grandes e muito pequenos de um jeito curto e seguro, e fazer contas com eles.</p>
+  </aside>
+</section>
+
+<!-- 2. Gancho -->
+<section class="slide" data-nome="Contar zeros">
+  <div class="conteudo">
+    <p class="olho">Para começar</p>
+    <h2 class="titulo">Quantos zeros tem aí?</h2>
+    <div style="position:absolute;left:0;right:0;top:160px;display:grid;grid-template-columns:1fr 1fr;gap:40px">
+      <div class="caixa" style="padding:26px 34px">
+        <span class="rotulo">Velocidade da luz</span>
+        <div style="font-size:64px;font-weight:800;color:var(--d-forte);letter-spacing:.02em;font-variant-numeric:tabular-nums">300 000 000 m/s</div>
+        <div data-passo="3" style="font-size:56px;margin-top:10px">\(= 3 \cdot 10^{8}\ \text{m/s}\)</div>
+      </div>
+      <div class="caixa" style="padding:26px 34px">
+        <span class="rotulo">Distância Terra–Sol</span>
+        <div style="font-size:64px;font-weight:800;color:var(--d-forte);letter-spacing:.02em;font-variant-numeric:tabular-nums">150 000 000 000 m</div>
+        <div data-passo="3" style="font-size:56px;margin-top:10px">\(= 1{,}5 \cdot 10^{11}\ \text{m}\)</div>
+      </div>
+    </div>
+    <span class="pilula pilula-pausa" data-passo="1" style="position:absolute;left:600px;top:500px">Contar zeros é lento</span>
+    <div class="caixa caixa-atencao" data-passo="2" style="position:absolute;left:600px;right:0;top:600px;padding:22px 34px">
+      <div class="texto">E errar <b>um zero</b> muda o número <b>dez vezes</b>.</div>
+    </div>
+  </div>
+  <aside class="notas">
+    <p>Peça para a turma contar os zeros em voz alta. Clique 1 e 2: o problema.</p>
+    <p>Clique 3: a mesma informação em notação científica. É isso que vamos aprender a escrever.</p>
+  </aside>
+</section>
+
+<!-- 3. Potências de 10 -->
+<section class="slide" data-nome="Potências de 10">
+  <div class="conteudo">
+    <p class="olho">A base de tudo</p>
+    <h2 class="titulo">Potências de 10</h2>
+    <table class="tabela" style="position:absolute;left:0;top:150px;font-size:38px">
+      <tr><th>potência</th><td>\(10^{3}\)</td><td>\(10^{2}\)</td><td>\(10^{1}\)</td><td>\(10^{0}\)</td><td data-passo="2">\(10^{-1}\)</td><td data-passo="2">\(10^{-3}\)</td></tr>
+      <tr><th>valor</th><td>1000</td><td>100</td><td>10</td><td>1</td><td data-passo="2">0,1</td><td data-passo="2">0,001</td></tr>
+    </table>
+    <div style="position:absolute;left:0;right:0;top:350px;display:grid;grid-template-columns:1fr 1fr;gap:30px">
+      <div class="caixa" data-passo="1" style="padding:20px 32px"><span class="rotulo">Expoente positivo</span><div class="texto" style="font-size:33px">\(10^{n}\) é o <b>1 seguido de \(n\) zeros</b>: \(10^{3} = 1000\).</div></div>
+      <div class="caixa" data-passo="2" style="padding:20px 32px"><span class="rotulo">Expoente negativo</span><div class="texto" style="font-size:33px">É a <b>fração</b>: \(10^{-3} = \dfrac{1}{1000} = 0{,}001\).</div></div>
+    </div>
+    <div class="caixa caixa-fundamental" data-passo="3" style="position:absolute;left:600px;right:0;top:590px;padding:20px 32px">
+      <span class="rotulo">Os prefixos são potências de 10</span>
+      <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:8px 24px;font-size:34px">
+        <span>giga = \(10^{9}\)</span><span>mega = \(10^{6}\)</span><span>quilo = \(10^{3}\)</span>
+        <span>mili = \(10^{-3}\)</span><span>micro = \(10^{-6}\)</span><span>nano = \(10^{-9}\)</span>
+      </div>
+    </div>
+  </div>
+  <aside class="notas">
+    <p>Clique 1: expoente positivo conta zeros. Clique 2: expoente negativo é fração; 10 elevado a −1 é 0,1.</p>
+    <p>Clique 3: os prefixos de Grandezas e unidades são exatamente essas potências. 1 km = 10³ m; 1 mm = 10⁻³ m.</p>
+  </aside>
+</section>
+
+<!-- 4. Definição -->
+<section class="slide" data-nome="Notação científica">
+  <div class="conteudo">
+    <p class="olho">Fundamental</p>
+    <h2 class="titulo">Notação científica</h2>
+    <div class="caixa caixa-fundamental" style="position:absolute;left:380px;right:380px;top:150px;text-align:center;font-size:104px;padding:18px">\(a \cdot 10^{n}\)</div>
+    <div style="position:absolute;left:0;right:0;top:370px;display:grid;grid-template-columns:1fr 1fr;gap:30px">
+      <div class="caixa" data-passo="1" style="padding:22px 32px"><span class="rotulo">\(a\): os algarismos</span><div class="texto" style="font-size:34px">Sempre \(1 \leq a &lt; 10\): <b>um único algarismo</b>, diferente de zero, antes da vírgula.</div></div>
+      <div class="caixa" data-passo="2" style="padding:22px 32px"><span class="rotulo">\(10^{n}\): o tamanho</span><div class="texto" style="font-size:34px">\(n\) é um número <b>inteiro</b>, positivo ou negativo.</div></div>
+    </div>
+    <div data-passo="3" style="position:absolute;left:600px;right:0;top:620px;display:flex;gap:22px;flex-wrap:wrap;font-size:40px">
+      <span class="caixa" style="padding:12px 26px">\(3 \cdot 10^{8}\) <b style="color:var(--certo)">✓</b></span>
+      <span class="caixa" style="padding:12px 26px">\(1{,}5 \cdot 10^{11}\) <b style="color:var(--certo)">✓</b></span>
+      <span class="caixa" data-passo="4" style="padding:12px 26px">\(15 \cdot 10^{10}\) <b style="color:var(--erro)">✗</b></span>
+      <span class="caixa" data-passo="4" style="padding:12px 26px">\(0{,}3 \cdot 10^{9}\) <b style="color:var(--erro)">✗</b></span>
+    </div>
+  </div>
+  <aside class="notas">
+    <p>Cliques 1 e 2: a parte a guarda os algarismos; a potência guarda o tamanho.</p>
+    <p>Clique 4: 15 · 10¹⁰ vale o mesmo que 1,5 · 10¹¹, mas não está em notação científica (15 passa de 10). 0,3 · 10⁹ também não (0,3 é menor que 1).</p>
+  </aside>
+</section>
+
+<!-- 5. Andando com a vírgula -->
+<section class="slide" data-nome="Andando com a vírgula">
+  <div class="conteudo">
+    <p class="olho">Como escrever</p>
+    <h2 class="titulo">Ande com a vírgula</h2>
+    <svg viewBox="0 0 820 180" width="820" height="180" style="position:absolute;left:0;top:150px;overflow:visible;font-family:Figtree,'Segoe UI',sans-serif" aria-hidden="true">
+      <g font-size="88" font-weight="800" fill="#292B2C" text-anchor="middle"><text x="120" y="150">7</text><text x="210" y="150">2</text><text x="300" y="150">0</text><text x="390" y="150">0</text><text x="480" y="150">0</text></g>
+      <text x="530" y="160" font-size="88" font-weight="800" fill="#BFB6E6" text-anchor="middle">,</text>
+      <g data-passo="1"><path d="M528 66 Q484 10 440 66" fill="none" stroke="var(--d)" stroke-width="5" stroke-linecap="round"/></g>
+      <g data-passo="1" style="transition-delay:.5s"><path d="M440 66 Q394 10 350 66" fill="none" stroke="var(--d)" stroke-width="5" stroke-linecap="round"/></g>
+      <g data-passo="1" style="transition-delay:1s"><path d="M350 66 Q304 10 260 66" fill="none" stroke="var(--d)" stroke-width="5" stroke-linecap="round"/></g>
+      <g data-passo="1" style="transition-delay:1.5s"><path d="M260 66 Q214 10 170 66" fill="none" stroke="var(--d)" stroke-width="5" stroke-linecap="round"/><text x="165" y="160" font-size="88" font-weight="800" fill="#E0A800" text-anchor="middle">,</text></g>
+      <g data-passo="1" font-size="28" font-weight="800" fill="var(--d-forte)" text-anchor="middle">
+        <text x="484" y="22">+1</text><text x="394" y="22">+1</text><text x="304" y="22">+1</text><text x="214" y="22">+1</text>
+      </g>
+      <text data-passo="1" x="640" y="130" font-size="34" font-weight="800" fill="#3F2FA0" style="transition-delay:1.8s">4 casas</text>
+    </svg>
+    <div class="contas" style="position:absolute;left:0;top:350px;font-size:42px;row-gap:10px">
+      <div class="eq"><span>\(x\)</span><span>\(=\)</span><span>\(72\,000\)</span></div>
+      <div class="eq" data-passo="2"><span>\(x\)</span><span>\(=\)</span><span>\(7{,}2 \cdot 10\,000\)</span></div>
+      <div class="eq final" data-passo="3"><span>\(x\)</span><span>\(=\)</span><span>\(7{,}2 \cdot 10^{4}\)</span></div>
+    </div>
+    <svg viewBox="0 0 820 180" width="820" height="180" style="position:absolute;left:940px;top:150px;overflow:visible;font-family:Figtree,'Segoe UI',sans-serif" aria-hidden="true">
+      <g font-size="88" font-weight="800" fill="#292B2C" text-anchor="middle"><text x="60" y="150">0</text><text x="190" y="150">0</text><text x="280" y="150">0</text><text x="370" y="150">0</text><text x="460" y="150">5</text><text x="550" y="150">2</text></g>
+      <text x="115" y="160" font-size="88" font-weight="800" fill="#BFB6E6" text-anchor="middle">,</text>
+      <g data-passo="4"><path d="M118 66 Q166 10 214 66" fill="none" stroke="var(--d)" stroke-width="5" stroke-linecap="round"/></g>
+      <g data-passo="4" style="transition-delay:.5s"><path d="M214 66 Q260 10 304 66" fill="none" stroke="var(--d)" stroke-width="5" stroke-linecap="round"/></g>
+      <g data-passo="4" style="transition-delay:1s"><path d="M304 66 Q350 10 394 66" fill="none" stroke="var(--d)" stroke-width="5" stroke-linecap="round"/></g>
+      <g data-passo="4" style="transition-delay:1.5s"><path d="M394 66 Q440 10 486 66" fill="none" stroke="var(--d)" stroke-width="5" stroke-linecap="round"/><text x="505" y="160" font-size="88" font-weight="800" fill="#E0A800" text-anchor="middle">,</text></g>
+      <g data-passo="4" font-size="28" font-weight="800" fill="var(--d-forte)" text-anchor="middle">
+        <text x="166" y="22">−1</text><text x="260" y="22">−1</text><text x="350" y="22">−1</text><text x="440" y="22">−1</text>
+      </g>
+      <text data-passo="4" x="640" y="130" font-size="34" font-weight="800" fill="#3F2FA0" style="transition-delay:1.8s">4 casas</text>
+    </svg>
+    <div class="contas" style="position:absolute;left:940px;top:350px;font-size:42px;row-gap:10px">
+      <div class="eq"><span>\(y\)</span><span>\(=\)</span><span>\(0{,}00052\)</span></div>
+      <div class="eq" data-passo="5"><span>\(y\)</span><span>\(=\)</span><span>\(5{,}2 \cdot 0{,}0001\)</span></div>
+      <div class="eq final" data-passo="6"><span>\(y\)</span><span>\(=\)</span><span>\(5{,}2 \cdot 10^{-4}\)</span></div>
+    </div>
+    <div class="caixa caixa-fundamental" style="position:absolute;left:600px;right:0;top:620px;padding:18px 32px">
+      <div class="texto" style="font-size:32px">Ande até sobrar <b>um só algarismo</b> antes da vírgula. Cada casa para a <b>esquerda</b>: expoente <b>+1</b>. Para a <b>direita</b>: <b>−1</b>.</div>
+    </div>
+    <span class="pilula pilula-resposta" data-passo="7" style="position:absolute;right:0;top:790px">Luz: \(3 \cdot 10^{8}\) m/s · Terra–Sol: \(1{,}5 \cdot 10^{11}\) m</span>
+  </div>
+  <aside class="notas">
+    <p>Clique 1: a vírgula de 72 000 (que está no fim) anda 4 casas para a esquerda; o expoente fica +4. Cliques 2 e 3: a conta.</p>
+    <p>Clique 4: em 0,00052 a vírgula anda 4 casas para a direita, até passar o 5; o expoente fica −4. Número menor que 1, expoente negativo.</p>
+    <p>Clique 7: os dois números do começo.</p>
+  </aside>
+</section>
+
+<!-- 6. Multiplicar e dividir -->
+<section class="slide" data-nome="Multiplicar e dividir">
+  <div class="conteudo">
+    <p class="olho">Contas em notação científica</p>
+    <h2 class="titulo">Multiplicar e dividir</h2>
+    <div style="position:absolute;left:0;width:800px;top:160px;display:flex;flex-direction:column;gap:22px">
+      <div class="caixa caixa-fundamental" style="padding:20px 32px"><span class="rotulo">Multiplicação</span><div class="texto" style="font-size:34px">Multiplique os números e <b>some</b> os expoentes.</div></div>
+      <div class="caixa caixa-fundamental" style="padding:20px 32px"><span class="rotulo">Divisão</span><div class="texto" style="font-size:34px">Divida os números e <b>subtraia</b> os expoentes.</div></div>
+      <div class="caixa" style="padding:20px 32px"><span class="rotulo">No fim</span><div class="texto" style="font-size:34px">Se o número da frente sair de 1 a 10, <b>ajuste a vírgula</b>.</div></div>
+    </div>
+    <div class="contas" style="position:absolute;left:900px;right:0;top:160px;font-size:46px">
+      <div class="eq" data-passo="1"><span>\(P\)</span><span>\(=\)</span><span>\((3 \cdot 10^{4}) \cdot (5 \cdot 10^{-2})\)</span></div>
+      <div class="eq" data-passo="2"><span>\(P\)</span><span>\(=\)</span><span>\(3 \cdot 5 \cdot 10^{4 + (-2)}\)</span></div>
+      <div class="eq" data-passo="3"><span>\(P\)</span><span>\(=\)</span><span>\(15 \cdot 10^{2}\)</span></div>
+      <div class="eq" data-passo="4"><span>\(P\)</span><span>\(=\)</span><span>\(1{,}5 \cdot 10^{1} \cdot 10^{2}\)</span></div>
+      <div class="eq final" data-passo="5"><span>\(P\)</span><span>\(=\)</span><span>\(1{,}5 \cdot 10^{3}\)</span></div>
+    </div>
+    <span class="pilula pilula-pausa" data-passo="4" style="position:absolute;right:0;top:720px">15 passou de 10: a vírgula anda e o expoente ganha 1</span>
+  </div>
+  <aside class="notas">
+    <p>As regras vêm das potências: 10⁴ · 10⁻² = 10², somando os expoentes.</p>
+    <p>Cliques 1 a 5: uma linha por clique. Clique 4: o ajuste final, 15 = 1,5 · 10¹.</p>
+  </aside>
+</section>
+
+<!-- 7. Exemplo: fios de cabelo -->
+<section class="slide" data-nome="Exemplo: fios de cabelo">
+  <div class="conteudo">
+    <p class="olho">Exemplo</p>
+    <h2 class="titulo">Fios de cabelo lado a lado</h2>
+    <div style="position:absolute;left:0;width:800px;top:150px">
+      <p class="texto" style="margin:0;font-size:32px">Um fio de cabelo tem <b>0,08 mm</b> de espessura. Quantos fios, encostados lado a lado, ocupam <b>2 cm</b>?</p>
+      <div class="contas" style="margin-top:22px;font-size:38px;row-gap:10px">
+        <div class="eq" data-passo="1"><span>\(L\)</span><span>\(=\)</span><span>\(2\ \text{cm} = 2 \cdot 10^{-2}\ \text{m}\)</span></div>
+        <div class="eq" data-passo="2"><span>\(e\)</span><span>\(=\)</span><span>\(0{,}08\ \text{mm} = 8 \cdot 10^{-5}\ \text{m}\)</span></div>
+      </div>
+      <p class="texto" data-passo="3" style="margin:22px 0 0;font-size:30px"><b>Raciocínio:</b> número de fios = comprimento total ÷ espessura de um fio.</p>
+    </div>
+    <div class="contas" style="position:absolute;left:900px;right:0;top:150px;font-size:44px;row-gap:12px">
+      <div class="eq" data-passo="4"><span>\(n\)</span><span>\(=\)</span><span>\(\dfrac{L}{e}\)</span></div>
+      <div class="eq" data-passo="5"><span>\(n\)</span><span>\(=\)</span><span>\(\dfrac{2 \cdot 10^{-2}}{8 \cdot 10^{-5}}\)</span></div>
+      <div class="eq" data-passo="6"><span>\(n\)</span><span>\(=\)</span><span>\(\dfrac{2}{8} \cdot 10^{-2 - (-5)}\)</span></div>
+      <div class="eq" data-passo="7"><span>\(n\)</span><span>\(=\)</span><span>\(0{,}25 \cdot 10^{3}\)</span></div>
+      <div class="eq final" data-passo="8"><span>\(n\)</span><span>\(=\)</span><span>\(2{,}5 \cdot 10^{2}\)</span></div>
+    </div>
+    <span class="pilula pilula-resposta" data-passo="9" style="position:absolute;right:0;top:790px">250 fios</span>
+  </div>
+  <aside class="notas">
+    <p>Cliques 1 e 2: tudo em metros. 0,08 mm = 0,08 · 10⁻³ m = 8 · 10⁻⁵ m.</p>
+    <p>Clique 6: subtrair −5 é somar 5, então o expoente fica 3. Clique 7 e 8: 0,25 não está entre 1 e 10; a vírgula anda uma casa para a direita e o expoente perde 1.</p>
+  </aside>
+</section>
+
+<!-- 8. Atenção: soma -->
+<section class="slide" data-nome="Atenção: soma">
+  <div class="conteudo">
+    <p class="olho">Atenção</p>
+    <h2 class="titulo">Na soma, os expoentes não se somam</h2>
+    <div class="caixa caixa-atencao" style="position:absolute;left:0;right:0;top:160px;padding:22px 34px">
+      <div class="texto" style="font-size:34px">Somar expoentes vale <b>só na multiplicação</b>. Para somar ou subtrair, deixe as duas parcelas com o <b>mesmo expoente</b> primeiro.</div>
+    </div>
+    <div style="position:absolute;left:0;width:520px;top:370px;font-size:40px" data-passo="1">
+      <p class="texto" style="margin:0 0 10px;font-size:30px">O erro clássico:</p>
+      <span class="riscado" style="font-family:'Times New Roman',serif;font-style:normal">2 · 10³ + 5 · 10² = 7 · 10⁵</span>
+    </div>
+    <div class="contas" style="position:absolute;left:640px;right:0;top:370px;font-size:46px;row-gap:12px">
+      <div class="eq" data-passo="2"><span>\(S\)</span><span>\(=\)</span><span>\(2 \cdot 10^{3} + 5 \cdot 10^{2}\)</span></div>
+      <div class="eq" data-passo="3"><span>\(S\)</span><span>\(=\)</span><span>\(20 \cdot 10^{2} + 5 \cdot 10^{2}\)</span></div>
+      <div class="eq" data-passo="4"><span>\(S\)</span><span>\(=\)</span><span>\(25 \cdot 10^{2}\)</span></div>
+      <div class="eq final" data-passo="5"><span>\(S\)</span><span>\(=\)</span><span>\(2{,}5 \cdot 10^{3}\)</span></div>
+    </div>
+  </div>
+  <aside class="notas">
+    <p>Clique 1: o erro. Confira: 2000 + 500 = 2500, nada perto de 700 000.</p>
+    <p>Clique 3: 2 · 10³ vira 20 · 10² (a vírgula anda para a direita, o expoente perde 1). Agora sim: 20 + 5 = 25 centenas.</p>
+  </aside>
+</section>
+
+<!-- 9. Questão 1 -->
+<section class="slide questao" data-nome="Questão 1">
+  <div class="conteudo">
+    <div class="area-resolucao"></div>
+    <span class="pilula pilula-pausa" data-em="1:some">Pause o vídeo e tente</span>
+    <div class="painel-questao">
+      <p class="olho">Questão 1 · estilo PISM</p>
+      <p class="enunciado">As hemácias (glóbulos vermelhos) são as células que levam o oxigênio pelo sangue. Vista ao microscópio, uma hemácia tem a forma de um disco com diâmetro de cerca de \(0{,}000007\ \text{m}\). Escrito em notação científica, esse diâmetro é</p>
+      <ol class="alternativas curtas">
+        <li data-em="2:apaga"><b>A</b><span>\(7 \cdot 10^{6}\ \text{m}\)</span></li>
+        <li data-em="2:certo"><b>B</b><span>\(7 \cdot 10^{-6}\ \text{m}\)</span></li>
+        <li data-em="2:apaga"><b>C</b><span>\(0{,}7 \cdot 10^{-5}\ \text{m}\)</span></li>
+        <li data-em="2:apaga"><b>D</b><span>\(70 \cdot 10^{-7}\ \text{m}\)</span></li>
+        <li data-em="2:apaga"><b>E</b><span>\(7 \cdot 10^{-5}\ \text{m}\)</span></li>
+      </ol>
+    </div>
+  </div>
+  <aside class="notas">
+    <p>Clique 1 tira o aviso: resolva com a caneta (D); E esconde o enunciado. Clique 2: gabarito B. A vírgula anda 6 casas para a direita.</p>
+    <p>Erros: A troca o sinal do expoente; C e D valem o mesmo número, mas 0,7 e 70 não estão entre 1 e 10; E conta só os cinco zeros depois da vírgula.</p>
+  </aside>
+</section>
+
+<!-- 10. Questão 2 -->
+<section class="slide questao" data-nome="Questão 2">
+  <div class="conteudo">
+    <div class="area-resolucao"></div>
+    <span class="pilula pilula-pausa" data-em="1:some">Pause o vídeo e tente</span>
+    <div class="painel-questao">
+      <p class="olho">Questão 2 · estilo PISM</p>
+      <p class="enunciado">A luz que sai do Sol leva algum tempo para chegar à Terra. A distância média entre os dois é de \(1{,}5 \cdot 10^{11}\ \text{m}\), e a luz se propaga a \(3 \cdot 10^{8}\ \text{m/s}\). O tempo que a luz leva para percorrer essa distância é de</p>
+      <ol class="alternativas curtas">
+        <li data-em="2:apaga"><b>A</b><span>\(2 \cdot 10^{-3}\ \text{s}\)</span></li>
+        <li data-em="2:apaga"><b>B</b><span>\(4{,}5 \cdot 10^{19}\ \text{s}\)</span></li>
+        <li data-em="2:apaga"><b>C</b><span>\(5 \cdot 10^{18}\ \text{s}\)</span></li>
+        <li data-em="2:certo"><b>D</b><span>\(5 \cdot 10^{2}\ \text{s}\)</span></li>
+        <li data-em="2:apaga"><b>E</b><span>\(5 \cdot 10^{3}\ \text{s}\)</span></li>
+      </ol>
+    </div>
+  </div>
+  <aside class="notas">
+    <p>Tempo = distância ÷ velocidade: 1,5/3 = 0,5 e 11 − 8 = 3, então 0,5 · 10³ = 5 · 10² s (500 s, uns 8 minutos). Gabarito D.</p>
+    <p>Erros: A inverte a divisão; B multiplica; C divide os números mas soma os expoentes; E não ajusta o expoente ao trocar 0,5 por 5.</p>
+  </aside>
+</section>
+
+<!-- 11. Questão 3 -->
+<section class="slide questao" data-nome="Questão 3">
+  <div class="conteudo">
+    <div class="area-resolucao"></div>
+    <span class="pilula pilula-pausa" data-em="1:some">Pause o vídeo e tente</span>
+    <div class="painel-questao">
+      <p class="olho">Questão 3 · estilo PISM</p>
+      <p class="enunciado">Os satélites geoestacionários, usados em telecomunicações e na previsão do tempo, ficam parados em relação a um observador no solo. Eles orbitam a cerca de \(3{,}6 \cdot 10^{4}\ \text{km}\) de altitude, medida a partir da superfície da Terra. O raio da Terra é de cerca de \(6{,}4 \cdot 10^{3}\ \text{km}\). A distância de um satélite geoestacionário ao centro da Terra é de, aproximadamente,</p>
+      <ol class="alternativas curtas">
+        <li data-em="2:apaga"><b>A</b><span>\(1{,}0 \cdot 10^{4}\ \text{km}\)</span></li>
+        <li data-em="2:apaga"><b>B</b><span>\(3{,}0 \cdot 10^{4}\ \text{km}\)</span></li>
+        <li data-em="2:certo"><b>C</b><span>\(4{,}2 \cdot 10^{4}\ \text{km}\)</span></li>
+        <li data-em="2:apaga"><b>D</b><span>\(1{,}0 \cdot 10^{5}\ \text{km}\)</span></li>
+        <li data-em="2:apaga"><b>E</b><span>\(1{,}0 \cdot 10^{8}\ \text{km}\)</span></li>
+      </ol>
+    </div>
+  </div>
+  <aside class="notas">
+    <p>Distância ao centro = altitude + raio. Iguale os expoentes: 6,4 · 10³ = 0,64 · 10⁴; 3,6 + 0,64 = 4,24, então ≈ 4,2 · 10⁴ km. Gabarito C.</p>
+    <p>Erros: A e D somam os números da frente sem igualar os expoentes; B subtrai o raio; E soma os expoentes, regra da multiplicação.</p>
+  </aside>
+</section>
+
+<!-- 12. Resumo -->
+<section class="slide" data-nome="Resumo">
+  <div class="conteudo">
+    <p class="olho">Resumo</p>
+    <h2 class="titulo">O essencial</h2>
+    <div class="resumo" style="position:absolute;left:0;right:0;top:150px">
+      <div><b>Potências de 10:</b> \(10^{3} = 1000\); \(10^{-3} = 0{,}001\). Os prefixos são potências de 10.</div>
+      <div><b>Notação científica:</b> \(a \cdot 10^{n}\), com \(1 \leq a &lt; 10\) e \(n\) inteiro.</div>
+      <div><b>Vírgula:</b> cada casa para a esquerda, expoente +1; para a direita, −1.</div>
+      <div><b>Multiplicação:</b> multiplique os números e some os expoentes.</div>
+      <div><b>Divisão:</b> divida os números e subtraia os expoentes. No fim, ajuste a vírgula.</div>
+      <div><b>Soma:</b> iguale os expoentes antes de somar.</div>
+    </div>
+  </div>
+  <aside class="notas">
+    <p>Peça para tirarem um print desta tela.</p>
+  </aside>
+</section>
+
+<!-- 13. A seguir -->
+<section class="slide capa" data-nome="A seguir">
+  <div class="estrelas"></div>
+  <div class="texto-capa" style="top:130px">
+    <span class="selo">Física · PISM I</span>
+    <p class="aula">A seguir · Notação científica e ordem de grandeza · Parte 2 de 2</p>
+    <h1 style="font-size:116px">Ordem de grandeza e algarismos significativos</h1>
+    <p class="sub">A potência de 10 mais próxima</p>
+  </div>
+  <svg class="emblema" viewBox="0 0 640 640" aria-hidden="true">
+    <line x1="60" y1="360" x2="580" y2="360" stroke="#fff" stroke-opacity=".8" stroke-width="6" stroke-linecap="round"/>
+    <g stroke="#fff" stroke-opacity=".8" stroke-width="5" stroke-linecap="round"><line x1="100" y1="336" x2="100" y2="384"/><line x1="320" y1="336" x2="320" y2="384"/><line x1="540" y1="336" x2="540" y2="384"/></g>
+    <g fill="#fff" font-size="40" font-weight="800" text-anchor="middle" font-family="Figtree,'Segoe UI',sans-serif"><text x="100" y="440">10⁴</text><text x="320" y="440">10⁵</text><text x="540" y="440">10⁶</text></g>
+    <circle cx="300" cy="360" r="20" fill="#FFD10C" stroke="#fff" stroke-width="4"/>
+    <path d="M300 320 Q310 250 320 220" stroke="#FFD10C" stroke-width="5" fill="none" stroke-linecap="round"/>
+    <circle cx="320" cy="200" r="24" fill="none" stroke="#FFD10C" stroke-width="6"/>
+  </svg>
+  <img class="logo-capa" src="{{LOGO_BRANCO}}" alt="Quarks">
+  <aside class="notas"><p>Próxima parte: ordem de grandeza e algarismos significativos.</p></aside>
+</section>

@@ -22,7 +22,7 @@ Slides das aulas teóricas gravadas do Quarks (OBS + Meet), um arquivo HTML por 
 | ? | ajuda |
 
 ## Organização
-Cada capítulo é dividido em partes ("Cinemática · Parte 1 de 4"). No fim de cada capítulo há um bloco extra só com as questões do PISM daquele capítulo, com a área de resolução grande para o professor resolver.
+Cada subcapítulo é dividido em partes de cerca de 20 minutos ("Movimento uniforme · Parte 1 de 4"), na ordem da apostila do acompanhamento (veja `planejamento/cronograma.html`). No fim de cada capítulo há um bloco extra só com as questões do PISM daquele capítulo, com a área de resolução grande para o professor resolver.
 
 ## Para quem edita
 `python3 build.py` monta todas as aulas em `saida/`. Regras em `CLAUDE.md`.

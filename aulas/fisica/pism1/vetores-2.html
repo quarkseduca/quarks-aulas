@@ -1,0 +1,386 @@
+<!--aula
+{"disciplina": "fisica", "curso": "PISM I", "assunto": "Vetores", "parte": "Parte 2 de 2", "titulo": "Decomposição de vetores"}
+-->
+<!-- Fonte: apostila PISM I, Física, cap. 1 (1.3 Vetores > Decomposição de vetores, resumo do 1.3) e lote de questões pism1-fisica-vetores (m005, m006, m007). -->
+<style>
+.vt-traca { stroke-dasharray: 1; stroke-dashoffset: 1; }
+.mostra .vt-traca, .vt-ja .vt-traca { animation: vtTraca 1.6s ease-in-out forwards; }
+.vt-ponta { opacity: 0; }
+.mostra .vt-ponta, .vt-ja .vt-ponta { animation: vtPonta .4s ease 1.4s forwards; }
+@keyframes vtTraca { to { stroke-dashoffset: 0; } }
+@keyframes vtPonta { to { opacity: 1; } }
+@media (prefers-reduced-motion: reduce) { .vt-traca { stroke-dasharray: none; stroke-dashoffset: 0; } .vt-ponta { opacity: 1; } }
+.vt-cartoes { display: grid; grid-template-columns: repeat(3, 1fr); gap: 26px; }
+.vt-cartoes > div { background: var(--branco); border: 2px solid var(--lilas-2); border-radius: 26px; padding: 18px 24px 22px; font-size: 28px; line-height: 1.32; }
+.vt-cartoes h3 { margin: 0 0 6px; font: 800 34px var(--fonte-titulo); color: var(--roxo-titulo); letter-spacing: -.01em; }
+.vt-cartoes > div > svg { display: block; width: 100%; height: auto; margin: 4px 0 8px; }
+.vt-lista { margin: 0; padding: 0; list-style: none; display: flex; flex-direction: column; gap: 14px; }
+.vt-lista li { display: flex; align-items: baseline; gap: 16px; font-size: 32px; line-height: 1.3; }
+.vt-lista li b.n { flex: none; width: 46px; height: 46px; border-radius: 50%; display: grid; place-items: center; background: var(--d); color: #fff; font: 800 26px var(--fonte-titulo); transform: translateY(6px); }
+.painel-questao .figura { display: block; margin: 2px auto 0; }
+</style>
+
+<section class="slide capa" data-nome="Capa">
+  <div class="estrelas"></div>
+  <div class="texto-capa">
+    <span class="selo">Física · PISM I</span>
+    <p class="aula">Vetores · Parte 2 de 2</p>
+    <h1>Decomposição de vetores</h1>
+    <p class="sub">Cada vetor vira duas componentes</p>
+  </div>
+  <svg class="emblema" viewBox="0 0 640 640" aria-hidden="true">
+    <g class="gira-lento"><ellipse cx="320" cy="320" rx="300" ry="128" fill="none" stroke="#fff" stroke-opacity=".38" stroke-width="2" transform="rotate(-10 320 320)"/></g>
+    <g class="gira"><ellipse cx="320" cy="320" rx="236" ry="196" fill="none" stroke="#FFD10C" stroke-opacity=".75" stroke-width="2.5" stroke-dasharray="3 14" stroke-linecap="round" transform="rotate(-8 320 320)"/>
+      <circle cx="84" cy="300" r="13" fill="var(--d)" stroke="#fff" stroke-width="3"/></g>
+    <circle cx="320" cy="320" r="132" fill="#FFD10C"/>
+    <image href="{{SYM_ROXO}}" x="238" y="238" width="164" height="164"/>
+  </svg>
+  <img class="logo-capa" src="{{LOGO_BRANCO}}" alt="Quarks">
+  <aside class="notas">
+    <p>Hoje: separar um vetor em uma parte horizontal e outra vertical. É a ferramenta que volta em lançamento oblíquo e em Dinâmica.</p>
+  </aside>
+</section>
+
+<section class="slide" data-nome="A mala de rodinhas">
+  <div class="conteudo">
+    <p class="olho">Para começar</p>
+    <h2 class="titulo">Um puxão, dois efeitos</h2>
+    <div style="position:absolute;left:0;width:560px;top:160px;display:flex;flex-direction:column;gap:22px">
+      <p class="texto" style="margin:0;font-size:34px">Ao puxar uma mala de rodinhas pela alça inclinada, parte do puxão leva a mala <b>para a frente</b> e parte a <b>ergue</b> do chão.</p>
+    </div>
+    <svg viewBox="0 0 760 540" width="1000" height="711" style="position:absolute;left:640px;top:100px;overflow:visible;font-family:Figtree,'Segoe UI',sans-serif" aria-hidden="true"><line x1="0" y1="520" x2="700" y2="520" stroke="#C9C0F0" stroke-width="5" stroke-linecap="round"/><rect x="110" y="300" width="200" height="190" rx="26" fill="var(--d-clara)" stroke="var(--d)" stroke-width="5"/><path d="M160 300 L160 330 M260 300 L260 330" stroke="var(--d)" stroke-width="5"/><circle cx="150" cy="500" r="18" fill="#292B2C"/><circle cx="270" cy="500" r="18" fill="#292B2C"/><line x1="300" y1="300" x2="375" y2="170" stroke="#292B2C" stroke-width="8" stroke-linecap="round"/><g><path d="M300.0 300.0 L425.6 82.5" stroke="#6551D1" stroke-width="9" stroke-linecap="round" fill="none"/><polygon points="440.0,57.5 438.9,90.1 412.3,74.8" fill="#6551D1" stroke="#6551D1" stroke-width="2" stroke-linejoin="round"/></g><text x="456.0" y="93.51288694035719" text-anchor="start" font-size="40" font-weight="800" fill="#3F2FA0">F</text><path d="M360.0 300.0 A60 60 0 0 0 330.0 248.0" fill="none" stroke="#5E5A70" stroke-width="3"/><text x="376" y="274" text-anchor="start" font-size="26" font-weight="700" fill="#5E5A70">60°</text><g data-passo="1"><path d="M440 58 L440 300" stroke="#8C7BEA" stroke-width="3" stroke-dasharray="8 8"/><g><path d="M300.0 300.0 L413.0 300.0" stroke="var(--d)" stroke-width="9" stroke-linecap="round" fill="none" class="vt-traca" pathLength="1"/><polygon points="440.0,300.0 413.0,314.4 413.0,285.6" fill="var(--d)" stroke="var(--d)" stroke-width="2" stroke-linejoin="round" class="vt-ponta"/></g><text x="330" y="340" text-anchor="start" font-size="28" font-weight="800" fill="var(--d-forte)">para a frente</text></g><g data-passo="2"><path d="M440 58 L300 58" stroke="#8C7BEA" stroke-width="3" stroke-dasharray="8 8"/><g><path d="M300.0 300.0 L300.0 84.5" stroke="#E0A800" stroke-width="9" stroke-linecap="round" fill="none" class="vt-traca" pathLength="1"/><polygon points="300.0,57.5 314.4,84.5 285.6,84.5" fill="#E0A800" stroke="#E0A800" stroke-width="2" stroke-linejoin="round" class="vt-ponta"/></g><text x="284" y="178.7564434701786" text-anchor="end" font-size="28" font-weight="800" fill="#8A6A00">para cima</text></g></svg>
+    <div class="caixa caixa-fundamental" data-passo="3" style="position:absolute;left:0;width:540px;top:380px;padding:20px 28px"><span class="rotulo">Decompor</span><div class="texto" style="font-size:30px">É separar essas duas partes: uma na <b>horizontal</b> e outra na <b>vertical</b>.</div></div>
+  </div>
+  <aside class="notas">
+    <p>Clique 1: a parte que leva a mala para a frente. Clique 2: a parte que a ergue.</p>
+    <p>Clique 3: essas duas partes são as componentes. Para calcular, precisamos de seno e cosseno.</p>
+  </aside>
+</section>
+
+<section class="slide" data-nome="Seno e cosseno">
+  <div class="conteudo">
+    <p class="olho">Relembrando</p>
+    <h2 class="titulo">Seno e cosseno no triângulo retângulo</h2>
+    <svg viewBox="0 0 760 460" width="760" height="460" style="position:absolute;left:0;top:150px;overflow:visible;font-family:Figtree,'Segoe UI',sans-serif" aria-hidden="true"><polygon points="60,400 560,400 560,100" fill="var(--d-clara)" stroke="none"/><line x1="60" y1="400" x2="560" y2="100" stroke="#6551D1" stroke-width="7" stroke-linecap="round"/><line x1="60" y1="400" x2="560" y2="400" stroke="var(--d)" stroke-width="7" stroke-linecap="round"/><line x1="560" y1="400" x2="560" y2="100" stroke="#E0A800" stroke-width="7" stroke-linecap="round"/><path d="M530 400 L530 370 L560 370" fill="none" stroke="#5E5A70" stroke-width="3"/><path d="M150.0 400.0 A90 90 0 0 0 137.2 353.7" fill="none" stroke="#5E5A70" stroke-width="3"/><text x="170" y="386" text-anchor="start" font-size="34" font-weight="800" fill="#5E5A70">θ</text><text x="281" y="212" text-anchor="middle" font-size="30" font-weight="800" fill="#3F2FA0">hipotenusa</text><text x="310" y="446" text-anchor="middle" font-size="28" font-weight="800" fill="var(--d-forte)">cateto adjacente a θ</text><text x="584" y="250" text-anchor="start" font-size="28" font-weight="800" fill="#8A6A00">cateto</text><text x="584" y="284" text-anchor="start" font-size="28" font-weight="800" fill="#8A6A00">oposto a θ</text></svg>
+    <div style="position:absolute;left:900px;right:0;top:170px;display:flex;flex-direction:column;gap:26px">
+      <p class="texto" style="margin:0;font-size:32px">Para decompor, você usa o seno e o cosseno de um ângulo agudo \(\theta\) do <b>triângulo retângulo</b>, vistos no ensino fundamental:</p>
+      <div class="caixa" data-passo="1" style="padding:16px 30px;font-size:46px">\(\operatorname{sen}\theta = \dfrac{\text{cateto oposto}}{\text{hipotenusa}}\)</div>
+      <div class="caixa" data-passo="2" style="padding:16px 30px;font-size:46px">\(\cos\theta = \dfrac{\text{cateto adjacente}}{\text{hipotenusa}}\)</div>
+    </div>
+  </div>
+  <aside class="notas">
+    <p>Hipotenusa: o lado em frente ao ângulo reto. Oposto: o cateto que não toca o ângulo θ. Adjacente: o cateto que encosta em θ.</p>
+    <p>Cliques 1 e 2: as duas razões.</p>
+  </aside>
+</section>
+
+<section class="slide" data-nome="Ângulos notáveis">
+  <div class="conteudo">
+    <p class="olho">Ângulos notáveis</p>
+    <h2 class="titulo">Os valores que aparecem em quase toda questão</h2>
+    <table class="tabela" style="position:absolute;left:0;top:170px;font-size:44px">
+      <tr><th>ângulo</th><th>30°</th><th>45°</th><th>60°</th></tr>
+      <tr data-passo="1"><td style="font-weight:800;color:var(--d-forte)">seno</td><td>\(\dfrac{1}{2}\)</td><td>\(\dfrac{\sqrt{2}}{2}\)</td><td>\(\dfrac{\sqrt{3}}{2}\)</td></tr>
+      <tr data-passo="2"><td style="font-weight:800;color:var(--d-forte)">cosseno</td><td>\(\dfrac{\sqrt{3}}{2}\)</td><td>\(\dfrac{\sqrt{2}}{2}\)</td><td>\(\dfrac{1}{2}\)</td></tr>
+    </table>
+    <div style="position:absolute;left:1080px;right:0;top:170px;display:flex;flex-direction:column;gap:22px">
+      <div class="caixa caixa-fundamental" data-passo="3" style="padding:18px 28px"><span class="rotulo">Aproximações usadas</span><div class="texto" style="font-size:34px">\(\sqrt{2} \approx 1{,}4\) e \(\sqrt{3} \approx 1{,}7\)</div></div>
+      <p class="texto" data-passo="4" style="margin:0;font-size:30px">Repare: o seno de 30° é o cosseno de 60°, e o contrário também. Em 45°, os dois são iguais.</p>
+    </div>
+  </div>
+  <aside class="notas">
+    <p>Linha a linha. Esses valores são dados na prova, mas é bom reconhecê-los.</p>
+    <p>Clique 3: as aproximações de √2 e √3 que vamos usar nos exemplos.</p>
+  </aside>
+</section>
+
+<section class="slide" data-nome="As componentes">
+  <div class="conteudo">
+    <p class="olho">Decomposição de vetores</p>
+    <h2 class="titulo">Baixando linhas até os eixos</h2>
+    <svg viewBox="0 0 800 470" width="800" height="470" style="position:absolute;left:0;top:140px;overflow:visible;font-family:Figtree,'Segoe UI',sans-serif" aria-hidden="true"><g><path d="M260.0 400.0 L743.8 400.0" stroke="#5E5A70" stroke-width="4" stroke-linecap="round" fill="none"/><polygon points="760.0,400.0 743.8,408.6 743.8,391.4" fill="#5E5A70" stroke="#5E5A70" stroke-width="2" stroke-linejoin="round"/></g><g><path d="M260.0 400.0 L260.0 26.2" stroke="#5E5A70" stroke-width="4" stroke-linecap="round" fill="none"/><polygon points="260.0,10.0 268.6,26.2 251.4,26.2" fill="#5E5A70" stroke="#5E5A70" stroke-width="2" stroke-linejoin="round"/></g><text x="770" y="410" text-anchor="start" font-size="30" font-weight="800" fill="#5E5A70">x</text><text x="240" y="30" text-anchor="end" font-size="30" font-weight="800" fill="#5E5A70">y</text><path d="M660 130 L660 400 M660 130 L260 130" stroke="#8C7BEA" stroke-width="3" stroke-dasharray="9 9"/><g><path d="M260.0 400.0 L636.1 146.1" stroke="#6551D1" stroke-width="9" stroke-linecap="round" fill="none"/><polygon points="660.0,130.0 644.7,158.8 627.5,133.4" fill="#6551D1" stroke="#6551D1" stroke-width="2" stroke-linejoin="round"/></g><text x="429" y="252" font-size="42" font-weight="800" font-style="italic" fill="#3F2FA0">v</text><path d="M432 216 L453 216 M446 211 L453 216 L446 221" stroke="#3F2FA0" stroke-width="2.6" fill="none" stroke-linecap="round" stroke-linejoin="round"/><path d="M340.0 400.0 A80 80 0 0 0 326.3 355.2" fill="none" stroke="#5E5A70" stroke-width="3"/><text x="356" y="384" text-anchor="start" font-size="32" font-weight="800" fill="#5E5A70">θ</text><g data-passo="1"><g><path d="M260.0 400.0 L633.0 400.0" stroke="var(--d)" stroke-width="9" stroke-linecap="round" fill="none" class="vt-traca" pathLength="1"/><polygon points="660.0,400.0 633.0,414.4 633.0,385.6" fill="var(--d)" stroke="var(--d)" stroke-width="2" stroke-linejoin="round" class="vt-ponta"/></g><text x="460.0" y="448" text-anchor="middle" font-size="28" font-weight="800" fill="var(--d-forte)">vₓ: cateto adjacente</text></g><g data-passo="2"><g><path d="M260.0 400.0 L260.0 157.0" stroke="#E0A800" stroke-width="9" stroke-linecap="round" fill="none" class="vt-traca" pathLength="1"/><polygon points="260.0,130.0 274.4,157.0 245.6,157.0" fill="#E0A800" stroke="#E0A800" stroke-width="2" stroke-linejoin="round" class="vt-ponta"/></g><text x="230" y="255.0" text-anchor="end" font-size="30" font-weight="800" fill="#8A6A00">v</text><text x="246" y="263.0" text-anchor="end" font-size="20" font-weight="800" fill="#8A6A00">y</text><text x="246" y="293.0" text-anchor="end" font-size="24" font-weight="800" fill="#8A6A00">cateto oposto</text></g></svg>
+    <div style="position:absolute;left:880px;right:0;top:160px">
+      <p class="texto" style="margin:0 0 18px;font-size:30px">O vetor é a <b>hipotenusa</b>; as <b>componentes</b> são os catetos.</p>
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:30px">
+        <div class="contas" style="font-size:44px">
+          <div class="eq" data-passo="3"><span>\(\cos\theta\)</span><span>\(=\)</span><span>\(\dfrac{v_x}{v}\)</span></div>
+          <div class="eq final" data-passo="4"><span>\(v_x\)</span><span>\(=\)</span><span>\(v\cos\theta\)</span></div>
+        </div>
+        <div class="contas" style="font-size:44px">
+          <div class="eq" data-passo="5"><span>\(\operatorname{sen}\theta\)</span><span>\(=\)</span><span>\(\dfrac{v_y}{v}\)</span></div>
+          <div class="eq final" data-passo="6"><span>\(v_y\)</span><span>\(=\)</span><span>\(v\operatorname{sen}\theta\)</span></div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <aside class="notas">
+    <p>Do vetor, baixe linhas tracejadas até os eixos: aparece um triângulo retângulo. Clique 1: a componente horizontal; clique 2: a vertical.</p>
+    <p>Cliques 3 a 6: da definição de cosseno sai vₓ; da de seno, v_y.</p>
+  </aside>
+</section>
+
+<section class="slide" data-nome="Componentes de um vetor">
+  <div class="conteudo">
+    <p class="olho">Fórmula</p>
+    <h2 class="titulo">Componentes de um vetor</h2>
+    <div class="caixa caixa-fundamental" style="position:absolute;left:240px;right:240px;top:150px;text-align:center;font-size:76px;padding:18px">\(v_x = v\cos\theta \qquad v_y = v\operatorname{sen}\theta\)</div>
+    <div class="letras" style="position:absolute;left:0;right:0;top:380px">
+      <div data-passo="1"><span class="simbolo">\(v\)</span>módulo do vetor</div>
+      <div data-passo="2"><span class="simbolo">\(\theta\)</span>ângulo que o vetor faz com o <b>eixo \(x\)</b></div>
+      <div data-passo="3"><span class="simbolo">\(v_x\)</span>componente horizontal</div>
+      <div data-passo="4"><span class="simbolo">\(v_y\)</span>componente vertical</div>
+    </div>
+    <span class="pilula pilula-resposta" data-passo="5" style="position:absolute;right:0;top:680px">De volta: \(v^2 = v_x^2 + v_y^2\)</span>
+  </div>
+  <aside class="notas">
+    <p>Uma letra por clique. O θ é medido a partir do eixo x: guarde isso para a atenção daqui a pouco.</p>
+    <p>Clique 5: as componentes são catetos, então Pitágoras devolve o módulo.</p>
+  </aside>
+</section>
+
+<section class="slide" data-nome="Para que serve">
+  <div class="conteudo">
+    <p class="olho">Decomposição de vetores</p>
+    <h2 class="titulo">Trocar um vetor pelas componentes</h2>
+    <svg viewBox="0 0 640 430" width="640" height="430" style="position:absolute;left:0;top:150px;overflow:visible;font-family:Figtree,'Segoe UI',sans-serif" aria-hidden="true"><g opacity=".35"><g><path d="M60.0 360.0 L399.0 134.0" stroke="#6551D1" stroke-width="8" stroke-linecap="round" fill="none"/><polygon points="420.0,120.0 406.5,145.2 391.6,122.8" fill="#6551D1" stroke="#6551D1" stroke-width="2" stroke-linejoin="round"/></g></g><g><path d="M60.0 360.0 L393.0 360.0" stroke="var(--d)" stroke-width="9" stroke-linecap="round" fill="none"/><polygon points="420.0,360.0 393.0,374.4 393.0,345.6" fill="var(--d)" stroke="var(--d)" stroke-width="2" stroke-linejoin="round"/></g><g><path d="M420.0 360.0 L420.0 147.0" stroke="#E0A800" stroke-width="9" stroke-linecap="round" fill="none"/><polygon points="420.0,120.0 434.4,147.0 405.6,147.0" fill="#E0A800" stroke="#E0A800" stroke-width="2" stroke-linejoin="round"/></g><text x="240" y="410" text-anchor="middle" font-size="28" font-weight="800" fill="var(--d-forte)">horizontal</text><text x="440" y="250" text-anchor="start" font-size="28" font-weight="800" fill="#8A6A00">vertical</text><text x="190" y="200" text-anchor="middle" font-size="28" font-weight="800" fill="#3F2FA0">mesmo efeito</text></svg>
+    <div style="position:absolute;left:760px;right:0;top:160px">
+      <div class="caixa caixa-fundamental" style="padding:18px 28px"><div class="texto" style="font-size:32px">As duas componentes juntas fazem <b>exatamente o mesmo efeito</b> que o vetor.</div></div>
+      <p class="texto" style="margin:28px 0 16px;font-size:32px"><b>Para somar vetores em direções quaisquer:</b></p>
+      <ol class="vt-lista">
+        <li data-passo="1"><b class="n">1</b><span><b>Decomponha</b> cada vetor.</span></li>
+        <li data-passo="2"><b class="n">2</b><span>Some as componentes <b>horizontais</b> entre si e as <b>verticais</b> entre si.</span></li>
+        <li data-passo="3"><b class="n">3</b><span>Junte as duas somas por <b>Pitágoras</b>.</span></li>
+      </ol>
+    </div>
+  </div>
+  <aside class="notas">
+    <p>Dá para apagar o vetor e ficar só com as componentes: o efeito é o mesmo.</p>
+    <p>Cliques 1 a 3: o roteiro para somar vetores tortos. O exemplo da Lúcia usa exatamente isso.</p>
+  </aside>
+</section>
+
+<section class="slide" data-nome="Exemplo: mala">
+  <div class="conteudo">
+    <p class="olho">Exemplo</p>
+    <h2 class="titulo">A mala de rodinhas</h2>
+    <div style="position:absolute;left:0;width:620px;top:150px">
+      <p class="texto" style="margin:0;font-size:30px">Ana puxa uma mala com <b>20 N</b>, pela alça que faz <b>60° com o chão</b>. Quanto puxa para a frente e quanto para cima? Use \(\sqrt{3} \approx 1{,}7\).</p>
+      <svg viewBox="0 0 440 260" width="440" height="260" style="display:block;margin-top:6px;overflow:visible;font-family:Figtree,'Segoe UI',sans-serif" aria-hidden="true"><line x1="0" y1="250" x2="420" y2="250" stroke="#C9C0F0" stroke-width="4"/><g><path d="M60.0 230.0 L167.4 44.0" stroke="#6551D1" stroke-width="8" stroke-linecap="round" fill="none"/><polygon points="180.0,22.2 179.0,50.7 155.8,37.3" fill="#6551D1" stroke="#6551D1" stroke-width="2" stroke-linejoin="round"/></g><text x="192.00000000000003" y="52.15390309173475" text-anchor="start" font-size="28" font-weight="800" fill="#3F2FA0">20 N</text><path d="M116.0 230.0 A56 56 0 0 0 88.0 181.5" fill="none" stroke="#5E5A70" stroke-width="3"/><text x="130" y="212" text-anchor="start" font-size="24" font-weight="700" fill="#5E5A70">60°</text><path d="M180 22 L180 230" stroke="#8C7BEA" stroke-width="3" stroke-dasharray="7 7"/></svg>
+    </div>
+    <div style="position:absolute;left:700px;right:0;top:150px;display:grid;grid-template-columns:1fr 1fr;gap:36px">
+      <div>
+        <p class="texto" style="margin:0 0 12px;font-size:30px"><b>Para a frente</b></p>
+        <div class="contas" style="font-size:40px">
+          <div class="eq" data-passo="1"><span>\(F_x\)</span><span>\(=\)</span><span>\(F\cos\theta\)</span></div>
+          <div class="eq" data-passo="2"><span>\(F_x\)</span><span>\(=\)</span><span>\(20 \cdot \cos 60°\)</span></div>
+          <div class="eq" data-passo="3"><span>\(F_x\)</span><span>\(=\)</span><span>\(20 \cdot \dfrac{1}{2}\)</span></div>
+          <div class="eq final" data-passo="4"><span>\(F_x\)</span><span>\(=\)</span><span>\(10\ \text{N}\)</span></div>
+        </div>
+      </div>
+      <div>
+        <p class="texto" style="margin:0 0 12px;font-size:30px"><b>Para cima</b></p>
+        <div class="contas" style="font-size:40px">
+          <div class="eq" data-passo="5"><span>\(F_y\)</span><span>\(=\)</span><span>\(F\operatorname{sen}\theta\)</span></div>
+          <div class="eq" data-passo="6"><span>\(F_y\)</span><span>\(=\)</span><span>\(20 \cdot \operatorname{sen} 60°\)</span></div>
+          <div class="eq" data-passo="7"><span>\(F_y\)</span><span>\(=\)</span><span>\(20 \cdot \dfrac{\sqrt{3}}{2}\)</span></div>
+          <div class="eq" data-passo="8"><span>\(F_y\)</span><span>\(=\)</span><span>\(10\sqrt{3}\ \text{N}\)</span></div>
+          <div class="eq final" data-passo="9"><span>\(F_y\)</span><span>\(\approx\)</span><span>\(17\ \text{N}\)</span></div>
+        </div>
+      </div>
+    </div>
+    <span class="pilula pilula-resposta" data-passo="10" style="position:absolute;right:0;top:740px">10 N para a frente e cerca de 17 N para cima</span>
+  </div>
+  <aside class="notas">
+    <p>Dados: F = 20 N e θ = 60°, medido a partir da horizontal. Horizontal leva o cosseno; vertical, o seno.</p>
+    <p>10√3 ≈ 10 · 1,7 = 17 N.</p>
+  </aside>
+</section>
+
+<section class="slide" data-nome="Exemplo: Lúcia (1)">
+  <div class="conteudo">
+    <p class="olho">Exemplo</p>
+    <h2 class="titulo">A caminhada da Lúcia</h2>
+    <svg viewBox="0 0 336 420" width="336" height="420" style="position:absolute;left:0;top:150px;overflow:visible;font-family:Figtree,'Segoe UI',sans-serif" aria-hidden="true"><rect x="0" y="0" width="336" height="420" fill="#fff" stroke="#E2DCF7" stroke-width="2" rx="6"/><line x1="42" y1="0" x2="42" y2="420" stroke="#E2DCF7" stroke-width="2"/><line x1="84" y1="0" x2="84" y2="420" stroke="#E2DCF7" stroke-width="2"/><line x1="126" y1="0" x2="126" y2="420" stroke="#E2DCF7" stroke-width="2"/><line x1="168" y1="0" x2="168" y2="420" stroke="#E2DCF7" stroke-width="2"/><line x1="210" y1="0" x2="210" y2="420" stroke="#E2DCF7" stroke-width="2"/><line x1="252" y1="0" x2="252" y2="420" stroke="#E2DCF7" stroke-width="2"/><line x1="294" y1="0" x2="294" y2="420" stroke="#E2DCF7" stroke-width="2"/><line x1="0" y1="42" x2="336" y2="42" stroke="#E2DCF7" stroke-width="2"/><line x1="0" y1="84" x2="336" y2="84" stroke="#E2DCF7" stroke-width="2"/><line x1="0" y1="126" x2="336" y2="126" stroke="#E2DCF7" stroke-width="2"/><line x1="0" y1="168" x2="336" y2="168" stroke="#E2DCF7" stroke-width="2"/><line x1="0" y1="210" x2="336" y2="210" stroke="#E2DCF7" stroke-width="2"/><line x1="0" y1="252" x2="336" y2="252" stroke="#E2DCF7" stroke-width="2"/><line x1="0" y1="294" x2="336" y2="294" stroke="#E2DCF7" stroke-width="2"/><line x1="0" y1="336" x2="336" y2="336" stroke="#E2DCF7" stroke-width="2"/><line x1="0" y1="378" x2="336" y2="378" stroke="#E2DCF7" stroke-width="2"/><text x="348" y="388" text-anchor="start" font-size="24" font-weight="700" fill="#5E5A70">L</text><text x="42" y="-10" text-anchor="middle" font-size="24" font-weight="700" fill="#5E5A70">N</text><circle cx="42" cy="378" r="8" fill="#3F2FA0"/><g><path d="M42.0 378.0 L277.5 142.5" stroke="#6551D1" stroke-width="7" stroke-linecap="round" fill="none"/><polygon points="294.0,126.0 286.3,151.4 268.6,133.7" fill="#6551D1" stroke="#6551D1" stroke-width="2" stroke-linejoin="round"/></g><text x="150" y="150" text-anchor="middle" font-size="26" font-weight="800" fill="#3F2FA0">6√2 m</text><path d="M92.0 378.0 A50 50 0 0 0 77.4 342.6" fill="none" stroke="#5E5A70" stroke-width="3"/><text x="102" y="366" text-anchor="start" font-size="22" font-weight="700" fill="#5E5A70">45°</text><g data-passo="5"><path d="M294 126 L294 378" stroke="#8C7BEA" stroke-width="3" stroke-dasharray="7 7"/><g><path d="M42.0 378.0 L272.4 378.0" stroke="var(--d)" stroke-width="7" stroke-linecap="round" fill="none" class="vt-traca" pathLength="1"/><polygon points="294.0,378.0 272.4,389.5 272.4,366.5" fill="var(--d)" stroke="var(--d)" stroke-width="2" stroke-linejoin="round" class="vt-ponta"/></g><text x="168" y="412" text-anchor="middle" font-size="24" font-weight="800" fill="var(--d-forte)">6 m</text><g><path d="M42.0 378.0 L42.0 147.6" stroke="#E0A800" stroke-width="7" stroke-linecap="round" fill="none" class="vt-traca" pathLength="1"/><polygon points="42.0,126.0 53.5,147.6 30.5,147.6" fill="#E0A800" stroke="#E0A800" stroke-width="2" stroke-linejoin="round" class="vt-ponta"/></g><text x="52" y="252" text-anchor="start" font-size="24" font-weight="800" fill="#8A6A00">6 m</text></g></svg>
+    <div style="position:absolute;left:560px;right:0;top:150px">
+      <p class="texto" style="margin:0;font-size:30px">Lúcia anda \(6\sqrt{2}\ \text{m}\) numa direção a <b>45° do leste, rumo ao norte</b>, e depois <b>2 m para o norte</b>. A que distância fica da partida?</p>
+      <p class="texto" style="margin:14px 0 14px;font-size:30px"><b>Decompondo o primeiro trecho</b> (leste à esquerda, norte à direita):</p>
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:30px">
+        <div class="contas" style="font-size:40px"><div class="eq" data-passo="1"><span>\(a_x\)</span><span>\(=\)</span><span>\(a\cos\theta\)</span></div><div class="eq" data-passo="2"><span>\(a_x\)</span><span>\(=\)</span><span>\(6\sqrt{2} \cdot \dfrac{\sqrt{2}}{2}\)</span></div><div class="eq" data-passo="3"><span>\(a_x\)</span><span>\(=\)</span><span>\(\dfrac{6 \cdot 2}{2}\)</span></div><div class="eq final" data-passo="4"><span>\(a_x\)</span><span>\(=\)</span><span>\(6\ \text{m}\)</span></div></div>
+        <div class="contas" style="font-size:40px"><div class="eq" data-passo="1"><span>\(a_y\)</span><span>\(=\)</span><span>\(a\operatorname{sen}\theta\)</span></div><div class="eq" data-passo="2"><span>\(a_y\)</span><span>\(=\)</span><span>\(6\sqrt{2} \cdot \dfrac{\sqrt{2}}{2}\)</span></div><div class="eq" data-passo="3"><span>\(a_y\)</span><span>\(=\)</span><span>\(\dfrac{6 \cdot 2}{2}\)</span></div><div class="eq final" data-passo="4"><span>\(a_y\)</span><span>\(=\)</span><span>\(6\ \text{m}\)</span></div></div>
+      </div>
+    </div>
+  </div>
+  <aside class="notas">
+    <p>Dados: a = 6√2 m a 45° do leste e b = 2 m para o norte. Primeiro passo: decompor o trecho inclinado.</p>
+    <p>√2 · √2 = 2. Clique 5: o trecho inclinado vira 6 m para leste e 6 m para norte.</p>
+  </aside>
+</section>
+
+<section class="slide" data-nome="Exemplo: Lúcia (2)">
+  <div class="conteudo">
+    <p class="olho">Exemplo</p>
+    <h2 class="titulo">Somando por eixo</h2>
+    <svg viewBox="0 0 336 420" width="336" height="420" style="position:absolute;left:0;top:150px;overflow:visible;font-family:Figtree,'Segoe UI',sans-serif" aria-hidden="true"><rect x="0" y="0" width="336" height="420" fill="#fff" stroke="#E2DCF7" stroke-width="2" rx="6"/><line x1="42" y1="0" x2="42" y2="420" stroke="#E2DCF7" stroke-width="2"/><line x1="84" y1="0" x2="84" y2="420" stroke="#E2DCF7" stroke-width="2"/><line x1="126" y1="0" x2="126" y2="420" stroke="#E2DCF7" stroke-width="2"/><line x1="168" y1="0" x2="168" y2="420" stroke="#E2DCF7" stroke-width="2"/><line x1="210" y1="0" x2="210" y2="420" stroke="#E2DCF7" stroke-width="2"/><line x1="252" y1="0" x2="252" y2="420" stroke="#E2DCF7" stroke-width="2"/><line x1="294" y1="0" x2="294" y2="420" stroke="#E2DCF7" stroke-width="2"/><line x1="0" y1="42" x2="336" y2="42" stroke="#E2DCF7" stroke-width="2"/><line x1="0" y1="84" x2="336" y2="84" stroke="#E2DCF7" stroke-width="2"/><line x1="0" y1="126" x2="336" y2="126" stroke="#E2DCF7" stroke-width="2"/><line x1="0" y1="168" x2="336" y2="168" stroke="#E2DCF7" stroke-width="2"/><line x1="0" y1="210" x2="336" y2="210" stroke="#E2DCF7" stroke-width="2"/><line x1="0" y1="252" x2="336" y2="252" stroke="#E2DCF7" stroke-width="2"/><line x1="0" y1="294" x2="336" y2="294" stroke="#E2DCF7" stroke-width="2"/><line x1="0" y1="336" x2="336" y2="336" stroke="#E2DCF7" stroke-width="2"/><line x1="0" y1="378" x2="336" y2="378" stroke="#E2DCF7" stroke-width="2"/><text x="348" y="388" text-anchor="start" font-size="24" font-weight="700" fill="#5E5A70">L</text><text x="42" y="-10" text-anchor="middle" font-size="24" font-weight="700" fill="#5E5A70">N</text><circle cx="42" cy="378" r="8" fill="#3F2FA0"/><g opacity=".45"><g><path d="M42.0 378.0 L280.0 140.0" stroke="#6551D1" stroke-width="6" stroke-linecap="round" fill="none"/><polygon points="294.0,126.0 287.5,147.5 272.5,132.5" fill="#6551D1" stroke="#6551D1" stroke-width="2" stroke-linejoin="round"/></g></g><g><path d="M294.0 126.0 L294.0 63.6" stroke="#E0A800" stroke-width="7" stroke-linecap="round" fill="none"/><polygon points="294.0,42.0 305.5,63.6 282.5,63.6" fill="#E0A800" stroke="#E0A800" stroke-width="2" stroke-linejoin="round"/></g><text x="306" y="92" text-anchor="start" font-size="24" font-weight="800" fill="#8A6A00">2 m</text><g data-passo="9"><g><path d="M42.0 378.0 L278.9 62.2" stroke="#6551D1" stroke-width="8" stroke-linecap="round" fill="none" class="vt-traca" pathLength="1"/><polygon points="294.0,42.0 289.6,70.2 268.1,54.1" fill="#6551D1" stroke="#6551D1" stroke-width="2" stroke-linejoin="round" class="vt-ponta"/></g><text x="120" y="160" text-anchor="middle" font-size="32" font-weight="800" fill="#3F2FA0">R</text></g></svg>
+    <div style="position:absolute;left:560px;right:0;top:150px">
+      <p class="texto" style="margin:0 0 14px;font-size:30px"><b>Somando por eixo:</b> o segundo trecho só tem parte norte, \(b_x = 0\) e \(b_y = 2\ \text{m}\).</p>
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:30px">
+        <div class="contas" style="font-size:40px"><div class="eq" data-passo="1"><span>\(R_x\)</span><span>\(=\)</span><span>\(a_x + b_x\)</span></div><div class="eq" data-passo="2"><span>\(R_x\)</span><span>\(=\)</span><span>\(6 + 0\)</span></div><div class="eq final" data-passo="3"><span>\(R_x\)</span><span>\(=\)</span><span>\(6\ \text{m}\)</span></div></div>
+        <div class="contas" style="font-size:40px"><div class="eq" data-passo="1"><span>\(R_y\)</span><span>\(=\)</span><span>\(a_y + b_y\)</span></div><div class="eq" data-passo="2"><span>\(R_y\)</span><span>\(=\)</span><span>\(6 + 2\)</span></div><div class="eq final" data-passo="3"><span>\(R_y\)</span><span>\(=\)</span><span>\(8\ \text{m}\)</span></div></div>
+      </div>
+      <p class="texto" data-passo="4" style="margin:22px 0 12px;font-size:30px"><b>Juntando por Pitágoras:</b></p>
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:30px">
+        <div class="contas" style="font-size:40px"><div class="eq" data-passo="5"><span>\(R^2\)</span><span>\(=\)</span><span>\(R_x^2 + R_y^2\)</span></div><div class="eq" data-passo="6"><span>\(R^2\)</span><span>\(=\)</span><span>\(6^2 + 8^2\)</span></div><div class="eq" data-passo="7"><span>\(R^2\)</span><span>\(=\)</span><span>\(36 + 64\)</span></div></div>
+        <div class="contas" style="font-size:40px"><div class="eq" data-passo="8"><span>\(R^2\)</span><span>\(=\)</span><span>\(100\)</span></div><div class="eq final" data-passo="9"><span>\(R\)</span><span>\(=\)</span><span>\(10\ \text{m}\)</span></div></div>
+      </div>
+    </div>
+  </div>
+  <aside class="notas">
+    <p>Cliques 1 a 3: horizontal com horizontal, vertical com vertical.</p>
+    <p>Cliques 4 a 9: Pitágoras com as somas. Resposta: 10 m (6, 8, 10).</p>
+  </aside>
+</section>
+
+<section class="slide" data-nome="Atenção: o cosseno">
+  <div class="conteudo">
+    <p class="olho">Atenção</p>
+    <h2 class="titulo">O cosseno nem sempre fica no x</h2>
+    <div class="caixa caixa-atencao" style="position:absolute;left:0;right:0;top:150px;padding:20px 32px">
+      <div class="texto" style="font-size:31px">O cosseno vai com o cateto <b>adjacente</b> ao ângulo dado, não com o eixo \(x\). Se o enunciado der o ângulo com a <b>vertical</b>, troque: a componente vertical leva o cosseno e a horizontal leva o seno.</div>
+    </div>
+    <svg viewBox="0 0 560 380" width="560" height="380" style="position:absolute;left:600px;top:340px;overflow:visible;font-family:Figtree,'Segoe UI',sans-serif" aria-hidden="true"><g><path d="M120.0 330.0 L120.0 34.4" stroke="#5E5A70" stroke-width="3" stroke-linecap="round" fill="none"/><polygon points="120.0,20.0 127.7,34.4 112.3,34.4" fill="#5E5A70" stroke="#5E5A70" stroke-width="2" stroke-linejoin="round"/></g><g><path d="M120.0 330.0 L505.6 330.0" stroke="#5E5A70" stroke-width="3" stroke-linecap="round" fill="none"/><polygon points="520.0,330.0 505.6,337.7 505.6,322.3" fill="#5E5A70" stroke="#5E5A70" stroke-width="2" stroke-linejoin="round"/></g><path d="M260 88 L260 330 M260 88 L120 88" stroke="#8C7BEA" stroke-width="3" stroke-dasharray="7 7"/><g><path d="M120.0 330.0 L247.4 109.3" stroke="#6551D1" stroke-width="8" stroke-linecap="round" fill="none"/><polygon points="260.0,87.5 259.0,116.1 235.8,102.6" fill="#6551D1" stroke="#6551D1" stroke-width="2" stroke-linejoin="round"/></g><text x="274.0" y="95.51288694035716" text-anchor="start" font-size="34" font-weight="800" fill="#3F2FA0">F</text><path d="M160.0 260.7 A80 80 0 0 0 120.0 250.0" fill="none" stroke="#5E5A70" stroke-width="3"/><text x="142" y="238" text-anchor="middle" font-size="30" font-weight="800" fill="#5E5A70">θ</text><g data-passo="1"><g><path d="M120.0 330.0 L120.0 110.9" stroke="#E0A800" stroke-width="8" stroke-linecap="round" fill="none" class="vt-traca" pathLength="1"/><polygon points="120.0,87.5 132.5,110.9 107.5,110.9" fill="#E0A800" stroke="#E0A800" stroke-width="2" stroke-linejoin="round" class="vt-ponta"/></g><text x="106" y="218.75644347017857" text-anchor="end" font-size="30" font-weight="800" fill="#8A6A00">F cos θ</text></g><g data-passo="2"><g><path d="M120.0 330.0 L236.6 330.0" stroke="var(--d)" stroke-width="8" stroke-linecap="round" fill="none" class="vt-traca" pathLength="1"/><polygon points="260.0,330.0 236.6,342.5 236.6,317.5" fill="var(--d)" stroke="var(--d)" stroke-width="2" stroke-linejoin="round" class="vt-ponta"/></g><text x="190.0" y="374" text-anchor="middle" font-size="30" font-weight="800" fill="var(--d-forte)">F sen θ</text></g></svg>
+    <span class="pilula pilula-pausa" data-passo="3" style="position:absolute;left:1240px;right:0;top:480px;white-space:normal;line-height:1.25;border-radius:28px">Antes de calcular, marque o ângulo no desenho</span>
+  </div>
+  <aside class="notas">
+    <p>Aqui o ângulo θ está com a vertical. Clique 1: o cateto adjacente a θ é o vertical, F cos θ. Clique 2: o horizontal é o oposto, F sen θ.</p>
+    <p>É exatamente a pegadinha de uma das questões a seguir.</p>
+  </aside>
+</section>
+
+<section class="slide" data-nome="Como o PISM cobra">
+  <div class="conteudo">
+    <p class="olho">Dica</p>
+    <h2 class="titulo">Como o PISM cobra</h2>
+    <div class="vt-cartoes" style="position:absolute;left:0;right:0;top:150px;grid-template-columns:1fr 1fr 1fr">
+      <div data-passo="1"><h3>Na malha quadriculada</h3><svg viewBox="-10 -10 330 280" style="width:auto;height:250px"><rect x="0" y="0" width="264" height="220" fill="#fff" stroke="#E2DCF7" stroke-width="2" rx="6"/><line x1="44" y1="0" x2="44" y2="220" stroke="#E2DCF7" stroke-width="2"/><line x1="88" y1="0" x2="88" y2="220" stroke="#E2DCF7" stroke-width="2"/><line x1="132" y1="0" x2="132" y2="220" stroke="#E2DCF7" stroke-width="2"/><line x1="176" y1="0" x2="176" y2="220" stroke="#E2DCF7" stroke-width="2"/><line x1="220" y1="0" x2="220" y2="220" stroke="#E2DCF7" stroke-width="2"/><line x1="0" y1="44" x2="264" y2="44" stroke="#E2DCF7" stroke-width="2"/><line x1="0" y1="88" x2="264" y2="88" stroke="#E2DCF7" stroke-width="2"/><line x1="0" y1="132" x2="264" y2="132" stroke="#E2DCF7" stroke-width="2"/><line x1="0" y1="176" x2="264" y2="176" stroke="#E2DCF7" stroke-width="2"/><g><path d="M44.0 176.0 L204.2 55.9" stroke="#6551D1" stroke-width="6" stroke-linecap="round" fill="none"/><polygon points="220.0,44.0 210.5,64.3 197.8,47.4" fill="#6551D1" stroke="#6551D1" stroke-width="2" stroke-linejoin="round"/></g><path d="M44 192 L220 192" stroke="var(--d)" stroke-width="4"/><path d="M236 176 L236 44" stroke="#E0A800" stroke-width="4"/><text x="132" y="222" text-anchor="middle" font-size="26" font-weight="800" fill="var(--d-forte)">4</text><text x="250" y="118.0" text-anchor="start" font-size="26" font-weight="800" fill="#8A6A00">3</text></svg>Conte quadradinhos na horizontal e na vertical.</div>
+      <div data-passo="2"><h3>Com 30°, 45° ou 60°</h3><svg viewBox="0 -10 330 260" style="width:auto;height:250px"><g><path d="M40.0 200.0 L196.1 109.9" stroke="#6551D1" stroke-width="6" stroke-linecap="round" fill="none"/><polygon points="213.2,100.0 201.3,119.0 190.8,100.8" fill="#6551D1" stroke="#6551D1" stroke-width="2" stroke-linejoin="round"/></g><path d="M213 100 L213 200" stroke="#8C7BEA" stroke-width="3" stroke-dasharray="6 6"/><g><path d="M40.0 200.0 L195.2 200.0" stroke="var(--d)" stroke-width="6" stroke-linecap="round" fill="none"/><polygon points="213.2,200.0 195.2,209.6 195.2,190.4" fill="var(--d)" stroke="var(--d)" stroke-width="2" stroke-linejoin="round"/></g><g><path d="M40.0 200.0 L40.0 118.0" stroke="#E0A800" stroke-width="6" stroke-linecap="round" fill="none"/><polygon points="40.0,100.0 49.6,118.0 30.4,118.0" fill="#E0A800" stroke="#E0A800" stroke-width="2" stroke-linejoin="round"/></g><path d="M90.0 200.0 A50 50 0 0 0 83.3 175.0" fill="none" stroke="#5E5A70" stroke-width="3"/><text x="100" y="192" text-anchor="start" font-size="22" font-weight="700" fill="#5E5A70">30°</text></svg>Decomponha com seno e cosseno.</div>
+      <div data-passo="3"><h3>Depois volta</h3><div style="font-size:30px;line-height:1.4;margin-top:14px">A decomposição aparece de novo em <b>lançamento oblíquo</b> (a velocidade inicial) e em <b>Dinâmica</b> (forças inclinadas e plano inclinado).</div></div>
+    </div>
+    <div class="caixa caixa-fundamental" data-passo="4" style="position:absolute;left:600px;right:0;top:660px;padding:16px 28px"><div class="texto" style="font-size:30px">O pedido mais comum: a <b>resultante</b> ou uma <b>componente</b>.</div></div>
+  </div>
+  <aside class="notas">
+    <p>Dois formatos: vetores numa malha ou com ângulos notáveis.</p>
+    <p>Na malha, nem precisa de seno: conte e use Pitágoras.</p>
+  </aside>
+</section>
+
+<section class="slide questao" data-nome="Questão 1">
+  <div class="conteudo">
+    <div class="area-resolucao"></div>
+    <span class="pilula pilula-pausa" data-em="1:some">Pause o vídeo e tente</span>
+    <div class="painel-questao">
+      <p class="olho">Questão 1 · estilo PISM</p>
+      <p class="enunciado">Um jardineiro empurra um cortador de grama aplicando, ao longo do cabo, uma força \(\vec F\) de módulo \(40\ \text{N}\). O cabo faz \(60°\) com a vertical, como mostra a figura. Considere \(\operatorname{sen} 60° = \dfrac{\sqrt{3}}{2}\) e \(\cos 60° = \dfrac{1}{2}\). O módulo da componente horizontal de \(\vec F\) é igual a</p>
+      <svg viewBox="0 0 380 215" width="380" height="215" style=";overflow:visible;font-family:Figtree,'Segoe UI',sans-serif" aria-hidden="true" class="figura"><line x1="0" y1="200" x2="380" y2="200" stroke="#C9C0F0" stroke-width="4"/><rect x="215" y="140" width="130" height="44" rx="12" fill="var(--d-clara)" stroke="var(--d)" stroke-width="3"/><circle cx="235" cy="190" r="11" fill="#292B2C"/><circle cx="325" cy="190" r="11" fill="#292B2C"/><line x1="66" y1="56" x2="222" y2="146" stroke="#292B2C" stroke-width="6" stroke-linecap="round"/><line x1="56" y1="44" x2="76" y2="68" stroke="#292B2C" stroke-width="6" stroke-linecap="round"/><g><path d="M92.0 54.0 L186.0 107.9" stroke="#6551D1" stroke-width="5" stroke-linecap="round" fill="none"/><polygon points="200.0,116.0 181.6,115.4 190.3,100.4" fill="#6551D1" stroke="#6551D1" stroke-width="2" stroke-linejoin="round"/></g><text x="130" y="62" text-anchor="middle" font-size="24" font-weight="800" fill="#3F2FA0">F</text><line x1="222" y1="146" x2="222" y2="30" stroke="#5E5A70" stroke-width="2" stroke-dasharray="6 6"/><path d="M222.0 100.0 A46 46 0 0 0 182.2 123.0" fill="none" stroke="#5E5A70" stroke-width="2"/><text x="214" y="82" text-anchor="end" font-size="20" font-weight="700" fill="#5E5A70">60°</text></svg>
+      <ol class="alternativas curtas">
+        <li data-em="2:certo"><b>A</b><span>\(20\sqrt{3}\ \text{N}\)</span></li>
+        <li data-em="2:apaga"><b>B</b><span>\(20\ \text{N}\)</span></li>
+        <li data-em="2:apaga"><b>C</b><span>\(40\ \text{N}\)</span></li>
+        <li data-em="2:apaga"><b>D</b><span>\(40\sqrt{3}\ \text{N}\)</span></li>
+        <li data-em="2:apaga"><b>E</b><span>\(20\sqrt{2}\ \text{N}\)</span></li>
+      </ol>
+    </div>
+  </div>
+  <aside class="notas">
+    <p>Clique 1 tira o aviso de pausa: resolva com a caneta (D); E esconde o enunciado. Clique 2: gabarito A.</p>
+    <p>Ângulo com a vertical: a horizontal é o cateto oposto, leva o seno: 40 · √3/2 = 20√3 N (≈ 34 N).</p>
+    <p>Erros: B usa o cosseno (é a componente vertical); C é a força inteira; D esquece o /2; E usa o valor de 45°. (Banco FIS-1541)</p>
+  </aside>
+</section>
+
+<section class="slide questao" data-nome="Questão 2">
+  <div class="conteudo">
+    <div class="area-resolucao"></div>
+    <span class="pilula pilula-pausa" data-em="1:some">Pause o vídeo e tente</span>
+    <div class="painel-questao">
+      <p class="olho">Questão 2 · estilo PISM</p>
+      <p class="enunciado">Para tirar um tronco caído de uma trilha, dois voluntários puxam cordas amarradas no mesmo ponto do tronco, cada um com uma força de \(300\ \text{N}\). Vistas de cima, as cordas formam \(90°\) entre si, e cada uma faz \(45°\) com a direção da trilha, como mostra a figura. Considere \(\operatorname{sen} 45° = \cos 45° = \dfrac{\sqrt{2}}{2}\) e \(\sqrt{2} \approx 1{,}4\). O módulo da resultante das forças das duas cordas é aproximadamente igual a</p>
+      <svg viewBox="0 0 380 220" width="380" height="220" style=";overflow:visible;font-family:Figtree,'Segoe UI',sans-serif" aria-hidden="true" class="figura"><line x1="0" y1="110" x2="380" y2="110" stroke="#C9C0F0" stroke-width="3" stroke-dasharray="10 8"/><text x="372" y="100" text-anchor="end" font-size="18" font-weight="700" fill="#5E5A70">trilha</text><rect x="56" y="10" width="26" height="200" rx="12" fill="#D9CBB0" stroke="#8A6A00" stroke-width="2"/><g><path d="M90.0 110.0 L184.6 15.4" stroke="#6551D1" stroke-width="5" stroke-linecap="round" fill="none"/><polygon points="196.1,3.9 190.7,21.5 178.5,9.3" fill="#6551D1" stroke="#6551D1" stroke-width="2" stroke-linejoin="round"/></g><g><path d="M90.0 110.0 L184.6 204.6" stroke="#6551D1" stroke-width="5" stroke-linecap="round" fill="none"/><polygon points="196.1,216.1 178.5,210.7 190.7,198.5" fill="#6551D1" stroke="#6551D1" stroke-width="2" stroke-linejoin="round"/></g><circle cx="90" cy="110" r="6" fill="#3F2FA0"/><text x="204.06601717798213" y="21.93398282201788" text-anchor="start" font-size="20" font-weight="800" fill="#3F2FA0">300 N</text><text x="204.06601717798213" y="216.06601717798213" text-anchor="start" font-size="20" font-weight="800" fill="#3F2FA0">300 N</text><path d="M142.0 110.0 A52 52 0 0 0 126.8 73.2" fill="none" stroke="#5E5A70" stroke-width="2"/><path d="M126.8 146.8 A52 52 0 0 0 142.0 110.0" fill="none" stroke="#5E5A70" stroke-width="2"/><text x="150" y="96" text-anchor="start" font-size="18" font-weight="700" fill="#5E5A70">45°</text><text x="150" y="138" text-anchor="start" font-size="18" font-weight="700" fill="#5E5A70">45°</text></svg>
+      <ol class="alternativas curtas">
+        <li data-em="2:apaga"><b>A</b><span>\(600\ \text{N}\)</span></li>
+        <li data-em="2:apaga"><b>B</b><span>\(300\ \text{N}\)</span></li>
+        <li data-em="2:apaga"><b>C</b><span>\(510\ \text{N}\)</span></li>
+        <li data-em="2:certo"><b>D</b><span>\(420\ \text{N}\)</span></li>
+        <li data-em="2:apaga"><b>E</b><span>\(210\ \text{N}\)</span></li>
+      </ol>
+    </div>
+  </div>
+  <aside class="notas">
+    <p>Decompondo: as partes perpendiculares à trilha se cancelam; ao longo da trilha, 2 · 300 · √2/2 = 300√2 ≈ 420 N. Gabarito D.</p>
+    <p>Outra saída: forças perpendiculares, R² = 300² + 300². Erros: A soma os módulos; B resultante igual a uma força; C usa √3/2; E só uma corda. (Banco FIS-1542)</p>
+  </aside>
+</section>
+
+<section class="slide questao" data-nome="Questão 3">
+  <div class="conteudo">
+    <div class="area-resolucao"></div>
+    <span class="pilula pilula-pausa" data-em="1:some">Pause o vídeo e tente</span>
+    <div class="painel-questao">
+      <p class="olho">Questão 3 · estilo PISM</p>
+      <p class="enunciado">Um drone faz o levantamento de uma área rural na Zona da Mata mineira. Visto de cima, ele voa \(800\ \text{m}\) em linha reta para o leste e, em seguida, \(400\ \text{m}\) em linha reta numa direção que faz \(60°\) com o oeste, rumo ao norte. Considere \(\operatorname{sen} 60° = \dfrac{\sqrt{3}}{2}\) e \(\cos 60° = \dfrac{1}{2}\). Ao final desses dois trechos, a distância em linha reta entre o drone e o ponto de partida, vista de cima, é igual a</p>
+      <ol class="alternativas curtas">
+        <li data-em="2:certo"><b>A</b><span>\(400\sqrt{3}\ \text{m}\)</span></li>
+        <li data-em="2:apaga"><b>B</b><span>\(400\ \text{m}\)</span></li>
+        <li data-em="2:apaga"><b>C</b><span>\(600\ \text{m}\)</span></li>
+        <li data-em="2:apaga"><b>D</b><span>\(1\,200\ \text{m}\)</span></li>
+        <li data-em="2:apaga"><b>E</b><span>\(400\sqrt{7}\ \text{m}\)</span></li>
+      </ol>
+    </div>
+  </div>
+  <aside class="notas">
+    <p>Segundo trecho: 400 cos 60° = 200 m para o oeste e 400 sen 60° = 200√3 m para o norte. R_x = 800 − 200 = 600 m; R_y = 200√3 m.</p>
+    <p>R² = 360 000 + 120 000 = 480 000; R = 400√3 m (≈ 690 m). Gabarito A.</p>
+    <p>Erros: B subtrai os módulos; C esquece a parte norte; D soma os módulos; E soma a parte oeste como leste. (Banco FIS-1543)</p>
+  </aside>
+</section>
+
+<section class="slide" data-nome="Resumo">
+  <div class="conteudo">
+    <p class="olho">Resumo · Vetores</p>
+    <h2 class="titulo">O essencial</h2>
+    <div class="resumo" style="position:absolute;left:0;right:0;top:150px">
+      <div><b>Escalar:</b> número e unidade bastam. <b>Vetorial:</b> precisa também de direção e sentido.</div>
+      <div><b>Vetor:</b> módulo (tamanho), direção (a reta) e sentido (o lado da reta).</div>
+      <div><b>Soma:</b> polígono (ponta com cauda) ou paralelogramo; \(|a - b| \leq R \leq a + b\).</div>
+      <div><b>Perpendiculares:</b> \(R^2 = a^2 + b^2\).</div>
+      <div><b>Componentes:</b> \(v_x = v\cos\theta\) e \(v_y = v\operatorname{sen}\theta\), com \(\theta\) medido a partir do eixo \(x\).</div>
+      <div><b>Somar vetores tortos:</b> decomponha, some por eixo e junte por Pitágoras.</div>
+    </div>
+  </div>
+  <aside class="notas">
+    <p>Resumo do subcapítulo inteiro de vetores. Peça para tirarem um print desta tela.</p>
+  </aside>
+</section>
+
+<section class="slide capa" data-nome="A seguir">
+  <div class="estrelas"></div>
+  <div class="texto-capa" style="top:250px">
+    <span class="selo">Física · PISM I</span>
+    <p class="aula">A seguir · Fundamentos</p>
+    <h1 style="font-size:116px">Questões do PISM</h1>
+    <p class="sub">Fundamentos</p>
+  </div>
+  <svg class="emblema" viewBox="0 0 640 640" aria-hidden="true">
+    <rect x="150" y="80" width="340" height="460" rx="36" fill="#fff" opacity=".95"/>
+    <rect x="200" y="140" width="240" height="18" rx="9" fill="#C9C0F0"/><rect x="200" y="180" width="200" height="18" rx="9" fill="#C9C0F0"/>
+    <g font-family="Figtree,'Segoe UI',sans-serif" font-size="30" font-weight="800" text-anchor="middle">
+      <circle cx="225" cy="260" r="24" fill="#F1EEFD"/><text x="225" y="271" fill="#3F2FA0">A</text><rect x="265" y="252" width="160" height="16" rx="8" fill="#E4DEFB"/>
+      <circle cx="225" cy="320" r="24" fill="#F1EEFD"/><text x="225" y="331" fill="#3F2FA0">B</text><rect x="265" y="312" width="130" height="16" rx="8" fill="#E4DEFB"/>
+      <circle cx="225" cy="380" r="24" fill="#FFD10C"/><text x="225" y="391" fill="#292B2C">C</text><rect x="265" y="372" width="150" height="16" rx="8" fill="#E4DEFB"/>
+      <circle cx="225" cy="440" r="24" fill="#F1EEFD"/><text x="225" y="451" fill="#3F2FA0">D</text><rect x="265" y="432" width="110" height="16" rx="8" fill="#E4DEFB"/>
+    </g>
+    <circle cx="470" cy="470" r="86" fill="var(--d)" stroke="#fff" stroke-width="6"/>
+    <text x="470" y="486" text-anchor="middle" font-family="'Bricolage Grotesque',Figtree,sans-serif" font-size="46" font-weight="800" fill="#fff">PISM</text>
+  </svg>
+  <img class="logo-capa" src="{{LOGO_BRANCO}}" alt="Quarks">
+  <aside class="notas"><p>Fim do capítulo Fundamentos. A seguir, o bloco só com as questões oficiais do PISM deste capítulo.</p></aside>
+</section>

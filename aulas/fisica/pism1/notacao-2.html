@@ -1,0 +1,397 @@
+<!--aula
+{"disciplina": "fisica", "curso": "PISM I", "assunto": "Notação científica e ordem de grandeza", "parte": "Parte 2 de 2", "titulo": "Ordem de grandeza e algarismos significativos"}
+-->
+<!-- Fonte: apostila PISM I, Física, cap. 1 (1.2 Notação científica e ordem de grandeza > Ordem de grandeza; Algarismos significativos) e lote de questões pism1-fisica-notacao-cientifica-e-ordem-de-grandeza (m004, m005, m007). -->
+
+<!-- 1. Capa -->
+<section class="slide capa" data-nome="Capa">
+  <div class="estrelas"></div>
+  <div class="texto-capa" style="top:130px">
+    <span class="selo">Física · PISM I</span>
+    <p class="aula">Notação científica e ordem de grandeza · Parte 2 de 2</p>
+    <h1>Ordem de grandeza</h1>
+    <p class="sub">e algarismos significativos</p>
+  </div>
+  <svg class="emblema" viewBox="0 0 640 640" aria-hidden="true">
+    <g class="gira-lento"><ellipse cx="320" cy="320" rx="300" ry="128" fill="none" stroke="#fff" stroke-opacity=".38" stroke-width="2" transform="rotate(-10 320 320)"/></g>
+    <g class="gira"><ellipse cx="320" cy="320" rx="236" ry="196" fill="none" stroke="#FFD10C" stroke-opacity=".75" stroke-width="2.5" stroke-dasharray="3 14" stroke-linecap="round" transform="rotate(-8 320 320)"/>
+      <circle cx="84" cy="300" r="13" fill="var(--d)" stroke="#fff" stroke-width="3"/></g>
+    <circle cx="320" cy="320" r="132" fill="#FFD10C"/>
+    <image href="{{SYM_ROXO}}" x="238" y="238" width="164" height="164"/>
+  </svg>
+  <img class="logo-capa" src="{{LOGO_BRANCO}}" alt="Quarks">
+  <aside class="notas">
+    <p>Hoje: estimar um valor pela potência de 10 e escrever uma medida com os algarismos que ela realmente tem.</p>
+  </aside>
+</section>
+
+<!-- 2. Gancho -->
+<section class="slide" data-nome="Batidas do coração">
+  <div class="conteudo">
+    <p class="olho">Para começar</p>
+    <h2 class="titulo">Quantas vezes o seu coração bate num dia?</h2>
+    <div style="position:absolute;left:0;right:0;top:250px;display:flex;gap:30px">
+      <span class="caixa" data-passo="1" style="padding:20px 40px;font-size:44px;font-weight:800;color:var(--d-forte)">milhares?</span>
+      <span class="caixa" data-passo="1" style="padding:20px 40px;font-size:44px;font-weight:800;color:var(--d-forte)">centenas de milhares?</span>
+      <span class="caixa" data-passo="1" style="padding:20px 40px;font-size:44px;font-weight:800;color:var(--d-forte)">milhões?</span>
+    </div>
+    <div class="caixa caixa-fundamental" data-passo="2" style="position:absolute;left:0;right:0;top:430px;padding:22px 34px">
+      <div class="texto">Ninguém precisa do número exato para ter uma boa ideia. O que importa é a <b>potência de 10</b>: essa estimativa é a <b>ordem de grandeza</b>.</div>
+    </div>
+    <span class="pilula pilula-pausa" data-passo="3" style="position:absolute;right:0;top:680px">Chute agora: a gente confere daqui a pouco</span>
+  </div>
+  <aside class="notas">
+    <p>Clique 1: as três opções. Peça um palpite.</p>
+    <p>A resposta vem no exemplo dos batimentos, no meio desta parte.</p>
+  </aside>
+</section>
+
+<!-- 3. Definição e critério -->
+<section class="slide" data-nome="Ordem de grandeza">
+  <div class="conteudo">
+    <p class="olho">Definição</p>
+    <h2 class="titulo">A potência de 10 mais próxima</h2>
+    <div class="caixa caixa-fundamental" style="position:absolute;left:0;right:0;top:150px;padding:22px 34px">
+      <span class="rotulo">Ordem de grandeza</span>
+      <div class="texto">A ordem de grandeza de um valor é a <b>potência de 10 mais próxima</b> dele.</div>
+    </div>
+    <p class="texto" data-passo="1" style="position:absolute;left:0;right:0;top:340px;margin:0">Escreva o valor como \(a \cdot 10^{n}\) e olhe só para o \(a\):</p>
+    <div style="position:absolute;left:0;right:0;top:420px;display:grid;grid-template-columns:1fr 1fr;gap:30px">
+      <div class="caixa" data-passo="2" style="padding:22px 32px;text-align:center"><div style="font-size:52px">\(a &lt; 3{,}16 \ \Rightarrow\ 10^{n}\)</div></div>
+      <div class="caixa" data-passo="3" style="padding:22px 32px;text-align:center"><div style="font-size:52px">\(a \geq 3{,}16 \ \Rightarrow\ 10^{n+1}\)</div></div>
+    </div>
+    <span class="pilula pilula-resposta" data-passo="4" style="position:absolute;right:0;top:640px">\(3{,}16 \approx \sqrt{10}\): o meio do caminho entre 1 e 10</span>
+  </div>
+  <aside class="notas">
+    <p>Cliques 2 e 3: a regra. Se o a passa de 3,16, a ordem sobe uma potência.</p>
+    <p>Clique 4: de onde vem o 3,16, explicado no próximo slide. Quando uma questão usar outro critério, ela avisa no enunciado.</p>
+  </aside>
+</section>
+
+<!-- 4. Por que 3,16 -->
+<section class="slide" data-nome="Por que 3,16">
+  <div class="conteudo">
+    <p class="olho">Por que 3,16 e não 5?</p>
+    <h2 class="titulo">Entre potências de 10, conta "quantas vezes"</h2>
+    <svg viewBox="0 0 1760 300" width="1760" height="300" style="position:absolute;left:0;top:160px;overflow:visible;font-family:Figtree,'Segoe UI',sans-serif" aria-hidden="true">
+      <line x1="160" y1="200" x2="1600" y2="200" stroke="#BFB6E6" stroke-width="8" stroke-linecap="round"/>
+      <g stroke="#BFB6E6" stroke-width="5"><line x1="160" y1="180" x2="160" y2="220"/><line x1="1600" y1="180" x2="1600" y2="220"/></g>
+      <g font-size="44" font-weight="800" fill="var(--d-forte)" text-anchor="middle"><text x="160" y="276">1</text><text x="1600" y="276">10</text></g>
+      <g data-passo="1">
+        <line x1="880" y1="172" x2="880" y2="228" stroke="#E0A800" stroke-width="6"/>
+        <circle cx="880" cy="200" r="16" fill="#FFD10C" stroke="#fff" stroke-width="4"/>
+        <text x="880" y="276" text-anchor="middle" font-size="44" font-weight="800" fill="#8A6A00">3,16</text>
+      </g>
+      <g data-passo="2" fill="none" stroke="var(--d)" stroke-width="5" stroke-linecap="round">
+        <path d="M170 160 Q520 20 870 160"/><path d="M890 160 Q1240 20 1590 160"/>
+      </g>
+      <g data-passo="2" font-size="38" font-weight="800" fill="var(--d-forte)" text-anchor="middle"><text x="520" y="70">× 3,16</text><text x="1240" y="70">× 3,16</text></g>
+      <g data-passo="3">
+        <circle cx="1166" cy="200" r="14" fill="#3F2FA0" stroke="#fff" stroke-width="4"/>
+        <text x="1166" y="276" text-anchor="middle" font-size="40" font-weight="800" fill="#3F2FA0">5</text>
+      </g>
+    </svg>
+    <div class="caixa caixa-fundamental" data-passo="3" style="position:absolute;left:600px;right:0;top:500px;padding:22px 34px">
+      <div class="texto" style="font-size:34px">O 5 já está <b>mais perto de 10</b>: de 5 a 10 é só \(\times 2\); de 1 a 5 é \(\times 5\).</div>
+    </div>
+    <div class="caixa" data-passo="4" style="position:absolute;left:600px;right:0;top:680px;padding:20px 34px">
+      <div class="texto" style="font-size:32px">O meio é o número que, vezes ele mesmo, dá 10: \(\sqrt{10} \approx 3{,}16\).</div>
+    </div>
+  </div>
+  <aside class="notas">
+    <p>Clique 2: de 1 até 3,16 você multiplica por 3,16, e de 3,16 até 10 multiplica por 3,16 de novo. Esse é o meio "em vezes".</p>
+    <p>Clique 3: o 5, que parece o meio, já está mais perto do 10 nessa conta.</p>
+  </aside>
+</section>
+
+<!-- 5. Tabela de exemplos -->
+<section class="slide" data-nome="Exemplos de ordem">
+  <div class="conteudo">
+    <p class="olho">Na prática</p>
+    <h2 class="titulo">Do valor à ordem de grandeza</h2>
+    <table class="tabela" style="position:absolute;left:0;right:0;top:160px;font-size:36px;width:1760px">
+      <tr><th>valor</th><th>notação científica</th><th>ordem de grandeza</th></tr>
+      <tr data-passo="1"><td>altura de uma pessoa, 1,7 m</td><td>\(1{,}7 \cdot 10^{0}\) m</td><td style="font-weight:800;color:var(--d-forte)">\(10^{0}\) m</td></tr>
+      <tr data-passo="2"><td>segundos num dia, 86 400 s</td><td>\(8{,}64 \cdot 10^{4}\) s</td><td style="font-weight:800;color:var(--d-forte)">\(10^{5}\) s</td></tr>
+      <tr data-passo="3"><td>distância Terra–Sol</td><td>\(1{,}5 \cdot 10^{11}\) m</td><td style="font-weight:800;color:var(--d-forte)">\(10^{11}\) m</td></tr>
+    </table>
+    <div class="caixa caixa-atencao" data-passo="2" style="position:absolute;left:600px;right:0;top:560px;padding:20px 34px">
+      <div class="texto" style="font-size:32px">8,64 passa de 3,16: a ordem <b>sobe</b> para \(10^{5}\).</div>
+    </div>
+  </div>
+  <aside class="notas">
+    <p>Uma linha por clique. 1,7 e 1,5 ficam abaixo de 3,16: a ordem é a do expoente. 8,64 passa: a ordem sobe.</p>
+  </aside>
+</section>
+
+<!-- 6. Régua de ordens de grandeza -->
+<section class="slide" data-nome="Régua de comprimentos">
+  <div class="conteudo">
+    <p class="olho">Comprimentos da natureza, em metros</p>
+    <h2 class="titulo">Do átomo à distância Terra–Sol</h2>
+    <svg viewBox="0 0 1760 420" width="1760" height="420" style="position:absolute;left:0;top:150px;overflow:visible;font-family:Figtree,'Segoe UI',sans-serif" aria-hidden="true">
+      <line x1="60" y1="200" x2="1700" y2="200" stroke="#BFB6E6" stroke-width="8" stroke-linecap="round"/>
+      <g stroke="#BFB6E6" stroke-width="5">
+        <line x1="80" y1="184" x2="80" y2="216"/><line x1="224" y1="184" x2="224" y2="216"/><line x1="368" y1="184" x2="368" y2="216"/><line x1="512" y1="184" x2="512" y2="216"/><line x1="656" y1="184" x2="656" y2="216"/><line x1="800" y1="184" x2="800" y2="216"/><line x1="944" y1="184" x2="944" y2="216"/><line x1="1088" y1="184" x2="1088" y2="216"/><line x1="1232" y1="184" x2="1232" y2="216"/><line x1="1376" y1="184" x2="1376" y2="216"/><line x1="1520" y1="184" x2="1520" y2="216"/><line x1="1664" y1="184" x2="1664" y2="216"/>
+      </g>
+      <g font-size="30" font-weight="700" fill="#5E5A70" text-anchor="middle">
+        <text x="80" y="262">10⁻¹⁰</text><text x="224" y="262">10⁻⁸</text><text x="368" y="262">10⁻⁶</text><text x="512" y="262">10⁻⁴</text><text x="656" y="262">10⁻²</text><text x="800" y="262">10⁰</text><text x="944" y="262">10²</text><text x="1088" y="262">10⁴</text><text x="1232" y="262">10⁶</text><text x="1376" y="262">10⁸</text><text x="1520" y="262">10¹⁰</text><text x="1664" y="262">10¹²</text>
+      </g>
+      <g font-size="30" font-weight="800" fill="#3F2FA0" text-anchor="middle">
+        <g data-passo="1"><circle cx="80" cy="200" r="14" fill="var(--d)" stroke="#fff" stroke-width="4"/><line x1="80" y1="186" x2="80" y2="130" stroke="var(--d)" stroke-width="3"/><text x="80" y="118">átomo</text></g>
+        <g data-passo="1"><circle cx="368" cy="200" r="14" fill="var(--d)" stroke="#fff" stroke-width="4"/><line x1="368" y1="186" x2="368" y2="130" stroke="var(--d)" stroke-width="3"/><text x="368" y="118">bactéria</text></g>
+        <g data-passo="1"><circle cx="584" cy="200" r="14" fill="var(--d)" stroke="#fff" stroke-width="4"/><line x1="584" y1="186" x2="584" y2="70" stroke="var(--d)" stroke-width="3"/><text x="584" y="58">grão de areia</text></g>
+        <g data-passo="2"><circle cx="800" cy="200" r="14" fill="var(--d)" stroke="#fff" stroke-width="4"/><line x1="800" y1="186" x2="800" y2="130" stroke="var(--d)" stroke-width="3"/><text x="800" y="118">pessoa</text></g>
+        <g data-passo="2"><circle cx="1088" cy="200" r="14" fill="var(--d)" stroke="#fff" stroke-width="4"/><line x1="1088" y1="186" x2="1088" y2="130" stroke="var(--d)" stroke-width="3"/><text x="1088" y="118">montanha alta</text></g>
+        <g data-passo="2"><circle cx="1304" cy="200" r="14" fill="var(--d)" stroke="#fff" stroke-width="4"/><line x1="1304" y1="186" x2="1304" y2="70" stroke="var(--d)" stroke-width="3"/><text x="1304" y="58">diâmetro da Terra</text></g>
+        <g data-passo="2"><circle cx="1592" cy="200" r="18" fill="#FFD10C" stroke="#fff" stroke-width="4"/><line x1="1592" y1="182" x2="1592" y2="130" stroke="#E0A800" stroke-width="3"/><text x="1592" y="118">Terra–Sol</text></g>
+      </g>
+    </svg>
+    <div class="caixa caixa-fundamental" data-passo="3" style="position:absolute;left:600px;right:0;top:480px;padding:22px 34px">
+      <div class="texto" style="font-size:34px">Cada marca é <b>100 vezes</b> maior que a anterior. Do átomo (\(10^{-10}\) m) à distância Terra–Sol (\(10^{11}\) m) são <b>21 potências de 10</b>.</div>
+    </div>
+  </div>
+  <aside class="notas">
+    <p>Clique 1: o mundo pequeno (átomo 10⁻¹⁰ m, bactéria 10⁻⁶ m, grão de areia 10⁻³ m). Clique 2: o mundo grande (pessoa 10⁰, montanha 10⁴, diâmetro da Terra 10⁷, Terra–Sol 10¹¹).</p>
+    <p>A escala não é linear: cada marca multiplica por 100.</p>
+  </aside>
+</section>
+
+<!-- 7. Exemplo: batimentos -->
+<section class="slide" data-nome="Exemplo: batimentos">
+  <div class="conteudo">
+    <p class="olho">Exemplo</p>
+    <h2 class="titulo">Batimentos em um dia</h2>
+    <div style="position:absolute;left:0;width:800px;top:150px">
+      <p class="texto" style="margin:0;font-size:32px">Um coração em repouso bate cerca de <b>70 vezes por minuto</b>. Qual é a ordem de grandeza do número de batimentos em <b>um dia</b>?</p>
+      <p class="texto" style="margin:22px 0 10px;font-size:30px"><b>O dia em minutos:</b></p>
+      <div class="contas" style="font-size:40px;row-gap:10px">
+        <div class="eq" data-passo="1"><span>\(t\)</span><span>\(=\)</span><span>\(24\ \text{h}\)</span></div>
+        <div class="eq" data-passo="2"><span>\(t\)</span><span>\(=\)</span><span>\(24 \cdot 60\ \text{min}\)</span></div>
+        <div class="eq final" data-passo="3"><span>\(t\)</span><span>\(=\)</span><span>\(1440\ \text{min}\)</span></div>
+      </div>
+    </div>
+    <div style="position:absolute;left:900px;right:0;top:150px">
+      <p class="texto" style="margin:0 0 14px;font-size:30px"><b>Ritmo vezes tempo:</b></p>
+      <div class="contas" style="font-size:44px;row-gap:12px">
+        <div class="eq" data-passo="4"><span>\(n\)</span><span>\(=\)</span><span>\(f \cdot t\)</span></div>
+        <div class="eq" data-passo="5"><span>\(n\)</span><span>\(=\)</span><span>\(70 \cdot 1440\)</span></div>
+        <div class="eq" data-passo="6"><span>\(n\)</span><span>\(=\)</span><span>\(100\,800\)</span></div>
+        <div class="eq final" data-passo="7"><span>\(n\)</span><span>\(=\)</span><span>\(1{,}008 \cdot 10^{5}\)</span></div>
+      </div>
+      <p class="texto" data-passo="8" style="margin:22px 0 0;font-size:32px">1,008 é menor que 3,16: a ordem é \(10^{5}\).</p>
+    </div>
+    <span class="pilula pilula-resposta" data-passo="9" style="position:absolute;right:0;top:790px">\(10^{5}\) batimentos: centenas de milhares</span>
+  </div>
+  <aside class="notas">
+    <p>Cliques 1 a 3: o dia tem 1440 minutos. Cliques 4 a 7: 70 · 1440 = 100 800.</p>
+    <p>Clique 8: compare com 3,16. Volte ao palpite do começo: centenas de milhares.</p>
+  </aside>
+</section>
+
+<!-- 8. Atenção -->
+<section class="slide" data-nome="Atenção: não é o expoente">
+  <div class="conteudo">
+    <p class="olho">Atenção</p>
+    <h2 class="titulo">Ordem de grandeza não é o expoente</h2>
+    <div class="caixa caixa-atencao" style="position:absolute;left:0;right:0;top:160px;padding:22px 34px">
+      <div class="texto" style="font-size:34px">O dia tem \(8{,}64 \cdot 10^{4}\) s, mas a ordem de grandeza é \(10^{5}\), e não \(10^{4}\): o valor está mais perto de 100 000 do que de 10 000.</div>
+    </div>
+    <div style="position:absolute;left:0;right:0;top:380px;display:flex;gap:40px;align-items:center;font-size:52px">
+      <span data-passo="1">\(8{,}64 \cdot 10^{4}\)</span>
+      <span data-passo="1" class="riscado" style="font-size:52px;font-family:'Times New Roman',serif">10⁴</span>
+      <span data-passo="2" class="caixa caixa-fundamental" style="padding:10px 30px">\(10^{5}\) <b style="color:var(--certo)">✓</b></span>
+    </div>
+    <span class="pilula pilula-pausa" data-passo="3" style="position:absolute;right:0;top:620px">Antes de responder, compare o \(a\) com 3,16</span>
+  </div>
+  <aside class="notas">
+    <p>A alternativa errada mais comum nas provas é a do expoente. 8,64 passa de 3,16, então a ordem sobe.</p>
+  </aside>
+</section>
+
+<!-- 9. Algarismos significativos -->
+<section class="slide" data-nome="Algarismos significativos">
+  <div class="conteudo">
+    <p class="olho">Precisão da medida</p>
+    <h2 class="titulo">Algarismos significativos</h2>
+    <svg viewBox="0 0 1000 260" width="1000" height="260" style="position:absolute;left:0;top:150px;overflow:visible;font-family:Figtree,'Segoe UI',sans-serif" aria-hidden="true">
+      <rect x="20" y="120" width="960" height="110" rx="12" fill="#FFF4C2" stroke="#E0A800" stroke-width="3"/>
+      <g stroke="#292B2C" stroke-width="3">
+        <line x1="100" y1="120" x2="100" y2="190"/><line x1="240" y1="120" x2="240" y2="160"/><line x1="380" y1="120" x2="380" y2="160"/><line x1="520" y1="120" x2="520" y2="175"/><line x1="660" y1="120" x2="660" y2="160"/><line x1="800" y1="120" x2="800" y2="160"/><line x1="940" y1="120" x2="940" y2="160"/>
+      </g>
+      <g font-size="30" font-weight="800" fill="#292B2C" text-anchor="middle"><text x="100" y="220">14 cm</text></g>
+      <g font-size="22" font-weight="700" fill="#5E5A70" text-anchor="middle"><text x="240" y="186">14,1</text><text x="380" y="186">14,2</text><text x="520" y="200">14,3</text><text x="660" y="186">14,4</text><text x="800" y="186">14,5</text></g>
+      <path d="M20 40 L540 40 L590 70 L540 100 L20 100 Z" fill="#8C7BEA" stroke="#3F2FA0" stroke-width="3"/>
+      <path d="M540 40 L590 70 L540 100 Z" fill="#F1D9B5" stroke="#3F2FA0" stroke-width="3"/>
+      <line x1="590" y1="70" x2="590" y2="120" stroke="#E0A800" stroke-width="3" stroke-dasharray="6 6"/>
+    </svg>
+    <p class="texto" style="position:absolute;left:0;width:1000px;top:420px;margin:0;font-size:32px">A ponta passa um pouco de 14,3 cm, quase na metade do próximo milímetro.</p>
+    <div data-passo="1" style="position:absolute;left:1080px;right:0;top:160px;text-align:center">
+      <div style="font-size:110px;font-weight:800;letter-spacing:.04em;font-variant-numeric:tabular-nums"><span style="color:var(--d-forte)">14,3</span><span style="color:#E0A800">5</span> <span style="font-size:60px;color:#5E5A70">cm</span></div>
+      <div style="display:flex;justify-content:center;gap:30px;font-size:28px;font-weight:800"><span style="color:var(--d-forte)">certos: 1, 4 e 3</span><span style="color:#8A6A00">duvidoso: 5</span></div>
+      <p class="texto" data-passo="3" style="margin:20px 0 0;font-size:30px"><span class="riscado">14,3527 cm</span>: a régua não enxerga isso.</p>
+    </div>
+    <div class="caixa caixa-fundamental" data-passo="2" style="position:absolute;left:600px;right:0;top:560px;padding:20px 34px">
+      <span class="rotulo">Definição</span>
+      <div class="texto" style="font-size:32px">São os algarismos com significado: todos os que se leem <b>com certeza</b> na escala e mais o <b>primeiro duvidoso</b>, que é estimado. Em 14,35 cm, são <b>quatro</b>.</div>
+    </div>
+  </div>
+  <aside class="notas">
+    <p>Régua graduada em milímetros. O 1, o 4 e o 3 se leem com certeza; o 5 é estimado (a ponta fica quase na metade do milímetro).</p>
+    <p>Clique 3: escrever mais casas do que a régua dá é inventar precisão.</p>
+  </aside>
+</section>
+
+<!-- 10. Como contar -->
+<section class="slide" data-nome="Como contar">
+  <div class="conteudo">
+    <p class="olho">Algarismos significativos</p>
+    <h2 class="titulo">Como contar</h2>
+    <div style="position:absolute;left:0;right:0;top:160px;display:grid;grid-template-columns:repeat(3,1fr);gap:26px">
+      <div class="caixa" data-passo="1" style="padding:22px 28px"><span class="rotulo">Zeros à esquerda</span><div class="texto" style="font-size:30px"><b>Não contam</b>: só posicionam a vírgula.</div><div style="font-size:40px;margin-top:12px">\(0{,}0045\) m → <b style="color:var(--d-forte)">2</b></div></div>
+      <div class="caixa" data-passo="2" style="padding:22px 28px"><span class="rotulo">Zeros no meio ou no fim</span><div class="texto" style="font-size:30px">Depois da vírgula, <b>contam</b>.</div><div style="font-size:40px;margin-top:12px">\(2{,}05\) m e \(2{,}50\) m → <b style="color:var(--d-forte)">3</b></div></div>
+      <div class="caixa" data-passo="3" style="padding:22px 28px"><span class="rotulo">Notação científica</span><div class="texto" style="font-size:30px">Contam só os algarismos de \(a\).</div><div style="font-size:40px;margin-top:12px">\(4{,}5 \cdot 10^{-3}\) m → <b style="color:var(--d-forte)">2</b></div></div>
+    </div>
+    <div class="caixa caixa-atencao" data-passo="4" style="position:absolute;left:600px;right:0;top:520px;padding:22px 34px">
+      <div class="texto" style="font-size:33px"><b>2,5 m</b> e <b>2,50 m</b> não são a mesma informação: a segunda foi feita com um instrumento mais preciso, que garante o centímetro.</div>
+    </div>
+  </div>
+  <aside class="notas">
+    <p>Uma regra por clique. Clique 4: o zero do fim diz algo sobre o instrumento.</p>
+  </aside>
+</section>
+
+<!-- 11. Produto e exemplo da mesa -->
+<section class="slide" data-nome="Exemplo: a mesa">
+  <div class="conteudo">
+    <p class="olho">Exemplo</p>
+    <h2 class="titulo">Área de uma mesa</h2>
+    <div style="position:absolute;left:0;width:800px;top:150px">
+      <div class="caixa caixa-fundamental" style="padding:20px 32px">
+        <span class="rotulo">Multiplicação e divisão</span>
+        <div class="texto" style="font-size:31px">O resultado fica com o número de algarismos significativos do dado que tiver <b>menos</b>.</div>
+      </div>
+      <p class="texto" style="margin:24px 0 0;font-size:31px">O tampo mede <b>3,42 m</b> por <b>1,5 m</b>. Qual é a área, com o número correto de algarismos significativos?</p>
+      <p class="texto" data-passo="1" style="margin:16px 0 0;font-size:30px">3,42 tem <b>três</b>; 1,5 tem <b>dois</b>. O resultado fica com dois.</p>
+    </div>
+    <div class="contas" style="position:absolute;left:900px;right:0;top:150px;font-size:46px">
+      <div class="eq" data-passo="2"><span>\(A\)</span><span>\(=\)</span><span>\(c \cdot l\)</span></div>
+      <div class="eq" data-passo="3"><span>\(A\)</span><span>\(=\)</span><span>\(3{,}42 \cdot 1{,}5\)</span></div>
+      <div class="eq" data-passo="4"><span>\(A\)</span><span>\(=\)</span><span>\(5{,}13\ \text{m}^2\)</span></div>
+      <div class="eq final" data-passo="5"><span>\(A\)</span><span>\(\approx\)</span><span>\(5{,}1\ \text{m}^2\)</span></div>
+    </div>
+    <span class="pilula pilula-resposta" data-passo="6" style="position:absolute;right:0;top:700px">5,1 m²: o 3 da calculadora não tem significado</span>
+  </div>
+  <aside class="notas">
+    <p>A calculadora mostra 5,13, mas a medida de 1,5 m não garante tanto. Fica 5,1 m².</p>
+  </aside>
+</section>
+
+<!-- 12. Questão 1 -->
+<section class="slide questao" data-nome="Questão 1">
+  <div class="conteudo">
+    <div class="area-resolucao"></div>
+    <span class="pilula pilula-pausa" data-em="1:some">Pause o vídeo e tente</span>
+    <div class="painel-questao">
+      <p class="olho">Questão 1 · estilo PISM</p>
+      <p class="enunciado">Numa aula sobre o tamanho do Universo, uma professora pergunta à turma: se fosse possível empilhar folhas de papel até alcançar a Lua, quantas folhas seriam necessárias? Para a estimativa, ela pede que se considere a distância média da Terra à Lua igual a \(3{,}84 \cdot 10^{5}\ \text{km}\) e a espessura de uma folha de papel comum igual a \(0{,}1\ \text{mm}\). A ordem de grandeza do número de folhas da pilha é</p>
+      <ol class="alternativas curtas">
+        <li data-em="2:apaga"><b>A</b><span>\(10^{5}\)</span></li>
+        <li data-em="2:apaga"><b>B</b><span>\(10^{9}\)</span></li>
+        <li data-em="2:apaga"><b>C</b><span>\(10^{10}\)</span></li>
+        <li data-em="2:apaga"><b>D</b><span>\(10^{12}\)</span></li>
+        <li data-em="2:certo"><b>E</b><span>\(10^{13}\)</span></li>
+      </ol>
+    </div>
+  </div>
+  <aside class="notas">
+    <p>Clique 1 tira o aviso: resolva com a caneta (D); E esconde o enunciado. Tudo em metros: d = 3,84 · 10⁸ m e e = 10⁻⁴ m; n = 3,84 · 10¹². Como 3,84 &gt; 3,16, a ordem é 10¹³. Clique 2: gabarito E.</p>
+    <p>Erros: A subtrai 8 − 4 em vez de 8 − (−4); B esquece km → m e responde o expoente; C esquece km → m; D responde o expoente sem comparar com 3,16.</p>
+  </aside>
+</section>
+
+<!-- 13. Questão 2 -->
+<section class="slide questao" data-nome="Questão 2">
+  <div class="conteudo">
+    <div class="area-resolucao"></div>
+    <span class="pilula pilula-pausa" data-em="1:some">Pause o vídeo e tente</span>
+    <div class="painel-questao">
+      <p class="olho">Questão 2 · estilo PISM</p>
+      <p class="enunciado">O comprimento da linha do Equador é de cerca de \(40\,000\ \text{km}\). Imagine uma pessoa que pudesse dar a volta completa na Terra caminhando sobre essa linha, sem paradas, com velocidade constante de \(5\ \text{km/h}\). A ordem de grandeza, em dias, do tempo dessa caminhada é</p>
+      <ol class="alternativas curtas">
+        <li data-em="2:apaga"><b>A</b><span>\(10^{1}\) dias</span></li>
+        <li data-em="2:apaga"><b>B</b><span>\(10^{2}\) dias</span></li>
+        <li data-em="2:certo"><b>C</b><span>\(10^{3}\) dias</span></li>
+        <li data-em="2:apaga"><b>D</b><span>\(10^{4}\) dias</span></li>
+        <li data-em="2:apaga"><b>E</b><span>\(10^{5}\) dias</span></li>
+      </ol>
+    </div>
+  </div>
+  <aside class="notas">
+    <p>Tempo = 40 000 ÷ 5 = 8000 h; em dias, 8000 ÷ 24 ≈ 333 = 3,33 · 10². Como 3,33 &gt; 3,16 (por pouco), a ordem é 10³. Gabarito C.</p>
+    <p>Erros: A passa para meses; B responde o expoente; D para nas horas; E multiplica por 24.</p>
+  </aside>
+</section>
+
+<!-- 14. Questão 3 -->
+<section class="slide questao" data-nome="Questão 3">
+  <div class="conteudo">
+    <div class="area-resolucao"></div>
+    <span class="pilula pilula-pausa" data-em="1:some">Pause o vídeo e tente</span>
+    <div class="painel-questao">
+      <p class="olho">Questão 3 · estilo PISM</p>
+      <p class="enunciado">Para medir a velocidade de um ciclista numa reta do anel viário do campus da UFJF, dois estudantes marcaram dois pontos no asfalto com uma trena que só garante o metro: a distância entre eles foi registrada como \(48\ \text{m}\). Com um cronômetro que mostra centésimos de segundo, eles mediram que o ciclista levou \(4{,}52\ \text{s}\) para ir de um ponto ao outro, com velocidade praticamente constante. A velocidade do ciclista, em km/h, escrita com o número correto de algarismos significativos, é</p>
+      <ol class="alternativas curtas">
+        <li data-em="2:apaga"><b>A</b><span>10,6 km/h</span></li>
+        <li data-em="2:apaga"><b>B</b><span>38,2 km/h</span></li>
+        <li data-em="2:apaga"><b>C</b><span>38,23 km/h</span></li>
+        <li data-em="2:certo"><b>D</b><span>38 km/h</span></li>
+        <li data-em="2:apaga"><b>E</b><span>40 km/h</span></li>
+      </ol>
+    </div>
+  </div>
+  <aside class="notas">
+    <p>v = 48 ÷ 4,52 ≈ 10,62 m/s; vezes 3600/1000 ≈ 38,23 km/h. A distância tem 2 algarismos significativos, então fica 38 km/h. Gabarito D.</p>
+    <p>Erros: A não converte para km/h; B usa 3 significativos (o cronômetro); C copia a calculadora; E usa 1 significativo.</p>
+  </aside>
+</section>
+
+<!-- 15. Resumo -->
+<section class="slide" data-nome="Resumo">
+  <div class="conteudo">
+    <p class="olho">Resumo · Notação científica e ordem de grandeza</p>
+    <h2 class="titulo">O essencial</h2>
+    <div class="resumo" style="position:absolute;left:0;right:0;top:150px">
+      <div><b>Notação científica:</b> \(a \cdot 10^{n}\), com \(1 \leq a &lt; 10\) e \(n\) inteiro.</div>
+      <div><b>Contas:</b> na multiplicação, some os expoentes; na divisão, subtraia. Na soma, iguale os expoentes antes.</div>
+      <div><b>Ordem de grandeza:</b> a potência de 10 mais próxima. Se \(a \geq 3{,}16\), ela é \(10^{n+1}\).</div>
+      <div><b>Não é o expoente:</b> \(8{,}64 \cdot 10^{4}\) tem ordem \(10^{5}\).</div>
+      <div><b>Algarismos significativos:</b> os certos mais o primeiro duvidoso; zeros à esquerda não contam.</div>
+      <div><b>Produto e divisão:</b> o resultado tem tantos significativos quanto o dado que tem menos.</div>
+    </div>
+  </div>
+  <aside class="notas">
+    <p>Resumo do subcapítulo inteiro, as duas partes. Peça para tirarem um print.</p>
+  </aside>
+</section>
+
+<!-- 16. A seguir -->
+<section class="slide capa" data-nome="A seguir">
+  <div class="estrelas"></div>
+  <div class="texto-capa" style="top:130px">
+    <span class="selo">Física · PISM I</span>
+    <p class="aula">A seguir · Vetores · Parte 1 de 2</p>
+    <h1>Somando vetores</h1>
+    <p class="sub">Módulo, direção e sentido</p>
+  </div>
+  <svg class="emblema" viewBox="0 0 640 640" aria-hidden="true">
+    <g stroke-linecap="round" stroke-linejoin="round" fill="none">
+      <path d="M120 500 L440 500" stroke="#fff" stroke-opacity=".85" stroke-width="10"/><path d="M410 476 L444 500 L410 524" stroke="#fff" stroke-opacity=".85" stroke-width="10"/>
+      <path d="M460 480 L460 200" stroke="#fff" stroke-opacity=".85" stroke-width="10"/><path d="M436 232 L460 196 L484 232" stroke="#fff" stroke-opacity=".85" stroke-width="10"/>
+      <path d="M120 490 L430 210" stroke="#FFD10C" stroke-width="12"/><path d="M392 214 L440 200 L428 246" stroke="#FFD10C" stroke-width="12"/>
+    </g>
+    <circle cx="120" cy="500" r="16" fill="var(--d)" stroke="#fff" stroke-width="4"/>
+  </svg>
+  <img class="logo-capa" src="{{LOGO_BRANCO}}" alt="Quarks">
+  <aside class="notas"><p>Próxima parte: grandezas escalares e vetoriais e a soma de vetores.</p></aside>
+</section>

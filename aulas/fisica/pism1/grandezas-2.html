@@ -1,0 +1,301 @@
+<!--aula
+{"disciplina": "fisica", "curso": "PISM I", "assunto": "Grandezas e unidades", "parte": "Parte 2 de 2", "titulo": "Análise dimensional"}
+-->
+<!-- Fonte: apostila PISM I, Física, cap. 1 (1.1 Grandezas e unidades > Análise dimensional e resumo do 1.1) e lote ae-portal-grandezas-e-unidades-f1 (FIS-5030, FIS-5042, FIS-5043). -->
+
+<style>
+  .somas { display: grid; grid-template-columns: 1fr 1fr; gap: 22px 28px; }
+  .somas > div { background: var(--branco); border: 2px solid var(--lilas-2); border-radius: 26px; padding: 18px 28px; display: flex; align-items: center; justify-content: space-between; font-size: 40px; }
+  .somas .marca { font: 800 26px var(--fonte-texto); padding: 4px 16px; border-radius: 999px; }
+  .somas .sim { background: var(--certo-claro); color: var(--certo); }
+  .somas .nao { background: var(--erro-claro); color: var(--erro); }
+  .colchetes { display: grid; grid-template-columns: repeat(3, 1fr); gap: 24px; }
+  .colchetes > div { background: var(--branco); border: 2px solid var(--lilas-2); border-radius: 26px; padding: 18px 26px; text-align: center; }
+  .colchetes .eqc { font-size: 44px; display: block; }
+  .colchetes .leg { display: block; font-size: 24px; color: var(--cinza); font-weight: 700; margin-top: 6px; }
+</style>
+
+<!-- 1. Capa -->
+<section class="slide capa" data-nome="Capa">
+  <div class="estrelas"></div>
+  <div class="texto-capa">
+    <span class="selo">Física · PISM I</span>
+    <p class="aula">Grandezas e unidades · Parte 2 de 2</p>
+    <h1>Análise dimensional</h1>
+    <p class="sub">A conta feita só com as unidades</p>
+  </div>
+  <svg class="emblema" viewBox="0 0 640 640" aria-hidden="true">
+    <g class="gira-lento"><ellipse cx="320" cy="320" rx="300" ry="128" fill="none" stroke="#fff" stroke-opacity=".38" stroke-width="2" transform="rotate(-10 320 320)"/></g>
+    <g class="gira"><ellipse cx="320" cy="320" rx="236" ry="196" fill="none" stroke="#FFD10C" stroke-opacity=".75" stroke-width="2.5" stroke-dasharray="3 14" stroke-linecap="round" transform="rotate(-8 320 320)"/>
+      <circle cx="84" cy="300" r="13" fill="var(--d)" stroke="#fff" stroke-width="3"/></g>
+    <circle cx="320" cy="320" r="132" fill="#FFD10C"/>
+    <image href="{{SYM_ROXO}}" x="238" y="238" width="164" height="164"/>
+  </svg>
+  <img class="logo-capa" src="{{LOGO_BRANCO}}" alt="Quarks">
+  <aside class="notas">
+    <p>Hoje: uma ferramenta para conferir fórmulas e descobrir unidades sem fazer conta com números.</p>
+  </aside>
+</section>
+
+<!-- 2. Gancho -->
+<section class="slide" data-nome="Maçãs e laranjas">
+  <div class="conteudo">
+    <p class="olho">Para começar</p>
+    <h2 class="titulo">3 maçãs + 2 laranjas = ?</h2>
+    <svg viewBox="0 0 1000 300" width="1000" height="300" style="position:absolute;left:0;top:160px;overflow:visible;font-family:Figtree,'Segoe UI',sans-serif" aria-hidden="true">
+      <g fill="#C2384F"><circle cx="70" cy="120" r="54"/><circle cx="190" cy="120" r="54"/><circle cx="310" cy="120" r="54"/></g>
+      <g stroke="#1F7A3A" stroke-width="7" stroke-linecap="round"><line x1="70" y1="66" x2="80" y2="46"/><line x1="190" y1="66" x2="200" y2="46"/><line x1="310" y1="66" x2="320" y2="46"/></g>
+      <text x="420" y="145" font-size="80" font-weight="800" fill="#3F2FA0" text-anchor="middle">+</text>
+      <g fill="#F29A1F"><circle cx="540" cy="120" r="54"/><circle cx="660" cy="120" r="54"/></g>
+      <g fill="#fff" opacity=".35"><circle cx="525" cy="100" r="12"/><circle cx="645" cy="100" r="12"/></g>
+      <text x="190" y="240" font-size="34" font-weight="800" fill="#292B2C" text-anchor="middle">3 maçãs</text>
+      <text x="600" y="240" font-size="34" font-weight="800" fill="#292B2C" text-anchor="middle">2 laranjas</text>
+      <g data-passo="1"><text x="760" y="145" font-size="80" font-weight="800" fill="#3F2FA0">=</text><text x="850" y="145" font-size="60" font-weight="800" fill="#C2384F" text-decoration="line-through">5 maçãs</text></g>
+    </svg>
+    <div class="caixa" data-passo="2" style="position:absolute;left:1100px;right:0;top:170px;padding:22px 30px">
+      <div class="texto" style="font-size:34px">Em Física é igual: <b>não se soma metro com segundo</b>.</div>
+      <div style="font-size:56px;margin-top:10px;text-align:center"><span class="riscado">\(2\ \text{m} + 3\ \text{s}\)</span></div>
+    </div>
+    <div class="caixa caixa-fundamental" data-passo="3" style="position:absolute;left:600px;right:0;top:560px;padding:22px 34px">
+      <div class="texto">Essa regra simples ajuda a <b>conferir fórmulas</b> e a <b>descobrir unidades</b>.</div>
+    </div>
+  </div>
+  <aside class="notas">
+    <p>Ninguém soma 3 maçãs com 2 laranjas e diz que tem 5 maçãs. Clique 2: o mesmo vale para unidades.</p>
+    <p>Clique 3: é isso que vamos usar o tempo todo.</p>
+  </aside>
+</section>
+
+<!-- 3. Homogeneidade -->
+<section class="slide" data-nome="Homogeneidade">
+  <div class="conteudo">
+    <p class="olho">Definição</p>
+    <h2 class="titulo">Homogeneidade</h2>
+    <div class="caixa caixa-fundamental" style="position:absolute;left:0;right:0;top:160px;padding:24px 34px">
+      <span class="rotulo">Equação homogênea</span>
+      <div class="texto">Numa equação física correta, os dois lados têm a <b>mesma unidade</b>, e só se somam ou subtraem termos de <b>mesma unidade</b>.</div>
+    </div>
+    <div class="somas" style="position:absolute;left:0;right:0;top:390px">
+      <div data-passo="1"><span>\(3\ \text{kg} + 2\ \text{m}\)</span><span class="marca nao">não pode</span></div>
+      <div data-passo="2"><span>\(10\ \text{s} + 5\ \text{m/s}\)</span><span class="marca nao">não pode</span></div>
+    </div>
+    <div class="somas" style="position:absolute;left:600px;right:0;top:530px;grid-template-columns:1fr">
+      <div data-passo="3"><span>\(4\ \text{m}^2 + 4\ \text{m}\)</span><span class="marca nao">não pode</span></div>
+      <div data-passo="4"><span>\(2\ \text{m} + 50\ \text{cm} = 2\ \text{m} + 0{,}5\ \text{m} = 2{,}5\ \text{m}\)</span><span class="marca sim">pode</span></div>
+    </div>
+  </div>
+  <aside class="notas">
+    <p>Cliques 1 a 3: massa com comprimento, tempo com velocidade, área com comprimento. Nenhuma faz sentido.</p>
+    <p>Clique 4: metro com centímetro pode, porque é a mesma grandeza; é só converter antes.</p>
+  </aside>
+</section>
+
+<!-- 4. Notação [ ] -->
+<section class="slide" data-nome="A notação [ ]">
+  <div class="conteudo">
+    <p class="olho">Análise dimensional</p>
+    <h2 class="titulo">A unidade entre colchetes</h2>
+    <div style="position:absolute;left:0;width:860px;top:160px;display:flex;flex-direction:column;gap:24px">
+      <p class="texto" style="margin:0;font-size:34px">Escrevemos a <b>unidade de uma grandeza</b> entre colchetes: \([V]\) lê-se "unidade de \(V\)".</p>
+      <p class="texto" data-passo="1" style="margin:0;font-size:34px">Números puros, como 2 ou \(\pi\), <b>não têm unidade</b> e não mudam nada nessa conferência.</p>
+    </div>
+    <div class="caixa caixa-fundamental" data-passo="2" style="position:absolute;left:960px;right:0;top:160px;padding:24px 32px">
+      <span class="rotulo">Análise dimensional</span>
+      <div class="texto" style="font-size:33px">Fazer a conta <b>só com as unidades</b>, para ver se os dois lados combinam.</div>
+    </div>
+    <div class="colchetes" data-passo="3" style="position:absolute;left:600px;right:0;top:560px">
+      <div><span class="eqc">\([A] = \text{m}^2\)</span><span class="leg">área</span></div>
+      <div><span class="eqc">\([v] = \text{m/s}\)</span><span class="leg">velocidade</span></div>
+      <div><span class="eqc">\([2] = 1\)</span><span class="leg">número puro: sem unidade</span></div>
+    </div>
+  </div>
+  <aside class="notas">
+    <p>Os colchetes são só uma forma curta de dizer "a unidade de".</p>
+    <p>Clique 3: exemplos. O "1" do número puro quer dizer que ele não acrescenta unidade nenhuma.</p>
+  </aside>
+</section>
+
+<!-- 5. Exemplo: qual fórmula -->
+<section class="slide" data-nome="Exemplo: qual fórmula">
+  <div class="conteudo">
+    <p class="olho">Exemplo</p>
+    <h2 class="titulo">Qual fórmula pode valer?</h2>
+    <p class="texto" style="position:absolute;left:0;right:0;top:150px;margin:0;font-size:31px">Dois alunos escreveram fórmulas para o volume de um cilindro de raio \(r\) e altura \(h\). Volume sai em <b>m³</b>; \(r\) e \(h\) em metros.</p>
+    <div style="position:absolute;left:0;width:700px;top:280px">
+      <p class="texto" style="margin:0 0 12px;font-size:34px"><b>\(V = \pi r^2 h\)</b></p>
+      <div class="contas" style="font-size:44px">
+        <div class="eq" data-passo="1"><span>\([V]\)</span><span>\(=\)</span><span>\([r]^2 \cdot [h]\)</span></div>
+        <div class="eq" data-passo="2"><span>\([V]\)</span><span>\(=\)</span><span>\(\text{m}^2 \cdot \text{m}\)</span></div>
+        <div class="eq final" data-passo="3"><span>\([V]\)</span><span>\(=\)</span><span>\(\text{m}^3\)</span></div>
+      </div>
+    </div>
+    <div style="position:absolute;left:900px;right:0;top:280px">
+      <p class="texto" style="margin:0 0 12px;font-size:34px"><b>\(V = \pi r h\)</b></p>
+      <div class="contas" style="font-size:44px">
+        <div class="eq" data-passo="4"><span>\([V]\)</span><span>\(=\)</span><span>\([r] \cdot [h]\)</span></div>
+        <div class="eq" data-passo="5"><span>\([V]\)</span><span>\(=\)</span><span>\(\text{m} \cdot \text{m}\)</span></div>
+        <div class="eq final" data-passo="6"><span>\([V]\)</span><span>\(=\)</span><span>\(\text{m}^2\)</span></div>
+      </div>
+    </div>
+    <span class="pilula pilula-resposta" data-passo="7" style="position:absolute;right:0;top:640px">Só a primeira pode estar certa</span>
+    <p class="texto" data-passo="7" style="position:absolute;left:600px;right:0;top:730px;margin:0;font-size:29px;text-align:right">A segunda dá m², unidade de <b>área</b>, não de volume. O \(\pi\) não conta.</p>
+  </div>
+  <aside class="notas">
+    <p>O π é número puro, então sai da conta. Primeira fórmula: m³. Segunda: m².</p>
+    <p>Clique 7: a segunda está com certeza errada.</p>
+  </aside>
+</section>
+
+<!-- 6. Exemplo: unidade da constante -->
+<section class="slide" data-nome="Exemplo: a constante">
+  <div class="conteudo">
+    <p class="olho">Exemplo</p>
+    <h2 class="titulo">A unidade da constante</h2>
+    <div style="position:absolute;left:0;width:800px;top:160px">
+      <p class="texto" style="margin:0;font-size:33px">Quando uma pedra cai a partir do repouso, a distância segue a regra \(d = k\,t^2\), com \(d\) em <b>metros</b> e \(t\) em <b>segundos</b>. Qual é a unidade de \(k\) no SI?</p>
+      <div class="caixa" style="margin-top:28px;padding:18px 28px"><span class="rotulo">Raciocínio</span><div class="texto" style="font-size:31px">Isole \(k\) e faça a conta só com as unidades.</div></div>
+    </div>
+    <div class="contas" style="position:absolute;left:940px;top:150px;font-size:46px;row-gap:16px">
+      <div class="eq" data-passo="1"><span>\(d\)</span><span>\(=\)</span><span>\(k\,t^2\)</span></div>
+      <div class="eq" data-passo="2"><span>\(k\)</span><span>\(=\)</span><span>\(\dfrac{d}{t^2}\)</span></div>
+      <div class="eq" data-passo="3"><span>\([k]\)</span><span>\(=\)</span><span>\(\dfrac{[d]}{[t]^2}\)</span></div>
+      <div class="eq final" data-passo="4"><span>\([k]\)</span><span>\(=\)</span><span>\(\dfrac{\text{m}}{\text{s}^2}\)</span></div>
+    </div>
+    <span class="pilula pilula-resposta" data-passo="5" style="position:absolute;right:0;top:720px">\([k] = \text{m/s}^2\): a unidade da aceleração</span>
+  </div>
+  <aside class="notas">
+    <p>Divida os dois lados por t² para isolar k. Depois troque cada letra pela sua unidade.</p>
+    <p>Clique 5: vocês vão reencontrar m/s² em Cinemática, como unidade de aceleração.</p>
+  </aside>
+</section>
+
+<!-- 7. Atenção -->
+<section class="slide" data-nome="Atenção: unidade certa">
+  <div class="conteudo">
+    <p class="olho">Atenção</p>
+    <h2 class="titulo">Unidade certa não prova a fórmula</h2>
+    <div class="caixa caixa-atencao" style="position:absolute;left:0;right:0;top:160px;padding:22px 34px">
+      <div class="texto" style="font-size:33px">Se as unidades <b>não batem</b>, a fórmula com certeza está errada. Mas, se <b>batem</b>, ela ainda pode estar errada: a análise dimensional <b>não enxerga números puros</b>.</div>
+    </div>
+    <div style="position:absolute;left:0;right:0;top:390px;display:grid;grid-template-columns:1fr 1fr;gap:30px">
+      <div class="caixa" data-passo="1" style="text-align:center;padding:22px"><div style="font-size:54px">\(V = \pi r^2 h\)</div><div class="texto" style="font-size:28px;color:var(--cinza)">dá m³ · <b style="color:var(--certo)">é o volume do cilindro</b></div></div>
+      <div class="caixa" data-passo="2" style="text-align:center;padding:22px"><div style="font-size:54px">\(V = 2 r^2 h\)</div><div class="texto" style="font-size:28px;color:var(--cinza)">também dá m³ · <b style="color:var(--erro)">não é o volume</b></div></div>
+    </div>
+    <span class="pilula pilula-pausa" data-passo="3" style="position:absolute;right:0;top:680px">Unidade errada → fórmula errada. Unidade certa → ainda não sabemos.</span>
+  </div>
+  <aside class="notas">
+    <p>As duas fórmulas têm as mesmas unidades; só a primeira é o volume do cilindro. O π e o 2 são invisíveis para a análise.</p>
+    <p>Prova costuma explorar isso em afirmações do tipo "as unidades batem, logo a fórmula está certa".</p>
+  </aside>
+</section>
+
+<!-- 8. Questão 1 -->
+<section class="slide questao" data-nome="Questão 1">
+  <div class="conteudo">
+    <div class="area-resolucao"></div>
+    <span class="pilula pilula-pausa" data-em="1:some">Pause o vídeo e tente</span>
+    <div class="painel-questao">
+      <p class="olho">Questão 1 · prática</p>
+      <p class="enunciado">Em Física, só se somam grandezas que têm a mesma unidade. Um aluno escreveu cinco somas no quadro. A única soma que faz sentido físico é</p>
+      <ol class="alternativas">
+        <li data-em="2:apaga"><b>A</b><span>3 kg + 2 m</span></li>
+        <li data-em="2:apaga"><b>B</b><span>10 s + 5 m/s</span></li>
+        <li data-em="2:apaga"><b>C</b><span>4 m² + 4 m</span></li>
+        <li data-em="2:certo"><b>D</b><span>2 m + 50 cm</span></li>
+        <li data-em="2:apaga"><b>E</b><span>1 L + 1 kg</span></li>
+      </ol>
+    </div>
+  </div>
+  <aside class="notas">
+    <p>Clique 1 tira o aviso: resolva com a caneta (D) no quadro; E esconde o enunciado. Clique 2: gabarito D (mesma grandeza, só converter).</p>
+    <p>Erros: A massa com comprimento; B tempo com velocidade; C área com comprimento; E volume com massa (para a água 1 L tem cerca de 1 kg, mas são grandezas diferentes).</p>
+  </aside>
+</section>
+
+<!-- 9. Questão 2 -->
+<section class="slide questao" data-nome="Questão 2">
+  <div class="conteudo">
+    <div class="area-resolucao"></div>
+    <span class="pilula pilula-pausa" data-em="1:some">Pause o vídeo e tente</span>
+    <div class="painel-questao">
+      <p class="olho">Questão 2 · prática</p>
+      <p class="enunciado">A posição de um carrinho de controle remoto numa pista reta foi ajustada, num experimento, pela regra \(s = b\,t + c\,t^3\), em que \(s\) é a posição, em metros, e \(t\) é o tempo, em segundos. Para que a regra seja homogênea, a unidade da constante \(c\) no SI deve ser</p>
+      <ol class="alternativas">
+        <li data-em="2:certo"><b>A</b><span>m/s³</span></li>
+        <li data-em="2:apaga"><b>B</b><span>m/s²</span></li>
+        <li data-em="2:apaga"><b>C</b><span>m · s³</span></li>
+        <li data-em="2:apaga"><b>D</b><span>s³/m</span></li>
+        <li data-em="2:apaga"><b>E</b><span>m/s</span></li>
+      </ol>
+    </div>
+  </div>
+  <aside class="notas">
+    <p>O termo c·t³ precisa dar metros: [c] = m / s³. Gabarito A.</p>
+    <p>Erros: B usa o expoente 2 da teoria; C multiplica em vez de dividir; D inverte a fração; E é a unidade de b, não de c.</p>
+  </aside>
+</section>
+
+<!-- 10. Questão 3 -->
+<section class="slide questao" data-nome="Questão 3">
+  <div class="conteudo">
+    <div class="area-resolucao"></div>
+    <span class="pilula pilula-pausa" data-em="1:some">Pause o vídeo e tente</span>
+    <div class="painel-questao">
+      <p class="olho">Questão 3 · prática</p>
+      <p class="enunciado" style="font-size:24px">Um grupo de alunos quer uma fórmula para o tempo \(t\) que um objeto leva para cair de uma altura \(h\). A resposta depende de \(h\), em metros, e da aceleração da gravidade \(g\), em m/s². Cinco fórmulas foram propostas:</p>
+      <p class="enunciado" style="font-size:29px;line-height:1.9">I. \(t = \dfrac{2h}{g}\) &nbsp; II. \(t = \sqrt{\dfrac{2h}{g}}\) &nbsp; III. \(t = \sqrt{\dfrac{2g}{h}}\)<br>IV. \(t = \sqrt{2gh}\) &nbsp; V. \(t = h \cdot g\)</p>
+      <p class="enunciado" style="font-size:24px">Analisando apenas as unidades, a única fórmula que dá resultado em segundos é</p>
+      <ol class="alternativas curtas">
+        <li data-em="2:apaga"><b>A</b><span>I</span></li>
+        <li data-em="2:certo"><b>B</b><span>II</span></li>
+        <li data-em="2:apaga"><b>C</b><span>III</span></li>
+        <li data-em="2:apaga"><b>D</b><span>IV</span></li>
+        <li data-em="2:apaga"><b>E</b><span>V</span></li>
+      </ol>
+    </div>
+  </div>
+  <aside class="notas">
+    <p>m ÷ (m/s²) = s²; a raiz dá s. Gabarito B (II).</p>
+    <p>Erros: I dá s² (falta a raiz); III dá 1/s; IV dá m/s; V dá m²/s².</p>
+  </aside>
+</section>
+
+<!-- 11. Resumo -->
+<section class="slide" data-nome="Resumo">
+  <div class="conteudo">
+    <p class="olho">Resumo · Grandezas e unidades</p>
+    <h2 class="titulo">O essencial</h2>
+    <div class="resumo" style="position:absolute;left:0;right:0;top:150px">
+      <div><b>Grandeza</b> é o que se mede; o valor é sempre <b>número e unidade</b>.</div>
+      <div><b>SI:</b> sete grandezas de base (metro, quilograma, segundo…); as outras unidades são <b>derivadas</b>.</div>
+      <div><b>Prefixos</b> multiplicam a unidade: quilo = 1000, centi = 0,01, mili = 0,001.</div>
+      <div><b>Converter:</b> troque a unidade pelo valor dela na unidade nova; em área, eleve ao quadrado, e em volume, ao cubo.</div>
+      <div><b>1 m² = 10 000 cm²</b>; <b>1 m³ = 1000 L</b>; <b>1 h = 3600 s</b>.</div>
+      <div><b>Homogeneidade:</b> os dois lados de uma equação física têm a mesma unidade. Unidade certa não prova a fórmula.</div>
+    </div>
+  </div>
+  <aside class="notas">
+    <p>Resumo do subcapítulo inteiro, as duas partes. Peça para tirarem um print desta tela.</p>
+  </aside>
+</section>
+
+<!-- 12. A seguir -->
+<section class="slide capa" data-nome="A seguir">
+  <div class="estrelas"></div>
+  <div class="texto-capa" style="top:150px">
+    <span class="selo">Física · PISM I</span>
+    <p class="aula" style="font-size:26px;margin-top:36px">A seguir · Notação científica e ordem de grandeza<br>Parte 1 de 2</p>
+    <h1 style="font-size:116px">Notação científica</h1>
+    <p class="sub" style="font-size:44px;margin-top:20px">Números enormes e minúsculos, sem contar zeros</p>
+  </div>
+  <svg class="emblema" viewBox="0 0 640 640" aria-hidden="true">
+    <circle cx="320" cy="320" r="220" fill="#FFD10C"/>
+    <g font-family="'Bricolage Grotesque',Figtree,sans-serif" font-weight="800" fill="#3F2FA0">
+      <text x="440" y="380" font-size="150" text-anchor="end">3·10</text>
+      <text x="446" y="290" font-size="90">8</text>
+    </g>
+    <circle cx="560" cy="150" r="16" fill="var(--d)" stroke="#fff" stroke-width="4"/>
+  </svg>
+  <img class="logo-capa" src="{{LOGO_BRANCO}}" alt="Quarks">
+  <aside class="notas"><p>Próximo subcapítulo: notação científica, para escrever 300 000 000 m/s como 3 · 10⁸ m/s.</p></aside>
+</section>

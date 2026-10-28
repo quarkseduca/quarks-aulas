@@ -1,0 +1,506 @@
+<!--aula
+{"disciplina": "fisica", "curso": "PISM I", "assunto": "Grandezas e unidades", "parte": "Parte 1 de 2", "titulo": "Medir e converter"}
+-->
+<!-- Fonte: apostila PISM I, Física, cap. 1 (1.1 Grandezas e unidades > Grandezas e o Sistema Internacional; Conversão de unidades) e lote ae-portal-grandezas-e-unidades-f1 (FIS-5028, FIS-5033, FIS-5040). -->
+
+<style>
+  .tabela.compacta { font-size: 30px; }
+  .tabela.compacta th { padding: 10px 30px; }
+  .tabela.compacta td { padding: 7px 30px; }
+  .tabela.compacta tr.destaque td { background: #FFF8D6; font-weight: 800; }
+  .equiv { display: grid; grid-template-columns: 1fr 1fr; gap: 22px 28px; }
+  .equiv > div { background: var(--branco); border: 2px solid var(--lilas-2); border-radius: 26px; padding: 18px 28px; font-size: 32px; line-height: 1.5; }
+  .equiv .rotulo { display: block; font-weight: 800; font-size: 22px; letter-spacing: .1em; text-transform: uppercase; color: var(--d-forte); margin-bottom: 4px; }
+  .prefixos { display: grid; grid-template-columns: repeat(7, 1fr); gap: 14px; }
+  .prefixos > div { background: var(--branco); border: 2px solid var(--lilas-2); border-radius: 24px; padding: 16px 10px 18px; text-align: center; }
+  .prefixos .nome { display: block; font-weight: 700; font-size: 26px; color: var(--cinza); }
+  .prefixos .simb { display: block; font: 800 72px var(--fonte-titulo); color: var(--d-forte); line-height: 1.1; }
+  .prefixos .vale { display: block; font-weight: 700; font-size: 23px; color: var(--carvao); font-variant-numeric: tabular-nums; }
+  .prefixos .maior { background: var(--d-clara); border-color: color-mix(in srgb, var(--d) 35%, transparent); }
+  .simbolos { display: grid; grid-template-columns: repeat(3, 1fr); gap: 24px; }
+  .simbolos > div { background: var(--branco); border: 2px solid var(--lilas-2); border-radius: 26px; padding: 18px 26px; display: flex; justify-content: space-around; align-items: center; font: 800 46px var(--fonte-titulo); }
+  .simbolos .ok { color: var(--certo); }
+</style>
+
+<!-- 1. Capa -->
+<section class="slide capa" data-nome="Capa">
+  <div class="estrelas"></div>
+  <div class="texto-capa">
+    <span class="selo">Física · PISM I</span>
+    <p class="aula">Grandezas e unidades · Parte 1 de 2</p>
+    <h1>Medir e converter</h1>
+    <p class="sub">O Sistema Internacional e a troca de unidades</p>
+  </div>
+  <svg class="emblema" viewBox="0 0 640 640" aria-hidden="true">
+    <g class="gira-lento"><ellipse cx="320" cy="320" rx="300" ry="128" fill="none" stroke="#fff" stroke-opacity=".38" stroke-width="2" transform="rotate(-10 320 320)"/></g>
+    <g class="gira"><ellipse cx="320" cy="320" rx="236" ry="196" fill="none" stroke="#FFD10C" stroke-opacity=".75" stroke-width="2.5" stroke-dasharray="3 14" stroke-linecap="round" transform="rotate(-8 320 320)"/>
+      <circle cx="84" cy="300" r="13" fill="var(--d)" stroke="#fff" stroke-width="3"/></g>
+    <circle cx="320" cy="320" r="132" fill="#FFD10C"/>
+    <image href="{{SYM_ROXO}}" x="238" y="238" width="164" height="164"/>
+  </svg>
+  <img class="logo-capa" src="{{LOGO_BRANCO}}" alt="Quarks">
+  <aside class="notas">
+    <p>Primeiro passo da Física: toda medida tem número e unidade. No fim, você troca qualquer unidade por outra sem errar a conta.</p>
+  </aside>
+</section>
+
+<!-- 2. Gancho -->
+<section class="slide" data-nome="2 de farinha">
+  <div class="conteudo">
+    <p class="olho">Para começar</p>
+    <h2 class="titulo">"2 de farinha"</h2>
+    <svg viewBox="0 0 640 400" width="640" height="400" style="position:absolute;left:0;top:150px;overflow:visible;font-family:Figtree,'Segoe UI',sans-serif" aria-hidden="true">
+      <rect x="6" y="6" width="620" height="390" rx="34" fill="#fff" stroke="#E4DEFB" stroke-width="3"/>
+      <text x="50" y="80" font-size="40" font-weight="800" fill="#3F2FA0" font-family="'Bricolage Grotesque',Figtree,sans-serif">Bolo de cenoura</text>
+      <g font-size="32" fill="#292B2C">
+        <text x="50" y="150">• 3 cenouras médias</text>
+        <text x="50" y="205">• 3 ovos</text>
+        <text x="50" y="260">•</text><text x="120" y="260">de farinha de trigo</text>
+        <text x="50" y="315">• 1 de açúcar</text>
+      </g>
+      <rect x="74" y="226" width="38" height="46" rx="10" fill="#FFD10C" opacity=".7"/>
+      <text x="92" y="260" font-size="32" font-weight="800" fill="#292B2C" text-anchor="middle">2</text>
+    </svg>
+    <div style="position:absolute;left:760px;right:0;top:170px;display:flex;flex-direction:column;gap:22px;align-items:flex-start">
+      <span class="pilula pilula-pausa" data-passo="1">2 xícaras?</span>
+      <span class="pilula pilula-pausa" data-passo="2">2 quilos?</span>
+      <span class="pilula pilula-pausa" data-passo="3">2 colheres?</span>
+    </div>
+    <div class="caixa caixa-fundamental" data-passo="4" style="position:absolute;left:600px;right:0;top:560px;padding:24px 34px">
+      <div class="texto">Sem a unidade, o número não serve para nada. Em Física, todo resultado de uma medida tem <b>duas partes</b>: um <b>número</b> e uma <b>unidade</b>.</div>
+    </div>
+  </div>
+  <aside class="notas">
+    <p>Cliques 1 a 3: cada leitura possível dá um bolo diferente. Dois quilos de farinha e duas colheres não têm nada a ver.</p>
+    <p>Clique 4: a ideia central desta parte.</p>
+  </aside>
+</section>
+
+<!-- 3. Grandeza e medida -->
+<section class="slide" data-nome="Grandeza e medida">
+  <div class="conteudo">
+    <p class="olho">Definição</p>
+    <h2 class="titulo">Grandeza física e medida</h2>
+    <div style="position:absolute;left:0;width:820px;top:160px;display:flex;flex-direction:column;gap:24px">
+      <p class="texto" style="margin:0;font-size:34px"><b>Grandeza física</b> é tudo o que pode ser medido: comprimento, massa, tempo, temperatura, velocidade.</p>
+      <p class="texto" data-passo="1" style="margin:0;font-size:34px"><b>Medir</b> é comparar a grandeza com um padrão da mesma espécie, a <b>unidade</b>, e dizer quantas vezes o padrão cabe nela.</p>
+    </div>
+    <svg viewBox="0 0 820 360" width="820" height="360" data-passo="2" style="position:absolute;left:940px;top:150px;overflow:visible;font-family:Figtree,'Segoe UI',sans-serif" aria-hidden="true">
+      <rect x="40" y="200" width="740" height="26" rx="8" fill="#C9C0F0"/>
+      <rect x="80" y="226" width="22" height="120" rx="6" fill="#C9C0F0"/><rect x="718" y="226" width="22" height="120" rx="6" fill="#C9C0F0"/>
+      <g>
+        <rect x="40" y="128" width="370" height="46" rx="10" fill="var(--d)"/>
+        <rect x="410" y="128" width="370" height="46" rx="10" fill="var(--d-forte)"/>
+        <g stroke="#fff" stroke-width="3" opacity=".7"><line x1="132" y1="128" x2="132" y2="148"/><line x1="317" y1="128" x2="317" y2="148"/><line x1="502" y1="128" x2="502" y2="148"/><line x1="687" y1="128" x2="687" y2="148"/></g>
+        <text x="225" y="163" text-anchor="middle" font-size="28" font-weight="800" fill="#fff">1 m</text>
+        <text x="595" y="163" text-anchor="middle" font-size="28" font-weight="800" fill="#fff">1 m</text>
+      </g>
+      <path d="M40 80 L780 80 M40 66 L40 94 M780 66 L780 94" stroke="#3F2FA0" stroke-width="4" fill="none"/>
+      <text x="410" y="60" text-anchor="middle" font-size="36" font-weight="800" fill="#3F2FA0">mesa de 2 m: o metro cabe 2 vezes</text>
+    </svg>
+    <div class="caixa caixa-fundamental" data-passo="3" style="position:absolute;left:600px;right:0;top:560px;padding:22px 34px">
+      <span class="rotulo">Medida é número e unidade</span>
+      <div class="texto" style="font-size:33px">O valor de uma grandeza é sempre um número com uma unidade: 2 m, 15 s, 60 kg. Trocar a unidade muda o número, mas <b>não muda a grandeza</b>: 2 m e 200 cm são o mesmo comprimento.</div>
+    </div>
+  </div>
+  <aside class="notas">
+    <p>Clique 1: medir é comparar com um padrão. Clique 2: a mesa de 2 m tem o comprimento de dois metros enfileirados.</p>
+    <p>Clique 3: o número sozinho não diz nada; trocar a unidade não muda o comprimento da mesa.</p>
+  </aside>
+</section>
+
+<!-- 4. O SI -->
+<section class="slide" data-nome="Sistema Internacional">
+  <div class="conteudo">
+    <p class="olho">Sistema Internacional (SI)</p>
+    <h2 class="titulo">As sete grandezas de base</h2>
+    <div style="position:absolute;left:0;width:640px;top:160px;display:flex;flex-direction:column;gap:26px">
+      <p class="texto" style="margin:0;font-size:32px">Para que um engenheiro de Juiz de Fora e um do Japão entendam as mesmas medidas, quase todos os países adotam o <b>SI</b>.</p>
+      <div class="caixa" data-passo="2" style="padding:20px 28px">
+        <span class="rotulo">Unidades derivadas</span>
+        <div class="texto" style="font-size:30px">São combinações das sete de base: área em <b>m²</b>, volume em <b>m³</b>, velocidade em <b>m/s</b>.</div>
+      </div>
+    </div>
+    <table class="tabela compacta" data-passo="1" style="position:absolute;left:740px;top:150px">
+      <tr><th>Grandeza</th><th>Unidade</th><th>Símbolo</th></tr>
+      <tr><td>comprimento</td><td>metro</td><td>m</td></tr>
+      <tr class="destaque"><td>massa</td><td>quilograma</td><td>kg</td></tr>
+      <tr><td>tempo</td><td>segundo</td><td>s</td></tr>
+      <tr><td>corrente elétrica</td><td>ampere</td><td>A</td></tr>
+      <tr><td>temperatura</td><td>kelvin</td><td>K</td></tr>
+      <tr><td>quantidade de matéria</td><td>mol</td><td>mol</td></tr>
+      <tr><td>intensidade luminosa</td><td>candela</td><td>cd</td></tr>
+    </table>
+    <span class="pilula pilula-pausa" data-passo="3" style="position:absolute;left:740px;top:700px">A massa já vem com prefixo: quilograma, não grama</span>
+  </div>
+  <aside class="notas">
+    <p>Clique 1: as sete grandezas de base, cada uma com sua unidade. No PISM I usamos muito metro, quilograma e segundo.</p>
+    <p>Clique 2: todas as outras unidades são derivadas. Clique 3: a unidade de base da massa é o quilograma; o grama não é unidade de base.</p>
+  </aside>
+</section>
+
+<!-- 5. Prefixos -->
+<section class="slide" data-nome="Prefixos">
+  <div class="conteudo">
+    <p class="olho">Valores muito grandes ou muito pequenos</p>
+    <h2 class="titulo">Prefixos multiplicam a unidade</h2>
+    <div class="prefixos" style="position:absolute;left:0;right:0;top:170px">
+      <div class="maior"><span class="nome">giga</span><span class="simb">G</span><span class="vale">1 000 000 000</span></div>
+      <div class="maior"><span class="nome">mega</span><span class="simb">M</span><span class="vale">1 000 000</span></div>
+      <div class="maior"><span class="nome">quilo</span><span class="simb">k</span><span class="vale">1 000</span></div>
+      <div><span class="nome">centi</span><span class="simb">c</span><span class="vale">0,01</span></div>
+      <div><span class="nome">mili</span><span class="simb">m</span><span class="vale">0,001</span></div>
+      <div><span class="nome">micro</span><span class="simb">μ</span><span class="vale">0,000 001</span></div>
+      <div><span class="nome">nano</span><span class="simb">n</span><span class="vale">0,000 000 001</span></div>
+    </div>
+    <p class="texto" style="position:absolute;left:0;right:0;top:430px;margin:0;font-size:28px;color:var(--cinza)">Os três primeiros aumentam a unidade; os outros quatro a diminuem.</p>
+    <div style="position:absolute;left:600px;right:0;top:530px;display:grid;grid-template-columns:1fr 1fr;gap:28px">
+      <div class="caixa caixa-fundamental" data-passo="1" style="padding:20px 30px"><span class="rotulo">Quilômetro</span><div class="texto" style="font-size:40px">\(1\ \text{km} = 1000\ \text{m}\)</div><div class="texto" style="font-size:26px;color:var(--cinza)">"quilo" quer dizer mil</div></div>
+      <div class="caixa caixa-fundamental" data-passo="2" style="padding:20px 30px"><span class="rotulo">Milímetro</span><div class="texto" style="font-size:40px">\(1\ \text{mm} = 0{,}001\ \text{m}\)</div><div class="texto" style="font-size:26px;color:var(--cinza)">"mili" quer dizer um milésimo</div></div>
+    </div>
+  </div>
+  <aside class="notas">
+    <p>Leia a régua da esquerda para a direita: giga, mega e quilo aumentam; centi, mili, micro e nano diminuem.</p>
+    <p>Cliques 1 e 2: o prefixo é só um multiplicador colado na unidade.</p>
+  </aside>
+</section>
+
+<!-- 6. Atenção: símbolos -->
+<section class="slide" data-nome="Atenção: símbolos">
+  <div class="conteudo">
+    <p class="olho">Atenção</p>
+    <h2 class="titulo">Símbolo não é abreviação</h2>
+    <div class="caixa caixa-atencao" style="position:absolute;left:0;right:0;top:160px;padding:22px 34px">
+      <div class="texto" style="font-size:33px">Símbolo de unidade <b>não tem ponto nem plural</b> e respeita <b>maiúscula e minúscula</b>.</div>
+    </div>
+    <div class="simbolos" data-passo="1" style="position:absolute;left:0;right:0;top:330px">
+      <div><span class="ok">5 km</span><span class="riscado">5 kms</span></div>
+      <div><span class="ok">3 h</span><span class="riscado">3 hrs.</span></div>
+      <div><span class="ok">2 kg</span><span class="riscado">2 Kg</span></div>
+    </div>
+    <div style="position:absolute;left:600px;right:0;top:520px;display:flex;flex-direction:column;gap:20px">
+      <div class="caixa" data-passo="2" style="padding:18px 30px"><div class="texto" style="font-size:32px"><b>m</b> minúsculo é metro (ou o prefixo mili); <b>M</b> maiúsculo é mega.</div></div>
+      <div class="caixa" data-passo="3" style="padding:18px 30px"><div class="texto" style="font-size:32px"><b>k</b> é quilo; <b>K</b> é kelvin.</div></div>
+    </div>
+  </div>
+  <aside class="notas">
+    <p>Clique 1: o certo em verde, o errado riscado. "2 Kg" seria dois "kelvin-gramas", que não existe.</p>
+    <p>Cliques 2 e 3: uma letra maiúscula muda o sentido. 5 mm é uma formiga; 5 Mm são cinco mil quilômetros.</p>
+  </aside>
+</section>
+
+<!-- 7. Converter -->
+<section class="slide" data-nome="Como converter">
+  <div class="conteudo">
+    <p class="olho">Conversão de unidades</p>
+    <h2 class="titulo">Troque a unidade pelo seu valor</h2>
+    <p class="texto" style="position:absolute;left:0;right:0;top:150px;margin:0;font-size:33px">Para comparar ou juntar medidas numa conta, todas precisam estar na <b>mesma unidade</b>. O caminho mais seguro: <b>troque a unidade pelo valor dela na unidade nova</b>.</p>
+    <div style="position:absolute;left:0;width:760px;top:290px">
+      <p class="texto" style="margin:0 0 14px;font-size:30px"><b>2,5 km em metros</b> &nbsp;(1 km = 1000 m)</p>
+      <div class="contas" style="font-size:44px">
+        <div class="eq" data-passo="1"><span>\(d\)</span><span>\(=\)</span><span>\(2{,}5\ \text{km}\)</span></div>
+        <div class="eq" data-passo="2"><span>\(d\)</span><span>\(=\)</span><span>\(2{,}5 \cdot \color{#0F8B8D}{1000\ \text{m}}\)</span></div>
+        <div class="eq final" data-passo="3"><span>\(d\)</span><span>\(=\)</span><span>\(2500\ \text{m}\)</span></div>
+      </div>
+    </div>
+    <div style="position:absolute;left:900px;right:0;top:290px">
+      <p class="texto" style="margin:0 0 14px;font-size:30px"><b>45 min em horas</b> &nbsp;(1 min = 1/60 h)</p>
+      <div class="contas" style="font-size:44px">
+        <div class="eq" data-passo="4"><span>\(t\)</span><span>\(=\)</span><span>\(45\ \text{min}\)</span></div>
+        <div class="eq" data-passo="5"><span>\(t\)</span><span>\(=\)</span><span>\(45 \cdot \color{#0F8B8D}{\dfrac{1}{60}\ \text{h}}\)</span></div>
+        <div class="eq final" data-passo="6"><span>\(t\)</span><span>\(=\)</span><span>\(0{,}75\ \text{h}\)</span></div>
+      </div>
+    </div>
+    <span class="pilula pilula-resposta" data-passo="7" style="position:absolute;right:0;top:720px">Converter muda o número, não a grandeza</span>
+  </div>
+  <aside class="notas">
+    <p>Onde aparece "km", escreva "1000 m". Onde aparece "min", escreva "1/60 h". Um clique por linha.</p>
+    <p>45 ÷ 60 = 0,75: três quartos de hora.</p>
+  </aside>
+</section>
+
+<!-- 8. Equivalências -->
+<section class="slide" data-nome="Equivalências">
+  <div class="conteudo">
+    <p class="olho">Unidades</p>
+    <h2 class="titulo">Equivalências mais usadas</h2>
+    <div class="equiv" style="position:absolute;left:0;right:0;top:160px">
+      <div data-passo="1"><span class="rotulo">Comprimento</span>1 km = 1000 m &nbsp;·&nbsp; 1 m = 100 cm &nbsp;·&nbsp; 1 cm = 10 mm</div>
+      <div data-passo="2"><span class="rotulo">Tempo</span>1 h = 60 min &nbsp;·&nbsp; 1 min = 60 s &nbsp;·&nbsp; então <b style="color:var(--roxo-titulo)">1 h = 3600 s</b></div>
+      <div data-passo="3"><span class="rotulo">Massa</span>1 kg = 1000 g &nbsp;·&nbsp; 1 t = 1000 kg</div>
+      <div data-passo="4"><span class="rotulo">Volume</span>1 L = 1000 mL &nbsp;·&nbsp; 1 L = 1 dm³ &nbsp;·&nbsp; 1 m³ = 1000 L</div>
+    </div>
+  </div>
+  <aside class="notas">
+    <p>Uma área por clique. São as trocas que aparecem em quase toda questão.</p>
+    <p>O tempo não é decimal: 1 h tem 60 min, e não 100. A tonelada (t) vale 1000 kg.</p>
+  </aside>
+</section>
+
+<!-- 9. Unidades compostas -->
+<section class="slide" data-nome="Unidades compostas">
+  <div class="conteudo">
+    <p class="olho">Conversão de unidades</p>
+    <h2 class="titulo">Unidades compostas: troque cada pedaço</h2>
+    <div style="position:absolute;left:0;width:760px;top:170px;display:flex;flex-direction:column;gap:26px">
+      <p class="texto" style="margin:0;font-size:33px"><b>54 km/h em m/s.</b> Troque o <b>km</b> por <b>1000 m</b> e o <b>h</b> por <b>3600 s</b>.</p>
+      <svg viewBox="0 0 760 150" width="760" height="150" style="overflow:visible;font-family:Figtree,'Segoe UI',sans-serif" aria-hidden="true">
+        <text x="40" y="96" font-size="64" font-weight="800" fill="#3F2FA0">54</text>
+        <text x="170" y="62" font-size="48" font-weight="800" fill="var(--d-forte)">km</text>
+        <line x1="160" y1="80" x2="250" y2="80" stroke="#292B2C" stroke-width="4"/>
+        <text x="186" y="132" font-size="48" font-weight="800" fill="var(--d-forte)">h</text>
+        <path d="M262 46 Q380 10 470 46" fill="none" stroke="var(--d)" stroke-width="4"/><path d="M458 34 L472 47 L454 52" fill="none" stroke="var(--d)" stroke-width="4" stroke-linecap="round"/>
+        <path d="M262 118 Q380 150 470 118" fill="none" stroke="var(--d)" stroke-width="4"/><path d="M455 110 L472 118 L458 130" fill="none" stroke="var(--d)" stroke-width="4" stroke-linecap="round"/>
+        <text x="490" y="62" font-size="44" font-weight="800" fill="#292B2C">1000 m</text>
+        <text x="490" y="132" font-size="44" font-weight="800" fill="#292B2C">3600 s</text>
+      </svg>
+      <div class="caixa" data-passo="5" style="padding:18px 28px"><div class="texto" style="font-size:30px">Essa conversão aparece tanto que, em Cinemática, você vai usar um <b>atalho</b> para ela.</div></div>
+    </div>
+    <div class="contas" style="position:absolute;left:900px;top:170px;font-size:46px;row-gap:20px">
+      <div class="eq" data-passo="1"><span>\(v\)</span><span>\(=\)</span><span>\(54\ \dfrac{\text{km}}{\text{h}}\)</span></div>
+      <div class="eq" data-passo="2"><span>\(v\)</span><span>\(=\)</span><span>\(54 \cdot \dfrac{1000\ \text{m}}{3600\ \text{s}}\)</span></div>
+      <div class="eq" data-passo="3"><span>\(v\)</span><span>\(=\)</span><span>\(\dfrac{54\,000\ \text{m}}{3600\ \text{s}}\)</span></div>
+      <div class="eq final" data-passo="4"><span>\(v\)</span><span>\(=\)</span><span>\(15\ \text{m/s}\)</span></div>
+    </div>
+  </div>
+  <aside class="notas">
+    <p>Cada pedaço da unidade é trocado separado: o km de cima e o h de baixo.</p>
+    <p>54 000 ÷ 3600 = 15. Clique 5: o atalho (÷ 3,6) vem em Cinemática; aqui a ideia é entender de onde ele sai.</p>
+  </aside>
+</section>
+
+<!-- 10. Área e volume -->
+<section class="slide" data-nome="Área e volume">
+  <div class="conteudo">
+    <p class="olho">Conversão de unidades</p>
+    <h2 class="titulo">Área e volume pedem cuidado</h2>
+    <svg viewBox="0 0 480 450" width="480" height="450" style="position:absolute;left:0;top:140px;overflow:visible;font-family:Figtree,'Segoe UI',sans-serif" aria-hidden="true">
+      <rect x="40" y="20" width="400" height="400" fill="var(--d-clara)" stroke="var(--d-forte)" stroke-width="4"/>
+      <g data-passo="1" stroke="var(--d)" stroke-width="1.6" opacity=".8">
+        <line x1="80" y1="20" x2="80" y2="420"/><line x1="120" y1="20" x2="120" y2="420"/><line x1="160" y1="20" x2="160" y2="420"/><line x1="200" y1="20" x2="200" y2="420"/><line x1="240" y1="20" x2="240" y2="420"/><line x1="280" y1="20" x2="280" y2="420"/><line x1="320" y1="20" x2="320" y2="420"/><line x1="360" y1="20" x2="360" y2="420"/><line x1="400" y1="20" x2="400" y2="420"/>
+        <line x1="40" y1="60" x2="440" y2="60"/><line x1="40" y1="100" x2="440" y2="100"/><line x1="40" y1="140" x2="440" y2="140"/><line x1="40" y1="180" x2="440" y2="180"/><line x1="40" y1="220" x2="440" y2="220"/><line x1="40" y1="260" x2="440" y2="260"/><line x1="40" y1="300" x2="440" y2="300"/><line x1="40" y1="340" x2="440" y2="340"/><line x1="40" y1="380" x2="440" y2="380"/>
+      </g>
+      <rect data-passo="1" x="40" y="20" width="40" height="40" fill="#FFD10C" stroke="#B88A00" stroke-width="2"/>
+      <text x="240" y="448" text-anchor="middle" font-size="28" font-weight="800" fill="#3F2FA0">1 m = 10 dm</text>
+      <text x="22" y="220" text-anchor="middle" font-size="28" font-weight="800" fill="#3F2FA0" transform="rotate(-90 22 220)">1 m = 10 dm</text>
+    </svg>
+    <p class="texto" data-passo="1" style="position:absolute;left:560px;width:520px;top:160px;margin:0;font-size:30px">10 fileiras de 10 quadradinhos de 1 dm²: <b>100</b> ao todo.</p>
+    <div style="position:absolute;left:560px;width:560px;top:300px">
+      <p class="texto" style="margin:0 0 10px;font-size:28px"><b>Área:</b> eleve ao quadrado</p>
+      <div class="contas" style="font-size:40px">
+        <div class="eq" data-passo="2"><span>\(1\ \text{m}^2\)</span><span>\(=\)</span><span>\((1\ \text{m})^2\)</span></div>
+        <div class="eq" data-passo="3"><span>\(1\ \text{m}^2\)</span><span>\(=\)</span><span>\((100\ \text{cm})^2\)</span></div>
+        <div class="eq final" data-passo="4"><span>\(1\ \text{m}^2\)</span><span>\(=\)</span><span>\(10\,000\ \text{cm}^2\)</span></div>
+      </div>
+    </div>
+    <div style="position:absolute;left:1180px;right:0;top:300px">
+      <p class="texto" style="margin:0 0 10px;font-size:28px"><b>Volume:</b> eleve ao cubo</p>
+      <div class="contas" style="font-size:40px">
+        <div class="eq" data-passo="5"><span>\(1\ \text{m}^3\)</span><span>\(=\)</span><span>\((1\ \text{m})^3\)</span></div>
+        <div class="eq" data-passo="6"><span>\(1\ \text{m}^3\)</span><span>\(=\)</span><span>\((10\ \text{dm})^3\)</span></div>
+        <div class="eq final" data-passo="7"><span>\(1\ \text{m}^3\)</span><span>\(=\)</span><span>\(1000\ \text{dm}^3\)</span></div>
+      </div>
+    </div>
+    <div class="caixa caixa-fundamental" data-passo="8" style="position:absolute;left:600px;right:0;top:640px;padding:20px 32px">
+      <div class="texto" style="font-size:31px">Lado × 10 → área × <b>100</b> e volume × <b>1000</b>. Como 1 dm³ = 1 L, um metro cúbico guarda <b>1000 litros</b>.</div>
+    </div>
+  </div>
+  <aside class="notas">
+    <p>Clique 1: o quadrado de 1 m de lado tem 10 dm em cada lado e guarda 10 · 10 = 100 quadradinhos de 1 dm² (um deles em amarelo).</p>
+    <p>Cliques 2 a 7: eleve a equivalência inteira, número e unidade. Clique 8: 1 m³ = 1000 L, que vai aparecer no próximo exemplo.</p>
+  </aside>
+</section>
+
+<!-- 11. Exemplo: caixa-d'água -->
+<section class="slide" data-nome="Exemplo: caixa-d'água">
+  <div class="conteudo">
+    <p class="olho">Exemplo</p>
+    <h2 class="titulo">Caixa-d'água</h2>
+    <div style="position:absolute;left:0;width:800px;top:160px">
+      <p class="texto" style="margin:0;font-size:32px">Uma caixa-d'água tem a forma de um bloco retangular com <b>1,5 m</b> de comprimento, <b>1,0 m</b> de largura e <b>0,8 m</b> de altura. Quantos litros ela guarda cheia?</p>
+      <svg viewBox="0 0 560 230" width="560" height="230" style="display:block;margin-top:14px;overflow:visible;font-family:Figtree,'Segoe UI',sans-serif" aria-hidden="true">
+        <path d="M60 80 L360 80 L440 30 L140 30 Z" fill="#E0F4F4" stroke="var(--d-forte)" stroke-width="3"/>
+        <path d="M360 80 L440 30 L440 150 L360 200 Z" fill="#B7E3E3" stroke="var(--d-forte)" stroke-width="3"/>
+        <rect x="60" y="80" width="300" height="120" fill="#CDEEEE" stroke="var(--d-forte)" stroke-width="3"/>
+        <g font-size="26" font-weight="800" fill="#3F2FA0"><text x="210" y="228" text-anchor="middle">c = 1,5 m</text><text x="414" y="200" >h = 0,8 m</text><text x="452" y="66">l = 1,0 m</text></g>
+      </svg>
+    </div>
+    <div style="position:absolute;left:900px;right:0;top:150px">
+      <p class="texto" style="margin:0 0 12px;font-size:28px">Volume em m³ e depois troque m³ por 1000 L.</p>
+      <div class="contas" style="font-size:42px;row-gap:12px">
+        <div class="eq" data-passo="1"><span>\(V\)</span><span>\(=\)</span><span>\(c \cdot l \cdot h\)</span></div>
+        <div class="eq" data-passo="2"><span>\(V\)</span><span>\(=\)</span><span>\(1{,}5 \cdot 1{,}0 \cdot 0{,}8\)</span></div>
+        <div class="eq" data-passo="3"><span>\(V\)</span><span>\(=\)</span><span>\(1{,}2\ \text{m}^3\)</span></div>
+        <div class="eq" data-passo="4"><span>\(V\)</span><span>\(=\)</span><span>\(1{,}2 \cdot \color{#0F8B8D}{1000\ \text{L}}\)</span></div>
+        <div class="eq final" data-passo="5"><span>\(V\)</span><span>\(=\)</span><span>\(1200\ \text{L}\)</span></div>
+      </div>
+    </div>
+    <span class="pilula pilula-resposta" data-passo="6" style="position:absolute;right:0;top:720px">A caixa guarda 1200 L</span>
+  </div>
+  <aside class="notas">
+    <p>Calcule primeiro na unidade do SI (m³) e só no fim troque m³ por 1000 L.</p>
+    <p>1,5 · 1,0 = 1,5 e 1,5 · 0,8 = 1,2.</p>
+  </aside>
+</section>
+
+<!-- 12. Exemplo: azulejos -->
+<section class="slide" data-nome="Exemplo: azulejos">
+  <div class="conteudo">
+    <p class="olho">Exemplo</p>
+    <h2 class="titulo">Azulejos na parede</h2>
+    <p class="texto" style="position:absolute;left:0;right:0;top:150px;margin:0;font-size:31px">Uma parede de <b>4 m por 3 m</b> vai ser coberta com azulejos quadrados de <b>20 cm</b> de lado. Quantos azulejos, sem contar perdas? Tudo em <b>cm²</b>.</p>
+    <div class="contas" style="position:absolute;left:0;top:260px;font-size:38px;row-gap:12px">
+      <div class="eq" data-passo="1"><span>\(A_{\text{parede}}\)</span><span>\(=\)</span><span>\(4\ \text{m} \cdot 3\ \text{m}\)</span></div>
+      <div class="eq" data-passo="2"><span>\(A_{\text{parede}}\)</span><span>\(=\)</span><span>\(12\ \text{m}^2\)</span></div>
+      <div class="eq" data-passo="3"><span>\(A_{\text{parede}}\)</span><span>\(=\)</span><span>\(12 \cdot 10\,000\ \text{cm}^2\)</span></div>
+      <div class="eq final" data-passo="4"><span>\(A_{\text{parede}}\)</span><span>\(=\)</span><span>\(120\,000\ \text{cm}^2\)</span></div>
+    </div>
+    <div class="contas" style="position:absolute;left:720px;top:260px;font-size:38px;row-gap:12px">
+      <div class="eq" data-passo="5"><span>\(A_{\text{azulejo}}\)</span><span>\(=\)</span><span>\(20\ \text{cm} \cdot 20\ \text{cm}\)</span></div>
+      <div class="eq final" data-passo="6"><span>\(A_{\text{azulejo}}\)</span><span>\(=\)</span><span>\(400\ \text{cm}^2\)</span></div>
+    </div>
+    <div class="contas" style="position:absolute;left:1290px;top:260px;font-size:38px;row-gap:12px">
+      <div class="eq" data-passo="7"><span>\(n\)</span><span>\(=\)</span><span>\(\dfrac{A_{\text{parede}}}{A_{\text{azulejo}}}\)</span></div>
+      <div class="eq" data-passo="8"><span>\(n\)</span><span>\(=\)</span><span>\(\dfrac{120\,000}{400}\)</span></div>
+      <div class="eq final" data-passo="9"><span>\(n\)</span><span>\(=\)</span><span>\(300\)</span></div>
+    </div>
+    <div class="caixa" data-passo="10" style="position:absolute;left:600px;right:0;top:620px;padding:18px 30px">
+      <span class="rotulo">Confira contando</span>
+      <div class="texto" style="font-size:30px">Na largura: 400 ÷ 20 = <b>20</b> azulejos. Na altura: 300 ÷ 20 = <b>15</b>. E \(20 \cdot 15 = 300\) azulejos.</div>
+    </div>
+  </div>
+  <aside class="notas">
+    <p>As duas áreas precisam estar na mesma unidade. A parede: 12 m² viram 120 000 cm² (cada m² tem 10 000 cm²).</p>
+    <p>Clique 10: 4 m = 400 cm e 3 m = 300 cm; contar por fileira confirma 300.</p>
+  </aside>
+</section>
+
+<!-- 13. Atenção: m² -->
+<section class="slide" data-nome="Atenção: m²">
+  <div class="conteudo">
+    <p class="olho">Atenção</p>
+    <h2 class="titulo">Um metro quadrado não tem 100 cm²</h2>
+    <div class="caixa caixa-atencao" style="position:absolute;left:0;right:0;top:160px;padding:22px 34px">
+      <div class="texto" style="font-size:33px">Como 1 m = 100 cm, é tentador escrever 1 m² = 100 cm². <b>Errado</b>: são 100 cm de <b>cada lado</b>. Na hora de converter área ou volume, <b>eleve a equivalência</b> ao quadrado ou ao cubo.</div>
+    </div>
+    <div style="position:absolute;left:0;right:0;top:370px;display:grid;grid-template-columns:repeat(3,1fr);gap:26px;text-align:center">
+      <div class="caixa" style="padding:22px"><div class="texto" style="font-size:40px">\(1\ \text{m} = 100\ \text{cm}\)</div></div>
+      <div class="caixa" data-passo="1" style="padding:22px"><div class="texto" style="font-size:40px"><span class="riscado">\(1\ \text{m}^2 = 100\ \text{cm}^2\)</span></div></div>
+      <div class="caixa caixa-fundamental" data-passo="2" style="padding:22px"><div class="texto" style="font-size:40px">\(1\ \text{m}^2 = 10\,000\ \text{cm}^2\)</div></div>
+    </div>
+    <div class="caixa caixa-fundamental" data-passo="3" style="position:absolute;left:600px;right:0;top:600px;padding:22px 34px;text-align:center">
+      <div class="texto" style="font-size:40px">\(1\ \text{m}^3 = (100\ \text{cm})^3 = 1\,000\,000\ \text{cm}^3\)</div>
+    </div>
+  </div>
+  <aside class="notas">
+    <p>Clique 1: o erro clássico. Clique 2: o certo, com 100 · 100. Clique 3: no volume, 100 · 100 · 100.</p>
+  </aside>
+</section>
+
+<!-- 14. Questão 1 -->
+<section class="slide questao" data-nome="Questão 1">
+  <div class="conteudo">
+    <div class="area-resolucao"></div>
+    <span class="pilula pilula-pausa" data-em="1:some">Pause o vídeo e tente</span>
+    <div class="painel-questao">
+      <p class="olho">Questão 1 · prática</p>
+      <p class="enunciado">No caderno de Ciências, Júlia anotou que uma formiga mede "5 Mm" de comprimento. A professora circulou a anotação e explicou que a letra maiúscula muda completamente o valor. Escrito do jeito que está, "5 Mm" corresponde a</p>
+      <ol class="alternativas">
+        <li data-em="2:apaga"><b>A</b><span>0,005 m</span></li>
+        <li data-em="2:certo"><b>B</b><span>5 000 000 m</span></li>
+        <li data-em="2:apaga"><b>C</b><span>5 000 m</span></li>
+        <li data-em="2:apaga"><b>D</b><span>0,000 005 m</span></li>
+        <li data-em="2:apaga"><b>E</b><span>0,05 m</span></li>
+      </ol>
+    </div>
+  </div>
+  <aside class="notas">
+    <p>Clique 1 tira o aviso: resolva com a caneta (D) no quadro; E esconde o enunciado. Clique 2: gabarito B (M é mega, 1 000 000).</p>
+    <p>Erros: A é 5 mm, o que ela queria escrever; C usa quilo; D usa micro; E usa centi e erra a casa.</p>
+  </aside>
+</section>
+
+<!-- 15. Questão 2 -->
+<section class="slide questao" data-nome="Questão 2">
+  <div class="conteudo">
+    <div class="area-resolucao"></div>
+    <span class="pilula pilula-pausa" data-em="1:some">Pause o vídeo e tente</span>
+    <div class="painel-questao">
+      <p class="olho">Questão 2 · prática</p>
+      <p class="enunciado">Uma toalha de mesa tem área de 3,5 m². Um artesão precisa informar essa área em centímetros quadrados para calcular quanto bordado vai usar. A área da toalha, em cm², é de</p>
+      <ol class="alternativas">
+        <li data-em="2:apaga"><b>A</b><span>350 cm²</span></li>
+        <li data-em="2:certo"><b>B</b><span>35 000 cm²</span></li>
+        <li data-em="2:apaga"><b>C</b><span>3 500 cm²</span></li>
+        <li data-em="2:apaga"><b>D</b><span>350 000 cm²</span></li>
+        <li data-em="2:apaga"><b>E</b><span>0,035 cm²</span></li>
+      </ol>
+    </div>
+  </div>
+  <aside class="notas">
+    <p>3,5 · 10 000 = 35 000 cm². Gabarito B.</p>
+    <p>Erros: A usa 1 m² = 100 cm²; C usa 1 000; D põe um zero a mais; E divide em vez de multiplicar.</p>
+  </aside>
+</section>
+
+<!-- 16. Questão 3 -->
+<section class="slide questao" data-nome="Questão 3">
+  <div class="conteudo">
+    <div class="area-resolucao"></div>
+    <span class="pilula pilula-pausa" data-em="1:some">Pause o vídeo e tente</span>
+    <div class="painel-questao">
+      <p class="olho">Questão 3 · prática</p>
+      <p class="enunciado" style="font-size:25px">Uma caixa-d'água vazia, em forma de bloco retangular, tem medidas internas de 1,5 m de comprimento, 1,2 m de largura e 1,0 m de altura. Ela é enchida por uma torneira que despeja 0,2 L de água a cada segundo. Sabendo que 1 m³ = 1 000 L, o tempo para encher a caixa é de</p>
+      <ol class="alternativas">
+        <li data-em="2:apaga"><b>A</b><span>9 s</span></li>
+        <li data-em="2:apaga"><b>B</b><span>15 min</span></li>
+        <li data-em="2:apaga"><b>C</b><span>2 h 50 min</span></li>
+        <li data-em="2:certo"><b>D</b><span>2 h 30 min</span></li>
+        <li data-em="2:apaga"><b>E</b><span>150 h</span></li>
+      </ol>
+    </div>
+  </div>
+  <aside class="notas">
+    <p>V = 1,8 m³ = 1800 L; t = 1800 ÷ 0,2 = 9000 s = 150 min = 2,5 h = 2 h 30 min. Gabarito D.</p>
+    <p>Erros: A não converte m³; B usa 100 L; C lê 0,5 h como 50 min; E chama 150 min de horas.</p>
+  </aside>
+</section>
+
+<!-- 17. Resumo -->
+<section class="slide" data-nome="Resumo">
+  <div class="conteudo">
+    <p class="olho">Resumo</p>
+    <h2 class="titulo">O essencial</h2>
+    <div class="resumo" style="position:absolute;left:0;right:0;top:150px">
+      <div><b>Grandeza</b> é o que se mede; o valor é sempre <b>número e unidade</b>.</div>
+      <div><b>SI:</b> sete grandezas de base (metro, quilograma, segundo…); as outras unidades são <b>derivadas</b>.</div>
+      <div><b>Prefixos:</b> quilo = 1000, centi = 0,01, mili = 0,001. Símbolo sem ponto e sem plural.</div>
+      <div><b>Converter:</b> troque a unidade pelo valor dela na unidade nova (km → 1000 m).</div>
+      <div><b>Área:</b> eleve ao quadrado. <b>Volume:</b> eleve ao cubo. 1 m² = 10 000 cm².</div>
+      <div><b>1 m³ = 1000 L</b> e <b>1 h = 3600 s</b>.</div>
+    </div>
+  </div>
+  <aside class="notas">
+    <p>Peça para tirarem um print desta tela.</p>
+  </aside>
+</section>
+
+<!-- 18. A seguir -->
+<section class="slide capa" data-nome="A seguir">
+  <div class="estrelas"></div>
+  <div class="texto-capa" style="top:170px">
+    <span class="selo">Física · PISM I</span>
+    <p class="aula" style="font-size:26px">A seguir · Grandezas e unidades · Parte 2 de 2</p>
+    <h1 style="font-size:116px">Análise dimensional</h1>
+    <p class="sub">A conta feita só com as unidades</p>
+  </div>
+  <svg class="emblema" viewBox="0 0 640 640" aria-hidden="true">
+    <circle cx="320" cy="320" r="220" fill="#FFD10C"/>
+    <g font-family="'Bricolage Grotesque',Figtree,sans-serif" font-weight="800" text-anchor="middle">
+      <text x="320" y="370" font-size="170" fill="#3F2FA0">[ m ]</text>
+    </g>
+    <circle cx="560" cy="150" r="16" fill="var(--d)" stroke="#fff" stroke-width="4"/>
+  </svg>
+  <img class="logo-capa" src="{{LOGO_BRANCO}}" alt="Quarks">
+  <aside class="notas"><p>Próxima parte: como conferir uma fórmula olhando só as unidades.</p></aside>
+</section>
