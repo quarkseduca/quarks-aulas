@@ -213,7 +213,7 @@ def max_passo(sec):
 
 
 def info_slides(slides):
-    """Lista dos slides para o sistema: nome, tipo, último clique e, nas questões, as letras e o gabarito."""
+    """Lista dos slides para o sistema: nome, tipo, último clique e, nas questões, as letras, o gabarito e as linhas da resolução."""
     out = []
     for sec in re.findall(r'<section class="slide[^"]*"[^>]*>.*?</section>', slides, re.S):
         abre = re.match(r'<section class="slide([^"]*)"([^>]*)>', sec)
@@ -227,6 +227,11 @@ def info_slides(slides):
             it["letras"] = re.findall(r'<li[^>]*><b>([A-E])</b>', alts)
             g = re.search(r'<li[^>]*data-em="[^"]*\bcerto\b[^"]*"[^>]*><b>([A-E])</b>', alts)
             it["gab"] = g.group(1) if g else ""
+            # linhas da resolução que o sistema pode mostrar na tela, uma por clique (dados, cada passo e a resposta)
+            r = re.search(r'<aside class="resolucao">(.*?)</aside>', sec, re.S)
+            if r:
+                passos = re.search(r'<ol class="passos">(.*?)</ol>', r.group(1), re.S)
+                it["r"] = len(re.findall(r'<p class="dados"', r.group(1))) + (len(re.findall(r"<li\b", passos.group(1))) if passos else 0) + len(re.findall(r'<p class="resposta"', r.group(1)))
         out.append(it)
     return out
 
