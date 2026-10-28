@@ -673,12 +673,20 @@ body {
       <span class="rotulo">O problema do modelo</span>
       <div class="texto" style="font-size:32px">Pela física da época, um elétron girando em volta do núcleo perderia energia emitindo luz e <b>cairia no núcleo</b> numa fração de segundo. Mas os átomos são <b>estáveis</b>. Isso levou a novos modelos, com regras próprias para os elétrons.</div>
     </div>
-    <svg viewBox="0 0 300 260" width="420" height="364" data-passo="2" style="position:absolute;left:640px;top:400px;overflow:visible;font-family:Figtree,'Segoe UI',sans-serif" aria-hidden="true">
-      <g stroke="#292B2C" stroke-width="2">
-        <circle cx="130" cy="120" r="34" fill="#FFD10C"/><circle cx="180" cy="110" r="34" fill="#C9C0F0"/><circle cx="150" cy="160" r="34" fill="#FFD10C"/>
-        <circle cx="110" cy="168" r="34" fill="#C9C0F0"/><circle cx="196" cy="160" r="34" fill="#FFD10C"/><circle cx="160" cy="76" r="34" fill="#C9C0F0"/>
+    <svg viewBox="0 0 460 460" width="480" height="480" style="position:absolute;left:600px;top:380px;overflow:visible;font-family:Figtree,'Segoe UI',sans-serif" aria-hidden="true">
+      <g data-passo="4">
+        <circle cx="230" cy="230" r="215" fill="#F1EEFD" stroke="#BFB6E6" stroke-width="3" stroke-dasharray="9 9"/>
+        <g fill="#3F2FA0" stroke="#fff" stroke-width="3"><circle cx="72" cy="128" r="15"/><circle cx="352" cy="74" r="15"/><circle cx="410" cy="262" r="15"/><circle cx="300" cy="408" r="15"/><circle cx="96" cy="356" r="15"/><circle cx="196" cy="34" r="15"/></g>
+        <g stroke="#fff" stroke-width="3.5" stroke-linecap="round"><path d="M65 128h14M345 74h14M403 262h14M293 408h14M89 356h14M189 34h14"/></g>
+        <text x="230" y="476" text-anchor="middle" font-size="24" font-weight="800" fill="#5340B8">eletrosfera, com os elétrons</text>
       </g>
-      <g font-size="26" font-weight="800" fill="#292B2C" text-anchor="middle"><text x="130" y="129">+</text><text x="150" y="169">+</text><text x="196" y="169">+</text></g>
+      <g data-passo="2" transform="translate(77 112)">
+        <g stroke="#292B2C" stroke-width="2">
+          <circle cx="130" cy="120" r="34" fill="#FFD10C"/><circle cx="180" cy="110" r="34" fill="#C9C0F0"/><circle cx="150" cy="160" r="34" fill="#FFD10C"/>
+          <circle cx="110" cy="168" r="34" fill="#C9C0F0"/><circle cx="196" cy="160" r="34" fill="#FFD10C"/><circle cx="160" cy="76" r="34" fill="#C9C0F0"/>
+        </g>
+        <g font-size="26" font-weight="800" fill="#292B2C" text-anchor="middle"><text x="130" y="129">+</text><text x="150" y="169">+</text><text x="196" y="169">+</text></g>
+      </g>
     </svg>
     <div style="position:absolute;left:1120px;right:0;top:420px;display:flex;flex-direction:column;gap:14px">
       <div class="cartao-icone" data-passo="2" style="grid-template-columns:50px 1fr;padding:14px 24px;font-size:28px"><svg viewBox="0 0 50 50" style="width:50px;height:50px"><circle cx="25" cy="25" r="20" fill="#FFD10C"/></svg><span><b>Próton</b> (+), no núcleo</span></div>
@@ -689,6 +697,7 @@ body {
   <aside class="notas">
     <p>Os novos modelos (Bohr e o atual) ficam para depois; no PISM I o programa vai até Rutherford.</p>
     <p>O que importa: núcleo pequeno e pesado com prótons e nêutrons, cercado pela eletrosfera com os elétrons.</p>
+    <p>Desenho fora de escala: o núcleo de verdade é umas 20 mil vezes menor que a eletrosfera.</p>
   </aside>
 </section>
 
@@ -697,12 +706,30 @@ body {
   <div class="conteudo">
     <p class="olho">Atenção</p>
     <h2 class="titulo">O átomo não é um sistema solar</h2>
-    <div class="caixa caixa-atencao" style="position:absolute;left:0;right:0;top:170px">
-      <div class="texto">A imagem de elétrons girando em volta do núcleo, como planetas em volta do Sol, ajuda a lembrar que o núcleo é <b>pequeno e central</b>. Mas é um modelo, com limites: os próprios cientistas o corrigiram depois.</div>
+    <div class="caixa caixa-atencao" style="position:absolute;left:0;right:0;top:160px;padding:22px 34px">
+      <div class="texto" style="font-size:32px">A imagem de elétrons girando em volta do núcleo, como planetas em volta do Sol, ajuda a lembrar que o núcleo é <b>pequeno e central</b>. Mas é um modelo, com limites: os próprios cientistas o corrigiram depois.</div>
     </div>
-    <span class="pilula pilula-pausa" data-passo="1" style="position:absolute;right:0;top:520px">Não use essa imagem para dizer como o elétron se move</span>
+    <svg viewBox="0 0 560 470" width="560" height="470" style="position:absolute;left:560px;top:390px;overflow:visible;font-family:Figtree,'Segoe UI',sans-serif" aria-hidden="true">
+      <g transform="rotate(-18 280 230)"><path id="orb1" d="M130 230 A150 62 0 1 1 430 230 A150 62 0 1 1 130 230" fill="none" stroke="#BFB6E6" stroke-width="2.5"/></g>
+      <g transform="rotate(14 280 230)"><path id="orb2" d="M60 230 A220 96 0 1 1 500 230 A220 96 0 1 1 60 230" fill="none" stroke="#BFB6E6" stroke-width="2.5"/></g>
+      <g transform="rotate(32 280 230)"><path id="orb3" d="M190 230 A90 175 0 1 1 370 230 A90 175 0 1 1 190 230" fill="none" stroke="#BFB6E6" stroke-width="2.5"/></g>
+      <circle cx="280" cy="230" r="34" fill="url(#gNucleo)" stroke="#B88A00" stroke-width="2"/>
+      <text x="280" y="240" text-anchor="middle" font-size="28" font-weight="800" fill="#8A6A00">+</text>
+      <g transform="rotate(-18 280 230)"><circle r="14" fill="#3F2FA0" stroke="#fff" stroke-width="3"><animateMotion dur="7s" begin="0s" repeatCount="indefinite"><mpath href="#orb1"/></animateMotion></circle></g>
+      <g transform="rotate(14 280 230)"><circle r="14" fill="#3F2FA0" stroke="#fff" stroke-width="3"><animateMotion dur="11s" begin="-4s" repeatCount="indefinite"><mpath href="#orb2"/></animateMotion></circle></g>
+      <g transform="rotate(32 280 230)"><circle r="14" fill="#3F2FA0" stroke="#fff" stroke-width="3"><animateMotion dur="9s" begin="-2s" repeatCount="indefinite"><mpath href="#orb3"/></animateMotion></circle></g>
+      <text x="280" y="462" text-anchor="middle" font-size="26" font-weight="800" fill="#5E5A70">a imagem popular: elétrons como planetas</text>
+    </svg>
+    <div style="position:absolute;left:1180px;right:0;top:400px;display:flex;flex-direction:column;gap:22px">
+      <span class="pilula pilula-pausa" data-passo="1" style="font-size:28px;line-height:1.25;border-radius:28px;padding:16px 26px">Não use essa imagem para dizer como o elétron se move</span>
+      <div class="caixa caixa-fundamental" data-passo="2" style="padding:18px 26px;display:grid;grid-template-columns:130px 1fr;gap:20px;align-items:center">
+        <svg viewBox="0 0 200 200" style="width:130px;height:130px" aria-hidden="true"><use href="#at-rutherford"/></svg>
+        <div class="texto" style="font-size:28px">No PISM I, fique com: <b>núcleo</b> pequeno no centro e <b>eletrosfera</b> com os elétrons.</div>
+      </div>
+    </div>
   </div>
   <aside class="notas">
+    <p>A animação mostra a imagem popular, a do "sistema solar". Ela serve para lembrar que o núcleo é pequeno e fica no centro.</p>
     <p>Muita alternativa de prova diz "o elétron descreve órbitas como os planetas". No PISM I, fique com núcleo e eletrosfera.</p>
   </aside>
 </section>
