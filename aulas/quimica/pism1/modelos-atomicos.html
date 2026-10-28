@@ -1,0 +1,653 @@
+<!--aula
+{"disciplina": "quimica", "curso": "PISM I", "assunto": "Estrutura atômica", "parte": "Parte 1 de 4", "titulo": "Modelos atômicos", "scripts": ["animacoes-modelos.js"]}
+-->
+<!-- Fonte: apostila PISM I, Química, cap. 2 (2.1 Modelos atômicos: Dalton, Thomson, Rutherford) e lote de questões pism1-quimica-modelos-atomicos (m009, m004, m008). -->
+
+<svg width="0" height="0" style="position:absolute" aria-hidden="true">
+  <defs>
+    <radialGradient id="gDalton" cx=".35" cy=".3" r=".75"><stop offset="0" stop-color="#9C8CF0"/><stop offset=".55" stop-color="#6551D1"/><stop offset="1" stop-color="#3F2FA0"/></radialGradient>
+    <radialGradient id="gNucleo" cx=".35" cy=".3" r=".8"><stop offset="0" stop-color="#FFE680"/><stop offset="1" stop-color="#E0A800"/></radialGradient>
+  </defs>
+  <symbol id="at-dalton" viewBox="0 0 200 200"><circle cx="100" cy="100" r="92" fill="url(#gDalton)"/><ellipse cx="68" cy="62" rx="24" ry="16" fill="#fff" opacity=".35" transform="rotate(-30 68 62)"/></symbol>
+  <symbol id="at-thomson" viewBox="0 0 200 200">
+    <circle cx="100" cy="100" r="92" fill="#FFF4C2" stroke="#E0A800" stroke-width="4"/>
+    <g fill="#B88A00" font-family="Figtree,'Segoe UI',sans-serif" font-weight="800" font-size="26" text-anchor="middle"><text x="62" y="58">+</text><text x="140" y="70">+</text><text x="100" y="112">+</text><text x="48" y="128">+</text><text x="150" y="140">+</text><text x="96" y="176">+</text></g>
+    <g fill="#3F2FA0"><circle cx="100" cy="52" r="13"/><circle cx="56" cy="92" r="13"/><circle cx="146" cy="104" r="13"/><circle cx="76" cy="150" r="13"/><circle cx="130" cy="164" r="13"/></g>
+    <g stroke="#fff" stroke-width="3.5" stroke-linecap="round"><path d="M93 52h14M49 92h14M139 104h14M69 150h14M123 164h14"/></g>
+  </symbol>
+  <symbol id="at-rutherford" viewBox="0 0 200 200">
+    <circle cx="100" cy="100" r="92" fill="#F1EEFD" stroke="#BFB6E6" stroke-width="3" stroke-dasharray="7 7"/>
+    <circle cx="100" cy="100" r="9" fill="url(#gNucleo)" stroke="#B88A00" stroke-width="1.5"/>
+    <g fill="#3F2FA0"><circle cx="40" cy="70" r="8"/><circle cx="150" cy="48" r="8"/><circle cx="164" cy="130" r="8"/><circle cx="70" cy="160" r="8"/></g>
+  </symbol>
+</svg>
+
+<!-- 1. Capa -->
+<section class="slide capa" data-nome="Capa">
+  <div class="estrelas"></div>
+  <div class="texto-capa">
+    <span class="selo">Química · PISM I</span>
+    <p class="aula">Estrutura atômica · Parte 1 de 4</p>
+    <h1>Modelos atômicos</h1>
+    <p class="sub">De Dalton a Rutherford</p>
+  </div>
+  <svg class="emblema" viewBox="0 0 640 640" aria-hidden="true">
+    <g class="gira-lento"><ellipse cx="320" cy="320" rx="300" ry="128" fill="none" stroke="#fff" stroke-opacity=".38" stroke-width="2" transform="rotate(-10 320 320)"/></g>
+    <g class="gira"><ellipse cx="320" cy="320" rx="236" ry="196" fill="none" stroke="#FFD10C" stroke-opacity=".75" stroke-width="2.5" stroke-dasharray="3 14" stroke-linecap="round" transform="rotate(-8 320 320)"/>
+      <circle cx="84" cy="300" r="13" fill="#FFD10C" stroke="#fff" stroke-width="3"/></g>
+    <circle cx="320" cy="320" r="132" fill="#FFD10C"/>
+    <image href="{{SYM_ROXO}}" x="238" y="238" width="164" height="164"/>
+  </svg>
+  <img class="logo-capa" src="{{LOGO_BRANCO}}" alt="Quarks">
+  <aside class="notas">
+    <p>Hoje: como os cientistas descobriram o que tem dentro de algo que ninguém consegue ver. Três modelos, três experimentos.</p>
+  </aside>
+</section>
+
+<!-- 2. Gancho -->
+<section class="slide" data-nome="Ninguém viu um átomo">
+  <div class="conteudo">
+    <p class="olho">Para começar</p>
+    <h2 class="titulo">Ninguém viu um átomo como vê uma laranja</h2>
+    <p class="texto" style="position:absolute;left:0;top:160px;margin:0">Tudo o que sabemos dele veio de <b>experimentos indiretos</b>:</p>
+    <div style="position:absolute;left:0;right:0;top:250px;display:grid;grid-template-columns:repeat(3,1fr);gap:24px">
+      <div class="cartao-icone" data-passo="1" style="grid-template-columns:1fr;justify-items:start;gap:10px;min-height:200px;align-content:start">
+        <svg viewBox="0 0 120 100" aria-hidden="true"><path d="M60 14v66M30 84h60M18 34h84" stroke="#3F2FA0" stroke-width="6" stroke-linecap="round" fill="none"/><path d="M18 34l-12 26h24zM102 34l-12 26h24z" fill="#F1EEFD" stroke="#3F2FA0" stroke-width="4" stroke-linejoin="round"/></svg>
+        <span><b>Massas</b> medidas numa reação química</span>
+      </div>
+      <div class="cartao-icone" data-passo="2" style="grid-template-columns:1fr;justify-items:start;gap:10px;min-height:200px;align-content:start">
+        <svg viewBox="0 0 120 100" aria-hidden="true"><rect x="6" y="34" width="108" height="32" rx="16" fill="#F1EEFD" stroke="#3F2FA0" stroke-width="4"/><path d="M20 50h84" stroke="#FFD10C" stroke-width="7" stroke-linecap="round"/></svg>
+        <span><b>Uma luz:</b> um feixe dentro de um tubo de vidro</span>
+      </div>
+      <div class="cartao-icone" data-passo="3" style="grid-template-columns:1fr;justify-items:start;gap:10px;min-height:200px;align-content:start">
+        <svg viewBox="0 0 120 100" aria-hidden="true"><path d="M8 60h52l44-40" stroke="#6551D1" stroke-width="6" stroke-linecap="round" stroke-linejoin="round" fill="none"/><path d="M90 18l16 0-2 16" stroke="#6551D1" stroke-width="6" stroke-linecap="round" stroke-linejoin="round" fill="none"/><rect x="56" y="40" width="8" height="44" rx="3" fill="#E7B437"/></svg>
+        <span><b>Um desvio:</b> partículas que mudam de rumo</span>
+      </div>
+    </div>
+    <div class="caixa caixa-fundamental" data-passo="4" style="position:absolute;left:600px;right:0;top:520px">
+      <span class="rotulo">Modelo atômico</span>
+      <div class="texto" style="font-size:34px">Uma <b>representação</b> que explica os resultados conhecidos. Quando aparece um resultado que ele não explica, o modelo é <b>corrigido ou trocado</b>.</div>
+    </div>
+  </div>
+  <aside class="notas">
+    <p>Cada cartão vai virar um modelo: massas → Dalton; feixe no tubo → Thomson; desvio → Rutherford.</p>
+    <p>Clique 4: a definição de modelo. Insista: modelo não é foto.</p>
+  </aside>
+</section>
+
+<!-- 3. Modelo é representação -->
+<section class="slide" data-nome="Modelo é representação">
+  <div class="conteudo">
+    <p class="olho">Fundamental</p>
+    <h2 class="titulo">Modelo é representação, não foto</h2>
+    <div class="caixa caixa-fundamental" style="position:absolute;left:0;right:0;top:160px;padding:24px 36px">
+      <div class="texto" style="font-size:34px">Cada modelo explicou algo que o anterior não explicava, e cada um tem limites. De cada modelo, saiba três coisas:</div>
+      <div style="display:flex;gap:18px;margin-top:16px">
+        <span class="pilula pilula-resposta" data-passo="1">o que propõe</span>
+        <span class="pilula pilula-resposta" data-passo="2">que fato o sustentou</span>
+        <span class="pilula pilula-resposta" data-passo="3">onde falha</span>
+      </div>
+    </div>
+    <div class="linha-tempo" data-passo="4" style="position:absolute;left:600px;right:0;top:470px">
+      <div><span class="ano">1808</span>Dalton: átomo maciço</div>
+      <div><span class="ano">1897</span>Thomson descobre o elétron</div>
+      <div><span class="ano">1911</span>Rutherford: o núcleo</div>
+      <div><span class="ano">1932</span>Chadwick: o nêutron</div>
+    </div>
+  </div>
+  <aside class="notas">
+    <p>Os três itens são o roteiro de cada modelo e o que a prova cobra.</p>
+    <p>Clique 4: a linha do tempo dos próximos slides.</p>
+  </aside>
+</section>
+
+<!-- 4. As leis antes de Dalton -->
+<section class="slide" data-nome="Lavoisier e Proust">
+  <div class="conteudo">
+    <p class="olho">Dalton · o ponto de partida</p>
+    <h2 class="titulo">Duas leis das reações químicas</h2>
+    <div style="position:absolute;left:0;right:0;top:170px;display:grid;grid-template-columns:1fr 1fr;gap:40px">
+      <div class="caixa" data-passo="1">
+        <span class="rotulo">Lavoisier · conservação da massa</span>
+        <div class="texto">Num <b>sistema fechado</b>, a massa total <b>não muda</b> numa reação.</div>
+        <div class="texto" style="margin-top:18px;font-size:42px;text-align:center;color:var(--roxo-titulo)"><b>massa antes = massa depois</b></div>
+      </div>
+      <div class="caixa" data-passo="2">
+        <span class="rotulo">Proust · proporções fixas</span>
+        <div class="texto">Uma substância tem sempre a <b>mesma proporção em massa</b> entre seus componentes.</div>
+        <div class="texto" style="margin-top:18px">Água: <b>1 g de hidrogênio</b> para cada <b>8 g de oxigênio</b>, venha de onde vier.</div>
+      </div>
+    </div>
+    <span class="pilula pilula-pausa" data-passo="3" style="position:absolute;right:0;top:620px">Que átomo explica essas duas leis?</span>
+  </div>
+  <aside class="notas">
+    <p>Dalton partiu dessas leis, que eram fatos experimentais. A pergunta do clique 3 abre o modelo dele.</p>
+  </aside>
+</section>
+
+<!-- 5. O átomo de Dalton -->
+<section class="slide" data-nome="O átomo de Dalton">
+  <div class="conteudo">
+    <p class="olho">Dalton · início do século XIX</p>
+    <h2 class="titulo">Uma bola de bilhar</h2>
+    <svg viewBox="0 0 200 200" width="400" height="400" style="position:absolute;left:40px;top:170px" aria-hidden="true"><use href="#at-dalton"/></svg>
+    <p class="texto" style="position:absolute;left:0;width:500px;top:590px;margin:0;font-size:30px;text-align:center"><b>maciço, indivisível e indestrutível</b></p>
+    <ol class="resumo" style="position:absolute;left:600px;right:0;top:160px;grid-template-columns:1fr;gap:16px;list-style:none;margin:0;padding:0">
+      <li data-passo="1" style="background:#fff;border:2px solid var(--lilas-2);border-radius:26px;padding:18px 28px;font-size:31px;line-height:1.35">A matéria é formada por <b>átomos</b>: partículas maciças, indivisíveis e indestrutíveis.</li>
+      <li data-passo="2" style="background:#fff;border:2px solid var(--lilas-2);border-radius:26px;padding:18px 28px;font-size:31px;line-height:1.35">Átomos de um <b>mesmo elemento são iguais</b> entre si, em massa e em propriedades.</li>
+      <li data-passo="3" style="background:#fff;border:2px solid var(--lilas-2);border-radius:26px;padding:18px 28px;font-size:31px;line-height:1.35">Átomos de <b>elementos diferentes</b> têm massas e propriedades diferentes.</li>
+      <li data-passo="4" style="background:#fff;border:2px solid var(--lilas-2);border-radius:26px;padding:18px 28px;font-size:31px;line-height:1.35">Substâncias compostas são a união de átomos em <b>proporções fixas</b> de números inteiros.</li>
+      <li data-passo="5" style="background:#fff;border:2px solid var(--lilas-2);border-radius:26px;padding:18px 28px;font-size:31px;line-height:1.35">Numa reação, os átomos <b>não são criados nem destruídos</b>: apenas se rearranjam.</li>
+    </ol>
+  </div>
+  <aside class="notas">
+    <p>John Dalton, inglês. Um clique por postulado. Guarde os dois últimos: são eles que explicam as leis do slide anterior.</p>
+  </aside>
+</section>
+
+<!-- 6. Dalton explica as leis -->
+<section class="slide" data-nome="Dalton explica as leis">
+  <div class="conteudo">
+    <p class="olho">Dalton · por que o modelo funcionou</p>
+    <h2 class="titulo">Reação é rearranjo de átomos</h2>
+    <svg viewBox="0 0 1760 300" width="1760" height="300" style="position:absolute;left:0;top:150px;overflow:visible;font-family:Figtree,'Segoe UI',sans-serif" aria-hidden="true">
+      <g data-passo="1">
+        <rect x="0" y="10" width="740" height="230" rx="30" fill="#fff" stroke="#E4DEFB" stroke-width="2"/>
+        <text x="370" y="56" text-anchor="middle" font-size="26" font-weight="800" fill="#5340B8" letter-spacing="3">ANTES</text>
+        <g stroke="#292B2C" stroke-width="2.5">
+          <circle cx="110" cy="140" r="30" fill="#fff"/><circle cx="160" cy="140" r="30" fill="#fff"/>
+          <circle cx="280" cy="140" r="30" fill="#fff"/><circle cx="330" cy="140" r="30" fill="#fff"/>
+          <circle cx="480" cy="140" r="40" fill="url(#gDalton)"/><circle cx="550" cy="140" r="40" fill="url(#gDalton)"/>
+        </g>
+        <text x="370" y="215" text-anchor="middle" font-size="28" font-weight="700" fill="#5E5A70">hidrogênio + oxigênio</text>
+      </g>
+      <g data-passo="2">
+        <path d="M770 125h150M900 105l24 20-24 20" fill="none" stroke="#6551D1" stroke-width="7" stroke-linecap="round" stroke-linejoin="round"/>
+        <rect x="960" y="10" width="800" height="230" rx="30" fill="#fff" stroke="#E4DEFB" stroke-width="2"/>
+        <text x="1360" y="56" text-anchor="middle" font-size="26" font-weight="800" fill="#5340B8" letter-spacing="3">DEPOIS</text>
+        <g stroke="#292B2C" stroke-width="2.5">
+          <circle cx="1150" cy="140" r="40" fill="url(#gDalton)"/><circle cx="1098" cy="104" r="30" fill="#fff"/><circle cx="1202" cy="104" r="30" fill="#fff"/>
+          <circle cx="1490" cy="140" r="40" fill="url(#gDalton)"/><circle cx="1438" cy="104" r="30" fill="#fff"/><circle cx="1542" cy="104" r="30" fill="#fff"/>
+        </g>
+        <text x="1360" y="215" text-anchor="middle" font-size="28" font-weight="700" fill="#5E5A70">água</text>
+      </g>
+      <g data-passo="3" font-size="34" font-weight="800" text-anchor="middle" fill="#3F2FA0">
+        <text x="370" y="290">4 hidrogênios · 2 oxigênios</text>
+        <text x="1360" y="290">4 hidrogênios · 2 oxigênios</text>
+      </g>
+    </svg>
+    <div style="position:absolute;left:600px;right:0;top:500px;display:grid;grid-template-columns:1fr 1fr;gap:28px">
+      <div class="caixa caixa-fundamental" data-passo="4" style="padding:22px 30px">
+        <span class="rotulo">Explica Lavoisier</span>
+        <div class="texto" style="font-size:31px">Os átomos só trocam de parceiro. Mesmos átomos, <b>mesma massa</b>.</div>
+      </div>
+      <div class="caixa caixa-fundamental" data-passo="5" style="padding:22px 30px">
+        <span class="rotulo">Explica Proust</span>
+        <div class="texto" style="font-size:31px">A água é sempre a mesma combinação de átomos: <b>proporção fixa</b>.</div>
+      </div>
+    </div>
+  </div>
+  <aside class="notas">
+    <p>Bolinha branca = hidrogênio; roxa = oxigênio. Conte os átomos dos dois lados no clique 3.</p>
+    <p>Último postulado → Lavoisier; o das proporções fixas → Proust.</p>
+  </aside>
+</section>
+
+<!-- 7. Exemplo: proporção da água -->
+<section class="slide" data-nome="Exemplo: água">
+  <div class="conteudo">
+    <p class="olho">Exemplo</p>
+    <h2 class="titulo">Quanto oxigênio? Quanta água?</h2>
+    <div style="position:absolute;left:0;width:520px;top:160px">
+      <p class="texto" style="margin:0;font-size:33px">Para formar água, <b>3 g de hidrogênio</b> reagem com oxigênio, sem sobra. Quanto oxigênio reage? Quanta água se forma?</p>
+      <div class="caixa" style="margin-top:22px;padding:18px 28px">
+        <span class="rotulo">Dado (Proust)</span>
+        <div class="texto" style="font-size:32px">1 g de H : 8 g de O</div>
+      </div>
+    </div>
+    <div style="position:absolute;left:600px;width:540px;top:160px">
+      <p class="texto" style="margin:0 0 16px;font-size:32px"><b>Oxigênio:</b> a proporção é fixa</p>
+      <div class="contas" style="font-size:42px">
+        <div class="eq" data-passo="1"><span>\(m_O\)</span><span>\(=\)</span><span>\(8 \cdot m_H\)</span></div>
+        <div class="eq" data-passo="2"><span>\(m_O\)</span><span>\(=\)</span><span>\(8 \cdot 3\)</span></div>
+        <div class="eq final" data-passo="3"><span>\(m_O\)</span><span>\(=\)</span><span>\(24\ \text{g}\)</span></div>
+      </div>
+    </div>
+    <div style="position:absolute;left:1200px;right:0;top:160px">
+      <p class="texto" style="margin:0 0 16px;font-size:32px"><b>Água:</b> a massa se conserva</p>
+      <div class="contas" style="font-size:42px">
+        <div class="eq" data-passo="4"><span>\(m_{\text{água}}\)</span><span>\(=\)</span><span>\(m_H + m_O\)</span></div>
+        <div class="eq" data-passo="5"><span>\(m_{\text{água}}\)</span><span>\(=\)</span><span>\(3 + 24\)</span></div>
+        <div class="eq final" data-passo="6"><span>\(m_{\text{água}}\)</span><span>\(=\)</span><span>\(27\ \text{g}\)</span></div>
+      </div>
+    </div>
+    <span class="pilula pilula-resposta" data-passo="7" style="position:absolute;right:0;top:640px">Proust dá os 24 g; Lavoisier dá os 27 g</span>
+  </div>
+  <aside class="notas">
+    <p>Se 1 g de H pede 8 g de O, 3 g pedem o triplo: 24 g. Toda a massa vira água: 3 + 24 = 27 g.</p>
+  </aside>
+</section>
+
+<!-- 8. Onde Dalton falha -->
+<section class="slide" data-nome="Limites de Dalton">
+  <div class="conteudo">
+    <p class="olho">Dalton · os limites</p>
+    <h2 class="titulo">Onde o modelo falha</h2>
+    <div style="position:absolute;left:0;right:0;top:170px;display:grid;grid-template-columns:1fr 1fr;gap:40px">
+      <div class="caixa caixa-atencao" data-passo="1">
+        <span class="rotulo">Falha 1</span>
+        <div class="texto">O átomo <b>é divisível</b>: tem partículas menores, como o elétron (modelo de Thomson, a seguir).</div>
+      </div>
+      <div class="caixa caixa-atencao" data-passo="2">
+        <span class="rotulo">Falha 2</span>
+        <div class="texto">Nem todo átomo de um elemento tem a mesma massa: existem os <b>isótopos</b> (Parte 2).</div>
+      </div>
+    </div>
+    <div class="caixa caixa-fundamental" data-passo="3" style="position:absolute;left:600px;right:0;top:500px">
+      <span class="rotulo">O que continua valendo</span>
+      <div class="texto">Uma reação química é um <b>rearranjo de átomos</b>. Isso vale até hoje.</div>
+    </div>
+  </div>
+  <aside class="notas">
+    <p>As duas falhas derrubam dois postulados: indivisível e átomos iguais no mesmo elemento.</p>
+  </aside>
+</section>
+
+<!-- 9. Thomson: raios catódicos -->
+<section class="slide" data-nome="Raios catódicos">
+  <div class="conteudo">
+    <p class="olho">Thomson · 1897</p>
+    <h2 class="titulo">O feixe dos raios catódicos</h2>
+    <svg viewBox="0 0 1040 380" width="1040" height="380" style="position:absolute;left:0;top:150px;overflow:visible;font-family:Figtree,'Segoe UI',sans-serif" aria-hidden="true">
+      <rect x="20" y="100" width="1000" height="180" rx="90" fill="#F7F5FE" stroke="#BFB6E6" stroke-width="5"/>
+      <rect x="70" y="140" width="20" height="100" rx="6" fill="#3F2FA0"/>
+      <text x="80" y="76" text-anchor="middle" font-size="28" font-weight="800" fill="#3F2FA0">cátodo (−)</text>
+      <text x="520" y="340" text-anchor="middle" font-size="26" font-weight="700" fill="#5E5A70">tubo de vidro quase sem ar, ligado a uma alta tensão</text>
+      <path data-passo="1" data-em="2:some" d="M95 190H960" stroke="#FFD10C" stroke-width="12" stroke-linecap="round" fill="none"/>
+      <path data-passo="2" d="M95 190H520Q760 190 960 130" stroke="#FFD10C" stroke-width="12" stroke-linecap="round" fill="none"/>
+      <g data-passo="2">
+        <rect x="560" y="112" width="220" height="16" rx="6" fill="#FFD10C"/><text x="670" y="98" text-anchor="middle" font-size="30" font-weight="800" fill="#CC2A72">+</text>
+        <rect x="560" y="252" width="220" height="16" rx="6" fill="#3F2FA0"/><text x="670" y="300" text-anchor="middle" font-size="30" font-weight="800" fill="#3F2FA0">−</text>
+      </g>
+    </svg>
+    <div style="position:absolute;left:1100px;right:0;top:150px;display:flex;flex-direction:column;gap:16px">
+      <div class="caixa" data-passo="3" style="padding:18px 26px"><div class="texto" style="font-size:28px">Vai para o lado <b>positivo</b> → as partículas são <b>negativas</b>.</div></div>
+      <div class="caixa" data-passo="4" style="padding:18px 26px"><div class="texto" style="font-size:28px">Iguais com <b>qualquer metal</b> → estão em <b>todos os átomos</b>.</div></div>
+      <div class="caixa" data-passo="5" style="padding:18px 26px"><div class="texto" style="font-size:28px">Massa <b>muito menor</b> que a do átomo mais leve → são <b>parte</b> do átomo.</div></div>
+    </div>
+    <div class="caixa caixa-fundamental" data-passo="6" style="position:absolute;left:600px;right:0;top:640px;padding:20px 32px">
+      <div class="texto">Essas partículas são os <b>elétrons</b>. O átomo indivisível de Dalton caiu.</div>
+    </div>
+  </div>
+  <aside class="notas">
+    <p>Clique 1: o feixe sai da placa negativa (cátodo) e vai reto. Clique 2: placas carregadas, o feixe curva para o +.</p>
+    <p>Cliques 3 a 5: as três conclusões de J. J. Thomson. Clique 6: o elétron.</p>
+  </aside>
+</section>
+
+<!-- 10. O átomo de Thomson -->
+<section class="slide" data-nome="O átomo de Thomson">
+  <div class="conteudo">
+    <p class="olho">Thomson · o modelo</p>
+    <h2 class="titulo">O pudim de passas</h2>
+    <svg viewBox="0 0 200 200" width="400" height="400" style="position:absolute;left:40px;top:170px" aria-hidden="true"><use href="#at-thomson"/></svg>
+    <p class="texto" style="position:absolute;left:0;width:500px;top:590px;margin:0;font-size:28px;text-align:center"><b>esfera positiva com elétrons dentro</b></p>
+    <div style="position:absolute;left:600px;right:0;top:160px;display:flex;flex-direction:column;gap:18px">
+      <div class="caixa" data-passo="1" style="padding:20px 30px"><div class="texto" style="font-size:32px">A matéria comum é <b>neutra</b>. Se o átomo tem elétrons negativos, precisa ter <b>carga positiva na mesma quantidade</b>.</div></div>
+      <div class="caixa caixa-fundamental" data-passo="2" style="padding:20px 30px"><div class="texto" style="font-size:32px">O átomo é uma <b>esfera de carga positiva</b> com os elétrons espalhados dentro dela, como passas num pudim.</div></div>
+      <div class="caixa" data-passo="3" style="padding:20px 30px"><span class="rotulo">Explica</span><div class="texto" style="font-size:32px">A <b>eletrização</b>: um material fica carregado ao ganhar ou perder elétrons (o balão esfregado no cabelo atrai papel).</div></div>
+      <div class="caixa caixa-atencao" data-passo="4" style="padding:20px 30px"><span class="rotulo">Falha</span><div class="texto" style="font-size:32px">No experimento de Rutherford: a carga positiva <b>não está espalhada</b> pelo átomo inteiro.</div></div>
+    </div>
+  </div>
+  <aside class="notas">
+    <p>Na figura: o fundo amarelo é a carga positiva; bolinhas com "−" são os elétrons. O átomo inteiro é neutro.</p>
+  </aside>
+</section>
+
+<!-- 11. Rutherford: o experimento -->
+<section class="slide" data-nome="A folha de ouro">
+  <div class="conteudo">
+    <p class="olho">Rutherford · 1911</p>
+    <h2 class="titulo">A folha de ouro</h2>
+    <div data-anima="folha-de-ouro" data-anima-passo="1" style="position:absolute;left:0;top:140px;width:1760px;height:560px"></div>
+    <div style="position:absolute;left:600px;right:0;top:690px;display:grid;grid-template-columns:repeat(3,1fr);gap:20px">
+      <div class="caixa" data-passo="2" style="padding:16px 24px"><div class="texto" style="font-size:28px">A <b>grande maioria</b> atravessou <b>sem desvio</b>.</div></div>
+      <div class="caixa" data-passo="3" style="padding:16px 24px"><div class="texto" style="font-size:28px"><b>Algumas</b> sofreram <b>desvios grandes</b>.</div></div>
+      <div class="caixa" data-passo="4" style="padding:16px 24px"><div class="texto" style="font-size:28px"><b>Pouquíssimas</b> (uma em milhares) <b>voltaram</b>.</div></div>
+    </div>
+  </div>
+  <aside class="notas">
+    <p>Partícula alfa: positiva e bem mais pesada que o elétron. A tela em volta acende um ponto onde cada uma chega.</p>
+    <p>Clique 1 dispara o feixe (cerca de 9 s). Na tela real a proporção de desvios é muito menor: aqui está exagerada para dar para ver.</p>
+  </aside>
+</section>
+
+<!-- 12. O que Thomson previa -->
+<section class="slide" data-nome="Previsto x observado">
+  <div class="conteudo">
+    <p class="olho">Rutherford · a surpresa</p>
+    <h2 class="titulo">O que o modelo de Thomson previa</h2>
+    <div style="position:absolute;left:0;right:0;top:170px;display:grid;grid-template-columns:1fr 1fr;gap:40px">
+      <div class="caixa" data-passo="1">
+        <span class="rotulo">Previsto por Thomson</span>
+        <svg viewBox="0 0 700 170" width="100%" height="170" aria-hidden="true" style="display:block;margin:6px 0 10px">
+          <rect x="340" y="10" width="14" height="150" rx="5" fill="#E7B437"/>
+          <g stroke="#6551D1" stroke-width="5" stroke-linecap="round" fill="none"><path d="M20 40H680"/><path d="M20 70H680"/><path d="M20 100H680"/><path d="M20 130H680"/></g>
+        </svg>
+        <div class="texto" style="font-size:31px">A carga positiva espalhada não desvia muito partículas tão rápidas: <b>todas passariam quase em linha reta</b>.</div>
+      </div>
+      <div class="caixa" data-passo="2">
+        <span class="rotulo">Observado</span>
+        <svg viewBox="0 0 700 170" width="100%" height="170" aria-hidden="true" style="display:block;margin:6px 0 10px">
+          <rect x="340" y="10" width="14" height="150" rx="5" fill="#E7B437"/>
+          <g stroke="#6551D1" stroke-width="5" stroke-linecap="round" fill="none"><path d="M20 40H680"/><path d="M20 70H347L640 10"/><path d="M20 100H680"/><path d="M20 130H347L60 160"/></g>
+        </svg>
+        <div class="texto" style="font-size:31px">A maioria passou reto, mas <b>algumas desviaram muito</b> e <b>pouquíssimas voltaram</b>.</div>
+      </div>
+    </div>
+    <span class="pilula pilula-pausa" data-passo="3" style="position:absolute;right:0;top:680px">Thomson não explica isso</span>
+  </div>
+  <aside class="notas">
+    <p>Pegadinha de prova: "a maioria passou reto, logo Thomson estava certo". Errado: o que derruba Thomson são as que desviaram muito e as que voltaram.</p>
+  </aside>
+</section>
+
+<!-- 13. Lendo os resultados -->
+<section class="slide" data-nome="Lendo cada resultado">
+  <div class="conteudo">
+    <p class="olho">Rutherford · a interpretação</p>
+    <h2 class="titulo">O que cada resultado mostra</h2>
+    <div style="position:absolute;left:0;right:0;top:160px;display:flex;flex-direction:column;gap:18px">
+      <div class="cartao-icone" data-passo="1" style="grid-template-columns:120px 470px 1fr">
+        <svg viewBox="0 0 120 100" aria-hidden="true"><rect x="56" y="10" width="8" height="80" rx="3" fill="#E7B437"/><path d="M6 50h108" stroke="#6551D1" stroke-width="6" stroke-linecap="round"/></svg>
+        <span>A <b>maioria</b> passou reto</span>
+        <span>→ quase nada no caminho: o átomo é <b>quase todo vazio</b>.</span>
+      </div>
+      <div class="cartao-icone" data-passo="2" style="grid-template-columns:120px 470px 1fr">
+        <svg viewBox="0 0 120 100" aria-hidden="true"><rect x="56" y="10" width="8" height="80" rx="3" fill="#E7B437"/><path d="M6 60h54l50-44" stroke="#6551D1" stroke-width="6" stroke-linecap="round" stroke-linejoin="round" fill="none"/></svg>
+        <span><b>Algumas</b> desviaram muito</span>
+        <span>→ passaram perto de algo <b>positivo</b>, que as <b>repeliu</b>.</span>
+      </div>
+      <div class="cartao-icone" data-passo="3" style="grid-template-columns:120px 470px 1fr">
+        <svg viewBox="0 0 120 100" aria-hidden="true"><rect x="56" y="10" width="8" height="80" rx="3" fill="#E7B437"/><path d="M6 56h50L14 20" stroke="#6551D1" stroke-width="6" stroke-linecap="round" stroke-linejoin="round" fill="none"/></svg>
+        <span><b>Pouquíssimas</b> voltaram</span>
+        <span>→ bateram de frente em algo <b>pequeno</b>, positivo e <b>muito pesado</b>.</span>
+      </div>
+    </div>
+    <span class="pilula pilula-resposta" data-passo="4" style="position:absolute;right:0;top:660px">Esse “algo” é o núcleo</span>
+  </div>
+  <aside class="notas">
+    <p>Positivo porque repele a alfa, que é positiva. Pequeno porque quase ninguém acerta. Pesado porque a alfa, que é pesada, volta.</p>
+  </aside>
+</section>
+
+<!-- 14. O átomo de Rutherford -->
+<section class="slide" data-nome="O átomo de Rutherford">
+  <div class="conteudo">
+    <p class="olho">Fundamental</p>
+    <h2 class="titulo">Núcleo e eletrosfera</h2>
+    <svg viewBox="0 0 200 200" width="420" height="420" style="position:absolute;left:30px;top:160px;overflow:visible;font-family:Figtree,'Segoe UI',sans-serif" aria-hidden="true">
+      <use href="#at-rutherford"/>
+      <g data-passo="1"><path d="M108 94 L150 70" stroke="#8A6A00" stroke-width="1.6"/><text x="152" y="68" font-size="11" font-weight="800" fill="#8A6A00">núcleo</text></g>
+      <g data-passo="2"><text x="100" y="22" text-anchor="middle" font-size="11" font-weight="800" fill="#5340B8">eletrosfera</text></g>
+    </svg>
+    <div style="position:absolute;left:600px;right:0;top:160px;display:flex;flex-direction:column;gap:18px">
+      <div class="caixa caixa-fundamental" data-passo="1" style="padding:20px 30px"><span class="rotulo">Núcleo</span><div class="texto" style="font-size:33px">Muito <b>pequeno</b>, <b>positivo</b> e concentra praticamente <b>toda a massa</b>.</div></div>
+      <div class="caixa caixa-fundamental" data-passo="2" style="padding:20px 30px"><span class="rotulo">Eletrosfera</span><div class="texto" style="font-size:33px">Região <b>muito maior</b>, em volta do núcleo, onde ficam os <b>elétrons</b>.</div></div>
+      <div class="caixa" data-passo="3" style="padding:20px 30px"><div class="texto" style="font-size:33px">A maior parte do volume do átomo é <b>espaço vazio</b>.</div></div>
+    </div>
+  </div>
+  <aside class="notas">
+    <p>O desenho não está em escala: em escala, o núcleo seria invisível. É o que o próximo exemplo mostra.</p>
+  </aside>
+</section>
+
+<!-- 15. Exemplo: o tamanho do vazio -->
+<section class="slide" data-nome="Exemplo: o vazio">
+  <div class="conteudo">
+    <p class="olho">Exemplo</p>
+    <h2 class="titulo">O tamanho do vazio</h2>
+    <div style="position:absolute;left:0;width:520px;top:160px">
+      <p class="texto" style="margin:0;font-size:30px">No ouro, o raio do átomo é cerca de \(1{,}4 \cdot 10^{-10}\ \text{m}\) e o do núcleo, \(7 \cdot 10^{-15}\ \text{m}\). Quantas vezes o átomo é maior? Se o núcleo tivesse <b>1 cm</b> de diâmetro, qual seria o diâmetro do átomo?</p>
+    </div>
+    <div style="position:absolute;left:600px;width:560px;top:160px">
+      <p class="texto" style="margin:0 0 14px;font-size:30px"><b>A razão \(k\)</b> vale para raios e diâmetros</p>
+      <div class="contas" style="font-size:40px">
+        <div class="eq" data-passo="1"><span>\(k\)</span><span>\(=\)</span><span>\(\dfrac{r_{\text{átomo}}}{r_{\text{núcleo}}}\)</span></div>
+        <div class="eq" data-passo="2"><span>\(k\)</span><span>\(=\)</span><span>\(\dfrac{1{,}4 \cdot 10^{-10}}{7 \cdot 10^{-15}}\)</span></div>
+        <div class="eq" data-passo="3"><span>\(k\)</span><span>\(=\)</span><span>\(0{,}2 \cdot 10^{5}\)</span></div>
+        <div class="eq final" data-passo="4"><span>\(k\)</span><span>\(=\)</span><span>\(2 \cdot 10^{4}\)</span></div>
+      </div>
+    </div>
+    <div style="position:absolute;left:1210px;right:0;top:160px">
+      <p class="texto" style="margin:0 0 14px;font-size:30px"><b>Núcleo de 1 cm</b></p>
+      <div class="contas" style="font-size:40px">
+        <div class="eq" data-passo="5"><span>\(d_{\text{át}}\)</span><span>\(=\)</span><span>\(k \cdot d_{\text{núc}}\)</span></div>
+        <div class="eq" data-passo="6"><span>\(d_{\text{át}}\)</span><span>\(=\)</span><span>\(2 \cdot 10^{4} \cdot 1\ \text{cm}\)</span></div>
+        <div class="eq" data-passo="7"><span>\(d_{\text{át}}\)</span><span>\(=\)</span><span>\(2 \cdot 10^{4}\ \text{cm}\)</span></div>
+        <div class="eq final" data-passo="8"><span>\(d_{\text{át}}\)</span><span>\(=\)</span><span>\(200\ \text{m}\)</span></div>
+      </div>
+    </div>
+    <span class="pilula pilula-resposta" data-passo="9" style="position:absolute;right:0;top:690px">20 mil vezes maior: quase dois campos de futebol</span>
+  </div>
+  <aside class="notas">
+    <p>Divida 1,4 por 7 (0,2) e as potências subtraindo expoentes (−10 − (−15) = 5).</p>
+    <p>100 cm = 1 m, então 20 000 cm = 200 m. Uma bolinha de gude no meio de um estádio.</p>
+  </aside>
+</section>
+
+<!-- 16. Depois de Rutherford -->
+<section class="slide" data-nome="Depois de Rutherford">
+  <div class="conteudo">
+    <p class="olho">Rutherford · o problema e o que veio depois</p>
+    <h2 class="titulo">Prótons, nêutrons e elétrons</h2>
+    <div class="caixa caixa-atencao" data-passo="1" style="position:absolute;left:0;right:0;top:160px;padding:22px 34px">
+      <span class="rotulo">O problema do modelo</span>
+      <div class="texto" style="font-size:32px">Pela física da época, um elétron girando em volta do núcleo perderia energia emitindo luz e <b>cairia no núcleo</b> numa fração de segundo. Mas os átomos são <b>estáveis</b>. Isso levou a novos modelos, com regras próprias para os elétrons.</div>
+    </div>
+    <svg viewBox="0 0 300 260" width="420" height="364" data-passo="2" style="position:absolute;left:640px;top:400px;overflow:visible;font-family:Figtree,'Segoe UI',sans-serif" aria-hidden="true">
+      <g stroke="#292B2C" stroke-width="2">
+        <circle cx="130" cy="120" r="34" fill="#FFD10C"/><circle cx="180" cy="110" r="34" fill="#C9C0F0"/><circle cx="150" cy="160" r="34" fill="#FFD10C"/>
+        <circle cx="110" cy="168" r="34" fill="#C9C0F0"/><circle cx="196" cy="160" r="34" fill="#FFD10C"/><circle cx="160" cy="76" r="34" fill="#C9C0F0"/>
+      </g>
+      <g font-size="26" font-weight="800" fill="#292B2C" text-anchor="middle"><text x="130" y="129">+</text><text x="150" y="169">+</text><text x="196" y="169">+</text></g>
+    </svg>
+    <div style="position:absolute;left:1120px;right:0;top:420px;display:flex;flex-direction:column;gap:14px">
+      <div class="cartao-icone" data-passo="2" style="grid-template-columns:50px 1fr;padding:14px 24px;font-size:28px"><svg viewBox="0 0 50 50" style="width:50px;height:50px"><circle cx="25" cy="25" r="20" fill="#FFD10C"/></svg><span><b>Próton</b> (+), no núcleo</span></div>
+      <div class="cartao-icone" data-passo="3" style="grid-template-columns:50px 1fr;padding:14px 24px;font-size:28px"><svg viewBox="0 0 50 50" style="width:50px;height:50px"><circle cx="25" cy="25" r="20" fill="#C9C0F0"/></svg><span><b>Nêutron</b> (sem carga), no núcleo · Chadwick, 1932</span></div>
+      <div class="cartao-icone" data-passo="4" style="grid-template-columns:50px 1fr;padding:14px 24px;font-size:28px"><svg viewBox="0 0 50 50" style="width:50px;height:50px"><circle cx="25" cy="25" r="14" fill="#3F2FA0"/></svg><span><b>Elétron</b> (−), na eletrosfera</span></div>
+    </div>
+  </div>
+  <aside class="notas">
+    <p>Os novos modelos (Bohr e o atual) ficam para depois; no PISM I o programa vai até Rutherford.</p>
+    <p>O que importa: núcleo pequeno e pesado com prótons e nêutrons, cercado pela eletrosfera com os elétrons.</p>
+  </aside>
+</section>
+
+<!-- 17. Atenção: sistema solar -->
+<section class="slide" data-nome="Atenção: sistema solar">
+  <div class="conteudo">
+    <p class="olho">Atenção</p>
+    <h2 class="titulo">O átomo não é um sistema solar</h2>
+    <div class="caixa caixa-atencao" style="position:absolute;left:0;right:0;top:170px">
+      <div class="texto">A imagem de elétrons girando em volta do núcleo, como planetas em volta do Sol, ajuda a lembrar que o núcleo é <b>pequeno e central</b>. Mas é um modelo, com limites: os próprios cientistas o corrigiram depois.</div>
+    </div>
+    <span class="pilula pilula-pausa" data-passo="1" style="position:absolute;right:0;top:520px">Não use essa imagem para dizer como o elétron se move</span>
+  </div>
+  <aside class="notas">
+    <p>Muita alternativa de prova diz "o elétron descreve órbitas como os planetas". No PISM I, fique com núcleo e eletrosfera.</p>
+  </aside>
+</section>
+
+<!-- 18. Os três modelos -->
+<section class="slide" data-nome="Os três modelos">
+  <div class="conteudo">
+    <p class="olho">Comparando</p>
+    <h2 class="titulo">Os três modelos lado a lado</h2>
+    <div class="modelos3" style="position:absolute;left:0;right:0;top:150px">
+      <div data-passo="1">
+        <h3><svg viewBox="0 0 200 200" aria-hidden="true"><use href="#at-dalton"/></svg>Dalton</h3>
+        <dl><dt>Propõe</dt><dd>Esfera maciça e indivisível; átomos iguais no mesmo elemento.</dd>
+        <dt>Fato</dt><dd>Leis de Lavoisier e de Proust.</dd>
+        <dt>Falha</dt><dd>O elétron (átomo divisível) e os isótopos.</dd></dl>
+      </div>
+      <div data-passo="2">
+        <h3><svg viewBox="0 0 200 200" aria-hidden="true"><use href="#at-thomson"/></svg>Thomson</h3>
+        <dl><dt>Propõe</dt><dd>Esfera positiva com elétrons dentro: pudim de passas.</dd>
+        <dt>Fato</dt><dd>Raios catódicos: o elétron.</dd>
+        <dt>Falha</dt><dd>A folha de ouro: a carga positiva não está espalhada.</dd></dl>
+      </div>
+      <div data-passo="3">
+        <h3><svg viewBox="0 0 200 200" aria-hidden="true"><use href="#at-rutherford"/></svg>Rutherford</h3>
+        <dl><dt>Propõe</dt><dd>Núcleo pequeno, positivo e pesado; eletrosfera grande e quase vazia.</dd>
+        <dt>Fato</dt><dd>A folha de ouro.</dd>
+        <dt>Falha</dt><dd>A estabilidade: o elétron cairia no núcleo.</dd></dl>
+      </div>
+    </div>
+  </div>
+  <aside class="notas">
+    <p>Um clique por modelo. Este é o slide para o print.</p>
+  </aside>
+</section>
+
+<!-- 19. Como a prova cobra -->
+<section class="slide" data-nome="Como a prova cobra">
+  <div class="conteudo">
+    <p class="olho">Dica de prova</p>
+    <h2 class="titulo">Qual modelo a questão descreve?</h2>
+    <p class="texto" style="position:absolute;left:0;top:160px;margin:0">A questão típica descreve um experimento ou uma ideia e pergunta o modelo:</p>
+    <div style="position:absolute;left:600px;right:0;top:260px;display:flex;flex-direction:column;gap:18px">
+      <div class="liga" data-passo="1"><span>Leis das reações; átomo indivisível</span><svg viewBox="0 0 60 30"><path d="M4 15h48M42 5l12 10-12 10" stroke="#6551D1" stroke-width="5" fill="none" stroke-linecap="round" stroke-linejoin="round"/></svg><span class="modelo">Dalton</span></div>
+      <div class="liga" data-passo="2"><span>Raios catódicos; elétron</span><svg viewBox="0 0 60 30"><path d="M4 15h48M42 5l12 10-12 10" stroke="#6551D1" stroke-width="5" fill="none" stroke-linecap="round" stroke-linejoin="round"/></svg><span class="modelo">Thomson</span></div>
+      <div class="liga" data-passo="3"><span>Folha de ouro; núcleo</span><svg viewBox="0 0 60 30"><path d="M4 15h48M42 5l12 10-12 10" stroke="#6551D1" stroke-width="5" fill="none" stroke-linecap="round" stroke-linejoin="round"/></svg><span class="modelo">Rutherford</span></div>
+    </div>
+  </div>
+  <aside class="notas">
+    <p>Erro que se repete: misturar ideias (núcleo em Thomson, elétrons em Dalton, átomo maciço em Rutherford).</p>
+  </aside>
+</section>
+
+<!-- 20. Questão 1 -->
+<section class="slide questao" data-nome="Questão 1">
+  <div class="conteudo">
+    <div class="area-resolucao"></div>
+    <span class="pilula pilula-pausa" data-em="1:some">Pause o vídeo e tente</span>
+    <div class="painel-questao">
+      <p class="olho">Questão 1 · estilo PISM</p>
+      <p class="enunciado">Cada modelo atômico explicou fatos que o modelo anterior não conseguia explicar. O modelo de Thomson, proposto depois da descoberta do elétron, substituiu o modelo de Dalton.</p>
+      <p class="enunciado">Assinale o fato que o modelo de Thomson explica e o modelo de Dalton <b>NÃO</b> explica.</p>
+      <ol class="alternativas">
+        <li data-em="2:certo"><b>A</b><span>Um balão esfregado no cabelo passa a atrair pedacinhos de papel.</span></li>
+        <li data-em="2:apaga"><b>B</b><span>Num recipiente fechado, a massa total não muda durante uma reação química.</span></li>
+        <li data-em="2:apaga"><b>C</b><span>A água tem sempre 1 g de hidrogênio para cada 8 g de oxigênio, venha de onde vier.</span></li>
+        <li data-em="2:apaga"><b>D</b><span>Algumas partículas alfa voltam ao atingir uma folha de ouro finíssima.</span></li>
+        <li data-em="2:apaga"><b>E</b><span>A maior parte do volume do átomo é espaço vazio.</span></li>
+      </ol>
+    </div>
+  </div>
+  <aside class="notas">
+    <p>Clique 1 tira o aviso de pausa: resolva na área (D liga a caneta; E esconde o enunciado). Clique 2: gabarito A.</p>
+    <p>B e C Dalton já explicava (Lavoisier e Proust). D e E só Rutherford explica.</p>
+  </aside>
+</section>
+
+<!-- 21. Questão 2 -->
+<section class="slide questao" data-nome="Questão 2">
+  <div class="conteudo">
+    <div class="area-resolucao"></div>
+    <span class="pilula pilula-pausa" data-em="1:some">Pause o vídeo e tente</span>
+    <div class="painel-questao" style="gap:12px">
+      <p class="olho">Questão 2 · estilo PISM</p>
+      <p class="enunciado" style="font-size:25px">No modelo de Dalton, cada átomo é uma esfera maciça, e cada elemento tem a sua cor. A figura mostra um recipiente fechado com duas substâncias simples antes de uma reação: os círculos escuros são átomos de um elemento, e os claros, de outro.</p>
+      <svg viewBox="0 0 520 250" width="420" height="202" aria-hidden="true" style="flex:none">
+        <rect x="4" y="4" width="512" height="242" rx="28" fill="#F1EEFD" stroke="#292B2C" stroke-width="3"/>
+        <g stroke="#292B2C" stroke-width="2.5">
+          <circle cx="70" cy="70" r="24" fill="url(#gDalton)"/><circle cx="112" cy="70" r="24" fill="url(#gDalton)"/>
+          <circle cx="410" cy="160" r="24" fill="url(#gDalton)"/><circle cx="410" cy="202" r="24" fill="url(#gDalton)"/>
+          <circle cx="230" cy="54" r="17" fill="#fff"/><circle cx="260" cy="54" r="17" fill="#fff"/>
+          <circle cx="410" cy="52" r="17" fill="#fff"/><circle cx="410" cy="82" r="17" fill="#fff"/>
+          <circle cx="190" cy="130" r="17" fill="#fff"/><circle cx="220" cy="130" r="17" fill="#fff"/>
+          <circle cx="310" cy="112" r="17" fill="#fff"/><circle cx="310" cy="142" r="17" fill="#fff"/>
+          <circle cx="70" cy="160" r="17" fill="#fff"/><circle cx="70" cy="190" r="17" fill="#fff"/>
+          <circle cx="170" cy="206" r="17" fill="#fff"/><circle cx="200" cy="206" r="17" fill="#fff"/>
+        </g>
+      </svg>
+      <p class="enunciado" style="font-size:25px">Forma-se um único produto, cujas partículas têm <b>um</b> átomo escuro ligado a <b>três</b> claros, e os reagentes são consumidos totalmente. De acordo com Dalton, o número de partículas do produto é</p>
+      <ol class="alternativas curtas">
+        <li data-em="2:apaga"><b>A</b><span>2.</span></li>
+        <li data-em="2:apaga"><b>B</b><span>6.</span></li>
+        <li data-em="2:apaga"><b>C</b><span>8.</span></li>
+        <li data-em="2:certo"><b>D</b><span>4.</span></li>
+        <li data-em="2:apaga"><b>E</b><span>12.</span></li>
+      </ol>
+    </div>
+  </div>
+  <aside class="notas">
+    <p>Contar átomos, não partículas: 4 escuros e 12 claros; 4 ÷ 1 = 12 ÷ 3 = 4. Gabarito D.</p>
+    <p>Erros: A conta partículas escuras (2); B partículas claras (6); C soma as partículas (8); E átomos claros (12).</p>
+  </aside>
+</section>
+
+<!-- 22. Questão 3 -->
+<section class="slide questao" data-nome="Questão 3">
+  <div class="conteudo">
+    <div class="area-resolucao"></div>
+    <span class="pilula pilula-pausa" data-em="1:some">Pause o vídeo e tente</span>
+    <div class="painel-questao">
+      <p class="olho">Questão 3 · estilo PISM</p>
+      <p class="enunciado">O modelo de Rutherford diz que o núcleo é muito menor que o átomo. Em certo átomo, o raio é de \(1{,}2 \cdot 10^{-10}\ \text{m}\) e o raio do núcleo, de \(3 \cdot 10^{-15}\ \text{m}\).</p>
+      <p class="enunciado">Numa maquete desse átomo, feita na mesma proporção, o núcleo seria uma bolinha de 1 cm de diâmetro. O diâmetro do átomo na maquete seria de</p>
+      <ol class="alternativas curtas">
+        <li data-em="2:apaga"><b>A</b><span>4 km.</span></li>
+        <li data-em="2:apaga"><b>B</b><span>40 km.</span></li>
+        <li data-em="2:apaga"><b>C</b><span>40 m.</span></li>
+        <li data-em="2:apaga"><b>D</b><span>4 m.</span></li>
+        <li data-em="2:certo"><b>E</b><span>400 m.</span></li>
+      </ol>
+    </div>
+  </div>
+  <aside class="notas">
+    <p>k = 1,2·10⁻¹⁰ ÷ 3·10⁻¹⁵ = 4·10⁴; 4·10⁴ cm = 400 m. Gabarito E.</p>
+    <p>Erros: A expoente errado (4·10⁵ cm); B lê cm como m; C e D dividem a mais.</p>
+  </aside>
+</section>
+
+<!-- 23. Resumo -->
+<section class="slide" data-nome="Resumo">
+  <div class="conteudo">
+    <p class="olho">Resumo</p>
+    <h2 class="titulo">O essencial</h2>
+    <div class="resumo" style="position:absolute;left:0;right:0;top:150px">
+      <div><b>Modelo atômico</b> é uma representação que explica fatos conhecidos e tem limites.</div>
+      <div><b>Dalton:</b> átomo maciço e indivisível; explica Lavoisier e Proust; falha com o elétron e os isótopos.</div>
+      <div><b>Thomson:</b> elétron nos raios catódicos; esfera positiva com elétrons, o pudim de passas.</div>
+      <div><b>Rutherford:</b> folha de ouro; núcleo pequeno, positivo e pesado; eletrosfera grande e quase vazia.</div>
+      <div><b>Núcleo:</b> prótons (+) e nêutrons (sem carga). <b>Eletrosfera:</b> elétrons (−).</div>
+      <div><b>Átomo × núcleo:</b> cerca de 20 mil vezes maior. O átomo é quase todo vazio.</div>
+    </div>
+  </div>
+  <aside class="notas">
+    <p>Peça para tirarem um print desta tela.</p>
+  </aside>
+</section>
+
+<!-- 24. A seguir -->
+<section class="slide capa" data-nome="A seguir">
+  <div class="estrelas"></div>
+  <div class="texto-capa" style="top:170px">
+    <span class="selo">Química · PISM I</span>
+    <p class="aula">A seguir · Parte 2 de 4</p>
+    <h1 style="font-size:116px">Número atômico e de massa</h1>
+    <p class="sub">Prótons, nêutrons, íons e isótopos</p>
+  </div>
+  <svg class="emblema" viewBox="0 0 640 640" aria-hidden="true">
+    <circle cx="320" cy="320" r="250" fill="#fff" fill-opacity=".08" stroke="#fff" stroke-opacity=".4" stroke-width="3" stroke-dasharray="10 12"/>
+    <g stroke="#fff" stroke-width="4">
+      <circle cx="290" cy="290" r="58" fill="#FFD10C"/><circle cx="370" cy="280" r="58" fill="#C9C0F0"/><circle cx="330" cy="355" r="58" fill="#FFD10C"/>
+      <circle cx="262" cy="365" r="58" fill="#C9C0F0"/><circle cx="398" cy="360" r="58" fill="#FFD10C"/>
+    </g>
+    <circle cx="120" cy="200" r="16" fill="#FFD10C"/><circle cx="540" cy="460" r="16" fill="#FFD10C"/>
+  </svg>
+  <img class="logo-capa" src="{{LOGO_BRANCO}}" alt="Quarks">
+  <aside class="notas"><p>Próxima parte: Z, A, nêutrons, íons, isótopos e massa atômica.</p></aside>
+</section>

@@ -202,3 +202,28 @@ body {
 .mostra .vai-dir { animation: desliza-dir 2.4s ease-in-out both; }
 .mostra .vai-esq { animation: desliza-esq 2.4s ease-in-out both; }
 .riscado { text-decoration: line-through; text-decoration-color: var(--erro); text-decoration-thickness: 4px; color: var(--cinza); }
+
+/* Alternativas curtas (números, palavras): lado a lado, para sobrar espaço na coluna da questão */
+.alternativas.curtas { flex-direction: row; flex-wrap: wrap; }
+.alternativas.curtas { gap: 8px; }
+.painel-questao .alternativas.curtas li { flex: 1 1 0; grid-template-columns: 40px auto; column-gap: 8px; padding: 6px 10px; white-space: nowrap; }
+
+/* Linha do tempo e cartões com ícone */
+.linha-tempo { display: grid; grid-template-columns: repeat(4, 1fr); gap: 24px; position: relative; }
+.linha-tempo::before { content: ""; position: absolute; left: 30px; right: 30px; top: 30px; height: 6px; border-radius: 3px; background: var(--lilas-2); }
+.linha-tempo > div { position: relative; padding-top: 74px; font-size: 28px; line-height: 1.35; }
+.linha-tempo > div::before { content: ""; position: absolute; left: 14px; top: 14px; width: 38px; height: 38px; border-radius: 50%; background: var(--d); border: 5px solid var(--branco); box-shadow: 0 0 0 3px var(--d); }
+.linha-tempo .ano { display: block; font: 800 44px var(--fonte-titulo); color: var(--roxo-titulo); letter-spacing: -.02em; }
+.cartao-icone { display: grid; grid-template-columns: 120px 1fr; gap: 24px; align-items: center; background: var(--branco); border: 2px solid var(--lilas-2); border-radius: 26px; padding: 18px 28px; font-size: 30px; line-height: 1.35; }
+.cartao-icone svg { width: 120px; height: 100px; }
+.cartao-icone b { color: var(--roxo-titulo); }
+.modelos3 { display: grid; grid-template-columns: repeat(3, 1fr); gap: 28px; }
+.modelos3 > div { background: var(--branco); border: 2px solid var(--lilas-2); border-radius: 28px; padding: 20px 28px 26px; font-size: 29px; line-height: 1.32; }
+.modelos3 h3 { font: 800 42px var(--fonte-titulo); color: var(--roxo-titulo); margin: 0; display: flex; align-items: center; gap: 16px; }
+.modelos3 h3 svg { width: 96px; height: 96px; flex: none; }
+.modelos3 dl { margin: 10px 0 0; }
+.modelos3 dt { font-weight: 800; font-size: 20px; letter-spacing: .1em; text-transform: uppercase; color: var(--d-forte); margin-top: 10px; }
+.modelos3 dd { margin: 2px 0 0; }
+.liga { display: grid; grid-template-columns: 1fr 70px 300px; align-items: center; gap: 18px; background: var(--branco); border: 2px solid var(--lilas-2); border-radius: 26px; padding: 18px 30px; font-size: 32px; }
+.liga svg { width: 60px; height: 30px; }
+.liga .modelo { font: 800 40px var(--fonte-titulo); color: var(--roxo-titulo); }
