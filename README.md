@@ -3,7 +3,7 @@
 Slides das aulas teóricas gravadas do Quarks (OBS + Meet), um arquivo HTML por aula.
 
 ## Como usar no notebook do curso
-1. Baixe o arquivo da aula em `saida/` (ex.: `saida/fisica/pism1/mu-1.html`) e abra no Chrome ou no Edge.
+1. Baixe o arquivo da aula em `saida/` (ex.: `saida/fisica/pism1/mu-1.html`) e abra no Chrome ou no Edge. Funciona sem internet: fontes e fórmulas vão dentro do arquivo (cópias em `vendor/`).
 2. Aperte **F** para tela cheia e **G** para o modo gravação (tira o "CÂMERA" de dentro da moldura).
 3. Aperte **N** para abrir as notas numa janela separada (só você vê).
 4. No OBS, capture a janela do navegador e ponha a webcam em **X = 40, Y = 770, tamanho 480 x 270**.

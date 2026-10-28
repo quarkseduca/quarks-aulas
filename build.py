@@ -16,6 +16,7 @@ from pathlib import Path
 RAIZ = Path(__file__).resolve().parent
 MOTOR = RAIZ / "motor"
 MARCA = RAIZ / "marca"
+VENDOR = RAIZ / "vendor"
 
 DISCIPLINAS = {"fisica": "Física", "quimica": "Química", "matematica": "Matemática", "portugues": "Português"}
 
@@ -23,9 +24,18 @@ FONTES = ('<link rel="preconnect" href="https://fonts.googleapis.com">'
           '<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>'
           '<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,600;12..96,800'
           '&family=Figtree:wght@400;600;700;800&display=swap">')
-MATHJAX = ("<script>window.MathJax={tex:{inlineMath:[['\\\\(','\\\\)']],displayMath:[['\\\\[','\\\\]']]},"
-           "svg:{fontCache:'global'},options:{enableMenu:false}};</script>"
-           '<script src="https://cdn.jsdelivr.net/npm/mathjax@3.2.2/es5/tex-svg.js"></script>')
+MATHJAX_CONFIG = ("<script>window.MathJax={tex:{inlineMath:[['\\\\(','\\\\)']],displayMath:[['\\\\[','\\\\]']]},"
+                  "svg:{fontCache:'global'},options:{enableMenu:false}};</script>")
+MATHJAX = MATHJAX_CONFIG + '<script src="https://cdn.jsdelivr.net/npm/mathjax@3.2.2/es5/tex-svg-full.js"></script>'
+
+
+def offline():
+    """Fontes e MathJax dentro do arquivo: a aula abre sem internet (vendor/ tem as cópias)."""
+    css = (VENDOR / "fontes" / "fontes.css").read_text(encoding="utf-8")
+    css = re.sub(r"url\(([\w.-]+\.woff2)\)", lambda m: "url(data:font/woff2;base64,"
+                 + base64.b64encode((VENDOR / "fontes" / m.group(1)).read_bytes()).decode() + ")", css)
+    js = (VENDOR / "tex-svg-full.js").read_text(encoding="utf-8")
+    return f"<style>{css}</style>", f"{MATHJAX_CONFIG}<script>{js}</script>"
 
 
 def data_uri(nome):
@@ -110,7 +120,8 @@ def monta(caminho, previa=False):
 <script>{js_extra}</script>
 <script>{js}</script>'''
 
-    cabecalho = f'<title>{titulo}</title>{FONTES}<style>{css}</style>{MATHJAX}'
+    fontes, mathjax = (FONTES, MATHJAX) if previa else offline()
+    cabecalho = f'<title>{titulo}</title>{fontes}<style>{css}</style>{mathjax}'
     if previa:
         return cabecalho + "\n" + corpo + "\n"
     return (f'<!doctype html><html lang="pt-BR"><head><meta charset="utf-8">'
