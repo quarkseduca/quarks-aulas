@@ -1,0 +1,399 @@
+<!--aula
+{"disciplina": "quimica", "curso": "IF", "assunto": "Ácidos", "parte": "Parte 2 de 2", "titulo": "Nomenclatura e principais ácidos", "scripts": ["animacoes-acidos-bases.js"]}
+-->
+<!-- Fonte: slides da professora (Química IF 2026, aula 11: nomenclatura dos ácidos e principais ácidos), completados com a apostila IF, Química, 4.1 Ácidos. Questões: IF Sudeste MG 2018 e 2013 (prova extra), oficiais. -->
+<style>
+  .caixa, .card, .eqq, .linha-ex { box-sizing: border-box; }
+  .slide sub { font-size: .6em; vertical-align: -.24em; line-height: 0; }
+  .slide sup { font-size: .6em; vertical-align: .62em; line-height: 0; }
+  .est { font-size: .6em; font-weight: 700; color: var(--cinza); margin-left: 3px; letter-spacing: 0; }
+  .seta { display: inline-flex; flex-direction: column; align-items: center; line-height: .78; vertical-align: -.05em; margin: 0 .18em; }
+  .seta i { font: 700 .4em var(--fonte-texto); font-style: normal; color: var(--cinza); letter-spacing: 0; }
+  .eqq { background: var(--branco); border: 2px solid var(--lilas-2); border-radius: 24px; padding: 12px 28px; font: 800 40px var(--fonte-titulo); color: var(--roxo-titulo); letter-spacing: -.01em; white-space: nowrap; }
+  .eqq .nome { display: block; font: 600 24px var(--fonte-texto); color: var(--cinza); margin-top: 4px; letter-spacing: 0; white-space: normal; }
+  .eqq .et { display: inline-block; min-width: 150px; font: 800 22px var(--fonte-texto); letter-spacing: .08em; text-transform: uppercase; color: var(--d-forte); }
+  .linha-ex { background: var(--branco); border: 2px solid var(--lilas-2); border-radius: 24px; padding: 14px 26px; font-size: 30px; line-height: 1.3; }
+  .linha-ex b { color: var(--roxo-titulo); }
+  .card { background: var(--branco); border: 2px solid var(--lilas-2); border-radius: 28px; padding: 22px 28px; font-size: 28px; line-height: 1.32; color: var(--carvao); }
+  .card h3 { margin: 0 0 6px; font: 800 40px var(--fonte-titulo); letter-spacing: -.02em; color: var(--roxo-titulo); }
+  .card .f { font: 800 38px var(--fonte-titulo); color: var(--d-forte); letter-spacing: -.01em; }
+  .card .sub-h { margin: 0 0 12px; font-size: 25px; font-weight: 700; color: var(--cinza); }
+  .card ul { margin: 6px 0 0; padding-left: 28px; } .card li { margin: 3px 0; }
+  .card.destaque { background: var(--d-clara); border-color: color-mix(in srgb, var(--d) 35%, transparent); }
+  .chips { display: flex; flex-wrap: wrap; gap: 12px; }
+  .chip { display: inline-block; padding: 6px 20px; border-radius: 999px; background: var(--d-clara); color: var(--d-forte); font: 800 34px var(--fonte-titulo); }
+  .recip { box-sizing: content-box; background: linear-gradient(#F2F8FE, #DCEDFB); border: 3px solid #9CC3E6; border-radius: 26px; overflow: hidden; }
+  .legenda-ions { display: flex; flex-wrap: wrap; gap: 8px 22px; font-size: 25px; font-weight: 700; color: var(--carvao); }
+  .legenda-ions span { display: inline-flex; align-items: center; gap: 6px; }
+  .legenda-ions svg { width: 46px; height: 46px; }
+  .contador { font: 800 32px var(--fonte-titulo); color: var(--roxo-titulo); }
+  .tabela td, .tabela th { padding: 10px 34px; }
+  .tabela .f { font: 800 1.05em var(--fonte-titulo); color: var(--roxo-titulo); }
+  .tabela td.esq, .tabela th.esq { text-align: left; }
+  .regra { font: 800 44px var(--fonte-titulo); color: var(--roxo-titulo); letter-spacing: -.01em; }
+  .regra em { font-style: normal; color: var(--d); }
+  .regra .vazio { display: inline-block; min-width: 150px; border-bottom: 4px dashed var(--roxo-claro); color: var(--cinza); font-size: .6em; text-align: center; }
+  .lampada .luz { opacity: 0; transition: opacity 1.2s ease-in .6s; }
+  .mostra .lampada .luz, .lampada.mostra .luz { opacity: 1; }
+  /* cada átomo de uma molécula vibra sozinho (svg.vibra, como em Substâncias e misturas) */
+  @keyframes vib-a { 0%,100% { transform: translate(0,0); } 25% { transform: translate(1.6px,-1.2px); } 50% { transform: translate(-.8px,1.4px); } 75% { transform: translate(-1.4px,-.6px); } }
+  @keyframes vib-b { 0%,100% { transform: translate(0,0); } 25% { transform: translate(-1.4px,1px); } 50% { transform: translate(1.2px,-1.4px); } 75% { transform: translate(.6px,1.2px); } }
+  .slide.ativo .mostra svg.vibra .vib-a, .slide.ativo svg.vibra.sempre .vib-a { animation: vib-a 1.6s ease-in-out infinite; }
+  .slide.ativo .mostra svg.vibra .vib-b, .slide.ativo svg.vibra.sempre .vib-b { animation: vib-b 1.6s ease-in-out infinite; }
+  .rot { font-family: Figtree, sans-serif; font-weight: 800; text-anchor: middle; }
+  .mol { display: flex; flex-direction: column; align-items: center; gap: 2px; }
+  .mol svg { width: 150px; height: 116px; }
+  .escada { display: grid; grid-template-columns: 150px 210px 1fr 120px; align-items: center; gap: 4px 22px; background: var(--branco); border: 2px solid var(--lilas-2); border-radius: 24px; padding: 4px 26px; }
+  .escada .f { font: 800 40px var(--fonte-titulo); color: var(--roxo-titulo); }
+  .escada .nome { font-size: 31px; } .escada .nome b { color: var(--d); }
+  .escada .nox { justify-self: end; padding: 4px 16px; border-radius: 999px; background: var(--d-clara); color: var(--d-forte); font: 800 28px var(--fonte-titulo); }
+  .uso { display: grid; grid-template-columns: 160px 1fr; gap: 16px; align-items: start; }
+  /* água com gás: as bolhas de CO2 sobem (o H2CO3 se desfaz em água e gás carbônico) */
+  @keyframes sobe-bolha { 0% { transform: translateY(0); opacity: 0; } 12% { opacity: 1; } 88% { opacity: 1; } 100% { transform: translateY(-190px); opacity: 0; } }
+  .gas circle { opacity: 0; transform-box: fill-box; }
+  .slide.ativo .mostra .gas circle { animation: sobe-bolha 3.6s ease-in infinite; }
+  .gas circle:nth-child(2) { animation-delay: -.6s !important; } .gas circle:nth-child(3) { animation-delay: -1.2s !important; } .gas circle:nth-child(4) { animation-delay: -1.8s !important; }
+  .gas circle:nth-child(5) { animation-delay: -2.4s !important; } .gas circle:nth-child(6) { animation-delay: -3s !important; } .gas circle:nth-child(7) { animation-delay: -.3s !important; } .gas circle:nth-child(8) { animation-delay: -2.1s !important; }
+</style>
+
+<svg width="0" height="0" style="position:absolute" aria-hidden="true">
+  <defs>
+    <radialGradient id="gO" cx=".35" cy=".3" r=".8"><stop offset="0" stop-color="#FF8A7A"/><stop offset="1" stop-color="#C8301F"/></radialGradient>
+    <radialGradient id="gH" cx=".35" cy=".3" r=".8"><stop offset="0" stop-color="#FFFFFF"/><stop offset="1" stop-color="#C9C4DC"/></radialGradient>
+    <radialGradient id="gCl" cx=".35" cy=".3" r=".8"><stop offset="0" stop-color="#9BE8AE"/><stop offset="1" stop-color="#22964A"/></radialGradient>
+    <radialGradient id="gF" cx=".35" cy=".3" r=".8"><stop offset="0" stop-color="#F2F59A"/><stop offset="1" stop-color="#A7AE1E"/></radialGradient>
+    <radialGradient id="gNa" cx=".35" cy=".3" r=".8"><stop offset="0" stop-color="#CBBFFF"/><stop offset="1" stop-color="#5B45C9"/></radialGradient>
+    <radialGradient id="gS" cx=".35" cy=".3" r=".8"><stop offset="0" stop-color="#FFEB85"/><stop offset="1" stop-color="#D1A800"/></radialGradient>
+    <radialGradient id="gN" cx=".35" cy=".3" r=".8"><stop offset="0" stop-color="#7FA8FF"/><stop offset="1" stop-color="#2A5BD0"/></radialGradient>
+    <radialGradient id="gP" cx=".35" cy=".3" r=".8"><stop offset="0" stop-color="#FFC08A"/><stop offset="1" stop-color="#D4661A"/></radialGradient>
+    <radialGradient id="gC" cx=".35" cy=".3" r=".8"><stop offset="0" stop-color="#8A8A96"/><stop offset="1" stop-color="#2E2E36"/></radialGradient>
+    <radialGradient id="gLuz" cx=".5" cy=".5" r=".5"><stop offset="0" stop-color="#FFE45C" stop-opacity=".9"/><stop offset="1" stop-color="#FFD10C" stop-opacity="0"/></radialGradient>
+  </defs>
+  <symbol id="m-hclo" viewBox="0 0 220 170"><g><circle cx="33.7" cy="70.6" r="13" fill="url(#gH)" stroke="#8C84B8" stroke-width="2"/><circle cx="60.0" cy="85.0" r="21" fill="url(#gO)" stroke="#8E2115" stroke-width="2"/><circle cx="110.0" cy="85.0" r="27" fill="url(#gCl)" stroke="#1E7A3C" stroke-width="2"/></g></symbol>
+  <symbol id="m-hclo2" viewBox="0 0 220 170"><g><circle cx="33.7" cy="70.6" r="13" fill="url(#gH)" stroke="#8C84B8" stroke-width="2"/><circle cx="60.0" cy="85.0" r="21" fill="url(#gO)" stroke="#8E2115" stroke-width="2"/><circle cx="160.0" cy="85.0" r="21" fill="url(#gO)" stroke="#8E2115" stroke-width="2"/><circle cx="110.0" cy="85.0" r="27" fill="url(#gCl)" stroke="#1E7A3C" stroke-width="2"/></g></symbol>
+  <symbol id="m-hclo3" viewBox="0 0 220 170"><g><circle cx="33.7" cy="70.6" r="13" fill="url(#gH)" stroke="#8C84B8" stroke-width="2"/><circle cx="60.0" cy="85.0" r="21" fill="url(#gO)" stroke="#8E2115" stroke-width="2"/><circle cx="142.1" cy="46.7" r="21" fill="url(#gO)" stroke="#8E2115" stroke-width="2"/><circle cx="142.1" cy="123.3" r="21" fill="url(#gO)" stroke="#8E2115" stroke-width="2"/><circle cx="110.0" cy="85.0" r="27" fill="url(#gCl)" stroke="#1E7A3C" stroke-width="2"/></g></symbol>
+  <symbol id="m-hclo4" viewBox="0 0 220 170"><g><circle cx="33.7" cy="70.6" r="13" fill="url(#gH)" stroke="#8C84B8" stroke-width="2"/><circle cx="60.0" cy="85.0" r="21" fill="url(#gO)" stroke="#8E2115" stroke-width="2"/><circle cx="160.0" cy="85.0" r="21" fill="url(#gO)" stroke="#8E2115" stroke-width="2"/><circle cx="110.0" cy="35.0" r="21" fill="url(#gO)" stroke="#8E2115" stroke-width="2"/><circle cx="110.0" cy="135.0" r="21" fill="url(#gO)" stroke="#8E2115" stroke-width="2"/><circle cx="110.0" cy="85.0" r="27" fill="url(#gCl)" stroke="#1E7A3C" stroke-width="2"/></g></symbol>
+  <symbol id="m-h2so4" viewBox="0 0 220 170"><g><circle cx="33.7" cy="70.6" r="13" fill="url(#gH)" stroke="#8C84B8" stroke-width="2"/><circle cx="186.3" cy="99.4" r="13" fill="url(#gH)" stroke="#8C84B8" stroke-width="2"/><circle cx="60.0" cy="85.0" r="21" fill="url(#gO)" stroke="#8E2115" stroke-width="2"/><circle cx="160.0" cy="85.0" r="21" fill="url(#gO)" stroke="#8E2115" stroke-width="2"/><circle cx="110.0" cy="35.0" r="21" fill="url(#gO)" stroke="#8E2115" stroke-width="2"/><circle cx="110.0" cy="135.0" r="21" fill="url(#gO)" stroke="#8E2115" stroke-width="2"/><circle cx="110.0" cy="85.0" r="28" fill="url(#gS)" stroke="#8A6A00" stroke-width="2"/></g></symbol>
+  <symbol id="m-hno3" viewBox="0 0 220 170"><g><circle cx="33.7" cy="70.6" r="13" fill="url(#gH)" stroke="#8C84B8" stroke-width="2"/><circle cx="60.0" cy="85.0" r="21" fill="url(#gO)" stroke="#8E2115" stroke-width="2"/><circle cx="135.0" cy="41.7" r="21" fill="url(#gO)" stroke="#8E2115" stroke-width="2"/><circle cx="135.0" cy="128.3" r="21" fill="url(#gO)" stroke="#8E2115" stroke-width="2"/><circle cx="110.0" cy="85.0" r="26" fill="url(#gN)" stroke="#1B3E94" stroke-width="2"/></g></symbol>
+  <symbol id="m-h3po4" viewBox="0 0 220 170"><g><circle cx="33.7" cy="70.6" r="13" fill="url(#gH)" stroke="#8C84B8" stroke-width="2"/><circle cx="186.3" cy="99.4" r="13" fill="url(#gH)" stroke="#8C84B8" stroke-width="2"/><circle cx="95.6" cy="161.3" r="13" fill="url(#gH)" stroke="#8C84B8" stroke-width="2"/><circle cx="60.0" cy="85.0" r="21" fill="url(#gO)" stroke="#8E2115" stroke-width="2"/><circle cx="160.0" cy="85.0" r="21" fill="url(#gO)" stroke="#8E2115" stroke-width="2"/><circle cx="110.0" cy="135.0" r="21" fill="url(#gO)" stroke="#8E2115" stroke-width="2"/><circle cx="110.0" cy="35.0" r="21" fill="url(#gO)" stroke="#8E2115" stroke-width="2"/><circle cx="110.0" cy="85.0" r="28" fill="url(#gP)" stroke="#8A3F08" stroke-width="2"/></g></symbol>
+</svg>
+
+
+<!-- 1. Capa -->
+<section class="slide capa" data-nome="Capa">
+  <div class="estrelas"></div>
+  <div class="texto-capa" style="top:150px">
+    <span class="selo">Química · IF</span>
+    <p class="aula">Ácidos · Parte 2 de 2</p>
+    <h1 style="font-size:110px">Nomenclatura e principais ácidos</h1>
+    <p class="sub">ídrico, ico, oso, per e hipo</p>
+  </div>
+  <svg class="emblema" viewBox="0 0 640 640" aria-hidden="true">
+    <g class="gira-lento"><ellipse cx="320" cy="320" rx="300" ry="128" fill="none" stroke="#fff" stroke-opacity=".38" stroke-width="2" transform="rotate(-10 320 320)"/></g>
+    <g class="gira"><ellipse cx="320" cy="320" rx="236" ry="196" fill="none" stroke="#FFD10C" stroke-opacity=".75" stroke-width="2.5" stroke-dasharray="3 14" stroke-linecap="round" transform="rotate(-8 320 320)"/>
+      <circle cx="84" cy="300" r="13" fill="#FFD10C" stroke="#fff" stroke-width="3"/></g>
+    <circle cx="320" cy="320" r="132" fill="#FFD10C"/>
+    <image href="{{SYM_ROXO}}" x="238" y="238" width="164" height="164"/>
+  </svg>
+  <img class="logo-capa" src="{{LOGO_BRANCO}}" alt="Quarks">
+  <aside class="notas"><p>Hoje: como se dá nome aos ácidos (hidrácidos em -ídrico; oxiácidos em -ico e -oso, com per e hipo) e os principais ácidos do dia a dia.</p><p>Retome da Parte 1: hidrácido não tem oxigênio; oxiácido tem.</p></aside>
+</section>
+
+<!-- Nomes dos hidrácidos -->
+<section class="slide" data-nome="Nomes dos hidrácidos">
+  <div class="conteudo">
+    <p class="olho">Nomenclatura 1 · Hidrácidos</p>
+    <h2 class="titulo">Sem oxigênio: termina em -ídrico</h2>
+    <div class="caixa caixa-fundamental" data-passo="1" style="position:absolute;left:0;width:600px;top:170px;padding:26px 32px">
+      <span class="rotulo">Hidrácido</span>
+      <p class="regra" style="margin:6px 0 0">ácido <span class="vazio">elemento</span> <em>ídrico</em></p>
+    </div>
+    <div class="linha-ex" data-passo="7" style="position:absolute;left:0;width:600px;top:360px">O enxofre vira <b>sulf-</b>: H<sub>2</sub>S é ácido <b>sulf</b>ídrico.</div>
+    <table class="tabela" style="position:absolute;left:680px;right:0;top:165px;font-size:34px">
+      <tr><th>Fórmula</th><th class="esq">Nome</th></tr>
+      <tr data-passo="2"><td class="f">HCl</td><td class="esq">ácido clor<b>ídrico</b></td></tr>
+      <tr data-passo="3"><td class="f">HBr</td><td class="esq">ácido brom<b>ídrico</b></td></tr>
+      <tr data-passo="4"><td class="f">HI</td><td class="esq">ácido iod<b>ídrico</b></td></tr>
+      <tr data-passo="5"><td class="f">HF</td><td class="esq">ácido fluor<b>ídrico</b></td></tr>
+      <tr data-passo="6"><td class="f">H<sub>2</sub>S</td><td class="esq">ácido sulf<b>ídrico</b></td></tr>
+    </table>
+  </div>
+  <aside class="notas"><p>Clique 1: a regra. Cliques 2 a 6: um ácido por clique; peça o nome antes. Clique 7: o caso do enxofre (sulf-, do latim sulfur).</p><p>O ácido clorídrico é o do suco do estômago e o do ácido muriático.</p></aside>
+</section>
+
+<!-- Nomes dos oxiácidos -->
+<section class="slide" data-nome="Nomes dos oxiácidos">
+  <div class="conteudo">
+    <p class="olho">Nomenclatura 2 · Oxiácidos</p>
+    <h2 class="titulo">Com oxigênio: -ico e -oso</h2>
+    <div style="position:absolute;left:0;width:600px;top:165px;display:flex;flex-direction:column;gap:18px">
+      <div class="caixa caixa-fundamental" data-passo="1" style="padding:20px 30px">
+        <span class="rotulo">Maior Nox do elemento</span>
+        <p class="regra" style="margin:4px 0 0;font-size:40px">ácido <span class="vazio">elemento</span> <em>ico</em></p>
+      </div>
+      <div class="caixa caixa-fundamental" data-passo="2" style="padding:20px 30px">
+        <span class="rotulo">Menor Nox do elemento</span>
+        <p class="regra" style="margin:4px 0 0;font-size:40px">ácido <span class="vazio">elemento</span> <em>oso</em></p>
+      </div>
+    </div>
+    <table class="tabela" style="position:absolute;left:680px;right:0;top:165px;font-size:33px">
+      <tr><th>Fórmula</th><th>Nox</th><th class="esq">Nome</th></tr>
+      <tr data-passo="3"><td class="f">HNO<sub>3</sub></td><td>+5</td><td class="esq">ácido nítr<b>ico</b></td></tr>
+      <tr data-passo="3"><td class="f">HNO<sub>2</sub></td><td>+3</td><td class="esq">ácido nitr<b>oso</b></td></tr>
+      <tr data-passo="4"><td class="f">H<sub>2</sub>SO<sub>4</sub></td><td>+6</td><td class="esq">ácido sulfúr<b>ico</b></td></tr>
+      <tr data-passo="4"><td class="f">H<sub>2</sub>SO<sub>3</sub></td><td>+4</td><td class="esq">ácido sulfur<b>oso</b></td></tr>
+      <tr data-passo="5"><td class="f">H<sub>3</sub>PO<sub>4</sub></td><td>+5</td><td class="esq">ácido fosfór<b>ico</b></td></tr>
+      <tr data-passo="5"><td class="f">H<sub>3</sub>PO<sub>3</sub></td><td>+3</td><td class="esq">ácido fosfor<b>oso</b></td></tr>
+    </table>
+    <div class="caixa caixa-atencao" data-passo="6" style="position:absolute;left:680px;right:0;top:640px;padding:20px 28px">
+      <div class="texto" style="font-size:28px">Atalho: o <b>-oso</b> tem <b>um O a menos</b> que o -ico do mesmo elemento.</div>
+    </div>
+  </div>
+  <aside class="notas"><p>Cliques 1 e 2: as duas regras. Cliques 3 a 5: os pares do nitrogênio, do enxofre e do fósforo (o enxofre vira sulfúr-/sulfur-; o fósforo, fosfór-/fosfor-).</p><p>Nox é a carga que o elemento central teria; a próxima tela mostra a conta. O atalho do O a menos é o da apostila e funciona para todos os pares da tabela.</p></aside>
+</section>
+
+<!-- Exemplo: Nox do enxofre -->
+<section class="slide" data-nome="Exemplo: Nox do enxofre">
+  <div class="conteudo">
+    <p class="olho">Exemplo</p>
+    <h2 class="titulo">Qual é o Nox do S no H<sub>2</sub>SO<sub>4</sub> e no H<sub>2</sub>SO<sub>3</sub>?</h2>
+    <div class="linha-ex" data-passo="1" style="position:absolute;left:0;right:0;top:170px;font-size:31px">Regras: <b>H = +1</b>, <b>O = −2</b>, e a soma dos Nox numa molécula é <b>zero</b>. Chame de <b>x</b> o Nox do S.</div>
+    <p class="contador" style="position:absolute;left:0;top:285px;margin:0">H<sub>2</sub>SO<sub>4</sub></p>
+    <div class="contas" style="position:absolute;left:0;top:340px;font-size:40px;row-gap:16px">
+        <div class="eq" data-passo="2"><span>\(2\cdot(+1) + x + 4\cdot(-2)\)</span><span>\(=\)</span><span>\(0\)</span></div>
+        <div class="eq" data-passo="3"><span>\(2 + x - 8\)</span><span>\(=\)</span><span>\(0\)</span></div>
+        <div class="eq final" data-passo="4"><span>\(x\)</span><span>\(=\)</span><span>\(+6\)</span></div>
+    </div>
+    <p class="contador" style="position:absolute;left:900px;top:285px;margin:0">H<sub>2</sub>SO<sub>3</sub></p>
+    <div class="contas" style="position:absolute;left:900px;top:340px;font-size:40px;row-gap:16px">
+        <div class="eq" data-passo="5"><span>\(2\cdot(+1) + x + 3\cdot(-2)\)</span><span>\(=\)</span><span>\(0\)</span></div>
+        <div class="eq" data-passo="6"><span>\(2 + x - 6\)</span><span>\(=\)</span><span>\(0\)</span></div>
+        <div class="eq final" data-passo="7"><span>\(x\)</span><span>\(=\)</span><span>\(+4\)</span></div>
+    </div>
+    <div class="caixa caixa-fundamental" data-passo="8" style="position:absolute;left:580px;right:0;top:650px;padding:22px 32px">
+      <div class="texto" style="font-size:31px"><b>Resposta:</b> +6, o maior: ácido sulfúr<b>ico</b>. +4, o menor: ácido sulfur<b>oso</b>.</div>
+    </div>
+  </div>
+  <aside class="notas"><p>Clique 1: as regras do Nox. Cliques 2 a 4: H₂SO₄: 2 hidrogênios (+1 cada), o enxofre (x) e 4 oxigênios (−2 cada) somam zero: 2 + x − 8 = 0, x = +6. Cliques 5 a 7: H₂SO₃: 2 + x − 6 = 0, x = +4. Clique 8: a resposta.</p><p>Confira: 2 + 6 − 8 = 0 e 2 + 4 − 6 = 0.</p></aside>
+</section>
+
+<!-- Per e hipo -->
+<section class="slide" data-nome="Per e hipo">
+  <div class="conteudo">
+    <p class="olho">Quando o elemento forma mais de dois ácidos</p>
+    <h2 class="titulo">Os quatro ácidos do cloro</h2>
+    <table class="tabela" data-passo="1" style="position:absolute;left:0;width:560px;top:170px;font-size:30px">
+      <tr><th>Família</th><th>Nox do central</th></tr>
+      <tr><td>14 (4A)</td><td>+4</td></tr>
+      <tr><td>15 (5A)</td><td>+3, +5</td></tr>
+      <tr><td>16 (6A)</td><td>+4, +6</td></tr>
+      <tr><td>17 (7A)</td><td>+1, +3, +5, +7</td></tr>
+    </table>
+    <div style="position:absolute;left:640px;right:0;top:160px;display:flex;flex-direction:column;gap:12px">
+      <div class="escada" data-passo="2"><svg class="vibra" aria-hidden="true" style="width:150px;height:116px"><use href="#m-hclo4"/></svg><span class="f">HClO<sub>4</sub></span><span class="nome">ácido <b>per</b>clór<b>ico</b></span><span class="nox">+7</span></div>
+      <div class="escada" data-passo="3"><svg class="vibra" aria-hidden="true" style="width:150px;height:116px"><use href="#m-hclo3"/></svg><span class="f">HClO<sub>3</sub></span><span class="nome">ácido clór<b>ico</b></span><span class="nox">+5</span></div>
+      <div class="escada" data-passo="4"><svg class="vibra" aria-hidden="true" style="width:150px;height:116px"><use href="#m-hclo2"/></svg><span class="f">HClO<sub>2</sub></span><span class="nome">ácido clor<b>oso</b></span><span class="nox">+3</span></div>
+      <div class="escada" data-passo="5"><svg class="vibra" aria-hidden="true" style="width:150px;height:116px"><use href="#m-hclo"/></svg><span class="f">HClO</span><span class="nome">ácido <b>hipo</b>clor<b>oso</b></span><span class="nox">+1</span></div>
+    </div>
+    <div class="caixa caixa-atencao" data-passo="6" style="position:absolute;left:640px;right:0;top:720px;padding:18px 28px">
+      <div class="texto" style="font-size:28px">Do maior para o menor Nox: <b>per…ico</b>, <b>…ico</b>, <b>…oso</b>, <b>hipo…oso</b>.</div>
+    </div>
+  </div>
+  <aside class="notas"><p>Clique 1: os Nox do elemento central em cada família (tabela da professora). A família 17 tem quatro: por isso o cloro forma quatro oxiácidos.</p><p>Cliques 2 a 5: do maior para o menor Nox. Repare que cada degrau tem um oxigênio a menos (as moléculas mostram os átomos). Conta do HClO₄: 1 + x − 8 = 0, x = +7; HClO: 1 + x − 2 = 0, x = +1.</p><p>O mesmo vale para o bromo e o iodo (HBrO₄, ácido perbrômico; HIO, ácido hipoiodoso).</p></aside>
+</section>
+
+<!-- Exemplo: dando nome -->
+<section class="slide" data-nome="Exemplo: dando nome">
+  <div class="conteudo">
+    <p class="olho">Exemplo</p>
+    <h2 class="titulo">Dê o nome de HBr, HNO<sub>2</sub> e HClO</h2>
+    <p class="texto" style="position:absolute;left:0;right:0;top:150px;margin:0;font-size:31px">Dado: o HNO<sub>3</sub> é o ácido nítrico.</p>
+    <div style="position:absolute;left:0;right:0;top:230px;display:flex;flex-direction:column;gap:18px">
+      <div class="linha-ex" data-passo="1"><b>HBr:</b> sem oxigênio → hidrácido → <b>-ídrico</b>: ácido <b>bromídrico</b>.</div>
+      <div class="linha-ex" data-passo="2"><b>HNO<sub>2</sub>:</b> um O a menos que o nítrico (Nox +3, o menor) → <b>-oso</b>: ácido <b>nitroso</b>.</div>
+      <div class="linha-ex" data-passo="3"><b>HClO:</b> Nox do Cl: 1 + x − 2 = 0, x = +1, o menor dos quatro → <b>hipo…oso</b>: ácido <b>hipocloroso</b>.</div>
+    </div>
+    <div class="caixa caixa-fundamental" data-passo="4" style="position:absolute;left:580px;right:0;top:650px;padding:22px 32px">
+      <div class="texto" style="font-size:31px"><b>Resposta:</b> ácido bromídrico, ácido nitroso e ácido hipocloroso.</div>
+    </div>
+  </div>
+  <aside class="notas"><p>Peça cada nome antes de clicar. O exemplo do HBr e do HNO₂ é o da apostila; o HClO retoma a escada do cloro.</p><p>Primeira pergunta sempre: tem oxigênio? Depois, se tiver: qual o Nox (ou quantos O a menos).</p></aside>
+</section>
+
+<!-- Principais ácidos 1 -->
+<section class="slide" data-nome="Principais ácidos 1">
+  <div class="conteudo">
+    <p class="olho">Principais ácidos</p>
+    <h2 class="titulo">Sulfúrico e nítrico</h2>
+    <div style="position:absolute;left:0;right:0;top:160px;display:grid;grid-template-columns:1fr 1fr;gap:36px">
+      <div class="card" data-passo="1">
+        <div class="uso"><svg class="vibra" aria-hidden="true" style="width:160px;height:124px"><use href="#m-h2so4"/></svg>
+          <div><h3>H<sub>2</sub>SO<sub>4</sub></h3><p class="sub-h" style="margin:0">ácido sulfúrico · líquido oleoso · o mais produzido no mundo</p></div></div>
+        <ul><li>fertilizantes, papel, corantes, inseticidas e explosivos</li><li>solução da bateria de carro; desidratante</li><li><b>queimaduras severas</b> na pele</li></ul>
+      </div>
+      <div class="card" data-passo="2">
+        <div class="uso"><svg class="vibra" aria-hidden="true" style="width:160px;height:124px"><use href="#m-hno3"/></svg>
+          <div><h3>HNO<sub>3</sub></h3><p class="sub-h" style="margin:0">ácido nítrico · líquido</p></div></div>
+        <ul><li>fertilizantes e corantes; inseticidas</li><li>explosivos: TNT e nitroglicerina</li><li><b>queimaduras severas</b> e danos aos olhos</li></ul>
+      </div>
+    </div>
+    <div class="caixa caixa-atencao" data-passo="3" style="position:absolute;left:580px;right:0;top:660px">
+      <div class="texto" style="font-size:30px">Puros, o H<sub>2</sub>SO<sub>4</sub> e o HNO<sub>3</sub> são <b>líquidos</b> (l), não gases.</div>
+    </div>
+  </div>
+  <aside class="notas"><p>Clique 1: o ácido sulfúrico (os átomos da molécula: S amarelo no centro, 4 O vermelhos, 2 H brancos ligados a O). Clique 2: o ácido nítrico (N azul). Clique 3: o estado físico.</p><p>Correção do material da professora: lá o HNO₃ (e o H₂SO₄) aparecem como (g); os dois são líquidos à temperatura ambiente.</p><p>O ácido sulfúrico solta muito calor ao se misturar com a água (texto do IF 2024).</p></aside>
+</section>
+
+<!-- Principais ácidos 2 -->
+<section class="slide" data-nome="Principais ácidos 2">
+  <div class="conteudo">
+    <p class="olho">Principais ácidos</p>
+    <h2 class="titulo">Clorídrico, fosfórico e carbônico</h2>
+    <div style="position:absolute;left:0;right:0;top:160px;display:grid;grid-template-columns:1fr 1fr 1.15fr;gap:28px">
+      <div class="card" data-passo="1" style="font-size:26px"><h3>HCl</h3><p class="sub-h">ácido clorídrico · muriático</p>
+        <ul><li>no <b>suco gástrico</b> do estômago</li><li>limpeza de pisos e de metais; galvanização</li><li>curtimento de couros</li><li>tóxico e corrosivo</li></ul></div>
+      <div class="card" data-passo="2" style="font-size:26px"><div class="uso" style="grid-template-columns:1fr 100px"><div><h3>H<sub>3</sub>PO<sub>4</sub></h3><p class="sub-h">ácido fosfórico</p></div><svg class="vibra" aria-hidden="true" style="width:110px;height:86px"><use href="#m-h3po4"/></svg></div>
+        <ul><li>refrigerantes tipo <b>cola</b></li><li>fertilizantes e inseticidas</li><li>queimaduras e danos aos olhos</li></ul></div>
+      <div class="card" data-passo="3" style="font-size:26px"><h3>H<sub>2</sub>CO<sub>3</sub></h3><p class="sub-h">ácido carbônico · fraco</p>
+        <div style="display:grid;grid-template-columns:200px 1fr;gap:12px;align-items:center"><svg viewBox="0 0 220 250" style="width:200px;height:228px" aria-hidden="true">
+            <path d="M30 40 L48 232 a10 10 0 0 0 10 8 h104 a10 10 0 0 0 10 -8 L190 40" fill="#EAF4FD" stroke="#7F7A99" stroke-width="5" stroke-linejoin="round"/>
+            <path d="M38 76 H182 L172 230 a6 6 0 0 1 -6 5 H54 a6 6 0 0 1 -6 -5 Z" fill="#CFE6FA"/>
+            <g class="gas" fill="#fff" stroke="#7FB4E0" stroke-width="2.5"><circle cx="70" cy="226" r="6"/><circle cx="96" cy="230" r="5"/><circle cx="120" cy="224" r="7"/><circle cx="146" cy="230" r="5"/><circle cx="160" cy="222" r="6"/><circle cx="84" cy="222" r="4"/><circle cx="108" cy="232" r="5"/><circle cx="134" cy="226" r="4"/></g>
+          </svg><span>na <b>água com gás</b> e nos refrigerantes</span></div>
+        <p class="f" style="margin:8px 0 0;font-size:30px">H<sub>2</sub>CO<sub>3</sub> → H<sub>2</sub>O + CO<sub>2</sub></p></div>
+    </div>
+    <div class="caixa caixa-atencao" data-passo="4" style="position:absolute;left:580px;width:640px;top:650px;padding:18px 26px">
+      <div class="texto" style="font-size:27px">Nunca misture ácido muriático com água sanitária: solta <b>cloro</b>, um gás tóxico.</div>
+    </div>
+  </div>
+  <aside class="notas"><p>Clique 1: o ácido clorídrico (o ácido muriático é ele, impuro). Clique 2: o fosfórico. Clique 3: o carbônico; as bolhas são o gás carbônico que escapa quando ele se desfaz (é o que sai ao abrir a garrafa). Clique 4: o cuidado em casa (apostila).</p><p>O ácido carbônico só existe dissolvido: por isso é fraco e instável.</p></aside>
+</section>
+
+<!-- Questão 1 -->
+<section class="slide questao" data-nome="Questão 1">
+  <div class="conteudo">
+    <div class="area-resolucao"></div>
+    <span class="pilula pilula-pausa" data-em="1:some">Pause o vídeo e tente</span>
+    <div class="painel-questao">
+      <p class="olho">Questão 1 · IF Sudeste MG 2018</p>
+      <p class="enunciado" style="font-size:25px">Sobre a reação química representada abaixo:</p>
+      <p class="enunciado" style="font-size:25px"><span style="display:block;text-align:center;font:800 28px var(--fonte-titulo);color:var(--roxo-titulo)">HCl <span class="est">(aq)</span> + NaOH <span class="est">(aq)</span> → NaCl <span class="est">(aq)</span> + H<sub>2</sub>O <span class="est">(l)</span></span></p>
+      <p class="enunciado" style="font-size:25px">É <b>INCORRETO</b> afirmar que:</p>
+      <ol class="alternativas" style="gap:8px">
+        <li data-em="2:apaga" style="font-size:23px;padding:6px 14px"><b>A</b><span>nos reagentes, encontram-se um ácido e uma base.</span></li>
+        <li data-em="2:certo" style="font-size:23px;padding:6px 14px"><b>B</b><span>o ácido utilizado recebe o nome de ácido clórico.</span></li>
+        <li data-em="2:apaga" style="font-size:23px;padding:6px 14px"><b>C</b><span>os produtos formados são sal e água.</span></li>
+        <li data-em="2:apaga" style="font-size:23px;padding:6px 14px"><b>D</b><span>trata-se de uma reação de neutralização.</span></li>
+        <li data-em="2:apaga" style="font-size:23px;padding:6px 14px"><b>E</b><span>todas as substâncias da reação são classificadas como compostas.</span></li>
+      </ol>
+    </div>
+  </div>
+  <aside class="resolucao">
+    <p class="dados"><b>Dados:</b> procura-se a afirmativa errada.</p>
+    <ol class="passos">
+      <li>HCl: sem oxigênio → hidrácido.</li>
+      <li>Hidrácido termina em -ídrico.</li>
+      <li>HCl = ácido clorídrico.</li>
+      <li>Ácido clórico é o HClO<sub>3</sub>.</li>
+      <li>A, C, D e E estão certas.</li>
+    </ol>
+    <p class="resposta"><b>Resposta:</b> a errada chama o HCl de ácido clórico. <b>Gabarito B.</b></p>
+    <p class="atencao"><b>Destaque no quadro:</b> clorídrico (HCl, sem O) ≠ clórico (HClO<sub>3</sub>, com O).</p>
+    <ul class="erros">
+      <li><b>A</b> Certa: HCl é ácido e NaOH é base.</li>
+      <li><b>C</b> Certa: forma o sal NaCl e água.</li>
+      <li><b>D</b> Certa: ácido + base → sal + água é neutralização.</li>
+      <li><b>E</b> Certa: as quatro têm mais de um elemento.</li>
+    </ul>
+  </aside>
+  <aside class="notas">
+    <p>Clique 1 tira o aviso de pausa: resolva na área (D liga a caneta; E esconde o enunciado). Clique 2: gabarito B.</p>
+    <p>Questão oficial do IF Sudeste MG, prova de 2018. As alternativas A, C e D adiantam o que vem em Bases e Sais; dá para responder só pelo nome do ácido.</p>
+  </aside>
+</section>
+
+<!-- Questão 2 -->
+<section class="slide questao" data-nome="Questão 2">
+  <div class="conteudo">
+    <div class="area-resolucao"></div>
+    <span class="pilula pilula-pausa" data-em="1:some">Pause o vídeo e tente</span>
+    <div class="painel-questao">
+      <p class="olho">Questão 2 · IF Sudeste MG 2013</p>
+      <p class="enunciado" style="font-size:22px">A tabela a seguir apresenta características e aplicações de algumas substâncias:</p>
+      <table class="tabela" style="font-size:20px;width:100%">
+        <tr><th class="esq" style="padding:6px 14px">Nome</th><th class="esq" style="padding:6px 14px">Aplicações e características</th></tr>
+        <tr><td class="esq" style="padding:5px 14px">Ácido muriático</td><td class="esq" style="padding:5px 14px">Limpeza doméstica</td></tr>
+        <tr><td class="esq" style="padding:5px 14px">Ácido sulfúrico</td><td class="esq" style="padding:5px 14px">Desidratante, solução de bateria</td></tr>
+        <tr><td class="esq" style="padding:5px 14px">Hidróxido de magnésio</td><td class="esq" style="padding:5px 14px">Antiácido</td></tr>
+        <tr><td class="esq" style="padding:5px 14px">Sal de Cozinha</td><td class="esq" style="padding:5px 14px">Cozinhar</td></tr>
+      </table>
+      <p class="enunciado" style="font-size:22px">As fórmulas das substâncias da tabela são, respectivamente:</p>
+      <ol class="alternativas" style="gap:8px">
+        <li data-em="2:certo" style="font-size:22px;padding:6px 14px"><b>A</b><span>HCl, H<sub>2</sub>SO<sub>4</sub>, Mg(OH)<sub>2</sub>, NaCl.</span></li>
+        <li data-em="2:apaga" style="font-size:22px;padding:6px 14px"><b>B</b><span>HClO, H<sub>2</sub>SO<sub>4</sub>, MgOH, NaCl<sub>2</sub>.</span></li>
+        <li data-em="2:apaga" style="font-size:22px;padding:6px 14px"><b>C</b><span>HCl, H<sub>2</sub>SO<sub>4</sub>, Mg(OH)<sub>2</sub>, NaCl<sub>2</sub>.</span></li>
+        <li data-em="2:apaga" style="font-size:22px;padding:6px 14px"><b>D</b><span>HClO<sub>2</sub>, H<sub>2</sub>SO<sub>3</sub>, MgOH, NaCl<sub>2</sub>.</span></li>
+        <li data-em="2:apaga" style="font-size:22px;padding:6px 14px"><b>E</b><span>HClO, H<sub>2</sub>SO<sub>3</sub>, Mg(OH)<sub>2</sub>, NaCl<sub>2</sub>.</span></li>
+      </ol>
+    </div>
+  </div>
+  <aside class="resolucao">
+    <p class="dados"><b>Dados:</b> nomes da tabela, na ordem.</p>
+    <ol class="passos">
+      <li>Muriático = clorídrico: HCl.</li>
+      <li>Sulfúrico (ico, S +6): H<sub>2</sub>SO<sub>4</sub>.</li>
+      <li>Mg<sup>2+</sup> com 2 OH<sup>−</sup>: Mg(OH)<sub>2</sub>.</li>
+      <li>Na<sup>+</sup> com Cl<sup>−</sup>: NaCl.</li>
+    </ol>
+    <p class="resposta"><b>Resposta:</b> HCl, H<sub>2</sub>SO<sub>4</sub>, Mg(OH)<sub>2</sub>, NaCl. <b>Gabarito A.</b></p>
+    <p class="atencao"><b>Destaque no quadro:</b> o -ico tem um O a mais que o -oso: sulfúrico H<sub>2</sub>SO<sub>4</sub>, sulfuroso H<sub>2</sub>SO<sub>3</sub>.</p>
+    <ul class="erros">
+      <li><b>B</b> HClO é o hipocloroso; MgOH e NaCl<sub>2</sub> não fecham as cargas.</li>
+      <li><b>C</b> O sal de cozinha é NaCl: um Na<sup>+</sup> para um Cl<sup>−</sup>.</li>
+      <li><b>D</b> HClO<sub>2</sub> é o cloroso e H<sub>2</sub>SO<sub>3</sub> é o sulfuroso.</li>
+      <li><b>E</b> HClO e H<sub>2</sub>SO<sub>3</sub> são outros ácidos; NaCl<sub>2</sub> está errado.</li>
+    </ul>
+  </aside>
+  <aside class="notas">
+    <p>Clique 1 tira o aviso de pausa: resolva na área (D liga a caneta; E esconde o enunciado). Clique 2: gabarito A.</p>
+    <p>Questão oficial do IF Sudeste MG, prova extra de 2013. Tudo sai do nome: muriático é o clorídrico, e as fórmulas têm de fechar as cargas.</p>
+  </aside>
+</section>
+
+<!-- Resumo -->
+<section class="slide" data-nome="Resumo">
+  <div class="conteudo">
+    <p class="olho">Resumo</p>
+    <h2 class="titulo">O essencial</h2>
+    <div class="resumo" style="position:absolute;left:0;right:0;top:150px">
+      <div><b>Hidrácido:</b> ácido + elemento + <b>ídrico</b> (HCl, clorídrico; H<sub>2</sub>S, sulfídrico).</div>
+      <div><b>Oxiácido:</b> <b>ico</b> (maior Nox) e <b>oso</b> (menor Nox, um O a menos).</div>
+      <div><b>Nox do central:</b> H = +1, O = −2, soma zero (H<sub>2</sub>SO<sub>4</sub>: +6).</div>
+      <div><b>Cloro:</b> per…ico (+7), …ico (+5), …oso (+3), hipo…oso (+1).</div>
+      <div><b>H<sub>2</sub>SO<sub>4</sub>:</b> fertilizantes, bateria. <b>HNO<sub>3</sub>:</b> explosivos, fertilizantes.</div>
+      <div><b>HCl:</b> suco gástrico, muriático. <b>H<sub>3</sub>PO<sub>4</sub>:</b> cola. <b>H<sub>2</sub>CO<sub>3</sub>:</b> água com gás.</div>
+    </div>
+    <div class="caixa caixa-atencao" style="position:absolute;left:580px;right:0;top:660px">
+      <div class="texto" style="font-size:30px">Clorídrico é o HCl; clórico é o HClO<sub>3</sub>. Cai muito!</div>
+    </div>
+  </div>
+  <aside class="notas"><p>Peça para tirarem um print desta tela.</p></aside>
+</section>
+
+<!-- A seguir -->
+<section class="slide capa" data-nome="A seguir">
+  <div class="estrelas"></div>
+  <div class="texto-capa" style="top:170px">
+    <span class="selo">Química · IF</span>
+    <p class="aula" style="font-size:26px">A seguir · Funções inorgânicas · Parte única</p>
+    <h1>Bases</h1>
+    <p class="sub">Dissociação, força e nomes</p>
+  </div>
+  <svg class="emblema" viewBox="0 0 640 640" aria-hidden="true">
+    <path d="M320 90 C 250 210 170 300 170 390 a150 150 0 0 0 300 0 C 470 300 390 210 320 90 Z" fill="#FFD10C"/>
+    <text x="320" y="440" text-anchor="middle" font-family="Bricolage Grotesque, sans-serif" font-weight="800" font-size="150" fill="#3A2196">OH</text>
+    <text x="470" y="330" text-anchor="middle" font-family="Figtree, sans-serif" font-weight="800" font-size="110" fill="#fff">−</text>
+  </svg>
+  <img class="logo-capa" src="{{LOGO_BRANCO}}" alt="Quarks">
+  <aside class="notas"><p>Próxima: as bases de Arrhenius (o íon OH⁻), a classificação, a força, a solubilidade, os nomes e as principais bases.</p></aside>
+</section>

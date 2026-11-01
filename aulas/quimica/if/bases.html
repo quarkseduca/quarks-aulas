@@ -1,0 +1,480 @@
+<!--aula
+{"disciplina": "quimica", "curso": "IF", "assunto": "Funções inorgânicas", "parte": "Parte única", "titulo": "Bases", "scripts": ["animacoes-acidos-bases.js"]}
+-->
+<!-- Fonte: slides da professora (Química IF 2026, aula 11: bases ou hidróxidos, propriedades, classificação, força, nomenclatura e principais bases), completados com a apostila IF, Química, 4.2 Bases. Questões: IF Sudeste MG 2025 e 2013 (oficiais). -->
+<style>
+  .caixa, .card, .eqq, .linha-ex { box-sizing: border-box; }
+  .slide sub { font-size: .6em; vertical-align: -.24em; line-height: 0; }
+  .slide sup { font-size: .6em; vertical-align: .62em; line-height: 0; }
+  .est { font-size: .6em; font-weight: 700; color: var(--cinza); margin-left: 3px; letter-spacing: 0; }
+  .seta { display: inline-flex; flex-direction: column; align-items: center; line-height: .78; vertical-align: -.05em; margin: 0 .18em; }
+  .seta i { font: 700 .4em var(--fonte-texto); font-style: normal; color: var(--cinza); letter-spacing: 0; }
+  .eqq { background: var(--branco); border: 2px solid var(--lilas-2); border-radius: 24px; padding: 12px 28px; font: 800 40px var(--fonte-titulo); color: var(--roxo-titulo); letter-spacing: -.01em; white-space: nowrap; }
+  .eqq .nome { display: block; font: 600 24px var(--fonte-texto); color: var(--cinza); margin-top: 4px; letter-spacing: 0; white-space: normal; }
+  .eqq .et { display: inline-block; min-width: 150px; font: 800 22px var(--fonte-texto); letter-spacing: .08em; text-transform: uppercase; color: var(--d-forte); }
+  .linha-ex { background: var(--branco); border: 2px solid var(--lilas-2); border-radius: 24px; padding: 14px 26px; font-size: 30px; line-height: 1.3; }
+  .linha-ex b { color: var(--roxo-titulo); }
+  .card { background: var(--branco); border: 2px solid var(--lilas-2); border-radius: 28px; padding: 22px 28px; font-size: 28px; line-height: 1.32; color: var(--carvao); }
+  .card h3 { margin: 0 0 6px; font: 800 40px var(--fonte-titulo); letter-spacing: -.02em; color: var(--roxo-titulo); }
+  .card .f { font: 800 38px var(--fonte-titulo); color: var(--d-forte); letter-spacing: -.01em; }
+  .card .sub-h { margin: 0 0 12px; font-size: 25px; font-weight: 700; color: var(--cinza); }
+  .card ul { margin: 6px 0 0; padding-left: 28px; } .card li { margin: 3px 0; }
+  .card.destaque { background: var(--d-clara); border-color: color-mix(in srgb, var(--d) 35%, transparent); }
+  .chips { display: flex; flex-wrap: wrap; gap: 12px; }
+  .chip { display: inline-block; padding: 6px 20px; border-radius: 999px; background: var(--d-clara); color: var(--d-forte); font: 800 34px var(--fonte-titulo); }
+  .recip { box-sizing: content-box; background: linear-gradient(#F2F8FE, #DCEDFB); border: 3px solid #9CC3E6; border-radius: 26px; overflow: hidden; }
+  .legenda-ions { display: flex; flex-wrap: wrap; gap: 8px 22px; font-size: 25px; font-weight: 700; color: var(--carvao); }
+  .legenda-ions span { display: inline-flex; align-items: center; gap: 6px; }
+  .legenda-ions svg { width: 46px; height: 46px; }
+  .contador { font: 800 32px var(--fonte-titulo); color: var(--roxo-titulo); }
+  .tabela td, .tabela th { padding: 10px 34px; }
+  .tabela .f { font: 800 1.05em var(--fonte-titulo); color: var(--roxo-titulo); }
+  .tabela td.esq, .tabela th.esq { text-align: left; }
+  .regra { font: 800 44px var(--fonte-titulo); color: var(--roxo-titulo); letter-spacing: -.01em; }
+  .regra em { font-style: normal; color: var(--d); }
+  .regra .vazio { display: inline-block; min-width: 150px; border-bottom: 4px dashed var(--roxo-claro); color: var(--cinza); font-size: .6em; text-align: center; }
+  .lampada .luz { opacity: 0; transition: opacity 1.2s ease-in .6s; }
+  .mostra .lampada .luz, .lampada.mostra .luz { opacity: 1; }
+  /* cada átomo de uma molécula vibra sozinho (svg.vibra, como em Substâncias e misturas) */
+  @keyframes vib-a { 0%,100% { transform: translate(0,0); } 25% { transform: translate(1.6px,-1.2px); } 50% { transform: translate(-.8px,1.4px); } 75% { transform: translate(-1.4px,-.6px); } }
+  @keyframes vib-b { 0%,100% { transform: translate(0,0); } 25% { transform: translate(-1.4px,1px); } 50% { transform: translate(1.2px,-1.4px); } 75% { transform: translate(.6px,1.2px); } }
+  .slide.ativo .mostra svg.vibra .vib-a, .slide.ativo svg.vibra.sempre .vib-a { animation: vib-a 1.6s ease-in-out infinite; }
+  .slide.ativo .mostra svg.vibra .vib-b, .slide.ativo svg.vibra.sempre .vib-b { animation: vib-b 1.6s ease-in-out infinite; }
+  .rot { font-family: Figtree, sans-serif; font-weight: 800; text-anchor: middle; }
+  /* leite de magnésia: partículas sólidas de Mg(OH)2 espalhadas na água, que mal se dissolvem */
+  @keyframes deriva { 0%,100% { transform: translate(0,0); } 30% { transform: translate(5px,7px); } 65% { transform: translate(-4px,12px); } }
+  .susp circle { transform-box: fill-box; }
+  .slide.ativo .mostra .susp circle { animation: deriva 6s ease-in-out infinite; }
+  .susp circle:nth-child(3n) { animation-duration: 5s !important; animation-delay: -2s !important; } .susp circle:nth-child(3n+1) { animation-duration: 7s !important; animation-delay: -4s !important; }
+  .tabela.nox td, .tabela.nox th { padding: 5px 24px; }
+</style>
+
+<svg width="0" height="0" style="position:absolute" aria-hidden="true">
+  <defs>
+    <radialGradient id="gO" cx=".35" cy=".3" r=".8"><stop offset="0" stop-color="#FF8A7A"/><stop offset="1" stop-color="#C8301F"/></radialGradient>
+    <radialGradient id="gH" cx=".35" cy=".3" r=".8"><stop offset="0" stop-color="#FFFFFF"/><stop offset="1" stop-color="#C9C4DC"/></radialGradient>
+    <radialGradient id="gCl" cx=".35" cy=".3" r=".8"><stop offset="0" stop-color="#9BE8AE"/><stop offset="1" stop-color="#22964A"/></radialGradient>
+    <radialGradient id="gF" cx=".35" cy=".3" r=".8"><stop offset="0" stop-color="#F2F59A"/><stop offset="1" stop-color="#A7AE1E"/></radialGradient>
+    <radialGradient id="gNa" cx=".35" cy=".3" r=".8"><stop offset="0" stop-color="#CBBFFF"/><stop offset="1" stop-color="#5B45C9"/></radialGradient>
+    <radialGradient id="gS" cx=".35" cy=".3" r=".8"><stop offset="0" stop-color="#FFEB85"/><stop offset="1" stop-color="#D1A800"/></radialGradient>
+    <radialGradient id="gN" cx=".35" cy=".3" r=".8"><stop offset="0" stop-color="#7FA8FF"/><stop offset="1" stop-color="#2A5BD0"/></radialGradient>
+    <radialGradient id="gP" cx=".35" cy=".3" r=".8"><stop offset="0" stop-color="#FFC08A"/><stop offset="1" stop-color="#D4661A"/></radialGradient>
+    <radialGradient id="gC" cx=".35" cy=".3" r=".8"><stop offset="0" stop-color="#8A8A96"/><stop offset="1" stop-color="#2E2E36"/></radialGradient>
+    <radialGradient id="gLuz" cx=".5" cy=".5" r=".5"><stop offset="0" stop-color="#FFE45C" stop-opacity=".9"/><stop offset="1" stop-color="#FFD10C" stop-opacity="0"/></radialGradient>
+  </defs>
+</svg>
+
+
+<!-- 1. Capa -->
+<section class="slide capa" data-nome="Capa">
+  <div class="estrelas"></div>
+  <div class="texto-capa" style="top:150px">
+    <span class="selo">Química · IF</span>
+    <p class="aula">Funções inorgânicas · Parte única</p>
+    <h1>Bases</h1>
+    <p class="sub">Dissociação, força, solubilidade e nomes</p>
+  </div>
+  <svg class="emblema" viewBox="0 0 640 640" aria-hidden="true">
+    <g class="gira-lento"><ellipse cx="320" cy="320" rx="300" ry="128" fill="none" stroke="#fff" stroke-opacity=".38" stroke-width="2" transform="rotate(-10 320 320)"/></g>
+    <g class="gira"><ellipse cx="320" cy="320" rx="236" ry="196" fill="none" stroke="#FFD10C" stroke-opacity=".75" stroke-width="2.5" stroke-dasharray="3 14" stroke-linecap="round" transform="rotate(-8 320 320)"/>
+      <circle cx="84" cy="300" r="13" fill="#FFD10C" stroke="#fff" stroke-width="3"/></g>
+    <circle cx="320" cy="320" r="132" fill="#FFD10C"/>
+    <image href="{{SYM_ROXO}}" x="238" y="238" width="164" height="164"/>
+  </svg>
+  <img class="logo-capa" src="{{LOGO_BRANCO}}" alt="Quarks">
+  <aside class="notas"><p>Hoje: a base de Arrhenius e a dissociação, as propriedades, a classificação pelo número de OH⁻, a força, a solubilidade, os nomes (Nox fixo e variável) e as principais bases.</p></aside>
+</section>
+
+<!-- Base de Arrhenius -->
+<section class="slide" data-nome="Base de Arrhenius">
+  <div class="conteudo">
+    <p class="olho">Bases ou hidróxidos</p>
+    <h2 class="titulo">O que é uma base</h2>
+    <div class="recip" data-passo="1" style="position:absolute;left:0;top:165px;width:760px;height:420px">
+      <div data-anima="ions" data-modo="dissociacao" data-anima-passo="1" data-w="760" data-h="420" data-r="15" data-n-agua="16" data-an="OH" data-cols="4" data-linhas="3" data-semente="9" data-contador="cont-base" data-texto="{k} de {n} íons já soltos" style="width:760px;height:420px"></div>
+    </div>
+    <div style="position:absolute;left:830px;right:0;top:160px;display:flex;flex-direction:column;gap:20px">
+      <div data-passo="1"><div class="legenda-ions"><span><svg viewBox="-25 -25 50 50" aria-hidden="true"><circle cx="0.0" cy="0.0" r="11.6" fill="url(#gNa)" stroke="#3A2196" stroke-width="1.5"/><g transform="translate(10.4 -11.6)"><circle r="5.7" fill="#fff" stroke="#C63C28" stroke-width="2"/><text text-anchor="middle" y="3.3" font-family="Figtree,sans-serif" font-weight="800" font-size="10.4" fill="#C63C28">+</text></g></svg><em style="font-style:normal">Na<sup>+</sup></em></span><span><svg viewBox="-25 -25 50 50" aria-hidden="true"><circle cx="11.2" cy="0.0" r="6.6" fill="url(#gH)" stroke="#8C84B8" stroke-width="1.5"/><circle cx="0.0" cy="0.0" r="11.0" fill="url(#gO)" stroke="#8E2115" stroke-width="1.5"/><g transform="translate(10.4 -11.6)"><circle r="5.7" fill="#fff" stroke="#1F6FB3" stroke-width="2"/><text text-anchor="middle" y="3.3" font-family="Figtree,sans-serif" font-weight="800" font-size="10.4" fill="#1F6FB3">−</text></g></svg><em style="font-style:normal">OH<sup>−</sup> (hidroxila)</em></span><span><svg viewBox="-25 -25 50 50" aria-hidden="true"><circle cx="-9.0" cy="6.8" r="6.6" fill="url(#gH)" stroke="#8C84B8" stroke-width="1.5"/><circle cx="9.0" cy="6.8" r="6.6" fill="url(#gH)" stroke="#8C84B8" stroke-width="1.5"/><circle cx="0.0" cy="0.0" r="11.0" fill="url(#gO)" stroke="#8E2115" stroke-width="1.5"/></svg><em style="font-style:normal">H<sub>2</sub>O</em></span></div>
+        <p class="contador" id="cont-base" style="margin:10px 0 0;font-size:28px">&nbsp;</p></div>
+      <div class="caixa caixa-fundamental" data-passo="2" style="padding:22px 30px">
+        <span class="rotulo">Base de Arrhenius</span>
+        <div class="texto" style="font-size:31px">Em água, sofre <b>dissociação</b> e libera o ânion <b>OH<sup>−</sup></b> como <b>único ânion</b>.</div>
+      </div>
+      <div class="eqq" data-passo="3">NaOH <span class="est">(s)</span> <span class="seta"><i>água</i>→</span> Na<sup>+</sup> <span class="est">(aq)</span> + OH<sup>−</sup> <span class="est">(aq)</span><span class="nome">o OH<sup>−</sup> (hidroxila ou oxidrila) dá as propriedades das bases</span></div>
+      <div class="linha-ex" data-passo="4">Para ser base de Arrhenius, a fórmula tem o grupo <b>OH</b>.</div>
+    </div>
+  </div>
+  <aside class="notas"><p>Clique 1: um cristal de hidróxido de sódio (NaOH, a soda cáustica) na água. Os íons Na⁺ e OH⁻ já existiam no sólido: a água só os separa, um a um (o contador acompanha). Clique 2: a definição. Clique 3: a equação de dissociação. Clique 4: o grupo OH.</p><p>Correção do material da professora: lá as dissociações estão escritas como NaOH(s) + H₂O(l) → Na⁺(aq) + OH⁻(aq), com a água entre os reagentes e sem aparecer nos produtos (a equação não fecha). A água é o meio: vai sobre a seta, como aqui.</p></aside>
+</section>
+
+<!-- Dissociação e ionização -->
+<section class="slide" data-nome="Dissociação e ionização">
+  <div class="conteudo">
+    <p class="olho">Não confunda</p>
+    <h2 class="titulo">Dissociação não é ionização</h2>
+    <div style="position:absolute;left:0;right:0;top:165px;display:flex;flex-direction:column;gap:14px">
+      <div class="eqq" data-passo="1">Ca(OH)<sub>2</sub> <span class="est">(s)</span> <span class="seta"><i>água</i>→</span> Ca<sup>2+</sup> <span class="est">(aq)</span> + 2 OH<sup>−</sup> <span class="est">(aq)</span><span class="nome">hidróxido de cálcio: 2 OH⁻</span></div>
+      <div class="eqq" data-passo="2">Al(OH)<sub>3</sub> <span class="est">(s)</span> <span class="seta"><i>água</i>→</span> Al<sup>3+</sup> <span class="est">(aq)</span> + 3 OH<sup>−</sup> <span class="est">(aq)</span><span class="nome">hidróxido de alumínio: 3 OH⁻</span></div>
+    </div>
+    <div style="position:absolute;left:0;right:0;top:470px;display:grid;grid-template-columns:1fr 1fr;gap:36px">
+      <div class="card" data-passo="3" style="font-size:27px"><h3 style="font-size:34px">Ácido: ionização</h3>É <b>molecular</b>: os íons <b>nascem</b> na água (HCl → H<sup>+</sup> + Cl<sup>−</sup>).</div>
+      <div class="card destaque" data-passo="4" style="font-size:27px"><h3 style="font-size:34px">Base: dissociação</h3>É <b>iônica</b>: os íons <b>já existiam</b> e só se separam.</div>
+    </div>
+    <div class="caixa caixa-atencao" data-passo="5" style="position:absolute;left:580px;right:0;top:680px;padding:18px 28px">
+      <div class="texto" style="font-size:28px">Exceção: o NH<sub>4</sub>OH não tem metal; vem da amônia (NH<sub>3</sub>) na água.</div>
+    </div>
+  </div>
+  <aside class="notas"><p>Cliques 1 e 2: mais duas dissociações; o número de OH⁻ é a carga do metal. Cliques 3 e 4: a diferença entre ionização (ácido, molecular) e dissociação (base, iônica). Clique 5: o hidróxido de amônio, a única base comum sem metal: o NH₄⁺ faz o papel do metal.</p><p>As bases de metal são compostos iônicos (ligação iônica entre o metal e o OH⁻).</p></aside>
+</section>
+
+<!-- Propriedades das bases -->
+<section class="slide" data-nome="Propriedades das bases">
+  <div class="conteudo">
+    <p class="olho">Propriedades das bases</p>
+    <h2 class="titulo">Como reconhecer uma base</h2>
+    <div style="position:absolute;left:0;width:700px;top:165px;display:flex;flex-direction:column;gap:14px">
+      <div class="linha-ex" data-passo="1"><b>Sabor adstringente</b> e pele <b>escorregadia</b>. Nunca prove!</div>
+      <div class="linha-ex" data-passo="1">Em água, se <b>dissociam</b> e <b>conduzem eletricidade</b>.</div>
+      <div class="linha-ex" data-passo="3">Mudam a cor dos <b>indicadores</b>.</div>
+      <div class="linha-ex" data-passo="3"><b>Reagem com os ácidos</b> (neutralização).</div>
+    </div>
+    <div style="position:absolute;left:760px;top:140px;display:flex;gap:40px">
+      <div data-passo="1" style="position:relative;width:480px;height:520px">
+        <svg class="lampada" viewBox="0 0 480 470" style="position:absolute;left:0;top:0;width:480px;height:470px;overflow:visible" aria-hidden="true">
+          
+          <circle cx="240" cy="64" r="34" fill="#F4F2FA" stroke="#7F7A99" stroke-width="5"/>
+          <path d="M226 98 h28 v22 h-28 z" fill="#B9B0E6" stroke="#7F7A99" stroke-width="4"/>
+          <path d="M232 64 l8 -12 l8 12" fill="none" stroke="#7F7A99" stroke-width="3"/>
+          <g fill="none" stroke="#5E5A70" stroke-width="5" stroke-linejoin="round"><path d="M226 112 H150 V300"/><path d="M254 112 H330 V300"/></g>
+          <g transform="translate(90 112)"><rect x="-26" y="-18" width="52" height="36" rx="6" fill="#FFD10C" stroke="#8A6A00" stroke-width="3"/><text class="rot" y="9" font-size="22" fill="#5E4A00">+ −</text></g>
+          <rect x="138" y="240" width="24" height="170" rx="6" fill="#9A95AD"/><rect x="318" y="240" width="24" height="170" rx="6" fill="#9A95AD"/>
+          <path d="M60 200 v230 a30 30 0 0 0 30 30 h300 a30 30 0 0 0 30 -30 v-230" fill="none" stroke="#7F7A99" stroke-width="6" stroke-linecap="round"/>
+        </svg>
+        <div style="position:absolute;left:66px;top:246px;width:348px;height:208px;border-radius:0 0 26px 26px;overflow:hidden;background:linear-gradient(#F2F8FE,#DCEDFB)"><svg viewBox="0 0 348 208" style="display:block;width:348px;height:208px" aria-hidden="true"><text x="174" y="190" class="rot" font-size="20" fill="#7F7A99">só água destilada</text></svg></div>
+        <svg viewBox="0 0 480 470" style="position:absolute;left:0;top:0;width:480px;height:470px;pointer-events:none" aria-hidden="true"><rect x="138" y="240" width="24" height="170" rx="6" fill="#9A95AD" fill-opacity=".85"/><rect x="318" y="240" width="24" height="170" rx="6" fill="#9A95AD" fill-opacity=".85"/></svg>
+        <p style="position:absolute;left:0;right:0;top:474px;margin:0;text-align:center;font-size:26px;font-weight:700;color:var(--carvao)">água destilada: <b>não acende</b></p>
+      </div>
+      <div data-passo="2" style="position:relative;width:480px;height:520px">
+        <svg class="lampada" viewBox="0 0 480 470" style="position:absolute;left:0;top:0;width:480px;height:470px;overflow:visible" aria-hidden="true">
+          <circle class="luz" cx="240" cy="64" r="80" fill="url(#gLuz)"/><circle class="luz" cx="240" cy="64" r="34" fill="#FFE45C"/>
+          <circle cx="240" cy="64" r="34" fill="none" stroke="#7F7A99" stroke-width="5"/>
+          <path d="M226 98 h28 v22 h-28 z" fill="#B9B0E6" stroke="#7F7A99" stroke-width="4"/>
+          <path d="M232 64 l8 -12 l8 12" fill="none" stroke="#7F7A99" stroke-width="3"/>
+          <g fill="none" stroke="#5E5A70" stroke-width="5" stroke-linejoin="round"><path d="M226 112 H150 V300"/><path d="M254 112 H330 V300"/></g>
+          <g transform="translate(90 112)"><rect x="-26" y="-18" width="52" height="36" rx="6" fill="#FFD10C" stroke="#8A6A00" stroke-width="3"/><text class="rot" y="9" font-size="22" fill="#5E4A00">+ −</text></g>
+          <rect x="138" y="240" width="24" height="170" rx="6" fill="#9A95AD"/><rect x="318" y="240" width="24" height="170" rx="6" fill="#9A95AD"/>
+          <path d="M60 200 v230 a30 30 0 0 0 30 30 h300 a30 30 0 0 0 30 -30 v-230" fill="none" stroke="#7F7A99" stroke-width="6" stroke-linecap="round"/>
+        </svg>
+        <div style="position:absolute;left:66px;top:246px;width:348px;height:208px;border-radius:0 0 26px 26px;overflow:hidden;background:linear-gradient(#F2F8FE,#DCEDFB)"><div data-anima="ions" data-modo="dissociacao" data-anima-passo="2" data-pronto="1" data-w="348" data-h="208" data-r="10" data-n-agua="7" data-an="OH" data-cols="4" data-linhas="2" data-semente="4" style="width:348px;height:208px"></div></div>
+        <svg viewBox="0 0 480 470" style="position:absolute;left:0;top:0;width:480px;height:470px;pointer-events:none" aria-hidden="true"><rect x="138" y="240" width="24" height="170" rx="6" fill="#9A95AD" fill-opacity=".85"/><rect x="318" y="240" width="24" height="170" rx="6" fill="#9A95AD" fill-opacity=".85"/></svg>
+        <p style="position:absolute;left:0;right:0;top:474px;margin:0;text-align:center;font-size:26px;font-weight:700;color:var(--carvao)">NaOH em água: <b>acende</b></p>
+      </div>
+    </div>
+    <div class="caixa caixa-atencao" data-passo="4" style="position:absolute;left:760px;right:0;top:700px;padding:20px 30px">
+      <span class="rotulo">Soda cáustica queima</span>
+      <div class="texto" style="font-size:28px">O NaOH destrói pele e olhos: só com <b>luvas e óculos</b>.</div>
+    </div>
+  </div>
+  <aside class="notas"><p>Clique 1: sabor e condução; o copo com água destilada não acende. Clique 2: com NaOH dissolvido, os íons Na⁺ e OH⁻ livres levam a corrente: a lâmpada acende. Cliques 3 e 4: as outras propriedades e o cuidado.</p><p>A professora usa "adstringente" (que amarra a boca); a apostila fala em gosto amargo. As duas descrições aparecem em prova. A reação com ácido é a neutralização (próxima parte: Sais).</p></aside>
+</section>
+
+<!-- Número de hidroxilas -->
+<section class="slide" data-nome="Número de hidroxilas">
+  <div class="conteudo">
+    <p class="olho">Classificação 1 · Quantas OH⁻</p>
+    <h2 class="titulo">Monobases, dibases, tribases...</h2>
+    <table class="tabela" style="position:absolute;left:0;right:0;top:165px;font-size:33px;width:100%">
+      <tr><th class="esq">Classe</th><th>Libera</th><th class="esq">Exemplos</th></tr>
+      <tr data-passo="1"><td class="esq"><b>Monobase</b></td><td>1 OH<sup>−</sup></td><td class="esq"><span class="f">NaOH</span>, <span class="f">KOH</span>, <span class="f">NH<sub>4</sub>OH</span></td></tr>
+      <tr data-passo="2"><td class="esq"><b>Dibase</b></td><td>2 OH<sup>−</sup></td><td class="esq"><span class="f">Ca(OH)<sub>2</sub></span>, <span class="f">Fe(OH)<sub>2</sub></span></td></tr>
+      <tr data-passo="3"><td class="esq"><b>Tribase</b></td><td>3 OH<sup>−</sup></td><td class="esq"><span class="f">Al(OH)<sub>3</sub></span>, <span class="f">Fe(OH)<sub>3</sub></span></td></tr>
+      <tr data-passo="4"><td class="esq"><b>Tetrabase</b></td><td>4 OH<sup>−</sup></td><td class="esq"><span class="f">Sn(OH)<sub>4</sub></span>, <span class="f">Pb(OH)<sub>4</sub></span></td></tr>
+    </table>
+    <div class="caixa caixa-atencao" data-passo="5" style="position:absolute;left:580px;right:0;top:650px">
+      <div class="texto" style="font-size:30px">Nº de OH<sup>−</sup> = carga do metal: Ca<sup>2+</sup> pede 2, Al<sup>3+</sup> pede 3.</div>
+    </div>
+  </div>
+  <aside class="notas"><p>Uma linha por clique; peça para contarem os OH antes. Clique 5: por que o número de OH é a carga do cátion (a soma das cargas dá zero).</p><p>O ferro aparece duas vezes: Fe²⁺ dá dibase e Fe³⁺ dá tribase (nome com Nox variável, adiante).</p></aside>
+</section>
+
+<!-- Força das bases -->
+<section class="slide" data-nome="Força das bases">
+  <div class="conteudo">
+    <p class="olho">Classificação 2 · Força</p>
+    <h2 class="titulo">Bases fortes e fracas</h2>
+    <p class="texto" data-passo="1" style="position:absolute;left:0;right:0;top:150px;margin:0;font-size:31px">A força depende de <b>quanto a base se dissocia</b> (o grau de dissociação, α).</p>
+    <div style="position:absolute;left:0;right:0;top:225px;display:grid;grid-template-columns:1fr 1fr;gap:36px">
+      <div class="card destaque" data-passo="2">
+        <h3>Fortes <span style="font:700 28px var(--fonte-texto);color:var(--cinza)">α &gt; 50%</span></h3>
+        <ul><li>metais <b>alcalinos</b> (família 1): NaOH, KOH</li><li>metais <b>alcalinoterrosos</b> (família 2): Ca(OH)<sub>2</sub>, Ba(OH)<sub>2</sub></li></ul>
+      </div>
+      <div class="card" data-passo="3">
+        <h3>Fracas <span style="font:700 28px var(--fonte-texto);color:var(--cinza)">α &lt; 5%</span></h3>
+        <ul><li>hidróxido de amônio, NH<sub>4</sub>OH</li><li>os demais metais: Fe(OH)<sub>3</sub>, Cu(OH)<sub>2</sub>, Al(OH)<sub>3</sub></li></ul>
+      </div>
+    </div>
+    <div class="caixa caixa-atencao" data-passo="4" style="position:absolute;left:580px;right:0;top:650px">
+      <span class="rotulo">Exceção</span>
+      <div class="texto" style="font-size:30px">O Mg(OH)<sub>2</sub> é de metal alcalinoterroso, mas é base <b>fraca</b>.</div>
+    </div>
+  </div>
+  <aside class="notas"><p>Clique 1: força = extensão da dissociação. Clique 2: as fortes (famílias 1 e 2). Clique 3: as fracas. Clique 4: a exceção que a professora destaca (o Be(OH)₂ também é fraco, mas quase não aparece).</p><p>No material da professora o Cu(OH)₂ aparece como "hidróxido de cobre": o nome completo é hidróxido de cobre II (cúprico).</p></aside>
+</section>
+
+<!-- Solubilidade das bases -->
+<section class="slide" data-nome="Solubilidade das bases">
+  <div class="conteudo">
+    <p class="olho">Solubilidade em água</p>
+    <h2 class="titulo">Nem toda base se dissolve</h2>
+    <div style="position:absolute;left:0;width:1120px;top:165px;display:flex;flex-direction:column;gap:16px">
+      <div class="linha-ex" data-passo="1"><b>Solúveis:</b> as dos metais alcalinos (NaOH, KOH) e o NH<sub>4</sub>OH.</div>
+      <div class="linha-ex" data-passo="2"><b>Pouco solúveis:</b> as dos alcalinoterrosos (Ca(OH)<sub>2</sub>, Ba(OH)<sub>2</sub>).</div>
+      <div class="linha-ex" data-passo="3"><b>Praticamente insolúveis:</b> as dos demais metais (Al(OH)<sub>3</sub>, Fe(OH)<sub>3</sub>, Sn(OH)<sub>4</sub>) e o Mg(OH)<sub>2</sub>.</div>
+    </div>
+    <div data-passo="4" style="position:absolute;left:1200px;right:0;top:150px;display:flex;flex-direction:column;align-items:center;gap:8px;text-align:center">
+      <svg viewBox="0 0 220 250" style="width:220px;height:250px" aria-hidden="true">
+          <path d="M30 40 L48 232 a10 10 0 0 0 10 8 h104 a10 10 0 0 0 10 -8 L190 40" fill="#F7F6FB" stroke="#7F7A99" stroke-width="5" stroke-linejoin="round"/>
+          <path d="M38 76 H182 L172 230 a6 6 0 0 1 -6 5 H54 a6 6 0 0 1 -6 -5 Z" fill="#E9E6F2"/>
+          <g class="susp"><circle cx="86" cy="167" r="3" fill="#FFFFFF" stroke="#C9C4DC" stroke-width="1.5"/><circle cx="148" cy="191" r="5" fill="#FFFFFF" stroke="#C9C4DC" stroke-width="1.5"/><circle cx="75" cy="113" r="3" fill="#FFFFFF" stroke="#C9C4DC" stroke-width="1.5"/><circle cx="58" cy="192" r="4" fill="#FFFFFF" stroke="#C9C4DC" stroke-width="1.5"/><circle cx="158" cy="105" r="4" fill="#FFFFFF" stroke="#C9C4DC" stroke-width="1.5"/><circle cx="122" cy="182" r="4" fill="#FFFFFF" stroke="#C9C4DC" stroke-width="1.5"/><circle cx="155" cy="134" r="3" fill="#FFFFFF" stroke="#C9C4DC" stroke-width="1.5"/><circle cx="89" cy="144" r="3" fill="#FFFFFF" stroke="#C9C4DC" stroke-width="1.5"/><circle cx="162" cy="156" r="4" fill="#FFFFFF" stroke="#C9C4DC" stroke-width="1.5"/><circle cx="80" cy="132" r="4" fill="#FFFFFF" stroke="#C9C4DC" stroke-width="1.5"/><circle cx="93" cy="185" r="3" fill="#FFFFFF" stroke="#C9C4DC" stroke-width="1.5"/><circle cx="164" cy="176" r="5" fill="#FFFFFF" stroke="#C9C4DC" stroke-width="1.5"/><circle cx="120" cy="153" r="4" fill="#FFFFFF" stroke="#C9C4DC" stroke-width="1.5"/><circle cx="87" cy="211" r="4" fill="#FFFFFF" stroke="#C9C4DC" stroke-width="1.5"/><circle cx="67" cy="166" r="3" fill="#FFFFFF" stroke="#C9C4DC" stroke-width="1.5"/><circle cx="93" cy="169" r="4" fill="#FFFFFF" stroke="#C9C4DC" stroke-width="1.5"/><circle cx="108" cy="198" r="4" fill="#FFFFFF" stroke="#C9C4DC" stroke-width="1.5"/><circle cx="111" cy="205" r="4" fill="#FFFFFF" stroke="#C9C4DC" stroke-width="1.5"/><circle cx="85" cy="168" r="4" fill="#FFFFFF" stroke="#C9C4DC" stroke-width="1.5"/><circle cx="160" cy="101" r="3" fill="#FFFFFF" stroke="#C9C4DC" stroke-width="1.5"/><circle cx="61" cy="208" r="4" fill="#FFFFFF" stroke="#C9C4DC" stroke-width="1.5"/><circle cx="122" cy="226" r="5" fill="#FFFFFF" stroke="#C9C4DC" stroke-width="1.5"/><circle cx="145" cy="177" r="4" fill="#FFFFFF" stroke="#C9C4DC" stroke-width="1.5"/><circle cx="142" cy="140" r="3" fill="#FFFFFF" stroke="#C9C4DC" stroke-width="1.5"/><circle cx="108" cy="141" r="5" fill="#FFFFFF" stroke="#C9C4DC" stroke-width="1.5"/><circle cx="91" cy="137" r="4" fill="#FFFFFF" stroke="#C9C4DC" stroke-width="1.5"/><circle cx="111" cy="172" r="4" fill="#FFFFFF" stroke="#C9C4DC" stroke-width="1.5"/><circle cx="97" cy="115" r="3" fill="#FFFFFF" stroke="#C9C4DC" stroke-width="1.5"/><circle cx="146" cy="148" r="4" fill="#FFFFFF" stroke="#C9C4DC" stroke-width="1.5"/><circle cx="153" cy="150" r="3" fill="#FFFFFF" stroke="#C9C4DC" stroke-width="1.5"/><circle cx="98" cy="135" r="4" fill="#FFFFFF" stroke="#C9C4DC" stroke-width="1.5"/><circle cx="114" cy="96" r="3" fill="#FFFFFF" stroke="#C9C4DC" stroke-width="1.5"/><circle cx="101" cy="111" r="4" fill="#FFFFFF" stroke="#C9C4DC" stroke-width="1.5"/><circle cx="150" cy="173" r="3" fill="#FFFFFF" stroke="#C9C4DC" stroke-width="1.5"/></g>
+        </svg>
+      <p style="margin:0;font-size:27px;font-weight:700">leite de magnésia</p>
+      <p style="margin:0;font-size:25px;color:var(--cinza)">branco e turvo: grãos sólidos de Mg(OH)<sub>2</sub> espalhados na água</p>
+    </div>
+    <div class="caixa caixa-atencao" data-passo="5" style="position:absolute;left:580px;width:540px;top:620px;padding:20px 28px">
+      <div class="texto" style="font-size:28px">Em geral, as bases <b>fortes</b> são as mais solúveis.</div>
+    </div>
+  </div>
+  <aside class="notas"><p>Cliques 1 a 3: as três faixas de solubilidade. Clique 4: o leite de magnésia; os grãos de Mg(OH)₂ ficam espalhados e quase não se dissolvem (é uma suspensão; agite antes de usar). Clique 5: a relação com a força.</p><p>Na questão oficial do IF 2013 (adiante), o Ca(OH)₂ é "forte, pouco solúvel" e o Sn(OH)₄ é "fraca, praticamente insolúvel".</p></aside>
+</section>
+
+<!-- Nomes: Nox fixo -->
+<section class="slide" data-nome="Nomes: Nox fixo">
+  <div class="conteudo">
+    <p class="olho">Nomenclatura 1 · Metal de Nox fixo</p>
+    <h2 class="titulo">hidróxido de + metal</h2>
+    <div class="caixa caixa-fundamental" data-passo="1" style="position:absolute;left:0;width:830px;top:165px;padding:18px 32px">
+      <p class="regra" style="margin:0;font-size:40px">hidróxido de <span class="vazio">nome do elemento</span></p>
+    </div>
+    <div style="position:absolute;left:0;width:830px;top:300px;display:flex;flex-direction:column;gap:14px;font-size:27px">
+      <div class="linha-ex" data-passo="2" style="font-size:27px"><b>NaOH:</b> hidróxido de <b>sódio</b> &nbsp;·&nbsp; <b>KOH:</b> hidróxido de <b>potássio</b></div>
+      <div class="linha-ex" data-passo="3" style="font-size:27px"><b>Ca(OH)<sub>2</sub>:</b> hidróxido de <b>cálcio</b> &nbsp;·&nbsp; <b>Al(OH)<sub>3</sub>:</b> hidróxido de <b>alumínio</b></div>
+      <div class="linha-ex" data-passo="4" style="font-size:27px"><b>NH<sub>4</sub>OH:</b> hidróxido de <b>amônio</b></div>
+    </div>
+    <table class="tabela nox" data-passo="1" style="position:absolute;left:880px;right:0;top:150px;font-size:24px">
+      <tr><th class="esq">Metal</th><th>Símbolo</th><th>Nox mais comuns</th></tr>
+      <tr><td class="esq">Sódio</td><td><b>Na</b></td><td>+1</td></tr>
+      <tr><td class="esq">Potássio</td><td><b>K</b></td><td>+1</td></tr>
+      <tr><td class="esq">Cálcio</td><td><b>Ca</b></td><td>+2</td></tr>
+      <tr><td class="esq">Magnésio</td><td><b>Mg</b></td><td>+2</td></tr>
+      <tr><td class="esq">Alumínio</td><td><b>Al</b></td><td>+3</td></tr>
+      <tr><td class="esq">Zinco</td><td><b>Zn</b></td><td>+2</td></tr>
+      <tr><td class="esq">Prata</td><td><b>Ag</b></td><td>+1</td></tr>
+      <tr><td class="esq">Cobre</td><td><b>Cu</b></td><td>+1, +2</td></tr>
+      <tr><td class="esq">Ferro</td><td><b>Fe</b></td><td>+2, +3</td></tr>
+      <tr><td class="esq">Estanho</td><td><b>Sn</b></td><td>+2, +4</td></tr>
+      <tr><td class="esq">Chumbo</td><td><b>Pb</b></td><td>+2, +4</td></tr>
+      <tr><td class="esq">Ouro</td><td><b>Au</b></td><td>+1, +3</td></tr>
+      <tr><td class="esq">Mercúrio</td><td><b>Hg</b></td><td>+1, +2</td></tr>
+    </table>
+  </div>
+  <aside class="notas"><p>Clique 1: a regra e a tabela de Nox dos metais (da professora). Cliques 2 a 4: exemplos de Nox fixo; peça o nome antes.</p><p>Nox fixo: sódio, potássio e prata (+1), cálcio, magnésio e zinco (+2), alumínio (+3). Os de baixo da tabela têm dois Nox: próxima tela.</p></aside>
+</section>
+
+<!-- Nomes: Nox variável -->
+<section class="slide" data-nome="Nomes: Nox variável">
+  <div class="conteudo">
+    <p class="olho">Nomenclatura 2 · Metal de Nox variável</p>
+    <h2 class="titulo">Ferro II ou ferro III?</h2>
+    <div style="position:absolute;left:0;width:700px;top:165px;display:flex;flex-direction:column;gap:18px">
+      <div class="caixa caixa-fundamental" data-passo="1" style="padding:20px 30px">
+        <span class="rotulo">Com o Nox em romano</span>
+        <p class="regra" style="margin:4px 0 0;font-size:38px">hidróxido de <span class="vazio">elemento</span> <em>II, III...</em></p>
+      </div>
+      <div class="caixa caixa-fundamental" data-passo="2" style="padding:20px 30px">
+        <span class="rotulo">Com sufixo</span>
+        <p class="regra" style="margin:4px 0 0;font-size:38px">hidróxido <span class="vazio">elemento</span> <em>ico</em> / <em>oso</em></p>
+        <p style="margin:6px 0 0;font-size:25px;color:var(--cinza)"><b>ico</b>: maior Nox · <b>oso</b>: menor Nox</p>
+      </div>
+    </div>
+    <table class="tabela" style="position:absolute;left:760px;right:0;top:165px;font-size:30px">
+      <tr><th>Fórmula</th><th class="esq">Romano</th><th class="esq">Sufixo</th></tr>
+      <tr data-passo="3"><td class="f">Fe(OH)<sub>3</sub></td><td class="esq">hidróxido de ferro III</td><td class="esq">hidróxido férr<b>ico</b></td></tr>
+      <tr data-passo="3"><td class="f">Fe(OH)<sub>2</sub></td><td class="esq">hidróxido de ferro II</td><td class="esq">hidróxido ferr<b>oso</b></td></tr>
+      <tr data-passo="4"><td class="f">Sn(OH)<sub>4</sub></td><td class="esq">hidróxido de estanho IV</td><td class="esq">hidróxido estân<b>ico</b></td></tr>
+      <tr data-passo="4"><td class="f">Sn(OH)<sub>2</sub></td><td class="esq">hidróxido de estanho II</td><td class="esq">hidróxido estan<b>oso</b></td></tr>
+      <tr data-passo="5"><td class="f">Cu(OH)<sub>2</sub></td><td class="esq">hidróxido de cobre II</td><td class="esq">hidróxido cúpr<b>ico</b></td></tr>
+      <tr data-passo="5"><td class="f">CuOH</td><td class="esq">hidróxido de cobre I</td><td class="esq">hidróxido cupr<b>oso</b></td></tr>
+    </table>
+    <div class="caixa caixa-atencao" data-passo="6" style="position:absolute;left:760px;right:0;top:680px;padding:18px 28px">
+      <div class="texto" style="font-size:28px">O Nox do metal = número de OH<sup>−</sup>: Fe(OH)<sub>3</sub> → ferro <b>+3</b>.</div>
+    </div>
+  </div>
+  <aside class="notas"><p>Cliques 1 e 2: os dois jeitos de dar o nome (a professora usa o sufixo; o romano é o mais usado hoje). Cliques 3 a 5: os pares do ferro, do estanho e do cobre. Clique 6: como achar o Nox pela fórmula.</p><p>Os sufixos vêm do latim: ferrum (férrico), stannum (estânico), cuprum (cúprico).</p></aside>
+</section>
+
+<!-- Exemplo: fórmulas de bases -->
+<section class="slide" data-nome="Exemplo: fórmulas de bases">
+  <div class="conteudo">
+    <p class="olho">Exemplo</p>
+    <h2 class="titulo">Escreva as fórmulas</h2>
+    <p class="texto" style="position:absolute;left:0;right:0;top:150px;margin:0;font-size:31px">Hidróxido de cálcio (Ca<sup>2+</sup>) e hidróxido de alumínio (Al<sup>3+</sup>).</p>
+    <div style="position:absolute;left:0;width:860px;top:230px;display:flex;flex-direction:column;gap:16px">
+      <div class="linha-ex" data-passo="1"><b>Raciocínio:</b> cada carga positiva do metal pede um OH<sup>−</sup>.</div>
+      <div class="linha-ex" data-passo="2"><b>Cálcio:</b> carga +2 → 2 OH → <b>Ca(OH)<sub>2</sub></b></div>
+      <div class="linha-ex" data-passo="3"><b>Alumínio:</b> carga +3 → 3 OH → <b>Al(OH)<sub>3</sub></b></div>
+      <div class="linha-ex" data-passo="4">Mais de um OH: <b>parênteses</b>, com o índice fora.</div>
+    </div>
+    <p class="contador" data-passo="5" style="position:absolute;left:960px;top:240px;margin:0">Conferindo a carga total do Al(OH)<sub>3</sub>:</p>
+    <div class="contas" style="position:absolute;left:960px;top:310px;font-size:42px;row-gap:18px">
+        <div class="eq" data-passo="5"><span>\(q\)</span><span>\(=\)</span><span>\(q_{\text{Al}} + 3\,q_{\text{OH}}\)</span></div>
+        <div class="eq" data-passo="6"><span>\(q\)</span><span>\(=\)</span><span>\((+3) + 3\cdot(-1)\)</span></div>
+        <div class="eq final" data-passo="7"><span>\(q\)</span><span>\(=\)</span><span>\(0\)</span></div>
+    </div>
+    <div class="caixa caixa-fundamental" data-passo="8" style="position:absolute;left:960px;right:0;top:620px;padding:20px 30px">
+      <div class="texto" style="font-size:30px"><b>Resposta:</b> Ca(OH)<sub>2</sub> e Al(OH)<sub>3</sub>.</div>
+    </div>
+  </div>
+  <aside class="notas"><p>Peça a fórmula antes de cada clique. Cliques 5 a 7: a conferência da carga do hidróxido de alumínio: (+3) + 3 · (−1) = 0 (exemplo da apostila). Clique 8: a resposta.</p><p>Erro comum: escrever CaOH₂ (sem parênteses), que daria 1 O e 2 H.</p></aside>
+</section>
+
+<!-- Principais bases -->
+<section class="slide" data-nome="Principais bases">
+  <div class="conteudo">
+    <p class="olho">Principais bases</p>
+    <h2 class="titulo">As bases do dia a dia</h2>
+    <div style="position:absolute;left:0;right:0;top:160px;display:grid;grid-template-columns:1fr 1fr;gap:22px 32px">
+      <div class="card" data-passo="1" style="font-size:26px;padding:18px 26px"><h3 style="font-size:36px">NaOH <span style="font:700 25px var(--fonte-texto);color:var(--cinza)">hidróxido de sódio · soda cáustica</span></h3>
+        Fabricação de <b>sabão</b> (com óleos e gorduras), papel, tecidos e produtos de limpeza. Muito corrosivo.</div>
+      <div class="card" data-passo="2" style="font-size:26px;padding:18px 26px"><h3 style="font-size:36px">Mg(OH)<sub>2</sub> <span style="font:700 25px var(--fonte-texto);color:var(--cinza)">hidróxido de magnésio</span></h3>
+        <b>Leite de magnésia</b>: antiácido, diminui a acidez do estômago. Em excesso, é laxante.</div>
+      <div class="card" data-passo="3" style="font-size:26px;padding:18px 26px"><h3 style="font-size:36px">Ca(OH)<sub>2</sub> <span style="font:700 25px var(--fonte-texto);color:var(--cinza)">hidróxido de cálcio</span></h3>
+        <b>Cal hidratada</b>: argamassa e construção.</div>
+      <div class="card" data-passo="4" style="font-size:26px;padding:18px 26px"><h3 style="font-size:36px">NH<sub>4</sub>OH <span style="font:700 25px var(--fonte-texto);color:var(--cinza)">hidróxido de amônio</span></h3>
+        Amônia dissolvida em água: <b>produtos de limpeza</b>.</div>
+    </div>
+    <div class="caixa caixa-atencao" data-passo="5" style="position:absolute;left:580px;right:0;top:640px">
+      <div class="texto" style="font-size:29px">O KOH (hidróxido de potássio) também faz sabão: o sabão mole.</div>
+    </div>
+  </div>
+  <aside class="notas"><p>Uma base por clique: as duas primeiras são da professora, as outras da apostila. Clique 5: o KOH.</p><p>O leite de magnésia neutraliza o excesso de ácido clorídrico do estômago: é a neutralização, que abre a próxima parte (Sais).</p></aside>
+</section>
+
+<!-- Questão 1 -->
+<section class="slide questao" data-nome="Questão 1">
+  <div class="conteudo">
+    <div class="area-resolucao"></div>
+    <span class="pilula pilula-pausa" data-em="1:some">Pause o vídeo e tente</span>
+    <div class="painel-questao">
+      <p class="olho">Questão 1 · IF Sudeste MG 2025</p>
+      <p class="enunciado" style="font-size:22px">Segundo o conceito de Arrhenius, ácidos são substâncias que aumentam a concentração de íons hidrogênio, H<sup>+</sup>, quando solubilizadas em água. A função hidróxidos, são substâncias que, em solução aquosa, aumentam a concentração de íons hidroxila (OH<sup>−</sup>).</p>
+      <p class="enunciado" style="font-size:22px">Com base nos conceitos ácido-base de Arrhenius, assinale a alternativa que contenha a fórmula química de um ácido e de uma base, respectivamente.</p>
+      <ol class="alternativas" style="gap:8px">
+        <li data-em="2:certo" style="font-size:24px;padding:6px 14px"><b>A</b><span>H<sub>2</sub>S e Mg(OH)<sub>2</sub></span></li>
+        <li data-em="2:apaga" style="font-size:24px;padding:6px 14px"><b>B</b><span>NH<sub>3</sub> e NaClO</span></li>
+        <li data-em="2:apaga" style="font-size:24px;padding:6px 14px"><b>C</b><span>HNO<sub>2</sub> e HCl</span></li>
+        <li data-em="2:apaga" style="font-size:24px;padding:6px 14px"><b>D</b><span>NaH e NaOH</span></li>
+        <li data-em="2:apaga" style="font-size:24px;padding:6px 14px"><b>E</b><span>BH<sub>3</sub> e NH<sub>4</sub>OH</span></li>
+      </ol>
+    </div>
+  </div>
+  <aside class="resolucao">
+    <p class="dados"><b>Dados:</b> ácido libera H<sup>+</sup>; base libera OH<sup>−</sup>.</p>
+    <ol class="passos">
+      <li>Ácido: H ionizável ligado a ametal.</li>
+      <li>H<sub>2</sub>S → 2 H<sup>+</sup> + S<sup>2−</sup>: ácido.</li>
+      <li>Base: metal (ou NH<sub>4</sub><sup>+</sup>) com OH.</li>
+      <li>Mg(OH)<sub>2</sub> → Mg<sup>2+</sup> + 2 OH<sup>−</sup>: base.</li>
+    </ol>
+    <p class="resposta"><b>Resposta:</b> H<sub>2</sub>S (ácido sulfídrico) e Mg(OH)<sub>2</sub> (hidróxido de magnésio). <b>Gabarito A.</b></p>
+    <p class="atencao"><b>Destaque no quadro:</b> ter H não basta: o H tem de sair como H<sup>+</sup> na água.</p>
+    <ul class="erros">
+      <li><b>B</b> NH<sub>3</sub> não libera H<sup>+</sup>; NaClO é sal, não base.</li>
+      <li><b>C</b> Os dois são ácidos: falta a base.</li>
+      <li><b>D</b> NaH: H ligado a metal, não sai como H<sup>+</sup>.</li>
+      <li><b>E</b> BH<sub>3</sub> não é ácido de Arrhenius; só o NH<sub>4</sub>OH está certo.</li>
+    </ul>
+  </aside>
+  <aside class="notas">
+    <p>Clique 1 tira o aviso de pausa: resolva na área (D liga a caneta; E esconde o enunciado). Clique 2: gabarito A.</p>
+    <p>Questão oficial do IF Sudeste MG, prova de 2025 (também está na lista da professora).</p>
+  </aside>
+</section>
+
+<!-- Questão 2 -->
+<section class="slide questao" data-nome="Questão 2">
+  <div class="conteudo">
+    <div class="area-resolucao"></div>
+    <span class="pilula pilula-pausa" data-em="1:some">Pause o vídeo e tente</span>
+    <div class="painel-questao">
+      <p class="olho">Questão 2 · IF Sudeste MG 2013</p>
+      <p class="enunciado" style="font-size:24px">Diante dos compostos apresentados, H<sub>2</sub>S – H<sub>3</sub>PO<sub>4</sub> – Ca(OH)<sub>2</sub> – Sn(OH)<sub>4</sub>, podemos dizer que suas classificações são, respectivamente:</p>
+      <ol class="alternativas" style="gap:8px">
+        <li data-em="2:apaga" style="font-size:20px;padding:6px 14px"><b>A</b><span>Oxiácido, Triácido, moderado - Hidrácido, diácido, fraco - Dibase, forte, pouco solúvel - Tetrabase, fraca, praticamente insolúvel.</span></li>
+        <li data-em="2:apaga" style="font-size:20px;padding:6px 14px"><b>B</b><span>Hidrácido, diácido, fraco - Dibase, forte, pouco solúvel - Tetrabase, fraca, praticamente insolúvel - Oxiácido, Triácido, moderado.</span></li>
+        <li data-em="2:apaga" style="font-size:20px;padding:6px 14px"><b>C</b><span>Dibase, forte, pouco solúvel - Tetrabase, fraca, praticamente insolúvel - Hidrácido, diácido, fraco - Oxiácido, Triácido, moderado.</span></li>
+        <li data-em="2:apaga" style="font-size:20px;padding:6px 14px"><b>D</b><span>Tetrabase, fraca, praticamente insolúvel - Hidrácido, diácido, fraco - Oxiácido, Triácido, moderado - Dibase, forte, pouco solúvel.</span></li>
+        <li data-em="2:certo" style="font-size:20px;padding:6px 14px"><b>E</b><span>Hidrácido, diácido, fraco - Oxiácido, Triácido, moderado - Dibase, forte, pouco solúvel - Tetrabase, fraca, praticamente insolúvel.</span></li>
+      </ol>
+    </div>
+  </div>
+  <aside class="resolucao">
+    <p class="dados"><b>Dados:</b> classifique na ordem dada.</p>
+    <ol class="passos">
+      <li>H<sub>2</sub>S: sem O, 2 H, fraco.</li>
+      <li>H<sub>3</sub>PO<sub>4</sub>: com O, 3 H; 4 − 3 = 1: moderado.</li>
+      <li>Ca(OH)<sub>2</sub>: 2 OH; alcalinoterroso: forte, pouco solúvel.</li>
+      <li>Sn(OH)<sub>4</sub>: 4 OH; outro metal: fraca, insolúvel.</li>
+    </ol>
+    <p class="resposta"><b>Resposta:</b> hidrácido, diácido, fraco; oxiácido, triácido, moderado; dibase, forte, pouco solúvel; tetrabase, fraca, praticamente insolúvel. <b>Gabarito E.</b></p>
+    <p class="atencao"><b>Destaque no quadro:</b> siga a ordem: dois ácidos e depois duas bases.</p>
+    <ul class="erros">
+      <li><b>A</b> Troca os dois ácidos: o H<sub>2</sub>S é o hidrácido.</li>
+      <li><b>B</b> O 2º composto é o H<sub>3</sub>PO<sub>4</sub>, um oxiácido, não uma dibase.</li>
+      <li><b>C</b> Começa pelas bases, mas os dois primeiros são ácidos.</li>
+      <li><b>D</b> Começa por uma tetrabase; o 1º é o H<sub>2</sub>S.</li>
+    </ul>
+  </aside>
+  <aside class="notas">
+    <p>Clique 1 tira o aviso de pausa: resolva na área (D liga a caneta; E esconde o enunciado). Clique 2: gabarito E.</p>
+    <p>Questão oficial do IF Sudeste MG, prova de 2013 (2º semestre). Revisa ácidos (Parte 1) e bases.</p>
+  </aside>
+</section>
+
+<!-- Resumo -->
+<section class="slide" data-nome="Resumo">
+  <div class="conteudo">
+    <p class="olho">Resumo</p>
+    <h2 class="titulo">O essencial</h2>
+    <div class="resumo" style="position:absolute;left:0;right:0;top:150px">
+      <div><b>Base de Arrhenius:</b> em água, se <b>dissocia</b> e libera OH<sup>−</sup> como único ânion.</div>
+      <div><b>Dissociação:</b> os íons já existiam (base iônica). <b>Ionização:</b> os íons nascem na água (ácido).</div>
+      <div><b>Mono, di, tri, tetrabase:</b> nº de OH<sup>−</sup> = carga do metal.</div>
+      <div><b>Fortes:</b> famílias 1 e 2 (menos Mg(OH)<sub>2</sub>). <b>Fracas:</b> NH<sub>4</sub>OH e os demais metais.</div>
+      <div><b>Solúveis:</b> alcalinos e NH<sub>4</sub>OH; alcalinoterrosos: pouco; os demais: quase nada.</div>
+      <div><b>Nome:</b> hidróxido de + metal; Nox variável: ferro III (férrico), ferro II (ferroso).</div>
+    </div>
+    <div class="caixa caixa-atencao" style="position:absolute;left:580px;right:0;top:660px">
+      <div class="texto" style="font-size:30px"><b>NaOH:</b> soda cáustica, sabão. <b>Mg(OH)<sub>2</sub>:</b> leite de magnésia, antiácido.</div>
+    </div>
+  </div>
+  <aside class="notas"><p>Peça para tirarem um print desta tela.</p></aside>
+</section>
+
+<!-- A seguir -->
+<section class="slide capa" data-nome="A seguir">
+  <div class="estrelas"></div>
+  <div class="texto-capa" style="top:170px">
+    <span class="selo">Química · IF</span>
+    <p class="aula" style="font-size:26px">A seguir · Funções inorgânicas · Parte única</p>
+    <h1>Sais</h1>
+    <p class="sub">Neutralização, classificação e nomes</p>
+  </div>
+  <svg class="emblema" viewBox="0 0 640 640" aria-hidden="true">
+    <g stroke="#fff" stroke-opacity=".55" stroke-width="6"><path d="M200 200 H440 V440 H200 Z M200 320 H440 M320 200 V440"/></g>
+    <g><circle cx="200" cy="200" r="44" fill="#FFD10C"/><circle cx="440" cy="200" r="36" fill="#fff"/><circle cx="320" cy="200" r="36" fill="#fff"/>
+      <circle cx="200" cy="320" r="36" fill="#fff"/><circle cx="320" cy="320" r="44" fill="#FFD10C"/><circle cx="440" cy="320" r="36" fill="#fff"/>
+      <circle cx="200" cy="440" r="36" fill="#fff"/><circle cx="320" cy="440" r="36" fill="#fff"/><circle cx="440" cy="440" r="44" fill="#FFD10C"/></g>
+  </svg>
+  <img class="logo-capa" src="{{LOGO_BRANCO}}" alt="Quarks">
+  <aside class="notas"><p>Próxima: o que acontece quando um ácido encontra uma base (neutralização), os sais, seus nomes e os principais sais do dia a dia.</p></aside>
+</section>

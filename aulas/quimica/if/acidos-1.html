@@ -1,0 +1,475 @@
+<!--aula
+{"disciplina": "quimica", "curso": "IF", "assunto": "Ácidos", "parte": "Parte 1 de 2", "titulo": "Ionização e força dos ácidos", "scripts": ["animacoes-acidos-bases.js"]}
+-->
+<!-- Fonte: slides da professora (Química IF 2026, aula 11: funções inorgânicas, ácido de Arrhenius, ionização, classificação e força), completados com a apostila IF, Química, 4.1 Ácidos. Questões: IF Sudeste MG 2024 e 2023 (oficiais, também da lista da professora). -->
+<style>
+  .caixa, .card, .eqq, .linha-ex { box-sizing: border-box; }
+  .slide sub { font-size: .6em; vertical-align: -.24em; line-height: 0; }
+  .slide sup { font-size: .6em; vertical-align: .62em; line-height: 0; }
+  .est { font-size: .6em; font-weight: 700; color: var(--cinza); margin-left: 3px; letter-spacing: 0; }
+  .seta { display: inline-flex; flex-direction: column; align-items: center; line-height: .78; vertical-align: -.05em; margin: 0 .18em; }
+  .seta i { font: 700 .4em var(--fonte-texto); font-style: normal; color: var(--cinza); letter-spacing: 0; }
+  .eqq { background: var(--branco); border: 2px solid var(--lilas-2); border-radius: 24px; padding: 12px 28px; font: 800 40px var(--fonte-titulo); color: var(--roxo-titulo); letter-spacing: -.01em; white-space: nowrap; }
+  .eqq .nome { display: block; font: 600 24px var(--fonte-texto); color: var(--cinza); margin-top: 4px; letter-spacing: 0; white-space: normal; }
+  .eqq .et { display: inline-block; min-width: 150px; font: 800 22px var(--fonte-texto); letter-spacing: .08em; text-transform: uppercase; color: var(--d-forte); }
+  .linha-ex { background: var(--branco); border: 2px solid var(--lilas-2); border-radius: 24px; padding: 14px 26px; font-size: 30px; line-height: 1.3; }
+  .linha-ex b { color: var(--roxo-titulo); }
+  .card { background: var(--branco); border: 2px solid var(--lilas-2); border-radius: 28px; padding: 22px 28px; font-size: 28px; line-height: 1.32; color: var(--carvao); }
+  .card h3 { margin: 0 0 6px; font: 800 40px var(--fonte-titulo); letter-spacing: -.02em; color: var(--roxo-titulo); }
+  .card .f { font: 800 38px var(--fonte-titulo); color: var(--d-forte); letter-spacing: -.01em; }
+  .card .sub-h { margin: 0 0 12px; font-size: 25px; font-weight: 700; color: var(--cinza); }
+  .card ul { margin: 6px 0 0; padding-left: 28px; } .card li { margin: 3px 0; }
+  .card.destaque { background: var(--d-clara); border-color: color-mix(in srgb, var(--d) 35%, transparent); }
+  .chips { display: flex; flex-wrap: wrap; gap: 12px; }
+  .chip { display: inline-block; padding: 6px 20px; border-radius: 999px; background: var(--d-clara); color: var(--d-forte); font: 800 34px var(--fonte-titulo); }
+  .recip { box-sizing: content-box; background: linear-gradient(#F2F8FE, #DCEDFB); border: 3px solid #9CC3E6; border-radius: 26px; overflow: hidden; }
+  .legenda-ions { display: flex; flex-wrap: wrap; gap: 8px 22px; font-size: 25px; font-weight: 700; color: var(--carvao); }
+  .legenda-ions span { display: inline-flex; align-items: center; gap: 6px; }
+  .legenda-ions svg { width: 46px; height: 46px; }
+  .contador { font: 800 32px var(--fonte-titulo); color: var(--roxo-titulo); }
+  .tabela td, .tabela th { padding: 10px 34px; }
+  .tabela .f { font: 800 1.05em var(--fonte-titulo); color: var(--roxo-titulo); }
+  .tabela td.esq, .tabela th.esq { text-align: left; }
+  .regra { font: 800 44px var(--fonte-titulo); color: var(--roxo-titulo); letter-spacing: -.01em; }
+  .regra em { font-style: normal; color: var(--d); }
+  .regra .vazio { display: inline-block; min-width: 150px; border-bottom: 4px dashed var(--roxo-claro); color: var(--cinza); font-size: .6em; text-align: center; }
+  .lampada .luz { opacity: 0; transition: opacity 1.2s ease-in .6s; }
+  .mostra .lampada .luz, .lampada.mostra .luz { opacity: 1; }
+  /* cada átomo de uma molécula vibra sozinho (svg.vibra, como em Substâncias e misturas) */
+  @keyframes vib-a { 0%,100% { transform: translate(0,0); } 25% { transform: translate(1.6px,-1.2px); } 50% { transform: translate(-.8px,1.4px); } 75% { transform: translate(-1.4px,-.6px); } }
+  @keyframes vib-b { 0%,100% { transform: translate(0,0); } 25% { transform: translate(-1.4px,1px); } 50% { transform: translate(1.2px,-1.4px); } 75% { transform: translate(.6px,1.2px); } }
+  .slide.ativo .mostra svg.vibra .vib-a, .slide.ativo svg.vibra.sempre .vib-a { animation: vib-a 1.6s ease-in-out infinite; }
+  .slide.ativo .mostra svg.vibra .vib-b, .slide.ativo svg.vibra.sempre .vib-b { animation: vib-b 1.6s ease-in-out infinite; }
+  .rot { font-family: Figtree, sans-serif; font-weight: 800; text-anchor: middle; }
+  .func { display: flex; flex-direction: column; align-items: center; gap: 6px; text-align: center; }
+  .func h3 { margin: 0; }
+  .estrutura text { font-family: Figtree, sans-serif; font-weight: 800; text-anchor: middle; }
+  .estrutura .lig { stroke: #5E5A70; stroke-width: 6; stroke-linecap: round; }
+  .estrutura .anel-sim { fill: none; stroke: #FFD10C; stroke-width: 7; }
+  .estrutura .anel-nao { fill: none; stroke: #C63C28; stroke-width: 5; stroke-dasharray: 10 8; }
+</style>
+
+<svg width="0" height="0" style="position:absolute" aria-hidden="true">
+  <defs>
+    <radialGradient id="gO" cx=".35" cy=".3" r=".8"><stop offset="0" stop-color="#FF8A7A"/><stop offset="1" stop-color="#C8301F"/></radialGradient>
+    <radialGradient id="gH" cx=".35" cy=".3" r=".8"><stop offset="0" stop-color="#FFFFFF"/><stop offset="1" stop-color="#C9C4DC"/></radialGradient>
+    <radialGradient id="gCl" cx=".35" cy=".3" r=".8"><stop offset="0" stop-color="#9BE8AE"/><stop offset="1" stop-color="#22964A"/></radialGradient>
+    <radialGradient id="gF" cx=".35" cy=".3" r=".8"><stop offset="0" stop-color="#F2F59A"/><stop offset="1" stop-color="#A7AE1E"/></radialGradient>
+    <radialGradient id="gNa" cx=".35" cy=".3" r=".8"><stop offset="0" stop-color="#CBBFFF"/><stop offset="1" stop-color="#5B45C9"/></radialGradient>
+    <radialGradient id="gS" cx=".35" cy=".3" r=".8"><stop offset="0" stop-color="#FFEB85"/><stop offset="1" stop-color="#D1A800"/></radialGradient>
+    <radialGradient id="gN" cx=".35" cy=".3" r=".8"><stop offset="0" stop-color="#7FA8FF"/><stop offset="1" stop-color="#2A5BD0"/></radialGradient>
+    <radialGradient id="gP" cx=".35" cy=".3" r=".8"><stop offset="0" stop-color="#FFC08A"/><stop offset="1" stop-color="#D4661A"/></radialGradient>
+    <radialGradient id="gC" cx=".35" cy=".3" r=".8"><stop offset="0" stop-color="#8A8A96"/><stop offset="1" stop-color="#2E2E36"/></radialGradient>
+    <radialGradient id="gLuz" cx=".5" cy=".5" r=".5"><stop offset="0" stop-color="#FFE45C" stop-opacity=".9"/><stop offset="1" stop-color="#FFD10C" stop-opacity="0"/></radialGradient>
+  </defs>
+</svg>
+
+
+<!-- 1. Capa -->
+<section class="slide capa" data-nome="Capa">
+  <div class="estrelas"></div>
+  <div class="texto-capa" style="top:150px">
+    <span class="selo">Química · IF</span>
+    <p class="aula">Ácidos · Parte 1 de 2</p>
+    <h1 style="font-size:110px">Ionização e força dos ácidos</h1>
+    <p class="sub">Arrhenius, classificação e grau de ionização</p>
+  </div>
+  <svg class="emblema" viewBox="0 0 640 640" aria-hidden="true">
+    <g class="gira-lento"><ellipse cx="320" cy="320" rx="300" ry="128" fill="none" stroke="#fff" stroke-opacity=".38" stroke-width="2" transform="rotate(-10 320 320)"/></g>
+    <g class="gira"><ellipse cx="320" cy="320" rx="236" ry="196" fill="none" stroke="#FFD10C" stroke-opacity=".75" stroke-width="2.5" stroke-dasharray="3 14" stroke-linecap="round" transform="rotate(-8 320 320)"/>
+      <circle cx="84" cy="300" r="13" fill="#FFD10C" stroke="#fff" stroke-width="3"/></g>
+    <circle cx="320" cy="320" r="132" fill="#FFD10C"/>
+    <image href="{{SYM_ROXO}}" x="238" y="238" width="164" height="164"/>
+  </svg>
+  <img class="logo-capa" src="{{LOGO_BRANCO}}" alt="Quarks">
+  <aside class="notas"><p>Hoje: o que as funções inorgânicas são, o ácido de Arrhenius e a ionização (com H⁺ e H₃O⁺), as classificações dos ácidos (oxigênio, número de H ionizáveis) e a força pelo grau de ionização.</p><p>Na Parte 2: os nomes dos ácidos e os principais ácidos do dia a dia.</p></aside>
+</section>
+
+<!-- Funções inorgânicas -->
+<section class="slide" data-nome="Funções inorgânicas">
+  <div class="conteudo">
+    <p class="olho">Para começar</p>
+    <h2 class="titulo">As funções inorgânicas</h2>
+    <div class="caixa caixa-fundamental" data-passo="1" style="position:absolute;left:0;right:0;top:160px;padding:22px 34px">
+      <span class="rotulo">Função inorgânica</span>
+      <div class="texto" style="font-size:33px">Conjunto de substâncias com <b>propriedades químicas semelhantes</b>. As quatro: <b>ácidos, bases, sais e óxidos</b>.</div>
+    </div>
+    <div style="position:absolute;left:0;right:0;top:350px;display:grid;grid-template-columns:repeat(4,1fr);gap:28px">
+      <div class="card func" data-passo="2"><h3>Ácidos</h3><span class="f">C<sub>6</sub>H<sub>8</sub>O<sub>7</sub></span><span>ácido cítrico, do <b>limão</b></span></div>
+      <div class="card func" data-passo="3"><h3>Bases</h3><span class="f">NaOH</span><span><b>soda cáustica</b></span></div>
+      <div class="card func" data-passo="4"><h3>Sais</h3><span class="f">NaCl</span><span><b>sal</b> de cozinha</span></div>
+      <div class="card func" data-passo="5"><h3>Óxidos</h3><span class="f">CaO</span><span><b>cal</b> virgem</span></div>
+    </div>
+    <div class="caixa caixa-atencao" data-passo="6" style="position:absolute;left:580px;right:0;top:640px">
+      <div class="texto" style="font-size:30px">Agora: os <b>ácidos</b>. Bases, sais e óxidos vêm depois, um de cada vez.</div>
+    </div>
+  </div>
+  <aside class="notas"><p>Clique 1: a definição. Cliques 2 a 5: um exemplo do dia a dia de cada função (no material da professora: o limão, com ácido cítrico, e a soda cáustica, NaOH).</p><p>O ácido cítrico é orgânico; está aqui só como exemplo de coisa azeda. Os ácidos que o IF cobra são os inorgânicos (HCl, H₂SO₄, HNO₃...).</p></aside>
+</section>
+
+<!-- Ácido de Arrhenius -->
+<section class="slide" data-nome="Ácido de Arrhenius">
+  <div class="conteudo">
+    <p class="olho">A definição de Arrhenius</p>
+    <h2 class="titulo">O que é um ácido</h2>
+    <div class="recip" data-passo="1" style="position:absolute;left:0;top:165px;width:760px;height:420px">
+      <div data-anima="ions" data-modo="ionizacao" data-anima-passo="1" data-w="760" data-h="420" data-r="14" data-n-agua="22" data-n-acido="8" data-alfa="1" data-acido="Cl" data-contador="cont-arr" data-texto="{k} de {n} moléculas de HCl ionizadas" style="width:760px;height:420px"></div>
+    </div>
+    <div style="position:absolute;left:830px;right:0;top:160px;display:flex;flex-direction:column;gap:20px">
+      <div data-passo="1"><div class="legenda-ions"><span><svg viewBox="-25 -25 50 50" aria-hidden="true"><circle cx="14.3" cy="0.0" r="6.6" fill="url(#gH)" stroke="#8C84B8" stroke-width="1.5"/><circle cx="0.0" cy="0.0" r="13.0" fill="url(#gCl)" stroke="#1E7A3C" stroke-width="1.5"/></svg><em style="font-style:normal">HCl</em></span><span><svg viewBox="-25 -25 50 50" aria-hidden="true"><circle cx="-9.0" cy="6.8" r="6.6" fill="url(#gH)" stroke="#8C84B8" stroke-width="1.5"/><circle cx="9.0" cy="6.8" r="6.6" fill="url(#gH)" stroke="#8C84B8" stroke-width="1.5"/><circle cx="0.0" cy="0.0" r="11.0" fill="url(#gO)" stroke="#8E2115" stroke-width="1.5"/></svg><em style="font-style:normal">H<sub>2</sub>O</em></span><span><svg viewBox="-25 -25 50 50" aria-hidden="true"><circle cx="-9.5" cy="6.4" r="6.6" fill="url(#gH)" stroke="#8C84B8" stroke-width="1.5"/><circle cx="9.5" cy="6.4" r="6.6" fill="url(#gH)" stroke="#8C84B8" stroke-width="1.5"/><circle cx="0.0" cy="-11.2" r="6.6" fill="url(#gH)" stroke="#8C84B8" stroke-width="1.5"/><circle cx="0.0" cy="0.0" r="11.0" fill="url(#gO)" stroke="#8E2115" stroke-width="1.5"/><g transform="translate(10.4 -11.6)"><circle r="5.7" fill="#fff" stroke="#C63C28" stroke-width="2"/><text text-anchor="middle" y="3.3" font-family="Figtree,sans-serif" font-weight="800" font-size="10.4" fill="#C63C28">+</text></g></svg><em style="font-style:normal">H<sub>3</sub>O<sup>+</sup></em></span><span><svg viewBox="-25 -25 50 50" aria-hidden="true"><circle cx="0.0" cy="0.0" r="13.0" fill="url(#gCl)" stroke="#1E7A3C" stroke-width="1.5"/><g transform="translate(10.4 -11.6)"><circle r="5.7" fill="#fff" stroke="#1F6FB3" stroke-width="2"/><text text-anchor="middle" y="3.3" font-family="Figtree,sans-serif" font-weight="800" font-size="10.4" fill="#1F6FB3">−</text></g></svg><em style="font-style:normal">Cl<sup>−</sup></em></span></div>
+        <p class="contador" id="cont-arr" style="margin:10px 0 0;font-size:28px">&nbsp;</p></div>
+      <div class="caixa caixa-fundamental" data-passo="2" style="padding:22px 30px">
+        <span class="rotulo">Ácido de Arrhenius</span>
+        <div class="texto" style="font-size:31px">Em água, se <b>ioniza</b> e libera o cátion <b>H<sup>+</sup></b> como <b>único cátion</b>.</div>
+      </div>
+      <div class="eqq" data-passo="3">HCl <span class="est">(g)</span> <span class="seta"><i>água</i>→</span> H<sup>+</sup> <span class="est">(aq)</span> + Cl<sup>−</sup> <span class="est">(aq)</span><span class="nome">ionização: na água aparecem íons que não existiam</span></div>
+      <div class="linha-ex" data-passo="4">É o H<sup>+</sup> que dá as propriedades dos ácidos. Todo ácido de Arrhenius tem <b>H</b> na fórmula.</div>
+    </div>
+  </div>
+  <aside class="notas"><p>Clique 1: as moléculas de HCl (gás) entram na água; cada uma passa o seu H⁺ para uma molécula de água (o H que viaja, com contorno vermelho), que vira H₃O⁺, e o resto vira o íon cloreto, Cl⁻. O contador acompanha.</p><p>Clique 2: a definição (Svante Arrhenius, fim do século XIX). Clique 3: a equação de ionização. Clique 4: o H⁺ é o responsável pelas propriedades dos ácidos.</p><p>Ionização = formação de íons a partir de uma substância molecular. O HCl puro não tem íons.</p></aside>
+</section>
+
+<!-- O íon hidrônio -->
+<section class="slide" data-nome="O íon hidrônio">
+  <div class="conteudo">
+    <p class="olho">A definição de Arrhenius não é 100% correta</p>
+    <h2 class="titulo">O H<sup>+</sup> não fica sozinho na água</h2>
+    <p class="texto" data-passo="1" style="position:absolute;left:0;right:0;top:150px;margin:0;font-size:32px">O H<sup>+</sup> se liga a uma molécula de água e forma o íon <b>hidrônio, H<sub>3</sub>O<sup>+</sup></b>: H<sup>+</sup> + H<sub>2</sub>O → H<sub>3</sub>O<sup>+</sup>.</p>
+    <div style="position:absolute;left:0;right:0;top:232px;display:flex;flex-direction:column;gap:14px">
+      <div class="eqq" data-passo="2" style="font-size:36px;padding:10px 26px;display:flex;justify-content:space-between;align-items:center"><span>HCl <span class="est">(g)</span> + H<sub>2</sub>O <span class="est">(l)</span> → H<sub>3</sub>O<sup>+</sup> <span class="est">(aq)</span> + Cl<sup>−</sup> <span class="est">(aq)</span></span><span class="nome" style="margin:0;font-size:23px">ácido clorídrico</span></div>
+      <div class="eqq" data-passo="3" style="font-size:36px;padding:10px 26px;display:flex;justify-content:space-between;align-items:center"><span>HNO<sub>3</sub> <span class="est">(l)</span> + H<sub>2</sub>O <span class="est">(l)</span> → H<sub>3</sub>O<sup>+</sup> <span class="est">(aq)</span> + NO<sub>3</sub><sup>−</sup> <span class="est">(aq)</span></span><span class="nome" style="margin:0;font-size:23px">ácido nítrico</span></div>
+      <div class="eqq" data-passo="4" style="font-size:36px;padding:10px 26px;display:flex;justify-content:space-between;align-items:center"><span>H<sub>2</sub>SO<sub>4</sub> <span class="est">(l)</span> + 2 H<sub>2</sub>O <span class="est">(l)</span> → 2 H<sub>3</sub>O<sup>+</sup> <span class="est">(aq)</span> + SO<sub>4</sub><sup>2−</sup> <span class="est">(aq)</span></span><span class="nome" style="margin:0;font-size:23px">ácido sulfúrico: 2 H⁺</span></div>
+      <div class="eqq" data-passo="5" style="font-size:36px;padding:10px 26px;display:flex;justify-content:space-between;align-items:center"><span>H<sub>3</sub>PO<sub>4</sub> <span class="est">(s)</span> + 3 H<sub>2</sub>O <span class="est">(l)</span> → 3 H<sub>3</sub>O<sup>+</sup> <span class="est">(aq)</span> + PO<sub>4</sub><sup>3−</sup> <span class="est">(aq)</span></span><span class="nome" style="margin:0;font-size:23px">ácido fosfórico: 3 H⁺</span></div>
+    </div>
+    <div class="caixa caixa-atencao" data-passo="6" style="position:absolute;left:580px;right:0;top:650px">
+      <div class="texto" style="font-size:29px">H<sup>+</sup> e H<sub>3</sub>O<sup>+</sup> contam a mesma história. Muitas provas escrevem só H<sup>+</sup>: é uma simplificação.</div>
+    </div>
+  </div>
+  <aside class="notas"><p>Clique 1: a ideia do hidrônio. Cliques 2 a 5: uma ionização por clique; repare que o número de H₃O⁺ é igual ao número de H que o ácido libera, e que cada H⁺ gasta uma água.</p><p>Correções do material da professora: o HNO₃ e o H₂SO₄ puros são <b>líquidos</b> (l), não gases (g); o H₃PO₄ puro é sólido (s). E a ionização total do H₂SO₄ gasta <b>2</b> moléculas de água (H₂SO₄ + 2 H₂O → 2 H₃O⁺ + SO₄²⁻); com 1 água só, a equação não fecha.</p><p>O HCl puro é gás mesmo (o ácido clorídrico do dia a dia é a solução dele em água).</p></aside>
+</section>
+
+<!-- Propriedades dos ácidos -->
+<section class="slide" data-nome="Propriedades dos ácidos">
+  <div class="conteudo">
+    <p class="olho">Propriedades dos ácidos</p>
+    <h2 class="titulo">Como reconhecer um ácido</h2>
+    <div style="position:absolute;left:0;width:700px;top:165px;display:flex;flex-direction:column;gap:16px">
+      <div class="linha-ex" data-passo="1"><b>Sabor azedo</b> (limão, vinagre). No laboratório, <b>nunca</b> se prova nada!</div>
+      <div class="linha-ex" data-passo="1">Em água, se <b>ionizam</b> e <b>conduzem eletricidade</b>.</div>
+      <div class="linha-ex" data-passo="3">Mudam a cor dos <b>indicadores</b>.</div>
+      <div class="linha-ex" data-passo="3">Reagem com o <b>calcário</b> (soltam gás carbônico) e atacam muitos <b>metais</b>.</div>
+    </div>
+    <div style="position:absolute;left:760px;top:140px;display:flex;gap:40px">
+      <div data-passo="1" style="position:relative;width:480px;height:520px">
+        <svg class="lampada" viewBox="0 0 480 470" style="position:absolute;left:0;top:0;width:480px;height:470px;overflow:visible" aria-hidden="true">
+          
+          <circle cx="240" cy="64" r="34" fill="#F4F2FA" stroke="#7F7A99" stroke-width="5"/>
+          <path d="M226 98 h28 v22 h-28 z" fill="#B9B0E6" stroke="#7F7A99" stroke-width="4"/>
+          <path d="M232 64 l8 -12 l8 12" fill="none" stroke="#7F7A99" stroke-width="3"/>
+          <g fill="none" stroke="#5E5A70" stroke-width="5" stroke-linejoin="round"><path d="M226 112 H150 V300"/><path d="M254 112 H330 V300"/></g>
+          <g transform="translate(90 112)"><rect x="-26" y="-18" width="52" height="36" rx="6" fill="#FFD10C" stroke="#8A6A00" stroke-width="3"/><text class="rot" y="9" font-size="22" fill="#5E4A00">+ −</text></g>
+          <rect x="138" y="240" width="24" height="170" rx="6" fill="#9A95AD"/><rect x="318" y="240" width="24" height="170" rx="6" fill="#9A95AD"/>
+          <path d="M60 200 v230 a30 30 0 0 0 30 30 h300 a30 30 0 0 0 30 -30 v-230" fill="none" stroke="#7F7A99" stroke-width="6" stroke-linecap="round"/>
+        </svg>
+        <div style="position:absolute;left:66px;top:246px;width:348px;height:208px;border-radius:0 0 26px 26px;overflow:hidden;background:linear-gradient(#F2F8FE,#DCEDFB)"><svg viewBox="0 0 348 208" style="display:block;width:348px;height:208px" aria-hidden="true"><g fill="#fff" stroke="#B9B0E6" stroke-width="3"><path d="M108 60 l22 -12 l22 12 v24 l-22 12 l-22 -12 z"/><path d="M178 120 l22 -12 l22 12 v24 l-22 12 l-22 -12 z"/><path d="M300 50 l22 -12 l22 12 v24 l-22 12 l-22 -12 z"/><path d="M20 130 l22 -12 l22 12 v24 l-22 12 l-22 -12 z"/><path d="M118 160 l22 -12 l22 12 v24 l-22 12 l-22 -12 z"/><path d="M296 150 l22 -12 l22 12 v24 l-22 12 l-22 -12 z"/></g></svg></div>
+        <svg viewBox="0 0 480 470" style="position:absolute;left:0;top:0;width:480px;height:470px;pointer-events:none" aria-hidden="true"><rect x="138" y="240" width="24" height="170" rx="6" fill="#9A95AD" fill-opacity=".85"/><rect x="318" y="240" width="24" height="170" rx="6" fill="#9A95AD" fill-opacity=".85"/></svg>
+        <p style="position:absolute;left:0;right:0;top:474px;margin:0;text-align:center;font-size:26px;font-weight:700;color:var(--carvao)">açúcar em água (sem íons): <b>não acende</b></p>
+      </div>
+      <div data-passo="2" style="position:relative;width:480px;height:520px">
+        <svg class="lampada" viewBox="0 0 480 470" style="position:absolute;left:0;top:0;width:480px;height:470px;overflow:visible" aria-hidden="true">
+          <circle class="luz" cx="240" cy="64" r="80" fill="url(#gLuz)"/><circle class="luz" cx="240" cy="64" r="34" fill="#FFE45C"/>
+          <circle cx="240" cy="64" r="34" fill="none" stroke="#7F7A99" stroke-width="5"/>
+          <path d="M226 98 h28 v22 h-28 z" fill="#B9B0E6" stroke="#7F7A99" stroke-width="4"/>
+          <path d="M232 64 l8 -12 l8 12" fill="none" stroke="#7F7A99" stroke-width="3"/>
+          <g fill="none" stroke="#5E5A70" stroke-width="5" stroke-linejoin="round"><path d="M226 112 H150 V300"/><path d="M254 112 H330 V300"/></g>
+          <g transform="translate(90 112)"><rect x="-26" y="-18" width="52" height="36" rx="6" fill="#FFD10C" stroke="#8A6A00" stroke-width="3"/><text class="rot" y="9" font-size="22" fill="#5E4A00">+ −</text></g>
+          <rect x="138" y="240" width="24" height="170" rx="6" fill="#9A95AD"/><rect x="318" y="240" width="24" height="170" rx="6" fill="#9A95AD"/>
+          <path d="M60 200 v230 a30 30 0 0 0 30 30 h300 a30 30 0 0 0 30 -30 v-230" fill="none" stroke="#7F7A99" stroke-width="6" stroke-linecap="round"/>
+        </svg>
+        <div style="position:absolute;left:66px;top:246px;width:348px;height:208px;border-radius:0 0 26px 26px;overflow:hidden;background:linear-gradient(#F2F8FE,#DCEDFB)"><div data-anima="ions" data-modo="ionizacao" data-anima-passo="2" data-pronto="1" data-w="348" data-h="208" data-r="9" data-n-agua="9" data-n-acido="4" data-alfa="1" data-acido="Cl" data-semente="5" style="width:348px;height:208px"></div></div>
+        <svg viewBox="0 0 480 470" style="position:absolute;left:0;top:0;width:480px;height:470px;pointer-events:none" aria-hidden="true"><rect x="138" y="240" width="24" height="170" rx="6" fill="#9A95AD" fill-opacity=".85"/><rect x="318" y="240" width="24" height="170" rx="6" fill="#9A95AD" fill-opacity=".85"/></svg>
+        <p style="position:absolute;left:0;right:0;top:474px;margin:0;text-align:center;font-size:26px;font-weight:700;color:var(--carvao)">HCl em água: <b>acende</b></p>
+      </div>
+    </div>
+    <div class="caixa caixa-atencao" data-passo="4" style="position:absolute;left:760px;right:0;top:700px;padding:20px 30px">
+      <div class="texto" style="font-size:28px">O ácido <b>puro</b> é molecular e quase não conduz: os íons livres só aparecem <b>na água</b>.</div>
+    </div>
+  </div>
+  <aside class="notas"><p>Clique 1: o sabor azedo e a condução; o copo com açúcar dissolvido: a lâmpada fica apagada (o açúcar não forma íons). Clique 2: o HCl em água, com os íons H₃O⁺ e Cl⁻ andando: a lâmpada acende. Cliques 3 e 4: as outras propriedades e o erro mais comum.</p><p>Quem leva a corrente na solução são os íons livres. É por isso que o suco de limão acende a lâmpada do circuito simples.</p></aside>
+</section>
+
+<!-- Hidrácidos e oxiácidos -->
+<section class="slide" data-nome="Hidrácidos e oxiácidos">
+  <div class="conteudo">
+    <p class="olho">Classificação 1 · Oxigênio na molécula</p>
+    <h2 class="titulo">Tem oxigênio ou não?</h2>
+    <div style="position:absolute;left:0;right:0;top:170px;display:grid;grid-template-columns:1fr 1fr;gap:40px">
+      <div class="card" data-passo="1" style="padding:30px 36px">
+        <h3>Hidrácidos</h3><p class="sub-h">ácidos <b>sem</b> oxigênio</p>
+        <div class="chips"><span class="chip">HCl</span><span class="chip">HBr</span><span class="chip">HF</span><span class="chip">H<sub>2</sub>S</span></div>
+      </div>
+      <div class="card" data-passo="2" style="padding:30px 36px">
+        <h3>Oxiácidos</h3><p class="sub-h">ácidos <b>com</b> oxigênio</p>
+        <div class="chips"><span class="chip">HNO<sub>3</sub></span><span class="chip">H<sub>2</sub>SO<sub>4</sub></span><span class="chip">H<sub>3</sub>PO<sub>4</sub></span><span class="chip">H<sub>2</sub>CO<sub>3</sub></span></div>
+      </div>
+    </div>
+    <div class="caixa caixa-fundamental" data-passo="3" style="position:absolute;left:0;right:0;top:430px;padding:22px 34px">
+      <div class="texto" style="font-size:31px">Olhe a fórmula: tem <b>O</b>? É <b>oxiácido</b>. Não tem? É <b>hidrácido</b>.</div>
+    </div>
+  </div>
+  <aside class="notas"><p>Clique 1: os hidrácidos (só H e outro elemento, ou H e um grupo sem O). Clique 2: os oxiácidos. Clique 3: a regra.</p><p>Essa classificação também decide o nome do ácido (Parte 2): hidrácido termina em -ídrico.</p></aside>
+</section>
+
+<!-- Número de H ionizáveis -->
+<section class="slide" data-nome="Número de H ionizáveis">
+  <div class="conteudo">
+    <p class="olho">Classificação 2 · Quantos H⁺ a molécula libera</p>
+    <h2 class="titulo">Monoácidos, diácidos, triácidos...</h2>
+    <table class="tabela" style="position:absolute;left:0;right:0;top:165px;font-size:33px;width:100%">
+      <tr><th class="esq">Classe</th><th>Libera</th><th class="esq">Exemplos</th></tr>
+      <tr data-passo="1"><td class="esq"><b>Monoácido</b></td><td>1 H<sup>+</sup></td><td class="esq"><span class="f">HCl</span>, <span class="f">HNO<sub>3</sub></span></td></tr>
+      <tr data-passo="2"><td class="esq"><b>Diácido</b></td><td>2 H<sup>+</sup></td><td class="esq"><span class="f">H<sub>2</sub>SO<sub>4</sub></span>, <span class="f">H<sub>2</sub>CO<sub>3</sub></span></td></tr>
+      <tr data-passo="3"><td class="esq"><b>Triácido</b></td><td>3 H<sup>+</sup></td><td class="esq"><span class="f">H<sub>3</sub>PO<sub>4</sub></span>, <span class="f">H<sub>3</sub>BO<sub>3</sub></span></td></tr>
+      <tr data-passo="4"><td class="esq"><b>Tetrácido</b></td><td>4 H<sup>+</sup></td><td class="esq"><span class="f">H<sub>4</sub>P<sub>2</sub>O<sub>7</sub></span>, <span class="f">H<sub>4</sub>SiO<sub>4</sub></span></td></tr>
+    </table>
+    <div class="caixa caixa-atencao" data-passo="5" style="position:absolute;left:580px;right:0;top:650px">
+      <div class="texto" style="font-size:30px">Conta-se o H que vira H<sup>+</sup> (o <b>ionizável</b>), não todo H da fórmula.</div>
+    </div>
+  </div>
+  <aside class="notas"><p>Uma linha por clique. Clique 5: o aviso que prepara a próxima tela (o H₃PO₃).</p><p>Nos oxiácidos, os H ionizáveis são os ligados a oxigênio. Para o IF, nos ácidos comuns, todos os H da fórmula são ionizáveis; a exceção que cai é o H₃PO₃ (e o H₃PO₂).</p></aside>
+</section>
+
+<!-- Ionização em etapas -->
+<section class="slide" data-nome="Ionização em etapas">
+  <div class="conteudo">
+    <p class="olho">Ácidos com mais de um H⁺</p>
+    <h2 class="titulo">Um H<sup>+</sup> de cada vez</h2>
+    <div style="position:absolute;left:0;right:0;top:170px;display:flex;flex-direction:column;gap:18px">
+      <div class="eqq" data-passo="1"><span class="et">1ª etapa</span>H<sub>2</sub>SO<sub>4</sub> <span class="est">(l)</span> + H<sub>2</sub>O <span class="est">(l)</span> → H<sub>3</sub>O<sup>+</sup> <span class="est">(aq)</span> + HSO<sub>4</sub><sup>−</sup> <span class="est">(aq)</span><span class="nome">ionização parcial: sobrou um H no ânion</span></div>
+      <div class="eqq" data-passo="2"><span class="et">2ª etapa</span>HSO<sub>4</sub><sup>−</sup> <span class="est">(aq)</span> + H<sub>2</sub>O <span class="est">(l)</span> → H<sub>3</sub>O<sup>+</sup> <span class="est">(aq)</span> + SO<sub>4</sub><sup>2−</sup> <span class="est">(aq)</span><span class="nome">sai o segundo H⁺</span></div>
+      <div class="eqq" data-passo="3" style="background:var(--d-clara)"><span class="et">Total</span>H<sub>2</sub>SO<sub>4</sub> <span class="est">(l)</span> + 2 H<sub>2</sub>O <span class="est">(l)</span> → 2 H<sub>3</sub>O<sup>+</sup> <span class="est">(aq)</span> + SO<sub>4</sub><sup>2−</sup> <span class="est">(aq)</span><span class="nome">ionização total: a soma das etapas</span></div>
+    </div>
+    <div class="caixa caixa-atencao" data-passo="4" style="position:absolute;left:580px;right:0;top:650px">
+      <div class="texto" style="font-size:30px">A <b>1ª ionização é sempre a mais fácil</b>: tirar H<sup>+</sup> de um íon já negativo custa mais.</div>
+    </div>
+  </div>
+  <aside class="notas"><p>Uma etapa por clique. Clique 3: somando as duas, o HSO₄⁻ aparece e some, e fica a ionização total. Clique 4: a primeira etapa é a mais fácil (o H⁺ é atraído pelo ânion negativo que sobra).</p><p>Correção do material da professora: lá a 1ª etapa estava escrita como H₂SO₄ + H₂O → H⁺ + HSO₄⁻, com a água de um lado e sem o H₃O⁺ do outro; a equação não fecha. Ou se escreve com H₃O⁺ (como aqui), ou sem a água: H₂SO₄ → H⁺ + HSO₄⁻. E o H₂SO₄ puro é líquido (l).</p></aside>
+</section>
+
+<!-- Ácido fosforoso -->
+<section class="slide" data-nome="Ácido fosforoso">
+  <div class="conteudo">
+    <p class="olho">Nem todo H é ionizável</p>
+    <h2 class="titulo">O H<sub>3</sub>PO<sub>3</sub> tem 3 H, mas libera só 2</h2>
+    <div data-passo="1"><svg class="estrutura" viewBox="0 0 540 420" style="position:absolute;left:0;top:165px;width:540px;height:420px" aria-hidden="true">
+      <rect x="2" y="2" width="536" height="416" rx="30" fill="#FBFAFF" stroke="#E4DFF7" stroke-width="3"/>
+      <g class="lig"><path d="M262 205 V110 M278 205 V110"/><path d="M270 215 H170 M90 215 H150" /><path d="M270 215 H370 M390 215 H450"/><path d="M270 225 V320"/></g>
+      <g data-passo="2"><circle class="anel-sim" cx="70" cy="215" r="34"/><circle class="anel-sim" cx="470" cy="215" r="34"/></g>
+      <g data-passo="3"><circle class="anel-nao" cx="270" cy="345" r="36"/></g>
+      <circle cx="270" cy="215" r="44" fill="url(#gP)" stroke="#8A3F08" stroke-width="2"/><text x="270" y="229" font-size="38" fill="#fff">P</text>
+      <circle cx="270" cy="88" r="36" fill="url(#gO)" stroke="#8E2115" stroke-width="2"/><text x="270" y="101" font-size="34" fill="#fff">O</text>
+      <circle cx="160" cy="215" r="36" fill="url(#gO)" stroke="#8E2115" stroke-width="2"/><text x="160" y="228" font-size="34" fill="#fff">O</text>
+      <circle cx="380" cy="215" r="36" fill="url(#gO)" stroke="#8E2115" stroke-width="2"/><text x="380" y="228" font-size="34" fill="#fff">O</text>
+      <circle cx="70" cy="215" r="25" fill="url(#gH)" stroke="#8C84B8" stroke-width="2"/><text x="70" y="226" font-size="28" fill="#3F2FA0">H</text>
+      <circle cx="470" cy="215" r="25" fill="url(#gH)" stroke="#8C84B8" stroke-width="2"/><text x="470" y="226" font-size="28" fill="#3F2FA0">H</text>
+      <circle cx="270" cy="345" r="25" fill="url(#gH)" stroke="#8C84B8" stroke-width="2"/><text x="270" y="356" font-size="28" fill="#3F2FA0">H</text>
+      <text x="270" y="400" font-size="24" fill="#C63C28" data-passo="3">ligado ao P: não sai</text>
+      <text x="120" y="290" font-size="24" fill="#8A6A00" data-passo="2">ligados ao O: saem</text>
+    </svg></div>
+    <div style="position:absolute;left:600px;right:0;top:165px;display:flex;flex-direction:column;gap:16px">
+      <div class="eqq" data-passo="4" style="font-size:35px"><span class="et">1ª etapa</span>H<sub>3</sub>PO<sub>3</sub> + H<sub>2</sub>O → H<sub>3</sub>O<sup>+</sup> + H<sub>2</sub>PO<sub>3</sub><sup>−</sup></div>
+      <div class="eqq" data-passo="5" style="font-size:35px"><span class="et">2ª etapa</span>H<sub>2</sub>PO<sub>3</sub><sup>−</sup> + H<sub>2</sub>O → H<sub>3</sub>O<sup>+</sup> + HPO<sub>3</sub><sup>2−</sup></div>
+      <div class="linha-ex" data-passo="6" style="font-size:30px"><b>3ª etapa: não ocorre.</b> O HPO<sub>3</sub><sup>2−</sup> não solta o H preso ao fósforo.</div>
+      <div class="caixa caixa-fundamental" data-passo="7" style="padding:22px 30px">
+        <div class="texto" style="font-size:31px">Só é ionizável o H <b>ligado ao oxigênio</b>. O H<sub>3</sub>PO<sub>3</sub> é <b>diácido</b>.</div>
+      </div>
+    </div>
+  </div>
+  <aside class="notas"><p>Clique 1: a estrutura do ácido fosforoso. Clique 2: os dois H ligados a oxigênio (ionizáveis). Clique 3: o H ligado direto ao fósforo (não ionizável). Cliques 4 e 5: as duas etapas, com os ânions di-hidrogenofosfito (H₂PO₃⁻) e hidrogenofosfito (HPO₃²⁻). Cliques 6 e 7: a conclusão.</p><p>Correção do material da professora: as etapas do H₃PO₃ estavam com os ânions H₂PO₂⁻, HPO₂²⁻ e PO₂³⁻ (fórmulas erradas: o H₃PO₃ tem 3 oxigênios, e eles não saem na ionização). O certo é H₂PO₃⁻ e HPO₃²⁻. E a 3ª etapa, que lá aparecia escrita, não ocorre: não existe PO₃³⁻ vindo dele.</p><p>O mesmo acontece com o H₃PO₂ (ácido hipofosforoso): só 1 H ligado a O, então é monoácido.</p></aside>
+</section>
+
+<!-- Força dos ácidos -->
+<section class="slide" data-nome="Força dos ácidos">
+  <div class="conteudo">
+    <p class="olho">Força dos ácidos</p>
+    <h2 class="titulo">Quantas moléculas se ionizam?</h2>
+    <div style="position:absolute;left:0;top:160px;width:1110px;display:grid;grid-template-columns:1fr 1fr;gap:50px">
+      <div data-passo="1" style="display:flex;flex-direction:column;gap:10px">
+        <p class="contador" style="margin:0">HCl em água</p>
+        <div class="recip" style="width:528px;height:300px"><div data-anima="ions" data-modo="ionizacao" data-anima-passo="1" data-w="528" data-h="300" data-r="10" data-n-agua="14" data-n-acido="12" data-intervalo="0.7" data-alfa="0.92" data-acido="Cl" data-semente="21" data-contador="cont-hcl" data-texto="{k} de {n} ionizadas" style="width:528px;height:300px"></div></div>
+        <p class="contador" id="cont-hcl" style="margin:0;font-size:28px">&nbsp;</p>
+      </div>
+      <div data-passo="1" style="display:flex;flex-direction:column;gap:10px">
+        <p class="contador" style="margin:0">HF em água</p>
+        <div class="recip" style="width:528px;height:300px"><div data-anima="ions" data-modo="ionizacao" data-anima-passo="1" data-w="528" data-h="300" data-r="10" data-n-agua="14" data-n-acido="12" data-intervalo="0.7" data-alfa="0.08" data-acido="F" data-semente="33" data-contador="cont-hf" data-texto="{k} de {n} ionizadas" style="width:528px;height:300px"></div></div>
+        <p class="contador" id="cont-hf" style="margin:0;font-size:28px">&nbsp;</p>
+      </div>
+    </div>
+    <div style="position:absolute;left:1170px;right:0;top:160px;display:flex;flex-direction:column;gap:16px">
+      <div class="caixa caixa-fundamental" data-passo="2" style="padding:20px 26px">
+        <span class="rotulo">Grau de ionização</span>
+        <p style="margin:4px 0 0;font:800 38px var(--fonte-titulo);color:var(--roxo-titulo)">α = <span style="display:inline-flex;flex-direction:column;align-items:center;vertical-align:middle;font-size:28px;line-height:1.15"><span style="border-bottom:3px solid currentColor;padding:0 6px">ionizadas</span><span>dissolvidas</span></span></p>
+      </div>
+      <div class="linha-ex" data-passo="3" style="font-size:28px"><b>Forte:</b> α &gt; 50%<br><b>Moderado:</b> 5% &lt; α &lt; 50%<br><b>Fraco:</b> α &lt; 5%</div>
+      <div class="linha-ex" data-passo="4" style="font-size:28px"><b>HCl:</b> 92 de cada 100 → α = 0,92 = <b>92%</b>: forte</div>
+      <div class="linha-ex" data-passo="5" style="font-size:28px"><b>HF:</b> 8 de cada 100 → α = 0,08 = <b>8%</b>: moderado</div>
+    </div>
+    <div class="caixa caixa-atencao" data-passo="6" style="position:absolute;left:580px;width:530px;top:650px;padding:20px 28px">
+      <div class="texto" style="font-size:28px">Força é <b>quanto</b> se ioniza, não quantos H a molécula tem.</div>
+    </div>
+  </div>
+  <aside class="notas"><p>Clique 1: 12 moléculas de cada ácido entram na água. Quase todas as de HCl se ionizam; das de HF, quase nenhuma (o contador mostra). 11 de 12 ≈ 92% e 1 de 12 ≈ 8%: é a mesma proporção do material da professora.</p><p>Clique 2: a definição do grau de ionização (α). Clique 3: as faixas. Cliques 4 e 5: os exemplos da professora, conta: α = 92/100 = 0,92 = 92% (forte, mais de 50%); α = 8/100 = 0,08 = 8% (moderado, entre 5% e 50%). Clique 6: o erro comum.</p><p>O H₃PO₄ tem 3 H e é só moderado; o HCl tem 1 H e é forte.</p></aside>
+</section>
+
+<!-- Força pela fórmula -->
+<section class="slide" data-nome="Força pela fórmula">
+  <div class="conteudo">
+    <p class="olho">Sem o grau de ionização</p>
+    <h2 class="titulo">Como saber a força pela fórmula</h2>
+    <div style="position:absolute;left:0;right:0;top:160px;display:grid;grid-template-columns:720px 1fr;gap:40px">
+      <div class="card" data-passo="1">
+        <h3>Hidrácidos</h3>
+        <ul style="padding-left:24px">
+          <li><b>Fortes:</b> HCl, HBr, HI</li>
+          <li><b>Moderado:</b> HF</li>
+          <li><b>Fracos:</b> os demais, como H<sub>2</sub>S</li>
+        </ul>
+      </div>
+      <div class="card" data-passo="2">
+        <h3>Oxiácidos</h3>
+        <p style="margin:0 0 8px;font-size:30px"><b>x</b> = nº de O − nº de H ionizáveis</p>
+        <ul style="padding-left:24px">
+          <li data-passo="3"><b>x ≥ 2: forte.</b> HNO<sub>3</sub>: 3 − 1 = 2; H<sub>2</sub>SO<sub>4</sub>: 4 − 2 = 2</li>
+          <li data-passo="4"><b>x = 1: moderado.</b> H<sub>3</sub>PO<sub>4</sub>: 4 − 3 = 1</li>
+          <li data-passo="5"><b>x = 0: fraco.</b> HClO: 1 − 1 = 0</li>
+        </ul>
+      </div>
+    </div>
+    <div class="caixa caixa-atencao" data-passo="6" style="position:absolute;left:580px;right:0;top:650px">
+      <span class="rotulo">Exceção</span>
+      <div class="texto" style="font-size:29px">O H<sub>2</sub>CO<sub>3</sub> dá x = 1, mas é <b>fraco</b>: ele se desfaz em água e gás carbônico.</div>
+    </div>
+  </div>
+  <aside class="notas"><p>Clique 1: os hidrácidos (decorar os três fortes). Clique 2: a regra dos oxiácidos. Cliques 3 a 5: um exemplo de cada faixa. Clique 6: a exceção do ácido carbônico.</p><p>No H₃PO₃ só contam os 2 H ionizáveis: x = 3 − 2 = 1, moderado. É a mesma regra usada na resolução oficial do IF 2013 (H₃PO₄: 4 − 3 = 1, moderado).</p></aside>
+</section>
+
+<!-- Questão 1 -->
+<section class="slide questao" data-nome="Questão 1">
+  <div class="conteudo">
+    <div class="area-resolucao"></div>
+    <span class="pilula pilula-pausa" data-em="1:some">Pause o vídeo e tente</span>
+    <div class="painel-questao">
+      <p class="olho">Questão 1 · IF Sudeste MG 2024</p>
+      <p class="enunciado" style="font-size:20px">O ácido sulfúrico, H<sub>2</sub>SO<sub>4</sub>, é o produto químico mais produzido no mundo. Em solução aquosa, esse ácido é altamente corrosivo e ataca todos os metais. Ele é oleoso e, quando misturado à água, libera quantidades relevantes de calor. Por ser um ácido, a substância conduz eletricidade, neutraliza álcalis e corrói metais formando gás hidrogênio.</p>
+      <p class="enunciado" style="font-size:20px">Sobre o conceito de ácidos e sobre o ácido sulfúrico, citado no texto, assinale a alternativa <b>CORRETA</b>.</p>
+      <ol class="alternativas" style="gap:8px">
+        <li data-em="2:apaga" style="font-size:20px;padding:6px 14px"><b>A</b><span>Ácidos são substâncias que se ionizam em meio aquoso, liberando o ânion H<sup>+</sup>.</span></li>
+        <li data-em="2:apaga" style="font-size:20px;padding:6px 14px"><b>B</b><span>O ácido sulfúrico, ao ser ionizado em água, libera apenas ânions em meio aquoso.</span></li>
+        <li data-em="2:apaga" style="font-size:20px;padding:6px 14px"><b>C</b><span>O ácido sulfúrico conduz eletricidade por possuir características metálicas.</span></li>
+        <li data-em="2:certo" style="font-size:20px;padding:6px 14px"><b>D</b><span>O ácido sulfúrico pode neutralizar uma substância presente no leite de magnésia chamada hidróxido de magnésio.</span></li>
+        <li data-em="2:apaga" style="font-size:20px;padding:6px 14px"><b>E</b><span>No ácido sulfúrico, a ligação existente entre os átomos é de natureza iônica.</span></li>
+      </ol>
+    </div>
+  </div>
+  <aside class="resolucao">
+    <p class="dados"><b>Dados:</b> ácido de Arrhenius libera H<sup>+</sup> em água.</p>
+    <ol class="passos">
+      <li><b>A:</b> H<sup>+</sup> é positivo: cátion, não ânion. ✗</li>
+      <li><b>B:</b> libera H<sup>+</sup> e SO<sub>4</sub><sup>2−</sup>: cátion e ânion. ✗</li>
+      <li><b>C:</b> conduz por ter íons livres, não metal. ✗</li>
+      <li><b>D:</b> Mg(OH)<sub>2</sub> é base: ácido + base neutraliza. ✓</li>
+      <li><b>E:</b> H, S e O são ametais: covalente. ✗</li>
+    </ol>
+    <p class="resposta"><b>Resposta:</b> o ácido sulfúrico neutraliza o hidróxido de magnésio. <b>Gabarito D.</b></p>
+    <p class="atencao"><b>Destaque no quadro:</b> H<sup>+</sup> é cátion; o ácido é molecular e forma íons na água.</p>
+    <ul class="erros">
+      <li><b>A</b> O H<sup>+</sup> tem carga positiva: é cátion.</li>
+      <li><b>B</b> Saem cátions (H<sup>+</sup>) e ânions (SO<sub>4</sub><sup>2−</sup>) juntos; a solução fica neutra.</li>
+      <li><b>C</b> Não há nada metálico: quem conduz são os íons livres na água.</li>
+      <li><b>E</b> H, S e O são ametais, unidos por ligações covalentes.</li>
+    </ul>
+  </aside>
+  <aside class="notas">
+    <p>Clique 1 tira o aviso de pausa: resolva na área (D liga a caneta; E esconde o enunciado). Clique 2: gabarito D.</p>
+    <p>Questão oficial do IF Sudeste MG, prova de 2024 (também está na lista da professora). A neutralização é: H₂SO₄ + Mg(OH)₂ → MgSO₄ + 2 H₂O (o leite de magnésia é uma base; bases vêm a seguir).</p>
+  </aside>
+</section>
+
+<!-- Questão 2 -->
+<section class="slide questao" data-nome="Questão 2">
+  <div class="conteudo">
+    <div class="area-resolucao"></div>
+    <span class="pilula pilula-pausa" data-em="1:some">Pause o vídeo e tente</span>
+    <div class="painel-questao">
+      <p class="olho">Questão 2 · IF Sudeste MG 2023</p>
+      <p class="enunciado" style="font-size:22px">As substâncias que compõem as funções inorgânicas são muito importantes no nosso dia a dia. Os ácidos, por exemplo, são substâncias que se ionizam em água e dão origem ao íon H<sup>+</sup> (H<sub>3</sub>O<sup>+</sup>), tornando o pH do meio abaixo de 7. Já as bases, liberam hidroxila (OH<sup>−</sup>) em meio aquoso, tornando o pH alcalino, isto é acima de 7.</p>
+      <p class="enunciado" style="font-size:22px">Nesse sentido, são exemplos de ácido e base, respectivamente:</p>
+      <ol class="alternativas" style="gap:8px">
+        <li data-em="2:apaga" style="font-size:24px;padding:6px 14px"><b>A</b><span>CO<sub>2</sub> e Ca(OH)<sub>2</sub></span></li>
+        <li data-em="2:apaga" style="font-size:24px;padding:6px 14px"><b>B</b><span>H<sub>2</sub>S e NO</span></li>
+        <li data-em="2:apaga" style="font-size:24px;padding:6px 14px"><b>C</b><span>HNO<sub>3</sub> e HCl</span></li>
+        <li data-em="2:certo" style="font-size:24px;padding:6px 14px"><b>D</b><span>H<sub>2</sub>SO<sub>4</sub> e LiOH</span></li>
+        <li data-em="2:apaga" style="font-size:24px;padding:6px 14px"><b>E</b><span>SO<sub>2</sub> e H<sub>2</sub>O<sub>2</sub></span></li>
+      </ol>
+    </div>
+  </div>
+  <aside class="resolucao">
+    <p class="dados"><b>Dados:</b> ácido libera H<sup>+</sup>; base libera OH<sup>−</sup>.</p>
+    <ol class="passos">
+      <li>Ácido: a fórmula começa pelo H ionizável.</li>
+      <li>Base: metal ligado a OH.</li>
+      <li>H<sub>2</sub>SO<sub>4</sub> → 2 H<sup>+</sup> + SO<sub>4</sub><sup>2−</sup>: ácido.</li>
+      <li>LiOH → Li<sup>+</sup> + OH<sup>−</sup>: base.</li>
+    </ol>
+    <p class="resposta"><b>Resposta:</b> H<sub>2</sub>SO<sub>4</sub> (ácido) e LiOH (base). <b>Gabarito D.</b></p>
+    <p class="atencao"><b>Destaque no quadro:</b> Ter O não faz ácido; ter H não faz ácido: tem de liberar H<sup>+</sup>.</p>
+    <ul class="erros">
+      <li><b>A</b> CO<sub>2</sub> é óxido: só forma ácido depois de reagir com a água.</li>
+      <li><b>B</b> NO é óxido, não base: não tem OH.</li>
+      <li><b>C</b> Os dois são ácidos; falta a base.</li>
+      <li><b>E</b> SO<sub>2</sub> é óxido e H<sub>2</sub>O<sub>2</sub> é peróxido: nenhum é ácido nem base.</li>
+    </ul>
+  </aside>
+  <aside class="notas">
+    <p>Clique 1 tira o aviso de pausa: resolva na área (D liga a caneta; E esconde o enunciado). Clique 2: gabarito D.</p>
+    <p>Questão oficial do IF Sudeste MG, prova de 2023 (também está na lista da professora). O enunciado já traz a definição de base: use-a, mesmo que as bases venham depois.</p>
+  </aside>
+</section>
+
+<!-- Resumo -->
+<section class="slide" data-nome="Resumo">
+  <div class="conteudo">
+    <p class="olho">Resumo</p>
+    <h2 class="titulo">O essencial</h2>
+    <div class="resumo" style="position:absolute;left:0;right:0;top:150px">
+      <div><b>Função inorgânica:</b> substâncias com propriedades químicas parecidas: ácidos, bases, sais e óxidos.</div>
+      <div><b>Ácido de Arrhenius:</b> em água, se ioniza e libera H<sup>+</sup> como único cátion (na verdade, H<sub>3</sub>O<sup>+</sup>).</div>
+      <div><b>Puro</b>, o ácido é molecular; <b>em água</b>, forma íons e conduz eletricidade.</div>
+      <div><b>Hidrácido:</b> sem O (HCl). <b>Oxiácido:</b> com O (H<sub>2</sub>SO<sub>4</sub>).</div>
+      <div><b>Mono, di, tri, tetrácido:</b> conta só o H ionizável (H<sub>3</sub>PO<sub>3</sub> é diácido).</div>
+      <div><b>Força (α):</b> forte &gt; 50%; moderado de 5% a 50%; fraco &lt; 5%.</div>
+    </div>
+    <div class="caixa caixa-atencao" style="position:absolute;left:580px;right:0;top:660px">
+      <div class="texto" style="font-size:30px">Com mais de um H<sup>+</sup>, a ionização é <b>em etapas</b>, e a 1ª é a mais fácil.</div>
+    </div>
+  </div>
+  <aside class="notas"><p>Peça para tirarem um print desta tela.</p></aside>
+</section>
+
+<!-- A seguir -->
+<section class="slide capa" data-nome="A seguir">
+  <div class="estrelas"></div>
+  <div class="texto-capa" style="top:170px">
+    <span class="selo">Química · IF</span>
+    <p class="aula" style="font-size:26px">A seguir · Ácidos · Parte 2 de 2</p>
+    <h1 style="font-size:110px">Nomenclatura e principais ácidos</h1>
+    <p class="sub">ídrico, ico, oso, per e hipo</p>
+  </div>
+  <svg class="emblema" viewBox="0 0 640 640" aria-hidden="true">
+    <path d="M262 110 h116 M282 110 v150 l-122 220 a40 40 0 0 0 36 60 h248 a40 40 0 0 0 36 -60 l-122 -220 v-150" fill="none" stroke="#fff" stroke-opacity=".8" stroke-width="12" stroke-linejoin="round" stroke-linecap="round"/>
+    <path d="M214 400 h212 l52 94 a22 22 0 0 1 -20 32 h-276 a22 22 0 0 1 -20 -32 z" fill="#FFD10C"/>
+    <circle cx="300" cy="460" r="14" fill="#fff" fill-opacity=".8"/><circle cx="350" cy="430" r="9" fill="#fff" fill-opacity=".8"/>
+  </svg>
+  <img class="logo-capa" src="{{LOGO_BRANCO}}" alt="Quarks">
+  <aside class="notas"><p>Próxima: como dar nome aos ácidos (ídrico, ico, oso, per e hipo) e os principais ácidos do dia a dia.</p></aside>
+</section>

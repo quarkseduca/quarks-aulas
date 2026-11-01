@@ -1,0 +1,423 @@
+<!--aula
+{"disciplina": "quimica", "curso": "IF", "assunto": "Funções inorgânicas", "parte": "Parte única", "titulo": "Sais", "scripts": ["animacoes-acidos-bases.js"]}
+-->
+<!-- Fonte: slides da professora (Química IF 2026, aula 12: sais, neutralização, classificação, nomenclatura e principais sais), completados com a apostila IF, Química, 4.3 Sais. Questões: IF Sudeste MG 2017 e 2026 (oficiais; a de 2017 também está na lista da professora). -->
+<style>
+  .caixa, .card, .eqq, .linha-ex { box-sizing: border-box; }
+  .slide sub { font-size: .6em; vertical-align: -.24em; line-height: 0; }
+  .slide sup { font-size: .6em; vertical-align: .62em; line-height: 0; }
+  .est { font-size: .6em; font-weight: 700; color: var(--cinza); margin-left: 3px; letter-spacing: 0; }
+  .seta { display: inline-flex; flex-direction: column; align-items: center; line-height: .78; vertical-align: -.05em; margin: 0 .18em; }
+  .seta i { font: 700 .4em var(--fonte-texto); font-style: normal; color: var(--cinza); letter-spacing: 0; }
+  .eqq { background: var(--branco); border: 2px solid var(--lilas-2); border-radius: 24px; padding: 12px 28px; font: 800 40px var(--fonte-titulo); color: var(--roxo-titulo); letter-spacing: -.01em; white-space: nowrap; }
+  .eqq .nome { display: block; font: 600 24px var(--fonte-texto); color: var(--cinza); margin-top: 4px; letter-spacing: 0; white-space: normal; }
+  .eqq .et { display: inline-block; min-width: 150px; font: 800 22px var(--fonte-texto); letter-spacing: .08em; text-transform: uppercase; color: var(--d-forte); }
+  .linha-ex { background: var(--branco); border: 2px solid var(--lilas-2); border-radius: 24px; padding: 14px 26px; font-size: 30px; line-height: 1.3; }
+  .linha-ex b { color: var(--roxo-titulo); }
+  .card { background: var(--branco); border: 2px solid var(--lilas-2); border-radius: 28px; padding: 22px 28px; font-size: 28px; line-height: 1.32; color: var(--carvao); }
+  .card h3 { margin: 0 0 6px; font: 800 40px var(--fonte-titulo); letter-spacing: -.02em; color: var(--roxo-titulo); }
+  .card .f { font: 800 38px var(--fonte-titulo); color: var(--d-forte); letter-spacing: -.01em; }
+  .card .sub-h { margin: 0 0 12px; font-size: 25px; font-weight: 700; color: var(--cinza); }
+  .card ul { margin: 6px 0 0; padding-left: 28px; } .card li { margin: 3px 0; }
+  .card.destaque { background: var(--d-clara); border-color: color-mix(in srgb, var(--d) 35%, transparent); }
+  .chips { display: flex; flex-wrap: wrap; gap: 12px; }
+  .chip { display: inline-block; padding: 6px 20px; border-radius: 999px; background: var(--d-clara); color: var(--d-forte); font: 800 34px var(--fonte-titulo); }
+  .recip { box-sizing: content-box; background: linear-gradient(#F2F8FE, #DCEDFB); border: 3px solid #9CC3E6; border-radius: 26px; overflow: hidden; }
+  .legenda-ions { display: flex; flex-wrap: wrap; gap: 8px 22px; font-size: 25px; font-weight: 700; color: var(--carvao); }
+  .legenda-ions span { display: inline-flex; align-items: center; gap: 6px; }
+  .legenda-ions svg { width: 46px; height: 46px; }
+  .contador { font: 800 32px var(--fonte-titulo); color: var(--roxo-titulo); }
+  .tabela td, .tabela th { padding: 10px 34px; }
+  .tabela .f { font: 800 1.05em var(--fonte-titulo); color: var(--roxo-titulo); }
+  .tabela td.esq, .tabela th.esq { text-align: left; }
+  .regra { font: 800 44px var(--fonte-titulo); color: var(--roxo-titulo); letter-spacing: -.01em; }
+  .regra em { font-style: normal; color: var(--d); }
+  .regra .vazio { display: inline-block; min-width: 150px; border-bottom: 4px dashed var(--roxo-claro); color: var(--cinza); font-size: .6em; text-align: center; }
+  .lampada .luz { opacity: 0; transition: opacity 1.2s ease-in .6s; }
+  .mostra .lampada .luz, .lampada.mostra .luz { opacity: 1; }
+  /* cada átomo de uma molécula vibra sozinho (svg.vibra, como em Substâncias e misturas) */
+  @keyframes vib-a { 0%,100% { transform: translate(0,0); } 25% { transform: translate(1.6px,-1.2px); } 50% { transform: translate(-.8px,1.4px); } 75% { transform: translate(-1.4px,-.6px); } }
+  @keyframes vib-b { 0%,100% { transform: translate(0,0); } 25% { transform: translate(-1.4px,1px); } 50% { transform: translate(1.2px,-1.4px); } 75% { transform: translate(.6px,1.2px); } }
+  .slide.ativo .mostra svg.vibra .vib-a, .slide.ativo svg.vibra.sempre .vib-a { animation: vib-a 1.6s ease-in-out infinite; }
+  .slide.ativo .mostra svg.vibra .vib-b, .slide.ativo svg.vibra.sempre .vib-b { animation: vib-b 1.6s ease-in-out infinite; }
+  .rot { font-family: Figtree, sans-serif; font-weight: 800; text-anchor: middle; }
+  .h-ac { color: #C63C28; } .oh-ba { color: #1F6FB3; } .ion-sal { color: var(--d); text-decoration: underline 4px color-mix(in srgb, var(--d) 40%, transparent); text-underline-offset: 8px; }
+</style>
+
+<svg width="0" height="0" style="position:absolute" aria-hidden="true">
+  <defs>
+    <radialGradient id="gO" cx=".35" cy=".3" r=".8"><stop offset="0" stop-color="#FF8A7A"/><stop offset="1" stop-color="#C8301F"/></radialGradient>
+    <radialGradient id="gH" cx=".35" cy=".3" r=".8"><stop offset="0" stop-color="#FFFFFF"/><stop offset="1" stop-color="#C9C4DC"/></radialGradient>
+    <radialGradient id="gCl" cx=".35" cy=".3" r=".8"><stop offset="0" stop-color="#9BE8AE"/><stop offset="1" stop-color="#22964A"/></radialGradient>
+    <radialGradient id="gF" cx=".35" cy=".3" r=".8"><stop offset="0" stop-color="#F2F59A"/><stop offset="1" stop-color="#A7AE1E"/></radialGradient>
+    <radialGradient id="gNa" cx=".35" cy=".3" r=".8"><stop offset="0" stop-color="#CBBFFF"/><stop offset="1" stop-color="#5B45C9"/></radialGradient>
+    <radialGradient id="gS" cx=".35" cy=".3" r=".8"><stop offset="0" stop-color="#FFEB85"/><stop offset="1" stop-color="#D1A800"/></radialGradient>
+    <radialGradient id="gN" cx=".35" cy=".3" r=".8"><stop offset="0" stop-color="#7FA8FF"/><stop offset="1" stop-color="#2A5BD0"/></radialGradient>
+    <radialGradient id="gP" cx=".35" cy=".3" r=".8"><stop offset="0" stop-color="#FFC08A"/><stop offset="1" stop-color="#D4661A"/></radialGradient>
+    <radialGradient id="gC" cx=".35" cy=".3" r=".8"><stop offset="0" stop-color="#8A8A96"/><stop offset="1" stop-color="#2E2E36"/></radialGradient>
+    <radialGradient id="gLuz" cx=".5" cy=".5" r=".5"><stop offset="0" stop-color="#FFE45C" stop-opacity=".9"/><stop offset="1" stop-color="#FFD10C" stop-opacity="0"/></radialGradient>
+  </defs>
+</svg>
+
+
+<!-- 1. Capa -->
+<section class="slide capa" data-nome="Capa">
+  <div class="estrelas"></div>
+  <div class="texto-capa" style="top:150px">
+    <span class="selo">Química · IF</span>
+    <p class="aula">Funções inorgânicas · Parte única</p>
+    <h1>Sais</h1>
+    <p class="sub">Neutralização, classificação e nomes</p>
+  </div>
+  <svg class="emblema" viewBox="0 0 640 640" aria-hidden="true">
+    <g class="gira-lento"><ellipse cx="320" cy="320" rx="300" ry="128" fill="none" stroke="#fff" stroke-opacity=".38" stroke-width="2" transform="rotate(-10 320 320)"/></g>
+    <g class="gira"><ellipse cx="320" cy="320" rx="236" ry="196" fill="none" stroke="#FFD10C" stroke-opacity=".75" stroke-width="2.5" stroke-dasharray="3 14" stroke-linecap="round" transform="rotate(-8 320 320)"/>
+      <circle cx="84" cy="300" r="13" fill="#FFD10C" stroke="#fff" stroke-width="3"/></g>
+    <circle cx="320" cy="320" r="132" fill="#FFD10C"/>
+    <image href="{{SYM_ROXO}}" x="238" y="238" width="164" height="164"/>
+  </svg>
+  <img class="logo-capa" src="{{LOGO_BRANCO}}" alt="Quarks">
+  <aside class="notas"><p>Hoje: a neutralização (ácido + base → sal + água), o que é um sal, a classificação dos sais (normais, hidrogenossais e hidroxissais), os nomes (eto, ato, ito) e os principais sais.</p></aside>
+</section>
+
+<!-- Neutralização -->
+<section class="slide" data-nome="Neutralização">
+  <div class="conteudo">
+    <p class="olho">Quando o ácido encontra a base</p>
+    <h2 class="titulo">A neutralização</h2>
+    <div class="recip" data-passo="1" style="position:absolute;left:0;top:165px;width:760px;height:420px">
+      <div data-anima="ions" data-modo="neutralizacao" data-anima-passo="1" data-w="760" data-h="420" data-r="14" data-n-agua="12" data-n-acido="6" data-semente="17" data-contador="cont-neu" data-texto="H₃O⁺ que ainda sobram: {k}" style="width:760px;height:420px"></div>
+    </div>
+    <div style="position:absolute;left:830px;right:0;top:160px;display:flex;flex-direction:column;gap:18px">
+      <div data-passo="1"><div class="legenda-ions"><span><svg viewBox="-25 -25 50 50" aria-hidden="true"><circle cx="-9.5" cy="6.4" r="6.6" fill="url(#gH)" stroke="#8C84B8" stroke-width="1.5"/><circle cx="9.5" cy="6.4" r="6.6" fill="url(#gH)" stroke="#8C84B8" stroke-width="1.5"/><circle cx="0.0" cy="-11.2" r="6.6" fill="url(#gH)" stroke="#8C84B8" stroke-width="1.5"/><circle cx="0.0" cy="0.0" r="11.0" fill="url(#gO)" stroke="#8E2115" stroke-width="1.5"/><g transform="translate(10.4 -11.6)"><circle r="5.7" fill="#fff" stroke="#C63C28" stroke-width="2"/><text text-anchor="middle" y="3.3" font-family="Figtree,sans-serif" font-weight="800" font-size="10.4" fill="#C63C28">+</text></g></svg><em style="font-style:normal">H<sub>3</sub>O<sup>+</sup></em></span><span><svg viewBox="-25 -25 50 50" aria-hidden="true"><circle cx="0.0" cy="0.0" r="13.0" fill="url(#gCl)" stroke="#1E7A3C" stroke-width="1.5"/><g transform="translate(10.4 -11.6)"><circle r="5.7" fill="#fff" stroke="#1F6FB3" stroke-width="2"/><text text-anchor="middle" y="3.3" font-family="Figtree,sans-serif" font-weight="800" font-size="10.4" fill="#1F6FB3">−</text></g></svg><em style="font-style:normal">Cl<sup>−</sup></em></span><span><svg viewBox="-25 -25 50 50" aria-hidden="true"><circle cx="0.0" cy="0.0" r="11.6" fill="url(#gNa)" stroke="#3A2196" stroke-width="1.5"/><g transform="translate(10.4 -11.6)"><circle r="5.7" fill="#fff" stroke="#C63C28" stroke-width="2"/><text text-anchor="middle" y="3.3" font-family="Figtree,sans-serif" font-weight="800" font-size="10.4" fill="#C63C28">+</text></g></svg><em style="font-style:normal">Na<sup>+</sup></em></span><span><svg viewBox="-25 -25 50 50" aria-hidden="true"><circle cx="11.2" cy="0.0" r="6.6" fill="url(#gH)" stroke="#8C84B8" stroke-width="1.5"/><circle cx="0.0" cy="0.0" r="11.0" fill="url(#gO)" stroke="#8E2115" stroke-width="1.5"/><g transform="translate(10.4 -11.6)"><circle r="5.7" fill="#fff" stroke="#1F6FB3" stroke-width="2"/><text text-anchor="middle" y="3.3" font-family="Figtree,sans-serif" font-weight="800" font-size="10.4" fill="#1F6FB3">−</text></g></svg><em style="font-style:normal">OH<sup>−</sup></em></span><span><svg viewBox="-25 -25 50 50" aria-hidden="true"><circle cx="-9.0" cy="6.8" r="6.6" fill="url(#gH)" stroke="#8C84B8" stroke-width="1.5"/><circle cx="9.0" cy="6.8" r="6.6" fill="url(#gH)" stroke="#8C84B8" stroke-width="1.5"/><circle cx="0.0" cy="0.0" r="11.0" fill="url(#gO)" stroke="#8E2115" stroke-width="1.5"/></svg><em style="font-style:normal">H<sub>2</sub>O</em></span></div>
+        <p class="contador" id="cont-neu" style="margin:10px 0 0;font-size:28px">&nbsp;</p></div>
+      <div class="caixa caixa-fundamental" data-passo="2" style="padding:20px 30px">
+        <span class="rotulo">Neutralização</span>
+        <p class="regra" style="margin:2px 0 0;font-size:42px">ácido + base → <em>sal</em> + <em>água</em></p>
+      </div>
+      <div class="eqq" data-passo="3">H<sup>+</sup> + OH<sup>−</sup> → H<sub>2</sub>O<span class="nome">o H<sup>+</sup> do ácido e o OH<sup>−</sup> da base viram água</span></div>
+      <div class="linha-ex" data-passo="4" style="font-size:28px">Sobram Na<sup>+</sup> e Cl<sup>−</sup>: é o <b>sal</b> (cloreto de sódio) dissolvido.</div>
+    </div>
+  </div>
+  <aside class="notas"><p>Clique 1: uma solução de HCl (H₃O⁺ e Cl⁻) recebe gotas de NaOH (Na⁺ e OH⁻). Cada OH⁻ que encontra um H₃O⁺ forma duas moléculas de água (o brilho amarelo); o contador mostra os H₃O⁺ que ainda sobram. No fim, só Na⁺, Cl⁻ e água.</p><p>Cliques 2 a 4: a regra, a reação que está por trás de toda neutralização e o sal que sobra. Na forma com H₃O⁺: H₃O⁺ + OH⁻ → 2 H₂O.</p><p>No dia a dia: o leite de magnésia (base) contra a azia (ácido demais no estômago).</p></aside>
+</section>
+
+<!-- O que é um sal -->
+<section class="slide" data-nome="O que é um sal">
+  <div class="conteudo">
+    <p class="olho">Sais</p>
+    <h2 class="titulo">Cátion da base, ânion do ácido</h2>
+    <div class="eqq" data-passo="1" style="position:absolute;left:0;right:0;top:170px;font-size:52px;padding:20px 34px;text-align:center">
+      <span class="h-ac">H</span><span class="ion-sal">Cl</span> <span class="est">(aq)</span> + <span class="ion-sal">Na</span><span class="oh-ba">OH</span> <span class="est">(aq)</span> → <span class="ion-sal">NaCl</span> <span class="est">(aq)</span> + <span class="h-ac">H</span><span class="oh-ba">OH</span> <span class="est">(l)</span>
+      <span class="nome" style="font-size:26px">ácido + base → sal + água (a água é H–OH)</span>
+    </div>
+    <div class="caixa caixa-fundamental" data-passo="2" style="position:absolute;left:0;right:0;top:360px;padding:24px 34px">
+      <span class="rotulo">Sal</span>
+      <div class="texto" style="font-size:32px">Composto <b>iônico</b> com pelo menos um <b>cátion diferente de H<sup>+</sup></b> e um <b>ânion diferente de OH<sup>−</sup></b>.</div>
+    </div>
+    <div style="position:absolute;left:580px;right:0;top:560px;display:grid;grid-template-columns:1fr 1fr;gap:24px">
+      <div class="linha-ex" data-passo="3">O <b>cátion</b> vem da <b>base</b> (Na<sup>+</sup>).</div>
+      <div class="linha-ex" data-passo="4">O <b>ânion</b> vem do <b>ácido</b> (Cl<sup>−</sup>).</div>
+    </div>
+    <div class="caixa caixa-atencao" data-passo="5" style="position:absolute;left:580px;right:0;top:700px;padding:18px 28px">
+      <div class="texto" style="font-size:28px">"Sal" não é só o de cozinha: o NaCl é um sal entre milhares.</div>
+    </div>
+  </div>
+  <aside class="notas"><p>Clique 1: a mesma neutralização com cores: o H do ácido (vermelho) e o OH da base (azul) formam a água; o Na e o Cl (sublinhados) formam o sal. Clique 2: a definição. Cliques 3 e 4: de onde vem cada íon. Clique 5: o aviso da apostila.</p><p>Correção de grafia do material da professora: "Um sal" (sal é masculino), não "Uma sal".</p></aside>
+</section>
+
+<!-- Neutralização total -->
+<section class="slide" data-nome="Neutralização total">
+  <div class="conteudo">
+    <p class="olho">Sais normais</p>
+    <h2 class="titulo">Neutralização total</h2>
+    <div style="position:absolute;left:0;right:0;top:165px;display:flex;flex-direction:column;gap:14px">
+      <div class="eqq" data-passo="1" style="font-size:38px">NaOH <span class="est">(aq)</span> + HCl <span class="est">(aq)</span> → NaCl <span class="est">(aq)</span> + H<sub>2</sub>O <span class="est">(l)</span></div>
+      <div class="eqq" data-passo="2" style="font-size:38px">KOH <span class="est">(aq)</span> + HNO<sub>3</sub> <span class="est">(aq)</span> → KNO<sub>3</sub> <span class="est">(aq)</span> + H<sub>2</sub>O <span class="est">(l)</span></div>
+      <div class="eqq" data-passo="3" style="font-size:38px">Ba(OH)<sub>2</sub> <span class="est">(aq)</span> + H<sub>2</sub>SO<sub>4</sub> <span class="est">(aq)</span> → BaSO<sub>4</sub> <span class="est">(s)</span> + 2 H<sub>2</sub>O <span class="est">(l)</span></div>
+    </div>
+    <div class="caixa caixa-fundamental" data-passo="4" style="position:absolute;left:0;right:0;top:450px;padding:22px 34px">
+      <div class="texto" style="font-size:31px"><b>Todos</b> os H<sup>+</sup> ionizáveis do ácido e <b>todas</b> as OH<sup>−</sup> da base viram água. O sal formado é um <b>sal normal</b>.</div>
+    </div>
+    <div class="caixa caixa-atencao" data-passo="5" style="position:absolute;left:580px;right:0;top:650px">
+      <div class="texto" style="font-size:29px">O BaSO<sub>4</sub> é <b>insolúvel</b> em água: sai como sólido, (s).</div>
+    </div>
+  </div>
+  <aside class="notas"><p>Uma equação por clique; conte os H⁺ e as OH⁻ de cada lado. Na terceira, 2 OH⁻ e 2 H⁺ formam 2 águas. Clique 4: a regra da neutralização total. Clique 5: o estado do sulfato de bário.</p><p>Correção do material da professora: lá o BaSO₄ aparece como (aq); ele é praticamente insolúvel e precipita, então é (s).</p></aside>
+</section>
+
+<!-- Exemplo: neutralização -->
+<section class="slide" data-nome="Exemplo: neutralização">
+  <div class="conteudo">
+    <p class="olho">Exemplo</p>
+    <h2 class="titulo">Neutralize o H<sub>2</sub>SO<sub>4</sub> com NaOH</h2>
+    <div style="position:absolute;left:0;width:1040px;top:165px;display:flex;flex-direction:column;gap:16px">
+      <div class="linha-ex" data-passo="1">O H<sub>2</sub>SO<sub>4</sub> libera <b>2 H<sup>+</sup></b>: precisa de <b>2 OH<sup>−</sup></b>, ou seja, <b>2 NaOH</b>.</div>
+      <div class="linha-ex" data-passo="2">2 H<sup>+</sup> + 2 OH<sup>−</sup> → <b>2 H<sub>2</sub>O</b></div>
+      <div class="linha-ex" data-passo="3">Sobram <b>2 Na<sup>+</sup></b> e <b>1 SO<sub>4</sub><sup>2−</sup></b>: o sal é <b>Na<sub>2</sub>SO<sub>4</sub></b>.</div>
+      <div class="linha-ex" data-passo="4">Nome: sulfúr<b>ico</b> → sulf<b>ato</b>: <b>sulfato de sódio</b>.</div>
+    </div>
+    <p class="contador" data-passo="5" style="position:absolute;left:1120px;top:180px;margin:0">Carga do Na<sub>2</sub>SO<sub>4</sub>:</p>
+    <div class="contas" style="position:absolute;left:1120px;top:250px;font-size:42px;row-gap:18px">
+        <div class="eq" data-passo="5"><span>\(q\)</span><span>\(=\)</span><span>\(2\cdot(+1) + (-2)\)</span></div>
+        <div class="eq final" data-passo="6"><span>\(q\)</span><span>\(=\)</span><span>\(0\)</span></div>
+    </div>
+    <div class="eqq" data-passo="7" style="position:absolute;left:580px;right:0;top:650px;background:var(--d-clara);font-size:42px;text-align:center">H<sub>2</sub>SO<sub>4</sub> + 2 NaOH → Na<sub>2</sub>SO<sub>4</sub> + 2 H<sub>2</sub>O</div>
+  </div>
+  <aside class="notas"><p>Peça cada passo antes do clique. Clique 1: quantas OH⁻ o ácido pede. Clique 2: as águas. Clique 3: o sal que sobra. Clique 4: o nome (adiante). Cliques 5 e 6: a carga do sal dá zero: 2 · (+1) + (−2) = 0. Clique 7: a equação balanceada (exemplo da apostila).</p><p>Conferindo os átomos: 2 Na, 1 S, 6 O e 4 H dos dois lados.</p></aside>
+</section>
+
+<!-- Classificação dos sais -->
+<section class="slide" data-nome="Classificação dos sais">
+  <div class="conteudo">
+    <p class="olho">Classificação</p>
+    <h2 class="titulo">Normais, hidrogenossais e hidroxissais</h2>
+    <div style="position:absolute;left:0;right:0;top:165px;display:grid;grid-template-columns:repeat(3,1fr);gap:28px">
+      <div class="card" data-passo="1"><h3>Normais</h3><p class="sub-h">neutralização <b>total</b></p><div class="chips"><span class="chip">NaCl</span><span class="chip">CaBr<sub>2</sub></span><span class="chip">Al<sub>2</sub>(SO<sub>4</sub>)<sub>3</sub></span></div></div>
+      <div class="card" data-passo="2"><h3>Hidrogenossais</h3><p class="sub-h">sobra <b>H</b> do ácido: neutralização parcial do ácido</p><div class="chips"><span class="chip">NaHCO<sub>3</sub></span><span class="chip">K<sub>2</sub>HPO<sub>4</sub></span><span class="chip">Ca(HSO<sub>4</sub>)<sub>2</sub></span></div></div>
+      <div class="card" data-passo="3"><h3>Hidroxissais</h3><p class="sub-h">sobra <b>OH</b> da base: neutralização parcial da base</p><div class="chips"><span class="chip">Ca(OH)Cl</span><span class="chip">Al(OH)<sub>2</sub>Br</span></div></div>
+    </div>
+    <div style="position:absolute;left:580px;right:0;top:500px;display:flex;flex-direction:column;gap:14px">
+      <div class="eqq" data-passo="4" style="font-size:36px">H<sub>3</sub>PO<sub>4</sub> + NaOH → NaH<sub>2</sub>PO<sub>4</sub> + H<sub>2</sub>O<span class="nome">só 1 dos 3 H do ácido foi neutralizado: hidrogenossal</span></div>
+      <div class="eqq" data-passo="5" style="font-size:36px">Ca(OH)<sub>2</sub> + HCl → Ca(OH)Cl + H<sub>2</sub>O<span class="nome">só 1 das 2 OH da base foi neutralizada: hidroxissal</span></div>
+    </div>
+  </div>
+  <aside class="notas"><p>Cliques 1 a 3: as três classes. Cliques 4 e 5: uma neutralização parcial de cada tipo: falta base para tirar todos os H⁺ do ácido, ou falta ácido para tirar todas as OH⁻ da base.</p><p>O NaHCO₃ é o bicarbonato de sódio (hidrogenocarbonato de sódio), do fermento químico. A equação do NaH₂PO₄ é uma das alternativas da questão do IF 2017, adiante.</p></aside>
+</section>
+
+<!-- Nomes dos sais -->
+<section class="slide" data-nome="Nomes dos sais">
+  <div class="conteudo">
+    <p class="olho">Nomenclatura</p>
+    <h2 class="titulo">O nome vem do ácido e da base</h2>
+    <table class="tabela" style="position:absolute;left:0;width:860px;top:165px;font-size:32px">
+      <tr><th class="esq">Ácido termina em</th><th class="esq">Ânion termina em</th></tr>
+      <tr data-passo="2"><td class="esq">-<b>ídrico</b> (clorídrico)</td><td class="esq">-<b>eto</b> (cloreto)</td></tr>
+      <tr data-passo="3"><td class="esq">-<b>ico</b> (sulfúrico)</td><td class="esq">-<b>ato</b> (sulfato)</td></tr>
+      <tr data-passo="4"><td class="esq">-<b>oso</b> (sulfuroso)</td><td class="esq">-<b>ito</b> (sulfito)</td></tr>
+    </table>
+    <div class="caixa caixa-fundamental" data-passo="1" style="position:absolute;left:940px;right:0;top:165px;padding:22px 30px">
+      <span class="rotulo">Nome de um sal</span>
+      <p class="regra" style="margin:4px 0 0;font-size:40px">ânion <em>de</em> cátion</p><p style="margin:4px 0 0;font-size:24px;color:var(--cinza)">o ânion vem do ácido; o cátion, da base</p>
+    </div>
+    <div style="position:absolute;left:940px;right:0;top:360px;display:flex;flex-direction:column;gap:14px">
+      <div class="eqq" data-passo="5" style="font-size:31px">HCl + NaOH → NaCl + H<sub>2</sub>O<span class="nome">clorídrico → <b>cloreto de sódio</b></span></div>
+      <div class="eqq" data-passo="6" style="font-size:31px">HNO<sub>2</sub> + KOH → KNO<sub>2</sub> + H<sub>2</sub>O<span class="nome">nitroso → <b>nitrito de potássio</b></span></div>
+    </div>
+    <div class="caixa caixa-atencao" data-passo="7" style="position:absolute;left:0;width:860px;top:470px;padding:18px 28px">
+      <div class="texto" style="font-size:28px">Cátion de Nox variável: <b>cloreto de ferro III</b> (FeCl<sub>3</sub>).</div>
+    </div>
+  </div>
+  <aside class="notas"><p>Clique 1: a regra (ânion + de + cátion). Cliques 2 a 4: a troca das terminações. Cliques 5 e 6: os exemplos da professora. Clique 7: com cátion de Nox variável, vale o mesmo das bases (ferro III ou férrico).</p><p>O nome do cátion é o mesmo da base: hidróxido de sódio → ... de sódio.</p></aside>
+</section>
+
+<!-- Ânions mais comuns -->
+<section class="slide" data-nome="Ânions mais comuns">
+  <div class="conteudo">
+    <p class="olho">Para montar fórmulas e nomes</p>
+    <h2 class="titulo">Os ânions mais comuns</h2>
+    <table class="tabela" style="position:absolute;left:0;width:840px;top:165px;font-size:31px">
+      <tr><th>Ânion</th><th class="esq">Nome</th><th>Vem do</th></tr>
+      <tr data-passo="1"><td class="f">Cl<sup>−</sup></td><td class="esq">cloreto</td><td>HCl</td></tr>
+      <tr data-passo="2"><td class="f">S<sup>2−</sup></td><td class="esq">sulfeto</td><td>H<sub>2</sub>S</td></tr>
+      <tr data-passo="3"><td class="f">NO<sub>3</sub><sup>−</sup></td><td class="esq">nitrato</td><td>HNO<sub>3</sub></td></tr>
+      <tr data-passo="4"><td class="f">NO<sub>2</sub><sup>−</sup></td><td class="esq">nitrito</td><td>HNO<sub>2</sub></td></tr>
+      <tr data-passo="5"><td class="f">ClO<sup>−</sup></td><td class="esq">hipoclorito</td><td>HClO</td></tr>
+    </table>
+    <table class="tabela" style="position:absolute;left:920px;right:0;top:165px;font-size:31px">
+      <tr><th>Ânion</th><th class="esq">Nome</th><th>Vem do</th></tr>
+      <tr data-passo="6"><td class="f">SO<sub>4</sub><sup>2−</sup></td><td class="esq">sulfato</td><td>H<sub>2</sub>SO<sub>4</sub></td></tr>
+      <tr data-passo="7"><td class="f">SO<sub>3</sub><sup>2−</sup></td><td class="esq">sulfito</td><td>H<sub>2</sub>SO<sub>3</sub></td></tr>
+      <tr data-passo="8"><td class="f">CO<sub>3</sub><sup>2−</sup></td><td class="esq">carbonato</td><td>H<sub>2</sub>CO<sub>3</sub></td></tr>
+      <tr data-passo="9"><td class="f">HCO<sub>3</sub><sup>−</sup></td><td class="esq">bicarbonato</td><td>H<sub>2</sub>CO<sub>3</sub></td></tr>
+      <tr data-passo="10"><td class="f">PO<sub>4</sub><sup>3−</sup></td><td class="esq">fosfato</td><td>H<sub>3</sub>PO<sub>4</sub></td></tr>
+    </table>
+    <div class="caixa caixa-atencao" data-passo="11" style="position:absolute;left:580px;right:0;top:680px;padding:18px 28px">
+      <div class="texto" style="font-size:28px">A carga do ânion = nº de H<sup>+</sup> que o ácido perdeu: H<sub>2</sub>SO<sub>4</sub> → SO<sub>4</sub><sup>2−</sup>.</div>
+    </div>
+  </div>
+  <aside class="notas"><p>Um ânion por clique; peça o nome a partir do ácido (ídrico → eto, ico → ato, oso → ito).</p><p>O bicarbonato (HCO₃⁻) é o carbonato que guardou um H: hidrogenocarbonato. O hipoclorito (ClO⁻) está na água sanitária, como hipoclorito de sódio (NaClO).</p></aside>
+</section>
+
+<!-- Exemplo: fórmulas de sais -->
+<section class="slide" data-nome="Exemplo: fórmulas de sais">
+  <div class="conteudo">
+    <p class="olho">Exemplo</p>
+    <h2 class="titulo">Carbonato de cálcio e sulfato de alumínio</h2>
+    <p class="texto" style="position:absolute;left:0;right:0;top:150px;margin:0;font-size:30px">Íons: Ca<sup>2+</sup> e CO<sub>3</sub><sup>2−</sup>; Al<sup>3+</sup> e SO<sub>4</sub><sup>2−</sup>. A carga total tem de ser zero.</p>
+    <div style="position:absolute;left:0;width:900px;top:230px;display:flex;flex-direction:column;gap:16px">
+      <div class="linha-ex" data-passo="1"><b>Carbonato de cálcio:</b> +2 e −2 já se cancelam, 1 para 1: <b>CaCO<sub>3</sub></b>.</div>
+      <div class="linha-ex" data-passo="2"><b>Sulfato de alumínio:</b> 2 Al<sup>3+</sup> (+6) para 3 SO<sub>4</sub><sup>2−</sup> (−6): <b>Al<sub>2</sub>(SO<sub>4</sub>)<sub>3</sub></b>.</div>
+      <div class="linha-ex" data-passo="3">Ânion com mais de um átomo, repetido: <b>parênteses</b>.</div>
+    </div>
+    <p class="contador" data-passo="4" style="position:absolute;left:980px;top:240px;margin:0">Conferindo o Al<sub>2</sub>(SO<sub>4</sub>)<sub>3</sub>:</p>
+    <div class="contas" style="position:absolute;left:980px;top:310px;font-size:42px;row-gap:18px">
+        <div class="eq" data-passo="4"><span>\(q\)</span><span>\(=\)</span><span>\(2\,q_{\text{Al}} + 3\,q_{\text{SO}_4}\)</span></div>
+        <div class="eq" data-passo="5"><span>\(q\)</span><span>\(=\)</span><span>\(2\cdot(+3) + 3\cdot(-2)\)</span></div>
+        <div class="eq final" data-passo="6"><span>\(q\)</span><span>\(=\)</span><span>\(0\)</span></div>
+    </div>
+    <div class="caixa caixa-fundamental" data-passo="7" style="position:absolute;left:980px;right:0;top:620px;padding:20px 30px">
+      <div class="texto" style="font-size:30px"><b>Resposta:</b> CaCO<sub>3</sub> e Al<sub>2</sub>(SO<sub>4</sub>)<sub>3</sub>.</div>
+    </div>
+  </div>
+  <aside class="notas"><p>Peça a fórmula antes de cada clique. Truque do sulfato de alumínio: a carga de um vira o índice do outro (Al³⁺ e SO₄²⁻ → Al₂(SO₄)₃). Cliques 4 a 6: 2 · (+3) + 3 · (−2) = 6 − 6 = 0 (exemplo da apostila). Clique 7: a resposta.</p><p>O sulfato de alumínio é o que junta a sujeira em flocos no tratamento de água.</p></aside>
+</section>
+
+<!-- Principais sais 1 -->
+<section class="slide" data-nome="Principais sais 1">
+  <div class="conteudo">
+    <p class="olho">Principais sais</p>
+    <h2 class="titulo">Cloreto de sódio e os carbonatos</h2>
+    <div data-passo="1" style="position:absolute;left:0;top:165px;width:520px">
+      <div class="recip" style="width:520px;height:300px"><div data-anima="ions" data-modo="dissociacao" data-anima-passo="1" data-w="520" data-h="300" data-r="12" data-n-agua="10" data-an="Cl" data-cols="5" data-linhas="3" data-semente="7" style="width:520px;height:300px"></div></div>
+      <p style="margin:10px 0 0;font-size:25px;font-weight:700;text-align:center">o sal se dissolve: Na<sup>+</sup> e Cl<sup>−</sup> se separam</p>
+    </div>
+    <div style="position:absolute;left:580px;right:0;top:160px;display:flex;flex-direction:column;gap:18px">
+      <div class="card" data-passo="1" style="font-size:27px;padding:18px 26px"><h3 style="font-size:36px">NaCl <span style="font:700 25px var(--fonte-texto);color:var(--cinza)">cloreto de sódio</span></h3>Uso na cozinha, <b>conservação de alimentos</b>, soro fisiológico e soro caseiro.</div>
+      <div class="card" data-passo="2" style="font-size:27px;padding:18px 26px"><h3 style="font-size:36px">CaCO<sub>3</sub> <span style="font:700 25px var(--fonte-texto);color:var(--cinza)">carbonato de cálcio</span></h3>Calcário e <b>mármore</b>; conchas, corais e <b>casca de ovo</b>; matéria-prima do <b>cimento</b>.</div>
+      <div class="card" data-passo="3" style="font-size:27px;padding:18px 26px"><h3 style="font-size:36px">Na<sub>2</sub>CO<sub>3</sub> <span style="font:700 25px var(--fonte-texto);color:var(--cinza)">carbonato de sódio · barrilha</span></h3>Sabão e detergente, <b>vidro</b>, indústrias têxteis e siderúrgicas.</div>
+    </div>
+  </div>
+  <aside class="notas"><p>Clique 1: o cloreto de sódio; na água, o cristal se desfaz e os íons Na⁺ e Cl⁻ se espalham (dissociação, como nas bases). Cliques 2 e 3: os carbonatos.</p><p>A barrilha também é chamada de soda (não confundir com a soda cáustica, NaOH).</p></aside>
+</section>
+
+<!-- Principais sais 2 -->
+<section class="slide" data-nome="Principais sais 2">
+  <div class="conteudo">
+    <p class="olho">Principais sais</p>
+    <h2 class="titulo">Mais sais do dia a dia</h2>
+    <div style="position:absolute;left:0;right:0;top:160px;display:grid;grid-template-columns:1fr 1fr;gap:22px 32px">
+      <div class="card" data-passo="1" style="font-size:26px;padding:18px 26px"><h3 style="font-size:36px">CaSO<sub>4</sub> <span style="font:700 25px var(--fonte-texto);color:var(--cinza)">sulfato de cálcio · gesso</span></h3>Giz, construção civil e ortopedia.</div>
+      <div class="card" data-passo="2" style="font-size:26px;padding:18px 26px"><h3 style="font-size:36px">NaNO<sub>3</sub> <span style="font:700 25px var(--fonte-texto);color:var(--cinza)">nitrato de sódio · salitre do Chile</span></h3>Fertilizantes, explosivos e conservante de carnes.</div>
+      <div class="card" data-passo="3" style="font-size:26px;padding:18px 26px"><h3 style="font-size:36px">NaHCO<sub>3</sub> <span style="font:700 25px var(--fonte-texto);color:var(--cinza)">bicarbonato de sódio</span></h3>Fermento químico e antiácido.</div>
+      <div class="card" data-passo="4" style="font-size:26px;padding:18px 26px"><h3 style="font-size:36px">Al<sub>2</sub>(SO<sub>4</sub>)<sub>3</sub> <span style="font:700 25px var(--fonte-texto);color:var(--cinza)">sulfato de alumínio</span></h3>Tratamento de água: junta a sujeira em flocos.</div>
+    </div>
+    <div class="caixa caixa-atencao" data-passo="5" style="position:absolute;left:580px;right:0;top:640px">
+      <div class="texto" style="font-size:29px">O <b>salitre do Chile</b> tem esse nome pelos grandes depósitos nos desertos chilenos.</div>
+    </div>
+  </div>
+  <aside class="notas"><p>Um sal por clique (gesso e salitre são da professora; bicarbonato e sulfato de alumínio, da apostila). Clique 5: a curiosidade do salitre.</p><p>O gesso é sulfato de cálcio hidratado (com água presa no cristal). O IF 2014 cobrou o CaSO₄ como "principal componente do giz".</p></aside>
+</section>
+
+<!-- Questão 1 -->
+<section class="slide questao" data-nome="Questão 1">
+  <div class="conteudo">
+    <div class="area-resolucao"></div>
+    <span class="pilula pilula-pausa" data-em="1:some">Pause o vídeo e tente</span>
+    <div class="painel-questao">
+      <p class="olho">Questão 1 · IF Sudeste MG 2017</p>
+      <p class="enunciado" style="font-size:22px">As reações de neutralização ocorrem quando reagimos um ácido e uma base, produzindo sal e água. A correção da acidez estomacal, por meio do uso de bicarbonato de sódio ou leite de magnésia, é um exemplo de uma reação de neutralização.</p>
+      <p class="enunciado" style="font-size:22px">Entre as equações listadas, qual delas <b>NÃO</b> corresponde a uma reação de neutralização?</p>
+      <ol class="alternativas" style="gap:8px">
+        <li data-em="2:apaga" style="font-size:20px;padding:6px 14px"><b>A</b><span>2 KOH <span class="est">(aq)</span> + H<sub>2</sub>CO<sub>3</sub> <span class="est">(aq)</span> → K<sub>2</sub>CO<sub>3</sub> <span class="est">(aq)</span> + 2 H<sub>2</sub>O <span class="est">(l)</span></span></li>
+        <li data-em="2:apaga" style="font-size:20px;padding:6px 14px"><b>B</b><span>Ca(OH)<sub>2</sub> <span class="est">(aq)</span> + 2 HF <span class="est">(aq)</span> → CaF<sub>2</sub> <span class="est">(aq)</span> + 2 H<sub>2</sub>O <span class="est">(l)</span></span></li>
+        <li data-em="2:certo" style="font-size:20px;padding:6px 14px"><b>C</b><span>CH<sub>4</sub> <span class="est">(g)</span> + 2 O<sub>2</sub> <span class="est">(g)</span> → CO<sub>2</sub> <span class="est">(g)</span> + 2 H<sub>2</sub>O <span class="est">(l)</span></span></li>
+        <li data-em="2:apaga" style="font-size:20px;padding:6px 14px"><b>D</b><span>2 HCl <span class="est">(aq)</span> + Mg(OH)<sub>2</sub> <span class="est">(aq)</span> → MgCl<sub>2</sub> <span class="est">(aq)</span> + 2 H<sub>2</sub>O <span class="est">(l)</span></span></li>
+        <li data-em="2:apaga" style="font-size:20px;padding:6px 14px"><b>E</b><span>H<sub>3</sub>PO<sub>4</sub> <span class="est">(aq)</span> + NaOH <span class="est">(aq)</span> → NaH<sub>2</sub>PO<sub>4</sub> <span class="est">(aq)</span> + H<sub>2</sub>O <span class="est">(l)</span></span></li>
+      </ol>
+    </div>
+  </div>
+  <aside class="resolucao">
+    <p class="dados"><b>Dados:</b> neutralização: ácido + base → sal + água.</p>
+    <ol class="passos">
+      <li>A: base + ácido → K<sub>2</sub>CO<sub>3</sub> + água. ✓</li>
+      <li>B: base + ácido → CaF<sub>2</sub> + água. ✓</li>
+      <li>C: CH<sub>4</sub> + O<sub>2</sub>: sem ácido nem base. ✗</li>
+      <li>C é combustão do metano.</li>
+      <li>D: ácido + base → MgCl<sub>2</sub> + água. ✓</li>
+      <li>E: neutralização parcial (hidrogenossal). ✓</li>
+    </ol>
+    <p class="resposta"><b>Resposta:</b> a combustão do metano não é neutralização. <b>Gabarito C.</b></p>
+    <p class="atencao"><b>Destaque no quadro:</b> neutralização tem ácido e base nos reagentes e sal + água nos produtos.</p>
+    <ul class="erros">
+      <li><b>A</b> É neutralização: forma carbonato de potássio e água.</li>
+      <li><b>B</b> É neutralização: forma fluoreto de cálcio e água.</li>
+      <li><b>D</b> É neutralização: o leite de magnésia com o ácido do estômago.</li>
+      <li><b>E</b> É neutralização parcial: forma o hidrogenossal NaH<sub>2</sub>PO<sub>4</sub>.</li>
+    </ul>
+  </aside>
+  <aside class="notas">
+    <p>Clique 1 tira o aviso de pausa: resolva na área (D liga a caneta; E esconde o enunciado). Clique 2: gabarito C.</p>
+    <p>Questão oficial do IF Sudeste MG, prova de 2017 (também está na lista da professora). As alternativas estão como na prova, com o Mg(OH)₂ e o CaF₂ marcados (aq).</p>
+  </aside>
+</section>
+
+<!-- Questão 2 -->
+<section class="slide questao" data-nome="Questão 2">
+  <div class="conteudo">
+    <div class="area-resolucao"></div>
+    <span class="pilula pilula-pausa" data-em="1:some">Pause o vídeo e tente</span>
+    <div class="painel-questao">
+      <p class="olho">Questão 2 · IF Sudeste MG 2026</p>
+      <p class="enunciado" style="font-size:22px">Considere as reações químicas apresentadas a seguir:</p>
+      <p class="enunciado" style="font-size:22px">I – CH<sub>4</sub> <span class="est">(g)</span> + 2 O<sub>2</sub> <span class="est">(g)</span> → CO<sub>2</sub> <span class="est">(g)</span> + 2 H<sub>2</sub>O <span class="est">(l)</span><br>II – HCl <span class="est">(aq)</span> + NaOH <span class="est">(aq)</span> → NaCl <span class="est">(aq)</span> + H<sub>2</sub>O <span class="est">(l)</span></p>
+      <p class="enunciado" style="font-size:22px">Com base na análise das equações químicas, assinale a alternativa <b>CORRETA</b> quanto à classificação e características dessas reações.</p>
+      <ol class="alternativas" style="gap:8px">
+        <li data-em="2:apaga" style="font-size:21px;padding:6px 14px"><b>A</b><span>Ambas as reações são de combustão, pois há formação de água no produto.</span></li>
+        <li data-em="2:apaga" style="font-size:21px;padding:6px 14px"><b>B</b><span>A reação I é de neutralização, pois há formação de sal e água, e a reação II é de combustão incompleta.</span></li>
+        <li data-em="2:certo" style="font-size:21px;padding:6px 14px"><b>C</b><span>A reação I é de combustão e libera energia, enquanto a reação II é de neutralização e forma sal e água.</span></li>
+        <li data-em="2:apaga" style="font-size:21px;padding:6px 14px"><b>D</b><span>A reação I envolve apenas elementos químicos simples, enquanto a reação II envolve compostos químicos.</span></li>
+        <li data-em="2:apaga" style="font-size:21px;padding:6px 14px"><b>E</b><span>A reação I libera apenas água na reação, enquanto a reação II produz sal e água.</span></li>
+      </ol>
+    </div>
+  </div>
+  <aside class="resolucao">
+    <p class="dados"><b>Dados:</b> I: combustível + O<sub>2</sub>; II: ácido + base.</p>
+    <ol class="passos">
+      <li>I: CH<sub>4</sub> queima com O<sub>2</sub>: combustão.</li>
+      <li>Combustão libera energia (calor e luz).</li>
+      <li>II: HCl (ácido) + NaOH (base).</li>
+      <li>Forma NaCl (sal) + água: neutralização.</li>
+    </ol>
+    <p class="resposta"><b>Resposta:</b> I é combustão (libera energia); II é neutralização (sal e água). <b>Gabarito C.</b></p>
+    <p class="atencao"><b>Destaque no quadro:</b> formar água não decide: veja os reagentes.</p>
+    <ul class="erros">
+      <li><b>A</b> Só a I é combustão; a II é ácido + base.</li>
+      <li><b>B</b> Inverte as duas classificações.</li>
+      <li><b>D</b> Na I, só o O<sub>2</sub> é substância simples.</li>
+      <li><b>E</b> A I também forma CO<sub>2</sub>, não só água.</li>
+    </ul>
+  </aside>
+  <aside class="notas">
+    <p>Clique 1 tira o aviso de pausa: resolva na área (D liga a caneta; E esconde o enunciado). Clique 2: gabarito C.</p>
+    <p>Questão oficial do IF Sudeste MG, prova de 2026. Retoma a combustão (capítulo 2) e a neutralização.</p>
+  </aside>
+</section>
+
+<!-- Resumo -->
+<section class="slide" data-nome="Resumo">
+  <div class="conteudo">
+    <p class="olho">Resumo</p>
+    <h2 class="titulo">O essencial</h2>
+    <div class="resumo" style="position:absolute;left:0;right:0;top:150px">
+      <div><b>Neutralização:</b> ácido + base → sal + água (H<sup>+</sup> + OH<sup>−</sup> → H<sub>2</sub>O).</div>
+      <div><b>Sal:</b> composto iônico; cátion da base (≠ H<sup>+</sup>) e ânion do ácido (≠ OH<sup>−</sup>).</div>
+      <div><b>Normal:</b> neutralização total. <b>Hidrogenossal:</b> sobra H (NaHCO<sub>3</sub>). <b>Hidroxissal:</b> sobra OH.</div>
+      <div><b>Nome:</b> ânion + de + cátion. ídrico → <b>eto</b>; ico → <b>ato</b>; oso → <b>ito</b>.</div>
+      <div><b>Fórmula:</b> carga total zero: CaCO<sub>3</sub>, Al<sub>2</sub>(SO<sub>4</sub>)<sub>3</sub>.</div>
+      <div><b>NaCl</b> cozinha e soro; <b>CaCO<sub>3</sub></b> mármore; <b>CaSO<sub>4</sub></b> gesso; <b>NaHCO<sub>3</sub></b> fermento.</div>
+    </div>
+    <div class="caixa caixa-atencao" style="position:absolute;left:580px;right:0;top:660px">
+      <div class="texto" style="font-size:30px">Sulfúrico → sulf<b>ato</b>; sulfuroso → sulf<b>ito</b>; sulfídrico → sulf<b>eto</b>.</div>
+    </div>
+  </div>
+  <aside class="notas"><p>Peça para tirarem um print desta tela.</p></aside>
+</section>
+
+<!-- A seguir -->
+<section class="slide capa" data-nome="A seguir">
+  <div class="estrelas"></div>
+  <div class="texto-capa" style="top:170px">
+    <span class="selo">Química · IF</span>
+    <p class="aula" style="font-size:26px">A seguir · Óxidos · Parte 1 de 2</p>
+    <h1>Óxidos</h1>
+    <p class="sub">Classificação e nomenclatura</p>
+  </div>
+  <svg class="emblema" viewBox="0 0 640 640" aria-hidden="true">
+    <circle cx="320" cy="320" r="150" fill="#FFD10C"/>
+    <text x="320" y="375" text-anchor="middle" font-family="Bricolage Grotesque, sans-serif" font-weight="800" font-size="170" fill="#3A2196">O</text>
+    <g class="gira"><ellipse cx="320" cy="320" rx="250" ry="200" fill="none" stroke="#fff" stroke-opacity=".7" stroke-width="3" stroke-dasharray="3 14" stroke-linecap="round"/><circle cx="70" cy="320" r="16" fill="#fff"/></g>
+  </svg>
+  <img class="logo-capa" src="{{LOGO_BRANCO}}" alt="Quarks">
+  <aside class="notas"><p>Próxima: os óxidos, compostos de dois elementos com o oxigênio; como se classificam (ácidos, básicos, anfóteros, neutros) e seus nomes.</p></aside>
+</section>
