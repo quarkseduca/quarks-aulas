@@ -1,0 +1,411 @@
+<!--aula
+{"disciplina": "quimica", "curso": "IF", "assunto": "Reações químicas", "parte": "Parte única", "titulo": "Combustão e neutralização", "scripts": ["animacoes-reacoes.js"]}
+-->
+<!-- Fonte: slides da professora (Química IF 2026, aula 04: combustão, combustível e comburente, reação de neutralização e os quatro exemplos de ácido + base), completados com a apostila IF, Química, 7.4 Combustíveis (triângulo do fogo, completa e incompleta), 11 (combustão de orgânicos) e 4.3 Sais (neutralização). Questões: IF Sudeste MG 2016 e 2014 (oficiais). -->
+<style>
+  .caixa, .linha-ex, .lado-card { box-sizing: border-box; }
+  .eq-q { font: 800 60px var(--fonte-titulo); letter-spacing: -.01em; color: var(--roxo-titulo); white-space: nowrap; }
+  .eq-q sub, .eq-q sup { font-size: .55em; }
+  .eq-q .e { font: 700 .48em var(--fonte-texto); color: var(--cinza); letter-spacing: 0; }
+  .eq-q .k { color: var(--d-forte); }
+  .linha-ex { background: var(--branco); border: 2px solid var(--lilas-2); border-radius: 22px; padding: 12px 24px; font-size: 30px; line-height: 1.3; }
+  .linha-ex b { color: var(--roxo-titulo); }
+  .linha-ex sub, .linha-ex sup, .texto sub, .texto sup, .caixa sub, .caixa sup { font-size: .65em; }
+  .lado-card { background: var(--branco); border: 2px solid var(--lilas-2); border-radius: 30px; padding: 14px 28px 16px; display: flex; flex-direction: column; align-items: center; gap: 4px; text-align: center; }
+  .lado-card h3 { margin: 0; font: 800 44px var(--fonte-titulo); letter-spacing: -.02em; color: var(--roxo-titulo); }
+  .lado-card p { margin: 0; font-size: 27px; line-height: 1.3; color: var(--cinza); }
+  .lado-card p.eq-q { font-size: 40px; color: var(--roxo-titulo); }
+  .tabela th .tag-h { background: var(--branco); }
+  .tabela td, .tabela th { padding: 10px 30px; }
+  .tabela td.f { font: 800 38px var(--fonte-titulo); color: var(--roxo-titulo); white-space: nowrap; }
+  .tabela td.f sub, .tabela td.f sup { font-size: .55em; }
+  .tabela td.f .e { font: 700 .5em var(--fonte-texto); color: var(--cinza); }
+  .tabela td.mais { padding: 10px 4px; font: 800 34px var(--fonte-titulo); color: var(--roxo-claro); }
+  .tag { display: inline-block; padding: 4px 16px; border-radius: 999px; font-size: 21px; font-weight: 800; letter-spacing: .06em; text-transform: uppercase; }
+  .tag-a { background: #FCE8EC; color: #A12A42; } .tag-b { background: #E3F0FB; color: #1F5F99; } .tag-s { background: #FFF4C2; color: #8A6A00; } .tag-h { background: var(--d-clara); color: var(--d-forte); }
+  /* ---------- Animações (só na tela aberta e depois que a figura aparece) ---------- */
+  @keyframes chama { 0%,100% { transform: scale(1,1); } 50% { transform: scale(.94,.86); } }
+  .chama { transform-box: fill-box; transform-origin: 50% 100%; }
+  .slide.ativo .mostra .chama, .slide.ativo .chama.sempre { animation: chama 1.8s ease-in-out infinite; }
+  .chama.dentro { animation-delay: -.7s !important; }
+  /* fuligem que sobe da chama amarela (combustão incompleta) */
+  @keyframes fuligem { 0% { transform: translate(0,0); opacity: 0; } 20% { opacity: .85; } 100% { transform: translate(var(--dx, 10px), -110px); opacity: 0; } }
+  .fuligem circle { opacity: 0; }
+  .slide.ativo .mostra .fuligem circle { animation: fuligem 3.6s ease-out infinite; }
+  .fuligem circle:nth-child(2) { animation-delay: -.9s !important; --dx: -14px; } .fuligem circle:nth-child(3) { animation-delay: -1.8s !important; --dx: 18px; } .fuligem circle:nth-child(4) { animation-delay: -2.7s !important; --dx: -6px; }
+  /* triângulo do fogo: cada lado se desenha; tirar um lado apaga o fogo */
+  .tri .lado { fill: none; stroke-width: 16; stroke-linecap: round; stroke-dasharray: 800; stroke-dashoffset: 800; transition: stroke-dashoffset 1.3s ease-in-out, opacity .6s, stroke .6s; }
+  .tri .lado.mostra { stroke-dashoffset: 0; }
+  .tri text { transition: opacity .6s; }
+  .tri .fogo { transform-box: fill-box; transform-origin: 50% 100%; transform: scale(0); transition: transform 1.2s ease; }
+  .tri.aceso .fogo { transform: scale(1); }
+  .tri.sem-calor .fogo, .tri.sem-ar .fogo, .tri.sem-gas .fogo { transform: scale(0); }
+  .tri.sem-calor .l-calor { opacity: .15; }
+  .tri.sem-ar .l-calor { opacity: 1; } .tri.sem-ar .l-ar { opacity: .15; }
+  .tri.sem-gas .l-ar { opacity: 1; } .tri.sem-gas .l-gas { opacity: .15; }
+</style>
+
+<svg width="0" height="0" style="position:absolute" aria-hidden="true">
+  <defs>
+    <linearGradient id="gChamaA" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#FFD10C"/><stop offset="1" stop-color="#FF7A1A"/></linearGradient>
+    <linearGradient id="gChamaZ" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#9FD3FF"/><stop offset="1" stop-color="#2A5BD0"/></linearGradient>
+  </defs>
+</svg>
+
+<!-- 1. Capa -->
+<section class="slide capa" data-nome="Capa">
+  <div class="estrelas"></div>
+  <div class="texto-capa">
+    <span class="selo">Química · IF</span>
+    <p class="aula">Reações químicas</p>
+    <h1 style="font-size:130px">Combustão e neutralização</h1>
+    <p class="sub">O fogo e o ácido com a base</p>
+  </div>
+  <svg class="emblema" viewBox="0 0 640 640" aria-hidden="true">
+    <g class="gira-lento"><ellipse cx="320" cy="320" rx="300" ry="128" fill="none" stroke="#fff" stroke-opacity=".38" stroke-width="2" transform="rotate(-10 320 320)"/></g>
+    <g class="gira"><ellipse cx="320" cy="320" rx="236" ry="196" fill="none" stroke="#FFD10C" stroke-opacity=".75" stroke-width="2.5" stroke-dasharray="3 14" stroke-linecap="round" transform="rotate(-8 320 320)"/>
+      <circle cx="84" cy="300" r="13" fill="#FFD10C" stroke="#fff" stroke-width="3"/></g>
+    <circle cx="320" cy="320" r="132" fill="#FFD10C"/>
+    <image href="{{SYM_ROXO}}" x="238" y="238" width="164" height="164"/>
+  </svg>
+  <img class="logo-capa" src="{{LOGO_BRANCO}}" alt="Quarks">
+  <aside class="notas"><p>Hoje: dois tipos de reação que o IF pede para reconhecer. A combustão (combustível, comburente, triângulo do fogo, completa e incompleta) e a neutralização (ácido + base → sal + água).</p></aside>
+</section>
+
+<!-- 2. Combustão -->
+<section class="slide" data-nome="Combustão">
+  <div class="conteudo">
+    <p class="olho">Reações de combustão</p>
+    <h2 class="titulo">O que é queimar?</h2>
+    <div style="position:absolute;left:0;top:165px;width:900px">
+      <div data-anima="rearranjo" data-reacao="ch4" data-anima-passo="1" style="width:900px;height:288px"></div>
+      <div data-passo="1" style="display:grid;grid-template-columns:1fr 1fr;text-align:center;margin-top:4px">
+        <span class="eq-q" style="font-size:40px">CH<sub>4</sub> + 2 O<sub>2</sub></span><span class="eq-q" style="font-size:40px">CO<sub>2</sub> + 2 H<sub>2</sub>O</span>
+      </div>
+    </div>
+    <div style="position:absolute;left:960px;right:0;top:165px;display:flex;flex-direction:column;gap:16px">
+      <div class="caixa caixa-fundamental" data-passo="2" style="padding:22px 30px">
+        <span class="rotulo">Combustão</span>
+        <div class="texto" style="font-size:30px"><b>Combustível</b> + <b>comburente</b> (O<sub>2</sub>) → produtos + <b>energia</b> (calor e luz). É <b>exotérmica</b>: libera calor.</div>
+      </div>
+      <div class="linha-ex" data-passo="3"><b>Combustível:</b> o que queima (gás de cozinha, álcool, gasolina, madeira).</div>
+      <div class="linha-ex" data-passo="4"><b>Comburente:</b> quase sempre o gás oxigênio do ar.</div>
+    </div>
+    <div class="caixa caixa-atencao" data-passo="5" style="position:absolute;left:580px;right:0;top:640px">
+      <span class="rotulo">Sem O₂ não é combustão</span>
+      <div class="texto" style="font-size:29px">Vinagre com bicarbonato solta CO<sub>2</sub>, mas <b>não</b> é combustão: não há combustível reagindo com oxigênio.</div>
+    </div>
+  </div>
+  <aside class="notas">
+    <p>Clique 1: a queima do metano (gás natural), com os átomos trocando de parceiros: o C vai para o CO₂ e os H vão para a água. Clique 2: a definição (material da professora: combustível, comburente, reação exotérmica). Cliques 3 e 4: os nomes. Clique 5: o que não é combustão.</p>
+    <p>Combustível com carbono e hidrogênio, queimando por completo, sempre dá CO₂ e H₂O.</p>
+  </aside>
+</section>
+
+<!-- 3. Triângulo do fogo -->
+<section class="slide" data-nome="Triângulo do fogo">
+  <div class="conteudo">
+    <p class="olho">Para haver fogo</p>
+    <h2 class="titulo">O triângulo do fogo</h2>
+    <svg class="tri aceso" data-em="5:sem-calor 6:sem-ar 7:sem-gas" viewBox="0 0 760 460" style="position:absolute;left:20px;top:150px;width:700px;height:424px;overflow:visible" aria-hidden="true">
+      <path class="lado l-ar" data-passo="2" d="M90 410 L380 40" stroke="#2E8BD8"/>
+      <path class="lado l-calor" data-passo="3" d="M380 40 L670 410" stroke="#E5533D"/>
+      <path class="lado l-gas" data-passo="1" d="M670 410 L90 410" stroke="#6551D1"/>
+      <text class="l-gas" data-passo="1" x="380" y="456" text-anchor="middle" font-family="Figtree,sans-serif" font-weight="800" font-size="32" fill="#4B39B3">combustível</text>
+      <text class="l-ar" data-passo="2" x="160" y="186" text-anchor="middle" font-family="Figtree,sans-serif" font-weight="800" font-size="32" fill="#1F6FB3" transform="rotate(-52 160 186)">comburente (O₂)</text>
+      <text class="l-calor" data-passo="3" x="600" y="186" text-anchor="middle" font-family="Figtree,sans-serif" font-weight="800" font-size="32" fill="#C63C28" transform="rotate(52 600 186)">calor</text>
+      <g class="fogo" data-passo="4">
+        <path class="chama sempre" d="M380 170 C440 240 450 300 420 350 C405 375 395 384 380 384 C365 384 355 375 340 350 C310 300 320 240 380 170 Z" fill="url(#gChamaA)"/>
+        <path class="chama dentro sempre" d="M380 260 C405 292 410 322 398 350 C392 362 386 366 380 366 C374 366 368 362 362 350 C350 322 355 292 380 260 Z" fill="#FFF6C8"/>
+      </g>
+    </svg>
+    <div style="position:absolute;left:860px;right:0;top:170px;display:flex;flex-direction:column;gap:16px">
+      <div class="caixa caixa-fundamental" data-passo="4" style="padding:20px 30px">
+        <span class="rotulo">Os três juntos</span>
+        <div class="texto" style="font-size:29px">Só há fogo com combustível, comburente e calor ao mesmo tempo. <b>Tire um lado e o fogo apaga.</b></div>
+      </div>
+      <div class="linha-ex" data-passo="5"><b>Água na fogueira:</b> esfria, tira o <b>calor</b>.</div>
+      <div class="linha-ex" data-passo="6"><b>Tampa na panela:</b> barra o ar, tira o <b>comburente</b>.</div>
+      <div class="linha-ex" data-passo="7"><b>Fechar o registro:</b> tira o <b>combustível</b>.</div>
+    </div>
+    <div class="caixa caixa-atencao" data-passo="8" style="position:absolute;left:580px;right:0;top:660px">
+      <span class="rotulo">Óleo pegando fogo</span>
+      <div class="texto" style="font-size:29px">Nunca jogue água: ela espalha o óleo em chamas. Desligue o fogo e <b>abafe com uma tampa</b>.</div>
+    </div>
+  </div>
+  <aside class="notas">
+    <p>Cliques 1 a 3: os lados do triângulo (combustível, comburente, calor). Clique 4: o fogo acende quando os três estão juntos. Cliques 5 a 7: cada ação tira um lado (ele fica apagado no desenho) e o fogo some. Clique 8: o cuidado com o óleo.</p>
+    <p>O calor é só para começar: depois, a própria queima produz o calor que a mantém.</p>
+  </aside>
+</section>
+
+<!-- 4. Completa e incompleta -->
+<section class="slide" data-nome="Completa e incompleta">
+  <div class="conteudo">
+    <p class="olho">Depende do oxigênio</p>
+    <h2 class="titulo">Combustão completa e incompleta</h2>
+    <div style="position:absolute;left:0;right:0;top:160px;display:grid;grid-template-columns:1fr 1fr;gap:30px">
+      <div class="lado-card" data-passo="1">
+        <svg viewBox="0 0 300 190" style="width:240px;height:152px" aria-hidden="true">
+          <rect x="70" y="164" width="160" height="20" rx="10" fill="#B8B3C9"/>
+          <path class="chama" d="M150 30 C190 80 196 120 178 150 C170 162 160 166 150 166 C140 166 130 162 122 150 C104 120 110 80 150 30 Z" fill="url(#gChamaZ)"/>
+          <path class="chama dentro" d="M150 90 C166 110 170 132 162 150 C158 158 154 160 150 160 C146 160 142 158 138 150 C130 132 134 110 150 90 Z" fill="#E3F2FF"/>
+        </svg>
+        <h3>Completa</h3>
+        <p><b>Oxigênio de sobra</b>, chama <b>azulada</b>.</p>
+        <p class="eq-q">CH<sub>4</sub> + 2 O<sub>2</sub> → CO<sub>2</sub> + 2 H<sub>2</sub>O</p>
+      </div>
+      <div class="lado-card" data-passo="2">
+        <svg viewBox="0 0 300 190" style="width:240px;height:152px" aria-hidden="true">
+          <rect x="70" y="164" width="160" height="20" rx="10" fill="#B8B3C9"/>
+          <g class="fuligem" fill="#3B3640"><circle cx="150" cy="40" r="9"/><circle cx="140" cy="46" r="7"/><circle cx="160" cy="44" r="8"/><circle cx="150" cy="50" r="6"/></g>
+          <path class="chama" d="M150 30 C196 86 200 124 180 152 C172 162 160 166 150 166 C140 166 128 162 120 152 C100 124 104 86 150 30 Z" fill="url(#gChamaA)"/>
+          <path class="chama dentro" d="M150 96 C166 116 170 136 162 152 C158 158 154 160 150 160 C146 160 142 158 138 152 C130 136 134 116 150 96 Z" fill="#FFF6C8"/>
+        </svg>
+        <h3>Incompleta</h3>
+        <p><b>Pouco oxigênio</b>, chama <b>amarelada</b> e fumaça preta.</p>
+        <p class="eq-q" data-passo="3">CH<sub>4</sub> + <sup>3</sup>⁄<sub>2</sub> O<sub>2</sub> → <span style="color:#C2384F">CO</span> + 2 H<sub>2</sub>O</p>
+        <p class="eq-q" data-passo="4">CH<sub>4</sub> + O<sub>2</sub> → <span style="color:#C2384F">C</span> + 2 H<sub>2</sub>O</p>
+      </div>
+    </div>
+    <div class="caixa caixa-atencao" data-passo="5" style="position:absolute;left:580px;right:0;top:680px">
+      <div class="texto" style="font-size:29px"><b>CO</b> (monóxido de carbono) é tóxico e sem cheiro; <b>C</b> é a fuligem. Aquecedor a gás nunca em banheiro fechado.</div>
+    </div>
+  </div>
+  <aside class="notas">
+    <p>Clique 1: completa, com oxigênio suficiente: só CO₂ e H₂O, chama azul. Clique 2: incompleta, com a fuligem subindo da chama amarela. Cliques 3 e 4: os produtos da incompleta, monóxido de carbono (CO) ou carvão (C, a fuligem). Confira os oxigênios: 3 = 1 + 2 e 2 = 0 + 2.</p>
+    <p>Clique 5: o perigo do CO. Quanto menos oxigênio, menos o carbono se oxida: CO₂ → CO → C.</p>
+  </aside>
+</section>
+
+<!-- 5. Exemplo: etanol -->
+<section class="slide" data-nome="Exemplo: etanol">
+  <div class="conteudo">
+    <p class="olho">Exemplo · Combustão completa do etanol</p>
+    <h2 class="titulo">Balanceie: C<sub style="font-size:.55em">2</sub>H<sub style="font-size:.55em">6</sub>O + O<sub style="font-size:.55em">2</sub> → CO<sub style="font-size:.55em">2</sub> + H<sub style="font-size:.55em">2</sub>O</h2>
+    <div style="position:absolute;left:0;width:1000px;top:165px;display:flex;flex-direction:column;gap:12px">
+      <div class="linha-ex" data-passo="1"><b>Carbono:</b> 2 no etanol → <b>2</b> CO<sub>2</sub>.</div>
+      <div class="linha-ex" data-passo="2"><b>Hidrogênio:</b> 6 no etanol → 6 ÷ 2 = <b>3</b> H<sub>2</sub>O.</div>
+      <div class="linha-ex" data-passo="3"><b>Oxigênio à direita:</b> 2 · 2 + 3 · 1 = 7.</div>
+      <div class="linha-ex" data-passo="4"><b>À esquerda:</b> 1 (no etanol) + 2y = 7 → 2y = 6.</div>
+      <div class="linha-ex" data-passo="5"><b>Então</b> y = <b>3</b> O<sub>2</sub>. Confira: O 1 + 6 = 7 = 4 + 3 ✓</div>
+    </div>
+    <div class="caixa caixa-atencao" data-passo="4" style="position:absolute;left:1060px;right:0;top:165px">
+      <span class="rotulo">Não esqueça</span>
+      <div class="texto" style="font-size:28px">O <b>oxigênio do combustível</b> também entra na conta. O O<sub>2</sub> fica por último: ele é uma substância só.</div>
+    </div>
+    <div class="caixa caixa-fundamental" data-passo="6" style="position:absolute;left:580px;right:0;top:640px">
+      <span class="rotulo">Resposta</span>
+      <p class="eq-q" style="margin:4px 0 0;font-size:56px">C<sub>2</sub>H<sub>6</sub>O + <span class="k">3</span> O<sub>2</sub> → <span class="k">2</span> CO<sub>2</sub> + <span class="k">3</span> H<sub>2</sub>O</p>
+    </div>
+  </div>
+  <aside class="notas">
+    <p>É a equação do motor a álcool do material da professora: aqui, de onde vêm os coeficientes. Ordem: C, H e por último O. Um clique por linha.</p>
+    <p>Para combustível com C, H e O: carbono → CO₂; hidrogênio → H₂O; o oxigênio fecha a conta com o O₂.</p>
+  </aside>
+</section>
+
+<!-- 6. Neutralização -->
+<section class="slide" data-nome="Neutralização">
+  <div class="conteudo">
+    <p class="olho">Reação de neutralização</p>
+    <h2 class="titulo">Ácido + base → sal + água</h2>
+    <div style="position:absolute;left:0;top:165px;width:820px">
+      <div data-anima="rearranjo" data-reacao="neutra" data-anima-passo="1" style="width:820px;height:300px"></div>
+      <div data-passo="1" style="display:grid;grid-template-columns:1fr 1fr;text-align:center;margin-top:4px">
+        <span class="eq-q" style="font-size:40px">HCl + NaOH</span><span class="eq-q" style="font-size:40px">NaCl + H<sub>2</sub>O</span>
+      </div>
+    </div>
+    <div style="position:absolute;left:900px;right:0;top:165px;display:flex;flex-direction:column;gap:14px">
+      <div class="linha-ex" data-passo="2"><span class="tag tag-a">ácido</span> em água libera <b>H<sup>+</sup></b> (HCl → H<sup>+</sup> + Cl<sup>−</sup>).</div>
+      <div class="linha-ex" data-passo="3"><span class="tag tag-b">base</span> em água libera <b>OH<sup>−</sup></b> (NaOH → Na<sup>+</sup> + OH<sup>−</sup>).</div>
+      <div class="caixa caixa-fundamental" data-passo="4" style="padding:18px 28px">
+        <span class="rotulo">A água vem daqui</span>
+        <p class="eq-q" style="margin:2px 0 4px;font-size:50px">H<sup>+</sup> + OH<sup>−</sup> → H<sub>2</sub>O</p>
+        <div class="texto" style="font-size:27px">O que sobra (Na<sup>+</sup> e Cl<sup>−</sup>) forma o <b>sal</b>: NaCl.</div>
+      </div>
+    </div>
+    <div class="caixa caixa-atencao" data-passo="5" style="position:absolute;left:580px;right:0;top:660px">
+      <div class="texto" style="font-size:29px">Azia é ácido demais no estômago. O <b>leite de magnésia</b>, uma base, neutraliza o ácido.</div>
+    </div>
+  </div>
+  <aside class="notas">
+    <p>Clique 1: o H do ácido se junta ao OH da base e forma a água; o Na e o Cl formam o sal. Cliques 2 e 3: o que é ácido e o que é base (ideia de Arrhenius; o capítulo de funções inorgânicas aprofunda). Clique 4: a essência da neutralização, H⁺ + OH⁻ → H₂O (o material da professora escreve HOH, que é a mesma água). Clique 5: no dia a dia.</p>
+    <p>Sal não é só o de cozinha: é o composto formado pelo cátion da base e pelo ânion do ácido.</p>
+  </aside>
+</section>
+
+<!-- 7. Exemplos de neutralização -->
+<section class="slide" data-nome="Exemplos de neutralização">
+  <div class="conteudo">
+    <p class="olho">Veja outros exemplos</p>
+    <h2 class="titulo">Quatro neutralizações</h2>
+    <table class="tabela" style="position:absolute;left:0;right:0;top:160px;width:100%">
+      <tr><th><span class="tag tag-a">ácido</span></th><th></th><th><span class="tag tag-b">base</span></th><th></th><th><span class="tag tag-s">sal</span></th><th></th><th><span class="tag tag-h">água</span></th></tr>
+      <tr data-passo="1"><td class="f">HCl<span class="e">(aq)</span></td><td class="mais">+</td><td class="f">NaOH<span class="e">(aq)</span></td><td class="mais">→</td><td class="f">NaCl<span class="e">(aq)</span></td><td class="mais">+</td><td class="f">H<sub>2</sub>O<span class="e">(l)</span></td></tr>
+      <tr data-passo="2"><td class="f">HNO<sub>3</sub><span class="e">(aq)</span></td><td class="mais">+</td><td class="f">NaOH<span class="e">(aq)</span></td><td class="mais">→</td><td class="f">NaNO<sub>3</sub><span class="e">(aq)</span></td><td class="mais">+</td><td class="f">H<sub>2</sub>O<span class="e">(l)</span></td></tr>
+      <tr data-passo="3"><td class="f">H<sub>2</sub>SO<sub>4</sub><span class="e">(aq)</span></td><td class="mais">+</td><td class="f">Ca(OH)<sub>2</sub><span class="e">(aq)</span></td><td class="mais">→</td><td class="f">CaSO<sub>4</sub><span class="e">(s)</span></td><td class="mais">+</td><td class="f">2 H<sub>2</sub>O<span class="e">(l)</span></td></tr>
+      <tr data-passo="4"><td class="f">H<sub>3</sub>PO<sub>4</sub><span class="e">(aq)</span></td><td class="mais">+</td><td class="f">3 KOH<span class="e">(aq)</span></td><td class="mais">→</td><td class="f">K<sub>3</sub>PO<sub>4</sub><span class="e">(aq)</span></td><td class="mais">+</td><td class="f">3 H<sub>2</sub>O<span class="e">(l)</span></td></tr>
+    </table>
+    <div class="caixa caixa-fundamental" data-passo="5" style="position:absolute;left:580px;right:0;top:620px">
+      <span class="rotulo">Neutralização total</span>
+      <div class="texto" style="font-size:30px">Nº de <b>H<sup>+</sup></b> do ácido = nº de <b>OH<sup>−</sup></b> da base = nº de <b>águas</b> formadas. No H<sub>3</sub>PO<sub>4</sub>: 3 H<sup>+</sup>, 3 KOH, 3 H<sub>2</sub>O.</div>
+    </div>
+  </div>
+  <aside class="notas">
+    <p>Os quatro exemplos do material da professora, um por clique. Peça para os alunos apontarem o ácido (começa com H), a base (tem OH) e o sal (o metal da base com o resto do ácido).</p>
+    <p>Correção do material antigo: o CaSO₄ aparecia como (aq). Ele é pouco solúvel em água e se deposita, por isso aqui está (s).</p>
+    <p>Clique 5: a regra da neutralização total. Se sobrar H⁺ (como em H₃PO₄ + NaOH → NaH₂PO₄ + H₂O), ela é parcial, mas continua sendo neutralização.</p>
+  </aside>
+</section>
+
+<!-- 8. Exemplo: H2SO4 + NaOH -->
+<section class="slide" data-nome="Exemplo: ácido sulfúrico">
+  <div class="conteudo">
+    <p class="olho">Exemplo · Balanceando pela contagem de H⁺ e OH⁻</p>
+    <h2 class="titulo">H<sub style="font-size:.55em">2</sub>SO<sub style="font-size:.55em">4</sub> + NaOH → Na<sub style="font-size:.55em">2</sub>SO<sub style="font-size:.55em">4</sub> + H<sub style="font-size:.55em">2</sub>O</h2>
+    <div style="position:absolute;left:0;width:1000px;top:165px;display:flex;flex-direction:column;gap:12px">
+      <div class="linha-ex" data-passo="1"><b>Ácido:</b> o H<sub>2</sub>SO<sub>4</sub> libera <b>2 H<sup>+</sup></b>.</div>
+      <div class="linha-ex" data-passo="2"><b>Base:</b> 2 H<sup>+</sup> pedem 2 OH<sup>−</sup> → <b>2</b> NaOH.</div>
+      <div class="linha-ex" data-passo="3"><b>Água:</b> 2 H<sup>+</sup> + 2 OH<sup>−</sup> → <b>2</b> H<sub>2</sub>O.</div>
+      <div class="linha-ex" data-passo="4"><b>Sal:</b> sobram 2 Na<sup>+</sup> e 1 SO<sub>4</sub><sup>2−</sup> → Na<sub>2</sub>SO<sub>4</sub>.</div>
+      <div class="linha-ex" data-passo="5"><b>Confira:</b> Na 2 = 2 · S 1 = 1 · H 2 + 2 = 4 · O 4 + 2 = 6 ✓</div>
+    </div>
+    <div class="caixa caixa-atencao" data-passo="1" style="position:absolute;left:1060px;right:0;top:165px">
+      <span class="rotulo">Atalho</span>
+      <div class="texto" style="font-size:28px">Na neutralização, acerte primeiro <b>H<sup>+</sup> e OH<sup>−</sup></b>: o número de águas sai junto.</div>
+    </div>
+    <div class="caixa caixa-fundamental" data-passo="6" style="position:absolute;left:580px;right:0;top:640px">
+      <span class="rotulo">Resposta</span>
+      <p class="eq-q" style="margin:4px 0 0;font-size:56px">H<sub>2</sub>SO<sub>4</sub> + <span class="k">2</span> NaOH → Na<sub>2</sub>SO<sub>4</sub> + <span class="k">2</span> H<sub>2</sub>O</p>
+    </div>
+  </div>
+  <aside class="notas">
+    <p>Um clique por linha. A contagem: H à esquerda 2 (ácido) + 2 (bases) = 4; à direita 2 · 2 = 4. O à esquerda 4 + 2 = 6; à direita 4 + 2 = 6.</p>
+    <p>A mesma ideia resolve a questão 2: 3 H₂SO₄ (6 H⁺) com 2 Al(OH)₃ (6 OH⁻) dão 6 águas.</p>
+  </aside>
+</section>
+
+<!-- Questão 1 -->
+<section class="slide questao" data-nome="Questão 1">
+  <div class="conteudo">
+    <div class="area-resolucao"></div>
+    <span class="pilula pilula-pausa" data-em="1:some">Pause o vídeo e tente</span>
+    <div class="painel-questao">
+      <p class="olho">Questão 1 · IF Sudeste MG 2016</p>
+      <p class="enunciado" style="font-size:28px">A reação a seguir pode ser classificada como uma reação de:</p>
+      <p class="enunciado" style="font-size:24px;font-weight:800;color:var(--roxo-titulo);text-align:center;white-space:nowrap">C<sub>8</sub>H<sub>18</sub>(g) + <sup>25</sup>⁄<sub>2</sub> O<sub>2</sub>(g) → 8 CO<sub>2</sub>(g) + 9 H<sub>2</sub>O(l)</p>
+      <ol class="alternativas">
+        <li data-em="2:apaga"><b>A</b><span>dupla-troca.</span></li>
+        <li data-em="2:apaga"><b>B</b><span>decomposição.</span></li>
+        <li data-em="2:certo"><b>C</b><span>combustão.</span></li>
+        <li data-em="2:apaga"><b>D</b><span>neutralização.</span></li>
+        <li data-em="2:apaga"><b>E</b><span>síntese.</span></li>
+      </ol>
+    </div>
+  </div>
+  <aside class="resolucao">
+    <p class="dados"><b>Dados:</b> C₈H₁₈ + O₂ → CO₂ + H₂O.</p>
+    <ol class="passos">
+      <li><b>Reagentes:</b> octano (combustível) + O₂ (comburente).</li>
+      <li><b>Produtos:</b> CO₂ e H₂O, com energia.</li>
+      <li><b>Conclusão:</b> é a queima da gasolina.</li>
+    </ol>
+    <p class="resposta"><b>Resposta:</b> combustão (completa). <b>Gabarito C.</b></p>
+    <p class="atencao"><b>Destaque no quadro:</b> Combustível + O₂ → CO₂ + H₂O: combustão.</p>
+    <ul class="erros">
+      <li><b>A</b> Dupla-troca: dois compostos trocam partes.</li>
+      <li><b>B</b> Decomposição: um reagente só se divide.</li>
+      <li><b>D</b> Não há ácido nem base nos reagentes.</li>
+      <li><b>E</b> Síntese forma um produto só; aqui são dois.</li>
+    </ul>
+  </aside>
+  <aside class="notas">
+    <p>Clique 1 tira o aviso de pausa: resolva na área (D liga a caneta; E esconde o enunciado). Clique 2: gabarito C.</p>
+    <p>Questão oficial do IF Sudeste MG (2016, edição extra). O octano é o principal componente da gasolina; a prova o escreveu como (g), como no cilindro do motor, mas na temperatura ambiente ele é líquido. O 25/2 é coeficiente fracionário: em inteiros, 2 C₈H₁₈ + 25 O₂ → 16 CO₂ + 18 H₂O.</p>
+  </aside>
+</section>
+
+<!-- Questão 2 -->
+<section class="slide questao" data-nome="Questão 2">
+  <div class="conteudo">
+    <div class="area-resolucao"></div>
+    <span class="pilula pilula-pausa" data-em="1:some">Pause o vídeo e tente</span>
+    <div class="painel-questao">
+      <p class="olho">Questão 2 · IF Sudeste MG 2014</p>
+      <p class="enunciado" style="font-size:27px">O sulfato de alumínio é frequentemente utilizado como um agente floculante no processo de tratamento de água. Ele pode ser obtido pela reação entre o ácido sulfúrico, H<sub>2</sub>SO<sub>4</sub>, e o hidróxido de alumínio, Al(OH)<sub>3</sub>, conforme apresentado abaixo:</p>
+      <p class="enunciado" style="font-size:30px;font-weight:800;color:var(--roxo-titulo);text-align:center">H<sub>2</sub>SO<sub>4</sub> + Al(OH)<sub>3</sub> → Al<sub>2</sub>(SO<sub>4</sub>)<sub>3</sub> + H<sub>2</sub>O</p>
+      <p class="enunciado" style="font-size:27px">A soma dos coeficientes estequiométricos que balanceiam essa reação é:</p>
+      <ol class="alternativas curtas">
+        <li data-em="2:apaga"><b>A</b><span>8.</span></li>
+        <li data-em="2:apaga"><b>B</b><span>14.</span></li>
+        <li data-em="2:certo"><b>C</b><span>12.</span></li>
+        <li data-em="2:apaga"><b>D</b><span>15.</span></li>
+        <li data-em="2:apaga"><b>E</b><span>6.</span></li>
+      </ol>
+    </div>
+  </div>
+  <aside class="resolucao">
+    <p class="dados"><b>Dados:</b> H₂SO₄ + Al(OH)₃ → Al₂(SO₄)₃ + H₂O.</p>
+    <ol class="passos">
+      <li><b>Al:</b> 2 no sal → 2 Al(OH)₃.</li>
+      <li><b>SO₄:</b> 3 no sal → 3 H₂SO₄.</li>
+      <li><b>H⁺ e OH⁻:</b> 3 · 2 = 6 e 2 · 3 = 6 → 6 H₂O.</li>
+      <li><b>Equação:</b> 3 H₂SO₄ + 2 Al(OH)₃ → Al₂(SO₄)₃ + 6 H₂O.</li>
+      <li><b>Confira O:</b> 12 + 6 = 18 = 12 + 6.</li>
+      <li><b>Soma:</b> 3 + 2 + 1 + 6 = 12.</li>
+    </ol>
+    <p class="resposta"><b>Resposta:</b> a soma é 12. <b>Gabarito C.</b></p>
+    <p class="atencao"><b>Destaque no quadro:</b> Neutralização: nº de H⁺ = nº de OH⁻ = nº de águas.</p>
+    <ul class="erros">
+      <li><b>A</b> 3 + 2 + 1 + 2: põe só 2 águas.</li>
+      <li><b>B</b> Não sai de nenhum balanceamento correto.</li>
+      <li><b>D</b> Também não fecha a contagem de átomos.</li>
+      <li><b>E</b> É só o coeficiente da água.</li>
+    </ul>
+  </aside>
+  <aside class="notas">
+    <p>Clique 1 tira o aviso de pausa: resolva na área. Clique 2: gabarito C.</p>
+    <p>Questão oficial do IF Sudeste MG (2014, edição extra). É uma neutralização: o atalho do H⁺ e OH⁻ dá as 6 águas de uma vez.</p>
+  </aside>
+</section>
+
+<!-- Resumo -->
+<section class="slide" data-nome="Resumo">
+  <div class="conteudo">
+    <p class="olho">Resumo</p>
+    <h2 class="titulo">O essencial</h2>
+    <div class="resumo" style="position:absolute;left:0;right:0;top:150px">
+      <div><b>Combustão:</b> combustível + O<sub style="font-size:.65em">2</sub> (comburente) → produtos + energia.</div>
+      <div><b>Triângulo do fogo:</b> combustível, comburente e calor. Tire um e o fogo apaga.</div>
+      <div><b>Completa:</b> CO<sub style="font-size:.65em">2</sub> + H<sub style="font-size:.65em">2</sub>O, chama azul. <b>Incompleta:</b> também CO e C (fuligem).</div>
+      <div><b>Balanceie</b> a combustão na ordem C, H e, por último, O.</div>
+      <div><b>Neutralização:</b> ácido + base → sal + água.</div>
+      <div><b>H<sup style="font-size:.65em">+</sup> + OH<sup style="font-size:.65em">−</sup> → H<sub style="font-size:.65em">2</sub>O.</b> Total: nº de H<sup style="font-size:.65em">+</sup> = nº de OH<sup style="font-size:.65em">−</sup>.</div>
+    </div>
+    <div class="caixa caixa-atencao" style="position:absolute;left:580px;right:0;top:660px">
+      <div class="texto" style="font-size:30px">Formar água não basta: combustão tem <b>O<sub style="font-size:.65em">2</sub></b>; neutralização tem <b>ácido e base</b>.</div>
+    </div>
+  </div>
+  <aside class="notas"><p>Peça para tirarem um print desta tela.</p></aside>
+</section>
+
+<!-- A seguir -->
+<section class="slide capa" data-nome="A seguir">
+  <div class="estrelas"></div>
+  <div class="texto-capa" style="top:170px">
+    <span class="selo">Química · IF</span>
+    <p class="aula" style="font-size:26px">A seguir · Reações químicas</p>
+    <h1 style="font-size:120px">Leis ponderais</h1>
+    <p class="sub">Lavoisier e Proust: as massas nas reações</p>
+  </div>
+  <svg class="emblema" viewBox="0 0 640 640" aria-hidden="true">
+    <path d="M320 150 V470" stroke="#fff" stroke-opacity=".8" stroke-width="10" stroke-linecap="round"/>
+    <path d="M150 200 H490" stroke="#fff" stroke-opacity=".8" stroke-width="10" stroke-linecap="round"/>
+    <path d="M150 200 L100 330 H200 Z M490 200 L440 330 H540 Z" fill="none" stroke="#FFD10C" stroke-width="8" stroke-linejoin="round"/>
+    <path d="M90 330 a60 30 0 0 0 120 0 Z M430 330 a60 30 0 0 0 120 0 Z" fill="#FFD10C"/>
+    <rect x="230" y="470" width="180" height="26" rx="13" fill="#fff" opacity=".8"/>
+  </svg>
+  <img class="logo-capa" src="{{LOGO_BRANCO}}" alt="Quarks">
+  <aside class="notas"><p>Próxima: as leis ponderais. Lavoisier (a massa se conserva) e Proust (a proporção das massas é fixa), com tabelas e regra de três.</p></aside>
+</section>

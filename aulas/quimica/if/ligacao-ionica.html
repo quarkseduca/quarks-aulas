@@ -1,0 +1,555 @@
+<!--aula
+{"disciplina": "quimica", "curso": "IF", "assunto": "Ligações químicas", "parte": "Parte única", "titulo": "Ligação iônica", "scripts": ["animacoes-ligacoes.js"]}
+-->
+<!-- Fonte: slides da professora (Química IF 2026, aula 10: ligação química, regra do octeto, metais e ametais, ligação iônica e propriedades dos compostos iônicos), completados com a apostila IF, Química, 3.1 Ligação iônica. Questões: UFLA, Mackenzie e Cefet-MG (material da professora). -->
+<style>
+  .caixa { box-sizing: border-box; }
+  .linha-ex { box-sizing: border-box; background: var(--branco); border: 2px solid var(--lilas-2); border-radius: 24px; padding: 14px 26px; font-size: 31px; line-height: 1.3; }
+  .linha-ex b { color: var(--roxo-titulo); }
+  .fq { font: 800 1em var(--fonte-titulo); color: var(--roxo-titulo); }
+  .tag { display: inline-block; padding: 4px 18px; border-radius: 999px; font-weight: 800; font-size: 26px; }
+  .tag-i { background: #FFF4C2; color: #8A6A00; }
+  .tag-c { background: var(--d-clara); color: var(--d-forte); }
+  .mol-card { box-sizing: border-box; background: var(--branco); border: 2px solid var(--lilas-2); border-radius: 26px; padding: 14px 18px 16px; display: flex; flex-direction: column; align-items: center; gap: 6px; }
+  .mol-card h3 { margin: 0; font: 800 44px var(--fonte-titulo); color: var(--roxo-titulo); letter-spacing: -.01em; }
+  .mol-card small { font-size: 22px; font-weight: 700; color: var(--cinza); letter-spacing: .04em; text-transform: uppercase; }
+  .mol-card .par { display: flex; align-items: center; justify-content: center; gap: 20px; }
+  @keyframes vib-a { 0%,100% { transform: translate(0,0); } 25% { transform: translate(1.6px,-1.2px); } 50% { transform: translate(-.8px,1.4px); } 75% { transform: translate(-1.4px,-.6px); } }
+  @keyframes vib-b { 0%,100% { transform: translate(0,0); } 25% { transform: translate(-1.4px,1px); } 50% { transform: translate(1.2px,-1.4px); } 75% { transform: translate(.6px,1.2px); } }
+  .slide.ativo .mostra svg.vibra .vib-a, .slide.ativo svg.vibra.sempre .vib-a { animation: vib-a 1.6s ease-in-out infinite; }
+  .slide.ativo .mostra svg.vibra .vib-b, .slide.ativo svg.vibra.sempre .vib-b { animation: vib-b 1.6s ease-in-out infinite; }
+  /* átomos isolados descem para o nível de menor energia quando se ligam (o estado final é o de base) */
+  @keyframes liga-a { 0%,12% { transform: translate(-70px,-190px); } 45%,100% { transform: none; } }
+  @keyframes liga-b { 0%,12% { transform: translate(70px,-190px); } 45%,100% { transform: none; } }
+  .slide.ativo .mostra .liga-a { animation: liga-a 7s ease-in-out infinite; }
+  .slide.ativo .mostra .liga-b { animation: liga-b 7s ease-in-out infinite; }
+  @keyframes some-cedo { 0%,12% { opacity: 1; } 35%,100% { opacity: 0; } }
+  .slide.ativo .mostra .fantasma { animation: some-cedo 7s ease-in-out infinite; }
+  .fantasma { opacity: 0; }
+  .grupo-ion { box-sizing: border-box; background: var(--branco); border: 2px solid var(--lilas-2); border-radius: 28px; padding: 20px 26px; }
+  .grupo-ion h3 { margin: 0 0 4px; font: 800 40px var(--fonte-titulo); color: var(--roxo-titulo); }
+  .grupo-ion p { margin: 0 0 12px; font-size: 27px; color: var(--cinza); }
+  .grupo-ion table { width: 100%; border-collapse: collapse; font-size: 28px; }
+  .grupo-ion td { padding: 8px 6px; border-top: 2px solid var(--lilas); text-align: center; }
+  .grupo-ion td:first-child { text-align: left; font-weight: 700; }
+  .ion { font: 800 34px var(--fonte-titulo); color: var(--roxo-titulo); }
+  .ion sup { font-size: .6em; }
+  .cruza > path { fill: none; stroke: #E5533D; stroke-width: 5; stroke-linecap: round; stroke-dasharray: 260; stroke-dashoffset: 260; transition: stroke-dashoffset 1.2s ease-in-out .2s; }
+  .cruza.mostra > path { stroke-dashoffset: 0; }
+  .legenda-ion { display: flex; gap: 30px; justify-content: center; font-size: 26px; font-weight: 700; color: var(--carvao); }
+  .legenda-ion span { display: inline-flex; align-items: center; gap: 10px; }
+  /* íons que andam até os eletrodos: cátion para o polo −, ânion para o polo + */
+  @keyframes vai-esq { 0% { transform: translateX(0); opacity: 0; } 15% { opacity: 1; } 85% { opacity: 1; } 100% { transform: translateX(-90px); opacity: 0; } }
+  @keyframes vai-dir { 0% { transform: translateX(0); opacity: 0; } 15% { opacity: 1; } 85% { opacity: 1; } 100% { transform: translateX(90px); opacity: 0; } }
+  .slide.ativo .mostra .cat { animation: vai-esq 5s linear infinite; }
+  .slide.ativo .mostra .ani { animation: vai-dir 5s linear infinite; }
+  .cat:nth-child(2), .ani:nth-child(2) { animation-delay: -1.7s !important; } .cat:nth-child(3), .ani:nth-child(3) { animation-delay: -3.4s !important; }
+  @keyframes brilho { 0%,100% { opacity: .55; } 50% { opacity: .9; } }
+  .slide.ativo .mostra .brilho { animation: brilho 4s ease-in-out infinite; }
+</style>
+
+<svg width="0" height="0" style="position:absolute" aria-hidden="true">
+  <defs>
+    <radialGradient id="gO" cx=".35" cy=".3" r=".8"><stop offset="0" stop-color="#FF8A7A"/><stop offset="1" stop-color="#C8301F"/></radialGradient>
+    <radialGradient id="gH" cx=".35" cy=".3" r=".8"><stop offset="0" stop-color="#FFFFFF"/><stop offset="1" stop-color="#C9C4DC"/></radialGradient>
+    <radialGradient id="gN" cx=".35" cy=".3" r=".8"><stop offset="0" stop-color="#7FA8FF"/><stop offset="1" stop-color="#2A5BD0"/></radialGradient>
+    <radialGradient id="gC" cx=".35" cy=".3" r=".8"><stop offset="0" stop-color="#8A8A96"/><stop offset="1" stop-color="#2E2E36"/></radialGradient>
+    <radialGradient id="gCl" cx=".35" cy=".3" r=".8"><stop offset="0" stop-color="#8FE3B5"/><stop offset="1" stop-color="#14864E"/></radialGradient>
+    <radialGradient id="gNa" cx=".35" cy=".3" r=".8"><stop offset="0" stop-color="#C9BEFA"/><stop offset="1" stop-color="#5340B8"/></radialGradient>
+    <linearGradient id="gAgua" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#CFE6FA"/><stop offset="1" stop-color="#9CCBF2"/></linearGradient>
+  </defs>
+  <symbol id="m-h2" viewBox="0 0 150 110"><g stroke="#8C84B8" stroke-width="2"><circle cx="58" cy="55" r="24" fill="url(#gH)"/><circle cx="92" cy="55" r="24" fill="url(#gH)"/></g></symbol>
+  <symbol id="m-cl2" viewBox="0 0 150 110"><g stroke="#0E5C36" stroke-width="2"><circle cx="52" cy="55" r="33" fill="url(#gCl)"/><circle cx="98" cy="55" r="33" fill="url(#gCl)"/></g></symbol>
+  <symbol id="m-o2" viewBox="0 0 150 110"><g stroke="#8E2115" stroke-width="2"><circle cx="56" cy="55" r="30" fill="url(#gO)"/><circle cx="94" cy="55" r="30" fill="url(#gO)"/></g></symbol>
+  <symbol id="m-n2" viewBox="0 0 150 110"><g stroke="#1B3E94" stroke-width="2"><circle cx="57" cy="55" r="30" fill="url(#gN)"/><circle cx="93" cy="55" r="30" fill="url(#gN)"/></g></symbol>
+  <symbol id="m-h2o" viewBox="0 0 150 110"><g stroke-width="2"><circle cx="38" cy="74" r="20" fill="url(#gH)" stroke="#8C84B8"/><circle cx="112" cy="74" r="20" fill="url(#gH)" stroke="#8C84B8"/><circle cx="75" cy="50" r="32" fill="url(#gO)" stroke="#8E2115"/></g></symbol>
+  <symbol id="m-nh3" viewBox="0 0 150 110"><g stroke-width="2"><circle cx="34" cy="78" r="19" fill="url(#gH)" stroke="#8C84B8"/><circle cx="116" cy="78" r="19" fill="url(#gH)" stroke="#8C84B8"/><circle cx="75" cy="48" r="31" fill="url(#gN)" stroke="#1B3E94"/><circle cx="75" cy="88" r="19" fill="url(#gH)" stroke="#8C84B8"/></g></symbol>
+  <symbol id="m-ch4" viewBox="0 0 150 110"><g stroke-width="2"><circle cx="75" cy="20" r="18" fill="url(#gH)" stroke="#8C84B8"/><circle cx="36" cy="72" r="18" fill="url(#gH)" stroke="#8C84B8"/><circle cx="75" cy="55" r="29" fill="url(#gC)" stroke="#1E1E24"/><circle cx="114" cy="72" r="18" fill="url(#gH)" stroke="#8C84B8"/><circle cx="82" cy="92" r="17" fill="url(#gH)" stroke="#8C84B8"/></g></symbol>
+  <symbol id="m-co2" viewBox="0 0 150 110"><g stroke-width="2"><circle cx="30" cy="55" r="26" fill="url(#gO)" stroke="#8E2115"/><circle cx="120" cy="55" r="26" fill="url(#gO)" stroke="#8E2115"/><circle cx="75" cy="55" r="28" fill="url(#gC)" stroke="#1E1E24"/></g></symbol>
+  <symbol id="becher" viewBox="0 0 190 210"><path d="M22 14 h146 M30 14 v168 a18 18 0 0 0 18 18 h94 a18 18 0 0 0 18 -18 v-168" fill="none" stroke="#7F7A99" stroke-width="5" stroke-linecap="round"/></symbol>
+</svg>
+
+<!-- Capa -->
+<section class="slide capa" data-nome="Capa">
+  <div class="estrelas"></div>
+  <div class="texto-capa">
+    <span class="selo">Química · IF</span>
+    <p class="aula">Ligações químicas</p>
+    <h1>Ligação iônica</h1>
+    <p class="sub">Octeto, íons e o sal de cozinha</p>
+  </div>
+  <svg class="emblema" viewBox="0 0 640 640" aria-hidden="true">
+    <g class="gira-lento"><ellipse cx="320" cy="320" rx="300" ry="128" fill="none" stroke="#fff" stroke-opacity=".38" stroke-width="2" transform="rotate(-10 320 320)"/></g>
+    <g class="gira"><ellipse cx="320" cy="320" rx="236" ry="196" fill="none" stroke="#FFD10C" stroke-opacity=".75" stroke-width="2.5" stroke-dasharray="3 14" stroke-linecap="round" transform="rotate(-8 320 320)"/>
+      <circle cx="84" cy="300" r="13" fill="#FFD10C" stroke="#fff" stroke-width="3"/></g>
+    <circle cx="320" cy="320" r="132" fill="#FFD10C"/>
+    <image href="{{SYM_ROXO}}" x="238" y="238" width="164" height="164"/>
+  </svg>
+  <img class="logo-capa" src="{{LOGO_BRANCO}}" alt="Quarks">
+  <aside class="notas"><p>Hoje: por que os átomos se ligam, a regra do octeto, cátions e ânions, a ligação iônica, como montar a fórmula de um composto iônico e as propriedades desses compostos.</p></aside>
+</section>
+
+<!-- Por que se ligam -->
+<section class="slide" data-nome="Por que os átomos se ligam">
+  <div class="conteudo">
+    <p class="olho">Ligação química</p>
+    <h2 class="titulo">Por que os átomos se ligam?</h2>
+    <p class="texto" style="position:absolute;left:0;width:860px;top:160px;margin:0;font-size:33px">Quase nenhum átomo fica sozinho na natureza: o sódio está preso ao cloro no sal; o oxigênio, ao hidrogênio na água.</p>
+    <div class="caixa caixa-fundamental" data-passo="2" style="position:absolute;left:0;width:860px;top:330px">
+      <span class="rotulo">Estabilidade</span>
+      <div class="texto" style="font-size:31px">Ligados, os átomos ficam com <b>menos energia</b>: ficam <b>mais estáveis</b> do que isolados.</div>
+    </div>
+    <div class="caixa" data-passo="3" style="position:absolute;left:580px;width:560px;top:560px">
+      <span class="rotulo">A exceção</span>
+      <div class="texto" style="font-size:29px">Os <b>gases nobres</b> (He, Ne, Ar...) já são estáveis e aparecem como átomos isolados.</div>
+    </div>
+    <svg data-passo="1" viewBox="0 0 560 560" style="position:absolute;left:1200px;top:140px;width:560px;height:560px" aria-hidden="true">
+      <path d="M40 520 V30" stroke="#292B2C" stroke-width="4" stroke-linecap="round"/><path d="M30 46 l10 -16 10 16" fill="none" stroke="#292B2C" stroke-width="4" stroke-linecap="round" stroke-linejoin="round"/>
+      <text x="58" y="44" font-family="Figtree,sans-serif" font-weight="700" font-size="26" fill="#5E5A70">energia</text>
+      <path d="M70 160 H540" stroke="#B9B0E6" stroke-width="4" stroke-dasharray="10 8"/>
+      <path d="M70 420 H540" stroke="#6551D1" stroke-width="5"/>
+      <text x="530" y="140" text-anchor="end" font-family="Figtree,sans-serif" font-weight="800" font-size="26" fill="#5E5A70">isolados · menos estáveis</text>
+      <text x="530" y="470" text-anchor="end" font-family="Figtree,sans-serif" font-weight="800" font-size="26" fill="#3F2FA0">ligados · mais estáveis</text>
+      <g class="fantasma"><path d="M300 200 V350" stroke="#6551D1" stroke-width="4" stroke-dasharray="8 8"/><path d="M290 336 l10 16 10 -16" fill="none" stroke="#6551D1" stroke-width="4"/></g>
+      <g class="liga-a"><circle cx="268" cy="380" r="36" fill="url(#gNa)" stroke="#3A2196" stroke-width="2"/></g>
+      <g class="liga-b"><circle cx="332" cy="380" r="36" fill="url(#gCl)" stroke="#0E5C36" stroke-width="2"/></g>
+    </svg>
+  </div>
+  <aside class="notas">
+    <p>Clique 1: no gráfico, os dois átomos começam afastados, no nível de energia mais alto, e descem juntos quando se ligam. Clique 2: ligar dá estabilidade (menos energia). Clique 3: os gases nobres, que não precisam se ligar.</p>
+    <p>Todo ser vivo é feito de átomos, mas eles quase nunca estão isolados: estão ligados em substâncias.</p>
+  </aside>
+</section>
+
+<!-- Regra do octeto -->
+<section class="slide" data-nome="Regra do octeto">
+  <div class="conteudo">
+    <p class="olho">Lewis, 1916</p>
+    <h2 class="titulo">A regra do octeto</h2>
+    <p class="texto" style="position:absolute;left:0;width:760px;top:160px;margin:0;font-size:31px">O que os gases nobres têm de especial? Olhe a <b>última camada</b> de cada um.</p>
+    <table class="tabela" style="position:absolute;left:0;top:250px;font-size:29px">
+      <tr><th style="padding:10px 26px;text-align:left">Gás nobre</th><th style="padding:10px 18px">K</th><th style="padding:10px 18px">L</th><th style="padding:10px 18px">M</th><th style="padding:10px 18px">N</th><th style="padding:10px 18px">O</th><th style="padding:10px 18px">P</th></tr>
+      <tr><td style="padding:6px 26px;text-align:left">Hélio</td><td style="padding:6px 18px"><b style="color:#E5533D">2</b></td><td></td><td></td><td></td><td></td><td></td></tr>
+      <tr><td style="padding:6px 26px;text-align:left">Neônio</td><td style="padding:6px 18px">2</td><td style="padding:6px 18px"><b style="color:#E5533D">8</b></td><td></td><td></td><td></td><td></td></tr>
+      <tr><td style="padding:6px 26px;text-align:left">Argônio</td><td style="padding:6px 18px">2</td><td style="padding:6px 18px">8</td><td style="padding:6px 18px"><b style="color:#E5533D">8</b></td><td></td><td></td><td></td></tr>
+      <tr><td style="padding:6px 26px;text-align:left">Criptônio</td><td style="padding:6px 18px">2</td><td style="padding:6px 18px">8</td><td style="padding:6px 18px">18</td><td style="padding:6px 18px"><b style="color:#E5533D">8</b></td><td></td><td></td></tr>
+      <tr><td style="padding:6px 26px;text-align:left">Xenônio</td><td style="padding:6px 18px">2</td><td style="padding:6px 18px">8</td><td style="padding:6px 18px">18</td><td style="padding:6px 18px">18</td><td style="padding:6px 18px"><b style="color:#E5533D">8</b></td><td></td></tr>
+    </table>
+    <div style="position:absolute;left:860px;right:0;top:250px;display:flex;flex-direction:column;gap:24px">
+      <div class="caixa caixa-fundamental" data-passo="1">
+        <span class="rotulo">Regra do octeto</span>
+        <div class="texto" style="font-size:31px">Um átomo fica estável com <b>8 elétrons na última camada</b> (a camada de valência), como um gás nobre. O <b>hidrogênio</b> e o <b>hélio</b>, com uma camada só, ficam estáveis com <b>2</b>.</div>
+      </div>
+      <div class="caixa" data-passo="2">
+        <span class="rotulo">Como chegar lá</span>
+        <div class="texto" style="font-size:30px">Os átomos <b>perdem</b>, <b>ganham</b> ou <b>compartilham</b> elétrons até ficar com 8.</div>
+      </div>
+      <div class="caixa caixa-atencao" data-passo="3">
+        <div class="texto" style="font-size:27px">É uma regra útil para prever fórmulas, não uma lei: há substâncias que fogem dela.</div>
+      </div>
+    </div>
+  </div>
+  <aside class="notas">
+    <p>Peça para olharem a última camada de cada gás nobre (em vermelho): sempre 8, menos o hélio, com 2. Clique 1: a regra. Clique 2: os três caminhos (perder, ganhar ou compartilhar). Clique 3: a regra tem exceções.</p>
+    <p>O radônio (2, 8, 18, 32, 18, 8) também termina com 8; ficou de fora da tabela por espaço.</p>
+  </aside>
+</section>
+
+<!-- Cátions e ânions -->
+<section class="slide" data-nome="Cátions e ânions">
+  <div class="conteudo">
+    <p class="olho">Perder ou ganhar elétrons</p>
+    <h2 class="titulo">Cátions e ânions</h2>
+    <div style="position:absolute;left:0;right:0;top:150px;display:grid;grid-template-columns:1fr 1fr;gap:30px">
+      <div class="grupo-ion" data-passo="1">
+        <h3>Metais: perdem</h3>
+        <p>Poucos elétrons de valência (1, 2 ou 3). Viram <b style="color:var(--roxo-titulo)">cátions</b> (íons positivos).</p>
+        <table>
+          <tr><td style="color:var(--cinza)">grupo</td><td style="color:var(--cinza)">última camada</td><td style="color:var(--cinza)">tende a</td><td style="color:var(--cinza)">íons</td></tr>
+          <tr><td>1</td><td>1 e⁻</td><td>perder 1</td><td><span class="ion">Na<sup>+</sup> · K<sup>+</sup> · Rb<sup>+</sup></span></td></tr>
+          <tr><td>2</td><td>2 e⁻</td><td>perder 2</td><td><span class="ion">Mg<sup>2+</sup> · Ca<sup>2+</sup> · Ba<sup>2+</sup></span></td></tr>
+          <tr><td>13</td><td>3 e⁻</td><td>perder 3</td><td><span class="ion">Al<sup>3+</sup></span></td></tr>
+        </table>
+      </div>
+      <div class="grupo-ion" data-passo="2">
+        <h3>Ametais: ganham</h3>
+        <p>Muitos elétrons de valência (5, 6 ou 7). Viram <b style="color:var(--roxo-titulo)">ânions</b> (íons negativos).</p>
+        <table>
+          <tr><td style="color:var(--cinza)">grupo</td><td style="color:var(--cinza)">última camada</td><td style="color:var(--cinza)">tende a</td><td style="color:var(--cinza)">íons</td></tr>
+          <tr><td>15</td><td>5 e⁻</td><td>ganhar 3</td><td><span class="ion">N<sup>3−</sup> · P<sup>3−</sup></span></td></tr>
+          <tr><td>16</td><td>6 e⁻</td><td>ganhar 2</td><td><span class="ion">O<sup>2−</sup> · S<sup>2−</sup></span></td></tr>
+          <tr><td>17</td><td>7 e⁻</td><td>ganhar 1</td><td><span class="ion">F<sup>−</sup> · Cl<sup>−</sup></span></td></tr>
+        </table>
+      </div>
+    </div>
+    <div class="caixa caixa-fundamental" data-passo="3" style="position:absolute;left:580px;right:0;top:640px">
+      <div class="texto" style="font-size:29px">A <b>carga do íon</b> é o número de elétrons perdidos (+) ou ganhos (−). Esse número é a <b>valência</b> do elemento: Na tem valência 1; O, valência 2.</div>
+    </div>
+  </div>
+  <aside class="notas">
+    <p>Clique 1: metais perdem os elétrons de valência e viram cátions. Clique 2: ametais ganham o que falta para 8 e viram ânions. Clique 3: carga e valência.</p>
+    <p>Correção do material antigo: "o número de elétrons de valência indica a quantidade de ligações" vale para quem perde (Na: 1 elétron, valência 1). Para quem ganha, conta o que <b>falta</b> para 8: o oxigênio tem 6 elétrons de valência e faz 2 ligações (valência 2).</p>
+  </aside>
+</section>
+
+<!-- Ligação iônica: NaCl -->
+<section class="slide" data-nome="Ligação iônica">
+  <div class="conteudo">
+    <p class="olho">Ligação iônica</p>
+    <h2 class="titulo">O sódio entrega, o cloro recebe</h2>
+    <div style="position:absolute;left:0;top:150px;width:1000px;display:flex;flex-direction:column;gap:6px;font-size:27px;line-height:1.35">
+      <div><b style="color:var(--roxo-titulo)">Na</b> (Z = 11): 1s² 2s² 2p⁶ <b style="color:#E5533D">3s¹</b> → 1 elétron de valência</div>
+      <div><b style="color:var(--roxo-titulo)">Cl</b> (Z = 17): 1s² 2s² 2p⁶ <b style="color:#E5533D">3s² 3p⁵</b> → 7 elétrons de valência</div>
+    </div>
+    <div data-passo="1" style="position:absolute;left:0;top:250px;width:1000px;height:350px">
+      <div data-anima="transfere" data-anima-passo="1" data-m="Na|2,8,1" data-a="Cl|2,8,7" data-k="1" data-s="1.3" data-w="1000" data-h="350" style="width:1000px;height:350px"></div>
+    </div>
+    <div style="position:absolute;left:1060px;right:0;top:150px;display:flex;flex-direction:column;gap:20px">
+      <div class="linha-ex" data-passo="1">O Na <b>perde 1 e⁻</b> e vira <b>Na⁺</b> (2-8).</div>
+      <div class="linha-ex" data-passo="2">O Cl <b>ganha 1 e⁻</b> e vira <b>Cl⁻</b> (2-8-8).</div>
+      <div class="caixa caixa-fundamental" data-passo="3">
+        <span class="rotulo">Ligação iônica</span>
+        <div class="texto" style="font-size:28px"><b>Atração elétrica</b> entre cátions e ânions. Acontece entre um <b>metal</b> (baixa eletronegatividade, perde e⁻) e um <b>ametal</b> (alta eletronegatividade, ganha e⁻).</div>
+      </div>
+      <p data-passo="4" style="margin:0;font:800 56px var(--fonte-titulo);color:var(--roxo-titulo);text-align:center">Na⁺ + Cl⁻ → NaCl</p>
+    </div>
+  </div>
+  <aside class="notas">
+    <p>Clique 1: a animação. O elétron de valência do sódio (amarelo) vai para a vaga da última camada do cloro. O sódio perde a camada de fora e fica com 8 na camada L; o cloro fica com 8 na M. Aparecem as cargas e os íons se aproximam: cargas opostas se atraem.</p>
+    <p>Cliques 2 a 4: os íons, a definição e o composto (cloreto de sódio, o sal de cozinha). Eletronegatividade = tendência de atrair elétrons.</p>
+  </aside>
+</section>
+
+<!-- Exemplo: CaCl2 -->
+<section class="slide" data-nome="Exemplo: CaCl₂">
+  <div class="conteudo">
+    <p class="olho">Exemplo</p>
+    <h2 class="titulo">Cálcio e cloro: qual é a fórmula?</h2>
+    <div data-passo="3" style="position:absolute;left:0;top:150px;width:860px;height:450px">
+      <div data-anima="transfere" data-anima-passo="3" data-m="Ca|2,8,8,2" data-a="Cl|2,8,7" data-k="2" data-s=".8" data-w="860" data-h="450" style="width:860px;height:450px"></div>
+    </div>
+    <div style="position:absolute;left:920px;right:0;top:150px;display:flex;flex-direction:column;gap:16px">
+      <div class="linha-ex" data-passo="1"><b>Ca</b> (Z = 20): 1s² 2s² 2p⁶ 3s² 3p⁶ <b style="color:#E5533D">4s²</b> → perde 2 e⁻: <b>Ca²⁺</b></div>
+      <div class="linha-ex" data-passo="2"><b>Cl</b> (Z = 17): ... <b style="color:#E5533D">3s² 3p⁵</b> → ganha 1 e⁻: <b>Cl⁻</b></div>
+      <div class="linha-ex" data-passo="3">Cada Cl recebe só 1 e⁻: o Ca precisa de <b>2 cloros</b>.</div>
+      <div class="linha-ex" data-passo="4">Carga total: (+2) + 2 · (−1) = <b>0</b></div>
+      <div class="caixa caixa-fundamental" data-passo="5" style="padding:18px 28px"><div class="texto" style="font-size:34px"><b>Resposta:</b> <span class="fq" style="font-size:44px">CaCl<sub>2</sub></span></div></div>
+    </div>
+  </div>
+  <aside class="notas">
+    <p>Peça a resposta antes de cada clique. Clique 3: na animação, cada um dos 2 elétrons do cálcio vai para um cloro diferente.</p>
+    <p>A fórmula de um composto iônico tem carga total zero; o índice 2 diz que há 2 Cl⁻ para cada Ca²⁺.</p>
+  </aside>
+</section>
+
+<!-- Fórmula iônica: cruzando as cargas -->
+<section class="slide" data-nome="Cruzando as cargas">
+  <div class="conteudo">
+    <p class="olho">Fórmula iônica</p>
+    <h2 class="titulo">O atalho: cruzar as cargas</h2>
+    <p class="texto" style="position:absolute;left:0;right:0;top:150px;margin:0;font-size:31px">O <b>cátion vem primeiro</b>. O número da carga de um íon vira o <b>índice</b> do outro.</p>
+    <div style="position:absolute;left:0;right:0;top:230px;display:grid;grid-template-columns:repeat(3,1fr);gap:30px">
+      <div class="caixa" data-passo="1" style="text-align:center;padding:20px 20px 22px">
+        <svg class="cruza" data-passo="1" viewBox="0 0 440 250" width="440" height="250" aria-hidden="true">
+          <defs><marker id="pc1" viewBox="0 0 10 10" refX="5" refY="5" markerWidth="4" markerHeight="4" orient="auto"><path d="M0 0 L10 5 L0 10 z" fill="#E5533D"/></marker></defs>
+          <text x="150" y="86" text-anchor="end" font-family="Bricolage Grotesque,sans-serif" font-weight="800" font-size="70" fill="#3F2FA0">Al</text><text x="152" y="48" font-family="Bricolage Grotesque,sans-serif" font-weight="800" font-size="40" fill="#E5533D">3+</text>
+          <text x="330" y="86" text-anchor="end" font-family="Bricolage Grotesque,sans-serif" font-weight="800" font-size="70" fill="#3F2FA0">O</text><text x="332" y="48" font-family="Bricolage Grotesque,sans-serif" font-weight="800" font-size="40" fill="#E5533D">2−</text>
+          <path d="M350 100 L206, 186" marker-end="url(#pc1)"/><path d="M170 100 L276, 186" marker-end="url(#pc1)"/>
+          <g font-family="Bricolage Grotesque,sans-serif" font-weight="800" fill="#E5533D"><text x="196" y="232" text-anchor="end" font-size="60">Al</text><text x="199" y="245" font-size="36">2</text><text x="222" y="232" font-size="60">O</text><text x="267" y="245" font-size="36">3</text></g>
+        </svg>
+        <p style="margin:4px 0 0;font-size:26px">2 · (+3) + 3 · (−2) = 0</p>
+      </div>
+      <div class="caixa" data-passo="2" style="text-align:center;padding:20px 20px 22px">
+        <svg class="cruza" data-passo="2" viewBox="0 0 440 250" width="440" height="250" aria-hidden="true">
+          <defs><marker id="pc2" viewBox="0 0 10 10" refX="5" refY="5" markerWidth="4" markerHeight="4" orient="auto"><path d="M0 0 L10 5 L0 10 z" fill="#E5533D"/></marker></defs>
+          <text x="150" y="86" text-anchor="end" font-family="Bricolage Grotesque,sans-serif" font-weight="800" font-size="70" fill="#3F2FA0">Al</text><text x="152" y="48" font-family="Bricolage Grotesque,sans-serif" font-weight="800" font-size="40" fill="#E5533D">3+</text>
+          <text x="330" y="86" text-anchor="end" font-family="Bricolage Grotesque,sans-serif" font-weight="800" font-size="70" fill="#3F2FA0">Br</text><text x="332" y="48" font-family="Bricolage Grotesque,sans-serif" font-weight="800" font-size="40" fill="#E5533D">−</text>
+          <path d="M350 100 L196, 186" marker-end="url(#pc2)"/><path d="M170 100 L262, 186" marker-end="url(#pc2)"/>
+          <g font-family="Bricolage Grotesque,sans-serif" font-weight="800" fill="#E5533D"><text x="252" y="232" text-anchor="end" font-size="60">AlBr</text><text x="255" y="245" font-size="36">3</text></g>
+        </svg>
+        <p style="margin:4px 0 0;font-size:26px">(+3) + 3 · (−1) = 0 · o índice 1 não se escreve</p>
+      </div>
+      <div class="caixa" data-passo="3" style="text-align:center;padding:20px 20px 22px">
+        <svg class="cruza" data-passo="3" viewBox="0 0 440 250" width="440" height="250" aria-hidden="true">
+          <defs><marker id="pc3" viewBox="0 0 10 10" refX="5" refY="5" markerWidth="4" markerHeight="4" orient="auto"><path d="M0 0 L10 5 L0 10 z" fill="#E5533D"/></marker></defs>
+          <text x="150" y="86" text-anchor="end" font-family="Bricolage Grotesque,sans-serif" font-weight="800" font-size="70" fill="#3F2FA0">Mg</text><text x="152" y="48" font-family="Bricolage Grotesque,sans-serif" font-weight="800" font-size="40" fill="#E5533D">2+</text>
+          <text x="330" y="86" text-anchor="end" font-family="Bricolage Grotesque,sans-serif" font-weight="800" font-size="70" fill="#3F2FA0">O</text><text x="332" y="48" font-family="Bricolage Grotesque,sans-serif" font-weight="800" font-size="40" fill="#E5533D">2−</text>
+          <path d="M350 100 L150, 186" marker-end="url(#pc3)"/><path d="M170 100 L214, 186" marker-end="url(#pc3)"/>
+          <g font-family="Bricolage Grotesque,sans-serif" font-weight="800"><g fill="#9A95AD"><text x="140" y="232" text-anchor="end" font-size="56">Mg</text><text x="143" y="245" font-size="34">2</text><text x="166" y="232" font-size="56">O</text><text x="208" y="245" font-size="34">2</text></g><text x="236" y="232" font-size="56" fill="#E5533D">→ MgO</text></g>
+        </svg>
+        <p style="margin:4px 0 0;font-size:26px">Índices divisíveis por 2: simplifique</p>
+      </div>
+    </div>
+    <div class="caixa caixa-atencao" data-passo="4" style="position:absolute;left:580px;right:0;top:640px">
+      <div class="texto" style="font-size:29px">Confira sempre: a <b>carga total</b> do composto é <b>zero</b>.</div>
+    </div>
+  </div>
+  <aside class="notas">
+    <p>Um clique por exemplo; as setas se desenham levando a carga de um íon para o índice do outro. Clique 1: Al³⁺ e O²⁻ dão Al₂O₃ (6 cargas positivas e 6 negativas). Clique 2: Al³⁺ e Br⁻ dão AlBr₃ (exemplo da professora: o Al tem 3 elétrons de valência e o Br, com Z = 35 e final 4s² 4p⁵, tem 7). Clique 3: Mg²⁺ e O²⁻ dão MgO, não Mg₂O₂. Clique 4: a conferência.</p>
+    <p>Para o professor: no ensino médio se vê que o AlBr₃ tem forte caráter covalente; aqui ele segue a regra prática metal + ametal, como no material da professora.</p>
+  </aside>
+</section>
+
+<!-- Retículo cristalino -->
+<section class="slide" data-nome="Retículo cristalino">
+  <div class="conteudo">
+    <p class="olho">A estrutura dos compostos iônicos</p>
+    <h2 class="titulo">O retículo cristalino</h2>
+    <div data-passo="1" style="position:absolute;left:1240px;top:130px;width:500px;display:flex;flex-direction:column;align-items:center;gap:10px">
+      <div data-anima="reticulo" data-anima-passo="1" data-w="460" style="width:460px;height:460px"></div>
+      <div class="legenda-ion">
+        <span><svg viewBox="0 0 30 30" width="26" height="26"><circle cx="15" cy="15" r="10" fill="url(#gNa)"/></svg> Na⁺</span>
+        <span><svg viewBox="0 0 30 30" width="30" height="30"><circle cx="15" cy="15" r="14" fill="url(#gCl)"/></svg> Cl⁻</span>
+      </div>
+    </div>
+    <div style="position:absolute;left:0;width:1160px;top:160px;display:flex;flex-direction:column;gap:22px">
+      <p class="texto" style="margin:0;font-size:32px" data-passo="1">No sal, os íons formam um arranjo organizado que se repete em todas as direções: o <b>retículo cristalino</b> (ou rede cristalina).</p>
+      <div class="linha-ex" data-passo="2">Cada <b>Na⁺</b> fica rodeado de <b>Cl⁻</b>, e cada Cl⁻ rodeado de Na⁺.</div>
+      <div class="linha-ex" data-passo="3">Um grão de sal tem <b>bilhões</b> de íons presos pela atração elétrica.</div>
+      <div class="caixa caixa-atencao" data-passo="4" style="margin-left:500px">
+        <span class="rotulo">Não existe "molécula" de sal</span>
+        <div class="texto" style="font-size:28px">A fórmula <b>NaCl</b> só diz a <b>proporção</b>: 1 Na⁺ para 1 Cl⁻.</div>
+      </div>
+    </div>
+  </div>
+  <aside class="notas">
+    <p>Clique 1: o retículo gira devagar para mostrar o 3D; os íons vibram no lugar, sem sair da rede. Clique 2: cada íon rodeado pelos de carga oposta (no NaCl, 6 vizinhos). Clique 3: a quantidade. Clique 4: o erro que cai em prova ("molécula de cloreto de sódio").</p>
+    <p>O Cl⁻ aparece maior que o Na⁺ porque é mesmo maior.</p>
+  </aside>
+</section>
+
+<!-- Propriedades -->
+<section class="slide" data-nome="Propriedades dos compostos iônicos">
+  <div class="conteudo">
+    <p class="olho">Propriedades dos compostos iônicos</p>
+    <h2 class="titulo">Sólidos e difíceis de derreter</h2>
+    <div style="position:absolute;left:0;width:880px;top:160px;display:flex;flex-direction:column;gap:20px">
+      <div class="caixa caixa-fundamental" data-passo="1">
+        <span class="rotulo">Sólidos, com PF e PE altos</span>
+        <div class="texto" style="font-size:29px">Para derreter, é preciso vencer <b>muitas atrações fortes</b> entre cargas opostas: é preciso muita energia para "romper" o retículo.</div>
+      </div>
+      <div class="caixa" data-passo="3">
+        <span class="rotulo">Duros, mas quebradiços</span>
+        <div class="texto" style="font-size:29px">Riscam com dificuldade, mas se partem com uma pancada.</div>
+      </div>
+    </div>
+    <table class="tabela" data-passo="2" style="position:absolute;left:960px;top:160px;font-size:30px">
+      <tr><th style="padding:10px 30px;text-align:left">Composto</th><th style="padding:10px 30px">PF</th></tr>
+      <tr><td style="padding:8px 30px;text-align:left">cloreto de sódio, NaCl</td><td style="padding:8px 30px">801 °C</td></tr>
+      <tr><td style="padding:8px 30px;text-align:left">cloreto de césio, CsCl</td><td style="padding:8px 30px">645 °C</td></tr>
+      <tr><td style="padding:8px 30px;text-align:left">fluoreto de cálcio, CaF<sub>2</sub></td><td style="padding:8px 30px">1 418 °C</td></tr>
+      <tr><td style="padding:8px 30px;text-align:left">água (para comparar)</td><td style="padding:8px 30px">0 °C</td></tr>
+    </table>
+    <p data-passo="2" style="position:absolute;left:960px;top:500px;margin:0;font-size:24px;color:var(--cinza)">Todos sólidos na temperatura ambiente.</p>
+  </div>
+  <aside class="notas">
+    <p>Clique 1: a razão do PF alto. Clique 2: valores (a água entra só para comparar; ela não é iônica). Clique 3: duros e quebradiços.</p>
+    <p>Correção do material antigo: na tela de propriedades, os valores trocaram de lugar. O certo é CsCl 645 °C e CaF₂ 1 418 °C; o sulfeto de zinco (ZnS) não derrete na pressão ambiente: sublima perto de 1 185 °C. Por isso ele ficou fora da tabela.</p>
+  </aside>
+</section>
+
+<!-- Condução -->
+<section class="slide" data-nome="Conduzem eletricidade?">
+  <div class="conteudo">
+    <p class="olho">Propriedades dos compostos iônicos</p>
+    <h2 class="titulo">Acende a lâmpada?</h2>
+    <div style="position:absolute;left:0;top:150px;display:grid;grid-template-columns:400px 400px;gap:40px">
+      <div data-passo="1" style="text-align:center">
+        <svg viewBox="0 0 380 400" width="380" height="400" aria-hidden="true">
+          <circle cx="190" cy="44" r="26" fill="#E4E1EE" stroke="#7F7A99" stroke-width="4"/><rect x="178" y="68" width="24" height="16" rx="3" fill="#9A95AD"/>
+          <path d="M178 76 H110 V200 M202 76 H270 V200" fill="none" stroke="#5E5A70" stroke-width="4"/>
+          <rect x="70" y="180" width="240" height="190" rx="22" fill="none"/>
+          <path d="M60 170 v176 a24 24 0 0 0 24 24 h212 a24 24 0 0 0 24 -24 v-176" fill="none" stroke="#7F7A99" stroke-width="5" stroke-linecap="round"/>
+          <rect x="63" y="230" width="254" height="137" rx="20" fill="none"/><g><g><circle cx="150" cy="350" r="9" fill="url(#gNa)"/><text x="150" y="357" text-anchor="middle" font-family="Figtree" font-weight="800" font-size="0" fill="#fff">+</text></g><g><circle cx="150" cy="328" r="12" fill="url(#gCl)"/><text x="150" y="335" text-anchor="middle" font-family="Figtree" font-weight="800" font-size="0" fill="#fff">−</text></g><g><circle cx="172" cy="350" r="12" fill="url(#gCl)"/><text x="172" y="357" text-anchor="middle" font-family="Figtree" font-weight="800" font-size="0" fill="#fff">−</text></g><g><circle cx="172" cy="328" r="9" fill="url(#gNa)"/><text x="172" y="335" text-anchor="middle" font-family="Figtree" font-weight="800" font-size="0" fill="#fff">+</text></g><g><circle cx="194" cy="350" r="9" fill="url(#gNa)"/><text x="194" y="357" text-anchor="middle" font-family="Figtree" font-weight="800" font-size="0" fill="#fff">+</text></g><g><circle cx="194" cy="328" r="12" fill="url(#gCl)"/><text x="194" y="335" text-anchor="middle" font-family="Figtree" font-weight="800" font-size="0" fill="#fff">−</text></g><g><circle cx="216" cy="350" r="12" fill="url(#gCl)"/><text x="216" y="357" text-anchor="middle" font-family="Figtree" font-weight="800" font-size="0" fill="#fff">−</text></g><g><circle cx="216" cy="328" r="9" fill="url(#gNa)"/><text x="216" y="335" text-anchor="middle" font-family="Figtree" font-weight="800" font-size="0" fill="#fff">+</text></g></g>
+          <rect x="100" y="196" width="20" height="150" rx="6" fill="#6B6680"/><rect x="260" y="196" width="20" height="150" rx="6" fill="#6B6680"/>
+          <text x="84" y="222" text-anchor="middle" font-family="Figtree,sans-serif" font-weight="800" font-size="28" fill="#292B2C">−</text>
+          <text x="296" y="222" text-anchor="middle" font-family="Figtree,sans-serif" font-weight="800" font-size="28" fill="#292B2C">+</text>
+        </svg>
+        <p style="margin:0;font-size:27px;font-weight:700">sal sólido: <span style="color:#C63C28">não</span></p>
+      </div>
+      <div data-passo="2" style="text-align:center">
+        <svg viewBox="0 0 380 400" width="380" height="400" aria-hidden="true">
+          <circle class="brilho" cx="190" cy="44" r="42" fill="#FFD10C" opacity=".75"/><circle cx="190" cy="44" r="26" fill="#FFE566" stroke="#7F7A99" stroke-width="4"/><rect x="178" y="68" width="24" height="16" rx="3" fill="#9A95AD"/>
+          <path d="M178 76 H110 V200 M202 76 H270 V200" fill="none" stroke="#5E5A70" stroke-width="4"/>
+          <rect x="70" y="180" width="240" height="190" rx="22" fill="none"/>
+          <path d="M60 170 v176 a24 24 0 0 0 24 24 h212 a24 24 0 0 0 24 -24 v-176" fill="none" stroke="#7F7A99" stroke-width="5" stroke-linecap="round"/>
+          <rect x="63" y="230" width="254" height="137" rx="20" fill="url(#gAgua)"/><g><g class="cat"><circle cx="232" cy="262" r="13" fill="url(#gNa)"/><text x="232" y="269" text-anchor="middle" font-family="Figtree" font-weight="800" font-size="20" fill="#fff">+</text></g><g class="cat"><circle cx="262" cy="312" r="13" fill="url(#gNa)"/><text x="262" y="319" text-anchor="middle" font-family="Figtree" font-weight="800" font-size="20" fill="#fff">+</text></g><g class="cat"><circle cx="216" cy="346" r="13" fill="url(#gNa)"/><text x="216" y="353" text-anchor="middle" font-family="Figtree" font-weight="800" font-size="20" fill="#fff">+</text></g></g><g><g class="ani"><circle cx="150" cy="288" r="17" fill="url(#gCl)"/><text x="150" y="295" text-anchor="middle" font-family="Figtree" font-weight="800" font-size="22" fill="#fff">−</text></g><g class="ani"><circle cx="128" cy="252" r="17" fill="url(#gCl)"/><text x="128" y="259" text-anchor="middle" font-family="Figtree" font-weight="800" font-size="22" fill="#fff">−</text></g><g class="ani"><circle cx="162" cy="336" r="17" fill="url(#gCl)"/><text x="162" y="343" text-anchor="middle" font-family="Figtree" font-weight="800" font-size="22" fill="#fff">−</text></g></g>
+          <rect x="100" y="196" width="20" height="150" rx="6" fill="#6B6680"/><rect x="260" y="196" width="20" height="150" rx="6" fill="#6B6680"/>
+          <text x="84" y="222" text-anchor="middle" font-family="Figtree,sans-serif" font-weight="800" font-size="28" fill="#292B2C">−</text>
+          <text x="296" y="222" text-anchor="middle" font-family="Figtree,sans-serif" font-weight="800" font-size="28" fill="#292B2C">+</text>
+        </svg>
+        <p style="margin:0;font-size:27px;font-weight:700">sal na água: <span style="color:#1B8A4B">sim</span></p>
+      </div>
+    </div>
+    <div style="position:absolute;left:900px;right:0;top:160px;display:flex;flex-direction:column;gap:20px">
+      <div class="linha-ex" data-passo="1"><b>Sólido:</b> os íons estão presos no retículo; a corrente não passa.</div>
+      <div class="linha-ex" data-passo="2"><b>Na água:</b> o retículo se desfaz e os íons ficam <b>livres</b> para andar: <b>dissociação iônica</b>.</div>
+      <p data-passo="3" style="margin:0;font:800 46px var(--fonte-titulo);color:var(--roxo-titulo);text-align:center">NaCl(s) → Na⁺(aq) + Cl⁻(aq)</p>
+      <div class="caixa caixa-fundamental" data-passo="4">
+        <div class="texto" style="font-size:29px">Compostos iônicos conduzem eletricidade <b>dissolvidos em água</b> ou <b>derretidos</b> (fundidos). <b>Sólidos, não conduzem.</b></div>
+      </div>
+    </div>
+  </div>
+  <aside class="notas">
+    <p>Clique 1: o sal sólido no circuito; a lâmpada fica apagada. Clique 2: o sal dissolvido; os íons andam até os eletrodos (cátions para o polo −, ânions para o polo +) e a lâmpada acende. Clique 3: a equação da dissociação ((aq) = dissolvido em água). Clique 4: a regra.</p>
+    <p>Fundido, o sal também conduz, porque os íons ficam livres (a 801 °C).</p>
+  </aside>
+</section>
+
+<!-- Questão 1 -->
+<section class="slide questao" data-nome="Questão 1">
+  <div class="conteudo">
+    <div class="area-resolucao"></div>
+    <span class="pilula pilula-pausa" data-em="1:some">Pause o vídeo e tente</span>
+    <div class="painel-questao">
+      <p class="olho">Questão 1 · UFLA</p>
+      <p class="enunciado" style="font-size:25px">A seguir são dadas as configurações eletrônicas dos átomos A e B.</p>
+      <p class="enunciado" style="font-size:25px"><b>A:</b> 1s² 2s² 2p⁶ 3s² 3p⁶ 4s²<br><b>B:</b> 1s² 2s² 2p⁶ 3s² 3p⁵</p>
+      <p class="enunciado" style="font-size:25px">O cátion, o ânion e o composto formado por A e B são, respectivamente,</p>
+      <ol class="alternativas curtas">
+        <li data-em="2:apaga"><b>A</b><span>A<sup>+</sup>, B<sup>−</sup>, AB</span></li>
+        <li data-em="2:apaga"><b>B</b><span>B<sup>+</sup>, A<sup>2−</sup>, B<sub>2</sub>A</span></li>
+        <li data-em="2:apaga"><b>C</b><span>B<sup>2+</sup>, A<sup>−</sup>, BA<sub>2</sub></span></li>
+        <li data-em="2:certo"><b>D</b><span>A<sup>2+</sup>, B<sup>−</sup>, AB<sub>2</sub></span></li>
+        <li data-em="2:apaga"><b>E</b><span>B<sup>2+</sup>, A<sup>2−</sup>, AB</span></li>
+      </ol>
+    </div>
+  </div>
+  <aside class="resolucao">
+    <p class="dados"><b>Dados:</b> A termina em 4s² (2 e⁻ de valência); B, em 3s² 3p⁵ (7).</p>
+    <ol class="passos">
+      <li><b>A:</b> 2 e⁻ de valência → perde 2 → A²⁺ (cátion).</li>
+      <li><b>B:</b> 7 e⁻ de valência → ganha 1 → B⁻ (ânion).</li>
+      <li><b>Carga zero:</b> 1 A²⁺ para 2 B⁻ → AB₂.</li>
+      <li><b>Confere:</b> (+2) + 2 · (−1) = 0.</li>
+    </ol>
+    <p class="resposta"><b>Resposta:</b> A²⁺, B⁻ e AB₂. <b>Gabarito D.</b></p>
+    <p class="atencao"><b>Destaque no quadro:</b> Valência 1, 2 ou 3: perde (cátion). 5, 6 ou 7: ganha (ânion).</p>
+    <ul class="erros">
+      <li><b>A</b> A perde 2 elétrons, não 1: o cátion é A²⁺.</li>
+      <li><b>B</b> Troca os papéis: B (7 e⁻) ganha elétron, não perde.</li>
+      <li><b>C</b> Troca os papéis: o metal é A, não B.</li>
+      <li><b>E</b> B ganha só 1 elétron (B⁻), e a fórmula com A²⁺ e B⁻ é AB₂.</li>
+    </ul>
+  </aside>
+  <aside class="notas">
+    <p>Clique 1 tira o aviso de pausa: resolva na área (D liga a caneta; E esconde o enunciado). Clique 2: gabarito D.</p>
+    <p>Questão do material da professora. A é o cálcio (Z = 20); B é o cloro (Z = 17): o composto é o CaCl₂ visto no exemplo.</p>
+  </aside>
+</section>
+
+<!-- Questão 2 -->
+<section class="slide questao" data-nome="Questão 2">
+  <div class="conteudo">
+    <div class="area-resolucao"></div>
+    <span class="pilula pilula-pausa" data-em="1:some">Pause o vídeo e tente</span>
+    <div class="painel-questao">
+      <p class="olho">Questão 2 · Mackenzie</p>
+      <p class="enunciado" style="font-size:26px">Para que átomos de enxofre e potássio adquiram configuração eletrônica igual à dos gases nobres, é necessário que:</p>
+      <p class="enunciado" style="font-size:26px">Dados – Z: S = 16, K = 19.</p>
+      <ol class="alternativas" style="gap:8px">
+        <li data-em="2:apaga" style="font-size:21px;padding:6px 14px"><b>A</b><span>o enxofre receba 2 elétrons e que o potássio receba 7 elétrons.</span></li>
+        <li data-em="2:apaga" style="font-size:21px;padding:6px 14px"><b>B</b><span>o enxofre ceda 6 elétrons e que o potássio receba 7 elétrons.</span></li>
+        <li data-em="2:apaga" style="font-size:21px;padding:6px 14px"><b>C</b><span>o enxofre ceda 2 elétrons e que o potássio ceda 1 elétron.</span></li>
+        <li data-em="2:apaga" style="font-size:21px;padding:6px 14px"><b>D</b><span>o enxofre receba 6 elétrons e que o potássio ceda 1 elétron.</span></li>
+        <li data-em="2:certo" style="font-size:21px;padding:6px 14px"><b>E</b><span>o enxofre receba 2 elétrons e que o potássio ceda 1 elétron.</span></li>
+      </ol>
+    </div>
+  </div>
+  <aside class="resolucao">
+    <p class="dados"><b>Dados:</b> S: Z = 16; K: Z = 19.</p>
+    <ol class="passos">
+      <li><b>S:</b> 2-8-6 → faltam 2 → recebe 2 e⁻ (S²⁻).</li>
+      <li><b>K:</b> 2-8-8-1 → sobra 1 → cede 1 e⁻ (K⁺).</li>
+      <li><b>Octeto:</b> S fica 2-8-8; K fica 2-8-8.</li>
+    </ol>
+    <p class="resposta"><b>Resposta:</b> o enxofre recebe 2 e o potássio cede 1. <b>Gabarito E.</b></p>
+    <p class="atencao"><b>Destaque no quadro:</b> Distribua em camadas e olhe a última.</p>
+    <ul class="erros">
+      <li><b>A</b> O potássio cede 1 elétron; receber 7 seria muito mais difícil.</li>
+      <li><b>B</b> O enxofre recebe 2; não cede 6.</li>
+      <li><b>C</b> O enxofre, ametal, recebe elétrons.</li>
+      <li><b>D</b> O enxofre já tem 6: recebe só 2, não 6.</li>
+    </ul>
+  </aside>
+  <aside class="notas">
+    <p>Clique 1 tira o aviso de pausa: resolva na área (D liga a caneta; E esconde o enunciado). Clique 2: gabarito E.</p>
+    <p>Questão do material da professora. Os íons formados são S²⁻ e K⁺ (composto K₂S).</p>
+  </aside>
+</section>
+
+<!-- Questão 3 -->
+<section class="slide questao" data-nome="Questão 3">
+  <div class="conteudo">
+    <div class="area-resolucao"></div>
+    <span class="pilula pilula-pausa" data-em="1:some">Pause o vídeo e tente</span>
+    <div class="painel-questao">
+      <p class="olho">Questão 3 · Cefet-MG</p>
+      <p class="enunciado" style="font-size:26px">Nos compostos iônicos, os íons se unem devido a forças de atração eletrostáticas. Esses arranjos de cátions e ânions fornecem grande estabilidade aos compostos e determinam suas principais propriedades.</p>
+      <p class="enunciado" style="font-size:26px">A respeito dos sólidos iônicos, é correto afirmar que:</p>
+      <ol class="alternativas" style="gap:8px">
+        <li data-em="2:certo" style="font-size:23px;padding:6px 14px"><b>A</b><span>apresentam altos pontos de fusão e ebulição.</span></li>
+        <li data-em="2:apaga" style="font-size:23px;padding:6px 14px"><b>B</b><span>são bons condutores de eletricidade no estado sólido.</span></li>
+        <li data-em="2:apaga" style="font-size:23px;padding:6px 14px"><b>C</b><span>se transformam em compostos moleculares, quando fundidos.</span></li>
+        <li data-em="2:apaga" style="font-size:23px;padding:6px 14px"><b>D</b><span>se apresentam como líquidos ou gases na temperatura ambiente.</span></li>
+      </ol>
+    </div>
+  </div>
+  <aside class="resolucao">
+    <p class="dados"><b>Dados:</b> sólido iônico = retículo de cátions e ânions.</p>
+    <ol class="passos">
+      <li><b>Atrações fortes</b> entre muitos íons.</li>
+      <li><b>Muita energia</b> para romper o retículo.</li>
+      <li><b>Logo:</b> PF e PE altos.</li>
+    </ol>
+    <p class="resposta"><b>Resposta:</b> altos pontos de fusão e ebulição. <b>Gabarito A.</b></p>
+    <p class="atencao"><b>Destaque no quadro:</b> Iônico: sólido, PF alto, conduz só em água ou fundido.</p>
+    <ul class="erros">
+      <li><b>B</b> No sólido os íons estão presos: não conduz.</li>
+      <li><b>C</b> Fundido, continua iônico: os íons só ficam livres.</li>
+      <li><b>D</b> São sólidos na temperatura ambiente.</li>
+    </ul>
+  </aside>
+  <aside class="notas">
+    <p>Clique 1 tira o aviso de pausa: resolva na área (D liga a caneta; E esconde o enunciado). Clique 2: gabarito A.</p>
+    <p>Questão do material da professora (4 alternativas).</p>
+  </aside>
+</section>
+
+<!-- Resumo -->
+<section class="slide" data-nome="Resumo">
+  <div class="conteudo">
+    <p class="olho">Resumo</p>
+    <h2 class="titulo">O essencial</h2>
+    <div class="resumo" style="position:absolute;left:0;right:0;top:150px">
+      <div><b>Regra do octeto:</b> 8 elétrons na última camada, como um gás nobre (H e He: 2).</div>
+      <div><b>Metais</b> (1 a 3 e⁻ de valência) perdem: <b>cátions</b>. <b>Ametais</b> (5 a 7) ganham: <b>ânions</b>.</div>
+      <div><b>Ligação iônica:</b> metal transfere e⁻ para ametal; os íons se atraem.</div>
+      <div><b>Fórmula:</b> cátion primeiro, carga total zero: NaCl, CaCl₂, Al₂O₃, MgO.</div>
+      <div><b>Retículo cristalino:</b> não há molécula; a fórmula é só a proporção.</div>
+      <div><b>Propriedades:</b> sólidos, PF alto, quebradiços; conduzem só em água ou fundidos.</div>
+    </div>
+    <div class="caixa caixa-atencao" style="position:absolute;left:580px;right:0;top:660px">
+      <div class="texto" style="font-size:30px">Iônica = <b>metal + ametal</b>, com <b>transferência</b> de elétrons.</div>
+    </div>
+  </div>
+  <aside class="notas"><p>Peça para tirarem um print desta tela.</p></aside>
+</section>
+
+<!-- A seguir -->
+<section class="slide capa" data-nome="A seguir">
+  <div class="estrelas"></div>
+  <div class="texto-capa" style="top:170px">
+    <span class="selo">Química · IF</span>
+    <p class="aula" style="font-size:26px">A seguir · Ligações químicas</p>
+    <h1>Ligação covalente</h1>
+    <p class="sub">Quando os átomos compartilham</p>
+  </div>
+  <svg class="emblema" viewBox="0 0 640 640" aria-hidden="true">
+    <circle cx="250" cy="320" r="130" fill="none" stroke="#fff" stroke-opacity=".7" stroke-width="8"/>
+    <circle cx="390" cy="320" r="130" fill="none" stroke="#FFD10C" stroke-width="8"/>
+    <circle cx="320" cy="296" r="16" fill="#FFD10C"/><circle cx="320" cy="344" r="16" fill="#fff"/>
+  </svg>
+  <img class="logo-capa" src="{{LOGO_BRANCO}}" alt="Quarks">
+  <aside class="notas"><p>Próxima: quando nenhum dos átomos quer perder elétrons, eles compartilham pares e formam moléculas.</p></aside>
+</section>

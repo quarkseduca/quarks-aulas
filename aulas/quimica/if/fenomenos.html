@@ -1,0 +1,461 @@
+<!--aula
+{"disciplina": "quimica", "curso": "IF", "assunto": "Matéria e transformações", "parte": "Parte única", "titulo": "Fenômenos físicos e químicos", "scripts": ["animacoes-fenomenos.js"]}
+-->
+<!-- Fonte: slides da professora (Química IF 2026, aula 06: transformações químicas da matéria, fenômenos físicos e químicos, exercício da UnB), com a correção de que transformação química não é irreversível como regra, completados com a apostila IF, Química, cap. 1 (1.4 Fenômenos físicos e químicos). Questões: IF Sudeste MG 2024 e 2019 (oficiais, da lista da professora). -->
+<style>
+  .caixa, .cartao, .linha-ex { box-sizing: border-box; }
+  .linha-ex { background: var(--branco); border: 2px solid var(--lilas-2); border-radius: 24px; padding: 14px 26px; font-size: 30px; line-height: 1.3; }
+  .linha-ex b { color: var(--roxo-titulo); }
+  .linha-tag { display: grid; grid-template-columns: 1fr auto; align-items: center; gap: 18px; }
+  .tag { display: inline-block; padding: 5px 20px; border-radius: 999px; font-weight: 800; font-size: 25px; white-space: nowrap; }
+  .tag-f { background: #E3F0FB; color: #1F5F99; }
+  .tag-q { background: #FFE9DF; color: #A8431B; }
+  .tag-v { background: var(--certo-claro); color: var(--certo); }
+  .tag-x { background: var(--erro-claro); color: var(--erro); }
+  .tag-p { background: var(--d-clara); color: var(--d-forte); }
+  .cartao { background: var(--branco); border: 2px solid var(--lilas-2); border-radius: 28px; padding: 20px 24px; }
+  .cartao h3 { margin: 0 0 4px; font: 800 36px var(--fonte-titulo); letter-spacing: -.02em; color: var(--roxo-titulo); }
+  .cartao p { margin: 0; font-size: 25px; line-height: 1.3; color: var(--carvao); }
+  .cartao-ico { display: grid; grid-template-columns: 150px 1fr; gap: 18px; align-items: center; }
+  .cartao-ico svg { width: 150px; height: 150px; display: block; }
+  .rot-fig { font-family: Figtree, sans-serif; font-weight: 700; font-size: 22px; fill: #5E5A70; }
+  .tabela.marca-lin tr.marca td { background: #FFF4C2; font-weight: 800; }
+  .painel { box-sizing: border-box; background: var(--branco); border: 2px solid var(--lilas-2); border-radius: 30px; padding: 18px 26px; }
+  .painel h3 { margin: 0 0 6px; font: 800 38px var(--fonte-titulo); letter-spacing: -.02em; color: var(--roxo-titulo); }
+  .painel p { margin: 8px 0 0; font-size: 26px; line-height: 1.3; }
+  .fase { display: inline-block; padding: 4px 18px; border-radius: 999px; background: var(--d-clara); color: var(--d-forte); font-size: 24px; font-weight: 800; }
+  .eq-q { font: 800 40px var(--fonte-titulo); color: var(--roxo-titulo); }
+  /* prego que dobra; prego que enferruja */
+  .dobra { transform-box: view-box; transform-origin: 200px 300px; transition: transform 1.8s cubic-bezier(.5,0,.3,1); }
+  .dobra.on { transform: rotate(58deg); }
+  .ferrugem .camada { opacity: 0; transition: opacity 5s ease-in-out; }
+  .ferrugem .mancha { transform: scale(0); transform-box: fill-box; transform-origin: center; transition: transform 3s ease-out; }
+  .ferrugem.mostra .camada { opacity: .92; }
+  .ferrugem.mostra .mancha { transform: scale(1); }
+  .ferrugem.mostra .mancha:nth-of-type(2) { transition-delay: 1s; } .ferrugem.mostra .mancha:nth-of-type(3) { transition-delay: 2s; } .ferrugem.mostra .mancha:nth-of-type(4) { transition-delay: 2.6s; }
+  /* chamas, bolhas, açúcar que se dissolve, bateria que carrega e descarrega */
+  @keyframes chama { 0%,100% { transform: scaleY(1) scaleX(1); } 50% { transform: scaleY(.88) scaleX(1.04); } }
+  .chama { transform-box: fill-box; transform-origin: 50% 100%; }
+  .slide.ativo .mostra .chama { animation: chama 1.4s ease-in-out infinite; }
+  @keyframes bolha { 0% { transform: translateY(0); opacity: 0; } 15% { opacity: 1; } 85% { opacity: 1; } 100% { transform: translateY(-120px); opacity: 0; } }
+  .bolhas circle { opacity: 0; }
+  .slide.ativo .mostra .bolhas circle { animation: bolha 3.4s linear infinite; }
+  .bolhas circle:nth-child(2) { animation-delay: -.6s !important; } .bolhas circle:nth-child(3) { animation-delay: -1.3s !important; } .bolhas circle:nth-child(4) { animation-delay: -1.9s !important; } .bolhas circle:nth-child(5) { animation-delay: -2.5s !important; } .bolhas circle:nth-child(6) { animation-delay: -3s !important; }
+  @keyframes cai-dissolve { 0% { transform: translateY(0); opacity: 0; } 8% { opacity: 1; } 45% { transform: translateY(80px); opacity: 1; } 75% { transform: translateY(105px) scale(.4); opacity: 0; } 100% { transform: translateY(105px); opacity: 0; } }
+  .graos rect { opacity: 0; transform-box: fill-box; transform-origin: center; }
+  .slide.ativo .mostra .graos rect { animation: cai-dissolve 4.8s ease-in infinite; }
+  .graos rect:nth-child(2) { animation-delay: -1.2s !important; } .graos rect:nth-child(3) { animation-delay: -2.4s !important; } .graos rect:nth-child(4) { animation-delay: -3.6s !important; }
+  @keyframes carga { 0%,8% { transform: scaleX(.15); } 45%,55% { transform: scaleX(1); } 92%,100% { transform: scaleX(.15); } }
+  .carga { transform-box: fill-box; transform-origin: 0 50%; transform: scaleX(.15); }
+  .slide.ativo .mostra .carga { animation: carga 7s ease-in-out infinite; }
+  @keyframes seta-a { 0% { opacity: 0; } 8%,45% { opacity: 1; } 50%,100% { opacity: 0; } }
+  @keyframes seta-b { 0%,50% { opacity: 0; } 55%,92% { opacity: 1; } 97%,100% { opacity: 0; } }
+  .seta-b { opacity: 0; }
+  .slide.ativo .mostra .seta-a { animation: seta-a 7s ease-in-out infinite; }
+  .slide.ativo .mostra .seta-b { animation: seta-b 7s ease-in-out infinite; }
+  @keyframes pinga { 0%,20% { transform: translateY(0); opacity: 0; } 30% { opacity: 1; } 90% { transform: translateY(70px); opacity: 1; } 100% { transform: translateY(74px); opacity: 0; } }
+  .pingo { opacity: 0; }
+  .slide.ativo .mostra .pingo { animation: pinga 5s ease-in infinite; }
+  @keyframes fumaca { 0% { transform: translateY(0); opacity: 0; } 25% { opacity: .7; } 100% { transform: translateY(-50px); opacity: 0; } }
+  .fumo path { opacity: 0; }
+  .slide.ativo .mostra .fumo path { animation: fumaca 3.4s ease-out infinite; }
+  .fumo path:nth-child(2) { animation-delay: -1.7s !important; }
+</style>
+
+<svg width="0" height="0" style="position:absolute" aria-hidden="true">
+  <defs>
+    <radialGradient id="gO" cx=".35" cy=".3" r=".8"><stop offset="0" stop-color="#FF8A7A"/><stop offset="1" stop-color="#C8301F"/></radialGradient>
+    <radialGradient id="gH" cx=".35" cy=".3" r=".8"><stop offset="0" stop-color="#FFFFFF"/><stop offset="1" stop-color="#C9C4DC"/></radialGradient>
+    <linearGradient id="gAgua" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#CFE6FA"/><stop offset="1" stop-color="#9CCBF2"/></linearGradient>
+    <linearGradient id="gCafe" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#A9744A"/><stop offset="1" stop-color="#6E4325"/></linearGradient>
+    <linearGradient id="gFerro" x1="0" y1="0" x2="1" y2="0"><stop offset="0" stop-color="#8E8AA0"/><stop offset=".5" stop-color="#D9D6E3"/><stop offset="1" stop-color="#8E8AA0"/></linearGradient>
+    <linearGradient id="gCera" x1="0" y1="0" x2="1" y2="0"><stop offset="0" stop-color="#EDE7FF"/><stop offset=".5" stop-color="#FFFFFF"/><stop offset="1" stop-color="#E2DAFA"/></linearGradient>
+    <linearGradient id="gChama" x1="0" y1="1" x2="0" y2="0"><stop offset="0" stop-color="#FF8A3D"/><stop offset=".6" stop-color="#FFD10C"/><stop offset="1" stop-color="#FFF4C2"/></linearGradient>
+  </defs>
+</svg>
+
+<!-- 1. Capa -->
+<section class="slide capa" data-nome="Capa">
+  <div class="estrelas"></div>
+  <div class="texto-capa" style="top:150px">
+    <span class="selo">Química · IF</span>
+    <p class="aula">Matéria e transformações</p>
+    <h1 style="font-size:110px">Fenômenos físicos e químicos</h1>
+    <p class="sub">Surgiu ou não uma substância nova?</p>
+  </div>
+  <svg class="emblema" viewBox="0 0 640 640" aria-hidden="true">
+    <g class="gira-lento"><ellipse cx="320" cy="320" rx="300" ry="128" fill="none" stroke="#fff" stroke-opacity=".38" stroke-width="2" transform="rotate(-10 320 320)"/></g>
+    <g class="gira"><ellipse cx="320" cy="320" rx="236" ry="196" fill="none" stroke="#FFD10C" stroke-opacity=".75" stroke-width="2.5" stroke-dasharray="3 14" stroke-linecap="round" transform="rotate(-8 320 320)"/>
+      <circle cx="84" cy="300" r="13" fill="#FFD10C" stroke="#fff" stroke-width="3"/></g>
+    <circle cx="320" cy="320" r="132" fill="#FFD10C"/>
+    <image href="{{SYM_ROXO}}" x="238" y="238" width="164" height="164"/>
+  </svg>
+  <img class="logo-capa" src="{{LOGO_BRANCO}}" alt="Quarks">
+  <aside class="notas"><p>Hoje: a diferença entre fenômeno físico e fenômeno químico (reação), visto também no nível das partículas, e entre propriedades físicas e químicas. Fecha o capítulo Matéria e transformações; depois vem o bloco de questões do IF.</p></aside>
+</section>
+
+<!-- 2. Dois pregos -->
+<section class="slide" data-nome="Dois pregos">
+  <div class="conteudo">
+    <p class="olho">Fenômeno: qualquer transformação na matéria</p>
+    <h2 class="titulo">Os dois pregos mudaram. Do mesmo jeito?</h2>
+    <svg viewBox="0 0 720 440" style="position:absolute;left:0;top:150px;width:720px;height:440px" aria-hidden="true">
+      <rect x="20" y="420" width="680" height="14" rx="7" fill="#E4DEFB"/>
+      <!-- prego 1: dobrado -->
+      <rect x="192" y="300" width="16" height="120" fill="url(#gFerro)" stroke="#6E6A80" stroke-width="2"/>
+      <g class="dobra" data-em="1:on"><rect x="192" y="140" width="16" height="162" fill="url(#gFerro)" stroke="#6E6A80" stroke-width="2"/><rect x="172" y="128" width="56" height="14" rx="5" fill="#8E8AA0" stroke="#6E6A80" stroke-width="2"/></g>
+      <text x="200" y="80" text-anchor="middle" class="rot-fig" style="font-size:26px" data-passo="1">dobrado</text>
+      <!-- prego 2: enferrujado -->
+      <rect x="492" y="140" width="16" height="280" fill="url(#gFerro)" stroke="#6E6A80" stroke-width="2"/>
+      <rect x="472" y="128" width="56" height="14" rx="5" fill="#8E8AA0" stroke="#6E6A80" stroke-width="2"/>
+      <g class="ferrugem" data-passo="2"><rect class="camada" x="492" y="140" width="16" height="280" fill="#B4532A"/><rect class="camada" x="472" y="128" width="56" height="14" rx="5" fill="#9C4421"/>
+        <circle class="mancha" cx="500" cy="200" r="11" fill="#8A3A1A"/><circle class="mancha" cx="498" cy="290" r="13" fill="#D8794A"/><circle class="mancha" cx="502" cy="370" r="10" fill="#8A3A1A"/><circle class="mancha" cx="486" cy="135" r="8" fill="#D8794A"/></g>
+      <text x="500" y="80" text-anchor="middle" class="rot-fig" style="font-size:26px" data-passo="2">enferrujado</text>
+    </svg>
+    <div style="position:absolute;left:780px;right:0;top:160px;display:flex;flex-direction:column;gap:18px">
+      <div class="linha-ex" data-passo="1">O prego dobrado <b>continua sendo ferro</b>.</div>
+      <div class="linha-ex" data-passo="2">A ferrugem é um <b>material novo</b>: marrom e quebradiço.</div>
+      <div class="caixa caixa-fundamental" data-passo="3" style="padding:18px 28px">
+        <span class="rotulo">Fenômeno físico</span>
+        <div class="texto" style="font-size:28px">As substâncias <b>continuam as mesmas</b>: mudam a forma, o tamanho ou o estado físico.</div>
+      </div>
+      <div class="caixa caixa-fundamental" data-passo="4" style="padding:18px 28px">
+        <span class="rotulo">Fenômeno químico (reação química)</span>
+        <div class="texto" style="font-size:28px">Surgem <b>substâncias novas</b>, com propriedades diferentes das iniciais.</div>
+      </div>
+    </div>
+    <div class="caixa caixa-atencao" data-passo="5" style="position:absolute;left:780px;right:0;top:720px;padding:18px 28px">
+      <div class="texto" style="font-size:29px">A pergunta que decide: <b>surgiu uma substância nova?</b></div>
+    </div>
+  </div>
+  <aside class="notas">
+    <p>Clique 1: o prego se dobra (muda só a forma). Clique 2: o outro enferruja (a ferrugem vai aparecendo). Cliques 3 e 4: as definições. Clique 5: o critério.</p>
+    <p>Da apostila. A professora usa as palavras: fenômenos físicos não alteram a composição do material; fenômenos químicos modificam a composição do material.</p>
+  </aside>
+</section>
+
+<!-- 3. No nível das partículas -->
+<section class="slide" data-nome="No nível das partículas">
+  <div class="conteudo">
+    <p class="olho">O que acontece com as partículas</p>
+    <h2 class="titulo">Mesmas moléculas ou moléculas novas?</h2>
+    <div style="position:absolute;left:0;right:0;top:150px;display:grid;grid-template-columns:1fr 1fr;gap:40px">
+      <div class="painel" data-passo="1">
+        <h3>Físico: o gelo derrete</h3>
+        <span class="fase" data-fase>gelo: rede organizada</span>
+        <div data-anima="rearranjo" data-modo="fisico" data-anima-passo="1" data-w="780" data-h="250" style="width:780px;height:250px;margin-top:6px"></div>
+        <p>As moléculas de H<sub>2</sub>O só se afastam: <b>continuam H<sub>2</sub>O</b>.</p>
+      </div>
+      <div class="painel" data-passo="2">
+        <h3>Químico: a água se forma</h3>
+        <span class="fase" data-fase>antes: H₂ e O₂ (reagentes)</span>
+        <div data-anima="rearranjo" data-modo="quimico" data-anima-passo="2" data-w="780" data-h="250" style="width:780px;height:250px;margin-top:6px"></div>
+        <p class="eq-q" style="margin-top:0">2 H<sub>2</sub> + O<sub>2</sub> → 2 H<sub>2</sub>O</p>
+      </div>
+    </div>
+    <div class="caixa caixa-fundamental" data-passo="3" style="position:absolute;left:580px;right:0;top:650px;padding:20px 30px">
+      <div class="texto" style="font-size:29px">Na reação os <b>átomos se reorganizam</b>. <b>Reagentes:</b> as substâncias do começo. <b>Produtos:</b> as que surgem.</div>
+    </div>
+  </div>
+  <aside class="notas">
+    <p>Clique 1: no gelo que derrete, as moléculas de água saem da rede e se espalham, mas cada uma continua com um O (vermelho) e dois H (brancos). Clique 2: hidrogênio e oxigênio reagem; as moléculas H<sub>2</sub> e O<sub>2</sub> se desfazem e os mesmos átomos formam moléculas de água. Nenhum átomo some nem aparece (6 átomos antes, 6 depois): é a lei de Lavoisier, que vem no capítulo Reações químicas.</p>
+    <p>H<sub>2</sub> e O<sub>2</sub> são gases; a equação completa, com os estados, também fica para o capítulo Reações químicas.</p>
+  </aside>
+</section>
+
+<!-- 4. No dia a dia -->
+<section class="slide" data-nome="Físico ou químico?">
+  <div class="conteudo">
+    <p class="olho">No dia a dia</p>
+    <h2 class="titulo">Físico ou químico?</h2>
+    <div style="position:absolute;left:0;right:0;top:160px;display:grid;grid-template-columns:1fr 1fr;gap:14px 34px">
+        <div class="linha-ex linha-tag" style="font-size:28px;padding:10px 22px"><span>Derreter gelo</span><span data-passo="1"><span class="tag tag-f">físico</span></span></div>
+        <div class="linha-ex linha-tag" style="font-size:28px;padding:10px 22px"><span>Queimar papel</span><span data-passo="2"><span class="tag tag-q">químico</span></span></div>
+        <div class="linha-ex linha-tag" style="font-size:28px;padding:10px 22px"><span>Quebrar um copo</span><span data-passo="3"><span class="tag tag-f">físico</span></span></div>
+        <div class="linha-ex linha-tag" style="font-size:28px;padding:10px 22px"><span>Enferrujar o ferro</span><span data-passo="4"><span class="tag tag-q">químico</span></span></div>
+        <div class="linha-ex linha-tag" style="font-size:28px;padding:10px 22px"><span>Dissolver açúcar no café</span><span data-passo="5"><span class="tag tag-f">físico</span></span></div>
+        <div class="linha-ex linha-tag" style="font-size:28px;padding:10px 22px"><span>Cozinhar um ovo</span><span data-passo="6"><span class="tag tag-q">químico</span></span></div>
+        <div class="linha-ex linha-tag" style="font-size:28px;padding:10px 22px"><span>Amassar uma lata</span><span data-passo="7"><span class="tag tag-f">físico</span></span></div>
+        <div class="linha-ex linha-tag" style="font-size:28px;padding:10px 22px"><span>O leite azedar</span><span data-passo="8"><span class="tag tag-q">químico</span></span></div>
+        <div class="linha-ex linha-tag" style="font-size:28px;padding:10px 22px"><span>Ferver água</span><span data-passo="9"><span class="tag tag-f">físico</span></span></div>
+        <div class="linha-ex linha-tag" style="font-size:28px;padding:10px 22px"><span>O bolo crescer no forno</span><span data-passo="10"><span class="tag tag-q">químico</span></span></div>
+    </div>
+  </div>
+  <aside class="notas">
+    <p>Listas da apostila, misturadas. Peça a resposta antes de cada clique; para cada uma pergunte: surgiu substância nova?</p>
+    <p>O ovo cozido não volta a ser cru: as proteínas mudaram. No bolo, o fermento produz gás carbônico, que faz a massa crescer.</p>
+  </aside>
+</section>
+
+<!-- 5. Propriedades físicas e químicas -->
+<section class="slide" data-nome="Propriedades físicas e químicas">
+  <div class="conteudo">
+    <p class="olho">A mesma ideia nas propriedades</p>
+    <h2 class="titulo">Propriedades físicas e químicas</h2>
+    <div style="position:absolute;left:0;width:760px;top:160px">
+      <div class="caixa caixa-fundamental" data-passo="1" style="padding:20px 30px">
+        <span class="rotulo">Propriedade física</span>
+        <div class="texto" style="font-size:29px">Observada <b>sem mudar a substância</b>: cor, densidade, PF, PE, dureza, solubilidade.</div>
+      </div>
+      <p class="texto" data-passo="1" style="margin:16px 0 0;font-size:27px;color:var(--cinza)">Medir o PE do álcool não o transforma: ele continua sendo álcool, em vapor.</p>
+    </div>
+    <div style="position:absolute;left:840px;right:0;top:160px;display:flex;flex-direction:column;gap:14px">
+      <div class="caixa caixa-fundamental" data-passo="2" style="padding:20px 30px">
+        <span class="rotulo">Propriedade química</span>
+        <div class="texto" style="font-size:29px">Capacidade de <b>se transformar em outra substância</b>.</div>
+      </div>
+        <div class="linha-ex" data-passo="3" style="display:flex;align-items:center;gap:16px;padding:6px 20px;font-size:27px"><svg viewBox="0 0 120 120" style="width:110px;height:110px;flex:none" aria-hidden="true"><rect x="38" y="70" width="44" height="42" rx="8" fill="#EFEBFF" stroke="#8C7BEA" stroke-width="3"/><path class="chama" d="M60 66 q-22 -22 0 -56 q22 34 0 56 z" fill="url(#gChama)"/></svg><span><b>Sofrer combustão:</b> o álcool é inflamável.</span></div>
+        <div class="linha-ex" data-passo="4" style="display:flex;align-items:center;gap:16px;padding:6px 20px;font-size:27px"><svg viewBox="0 0 120 120" style="width:110px;height:110px;flex:none" aria-hidden="true"><rect x="22" y="54" width="76" height="14" fill="#8E8AA0"/><rect x="10" y="46" width="14" height="30" rx="4" fill="#8E8AA0"/><circle cx="44" cy="61" r="8" fill="#B4532A"/><circle cx="70" cy="60" r="10" fill="#B4532A"/><circle cx="88" cy="62" r="6" fill="#D8794A"/></svg><span><b>Oxidar</b> na presença do oxigênio: o ferro enferruja.</span></div>
+        <div class="linha-ex" data-passo="5" style="display:flex;align-items:center;gap:16px;padding:6px 20px;font-size:27px"><svg viewBox="0 0 120 120" style="width:110px;height:110px;flex:none" aria-hidden="true"><path d="M30 30 h60 l-8 82 h-44 z" fill="#EFEBFF" stroke="#8C7BEA" stroke-width="3" stroke-linejoin="round"/><path d="M34 60 h52 l-5 50 h-42 z" fill="#8E3B6E" opacity=".8"/><g class="bolhas" fill="#fff" stroke="#C9C1F2" stroke-width="1.5"><circle cx="48" cy="104" r="4"/><circle cx="62" cy="106" r="3"/><circle cx="72" cy="102" r="4"/><circle cx="56" cy="100" r="3"/><circle cx="66" cy="108" r="3"/><circle cx="52" cy="108" r="2"/></g></svg><span><b>Fermentar:</b> o suco de uva vira vinho.</span></div>
+    </div>
+  </div>
+  <aside class="notas">
+    <p>Clique 1: propriedade física (a apostila e as da Parte 1 e 2 de Propriedades da matéria). Clique 2: propriedade química, relacionada a alterações na estrutura da matéria (palavras da professora). Cliques 3 a 5: os exemplos da professora: capacidade de sofrer combustão, oxidação na presença do oxigênio e fermentação.</p>
+    <p>Na fermentação do suco de uva, os açúcares viram álcool e gás carbônico (as bolhinhas).</p>
+  </aside>
+</section>
+
+<!-- 6. Dá para desfazer? -->
+<section class="slide" data-nome="Dá para desfazer?">
+  <div class="conteudo">
+    <p class="olho">Cuidado com uma regra falsa</p>
+    <h2 class="titulo">"Transformação química é irreversível"?</h2>
+    <div style="position:absolute;left:0;right:0;top:160px;display:grid;grid-template-columns:1fr 1fr;gap:40px">
+      <div class="painel" data-passo="1" style="display:grid;grid-template-columns:230px 1fr;gap:20px;align-items:center">
+        <svg viewBox="0 0 230 220" style="width:230px;height:220px" aria-hidden="true">
+          <rect x="40" y="30" width="150" height="150" rx="22" fill="#fff" stroke="#4B39B3" stroke-width="6"/><rect x="92" y="14" width="46" height="18" rx="5" fill="#4B39B3"/>
+          <rect class="carga" x="58" y="48" width="114" height="114" rx="12" fill="#3FBF7F"/>
+          <g font-family="Figtree,sans-serif" font-weight="800" font-size="22" text-anchor="middle"><text class="seta-a" x="115" y="210" fill="#1F9D62">recarregando</text><text class="seta-b" x="115" y="210" fill="#5E5A70">em uso</text></g>
+        </svg>
+        <div><h3>Químico e reversível</h3><p>A bateria do celular funciona por <b>reação química</b>. Na recarga, a reação é <b>desfeita</b>, e ela volta a funcionar.</p></div>
+      </div>
+      <div class="painel" data-passo="2" style="display:grid;grid-template-columns:230px 1fr;gap:20px;align-items:center">
+        <svg viewBox="0 0 230 200" style="width:230px;height:200px" aria-hidden="true">
+          <path d="M70 40 h90 l-12 140 h-66 z" fill="#E8F3FC" stroke="#7FB4E0" stroke-width="5" stroke-linejoin="round"/>
+          <path d="M112 40 l-10 40 l18 20 l-14 30 l10 50" fill="none" stroke="#5E9FD6" stroke-width="4" stroke-linejoin="round"/>
+          <path d="M40 186 l16 -8 l8 10 z M170 182 l18 -6 l2 12 z" fill="#CFE6FA" stroke="#7FB4E0" stroke-width="2"/>
+        </svg>
+        <div><h3>Físico e sem volta</h3><p>O copo quebrado <b>não volta</b> a ser inteiro sozinho, mas os cacos <b>continuam sendo vidro</b>.</p></div>
+      </div>
+    </div>
+    <div class="caixa caixa-atencao" data-passo="3" style="position:absolute;left:580px;right:0;top:600px;padding:20px 30px">
+      <span class="rotulo">O que decide não é voltar ou não</span>
+      <div class="texto" style="font-size:29px">Há reações que se desfazem e fenômenos físicos difíceis de desfazer. O critério é um só: <b>surgiu substância nova?</b></div>
+    </div>
+  </div>
+  <aside class="notas">
+    <p><b>Correção do material da professora:</b> o slide diz "as transformações químicas são irreversíveis". Isso não vale como regra geral. Muitas reações são reversíveis (a da bateria recarregável; a decomposição da água em hidrogênio e oxigênio pela corrente elétrica e a formação da água quando o hidrogênio queima). E muitos fenômenos físicos não se desfazem sozinhos (quebrar um copo). Reversível ou não, o que define o fenômeno químico é a formação de substâncias novas.</p>
+    <p>Clique 1: a bateria carrega (barra verde) e descarrega. Clique 2: o copo quebrado. Clique 3: o critério.</p>
+  </aside>
+</section>
+
+<!-- 7. Pegadinhas -->
+<section class="slide" data-nome="Dissolver e ferver">
+  <div class="conteudo">
+    <p class="olho">As pegadinhas</p>
+    <h2 class="titulo">Sumiu? Fez bolha? Calma.</h2>
+    <div style="position:absolute;left:0;right:0;top:150px;display:grid;grid-template-columns:1fr 1fr;gap:40px">
+      <div class="painel" data-passo="1" style="display:grid;grid-template-columns:220px 1fr;gap:20px;align-items:center">
+        <svg viewBox="0 0 220 260" style="width:220px;height:260px" aria-hidden="true">
+          <g class="graos" fill="#FFFFFF" stroke="#B8945A" stroke-width="2"><rect x="96" y="20" width="12" height="12" rx="3"/><rect x="116" y="26" width="12" height="12" rx="3"/><rect x="104" y="14" width="12" height="12" rx="3"/><rect x="124" y="18" width="12" height="12" rx="3"/></g>
+          <path d="M44 96 h132 l-12 150 h-108 z" fill="url(#gCafe)" opacity=".9"/>
+          <path d="M36 80 h148 M44 80 l14 168 h104 l14 -168" fill="none" stroke="#7F7A99" stroke-width="5" stroke-linejoin="round"/>
+        </svg>
+        <div><h3>Dissolver não é reagir</h3><p>O açúcar some no café, mas o café fica <b>doce</b>: ele continua lá. Evaporando a água, ele <b>volta</b>.</p><p><span class="tag tag-f">físico</span></p></div>
+      </div>
+      <div class="painel" data-passo="2" style="display:grid;grid-template-columns:220px 1fr;gap:20px;align-items:center">
+        <svg viewBox="0 0 220 260" style="width:220px;height:260px" aria-hidden="true">
+          <path d="M40 90 h140 v130 a20 20 0 0 1 -20 20 h-100 a20 20 0 0 1 -20 -20 z" fill="url(#gAgua)"/>
+          <path d="M30 76 h160 M40 76 v144 a20 20 0 0 0 20 20 h100 a20 20 0 0 0 20 -20 v-144" fill="none" stroke="#7F7A99" stroke-width="5" stroke-linecap="round"/>
+          <g class="bolhas" fill="none" stroke="#fff" stroke-width="3"><circle cx="70" cy="226" r="9"/><circle cx="104" cy="230" r="7"/><circle cx="140" cy="226" r="10"/><circle cx="88" cy="232" r="6"/><circle cx="124" cy="232" r="8"/><circle cx="156" cy="230" r="6"/></g>
+        </svg>
+        <div><h3>Bolha nem sempre é reação</h3><p>As bolhas da água fervendo são a <b>própria água</b>, em vapor.</p><p><span class="tag tag-f">físico</span></p></div>
+      </div>
+    </div>
+    <div class="caixa caixa-atencao" data-passo="3" style="position:absolute;left:580px;right:0;top:640px;padding:20px 30px">
+      <div class="texto" style="font-size:29px">Já o comprimido efervescente solta <b>gás carbônico</b>, que não existia: aí é reação. <b>Compare o início com o fim.</b></div>
+    </div>
+  </div>
+  <aside class="notas">
+    <p>Clique 1: o açúcar cai e some no café (dissolve). Clique 2: as bolhas da fervura sobem. Clique 3: o contraponto, a efervescência, que forma gás novo.</p>
+    <p>Da apostila (atenções "Dissolver não é reagir" e "Evidência não é prova"). As evidências de reação (gás, cor, sólido, luz, calor, cheiro) são o começo do capítulo Reações químicas.</p>
+  </aside>
+</section>
+
+<!-- 8. A vela -->
+<section class="slide" data-nome="A vela">
+  <div class="conteudo">
+    <p class="olho">Os dois juntos</p>
+    <h2 class="titulo">A vela acesa</h2>
+    <svg viewBox="0 0 440 460" style="position:absolute;left:40px;top:130px;width:440px;height:460px" aria-hidden="true">
+      <g data-passo="1">
+        <g class="fumo" fill="none" stroke="#C9C1F2" stroke-width="4" stroke-linecap="round"><path d="M220 60 q8 -10 0 -20 q-8 -10 0 -20"/><path d="M232 66 q8 -10 0 -20 q-8 -10 0 -20"/></g>
+        <path class="chama" d="M220 168 q-34 -36 0 -96 q34 60 0 96 z" fill="url(#gChama)"/>
+        <path class="chama" d="M220 166 q-14 -16 0 -42 q14 26 0 42 z" fill="#FF8A3D" opacity=".7"/>
+      </g>
+      <path d="M216 168 v20 h8 v-20 z" fill="#3A3640"/>
+      <path d="M150 196 q70 -14 140 0 v230 h-140 z" fill="url(#gCera)" stroke="#C9C1F2" stroke-width="4"/>
+      <ellipse cx="220" cy="198" rx="58" ry="10" fill="#FFF4C2" opacity=".9" data-passo="2"/>
+      <g data-passo="2"><path d="M160 200 q-8 30 0 60 q6 8 10 0 q-4 -28 0 -58 z" fill="#FFFFFF" stroke="#C9C1F2" stroke-width="2"/><ellipse class="pingo" cx="165" cy="262" rx="6" ry="8" fill="#FFFFFF" stroke="#C9C1F2" stroke-width="2"/></g>
+      <rect x="110" y="426" width="220" height="16" rx="8" fill="#E4DEFB"/>
+    </svg>
+    <div style="position:absolute;left:600px;right:0;top:170px;display:flex;flex-direction:column;gap:18px">
+      <div class="linha-ex linha-tag" data-passo="2"><span>Perto do pavio, a parafina <b>derrete</b> e escorre: continua parafina.</span><span class="tag tag-f">físico</span></div>
+      <div class="linha-ex linha-tag" data-passo="3"><span>Na chama, a parafina em vapor <b>queima</b> e forma gás carbônico e vapor de água.</span><span class="tag tag-q">químico</span></div>
+      <div class="linha-ex" data-passo="4"><b>Luz e calor</b> da chama: sinais de que há reação.</div>
+    </div>
+    <div class="caixa caixa-atencao" data-passo="5" style="position:absolute;left:600px;right:0;top:650px;padding:20px 30px">
+      <div class="texto" style="font-size:29px">Um mesmo objeto pode ter os <b>dois</b> fenômenos ao mesmo tempo.</div>
+    </div>
+  </div>
+  <aside class="notas">
+    <p>Clique 1: a vela acesa. Clique 2: a poça de parafina derretida e a gota que escorre (físico). Clique 3: a queima (químico). Clique 4: luz e calor. Clique 5: a ideia.</p>
+    <p>Da apostila (exemplo "Houve reação?").</p>
+  </aside>
+</section>
+
+<!-- 9. Exemplo UnB -->
+<section class="slide" data-nome="Exemplo: propriedade física ou química?">
+  <div class="conteudo">
+    <p class="olho">Exemplo · UnB</p>
+    <h2 class="titulo">Propriedade física ou química?</h2>
+    <div style="position:absolute;left:0;right:0;top:160px;display:flex;flex-direction:column;gap:14px">
+      <div class="linha-ex linha-tag" style="font-size:28px;padding:11px 24px"><span><b>1)</b> A glicose é um sólido branco.</span><span data-passo="1"><span class="tag tag-f">física</span></span></div>
+      <div class="linha-ex linha-tag" style="font-size:28px;padding:11px 24px"><span><b>2)</b> O etanol entra em ebulição a 78,5 °C.</span><span data-passo="2"><span class="tag tag-f">física</span></span></div>
+      <div class="linha-ex linha-tag" style="font-size:28px;padding:11px 24px"><span><b>3)</b> O éter etílico sofre combustão.</span><span data-passo="3"><span class="tag tag-q">química</span></span></div>
+      <div class="linha-ex linha-tag" style="font-size:28px;padding:11px 24px"><span><b>4)</b> O sódio metálico é um sólido mole e de baixo ponto de fusão.</span><span data-passo="4"><span class="tag tag-f">física</span></span></div>
+    </div>
+    <div class="linha-ex linha-tag" style="position:absolute;left:580px;right:0;top:600px;font-size:28px;padding:11px 24px"><span><b>5)</b> O metabolismo do açúcar no corpo humano leva à produção de dióxido de carbono e água.</span><span data-passo="5"><span class="tag tag-q">química</span></span></div>
+  </div>
+  <aside class="notas">
+    <p>Exercício do material da professora (UnB-DF): julgar quais itens são propriedades químicas e quais são físicas. Peça a resposta antes de cada clique.</p>
+    <p>1: cor e estado (física). 2: ponto de ebulição (física). 3: capacidade de queimar (química). 4: dureza e PF (física). 5: o açúcar se transforma em CO<sub>2</sub> e água (química).</p>
+  </aside>
+</section>
+
+<!-- Questão 1 -->
+<section class="slide questao" data-nome="Questão 1">
+  <div class="conteudo">
+    <div class="area-resolucao"></div>
+    <span class="pilula pilula-pausa" data-em="1:some">Pause o vídeo e tente</span>
+    <div class="painel-questao">
+      <p class="olho">Questão 1 · IF Sudeste MG 2024</p>
+      <p class="enunciado" style="font-size:26px">Entre as transformações citadas a seguir, indique a única alternativa que apresenta apenas fenômenos físicos.</p>
+      <ol class="alternativas" style="gap:8px">
+        <li data-em="2:apaga" style="font-size:22px;padding:6px 14px"><b>A</b><span>Queima do carvão, formação do gelo e transformação de tecido em roupas.</span></li>
+        <li data-em="2:apaga" style="font-size:22px;padding:6px 14px"><b>B</b><span>Azedamento do leite, aquecimento de uma panela de alumínio e quebra de um copo de vidro.</span></li>
+        <li data-em="2:apaga" style="font-size:22px;padding:6px 14px"><b>C</b><span>Dissolução do açúcar em água, evaporação da água dos rios e alimento em decomposição.</span></li>
+        <li data-em="2:apaga" style="font-size:22px;padding:6px 14px"><b>D</b><span>Explosão de uma dinamite, transformação do vinagre a partir do vinho e cozimento de alimentos.</span></li>
+        <li data-em="2:certo" style="font-size:22px;padding:6px 14px"><b>E</b><span>Evaporação de perfume, sublimação da naftalina e produção de fios de cobre a partir de uma barra de cobre.</span></li>
+      </ol>
+    </div>
+  </div>
+  <aside class="resolucao">
+    <p class="dados"><b>Dados:</b> só fenômenos físicos (nada de substância nova).</p>
+    <ol class="passos">
+      <li>Perfume evapora: mudança de estado.</li>
+      <li>Naftalina sublima: mudança de estado.</li>
+      <li>Fios de cobre: muda só a forma.</li>
+      <li>A, B, C e D têm um fenômeno químico.</li>
+    </ol>
+    <p class="resposta"><b>Resposta:</b> evaporação, sublimação e fios de cobre. <b>Gabarito E.</b></p>
+    <p class="atencao"><b>Destaque no quadro:</b> Basta um fenômeno químico para a alternativa cair.</p>
+    <ul class="erros">
+      <li><b>A</b> A queima do carvão é química (forma gás carbônico).</li>
+      <li><b>B</b> O leite azedar é químico (forma ácido lático).</li>
+      <li><b>C</b> A decomposição do alimento é química.</li>
+      <li><b>D</b> As três são químicas.</li>
+    </ul>
+  </aside>
+  <aside class="notas">
+    <p>Clique 1 tira o aviso de pausa: resolva na área (D liga a caneta; E esconde o enunciado). Clique 2: gabarito E.</p>
+    <p>Questão oficial do IF Sudeste MG (2024), da lista da professora. Os fios de cobre ligam com a ductilidade (Propriedades da matéria).</p>
+  </aside>
+</section>
+
+<!-- Questão 2 -->
+<section class="slide questao" data-nome="Questão 2">
+  <div class="conteudo">
+    <div class="area-resolucao"></div>
+    <span class="pilula pilula-pausa" data-em="1:some">Pause o vídeo e tente</span>
+    <div class="painel-questao">
+      <p class="olho">Questão 2 · IF Sudeste MG 2019</p>
+      <p class="enunciado" style="font-size:20px">Um incêndio de grandes proporções destruiu o Museu Nacional, na Quinta da Boa Vista, em São Cristóvão, Zona Norte do Rio. A Instituição que completou 200 anos em 2018 já foi residência de um rei e dois imperadores. A maior parte do acervo, cerca de 20 milhões de itens, foi totalmente destruída. Fósseis, múmias, registros históricos e obras de arte viraram cinzas. Pedaços de documentos queimados foram parar em vários bairros da cidade. Foi necessário retirar água do lago que fica na Quinta da Boa Vista para ajudar no controle das chamas.</p>
+      <p class="enunciado" style="font-size:20px">I. Na queima do acervo ocorreu um fenômeno químico.<br>II. Um dos produtos formados durante o incêndio foi o gás carbônico (CO<sub>2</sub>).<br>III. O processo de retirada da água do lago para controlar as chamas é um fenômeno químico.</p>
+      <p class="enunciado" style="font-size:20px">Assinale a alternativa <b>CORRETA</b>.</p>
+      <ol class="alternativas curtas">
+        <li data-em="2:apaga" style="font-size:20px;padding:6px 14px"><b>A</b><span>Apenas a afirmativa I é verdadeira.</span></li>
+        <li data-em="2:apaga" style="font-size:20px;padding:6px 14px"><b>B</b><span>Apenas a afirmativa II é verdadeira.</span></li>
+        <li data-em="2:apaga" style="font-size:20px;padding:6px 14px"><b>C</b><span>Apenas a afirmativa III é verdadeira.</span></li>
+        <li data-em="2:certo" style="font-size:20px;padding:6px 14px"><b>D</b><span>Apenas as afirmativas I e II são verdadeiras.</span></li>
+        <li data-em="2:apaga" style="font-size:20px;padding:6px 14px"><b>E</b><span>Apenas as afirmativas I e III são verdadeiras.</span></li>
+      </ol>
+    </div>
+  </div>
+  <aside class="resolucao">
+    <p class="dados"><b>Dados:</b> queima do acervo; água do lago.</p>
+    <ol class="passos">
+      <li><b>I:</b> queima forma cinzas e gases: químico (V).</li>
+      <li><b>II:</b> papel e madeira têm carbono: CO<sub>2</sub> (V).</li>
+      <li><b>III:</b> levar água é só mudar de lugar (F).</li>
+    </ol>
+    <p class="resposta"><b>Resposta:</b> I e II. <b>Gabarito D.</b></p>
+    <p class="atencao"><b>Destaque no quadro:</b> Combustão é fenômeno químico e produz CO<sub>2</sub>.</p>
+    <ul class="erros">
+      <li><b>A</b> A II também é verdadeira.</li>
+      <li><b>B</b> A I também é verdadeira.</li>
+      <li><b>C</b> A III é a única falsa.</li>
+      <li><b>E</b> A III é falsa e a II, verdadeira, ficou de fora.</li>
+    </ul>
+  </aside>
+  <aside class="notas">
+    <p>Clique 1 tira o aviso de pausa: resolva na área (D liga a caneta; E esconde o enunciado). Clique 2: gabarito D.</p>
+    <p>Questão oficial do IF Sudeste MG (2019), da lista da professora. A reportagem (G1, set. 2018) está completa; a frase que apresenta as afirmativas foi resumida.</p>
+  </aside>
+</section>
+
+
+<!-- Resumo -->
+<section class="slide" data-nome="Resumo">
+  <div class="conteudo">
+    <p class="olho">Resumo</p>
+    <h2 class="titulo">O essencial</h2>
+    <div class="resumo" style="position:absolute;left:0;right:0;top:150px">
+      <div><b>Fenômeno físico:</b> as substâncias continuam as mesmas (mudança de estado, dissolução, quebra, forma).</div>
+      <div><b>Fenômeno químico (reação):</b> surgem substâncias novas; reagentes viram produtos.</div>
+      <div><b>Nas partículas:</b> no físico, as moléculas só se afastam; no químico, os átomos se reorganizam.</div>
+      <div><b>Propriedade física:</b> observada sem mudar a substância (cor, densidade, PF, PE, dureza).</div>
+      <div><b>Propriedade química:</b> capacidade de se transformar (combustão, oxidação, fermentação).</div>
+      <div><b>Bolha</b> nem sempre é reação; <b>dissolver</b> não é reagir.</div>
+    </div>
+    <div class="caixa caixa-atencao" style="position:absolute;left:580px;right:0;top:660px">
+      <div class="texto" style="font-size:30px">Reversível ou não, o que define o fenômeno químico é a <b>substância nova</b>.</div>
+    </div>
+  </div>
+  <aside class="notas"><p>Peça para tirarem um print desta tela.</p></aside>
+</section>
+
+<!-- A seguir -->
+<section class="slide capa" data-nome="A seguir">
+  <div class="estrelas"></div>
+  <div class="texto-capa" style="top:170px">
+    <span class="selo">Química · IF</span>
+    <p class="aula" style="font-size:26px">A seguir · Matéria e transformações · Questões do IF Sudeste</p>
+    <h1>Questões do IF Sudeste</h1>
+    <p class="sub">Matéria e transformações</p>
+  </div>
+  <svg class="emblema" viewBox="0 0 640 640" aria-hidden="true">
+    <rect x="150" y="80" width="340" height="460" rx="36" fill="#fff" opacity=".95"/>
+    <rect x="200" y="140" width="240" height="18" rx="9" fill="#C9C0F0"/><rect x="200" y="180" width="200" height="18" rx="9" fill="#C9C0F0"/>
+    <g font-family="Figtree,'Segoe UI',sans-serif" font-size="30" font-weight="800" text-anchor="middle">
+      <circle cx="225" cy="260" r="24" fill="#F1EEFD"/><text x="225" y="271" fill="#3F2FA0">A</text><rect x="265" y="252" width="160" height="16" rx="8" fill="#E4DEFB"/>
+      <circle cx="225" cy="320" r="24" fill="#F1EEFD"/><text x="225" y="331" fill="#3F2FA0">B</text><rect x="265" y="312" width="130" height="16" rx="8" fill="#E4DEFB"/>
+      <circle cx="225" cy="380" r="24" fill="#FFD10C"/><text x="225" y="391" fill="#292B2C">C</text><rect x="265" y="372" width="150" height="16" rx="8" fill="#E4DEFB"/>
+      <circle cx="225" cy="440" r="24" fill="#F1EEFD"/><text x="225" y="451" fill="#3F2FA0">D</text><rect x="265" y="432" width="110" height="16" rx="8" fill="#E4DEFB"/>
+    </g>
+    <circle cx="470" cy="470" r="86" fill="var(--d)" stroke="#fff" stroke-width="6"/>
+    <text x="470" y="490" text-anchor="middle" font-family="'Bricolage Grotesque',Figtree,sans-serif" font-size="58" font-weight="800" fill="#fff">IF</text>
+  </svg>
+  <img class="logo-capa" src="{{LOGO_BRANCO}}" alt="Quarks">
+  <aside class="notas"><p>Fim do capítulo Matéria e transformações. A seguir, o bloco só com as questões oficiais do IF Sudeste deste capítulo.</p></aside>
+</section>

@@ -1,0 +1,527 @@
+<!--aula
+{"disciplina": "quimica", "curso": "IF", "assunto": "Reações químicas", "parte": "Parte única", "titulo": "Reações e equações", "scripts": ["animacoes-reacoes.js"]}
+-->
+<!-- Fonte: slides da professora (Química IF 2026, aula 04: reações químicas, evidências, representação das transformações e o significado da equação), completados com a apostila IF, Química, 4.5 Reações inorgânicas (equação química e balanceamento por tentativas) e 1.4 (evidências de reação). Questões: IF Sudeste MG 2017 e 2013 (oficiais). -->
+<style>
+  .caixa, .vinheta, .linha-ex { box-sizing: border-box; }
+  .eq-q { font: 800 60px var(--fonte-titulo); letter-spacing: -.01em; color: var(--roxo-titulo); white-space: nowrap; }
+  .eq-q sub { font-size: .55em; }
+  .eq-q .e { font: 700 .48em var(--fonte-texto); color: var(--cinza); letter-spacing: 0; }
+  .eq-q .k { color: var(--d-forte); }
+  .real { background: #FFF1B8; border-radius: 14px; box-shadow: 0 0 0 6px #FFF1B8; transition: background .4s, box-shadow .4s; }
+  .real.fim { background: transparent; box-shadow: 0 0 0 6px transparent; }
+  .vinheta { display: flex; flex-direction: column; align-items: center; gap: 8px; text-align: center; background: var(--branco); border: 2px solid var(--lilas-2); border-radius: 28px; padding: 16px 18px 18px; }
+  .vinheta svg { width: 360px; height: 230px; }
+  .vinheta h3 { margin: 0; font: 800 36px var(--fonte-titulo); letter-spacing: -.02em; color: var(--roxo-titulo); }
+  .vinheta p { margin: 0; font-size: 24px; line-height: 1.3; color: var(--cinza); }
+  .vinheta p.f { font: 700 22px var(--fonte-texto); color: var(--carvao); }
+  .vinheta sub { font-size: .7em; }
+  .linha-ex { background: var(--branco); border: 2px solid var(--lilas-2); border-radius: 22px; padding: 12px 24px; font-size: 30px; line-height: 1.3; }
+  .linha-ex b { color: var(--roxo-titulo); }
+  .linha-ex sub, .texto sub, .caixa sub { font-size: .65em; }
+  .cartao { background: var(--branco); border: 2px solid var(--lilas-2); border-radius: 26px; padding: 18px 26px; font-size: 28px; line-height: 1.3; }
+  .cartao .rotulo { display: block; font-weight: 800; font-size: 21px; letter-spacing: .1em; text-transform: uppercase; color: var(--d-forte); margin-bottom: 4px; }
+  .conta { display: grid; grid-template-columns: 300px 1fr; align-items: center; gap: 20px; }
+  .conta .f { font: 800 46px var(--fonte-titulo); color: var(--roxo-titulo); }
+  .conta .f sub { font-size: .55em; }
+  .estados { display: flex; gap: 14px; flex-wrap: wrap; }
+  .estados span { background: var(--d-clara); color: var(--d-forte); border-radius: 999px; padding: 6px 18px; font-size: 26px; font-weight: 700; }
+  .estados b { color: var(--roxo-titulo); }
+  /* ---------- Animações (só na tela aberta e depois que a figura aparece) ---------- */
+  /* gás: bolhas que sobem do pedaço de sódio */
+  @keyframes bolha { 0% { transform: translateY(0); opacity: 0; } 15% { opacity: 1; } 85% { opacity: 1; } 100% { transform: translateY(-120px); opacity: 0; } }
+  .bolhas circle { opacity: 0; }
+  .slide.ativo .mostra .bolhas circle { animation: bolha 4s linear infinite; }
+  .bolhas circle:nth-child(2) { animation-delay: -.7s !important; } .bolhas circle:nth-child(3) { animation-delay: -1.5s !important; } .bolhas circle:nth-child(4) { animation-delay: -2.2s !important; } .bolhas circle:nth-child(5) { animation-delay: -2.9s !important; } .bolhas circle:nth-child(6) { animation-delay: -3.5s !important; }
+  @keyframes boia { 0%,100% { transform: translate(0,0); } 50% { transform: translate(6px,1px); } }
+  .slide.ativo .mostra .boia { animation: boia 4s ease-in-out infinite; }
+  /* luz e calor: a chama tremula */
+  @keyframes chama { 0%,100% { transform: scale(1,1); } 50% { transform: scale(.94,.86); } }
+  .chama { transform-box: fill-box; transform-origin: 50% 100%; }
+  .slide.ativo .mostra .chama { animation: chama 1.8s ease-in-out infinite; }
+  .chama.dentro { animation-delay: -.6s !important; }
+  /* cor: a maçã cortada escurece aos poucos */
+  .polpa { fill: #FFF1CF; transition: fill 6s ease-in .8s; }
+  .mostra .polpa { fill: #C98B4A; }
+  /* sólido: a gota cai e o pó amarelo se forma e desce */
+  @keyframes gota { 0% { transform: translateY(0); opacity: 0; } 10% { opacity: 1; } 30% { transform: translateY(58px); opacity: 1; } 34%,100% { transform: translateY(58px); opacity: 0; } }
+  .gota { opacity: 0; }
+  .slide.ativo .mostra .gota { animation: gota 6s ease-in infinite; }
+  @keyframes precipita { 0%,30% { transform: translateY(0); opacity: 0; } 40% { opacity: 1; } 80% { transform: translateY(var(--q, 60px)); opacity: 1; } 95% { opacity: 1; } 100% { transform: translateY(var(--q, 60px)); opacity: 0; } }
+  .po circle { opacity: 0; }
+  .slide.ativo .mostra .po circle { animation: precipita 6s ease-in infinite; }
+  /* moléculas que vibram de leve */
+  @keyframes vib-a { 0%,100% { transform: translate(0,0); } 25% { transform: translate(1.6px,-1.2px); } 50% { transform: translate(-.8px,1.4px); } 75% { transform: translate(-1.4px,-.6px); } }
+  @keyframes vib-b { 0%,100% { transform: translate(0,0); } 25% { transform: translate(-1.4px,1px); } 50% { transform: translate(1.2px,-1.4px); } 75% { transform: translate(.6px,1.2px); } }
+  .slide.ativo .mostra .vib-a { animation: vib-a 1.6s ease-in-out infinite; }
+  .slide.ativo .mostra .vib-b { animation: vib-b 1.7s ease-in-out infinite; }
+  /* gangorra do balanceamento: pende para o lado com mais átomos e fica reta quando os dois lados batem */
+  .viga { transform-box: view-box; transform-origin: 430px 250px; transition: transform 1.4s cubic-bezier(.5,1.6,.5,1); }
+  .viga.t1 { transform: rotate(-7deg); }
+  .viga.t2 { transform: rotate(7deg); }
+  .viga.t3 { transform: rotate(0deg); }
+  .viga .p-esq, .viga .p-dir { transition: transform 1.4s cubic-bezier(.5,1.6,.5,1); }
+  .viga.t1 .p-esq, .viga.t1 .p-dir { transform: rotate(7deg); }
+  .viga.t2 .p-esq, .viga.t2 .p-dir { transform: rotate(-7deg); }
+  .viga.t3 .p-esq, .viga.t3 .p-dir { transform: rotate(0deg); }
+  .p-esq { transform-box: view-box; transform-origin: 150px 250px; }
+  .p-dir { transform-box: view-box; transform-origin: 710px 250px; }
+  .viga text { transition: opacity .4s; }
+  .pd2 { transition: fill .4s; } .viga.t3 .pd2 { fill: #1F9D62; }
+  .nivel { opacity: 0; transition: opacity .6s .9s; }
+  .viga.t3 + .nivel { opacity: 1; }
+</style>
+
+<svg width="0" height="0" style="position:absolute" aria-hidden="true">
+  <defs>
+    <radialGradient id="gO" cx=".35" cy=".3" r=".8"><stop offset="0" stop-color="#FF8A7A"/><stop offset="1" stop-color="#C8301F"/></radialGradient>
+    <radialGradient id="gH" cx=".35" cy=".3" r=".8"><stop offset="0" stop-color="#FFFFFF"/><stop offset="1" stop-color="#C9C4DC"/></radialGradient>
+    <linearGradient id="gAguaR" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#E3F1FC"/><stop offset="1" stop-color="#B9DBF6"/></linearGradient>
+    <linearGradient id="gChama" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#FFD10C"/><stop offset="1" stop-color="#FF7A1A"/></linearGradient>
+  </defs>
+</svg>
+
+<!-- 1. Capa -->
+<section class="slide capa" data-nome="Capa">
+  <div class="estrelas"></div>
+  <div class="texto-capa">
+    <span class="selo">Química · IF</span>
+    <p class="aula">Reações químicas</p>
+    <h1>Reações e equações</h1>
+    <p class="sub">Evidências, equação química e balanceamento</p>
+  </div>
+  <svg class="emblema" viewBox="0 0 640 640" aria-hidden="true">
+    <g class="gira-lento"><ellipse cx="320" cy="320" rx="300" ry="128" fill="none" stroke="#fff" stroke-opacity=".38" stroke-width="2" transform="rotate(-10 320 320)"/></g>
+    <g class="gira"><ellipse cx="320" cy="320" rx="236" ry="196" fill="none" stroke="#FFD10C" stroke-opacity=".75" stroke-width="2.5" stroke-dasharray="3 14" stroke-linecap="round" transform="rotate(-8 320 320)"/>
+      <circle cx="84" cy="300" r="13" fill="#FFD10C" stroke="#fff" stroke-width="3"/></g>
+    <circle cx="320" cy="320" r="132" fill="#FFD10C"/>
+    <image href="{{SYM_ROXO}}" x="238" y="238" width="164" height="164"/>
+  </svg>
+  <img class="logo-capa" src="{{LOGO_BRANCO}}" alt="Quarks">
+  <aside class="notas"><p>Hoje: o que é uma reação química, como perceber que ela aconteceu, como escrever a equação (coeficientes, índices e estados físicos) e como balancear por tentativas.</p></aside>
+</section>
+
+<!-- 2. Reações em toda parte -->
+<section class="slide" data-nome="O que é reação química">
+  <div class="conteudo">
+    <p class="olho">Estamos cercados por reações</p>
+    <h2 class="titulo">O que é uma reação química?</h2>
+    <div style="position:absolute;left:0;right:0;top:165px;display:grid;grid-template-columns:repeat(3,1fr);gap:26px">
+      <div class="cartao" data-passo="1"><span class="rotulo">Queima</span>O gás do fogão, a vela, o combustível do carro.</div>
+      <div class="cartao" data-passo="1"><span class="rotulo">Digestão</span>O corpo quebra os alimentos em substâncias menores.</div>
+      <div class="cartao" data-passo="1"><span class="rotulo">Emoções</span>Medo e alegria passam por substâncias que o corpo produz.</div>
+    </div>
+    <div class="caixa caixa-fundamental" data-passo="2" style="position:absolute;left:0;right:0;top:365px">
+      <span class="rotulo">Reação química</span>
+      <div class="texto" style="font-size:34px">É a transformação de uma ou mais substâncias (os <b>reagentes</b>) em <b>substâncias novas</b> (os <b>produtos</b>). Ela se representa por uma <b>equação química</b>.</div>
+    </div>
+    <div class="caixa" data-passo="3" style="position:absolute;left:580px;right:0;top:620px">
+      <span class="rotulo">No motor a álcool</span>
+      <p class="eq-q" style="margin:4px 0 6px;font-size:50px">C<sub>2</sub>H<sub>6</sub>O<span class="e">(l)</span> + 3 O<sub>2</sub><span class="e">(g)</span> → 2 CO<sub>2</sub><span class="e">(g)</span> + 3 H<sub>2</sub>O<span class="e">(g)</span></p>
+      <div style="font-size:26px;color:var(--cinza)">etanol (combustível) + oxigênio do ar (comburente) → gás carbônico + água</div>
+    </div>
+  </div>
+  <aside class="notas">
+    <p>Clique 1: reações do dia a dia (material da professora: queima, digestão e emoções). Clique 2: a definição. Clique 3: o exemplo do motor a álcool.</p>
+    <p>No motor, a água sai como vapor pelo escapamento, por isso aparece (g) aqui; em tabelas de combustão costuma vir H₂O(l), a 25 °C. Os nomes combustível e comburente voltam na parte de combustão.</p>
+  </aside>
+</section>
+
+<!-- 3. Evidências -->
+<section class="slide" data-nome="Evidências de reação">
+  <div class="conteudo">
+    <p class="olho">Como saber, só olhando?</p>
+    <h2 class="titulo">Evidências de uma reação</h2>
+    <div style="position:absolute;left:0;right:0;top:150px;display:grid;grid-template-columns:repeat(4,1fr);gap:22px">
+      <div class="vinheta" data-passo="1">
+        <svg viewBox="0 0 360 230" aria-hidden="true">
+          <path d="M100 30 V200 a16 16 0 0 0 16 16 H244 a16 16 0 0 0 16 -16 V30" fill="none" stroke="#7F7A99" stroke-width="5" stroke-linecap="round"/>
+          <path d="M103 80 H257 V200 a13 13 0 0 1 -13 13 H116 a13 13 0 0 1 -13 -13 Z" fill="url(#gAguaR)"/>
+          <g class="boia"><rect x="160" y="64" width="40" height="22" rx="6" fill="#C9C6D6" stroke="#7F7A99" stroke-width="3"/></g>
+          <g class="bolhas" fill="#fff" stroke="#7FB4E0" stroke-width="2.5"><circle cx="168" cy="200" r="7"/><circle cx="186" cy="196" r="5"/><circle cx="200" cy="202" r="8"/><circle cx="176" cy="204" r="5"/><circle cx="194" cy="200" r="6"/><circle cx="210" cy="198" r="5"/></g>
+        </svg>
+        <h3>Gás</h3>
+        <p>bolhas de um gás novo</p>
+        <p class="f">2 Na + 2 H<sub>2</sub>O → 2 NaOH + H<sub>2</sub>(g)</p>
+      </div>
+      <div class="vinheta" data-passo="2">
+        <svg viewBox="0 0 360 230" aria-hidden="true">
+          <rect x="150" y="120" width="60" height="96" rx="10" fill="#F1EEFD" stroke="#8C7BEA" stroke-width="4"/>
+          <path d="M180 120 v-14" stroke="#292B2C" stroke-width="4" stroke-linecap="round"/>
+          <path class="chama" d="M180 18 C206 52 210 78 196 96 C188 106 172 106 164 96 C150 78 156 52 180 18 Z" fill="url(#gChama)"/>
+          <path class="chama dentro" d="M180 56 C192 72 194 86 186 96 C182 100 178 100 174 96 C166 86 168 72 180 56 Z" fill="#FFF6C8"/>
+          <g stroke="#FFD10C" stroke-width="5" stroke-linecap="round" opacity=".8"><path d="M120 50 l-22 -10 M118 86 h-26 M240 50 l22 -10 M242 86 h26"/></g>
+        </svg>
+        <h3>Luz e calor</h3>
+        <p>a chama da vela</p>
+        <p class="f">a parafina queima</p>
+      </div>
+      <div class="vinheta" data-passo="3">
+        <svg viewBox="0 0 360 230" aria-hidden="true">
+          <path d="M180 40 C120 30 70 70 74 130 C78 190 130 220 180 206 C230 220 282 190 286 130 C290 70 240 30 180 40 Z" fill="#E5533D" stroke="#B23A28" stroke-width="4"/>
+          <path class="polpa" d="M180 58 C132 50 94 82 96 130 C98 178 138 198 180 188 C222 198 262 178 264 130 C266 82 228 50 180 58 Z"/>
+          <path d="M180 40 C178 26 182 16 192 8" fill="none" stroke="#6B4A2B" stroke-width="5" stroke-linecap="round"/>
+          <g fill="#4A2E1A"><ellipse cx="166" cy="128" rx="6" ry="10"/><ellipse cx="194" cy="128" rx="6" ry="10"/></g>
+        </svg>
+        <h3>Mudança de cor</h3>
+        <p>a maçã cortada escurece</p>
+        <p class="f">a polpa reage com o O<sub>2</sub> do ar</p>
+      </div>
+      <div class="vinheta" data-passo="4">
+        <svg viewBox="0 0 360 230" aria-hidden="true">
+          <path d="M150 10 h60 v14 h-60 z" fill="#C9C1F2" stroke="#8C7BEA" stroke-width="3"/>
+          <path d="M172 24 v26 l8 12 l8 -12 v-26" fill="#EFEBFF" stroke="#8C7BEA" stroke-width="3" stroke-linejoin="round"/>
+          <circle class="gota" cx="180" cy="66" r="6" fill="#B9DBF6" stroke="#7FB4E0" stroke-width="2"/>
+          <path d="M130 90 V196 a50 26 0 0 0 100 0 V90" fill="none" stroke="#7F7A99" stroke-width="5" stroke-linecap="round"/>
+          <path d="M133 124 H227 V196 a47 23 0 0 1 -94 0 Z" fill="url(#gAguaR)"/>
+          <g class="po" fill="#F2C400" stroke="#C49A00" stroke-width="1.5">
+            <circle cx="166" cy="134" r="5" style="--q:72px"/><circle cx="182" cy="130" r="4" style="--q:84px;animation-delay:.25s"/><circle cx="198" cy="136" r="5" style="--q:70px;animation-delay:.5s"/>
+            <circle cx="174" cy="146" r="4" style="--q:66px;animation-delay:.4s"/><circle cx="190" cy="144" r="5" style="--q:72px;animation-delay:.15s"/><circle cx="206" cy="140" r="4" style="--q:64px;animation-delay:.6s"/>
+            <circle cx="158" cy="142" r="4" style="--q:58px;animation-delay:.7s"/><circle cx="214" cy="132" r="4" style="--q:62px;animation-delay:.35s"/>
+          </g>
+        </svg>
+        <h3>Sólido novo</h3>
+        <p>pó amarelo de PbI<sub>2</sub></p>
+        <p class="f">Pb(NO<sub>3</sub>)<sub>2</sub> + 2 KI → PbI<sub>2</sub>(s) + 2 KNO<sub>3</sub></p>
+      </div>
+    </div>
+    <p class="texto" data-passo="5" style="position:absolute;left:580px;right:0;top:572px;margin:0;font-size:30px">E também <b>cheiro novo</b>, como o do leite que azeda.</p>
+    <div class="caixa caixa-atencao" data-passo="6" style="position:absolute;left:580px;right:0;top:640px">
+      <span class="rotulo">Evidência não é prova</span>
+      <div class="texto" style="font-size:29px">A água fervendo solta bolhas e <b>não</b> é reação: as bolhas são a própria água, em vapor. Compare o início e o fim: surgiu <b>substância nova</b>?</div>
+    </div>
+  </div>
+  <aside class="notas">
+    <p>Um clique por evidência: gás (o sódio que corre na água soltando bolhas de H₂), luz e calor (a vela), mudança de cor (a maçã escurecendo), formação de sólido (gotas de iodeto de potássio no nitrato de chumbo formam um pó amarelo, o PbI₂). Clique 5: cheiro. Clique 6: o cuidado com as bolhas da fervura.</p>
+    <p>Correção do material antigo: a equação do sódio com a água estava "2 Na + H₂O → 2 NaOH + H₂", que não está balanceada (à esquerda, 1 O e 2 H; à direita, 2 O e 4 H). O certo é 2 Na(s) + 2 H₂O(l) → 2 NaOH(aq) + H₂(g). Nunca faça a do sódio em casa: é violenta.</p>
+    <p>A reação do Pb(NO₃)₂ com KI mostra duas evidências juntas: mudança de cor e formação de sólido.</p>
+  </aside>
+</section>
+
+<!-- 4. A equação química -->
+<section class="slide" data-nome="Equação química">
+  <div class="conteudo">
+    <p class="olho">Representação das transformações</p>
+    <h2 class="titulo">As partes da equação química</h2>
+    <div style="position:absolute;left:0;right:0;top:175px;text-align:center">
+      <p class="eq-q" style="margin:0;font-size:104px"><span data-em="1:real 2:fim"><span data-em="3:real 4:fim" class="k">2</span> H<sub data-em="4:real 5:fim">2</sub><span class="e" data-em="5:real">(g)</span> + O<sub>2</sub><span class="e">(g)</span></span> <span style="color:var(--roxo)">→</span> <span data-em="2:real 3:fim"><span class="k">2</span> H<sub>2</sub>O<span class="e">(l)</span></span></p>
+    </div>
+    <div style="position:absolute;left:0;right:0;top:350px;display:grid;grid-template-columns:repeat(4,1fr);gap:22px">
+      <div class="cartao" data-passo="1"><span class="rotulo">Reagentes</span>À esquerda da seta: o que existe <b>no começo</b>.</div>
+      <div class="cartao" data-passo="2"><span class="rotulo">Produtos</span>À direita: o que <b>se forma</b>. A seta diz "reagem e formam".</div>
+      <div class="cartao" data-passo="3"><span class="rotulo">Coeficiente</span>Número grande, na frente: <b>quantas moléculas</b>. O 1 não se escreve.</div>
+      <div class="cartao" data-passo="4"><span class="rotulo">Índice</span>Número pequeno, embaixo: <b>quantos átomos</b> na molécula.</div>
+    </div>
+    <div class="caixa caixa-fundamental" data-passo="5" style="position:absolute;left:580px;right:0;top:600px">
+      <span class="rotulo">Estado físico, entre parênteses</span>
+      <div class="estados" style="margin-top:6px"><span><b>(s)</b> sólido</span><span><b>(l)</b> líquido</span><span><b>(g)</b> gasoso</span><span><b>(v)</b> vapor</span><span><b>(aq)</b> dissolvido em água</span></div>
+    </div>
+  </div>
+  <aside class="notas">
+    <p>Cada clique acende uma parte da equação em amarelo: reagentes, produtos, um coeficiente, um índice e um estado físico.</p>
+    <p>Pergunte: quantas moléculas de O₂ entram? (1, o coeficiente que não se escreve.)</p>
+  </aside>
+</section>
+
+<!-- 5. O que a equação conta -->
+<section class="slide" data-nome="O que a equação conta">
+  <div class="conteudo">
+    <p class="olho">Significado</p>
+    <h2 class="titulo">Os átomos só trocam de parceiros</h2>
+    <div style="position:absolute;left:0;top:170px;width:900px">
+      <div data-anima="rearranjo" data-reacao="h2o" data-anima-passo="1" style="width:900px;height:300px"></div>
+      <div style="display:grid;grid-template-columns:1fr 1fr;text-align:center;margin-top:6px" data-passo="1">
+        <span class="eq-q" style="font-size:44px">2 H<sub>2</sub> + O<sub>2</sub></span><span class="eq-q" style="font-size:44px">2 H<sub>2</sub>O</span>
+      </div>
+    </div>
+    <div style="position:absolute;left:960px;right:0;top:175px;display:flex;flex-direction:column;gap:18px">
+      <div class="linha-ex" data-passo="2"><b>Antes:</b> 4 átomos de H e 2 de O.</div>
+      <div class="linha-ex" data-passo="3"><b>Depois:</b> 4 átomos de H e 2 de O.</div>
+      <div class="caixa caixa-fundamental" data-passo="4">
+        <span class="rotulo">Leitura</span>
+        <div class="texto" style="font-size:30px">2 moléculas de hidrogênio e 1 de oxigênio reagem e formam <b>2 moléculas de água</b>.</div>
+      </div>
+    </div>
+    <div class="caixa" data-passo="5" style="position:absolute;left:580px;right:0;top:640px">
+      <span class="rotulo">O caminho de volta também é reação</span>
+      <p class="eq-q" style="margin:4px 0 0;font-size:46px">2 H<sub>2</sub>O<span class="e">(l)</span> → 2 H<sub>2</sub><span class="e">(g)</span> + O<sub>2</sub><span class="e">(g)</span></p>
+    </div>
+  </div>
+  <aside class="notas">
+    <p>Clique 1: as ligações se desfazem e os átomos se reorganizam; nenhum some, nenhum aparece. Cliques 2 e 3: a contagem antes e depois. Clique 4: como se lê a equação. Clique 5: a decomposição da água (eletrólise), o caminho inverso.</p>
+    <p>Correção do material antigo: na decomposição da água estava "2 H₂(aq) + O₂(aq)". Hidrogênio e oxigênio saem como gases: H₂(g) e O₂(g).</p>
+  </aside>
+</section>
+
+<!-- 6. Contando átomos -->
+<section class="slide" data-nome="Contando átomos">
+  <div class="conteudo">
+    <p class="olho">Coeficiente vezes índice</p>
+    <h2 class="titulo">Quantos átomos há?</h2>
+    <div class="caixa caixa-fundamental" style="position:absolute;left:0;width:760px;top:165px">
+      <span class="rotulo">Para cada elemento</span>
+      <p style="margin:4px 0 6px;font:800 64px var(--fonte-titulo);color:var(--roxo-titulo)">átomos = c · i</p>
+      <div class="texto" style="font-size:28px">c = coeficiente; i = índice. Parênteses: o índice de fora multiplica tudo o que está dentro.</div>
+    </div>
+    <div style="position:absolute;left:820px;right:0;top:165px;display:flex;flex-direction:column;gap:16px">
+      <div class="linha-ex conta" data-passo="1"><span class="f">2 H<sub>2</sub>O</span><span>H: 2 · 2 = <b>4</b> &nbsp;·&nbsp; O: 2 · 1 = <b>2</b></span></div>
+      <div class="linha-ex conta" data-passo="2"><span class="f">3 H<sub>2</sub>SO<sub>4</sub></span><span>H: <b>6</b> &nbsp;·&nbsp; S: <b>3</b> &nbsp;·&nbsp; O: 3 · 4 = <b>12</b></span></div>
+      <div class="linha-ex conta" data-passo="3"><span class="f">2 Al(OH)<sub>3</sub></span><span>Al: <b>2</b> &nbsp;·&nbsp; O: 2 · 3 = <b>6</b> &nbsp;·&nbsp; H: 2 · 3 = <b>6</b></span></div>
+    </div>
+    <div class="caixa caixa-atencao" data-passo="4" style="position:absolute;left:580px;right:0;top:560px;display:grid;grid-template-columns:auto 1fr;gap:30px;align-items:center">
+      <svg viewBox="0 0 420 130" style="width:420px;height:130px" aria-hidden="true">
+        <g stroke-width="2"><circle class="vib-a" cx="40" cy="80" r="17" fill="url(#gH)" stroke="#8C84B8"/><circle class="vib-b" cx="100" cy="80" r="17" fill="url(#gH)" stroke="#8C84B8"/><circle class="vib-a" cx="70" cy="58" r="27" fill="url(#gO)" stroke="#8E2115"/></g>
+        <g stroke-width="2"><circle class="vib-b" cx="150" cy="80" r="17" fill="url(#gH)" stroke="#8C84B8"/><circle class="vib-a" cx="210" cy="80" r="17" fill="url(#gH)" stroke="#8C84B8"/><circle class="vib-b" cx="180" cy="58" r="27" fill="url(#gO)" stroke="#8E2115"/></g>
+        <g stroke-width="2"><circle class="vib-a" cx="268" cy="90" r="17" fill="url(#gH)" stroke="#8C84B8"/><circle class="vib-b" cx="404" cy="40" r="17" fill="url(#gH)" stroke="#8C84B8"/><circle class="vib-b" cx="308" cy="64" r="27" fill="url(#gO)" stroke="#8E2115"/><circle class="vib-a" cx="362" cy="64" r="27" fill="url(#gO)" stroke="#8E2115"/></g>
+        <text x="125" y="126" text-anchor="middle" font-family="Figtree,sans-serif" font-weight="800" font-size="22" fill="#8A6A00">2 H₂O</text>
+        <text x="336" y="126" text-anchor="middle" font-family="Figtree,sans-serif" font-weight="800" font-size="22" fill="#8A6A00">H₂O₂</text>
+      </svg>
+      <div><span class="rotulo">Coeficiente não é índice</span><div class="texto" style="font-size:28px">2 H<sub>2</sub>O são duas águas. H<sub>2</sub>O<sub>2</sub> é <b>outra substância</b> (água oxigenada). Mudar o índice muda a substância.</div></div>
+    </div>
+  </div>
+  <aside class="notas">
+    <p>Um clique por fórmula; peça a conta antes. No Al(OH)₃, o 3 de fora vale para o O e para o H.</p>
+    <p>Clique 4: o erro que mais aparece no balanceamento, mexer no índice. Duas águas e uma água oxigenada têm os mesmos 4 H e 2 O... mas a água oxigenada é outra substância, com outro arranjo.</p>
+  </aside>
+</section>
+
+<!-- 7. Balancear -->
+<section class="slide" data-nome="O que é balancear">
+  <div class="conteudo">
+    <p class="olho">Balanceamento por tentativas</p>
+    <h2 class="titulo">Os dois lados têm de bater</h2>
+    <p class="eq-q" style="position:absolute;left:0;top:160px;margin:0;font-size:58px;width:860px;text-align:center"><span class="k" data-passo="3">2 </span>H<sub>2</sub> + O<sub>2</sub> → <span class="k" data-passo="2">2 </span>H<sub>2</sub>O</p>
+    <svg viewBox="0 0 860 330" style="position:absolute;left:0;top:250px;width:860px;height:330px" aria-hidden="true">
+      <path d="M430 262 L392 320 H468 Z" fill="#E4DEFB" stroke="#8C7BEA" stroke-width="4" stroke-linejoin="round"/>
+      <g class="viga t1" data-em="2:t2 3:t3">
+        <rect x="110" y="244" width="640" height="14" rx="7" fill="#6551D1"/>
+        <circle cx="430" cy="251" r="12" fill="#FFD10C" stroke="#4B39B3" stroke-width="3"/>
+        <g class="p-esq"><rect x="20" y="130" width="260" height="114" rx="22" fill="#fff" stroke="#8C7BEA" stroke-width="4"/>
+          <text x="150" y="168" text-anchor="middle" font-family="Figtree,sans-serif" font-weight="800" font-size="22" fill="#5340B8" letter-spacing="2">REAGENTES</text>
+          <text x="150" y="216" text-anchor="middle" font-family="Figtree,sans-serif" font-weight="800" font-size="36" fill="#292B2C" data-em="3:some">2 H · 2 O</text>
+          <text x="150" y="216" text-anchor="middle" font-family="Figtree,sans-serif" font-weight="800" font-size="36" fill="#1F9D62" data-passo="3">4 H · 2 O</text></g>
+        <g class="p-dir"><rect x="580" y="130" width="260" height="114" rx="22" fill="#fff" stroke="#8C7BEA" stroke-width="4"/>
+          <text x="710" y="168" text-anchor="middle" font-family="Figtree,sans-serif" font-weight="800" font-size="22" fill="#5340B8" letter-spacing="2">PRODUTOS</text>
+          <text x="710" y="216" text-anchor="middle" font-family="Figtree,sans-serif" font-weight="800" font-size="36" fill="#292B2C" data-em="2:some">2 H · 1 O</text>
+          <text x="710" y="216" text-anchor="middle" font-family="Figtree,sans-serif" font-weight="800" font-size="36" fill="#292B2C" data-passo="2" class="pd2">4 H · 2 O</text></g>
+      </g>
+      <text class="nivel" x="430" y="80" text-anchor="middle" font-family="Figtree,sans-serif" font-weight="800" font-size="34" fill="#1F9D62">balanceada ✓</text>
+    </svg>
+    <div style="position:absolute;left:940px;right:0;top:165px;display:flex;flex-direction:column;gap:14px">
+      <div class="caixa caixa-fundamental" data-passo="1" style="padding:20px 30px">
+        <span class="rotulo">Balancear</span>
+        <div class="texto" style="font-size:29px">É acertar os <b>coeficientes</b> para que cada elemento tenha o <b>mesmo número de átomos</b> dos dois lados.</div>
+      </div>
+      <div class="linha-ex" data-passo="4" style="font-size:27px"><b>1.</b> Comece pelo elemento que aparece em <b>uma só substância</b> de cada lado (de maior índice).</div>
+      <div class="linha-ex" data-passo="5" style="font-size:27px"><b>2.</b> Deixe <b>H e O para o fim</b>: eles aparecem em muitas substâncias.</div>
+      <div class="linha-ex" data-passo="6" style="font-size:27px"><b>3.</b> <b>Nunca mude os índices</b>: só os coeficientes.</div>
+      <div class="linha-ex" data-passo="7" style="font-size:27px"><b>4.</b> No fim, <b>confira</b> todos os elementos.</div>
+    </div>
+  </div>
+  <aside class="notas">
+    <p>A gangorra pende para o lado com mais átomos. Começo: 2 O à esquerda e 1 à direita. Clique 1: o que é balancear. Clique 2: coeficiente 2 na água; agora faltam H à esquerda (2 contra 4). Clique 3: coeficiente 2 no H₂; 4 H e 2 O dos dois lados, a gangorra fica reta.</p>
+    <p>Cliques 4 a 7: o passo a passo do método das tentativas. Os átomos se conservam (Lavoisier, na parte de leis ponderais): por isso os dois lados têm de bater.</p>
+  </aside>
+</section>
+
+<!-- 8. Exemplo 1: amônia -->
+<section class="slide" data-nome="Exemplo: amônia">
+  <div class="conteudo">
+    <p class="olho">Exemplo 1 · Produção de amônia</p>
+    <h2 class="titulo">Balanceie: N<sub style="font-size:.55em">2</sub> + H<sub style="font-size:.55em">2</sub> → NH<sub style="font-size:.55em">3</sub></h2>
+    <div style="position:absolute;left:0;width:900px;top:165px;display:flex;flex-direction:column;gap:14px">
+      <div class="linha-ex" data-passo="1"><b>Conte:</b> N: 2 à esquerda, 1 à direita. H: 2 e 3.</div>
+      <div class="linha-ex" data-passo="2"><b>Nitrogênio:</b> 2 = 2 · 1 → coeficiente <b>2</b> no NH<sub>3</sub>.</div>
+      <div class="linha-ex" data-passo="3"><b>Agora:</b> H à direita = 2 · 3 = 6.</div>
+      <div class="linha-ex" data-passo="4"><b>Hidrogênio:</b> 6 = 3 · 2 → coeficiente <b>3</b> no H<sub>2</sub>.</div>
+      <div class="linha-ex" data-passo="5"><b>Confira:</b> N 2 = 2 &nbsp;·&nbsp; H 3 · 2 = 6 = 2 · 3 ✓</div>
+    </div>
+    <div style="position:absolute;left:960px;right:0;top:175px" data-passo="6">
+      <div data-anima="rearranjo" data-reacao="nh3" data-anima-passo="6" style="width:800px;height:267px"></div>
+    </div>
+    <div class="caixa caixa-fundamental" data-passo="6" style="position:absolute;left:580px;right:0;top:620px">
+      <span class="rotulo">Resposta</span>
+      <p class="eq-q" style="margin:4px 0 0;font-size:60px">N<sub>2</sub><span class="e">(g)</span> + <span class="k">3</span> H<sub>2</sub><span class="e">(g)</span> → <span class="k">2</span> NH<sub>3</sub><span class="e">(g)</span></p>
+    </div>
+  </div>
+  <aside class="notas">
+    <p>Um clique por linha; peça o próximo passo antes de mostrar. O nitrogênio aparece numa substância só de cada lado: começa por ele.</p>
+    <p>Clique 6: a resposta e os átomos se reorganizando: 2 N e 6 H dos dois lados. A amônia é a base dos fertilizantes.</p>
+  </aside>
+</section>
+
+<!-- 9. Exemplo 2: óxido de alumínio -->
+<section class="slide" data-nome="Exemplo: alumínio">
+  <div class="conteudo">
+    <p class="olho">Exemplo 2 · O alumínio no ar</p>
+    <h2 class="titulo">Balanceie: Al + O<sub style="font-size:.55em">2</sub> → Al<sub style="font-size:.55em">2</sub>O<sub style="font-size:.55em">3</sub></h2>
+    <div style="position:absolute;left:0;width:960px;top:165px;display:flex;flex-direction:column;gap:14px">
+      <div class="linha-ex" data-passo="1"><b>Conte:</b> Al: 1 e 2. O: 2 e 3.</div>
+      <div class="linha-ex" data-passo="2"><b>Oxigênio</b> tem índices 2 e 3: o menor múltiplo comum é <b>6</b>.</div>
+      <div class="linha-ex" data-passo="3"><b>3</b> O<sub>2</sub> (3 · 2 = 6) e <b>2</b> Al<sub>2</sub>O<sub>3</sub> (2 · 3 = 6).</div>
+      <div class="linha-ex" data-passo="4"><b>Alumínio:</b> à direita, 2 · 2 = 4 → coeficiente <b>4</b> no Al.</div>
+      <div class="linha-ex" data-passo="5"><b>Confira:</b> Al 4 = 4 &nbsp;·&nbsp; O 3 · 2 = 6 = 2 · 3 ✓</div>
+    </div>
+    <div class="caixa caixa-atencao" data-passo="2" style="position:absolute;left:1020px;right:0;top:165px">
+      <span class="rotulo">Dica do cruzamento</span>
+      <div class="texto" style="font-size:28px">Índices 2 e 3 do mesmo elemento: o índice de um vira o <b>coeficiente do outro</b>.</div>
+    </div>
+    <div class="caixa caixa-fundamental" data-passo="6" style="position:absolute;left:580px;right:0;top:620px">
+      <span class="rotulo">Resposta</span>
+      <p class="eq-q" style="margin:4px 0 0;font-size:60px"><span class="k">4</span> Al<span class="e">(s)</span> + <span class="k">3</span> O<sub>2</sub><span class="e">(g)</span> → <span class="k">2</span> Al<sub>2</sub>O<sub>3</sub><span class="e">(s)</span></p>
+    </div>
+  </div>
+  <aside class="notas">
+    <p>Equação do material da professora. Aqui o oxigênio é o que dá trabalho: comece por ele, com o menor múltiplo comum entre 2 e 3. Um clique por linha.</p>
+    <p>Contexto: a panela de alumínio fica fosca porque se forma uma película fina de Al₂O₃, que protege o metal por baixo.</p>
+  </aside>
+</section>
+
+<!-- 10. Exemplo 3: coeficiente fracionário -->
+<section class="slide" data-nome="Exemplo: coeficiente fracionário">
+  <div class="conteudo">
+    <p class="olho">Exemplo 3 · Metais que reagem com o oxigênio</p>
+    <h2 class="titulo">E quando sobra meio O<sub style="font-size:.55em">2</sub>?</h2>
+    <div class="linha-ex" data-passo="1" style="position:absolute;left:0;width:960px;top:165px;display:grid;grid-template-columns:1fr auto;align-items:center">
+      <span class="eq-q" style="font-size:46px">2 Cu + O<sub>2</sub> → 2 CuO</span><span>Cu 2 = 2 · O 2 = 2 ✓</span>
+    </div>
+    <div style="position:absolute;left:0;width:960px;top:272px;display:flex;flex-direction:column;gap:11px">
+      <div class="linha-ex" data-passo="2"><b>Agora:</b> Na + O<sub>2</sub> → Na<sub>2</sub>O. Sódio: coeficiente <b>2</b> no Na.</div>
+      <div class="linha-ex" data-passo="3"><b>Oxigênio:</b> 1 à direita. Basta <b>½</b> O<sub>2</sub> (½ · 2 = 1).</div>
+      <div class="linha-ex" data-passo="4"><b>Com fração:</b> 2 Na + ½ O<sub>2</sub> → Na<sub>2</sub>O (está certa).</div>
+      <div class="linha-ex" data-passo="5"><b>Menores inteiros:</b> multiplique tudo por 2.</div>
+    </div>
+    <div class="caixa caixa-atencao" data-passo="4" style="position:absolute;left:1020px;right:0;top:165px">
+      <span class="rotulo">Fração é aceita</span>
+      <div class="texto" style="font-size:28px">Uma molécula não se parte, mas a equação é uma <b>proporção</b>: ½ O<sub>2</sub> é metade da quantidade de Na<sub>2</sub>O. A prova pede quase sempre os <b>menores inteiros</b>.</div>
+    </div>
+    <div class="caixa caixa-fundamental" data-passo="6" style="position:absolute;left:580px;right:0;top:640px">
+      <span class="rotulo">Resposta em inteiros</span>
+      <p class="eq-q" style="margin:4px 0 0;font-size:60px"><span class="k">4</span> Na<span class="e">(s)</span> + O<sub>2</sub><span class="e">(g)</span> → <span class="k">2</span> Na<sub>2</sub>O<span class="e">(s)</span></p>
+    </div>
+  </div>
+  <aside class="notas">
+    <p>Duas equações do material da professora (2 Cu + O₂ → 2 CuO e 2 Na + ½ O₂ → Na₂O). Clique 1: a do cobre já está balanceada; confira. Cliques 2 a 5: a do sódio, com a fração. Clique 6: em inteiros, 4 Na + O₂ → 2 Na₂O (Na 4 = 4; O 2 = 2).</p>
+    <p>Na soma dos coeficientes das questões, use sempre os menores inteiros: 4 + 1 + 2 = 7.</p>
+  </aside>
+</section>
+
+<!-- Questão 1 -->
+<section class="slide questao" data-nome="Questão 1">
+  <div class="conteudo">
+    <div class="area-resolucao"></div>
+    <span class="pilula pilula-pausa" data-em="1:some">Pause o vídeo e tente</span>
+    <div class="painel-questao">
+      <p class="olho">Questão 1 · IF Sudeste MG 2017</p>
+      <p class="enunciado" style="font-size:27px">As transformações químicas ocorrem quando há alteração na constituição do material, formando, assim, novas substâncias. Com base nessa informação, marque a alternativa em que <b>NÃO</b> há uma evidência da ocorrência de uma transformação química.</p>
+      <ol class="alternativas">
+        <li data-em="2:apaga"><b>A</b><span>Liberação de um gás.</span></li>
+        <li data-em="2:apaga"><b>B</b><span>Mudança de cor.</span></li>
+        <li data-em="2:apaga"><b>C</b><span>Surgimento de um cheiro característico.</span></li>
+        <li data-em="2:apaga"><b>D</b><span>Produção de uma chama.</span></li>
+        <li data-em="2:certo"><b>E</b><span>Alteração do estado físico.</span></li>
+      </ol>
+    </div>
+  </div>
+  <aside class="resolucao">
+    <p class="dados"><b>Dados:</b> reação química forma substância nova.</p>
+    <ol class="passos">
+      <li><b>Gás, cor, cheiro, chama:</b> sinais de substância nova.</li>
+      <li><b>Mudar de estado:</b> a substância é a mesma.</li>
+      <li><b>Exemplo:</b> gelo derretido continua sendo água.</li>
+    </ol>
+    <p class="resposta"><b>Resposta:</b> alteração do estado físico (fenômeno físico). <b>Gabarito E.</b></p>
+    <p class="atencao"><b>Destaque no quadro:</b> Mudança de estado é física; reação forma substância nova.</p>
+    <ul class="erros">
+      <li><b>A</b> Gás novo (bolhas ao misturar) indica reação.</li>
+      <li><b>B</b> Cor nova (maçã escurecendo) indica reação.</li>
+      <li><b>C</b> Cheiro novo (leite azedo) indica reação.</li>
+      <li><b>D</b> A chama é a combustão, uma reação.</li>
+    </ul>
+  </aside>
+  <aside class="notas">
+    <p>Clique 1 tira o aviso de pausa: resolva na área (D liga a caneta; E esconde o enunciado). Clique 2: gabarito E.</p>
+    <p>Questão oficial do IF Sudeste MG (2017), da lista da professora.</p>
+  </aside>
+</section>
+
+<!-- Questão 2 -->
+<section class="slide questao" data-nome="Questão 2">
+  <div class="conteudo">
+    <div class="area-resolucao"></div>
+    <span class="pilula pilula-pausa" data-em="1:some">Pause o vídeo e tente</span>
+    <div class="painel-questao">
+      <p class="olho">Questão 2 · IF Sudeste MG 2013</p>
+      <p class="enunciado" style="font-size:26px">O Sulfeto de Sódio (Na<sub>2</sub>S) é utilizado em curtumes para remover os pelos das peles. (Este é o motivo do cheiro desagradável dos curtumes). O Na<sub>2</sub>S é preparado pela reação:</p>
+      <p class="enunciado" style="font-size:30px;font-weight:800;color:var(--roxo-titulo);text-align:center">Na<sub>2</sub>SO<sub>4</sub>(s) + C(s) → Na<sub>2</sub>S(s) + CO(g)</p>
+      <p class="enunciado" style="font-size:26px">Após o balanceamento dessa reação, qual a soma dos menores coeficientes inteiros?</p>
+      <ol class="alternativas curtas">
+        <li data-em="2:apaga"><b>A</b><span>12</span></li>
+        <li data-em="2:apaga"><b>B</b><span>8</span></li>
+        <li data-em="2:certo"><b>C</b><span>10</span></li>
+        <li data-em="2:apaga"><b>D</b><span>4</span></li>
+        <li data-em="2:apaga"><b>E</b><span>5</span></li>
+      </ol>
+    </div>
+  </div>
+  <aside class="resolucao">
+    <p class="dados"><b>Dados:</b> Na₂SO₄ + C → Na₂S + CO; menores inteiros.</p>
+    <ol class="passos">
+      <li><b>Na e S:</b> 2 = 2 e 1 = 1: coeficiente 1.</li>
+      <li><b>O:</b> 4 no Na₂SO₄ → 4 CO.</li>
+      <li><b>C:</b> 4 no CO → 4 C.</li>
+      <li><b>Equação:</b> Na₂SO₄ + 4 C → Na₂S + 4 CO.</li>
+      <li><b>Soma:</b> 1 + 4 + 1 + 4 = 10.</li>
+    </ol>
+    <p class="resposta"><b>Resposta:</b> a soma é 10. <b>Gabarito C.</b></p>
+    <p class="atencao"><b>Destaque no quadro:</b> O coeficiente 1 entra na soma.</p>
+    <ul class="erros">
+      <li><b>A</b> Não sai de nenhum balanceamento correto.</li>
+      <li><b>B</b> 1, 3, 1, 3: deixa 4 O contra 3.</li>
+      <li><b>D</b> Soma sem balancear (tudo 1).</li>
+      <li><b>E</b> Esquece o 1 dos coeficientes ou não acerta o O.</li>
+    </ul>
+  </aside>
+  <aside class="notas">
+    <p>Clique 1 tira o aviso de pausa: resolva na área. Clique 2: gabarito C.</p>
+    <p>Questão oficial do IF Sudeste MG (2013, segundo semestre). O oxigênio está todo no Na₂SO₄ e sai todo no CO: 4 CO; o carbono acompanha: 4 C. Confira: Na 2 = 2; S 1 = 1; O 4 = 4; C 4 = 4.</p>
+  </aside>
+</section>
+
+<!-- Resumo -->
+<section class="slide" data-nome="Resumo">
+  <div class="conteudo">
+    <p class="olho">Resumo</p>
+    <h2 class="titulo">O essencial</h2>
+    <div class="resumo" style="position:absolute;left:0;right:0;top:150px">
+      <div><b>Reação química:</b> reagentes viram <b>substâncias novas</b> (produtos).</div>
+      <div><b>Evidências:</b> gás, luz ou calor, cor, sólido novo, cheiro.</div>
+      <div><b>Coeficiente:</b> quantas moléculas. <b>Índice:</b> quantos átomos na molécula.</div>
+      <div><b>Estados:</b> (s), (l), (g), (v), (aq). H<sub style="font-size:.65em">2</sub> e O<sub style="font-size:.65em">2</sub> são <b>(g)</b>.</div>
+      <div><b>Átomos = c · i.</b> Os átomos se conservam: só trocam de parceiros.</div>
+      <div><b>Balancear:</b> comece pelo elemento de uma substância só; H e O no fim.</div>
+    </div>
+    <div class="caixa caixa-atencao" style="position:absolute;left:580px;right:0;top:660px">
+      <div class="texto" style="font-size:30px">Nunca mude o <b>índice</b>: só o coeficiente. Na soma, use os <b>menores inteiros</b>.</div>
+    </div>
+  </div>
+  <aside class="notas"><p>Peça para tirarem um print desta tela.</p></aside>
+</section>
+
+<!-- A seguir -->
+<section class="slide capa" data-nome="A seguir">
+  <div class="estrelas"></div>
+  <div class="texto-capa" style="top:170px">
+    <span class="selo">Química · IF</span>
+    <p class="aula" style="font-size:26px">A seguir · Reações químicas</p>
+    <h1 style="font-size:110px">Combustão e neutralização</h1>
+    <p class="sub">O fogo e o ácido com a base</p>
+  </div>
+  <svg class="emblema" viewBox="0 0 640 640" aria-hidden="true">
+    <path d="M320 110 C410 220 430 320 390 400 C370 440 340 456 320 456 C300 456 270 440 250 400 C210 320 230 220 320 110 Z" fill="#FFD10C"/>
+    <path d="M320 260 C360 310 366 360 348 396 C340 410 330 416 320 416 C310 416 300 410 292 396 C274 360 280 310 320 260 Z" fill="#fff" opacity=".85"/>
+    <rect x="200" y="480" width="240" height="26" rx="13" fill="#fff" opacity=".7"/>
+  </svg>
+  <img class="logo-capa" src="{{LOGO_BRANCO}}" alt="Quarks">
+  <aside class="notas"><p>Próxima: as reações de combustão (completa e incompleta, triângulo do fogo) e de neutralização (ácido + base → sal + água).</p></aside>
+</section>

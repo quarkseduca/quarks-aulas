@@ -1,0 +1,543 @@
+<!--aula
+{"disciplina": "quimica", "curso": "IF", "assunto": "Ligações químicas", "parte": "Parte única", "titulo": "Ligação covalente", "scripts": ["animacoes-ligacoes.js"]}
+-->
+<!-- Fonte: slides da professora (Química IF 2026, aula 10: ligação covalente simples, dupla e tripla, propriedades dos compostos covalentes), completados com a apostila IF, Química, 3.2 Ligação covalente (fórmulas de Lewis e estrutural, como reconhecer o tipo de ligação). Questões: PUC-MG e UNIRIO (material da professora) e IF Sudeste MG 2013 (oficial). -->
+<style>
+  .caixa { box-sizing: border-box; }
+  .linha-ex { box-sizing: border-box; background: var(--branco); border: 2px solid var(--lilas-2); border-radius: 24px; padding: 14px 26px; font-size: 31px; line-height: 1.3; }
+  .linha-ex b { color: var(--roxo-titulo); }
+  .fq { font: 800 1em var(--fonte-titulo); color: var(--roxo-titulo); }
+  .tag { display: inline-block; padding: 4px 18px; border-radius: 999px; font-weight: 800; font-size: 26px; }
+  .tag-i { background: #FFF4C2; color: #8A6A00; }
+  .tag-c { background: var(--d-clara); color: var(--d-forte); }
+  .mol-card { box-sizing: border-box; background: var(--branco); border: 2px solid var(--lilas-2); border-radius: 26px; padding: 14px 18px 16px; display: flex; flex-direction: column; align-items: center; gap: 6px; }
+  .mol-card h3 { margin: 0; font: 800 44px var(--fonte-titulo); color: var(--roxo-titulo); letter-spacing: -.01em; }
+  .mol-card small { font-size: 22px; font-weight: 700; color: var(--cinza); letter-spacing: .04em; text-transform: uppercase; }
+  .mol-card .par { display: flex; align-items: center; justify-content: center; gap: 20px; }
+  @keyframes vib-a { 0%,100% { transform: translate(0,0); } 25% { transform: translate(1.6px,-1.2px); } 50% { transform: translate(-.8px,1.4px); } 75% { transform: translate(-1.4px,-.6px); } }
+  @keyframes vib-b { 0%,100% { transform: translate(0,0); } 25% { transform: translate(-1.4px,1px); } 50% { transform: translate(1.2px,-1.4px); } 75% { transform: translate(.6px,1.2px); } }
+  .slide.ativo .mostra svg.vibra .vib-a, .slide.ativo svg.vibra.sempre .vib-a { animation: vib-a 1.6s ease-in-out infinite; }
+  .slide.ativo .mostra svg.vibra .vib-b, .slide.ativo svg.vibra.sempre .vib-b { animation: vib-b 1.6s ease-in-out infinite; }
+  /* dois cloros que se aproximam e passam a dividir um par (o estado final é o de base) */
+  @keyframes vem-esq { 0%,10% { transform: translateX(-80px); } 40%,100% { transform: none; } }
+  @keyframes vem-dir { 0%,10% { transform: translateX(80px); } 40%,100% { transform: none; } }
+  .slide.ativo .mostra .vem-esq { animation: vem-esq 9s ease-in-out infinite; }
+  .slide.ativo .mostra .vem-dir { animation: vem-dir 9s ease-in-out infinite; }
+  @keyframes anel-1 { 0%,42% { opacity: 0; } 50%,64% { opacity: 1; } 72%,100% { opacity: .25; } }
+  @keyframes anel-2 { 0%,66% { opacity: 0; } 74%,90% { opacity: 1; } 98%,100% { opacity: .25; } }
+  .anel { fill: none; stroke-width: 4; stroke-dasharray: 10 8; }
+  .slide.ativo .mostra .anel-1 { animation: anel-1 9s ease-in-out infinite; }
+  .slide.ativo .mostra .anel-2 { animation: anel-2 9s ease-in-out infinite; }
+  .tab-cov { border-collapse: separate; border-spacing: 0; background: var(--branco); border: 2px solid var(--lilas-2); border-radius: 26px; overflow: hidden; font-size: 28px; }
+  .tab-cov th { background: var(--d-clara); color: var(--d-forte); font-weight: 800; padding: 12px 24px; }
+  .tab-cov td { padding: 9px 24px; text-align: center; border-top: 2px solid var(--lilas); }
+  .tab-cov td:first-child { text-align: left; font-weight: 700; }
+  .tab-cov .lig { font: 800 34px var(--fonte-titulo); color: var(--roxo-titulo); }
+  .rot-f { font-size: 20px; font-weight: 800; letter-spacing: .1em; text-transform: uppercase; color: var(--d-forte); }
+  /* açúcar que se espalha na água: as moléculas andam inteiras */
+  @keyframes deriva-1 { 0%,100% { transform: translate(0,0); } 50% { transform: translate(26px,-18px); } }
+  @keyframes deriva-2 { 0%,100% { transform: translate(0,0); } 50% { transform: translate(-22px,14px); } }
+  .slide.ativo .mostra .der-1 { animation: deriva-1 6s ease-in-out infinite; }
+  .slide.ativo .mostra .der-2 { animation: deriva-2 7s ease-in-out infinite; }
+  .der-1, .der-2 { transform-box: fill-box; }
+</style>
+
+<svg width="0" height="0" style="position:absolute" aria-hidden="true">
+  <defs>
+    <radialGradient id="gO" cx=".35" cy=".3" r=".8"><stop offset="0" stop-color="#FF8A7A"/><stop offset="1" stop-color="#C8301F"/></radialGradient>
+    <radialGradient id="gH" cx=".35" cy=".3" r=".8"><stop offset="0" stop-color="#FFFFFF"/><stop offset="1" stop-color="#C9C4DC"/></radialGradient>
+    <radialGradient id="gN" cx=".35" cy=".3" r=".8"><stop offset="0" stop-color="#7FA8FF"/><stop offset="1" stop-color="#2A5BD0"/></radialGradient>
+    <radialGradient id="gC" cx=".35" cy=".3" r=".8"><stop offset="0" stop-color="#8A8A96"/><stop offset="1" stop-color="#2E2E36"/></radialGradient>
+    <radialGradient id="gCl" cx=".35" cy=".3" r=".8"><stop offset="0" stop-color="#8FE3B5"/><stop offset="1" stop-color="#14864E"/></radialGradient>
+    <radialGradient id="gNa" cx=".35" cy=".3" r=".8"><stop offset="0" stop-color="#C9BEFA"/><stop offset="1" stop-color="#5340B8"/></radialGradient>
+    <linearGradient id="gAgua" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#CFE6FA"/><stop offset="1" stop-color="#9CCBF2"/></linearGradient>
+  </defs>
+  <symbol id="m-h2" viewBox="0 0 150 110"><g stroke="#8C84B8" stroke-width="2"><circle cx="58" cy="55" r="24" fill="url(#gH)"/><circle cx="92" cy="55" r="24" fill="url(#gH)"/></g></symbol>
+  <symbol id="m-cl2" viewBox="0 0 150 110"><g stroke="#0E5C36" stroke-width="2"><circle cx="52" cy="55" r="33" fill="url(#gCl)"/><circle cx="98" cy="55" r="33" fill="url(#gCl)"/></g></symbol>
+  <symbol id="m-o2" viewBox="0 0 150 110"><g stroke="#8E2115" stroke-width="2"><circle cx="56" cy="55" r="30" fill="url(#gO)"/><circle cx="94" cy="55" r="30" fill="url(#gO)"/></g></symbol>
+  <symbol id="m-n2" viewBox="0 0 150 110"><g stroke="#1B3E94" stroke-width="2"><circle cx="57" cy="55" r="30" fill="url(#gN)"/><circle cx="93" cy="55" r="30" fill="url(#gN)"/></g></symbol>
+  <symbol id="m-h2o" viewBox="0 0 150 110"><g stroke-width="2"><circle cx="38" cy="74" r="20" fill="url(#gH)" stroke="#8C84B8"/><circle cx="112" cy="74" r="20" fill="url(#gH)" stroke="#8C84B8"/><circle cx="75" cy="50" r="32" fill="url(#gO)" stroke="#8E2115"/></g></symbol>
+  <symbol id="m-nh3" viewBox="0 0 150 110"><g stroke-width="2"><circle cx="34" cy="78" r="19" fill="url(#gH)" stroke="#8C84B8"/><circle cx="116" cy="78" r="19" fill="url(#gH)" stroke="#8C84B8"/><circle cx="75" cy="48" r="31" fill="url(#gN)" stroke="#1B3E94"/><circle cx="75" cy="88" r="19" fill="url(#gH)" stroke="#8C84B8"/></g></symbol>
+  <symbol id="m-ch4" viewBox="0 0 150 110"><g stroke-width="2"><circle cx="75" cy="20" r="18" fill="url(#gH)" stroke="#8C84B8"/><circle cx="36" cy="72" r="18" fill="url(#gH)" stroke="#8C84B8"/><circle cx="75" cy="55" r="29" fill="url(#gC)" stroke="#1E1E24"/><circle cx="114" cy="72" r="18" fill="url(#gH)" stroke="#8C84B8"/><circle cx="82" cy="92" r="17" fill="url(#gH)" stroke="#8C84B8"/></g></symbol>
+  <symbol id="m-co2" viewBox="0 0 150 110"><g stroke-width="2"><circle cx="30" cy="55" r="26" fill="url(#gO)" stroke="#8E2115"/><circle cx="120" cy="55" r="26" fill="url(#gO)" stroke="#8E2115"/><circle cx="75" cy="55" r="28" fill="url(#gC)" stroke="#1E1E24"/></g></symbol>
+  <symbol id="becher" viewBox="0 0 190 210"><path d="M22 14 h146 M30 14 v168 a18 18 0 0 0 18 18 h94 a18 18 0 0 0 18 -18 v-168" fill="none" stroke="#7F7A99" stroke-width="5" stroke-linecap="round"/></symbol>
+</svg>
+
+<!-- Capa -->
+<section class="slide capa" data-nome="Capa">
+  <div class="estrelas"></div>
+  <div class="texto-capa">
+    <span class="selo">Química · IF</span>
+    <p class="aula">Ligações químicas</p>
+    <h1>Ligação covalente</h1>
+    <p class="sub">Pares de elétrons compartilhados</p>
+  </div>
+  <svg class="emblema" viewBox="0 0 640 640" aria-hidden="true">
+    <g class="gira-lento"><ellipse cx="320" cy="320" rx="300" ry="128" fill="none" stroke="#fff" stroke-opacity=".38" stroke-width="2" transform="rotate(-10 320 320)"/></g>
+    <g class="gira"><ellipse cx="320" cy="320" rx="236" ry="196" fill="none" stroke="#FFD10C" stroke-opacity=".75" stroke-width="2.5" stroke-dasharray="3 14" stroke-linecap="round" transform="rotate(-8 320 320)"/>
+      <circle cx="84" cy="300" r="13" fill="#FFD10C" stroke="#fff" stroke-width="3"/></g>
+    <circle cx="320" cy="320" r="132" fill="#FFD10C"/>
+    <image href="{{SYM_ROXO}}" x="238" y="238" width="164" height="164"/>
+  </svg>
+  <img class="logo-capa" src="{{LOGO_BRANCO}}" alt="Quarks">
+  <aside class="notas"><p>Hoje: quando nenhum átomo quer perder elétrons, eles compartilham pares. Ligações simples, duplas e triplas, as fórmulas eletrônica (de Lewis), estrutural e molecular, as propriedades dos compostos moleculares e como reconhecer o tipo de ligação.</p></aside>
+</section>
+
+<!-- Compartilhando -->
+<section class="slide" data-nome="Compartilhando elétrons">
+  <div class="conteudo">
+    <p class="olho">Ligação covalente</p>
+    <h2 class="titulo">Quando ninguém quer perder</h2>
+    <p class="texto" style="position:absolute;left:0;width:880px;top:160px;margin:0;font-size:31px">Cada cloro tem <b>7 elétrons</b> de valência: os dois querem <b>ganhar</b> 1, e nenhum quer perder.</p>
+    <div data-passo="1" style="position:absolute;left:0;top:250px;width:880px;height:330px"><svg viewBox="-200 -110 540 230" width="776" height="330" aria-hidden="true">
+        <ellipse class="anel anel-1" cx="8" cy="-4" rx="86" ry="72" stroke="#14A863"/>
+        <ellipse class="anel anel-2" cx="132" cy="-4" rx="86" ry="72" stroke="#6551D1"/>
+        <g class="vem-esq"><text x="0" y="21" text-anchor="middle" font-family="Bricolage Grotesque,Figtree,sans-serif" font-weight="800" font-size="58" fill="#292B2C">Cl</text><circle cx="-9" cy="-46" r="6.5" fill="#14A863"/><circle cx="9" cy="-46" r="6.5" fill="#14A863"/><circle cx="-9" cy="38" r="6.5" fill="#14A863"/><circle cx="9" cy="38" r="6.5" fill="#14A863"/><circle cx="-52" cy="-13" r="6.5" fill="#14A863"/><circle cx="-52" cy="5" r="6.5" fill="#14A863"/><circle cx="70" cy="-13" r="6.5" fill="#14A863"/></g>
+        <g class="vem-dir"><text x="140" y="21" text-anchor="middle" font-family="Bricolage Grotesque,Figtree,sans-serif" font-weight="800" font-size="58" fill="#292B2C">Cl</text><circle cx="131" cy="-46" r="6.5" fill="#6551D1"/><circle cx="149" cy="-46" r="6.5" fill="#6551D1"/><circle cx="131" cy="38" r="6.5" fill="#6551D1"/><circle cx="149" cy="38" r="6.5" fill="#6551D1"/><circle cx="192" cy="-13" r="6.5" fill="#6551D1"/><circle cx="192" cy="5" r="6.5" fill="#6551D1"/><circle cx="70" cy="5" r="6.5" fill="#6551D1"/></g>
+      </svg></div>
+    <div style="position:absolute;left:960px;right:0;top:160px;display:flex;flex-direction:column;gap:20px">
+      <div class="linha-ex" data-passo="1">Cada Cl coloca <b>1 elétron</b> num par que fica <b>entre</b> os dois.</div>
+      <div class="linha-ex" data-passo="2">O par conta para os dois: cada Cl fica com <b>8</b>.</div>
+      <div class="caixa caixa-fundamental" data-passo="3">
+        <span class="rotulo">Ligação covalente</span>
+        <div class="texto" style="font-size:28px"><b>Compartilhamento</b> de pares de elétrons entre átomos de <b>alta eletronegatividade</b> (ametais e hidrogênio). Os átomos ligados formam uma <b>molécula</b>.</div>
+      </div>
+      <p data-passo="4" style="margin:0;font:800 56px var(--fonte-titulo);color:var(--roxo-titulo);text-align:center">Cl–Cl &nbsp;·&nbsp; Cl<sub style="font-size:.55em">2</sub></p>
+    </div>
+  </div>
+  <aside class="notas">
+    <p>Clique 1: os dois cloros se aproximam e passam a dividir um par. Os contornos mostram que o par entra na conta dos dois: o verde conta 8 elétrons em volta do cloro da esquerda; o roxo, 8 em volta do da direita. As cores só mostram de qual átomo veio cada elétron (os elétrons são iguais).</p>
+    <p>Cliques 2 a 4: a conta do octeto, a definição e a molécula Cl₂ (o traço é o par compartilhado).</p>
+  </aside>
+</section>
+
+<!-- Quantas ligações -->
+<section class="slide" data-nome="Quantas ligações">
+  <div class="conteudo">
+    <p class="olho">Ligação covalente</p>
+    <h2 class="titulo">Quem faz e quantas ligações?</h2>
+    <table class="tab-cov" data-passo="1" style="position:absolute;left:0;top:160px">
+      <tr><th style="text-align:left">Átomos</th><th>Exemplo</th></tr>
+      <tr><td>ametal + ametal</td><td>CO<sub>2</sub></td></tr>
+      <tr><td>ametal + hidrogênio</td><td>NH<sub>3</sub></td></tr>
+      <tr><td>hidrogênio + hidrogênio</td><td>H<sub>2</sub></td></tr>
+    </table>
+    <table class="tab-cov" data-passo="2" style="position:absolute;left:640px;width:1120px;top:160px">
+      <tr><th style="text-align:left">Átomo</th><th>Distribuição</th><th>Última camada</th><th>Faltam</th><th>Ligações</th></tr>
+      <tr data-passo="2"><td>H (Z = 1)</td><td>1s<sup>1</sup></td><td>1</td><td>1 (para 2)</td><td class="lig">1</td></tr>
+      <tr data-passo="3"><td>Cl (Z = 17)</td><td>... 3s<sup>2</sup> 3p<sup>5</sup></td><td>7</td><td>1</td><td class="lig">1</td></tr>
+      <tr data-passo="3"><td>O (Z = 8)</td><td>1s<sup>2</sup> 2s<sup>2</sup> 2p<sup>4</sup></td><td>6</td><td>2</td><td class="lig">2</td></tr>
+      <tr data-passo="3"><td>N (Z = 7)</td><td>1s<sup>2</sup> 2s<sup>2</sup> 2p<sup>3</sup></td><td>5</td><td>3</td><td class="lig">3</td></tr>
+      <tr data-passo="3"><td>C (Z = 6)</td><td>1s<sup>2</sup> 2s<sup>2</sup> 2p<sup>2</sup></td><td>4</td><td>4</td><td class="lig">4</td></tr>
+    </table>
+    <div class="caixa caixa-fundamental" data-passo="4" style="position:absolute;left:640px;right:0;top:620px">
+      <div class="texto" style="font-size:30px">Cada átomo faz tantas ligações quantos elétrons <b>faltam</b> para o octeto.</div>
+    </div>
+  </div>
+  <aside class="notas">
+    <p>Clique 1: as três combinações que formam compostos covalentes (do material da professora). Clique 2: o hidrogênio, que completa com 2. Clique 3: Cl, O, N e C. Clique 4: a regra para contar as ligações.</p>
+    <p>O carbono, com 4, faz 4 ligações (é tetravalente).</p>
+  </aside>
+</section>
+
+<!-- Três fórmulas -->
+<section class="slide" data-nome="Três fórmulas">
+  <div class="conteudo">
+    <p class="olho">Como representar uma molécula</p>
+    <h2 class="titulo">Três jeitos de escrever a água</h2>
+    <div style="position:absolute;left:0;right:0;top:160px;display:grid;grid-template-columns:1fr 1fr 1fr;gap:30px">
+      <div class="mol-card" data-passo="1" style="min-height:330px;justify-content:center">
+        <span class="rot-f">Eletrônica (de Lewis)</span>
+        <svg viewBox="-181 -60 362 120" width="452" height="150" aria-hidden="true"><circle cx="-57.5" cy="-9.0" r="6.5" fill="#C99400"/><circle cx="-57.5" cy="9.0" r="6.5" fill="#E5533D"/><circle cx="57.5" cy="-9.0" r="6.5" fill="#E5533D"/><circle cx="57.5" cy="9.0" r="6.5" fill="#C99400"/><circle cx="-9.0" cy="-46.0" r="6.5" fill="#E5533D"/><circle cx="9.0" cy="-46.0" r="6.5" fill="#E5533D"/><circle cx="9.0" cy="38.0" r="6.5" fill="#E5533D"/><circle cx="-9.0" cy="38.0" r="6.5" fill="#E5533D"/><text x="-115" y="21" text-anchor="middle" font-family="Bricolage Grotesque,Figtree,sans-serif" font-weight="800" font-size="58" fill="#292B2C">H</text><text x="0" y="21" text-anchor="middle" font-family="Bricolage Grotesque,Figtree,sans-serif" font-weight="800" font-size="58" fill="#292B2C">O</text><text x="115" y="21" text-anchor="middle" font-family="Bricolage Grotesque,Figtree,sans-serif" font-weight="800" font-size="58" fill="#292B2C">H</text></svg>
+        <p style="margin:0;font-size:26px;text-align:center">os elétrons de valência são <b style="color:var(--roxo-titulo)">pontos</b></p>
+      </div>
+      <div class="mol-card" data-passo="2" style="min-height:330px;justify-content:center">
+        <span class="rot-f">Estrutural</span>
+        <svg viewBox="-181 -60 362 120" width="452" height="150" aria-hidden="true"><path d="M-85.0 0.0 L-30.0 0.0" stroke="#6551D1" stroke-width="6" stroke-linecap="round"/><path d="M30.0 0.0 L85.0 0.0" stroke="#6551D1" stroke-width="6" stroke-linecap="round"/><text x="-115" y="21" text-anchor="middle" font-family="Bricolage Grotesque,Figtree,sans-serif" font-weight="800" font-size="58" fill="#292B2C">H</text><text x="0" y="21" text-anchor="middle" font-family="Bricolage Grotesque,Figtree,sans-serif" font-weight="800" font-size="58" fill="#292B2C">O</text><text x="115" y="21" text-anchor="middle" font-family="Bricolage Grotesque,Figtree,sans-serif" font-weight="800" font-size="58" fill="#292B2C">H</text></svg>
+        <p style="margin:0;font-size:26px;text-align:center">cada par compartilhado é um <b style="color:var(--roxo-titulo)">traço</b></p>
+      </div>
+      <div class="mol-card" data-passo="3" style="min-height:330px;justify-content:center">
+        <span class="rot-f">Molecular</span>
+        <p style="margin:24px 0 18px;font:800 110px var(--fonte-titulo);color:var(--roxo-titulo);line-height:1">H<sub style="font-size:.55em">2</sub>O</p>
+        <p style="margin:0;font-size:26px;text-align:center">só os elementos e <b style="color:var(--roxo-titulo)">quantos</b> átomos</p>
+      </div>
+    </div>
+    <div class="caixa" data-passo="4" style="position:absolute;left:580px;right:0;top:560px;display:grid;grid-template-columns:200px 1fr;gap:26px;align-items:center">
+      <svg class="vibra" viewBox="0 0 150 110" style="width:200px;height:147px" aria-hidden="true"><use href="#m-h2o"/></svg>
+      <div class="texto" style="font-size:29px">Na molécula, os átomos ficam presos pelas ligações e <b>vibram</b> sem se soltar. Cada H faz 1 ligação; o O faz 2 e ainda tem <b>2 pares livres</b>.</div>
+    </div>
+  </div>
+  <aside class="notas">
+    <p>Clique 1: fórmula eletrônica ou de Lewis; os pares entre os átomos são compartilhados (um ponto de cada cor: cada átomo entra com 1 elétron). Clique 2: a estrutural, H–O–H. Clique 3: a molecular, H₂O. Clique 4: o modelo de bolas vibrando.</p>
+    <p>Pergunte: quantos elétrons há em volta do O na fórmula de Lewis? (8: dois pares compartilhados e dois livres.) A forma real da água é angular; aqui a estrutural está em linha, como na apostila.</p>
+  </aside>
+</section>
+
+<!-- Ligação simples -->
+<section class="slide" data-nome="Ligação simples">
+  <div class="conteudo">
+    <p class="olho">Um par compartilhado</p>
+    <h2 class="titulo">Ligação simples</h2>
+    <div style="position:absolute;left:0;right:0;top:150px;display:grid;grid-template-columns:0.8fr 1fr 1.15fr 1.15fr 1.15fr;gap:20px;align-items:start">
+      <div class="mol-card" data-passo="1">
+        <div class="par"><h3>H<sub>2</sub></h3><svg class="vibra" viewBox="0 0 150 110" style="width:110px;height:81px" aria-hidden="true"><use href="#m-h2"/></svg></div>
+        <svg viewBox="-66 -60 242 120" width="194" height="96" aria-hidden="true"><circle cx="55.0" cy="-9.0" r="6.5" fill="#C99400"/><circle cx="55.0" cy="9.0" r="6.5" fill="#C99400"/><text x="0" y="21" text-anchor="middle" font-family="Bricolage Grotesque,Figtree,sans-serif" font-weight="800" font-size="58" fill="#292B2C">H</text><text x="110" y="21" text-anchor="middle" font-family="Bricolage Grotesque,Figtree,sans-serif" font-weight="800" font-size="58" fill="#292B2C">H</text></svg>
+        <svg viewBox="-66 -60 242 120" width="194" height="96" aria-hidden="true"><path d="M30.0 0.0 L80.0 0.0" stroke="#6551D1" stroke-width="6" stroke-linecap="round"/><text x="0" y="21" text-anchor="middle" font-family="Bricolage Grotesque,Figtree,sans-serif" font-weight="800" font-size="58" fill="#292B2C">H</text><text x="110" y="21" text-anchor="middle" font-family="Bricolage Grotesque,Figtree,sans-serif" font-weight="800" font-size="58" fill="#292B2C">H</text></svg>
+      </div>
+      <div class="mol-card" data-passo="1">
+        <div class="par"><h3>Cl<sub>2</sub></h3><svg class="vibra" viewBox="0 0 150 110" style="width:110px;height:81px" aria-hidden="true"><use href="#m-cl2"/></svg></div>
+        <svg viewBox="-66 -60 272 120" width="190" height="84" aria-hidden="true"><circle cx="70.0" cy="-9.0" r="6.5" fill="#14A863"/><circle cx="70.0" cy="9.0" r="6.5" fill="#14A863"/><circle cx="-9.0" cy="-46.0" r="6.5" fill="#14A863"/><circle cx="9.0" cy="-46.0" r="6.5" fill="#14A863"/><circle cx="9.0" cy="38.0" r="6.5" fill="#14A863"/><circle cx="-9.0" cy="38.0" r="6.5" fill="#14A863"/><circle cx="-56.0" cy="1.0" r="6.5" fill="#14A863"/><circle cx="-56.0" cy="-17.0" r="6.5" fill="#14A863"/><circle cx="131.0" cy="-46.0" r="6.5" fill="#14A863"/><circle cx="149.0" cy="-46.0" r="6.5" fill="#14A863"/><circle cx="149.0" cy="38.0" r="6.5" fill="#14A863"/><circle cx="131.0" cy="38.0" r="6.5" fill="#14A863"/><circle cx="196.0" cy="-17.0" r="6.5" fill="#14A863"/><circle cx="196.0" cy="1.0" r="6.5" fill="#14A863"/><text x="0" y="21" text-anchor="middle" font-family="Bricolage Grotesque,Figtree,sans-serif" font-weight="800" font-size="58" fill="#292B2C">Cl</text><text x="140" y="21" text-anchor="middle" font-family="Bricolage Grotesque,Figtree,sans-serif" font-weight="800" font-size="58" fill="#292B2C">Cl</text></svg>
+        <svg viewBox="-66 -60 272 120" width="190" height="84" aria-hidden="true"><path d="M40.0 0.0 L100.0 0.0" stroke="#6551D1" stroke-width="6" stroke-linecap="round"/><text x="0" y="21" text-anchor="middle" font-family="Bricolage Grotesque,Figtree,sans-serif" font-weight="800" font-size="58" fill="#292B2C">Cl</text><text x="140" y="21" text-anchor="middle" font-family="Bricolage Grotesque,Figtree,sans-serif" font-weight="800" font-size="58" fill="#292B2C">Cl</text></svg>
+      </div>
+      <div class="mol-card" data-passo="2">
+        <div class="par"><h3>H<sub>2</sub>O</h3><svg class="vibra" viewBox="0 0 150 110" style="width:110px;height:81px" aria-hidden="true"><use href="#m-h2o"/></svg></div>
+        <svg viewBox="-181 -60 362 120" width="253" height="84" aria-hidden="true"><circle cx="-57.5" cy="-9.0" r="6.5" fill="#C99400"/><circle cx="-57.5" cy="9.0" r="6.5" fill="#E5533D"/><circle cx="57.5" cy="-9.0" r="6.5" fill="#E5533D"/><circle cx="57.5" cy="9.0" r="6.5" fill="#C99400"/><circle cx="-9.0" cy="-46.0" r="6.5" fill="#E5533D"/><circle cx="9.0" cy="-46.0" r="6.5" fill="#E5533D"/><circle cx="9.0" cy="38.0" r="6.5" fill="#E5533D"/><circle cx="-9.0" cy="38.0" r="6.5" fill="#E5533D"/><text x="-115" y="21" text-anchor="middle" font-family="Bricolage Grotesque,Figtree,sans-serif" font-weight="800" font-size="58" fill="#292B2C">H</text><text x="0" y="21" text-anchor="middle" font-family="Bricolage Grotesque,Figtree,sans-serif" font-weight="800" font-size="58" fill="#292B2C">O</text><text x="115" y="21" text-anchor="middle" font-family="Bricolage Grotesque,Figtree,sans-serif" font-weight="800" font-size="58" fill="#292B2C">H</text></svg>
+        <svg viewBox="-181 -60 362 120" width="253" height="84" aria-hidden="true"><path d="M-85.0 0.0 L-30.0 0.0" stroke="#6551D1" stroke-width="6" stroke-linecap="round"/><path d="M30.0 0.0 L85.0 0.0" stroke="#6551D1" stroke-width="6" stroke-linecap="round"/><text x="-115" y="21" text-anchor="middle" font-family="Bricolage Grotesque,Figtree,sans-serif" font-weight="800" font-size="58" fill="#292B2C">H</text><text x="0" y="21" text-anchor="middle" font-family="Bricolage Grotesque,Figtree,sans-serif" font-weight="800" font-size="58" fill="#292B2C">O</text><text x="115" y="21" text-anchor="middle" font-family="Bricolage Grotesque,Figtree,sans-serif" font-weight="800" font-size="58" fill="#292B2C">H</text></svg>
+      </div>
+      <div class="mol-card" data-passo="3">
+        <div class="par"><h3>NH<sub>3</sub></h3><svg class="vibra" viewBox="0 0 150 110" style="width:110px;height:81px" aria-hidden="true"><use href="#m-nh3"/></svg></div>
+        <svg viewBox="-181 -60 362 232" width="199" height="128" aria-hidden="true"><circle cx="-57.5" cy="-9.0" r="6.5" fill="#C99400"/><circle cx="-57.5" cy="9.0" r="6.5" fill="#2E6FD8"/><circle cx="57.5" cy="-9.0" r="6.5" fill="#2E6FD8"/><circle cx="57.5" cy="9.0" r="6.5" fill="#C99400"/><circle cx="9.0" cy="56.0" r="6.5" fill="#2E6FD8"/><circle cx="-9.0" cy="56.0" r="6.5" fill="#C99400"/><circle cx="-9.0" cy="-46.0" r="6.5" fill="#2E6FD8"/><circle cx="9.0" cy="-46.0" r="6.5" fill="#2E6FD8"/><text x="-115" y="21" text-anchor="middle" font-family="Bricolage Grotesque,Figtree,sans-serif" font-weight="800" font-size="58" fill="#292B2C">H</text><text x="0" y="21" text-anchor="middle" font-family="Bricolage Grotesque,Figtree,sans-serif" font-weight="800" font-size="58" fill="#292B2C">N</text><text x="115" y="21" text-anchor="middle" font-family="Bricolage Grotesque,Figtree,sans-serif" font-weight="800" font-size="58" fill="#292B2C">H</text><text x="0" y="133" text-anchor="middle" font-family="Bricolage Grotesque,Figtree,sans-serif" font-weight="800" font-size="58" fill="#292B2C">H</text></svg>
+        <svg viewBox="-181 -60 362 232" width="199" height="128" aria-hidden="true"><path d="M-85.0 0.0 L-30.0 0.0" stroke="#6551D1" stroke-width="6" stroke-linecap="round"/><path d="M30.0 0.0 L85.0 0.0" stroke="#6551D1" stroke-width="6" stroke-linecap="round"/><path d="M0.0 30.0 L0.0 82.0" stroke="#6551D1" stroke-width="6" stroke-linecap="round"/><text x="-115" y="21" text-anchor="middle" font-family="Bricolage Grotesque,Figtree,sans-serif" font-weight="800" font-size="58" fill="#292B2C">H</text><text x="0" y="21" text-anchor="middle" font-family="Bricolage Grotesque,Figtree,sans-serif" font-weight="800" font-size="58" fill="#292B2C">N</text><text x="115" y="21" text-anchor="middle" font-family="Bricolage Grotesque,Figtree,sans-serif" font-weight="800" font-size="58" fill="#292B2C">H</text><text x="0" y="133" text-anchor="middle" font-family="Bricolage Grotesque,Figtree,sans-serif" font-weight="800" font-size="58" fill="#292B2C">H</text></svg>
+      </div>
+      <div class="mol-card" data-passo="4">
+        <div class="par"><h3>CH<sub>4</sub></h3><svg class="vibra" viewBox="0 0 150 110" style="width:110px;height:81px" aria-hidden="true"><use href="#m-ch4"/></svg></div>
+        <svg viewBox="-181 -172 362 344" width="181" height="172" aria-hidden="true"><circle cx="-57.5" cy="-9.0" r="6.5" fill="#C99400"/><circle cx="-57.5" cy="9.0" r="6.5" fill="#292B2C"/><circle cx="57.5" cy="-9.0" r="6.5" fill="#292B2C"/><circle cx="57.5" cy="9.0" r="6.5" fill="#C99400"/><circle cx="-9.0" cy="-56.0" r="6.5" fill="#292B2C"/><circle cx="9.0" cy="-56.0" r="6.5" fill="#C99400"/><circle cx="9.0" cy="56.0" r="6.5" fill="#292B2C"/><circle cx="-9.0" cy="56.0" r="6.5" fill="#C99400"/><text x="-115" y="21" text-anchor="middle" font-family="Bricolage Grotesque,Figtree,sans-serif" font-weight="800" font-size="58" fill="#292B2C">H</text><text x="0" y="21" text-anchor="middle" font-family="Bricolage Grotesque,Figtree,sans-serif" font-weight="800" font-size="58" fill="#292B2C">C</text><text x="115" y="21" text-anchor="middle" font-family="Bricolage Grotesque,Figtree,sans-serif" font-weight="800" font-size="58" fill="#292B2C">H</text><text x="0" y="-91" text-anchor="middle" font-family="Bricolage Grotesque,Figtree,sans-serif" font-weight="800" font-size="58" fill="#292B2C">H</text><text x="0" y="133" text-anchor="middle" font-family="Bricolage Grotesque,Figtree,sans-serif" font-weight="800" font-size="58" fill="#292B2C">H</text></svg>
+        <svg viewBox="-181 -172 362 344" width="181" height="172" aria-hidden="true"><path d="M-85.0 0.0 L-30.0 0.0" stroke="#6551D1" stroke-width="6" stroke-linecap="round"/><path d="M30.0 0.0 L85.0 0.0" stroke="#6551D1" stroke-width="6" stroke-linecap="round"/><path d="M0.0 -30.0 L0.0 -82.0" stroke="#6551D1" stroke-width="6" stroke-linecap="round"/><path d="M0.0 30.0 L0.0 82.0" stroke="#6551D1" stroke-width="6" stroke-linecap="round"/><text x="-115" y="21" text-anchor="middle" font-family="Bricolage Grotesque,Figtree,sans-serif" font-weight="800" font-size="58" fill="#292B2C">H</text><text x="0" y="21" text-anchor="middle" font-family="Bricolage Grotesque,Figtree,sans-serif" font-weight="800" font-size="58" fill="#292B2C">C</text><text x="115" y="21" text-anchor="middle" font-family="Bricolage Grotesque,Figtree,sans-serif" font-weight="800" font-size="58" fill="#292B2C">H</text><text x="0" y="-91" text-anchor="middle" font-family="Bricolage Grotesque,Figtree,sans-serif" font-weight="800" font-size="58" fill="#292B2C">H</text><text x="0" y="133" text-anchor="middle" font-family="Bricolage Grotesque,Figtree,sans-serif" font-weight="800" font-size="58" fill="#292B2C">H</text></svg>
+      </div>
+    </div>
+    <div class="caixa caixa-fundamental" data-passo="5" style="position:absolute;left:580px;right:0;top:615px;padding:22px 34px">
+      <div class="texto" style="font-size:30px"><b>1 par</b> compartilhado = ligação <b>simples</b> = <b>1 traço</b> (–).</div>
+    </div>
+  </div>
+  <aside class="notas">
+    <p>Em cada cartão: o modelo vibrando, a fórmula de Lewis (em cima) e a estrutural (embaixo). Clique 1: H₂ e Cl₂. Clique 2: H₂O. Clique 3: NH₃, com o N fazendo 3 ligações e um par livre. Clique 4: CH₄, com o C fazendo 4.</p>
+    <p>Peça para contarem os elétrons em volta de cada átomo: 8 (o H, 2).</p>
+  </aside>
+</section>
+
+<!-- Ligação dupla -->
+<section class="slide" data-nome="Ligação dupla">
+  <div class="conteudo">
+    <p class="olho">Dois pares compartilhados</p>
+    <h2 class="titulo">Ligação dupla</h2>
+    <p class="texto" style="position:absolute;left:0;right:0;top:150px;margin:0;font-size:29px">O (Z = 8): 1s² 2s² 2p⁴, faltam 2 · C (Z = 6): 1s² 2s² 2p², faltam 4</p>
+    <div style="position:absolute;left:0;right:0;top:220px;display:grid;grid-template-columns:0.8fr 1.25fr 1.1fr;gap:26px;align-items:start">
+      <div class="mol-card" data-passo="1">
+        <div class="par"><h3>O<sub>2</sub></h3><svg class="vibra" viewBox="0 0 150 110" style="width:110px;height:81px" aria-hidden="true"><use href="#m-o2"/></svg></div>
+        <svg viewBox="-66 -60 257 120" width="218" height="102" aria-hidden="true"><circle cx="53.5" cy="-9.0" r="6.5" fill="#E5533D"/><circle cx="53.5" cy="9.0" r="6.5" fill="#E5533D"/><circle cx="71.5" cy="-9.0" r="6.5" fill="#E5533D"/><circle cx="71.5" cy="9.0" r="6.5" fill="#E5533D"/><circle cx="-9.0" cy="-46.0" r="6.5" fill="#E5533D"/><circle cx="9.0" cy="-46.0" r="6.5" fill="#E5533D"/><circle cx="9.0" cy="38.0" r="6.5" fill="#E5533D"/><circle cx="-9.0" cy="38.0" r="6.5" fill="#E5533D"/><circle cx="116.0" cy="-46.0" r="6.5" fill="#E5533D"/><circle cx="134.0" cy="-46.0" r="6.5" fill="#E5533D"/><circle cx="134.0" cy="38.0" r="6.5" fill="#E5533D"/><circle cx="116.0" cy="38.0" r="6.5" fill="#E5533D"/><text x="0" y="21" text-anchor="middle" font-family="Bricolage Grotesque,Figtree,sans-serif" font-weight="800" font-size="58" fill="#292B2C">O</text><text x="125" y="21" text-anchor="middle" font-family="Bricolage Grotesque,Figtree,sans-serif" font-weight="800" font-size="58" fill="#292B2C">O</text></svg>
+        <svg viewBox="-66 -60 257 120" width="218" height="102" aria-hidden="true"><path d="M30.0 -8.0 L95.0 -8.0" stroke="#6551D1" stroke-width="6" stroke-linecap="round"/><path d="M30.0 8.0 L95.0 8.0" stroke="#6551D1" stroke-width="6" stroke-linecap="round"/><text x="0" y="21" text-anchor="middle" font-family="Bricolage Grotesque,Figtree,sans-serif" font-weight="800" font-size="58" fill="#292B2C">O</text><text x="125" y="21" text-anchor="middle" font-family="Bricolage Grotesque,Figtree,sans-serif" font-weight="800" font-size="58" fill="#292B2C">O</text></svg>
+      </div>
+      <div class="mol-card" data-passo="2">
+        <div class="par"><h3>CO<sub>2</sub></h3><svg class="vibra" viewBox="0 0 150 110" style="width:110px;height:81px" aria-hidden="true"><use href="#m-co2"/></svg></div>
+        <svg viewBox="-196 -60 392 120" width="333" height="102" aria-hidden="true"><circle cx="-74.0" cy="-9.0" r="6.5" fill="#E5533D"/><circle cx="-74.0" cy="9.0" r="6.5" fill="#292B2C"/><circle cx="-56.0" cy="-9.0" r="6.5" fill="#E5533D"/><circle cx="-56.0" cy="9.0" r="6.5" fill="#292B2C"/><circle cx="56.0" cy="-9.0" r="6.5" fill="#292B2C"/><circle cx="56.0" cy="9.0" r="6.5" fill="#E5533D"/><circle cx="74.0" cy="-9.0" r="6.5" fill="#292B2C"/><circle cx="74.0" cy="9.0" r="6.5" fill="#E5533D"/><circle cx="-139.0" cy="-46.0" r="6.5" fill="#E5533D"/><circle cx="-121.0" cy="-46.0" r="6.5" fill="#E5533D"/><circle cx="-121.0" cy="38.0" r="6.5" fill="#E5533D"/><circle cx="-139.0" cy="38.0" r="6.5" fill="#E5533D"/><circle cx="121.0" cy="-46.0" r="6.5" fill="#E5533D"/><circle cx="139.0" cy="-46.0" r="6.5" fill="#E5533D"/><circle cx="139.0" cy="38.0" r="6.5" fill="#E5533D"/><circle cx="121.0" cy="38.0" r="6.5" fill="#E5533D"/><text x="-130" y="21" text-anchor="middle" font-family="Bricolage Grotesque,Figtree,sans-serif" font-weight="800" font-size="58" fill="#292B2C">O</text><text x="0" y="21" text-anchor="middle" font-family="Bricolage Grotesque,Figtree,sans-serif" font-weight="800" font-size="58" fill="#292B2C">C</text><text x="130" y="21" text-anchor="middle" font-family="Bricolage Grotesque,Figtree,sans-serif" font-weight="800" font-size="58" fill="#292B2C">O</text></svg>
+        <svg viewBox="-196 -60 392 120" width="333" height="102" aria-hidden="true"><path d="M-100.0 -8.0 L-30.0 -8.0" stroke="#6551D1" stroke-width="6" stroke-linecap="round"/><path d="M-100.0 8.0 L-30.0 8.0" stroke="#6551D1" stroke-width="6" stroke-linecap="round"/><path d="M30.0 -8.0 L100.0 -8.0" stroke="#6551D1" stroke-width="6" stroke-linecap="round"/><path d="M30.0 8.0 L100.0 8.0" stroke="#6551D1" stroke-width="6" stroke-linecap="round"/><text x="-130" y="21" text-anchor="middle" font-family="Bricolage Grotesque,Figtree,sans-serif" font-weight="800" font-size="58" fill="#292B2C">O</text><text x="0" y="21" text-anchor="middle" font-family="Bricolage Grotesque,Figtree,sans-serif" font-weight="800" font-size="58" fill="#292B2C">C</text><text x="130" y="21" text-anchor="middle" font-family="Bricolage Grotesque,Figtree,sans-serif" font-weight="800" font-size="58" fill="#292B2C">O</text></svg>
+      </div>
+      <div class="mol-card" data-passo="3">
+        <div class="par"><h3>C<sub>2</sub>H<sub>4</sub></h3></div>
+        <svg viewBox="-166 -155 462 310" width="254" height="170" aria-hidden="true"><circle cx="56.0" cy="-9.0" r="6.5" fill="#292B2C"/><circle cx="56.0" cy="9.0" r="6.5" fill="#292B2C"/><circle cx="74.0" cy="-9.0" r="6.5" fill="#292B2C"/><circle cx="74.0" cy="9.0" r="6.5" fill="#292B2C"/><circle cx="-56.2" cy="-41.0" r="6.5" fill="#292B2C"/><circle cx="-43.8" cy="-54.0" r="6.5" fill="#C99400"/><circle cx="-43.8" cy="54.0" r="6.5" fill="#292B2C"/><circle cx="-56.2" cy="41.0" r="6.5" fill="#C99400"/><circle cx="173.8" cy="-54.0" r="6.5" fill="#292B2C"/><circle cx="186.2" cy="-41.0" r="6.5" fill="#C99400"/><circle cx="186.2" cy="41.0" r="6.5" fill="#292B2C"/><circle cx="173.8" cy="54.0" r="6.5" fill="#C99400"/><text x="0" y="21" text-anchor="middle" font-family="Bricolage Grotesque,Figtree,sans-serif" font-weight="800" font-size="58" fill="#292B2C">C</text><text x="130" y="21" text-anchor="middle" font-family="Bricolage Grotesque,Figtree,sans-serif" font-weight="800" font-size="58" fill="#292B2C">C</text><text x="-100" y="-74" text-anchor="middle" font-family="Bricolage Grotesque,Figtree,sans-serif" font-weight="800" font-size="58" fill="#292B2C">H</text><text x="-100" y="116" text-anchor="middle" font-family="Bricolage Grotesque,Figtree,sans-serif" font-weight="800" font-size="58" fill="#292B2C">H</text><text x="230" y="-74" text-anchor="middle" font-family="Bricolage Grotesque,Figtree,sans-serif" font-weight="800" font-size="58" fill="#292B2C">H</text><text x="230" y="116" text-anchor="middle" font-family="Bricolage Grotesque,Figtree,sans-serif" font-weight="800" font-size="58" fill="#292B2C">H</text></svg>
+        <svg viewBox="-166 -155 462 310" width="254" height="170" aria-hidden="true"><path d="M30.0 -8.0 L100.0 -8.0" stroke="#6551D1" stroke-width="6" stroke-linecap="round"/><path d="M30.0 8.0 L100.0 8.0" stroke="#6551D1" stroke-width="6" stroke-linecap="round"/><path d="M-21.7 -20.7 L-78.3 -74.3" stroke="#6551D1" stroke-width="6" stroke-linecap="round"/><path d="M-21.7 20.7 L-78.3 74.3" stroke="#6551D1" stroke-width="6" stroke-linecap="round"/><path d="M151.7 -20.7 L208.3 -74.3" stroke="#6551D1" stroke-width="6" stroke-linecap="round"/><path d="M151.7 20.7 L208.3 74.3" stroke="#6551D1" stroke-width="6" stroke-linecap="round"/><text x="0" y="21" text-anchor="middle" font-family="Bricolage Grotesque,Figtree,sans-serif" font-weight="800" font-size="58" fill="#292B2C">C</text><text x="130" y="21" text-anchor="middle" font-family="Bricolage Grotesque,Figtree,sans-serif" font-weight="800" font-size="58" fill="#292B2C">C</text><text x="-100" y="-74" text-anchor="middle" font-family="Bricolage Grotesque,Figtree,sans-serif" font-weight="800" font-size="58" fill="#292B2C">H</text><text x="-100" y="116" text-anchor="middle" font-family="Bricolage Grotesque,Figtree,sans-serif" font-weight="800" font-size="58" fill="#292B2C">H</text><text x="230" y="-74" text-anchor="middle" font-family="Bricolage Grotesque,Figtree,sans-serif" font-weight="800" font-size="58" fill="#292B2C">H</text><text x="230" y="116" text-anchor="middle" font-family="Bricolage Grotesque,Figtree,sans-serif" font-weight="800" font-size="58" fill="#292B2C">H</text></svg>
+      </div>
+    </div>
+    <div class="caixa caixa-fundamental" data-passo="4" style="position:absolute;left:580px;width:560px;top:580px;padding:20px 30px">
+      <div class="texto" style="font-size:29px"><b>2 pares</b> compartilhados = ligação <b>dupla</b> = <b>2 traços</b> (=).</div>
+    </div>
+  </div>
+  <aside class="notas">
+    <p>Clique 1: no O₂, cada oxigênio precisa de 2 e os dois compartilham dois pares (O=O). Clique 2: no CO₂, o carbono precisa de 4 e faz duas duplas (O=C=O). Clique 3: o eteno, C₂H₄, com uma dupla entre os carbonos. Clique 4: a regra.</p>
+    <p>Conferência: no CO₂, o C fica com 8 (4 pares compartilhados) e cada O com 8 (2 pares compartilhados e 2 livres).</p>
+  </aside>
+</section>
+
+<!-- Ligação tripla -->
+<section class="slide" data-nome="Ligação tripla">
+  <div class="conteudo">
+    <p class="olho">Três pares compartilhados</p>
+    <h2 class="titulo">Ligação tripla</h2>
+    <p class="texto" style="position:absolute;left:0;right:0;top:150px;margin:0;font-size:29px">N (Z = 7): 1s² 2s² 2p³, faltam 3</p>
+    <div style="position:absolute;left:0;right:0;top:220px;display:grid;grid-template-columns:0.85fr 1.1fr 1.2fr;gap:26px;align-items:start">
+      <div class="mol-card" data-passo="1">
+        <div class="par"><h3>N<sub>2</sub></h3><svg class="vibra" viewBox="0 0 150 110" style="width:110px;height:81px" aria-hidden="true"><use href="#m-n2"/></svg></div>
+        <svg viewBox="-66 -60 262 120" width="223" height="102" aria-hidden="true"><circle cx="48.0" cy="-9.0" r="6.5" fill="#2E6FD8"/><circle cx="48.0" cy="9.0" r="6.5" fill="#2E6FD8"/><circle cx="65.0" cy="-9.0" r="6.5" fill="#2E6FD8"/><circle cx="65.0" cy="9.0" r="6.5" fill="#2E6FD8"/><circle cx="82.0" cy="-9.0" r="6.5" fill="#2E6FD8"/><circle cx="82.0" cy="9.0" r="6.5" fill="#2E6FD8"/><circle cx="-47.0" cy="1.0" r="6.5" fill="#2E6FD8"/><circle cx="-47.0" cy="-17.0" r="6.5" fill="#2E6FD8"/><circle cx="177.0" cy="-17.0" r="6.5" fill="#2E6FD8"/><circle cx="177.0" cy="1.0" r="6.5" fill="#2E6FD8"/><text x="0" y="21" text-anchor="middle" font-family="Bricolage Grotesque,Figtree,sans-serif" font-weight="800" font-size="58" fill="#292B2C">N</text><text x="130" y="21" text-anchor="middle" font-family="Bricolage Grotesque,Figtree,sans-serif" font-weight="800" font-size="58" fill="#292B2C">N</text></svg>
+        <svg viewBox="-66 -60 262 120" width="223" height="102" aria-hidden="true"><path d="M30.0 -13.0 L100.0 -13.0" stroke="#6551D1" stroke-width="6" stroke-linecap="round"/><path d="M30.0 0.0 L100.0 0.0" stroke="#6551D1" stroke-width="6" stroke-linecap="round"/><path d="M30.0 13.0 L100.0 13.0" stroke="#6551D1" stroke-width="6" stroke-linecap="round"/><text x="0" y="21" text-anchor="middle" font-family="Bricolage Grotesque,Figtree,sans-serif" font-weight="800" font-size="58" fill="#292B2C">N</text><text x="130" y="21" text-anchor="middle" font-family="Bricolage Grotesque,Figtree,sans-serif" font-weight="800" font-size="58" fill="#292B2C">N</text></svg>
+      </div>
+      <div class="mol-card" data-passo="2">
+        <div class="par"><h3>HCN</h3></div>
+        <svg viewBox="-181 -60 382 120" width="298" height="94" aria-hidden="true"><circle cx="-57.5" cy="-9.0" r="6.5" fill="#C99400"/><circle cx="-57.5" cy="9.0" r="6.5" fill="#292B2C"/><circle cx="50.5" cy="-9.0" r="6.5" fill="#292B2C"/><circle cx="50.5" cy="9.0" r="6.5" fill="#2E6FD8"/><circle cx="67.5" cy="-9.0" r="6.5" fill="#292B2C"/><circle cx="67.5" cy="9.0" r="6.5" fill="#2E6FD8"/><circle cx="84.5" cy="-9.0" r="6.5" fill="#292B2C"/><circle cx="84.5" cy="9.0" r="6.5" fill="#2E6FD8"/><circle cx="182.0" cy="-17.0" r="6.5" fill="#2E6FD8"/><circle cx="182.0" cy="1.0" r="6.5" fill="#2E6FD8"/><text x="-115" y="21" text-anchor="middle" font-family="Bricolage Grotesque,Figtree,sans-serif" font-weight="800" font-size="58" fill="#292B2C">H</text><text x="0" y="21" text-anchor="middle" font-family="Bricolage Grotesque,Figtree,sans-serif" font-weight="800" font-size="58" fill="#292B2C">C</text><text x="135" y="21" text-anchor="middle" font-family="Bricolage Grotesque,Figtree,sans-serif" font-weight="800" font-size="58" fill="#292B2C">N</text></svg>
+        <svg viewBox="-181 -60 382 120" width="298" height="94" aria-hidden="true"><path d="M-85.0 0.0 L-30.0 0.0" stroke="#6551D1" stroke-width="6" stroke-linecap="round"/><path d="M30.0 -13.0 L105.0 -13.0" stroke="#6551D1" stroke-width="6" stroke-linecap="round"/><path d="M30.0 0.0 L105.0 0.0" stroke="#6551D1" stroke-width="6" stroke-linecap="round"/><path d="M30.0 13.0 L105.0 13.0" stroke="#6551D1" stroke-width="6" stroke-linecap="round"/><text x="-115" y="21" text-anchor="middle" font-family="Bricolage Grotesque,Figtree,sans-serif" font-weight="800" font-size="58" fill="#292B2C">H</text><text x="0" y="21" text-anchor="middle" font-family="Bricolage Grotesque,Figtree,sans-serif" font-weight="800" font-size="58" fill="#292B2C">C</text><text x="135" y="21" text-anchor="middle" font-family="Bricolage Grotesque,Figtree,sans-serif" font-weight="800" font-size="58" fill="#292B2C">N</text></svg>
+      </div>
+      <div class="mol-card" data-passo="3">
+        <div class="par"><h3>C<sub>2</sub>H<sub>2</sub></h3></div>
+        <svg viewBox="-181 -60 497 120" width="358" height="86" aria-hidden="true"><circle cx="-57.5" cy="-9.0" r="6.5" fill="#C99400"/><circle cx="-57.5" cy="9.0" r="6.5" fill="#292B2C"/><circle cx="50.5" cy="-9.0" r="6.5" fill="#292B2C"/><circle cx="50.5" cy="9.0" r="6.5" fill="#292B2C"/><circle cx="67.5" cy="-9.0" r="6.5" fill="#292B2C"/><circle cx="67.5" cy="9.0" r="6.5" fill="#292B2C"/><circle cx="84.5" cy="-9.0" r="6.5" fill="#292B2C"/><circle cx="84.5" cy="9.0" r="6.5" fill="#292B2C"/><circle cx="192.5" cy="-9.0" r="6.5" fill="#292B2C"/><circle cx="192.5" cy="9.0" r="6.5" fill="#C99400"/><text x="-115" y="21" text-anchor="middle" font-family="Bricolage Grotesque,Figtree,sans-serif" font-weight="800" font-size="58" fill="#292B2C">H</text><text x="0" y="21" text-anchor="middle" font-family="Bricolage Grotesque,Figtree,sans-serif" font-weight="800" font-size="58" fill="#292B2C">C</text><text x="135" y="21" text-anchor="middle" font-family="Bricolage Grotesque,Figtree,sans-serif" font-weight="800" font-size="58" fill="#292B2C">C</text><text x="250" y="21" text-anchor="middle" font-family="Bricolage Grotesque,Figtree,sans-serif" font-weight="800" font-size="58" fill="#292B2C">H</text></svg>
+        <svg viewBox="-181 -60 497 120" width="358" height="86" aria-hidden="true"><path d="M-85.0 0.0 L-30.0 0.0" stroke="#6551D1" stroke-width="6" stroke-linecap="round"/><path d="M30.0 -13.0 L105.0 -13.0" stroke="#6551D1" stroke-width="6" stroke-linecap="round"/><path d="M30.0 0.0 L105.0 0.0" stroke="#6551D1" stroke-width="6" stroke-linecap="round"/><path d="M30.0 13.0 L105.0 13.0" stroke="#6551D1" stroke-width="6" stroke-linecap="round"/><path d="M165.0 0.0 L220.0 0.0" stroke="#6551D1" stroke-width="6" stroke-linecap="round"/><text x="-115" y="21" text-anchor="middle" font-family="Bricolage Grotesque,Figtree,sans-serif" font-weight="800" font-size="58" fill="#292B2C">H</text><text x="0" y="21" text-anchor="middle" font-family="Bricolage Grotesque,Figtree,sans-serif" font-weight="800" font-size="58" fill="#292B2C">C</text><text x="135" y="21" text-anchor="middle" font-family="Bricolage Grotesque,Figtree,sans-serif" font-weight="800" font-size="58" fill="#292B2C">C</text><text x="250" y="21" text-anchor="middle" font-family="Bricolage Grotesque,Figtree,sans-serif" font-weight="800" font-size="58" fill="#292B2C">H</text></svg>
+      </div>
+    </div>
+    <div class="caixa caixa-fundamental" data-passo="4" style="position:absolute;left:580px;right:0;top:640px;padding:22px 34px">
+      <div class="texto" style="font-size:30px"><b>3 pares</b> compartilhados = ligação <b>tripla</b> = <b>3 traços</b> (≡).</div>
+    </div>
+  </div>
+  <aside class="notas">
+    <p>Clique 1: no N₂, cada nitrogênio precisa de 3 e os dois compartilham três pares (N≡N), o gás que forma quase 80% do ar. Clique 2: HCN, o ácido cianídrico (H–C≡N). Clique 3: o etino (acetileno), C₂H₂, gás do maçarico. Clique 4: a regra.</p>
+  </aside>
+</section>
+
+<!-- Exemplo: montando a estrutural -->
+<section class="slide" data-nome="Exemplo: fórmula estrutural">
+  <div class="conteudo">
+    <p class="olho">Exemplo</p>
+    <h2 class="titulo">Montando a fórmula estrutural</h2>
+    <p class="texto" style="position:absolute;left:0;right:0;top:150px;margin:0;font-size:31px">Monte a fórmula estrutural da <b>água</b> (H<sub>2</sub>O) e do <b>gás carbônico</b> (CO<sub>2</sub>).</p>
+    <div style="position:absolute;left:0;width:1000px;top:240px;display:flex;flex-direction:column;gap:16px">
+      <div class="linha-ex" data-passo="1"><b>1. Quantas ligações:</b> H faz 1; O faz 2 (tem 6); C faz 4 (tem 4).</div>
+      <div class="linha-ex" data-passo="2"><b>2. Água:</b> o O liga um H de cada lado, com uma ligação simples cada.</div>
+      <div class="linha-ex" data-passo="4"><b>3. Gás carbônico:</b> o C precisa de 4; cada O, de 2.</div>
+      <div class="linha-ex" data-passo="5" style="margin-left:520px"><b>4.</b> O C faz uma <b>dupla</b> com cada O.</div>
+    </div>
+    <div style="position:absolute;left:1080px;right:0;top:240px;display:flex;flex-direction:column;gap:24px;align-items:center">
+      <div class="mol-card" data-passo="3" style="width:100%"><span class="rot-f">Água</span><p style="margin:0;font:800 80px var(--fonte-titulo);color:var(--roxo-titulo)">H–O–H</p></div>
+      <div class="mol-card" data-passo="6" style="width:100%"><span class="rot-f">Gás carbônico</span><p style="margin:0;font:800 80px var(--fonte-titulo);color:var(--roxo-titulo)">O=C=O</p></div>
+    </div>
+  </div>
+  <aside class="notas">
+    <p>Peça a resposta antes de cada clique. Cliques 1 e 2: quantas ligações e o esqueleto da água. Clique 3: H–O–H. Cliques 4 e 5: o carbono no meio, com uma dupla para cada O. Clique 6: O=C=O.</p>
+    <p>Conferência: em H–O–H, o O tem 2 traços (2 ligações) e cada H, 1. Em O=C=O, o C tem 4 traços e cada O, 2.</p>
+  </aside>
+</section>
+
+<!-- Propriedades -->
+<section class="slide" data-nome="Compostos moleculares">
+  <div class="conteudo">
+    <p class="olho">Propriedades dos compostos moleculares</p>
+    <h2 class="titulo">Moléculas não são íons</h2>
+    <div style="position:absolute;left:0;width:1100px;top:160px;display:flex;flex-direction:column;gap:16px">
+      <div class="linha-ex" data-passo="1">Na temperatura ambiente, em geral <b>gases ou líquidos</b> (O<sub>2</sub>, CO<sub>2</sub>, H<sub>2</sub>O); alguns são sólidos, como o <b>açúcar</b> (C<sub>12</sub>H<sub>22</sub>O<sub>11</sub>).</div>
+      <div class="linha-ex" data-passo="2"><b>PF e PE menores</b> que os dos compostos iônicos.</div>
+      <div class="linha-ex" data-passo="3">Não têm cargas livres: puros, <b>não conduzem</b> eletricidade.</div>
+      <div class="caixa caixa-atencao" data-passo="5" style="margin-left:500px">
+        <span class="rotulo">Ferver não quebra a molécula</span>
+        <div class="texto" style="font-size:27px">Na fervura, as moléculas de H<sub>2</sub>O se <b>afastam</b>, mas continuam inteiras: o vapor também é H<sub>2</sub>O.</div>
+      </div>
+    </div>
+    <div data-passo="4" style="position:absolute;left:1240px;top:150px;width:520px;text-align:center">
+      <svg viewBox="0 0 380 400" width="400" height="420" aria-hidden="true">
+        <circle cx="190" cy="44" r="26" fill="#E4E1EE" stroke="#7F7A99" stroke-width="4"/><rect x="178" y="68" width="24" height="16" rx="3" fill="#9A95AD"/>
+        <path d="M178 76 H110 V200 M202 76 H270 V200" fill="none" stroke="#5E5A70" stroke-width="4"/>
+        <rect x="63" y="230" width="254" height="137" rx="20" fill="url(#gAgua)"/>
+        <path d="M60 170 v176 a24 24 0 0 0 24 24 h212 a24 24 0 0 0 24 -24 v-176" fill="none" stroke="#7F7A99" stroke-width="5" stroke-linecap="round"/>
+        <g class="der-1"><path d="M132 252 l12 -7 l12 7 v14 l-12 7 l-12 -7 z M156 259 l10 4 l12 -6 l10 7 v12 l-12 6 l-10 -6" fill="#fff" stroke="#6551D1" stroke-width="3" stroke-linejoin="round"/></g><g class="der-2"><path d="M204 268 l12 -7 l12 7 v14 l-12 7 l-12 -7 z M228 275 l10 4 l12 -6 l10 7 v12 l-12 6 l-10 -6" fill="#fff" stroke="#6551D1" stroke-width="3" stroke-linejoin="round"/></g><g class="der-2"><path d="M140 318 l12 -7 l12 7 v14 l-12 7 l-12 -7 z M164 325 l10 4 l12 -6 l10 7 v12 l-12 6 l-10 -6" fill="#fff" stroke="#6551D1" stroke-width="3" stroke-linejoin="round"/></g><g class="der-1"><path d="M200 332 l12 -7 l12 7 v14 l-12 7 l-12 -7 z M224 339 l10 4 l12 -6 l10 7 v12 l-12 6 l-10 -6" fill="#fff" stroke="#6551D1" stroke-width="3" stroke-linejoin="round"/></g>
+        <rect x="100" y="196" width="20" height="150" rx="6" fill="#6B6680"/><rect x="260" y="196" width="20" height="150" rx="6" fill="#6B6680"/>
+      </svg>
+      <p style="margin:0;font-size:26px;font-weight:700">açúcar na água: <span style="color:#C63C28">não acende</span></p>
+      <p style="margin:4px 0 0;font-size:22px;color:var(--cinza)">a molécula continua inteira: não se separa em íons</p>
+    </div>
+  </div>
+  <aside class="notas">
+    <p>Cliques 1 a 3: estado físico, PF e PE, condução. Clique 4: a sacarose se dissolve, mas as moléculas andam inteiras e sem carga: a lâmpada não acende (compare com o sal, que solta íons). Clique 5: na ebulição as ligações covalentes não se rompem.</p>
+    <p>O que segura uma molécula na outra são as forças intermoleculares, mais fracas que as ligações; por isso PF e PE são menores. Esse assunto fica para outra etapa.</p>
+  </aside>
+</section>
+
+<!-- Iônica × covalente -->
+<section class="slide" data-nome="Iônica × covalente">
+  <div class="conteudo">
+    <p class="olho">Comparando</p>
+    <h2 class="titulo">Iônica ou covalente?</h2>
+    <table class="tab-cov" style="position:absolute;left:0;right:0;top:160px;width:100%;font-size:29px">
+      <tr><th style="text-align:left;width:22%"></th><th style="width:39%">Iônica</th><th style="width:39%">Covalente</th></tr>
+      <tr data-passo="1"><td>Entre</td><td>metal e ametal</td><td>ametais e hidrogênio</td></tr>
+      <tr data-passo="2"><td>Elétrons</td><td>transferidos</td><td>compartilhados</td></tr>
+      <tr data-passo="3"><td>Forma</td><td>íons (retículo cristalino)</td><td>moléculas</td></tr>
+      <tr data-passo="4"><td>Estado a 25 °C</td><td>sólido</td><td>gás, líquido ou sólido</td></tr>
+      <tr data-passo="4"><td>PF e PE</td><td>altos</td><td>mais baixos</td></tr>
+      <tr data-passo="4"><td>Conduz corrente</td><td>em água ou fundido</td><td>não (puro)</td></tr>
+    </table>
+    <div class="caixa" data-passo="5" style="position:absolute;left:580px;right:0;top:640px;padding:22px 34px">
+      <div class="texto" style="font-size:28px">Entre <b>metais</b> (ferro, cobre) existe um terceiro tipo, a <b>ligação metálica</b>. Nas provas, saiba só reconhecer: metal + metal.</div>
+    </div>
+  </div>
+  <aside class="notas">
+    <p>Um clique por linha (as três últimas juntas). Clique 5: a ligação metálica, que aparece como alternativa errada em muitas questões do IF; o estudo dela fica para o ensino médio, como diz a apostila.</p>
+  </aside>
+</section>
+
+<!-- Exemplo: classificando -->
+<section class="slide" data-nome="Exemplo: iônica ou covalente">
+  <div class="conteudo">
+    <p class="olho">Exemplo</p>
+    <h2 class="titulo">Classifique a ligação</h2>
+    <p class="texto" style="position:absolute;left:0;right:0;top:150px;margin:0;font-size:31px">Olhe só quem é <b>metal</b> e quem é <b>ametal</b>.</p>
+    <div style="position:absolute;left:0;right:0;top:220px;display:flex;flex-direction:column;gap:10px">
+      <div class="linha-ex" data-passo="1" style="padding:8px 26px;display:grid;grid-template-columns:200px 1fr 220px;align-items:center"><span class="fq" style="font-size:38px">KBr</span><span>potássio (metal) e bromo (ametal)</span><span class="tag tag-i">Iônica</span></div>
+      <div class="linha-ex" data-passo="2" style="padding:8px 26px;display:grid;grid-template-columns:200px 1fr 220px;align-items:center"><span class="fq" style="font-size:38px">NH<sub>3</sub></span><span>nitrogênio e hidrogênio</span><span class="tag tag-c">Covalente</span></div>
+      <div class="linha-ex" data-passo="3" style="padding:8px 26px;display:grid;grid-template-columns:200px 1fr 220px;align-items:center"><span class="fq" style="font-size:38px">MgCl<sub>2</sub></span><span>magnésio (metal) e cloro (ametal)</span><span class="tag tag-i">Iônica</span></div>
+      <div class="linha-ex" data-passo="4" style="padding:8px 26px;display:grid;grid-template-columns:200px 1fr 220px;align-items:center;margin-left:560px"><span class="fq" style="font-size:38px">O<sub>2</sub></span><span>só oxigênio (ametal)</span><span class="tag tag-c">Covalente</span></div>
+      <div class="linha-ex" data-passo="5" style="padding:8px 26px;display:grid;grid-template-columns:200px 1fr 220px;align-items:center;margin-left:560px"><span class="fq" style="font-size:38px">CH<sub>4</sub></span><span>carbono e hidrogênio</span><span class="tag tag-c">Covalente</span></div>
+    </div>
+    <div class="caixa caixa-atencao" data-passo="6" style="position:absolute;left:580px;right:0;top:665px;padding:16px 30px">
+      <div class="texto" style="font-size:27px"><b>Hidrogênio não é metal:</b> fica no grupo 1, mas o HCl é <b>covalente</b>.</div>
+    </div>
+  </div>
+  <aside class="notas">
+    <p>Peça a resposta antes de cada clique (um por fórmula). Clique 6: a pegadinha do hidrogênio.</p>
+    <p>As duas últimas linhas ficam deslocadas para a direita por causa do canto da câmera.</p>
+  </aside>
+</section>
+
+<!-- Questão 1 -->
+<section class="slide questao" data-nome="Questão 1">
+  <div class="conteudo">
+    <div class="area-resolucao"></div>
+    <span class="pilula pilula-pausa" data-em="1:some">Pause o vídeo e tente</span>
+    <div class="painel-questao">
+      <p class="olho">Questão 1 · PUC-MG</p>
+      <p class="enunciado" style="font-size:27px">O elemento bromo forma compostos iônicos e moleculares.</p>
+      <p class="enunciado" style="font-size:27px">Assinale a alternativa que apresenta, respectivamente, um composto iônico e um molecular formado pelo bromo.</p>
+      <ol class="alternativas curtas">
+        <li data-em="2:certo"><b>A</b><span>CaBr<sub>2</sub> e HBr</span></li>
+        <li data-em="2:apaga"><b>B</b><span>CBr<sub>4</sub> e KBr</span></li>
+        <li data-em="2:apaga"><b>C</b><span>NaBr e MgBr<sub>2</sub></span></li>
+        <li data-em="2:apaga"><b>D</b><span>KBr e NH<sub>4</sub>Br</span></li>
+      </ol>
+    </div>
+  </div>
+  <aside class="resolucao">
+    <p class="dados"><b>Dados:</b> iônico = metal + ametal; molecular = só ametais (e H).</p>
+    <ol class="passos">
+      <li><b>CaBr₂:</b> Ca é metal → iônico.</li>
+      <li><b>HBr:</b> H e Br, ametais → molecular.</li>
+      <li><b>Ordem pedida:</b> iônico e depois molecular.</li>
+    </ol>
+    <p class="resposta"><b>Resposta:</b> CaBr₂ (iônico) e HBr (molecular). <b>Gabarito A.</b></p>
+    <p class="atencao"><b>Destaque no quadro:</b> Metal + ametal: iônico. Só ametais e H: molecular.</p>
+    <ul class="erros">
+      <li><b>B</b> Ordem trocada: CBr₄ é molecular e KBr é iônico.</li>
+      <li><b>C</b> Os dois são iônicos (Na e Mg são metais).</li>
+      <li><b>D</b> NH₄Br também é iônico: íons NH₄⁺ e Br⁻.</li>
+    </ul>
+  </aside>
+  <aside class="notas">
+    <p>Clique 1 tira o aviso de pausa: resolva na área (D liga a caneta; E esconde o enunciado). Clique 2: gabarito A.</p>
+    <p>Questão do material da professora (4 alternativas). Na D, o NH₄Br não tem metal, mas é formado pelos íons amônio (NH₄⁺) e brometo: é iônico. Vale comentar como curiosidade.</p>
+  </aside>
+</section>
+
+<!-- Questão 2 -->
+<section class="slide questao" data-nome="Questão 2">
+  <div class="conteudo">
+    <div class="area-resolucao"></div>
+    <span class="pilula pilula-pausa" data-em="1:some">Pause o vídeo e tente</span>
+    <div class="painel-questao">
+      <p class="olho">Questão 2 · UNIRIO</p>
+      <p class="enunciado" style="font-size:26px">O dióxido de carbono (CO<sub>2</sub>) é um gás essencial no globo terrestre. Sem a presença deste gás, o globo seria gelado e vazio. Porém, quando este é inalado em concentração superior a 10%, pode levar o indivíduo à morte por asfixia.</p>
+      <p class="enunciado" style="font-size:26px">Este gás apresenta em sua molécula um número de ligações covalentes igual a:</p>
+      <ol class="alternativas curtas">
+        <li data-em="2:certo"><b>A</b><span>4</span></li>
+        <li data-em="2:apaga"><b>B</b><span>1</span></li>
+        <li data-em="2:apaga"><b>C</b><span>2</span></li>
+        <li data-em="2:apaga"><b>D</b><span>3</span></li>
+        <li data-em="2:apaga"><b>E</b><span>0</span></li>
+      </ol>
+    </div>
+  </div>
+  <aside class="resolucao">
+    <p class="dados"><b>Dados:</b> CO₂; C faz 4 ligações; cada O faz 2.</p>
+    <ol class="passos">
+      <li><b>Estrutural:</b> O=C=O.</li>
+      <li><b>Cada dupla:</b> 2 ligações (2 pares).</li>
+      <li><b>Total:</b> 2 + 2 = 4 ligações.</li>
+    </ol>
+    <p class="resposta"><b>Resposta:</b> 4 ligações covalentes. <b>Gabarito A.</b></p>
+    <p class="atencao"><b>Destaque no quadro:</b> Conte os traços: cada traço é uma ligação.</p>
+    <ul class="erros">
+      <li><b>B</b> Uma ligação não completa o octeto do C nem dos O.</li>
+      <li><b>C</b> Conta só as duplas, não os pares.</li>
+      <li><b>D</b> O C precisa de 4 ligações, não 3.</li>
+      <li><b>E</b> C e O são ametais: há ligações covalentes.</li>
+    </ul>
+  </aside>
+  <aside class="notas">
+    <p>Clique 1 tira o aviso de pausa: resolva na área (D liga a caneta; E esconde o enunciado). Clique 2: gabarito A.</p>
+    <p>Questão do material da professora. Se alguém responder 2, mostre que cada dupla tem 2 pares: a contagem é de ligações (traços).</p>
+  </aside>
+</section>
+
+<!-- Questão 3 -->
+<section class="slide questao" data-nome="Questão 3">
+  <div class="conteudo">
+    <div class="area-resolucao"></div>
+    <span class="pilula pilula-pausa" data-em="1:some">Pause o vídeo e tente</span>
+    <div class="painel-questao">
+      <p class="olho">Questão 3 · IF Sudeste MG 2013</p>
+      <p class="enunciado" style="font-size:26px">O oxigênio, o cloreto de sódio e o gás metano estão sempre sendo relacionados a eventos naturais e a desastres, como o efeito estufa, por exemplo.</p>
+      <p class="enunciado" style="font-size:26px">Com relação a esses compostos, podemos dizer que a ligação química presente entre eles é, respectivamente:</p>
+      <ol class="alternativas" style="gap:8px">
+        <li data-em="2:apaga" style="font-size:23px;padding:6px 14px"><b>A</b><span>Iônica, covalente, covalente.</span></li>
+        <li data-em="2:apaga" style="font-size:23px;padding:6px 14px"><b>B</b><span>Covalente, iônica, iônica.</span></li>
+        <li data-em="2:apaga" style="font-size:23px;padding:6px 14px"><b>C</b><span>Covalente, covalente, covalente.</span></li>
+        <li data-em="2:apaga" style="font-size:23px;padding:6px 14px"><b>D</b><span>Iônica, Iônica, Iônica.</span></li>
+        <li data-em="2:certo" style="font-size:23px;padding:6px 14px"><b>E</b><span>Covalente, iônica, covalente.</span></li>
+      </ol>
+    </div>
+  </div>
+  <aside class="resolucao">
+    <p class="dados"><b>Dados:</b> O₂, NaCl e CH₄.</p>
+    <ol class="passos">
+      <li><b>O₂:</b> só oxigênio (ametal) → covalente.</li>
+      <li><b>NaCl:</b> Na metal + Cl ametal → iônica.</li>
+      <li><b>CH₄:</b> C e H → covalente.</li>
+    </ol>
+    <p class="resposta"><b>Resposta:</b> covalente, iônica, covalente. <b>Gabarito E.</b></p>
+    <p class="atencao"><b>Destaque no quadro:</b> Procure o metal: só o NaCl tem.</p>
+    <ul class="erros">
+      <li><b>A</b> O O₂ tem só ametal: covalente; e o NaCl é iônico.</li>
+      <li><b>B</b> O CH₄ não tem metal: é covalente.</li>
+      <li><b>C</b> O NaCl tem metal (Na): é iônico.</li>
+      <li><b>D</b> O₂ e CH₄ não têm metal: são covalentes.</li>
+    </ul>
+  </aside>
+  <aside class="notas">
+    <p>Clique 1 tira o aviso de pausa: resolva na área (D liga a caneta; E esconde o enunciado). Clique 2: gabarito E.</p>
+    <p>Questão oficial do IF Sudeste MG (2013).</p>
+  </aside>
+</section>
+
+<!-- Resumo -->
+<section class="slide" data-nome="Resumo">
+  <div class="conteudo">
+    <p class="olho">Resumo</p>
+    <h2 class="titulo">O essencial</h2>
+    <div class="resumo" style="position:absolute;left:0;right:0;top:150px">
+      <div><b>Ligação covalente:</b> compartilhamento de pares de elétrons entre ametais e H.</div>
+      <div><b>Ligações:</b> H e Cl fazem 1; O, 2; N, 3; C, 4 (o que falta para 8).</div>
+      <div><b>Simples</b> (1 par, –), <b>dupla</b> (2 pares, =), <b>tripla</b> (3 pares, ≡).</div>
+      <div><b>Fórmulas:</b> eletrônica (pontos), estrutural (traços), molecular (H₂O).</div>
+      <div><b>Moleculares:</b> gases ou líquidos (alguns sólidos), PF e PE baixos, não conduzem.</div>
+      <div><b>Metal + ametal:</b> iônica. <b>Ametal + ametal ou H:</b> covalente.</div>
+    </div>
+    <div class="caixa caixa-atencao" style="position:absolute;left:580px;right:0;top:660px">
+      <div class="texto" style="font-size:30px">Na fervura, a molécula fica <b>inteira</b>: só se afasta das outras.</div>
+    </div>
+  </div>
+  <aside class="notas"><p>Peça para tirarem um print desta tela.</p></aside>
+</section>
+
+<!-- A seguir -->
+<section class="slide capa" data-nome="A seguir">
+  <div class="estrelas"></div>
+  <div class="texto-capa" style="top:170px">
+    <span class="selo">Química · IF</span>
+    <p class="aula" style="font-size:26px">A seguir · Ligações químicas</p>
+    <h1 style="font-size:120px">Questões do IF Sudeste</h1>
+    <p class="sub">Provas oficiais, uma por tela</p>
+  </div>
+  <svg class="emblema" viewBox="0 0 640 640" aria-hidden="true">
+    <rect x="150" y="110" width="340" height="430" rx="34" fill="#fff" fill-opacity=".12" stroke="#fff" stroke-opacity=".6" stroke-width="4"/>
+    <g fill="#fff" fill-opacity=".7"><rect x="200" y="170" width="240" height="18" rx="9"/><rect x="200" y="210" width="200" height="18" rx="9"/><rect x="200" y="250" width="220" height="18" rx="9"/></g>
+    <g fill="none" stroke="#fff" stroke-opacity=".75" stroke-width="4"><circle cx="216" cy="330" r="16"/><circle cx="216" cy="390" r="16"/><circle cx="216" cy="450" r="16"/></g>
+    <circle cx="216" cy="390" r="16" fill="#FFD10C"/>
+    <g fill="#fff" fill-opacity=".55"><rect x="250" y="321" width="150" height="16" rx="8"/><rect x="250" y="381" width="170" height="16" rx="8"/><rect x="250" y="441" width="130" height="16" rx="8"/></g>
+    <circle cx="470" cy="130" r="54" fill="#FFD10C"/>
+    <path d="M446 132 L464 150 L496 112" fill="none" stroke="#292B2C" stroke-width="10" stroke-linecap="round" stroke-linejoin="round"/>
+  </svg>
+  <img class="logo-capa" src="{{LOGO_BRANCO}}" alt="Quarks">
+  <aside class="notas"><p>Próxima: o bloco de questões oficiais do IF Sudeste MG sobre ligações químicas.</p></aside>
+</section>
