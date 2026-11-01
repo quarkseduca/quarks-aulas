@@ -35,7 +35,8 @@ MATHJAX = MATHJAX_CONFIG + '<script src="https://cdn.jsdelivr.net/npm/mathjax@3.
 # no sistema, __VENDOR__ vira o endereço do arquivo (api.php?a=slides_vendor&f=); Baixar troca as duas linhas pelo conteúdo
 FONTES_SISTEMA = '<link rel="stylesheet" href="__VENDOR__fontes.css">'
 MATHJAX_SISTEMA = MATHJAX_CONFIG + '<script src="__VENDOR__tex-svg-full.js"></script>'
-CURSOS = {"PISM I": "pism1", "PISM II": "pism2", "PISM III": "pism3"}
+CURSOS = {"PISM I": "pism1", "PISM II": "pism2", "PISM III": "pism3", "IF": "if"}
+NOME_CURSO = {"pism1": "PISM I", "pism2": "PISM II", "pism3": "PISM III", "if": "IF/Sudeste"}  # rótulo da aba no sistema
 
 
 def fontes_css():
@@ -307,7 +308,8 @@ def sistema(destino):
                               "de": len(mesmos), "top": x.get("top", []), "id": pid})
             pism = next((p for p, (c, it) in ligados.items() if c == cap["n"] and it == "pism"
                          and partes[p]["disc"] == disc and partes[p]["curso"] == curso), None)
-            itens.append({"pism": True, "t": "Questões do PISM", "id": pism})
+            if curso.startswith("pism") or pism:  # o IF não tem bloco de questões do PISM
+                itens.append({"pism": True, "t": "Questões do PISM", "id": pism})
             lista.append({"n": cap["n"], "t": cap["t"], "itens": itens})
         soltos = [p for p, (c, it) in ligados.items() if c is None and partes[p]["disc"] == disc and partes[p]["curso"] == curso]
         if soltos:
@@ -317,7 +319,7 @@ def sistema(destino):
     vend.mkdir(parents=True, exist_ok=True)
     (vend / "fontes.css").write_text(fontes_css(), encoding="utf-8")
     (vend / "tex-svg-full.js").write_bytes((VENDOR / "tex-svg-full.js").read_bytes())
-    corpo = json.dumps({"disciplinas": DISCIPLINAS, "cursos": {v: k for k, v in CURSOS.items()}, "planos": cursos, "partes": partes},
+    corpo = json.dumps({"disciplinas": DISCIPLINAS, "cursos": NOME_CURSO, "planos": cursos, "partes": partes},
                        ensure_ascii=False, sort_keys=True)
     versao = hashlib.sha1(corpo.encode() + (vend / "fontes.css").read_bytes() + (vend / "tex-svg-full.js").read_bytes()).hexdigest()[:10]  # muda junto com fontes e MathJax (cache do navegador)
     (destino / "catalogo.json").write_text(json.dumps({"versao": versao, **json.loads(corpo)}, ensure_ascii=False, indent=1), encoding="utf-8")
