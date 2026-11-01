@@ -1,0 +1,518 @@
+<!--aula
+{"disciplina": "quimica", "curso": "IF", "assunto": "Modelos atômicos", "parte": "Parte 2 de 2", "titulo": "Bohr e os níveis de energia", "scripts": ["animacoes-atomo.js"]}
+-->
+<!-- Fonte: slides da professora (Química IF 2026, aula 07: o problema do modelo de Rutherford, Bohr, camadas K a Q, espectros e fogos de artifício), completados com a apostila IF, Química, 2.1 (Bohr e as camadas; modelo de Rutherford-Bohr). Questões: IF Sudeste MG 2018 e IF Sudeste MG 2013 (oficiais). -->
+<style>
+  .caixa { box-sizing: border-box; }
+  .linha-ex { box-sizing: border-box; background: var(--branco); border: 2px solid var(--lilas-2); border-radius: 24px; padding: 14px 26px; font-size: 30px; line-height: 1.3; }
+  .linha-ex b { color: var(--roxo-titulo); }
+  .rot-esp { font: 800 28px Figtree, sans-serif; fill: #3F2FA0; }
+  .rot-nm { font: 600 20px Figtree, sans-serif; fill: #5E5A70; }
+  /* linhas do espectro: acendem uma a uma quando o espectro aparece */
+  .linha-esp { transform-box: fill-box; transform-origin: 50% 50%; transform: scaleY(0); transition: transform .5s ease-out; }
+  .mostra .linha-esp, .linha-esp.ja { transform: scaleY(1); }
+  /* chamas do teste de chama: tremulam devagar */
+  @keyframes chama { 0%,100% { transform: scaleY(1) scaleX(1); } 35% { transform: scaleY(.9) scaleX(1.04); } 70% { transform: scaleY(1.05) scaleX(.97); } }
+  .chama { transform-box: fill-box; transform-origin: 50% 100%; }
+  .slide.ativo .mostra .chama { animation: chama 2.2s ease-in-out infinite; }
+  .chama.c2 { animation-delay: -.5s !important; } .chama.c3 { animation-delay: -1.1s !important; } .chama.c4 { animation-delay: -1.6s !important; } .chama.c5 { animation-delay: -.8s !important; }
+  .bico text { font: 800 26px Figtree, sans-serif; fill: #292B2C; }
+  /* fogos: cada estouro abre devagar e some sem piscar */
+  @keyframes estouro { 0% { transform: scale(.05); opacity: 0; } 8% { opacity: 1; } 55% { transform: scale(1); opacity: 1; } 100% { transform: scale(1.12); opacity: 0; } }
+  .fogo { transform-box: fill-box; transform-origin: center; opacity: 0; }
+  .slide.ativo .mostra .fogo { animation: estouro 5.5s ease-out infinite; }
+  .fogo.f2 { animation-delay: -1.4s !important; } .fogo.f3 { animation-delay: -2.8s !important; } .fogo.f4 { animation-delay: -4.1s !important; }
+  .grade4 { display: grid; grid-template-columns: repeat(4, 1fr); gap: 22px; }
+  .grade4 > div { background: var(--branco); border: 2px solid var(--lilas-2); border-radius: 26px; padding: 18px 22px; font-size: 26px; line-height: 1.3; text-align: center; }
+  .grade4 h3 { font: 800 36px var(--fonte-titulo); color: var(--roxo-titulo); margin: 6px 0 4px; }
+  .grade4 .ano { font: 800 24px Figtree, sans-serif; color: var(--d-forte); letter-spacing: .08em; }
+  .grade4 svg { width: 150px; height: 150px; }
+  .niveis text { font-family: Figtree, sans-serif; }
+</style>
+
+<svg width="0" height="0" style="position:absolute" aria-hidden="true">
+  <defs>
+    <linearGradient id="gEspectro" x1="0" y1="0" x2="1" y2="0">
+      <stop offset="0" stop-color="#7F1FFF"/><stop offset=".133" stop-color="#3B3BFF"/><stop offset=".267" stop-color="#00B4FF"/><stop offset=".333" stop-color="#00FF9C"/><stop offset=".433" stop-color="#4CFF00"/>
+      <stop offset=".567" stop-color="#E6FF00"/><stop offset=".633" stop-color="#FFC000"/><stop offset=".733" stop-color="#FF6A00"/><stop offset=".833" stop-color="#FF2A00"/><stop offset="1" stop-color="#B00000"/>
+    </linearGradient>
+    <radialGradient id="gO" cx=".35" cy=".3" r=".75"><stop offset="0" stop-color="#9C8CF0"/><stop offset=".55" stop-color="#6551D1"/><stop offset="1" stop-color="#3F2FA0"/></radialGradient>
+    <linearGradient id="chNa" x1="0" y1="1" x2="0" y2="0"><stop offset="0" stop-color="#FFF3B0"/><stop offset=".45" stop-color="#FFC000"/><stop offset="1" stop-color="#FF9A00" stop-opacity=".2"/></linearGradient>
+    <linearGradient id="chCa" x1="0" y1="1" x2="0" y2="0"><stop offset="0" stop-color="#FFD0A8"/><stop offset=".45" stop-color="#FF6A2A"/><stop offset="1" stop-color="#E0461A" stop-opacity=".2"/></linearGradient>
+    <linearGradient id="chSr" x1="0" y1="1" x2="0" y2="0"><stop offset="0" stop-color="#FFB8C0"/><stop offset=".45" stop-color="#E8102E"/><stop offset="1" stop-color="#B0001C" stop-opacity=".2"/></linearGradient>
+    <linearGradient id="chBa" x1="0" y1="1" x2="0" y2="0"><stop offset="0" stop-color="#E8FFC8"/><stop offset=".45" stop-color="#9BE33B"/><stop offset="1" stop-color="#5CB01A" stop-opacity=".2"/></linearGradient>
+    <linearGradient id="chCu" x1="0" y1="1" x2="0" y2="0"><stop offset="0" stop-color="#C8FFF2"/><stop offset=".45" stop-color="#19C9A5"/><stop offset="1" stop-color="#0E8F86" stop-opacity=".2"/></linearGradient>
+  </defs>
+  <symbol id="chama" viewBox="0 0 120 220"><path d="M60 6 C 84 60, 112 96, 108 150 C 104 192, 82 214, 60 214 C 38 214, 16 192, 12 150 C 8 96, 36 60, 60 6 Z"/></symbol>
+  <symbol id="at-dalton" viewBox="0 0 200 200"><circle cx="100" cy="100" r="92" fill="url(#gO)"/><ellipse cx="68" cy="62" rx="24" ry="16" fill="#fff" opacity=".35" transform="rotate(-30 68 62)"/></symbol>
+  <symbol id="at-thomson" viewBox="0 0 200 200">
+    <circle cx="100" cy="100" r="92" fill="#FFF4C2" stroke="#E0A800" stroke-width="4"/>
+    <g fill="#B88A00" font-family="Figtree,'Segoe UI',sans-serif" font-weight="800" font-size="26" text-anchor="middle"><text x="62" y="58">+</text><text x="140" y="70">+</text><text x="100" y="112">+</text><text x="48" y="128">+</text><text x="150" y="140">+</text><text x="96" y="176">+</text></g>
+    <g fill="#3F2FA0"><circle cx="100" cy="52" r="13"/><circle cx="56" cy="92" r="13"/><circle cx="146" cy="104" r="13"/><circle cx="76" cy="150" r="13"/><circle cx="130" cy="164" r="13"/></g>
+  </symbol>
+  <symbol id="at-rutherford" viewBox="0 0 200 200">
+    <circle cx="100" cy="100" r="92" fill="#F1EEFD" stroke="#BFB6E6" stroke-width="3" stroke-dasharray="7 7"/>
+    <circle cx="100" cy="100" r="9" fill="#FFD10C" stroke="#B88A00" stroke-width="1.5"/>
+    <g fill="#3F2FA0"><circle cx="40" cy="70" r="8"/><circle cx="150" cy="48" r="8"/><circle cx="164" cy="130" r="8"/><circle cx="70" cy="160" r="8"/></g>
+  </symbol>
+  <symbol id="at-bohr" viewBox="0 0 200 200">
+    <g fill="none" stroke="#BFB6E6" stroke-width="3" stroke-dasharray="6 6"><circle cx="100" cy="100" r="40"/><circle cx="100" cy="100" r="66"/><circle cx="100" cy="100" r="92"/></g>
+    <circle cx="100" cy="100" r="14" fill="#FFD10C" stroke="#B88A00" stroke-width="2"/>
+    <g fill="#3F2FA0"><circle cx="100" cy="60" r="8"/><circle cx="100" cy="140" r="8"/><circle cx="34" cy="100" r="8"/><circle cx="166" cy="100" r="8"/><circle cx="53" cy="53" r="8"/><circle cx="147" cy="147" r="8"/><circle cx="165" cy="77" r="8"/></g>
+  </symbol>
+</svg>
+
+<!-- 1. Capa -->
+<section class="slide capa" data-nome="Capa">
+  <div class="estrelas"></div>
+  <div class="texto-capa" style="top:150px">
+    <span class="selo">Química · IF</span>
+    <p class="aula">Modelos atômicos · Parte 2 de 2</p>
+    <h1 style="font-size:110px">Bohr e os níveis de energia</h1>
+    <p class="sub">Saltos do elétron, espectros e fogos</p>
+  </div>
+  <svg class="emblema" viewBox="0 0 640 640" aria-hidden="true">
+    <g class="gira-lento"><ellipse cx="320" cy="320" rx="300" ry="128" fill="none" stroke="#fff" stroke-opacity=".38" stroke-width="2" transform="rotate(-10 320 320)"/></g>
+    <g class="gira"><ellipse cx="320" cy="320" rx="236" ry="196" fill="none" stroke="#FFD10C" stroke-opacity=".75" stroke-width="2.5" stroke-dasharray="3 14" stroke-linecap="round" transform="rotate(-8 320 320)"/>
+      <circle cx="84" cy="300" r="13" fill="#FFD10C" stroke="#fff" stroke-width="3"/></g>
+    <circle cx="320" cy="320" r="132" fill="#FFD10C"/>
+    <image href="{{SYM_ROXO}}" x="238" y="238" width="164" height="164"/>
+  </svg>
+  <img class="logo-capa" src="{{LOGO_BRANCO}}" alt="Quarks">
+  <aside class="notas"><p>Hoje: o problema do modelo de Rutherford, a solução de Bohr (camadas ou níveis de energia), o salto do elétron e como isso explica os espectros e as cores dos fogos de artifício.</p></aside>
+</section>
+
+<!-- 2. O problema de Rutherford -->
+<section class="slide" data-nome="O problema de Rutherford">
+  <div class="conteudo">
+    <p class="olho">Rutherford deixou uma dúvida</p>
+    <h2 class="titulo">Por que o elétron não cai no núcleo?</h2>
+    <div data-anima="espiral" data-anima-passo="3" style="position:absolute;left:30px;top:120px;width:460px;height:460px"></div>
+    <div style="position:absolute;left:600px;right:0;top:160px;display:flex;flex-direction:column;gap:16px">
+      <div class="linha-ex" data-passo="1">Para continuar girando, o elétron está sempre <b>acelerado</b> (muda de direção o tempo todo).</div>
+      <div class="linha-ex" data-passo="2">Pela física da época, carga elétrica acelerada <b>emite luz</b> e <b>perde energia</b>.</div>
+      <div class="caixa caixa-atencao" data-passo="3" style="padding:18px 28px"><div class="texto" style="font-size:30px">Perdendo energia, o elétron faria uma <b>espiral</b> e se <b>chocaria com o núcleo</b>.</div></div>
+    </div>
+    <div class="caixa caixa-fundamental" data-passo="4" style="position:absolute;left:600px;right:0;top:640px">
+      <div class="texto" style="font-size:31px">Mas os átomos são <b>estáveis</b>: o modelo precisava de uma correção. Quem propôs foi <b>Niels Bohr</b>, em 1913.</div>
+    </div>
+  </div>
+  <aside class="notas">
+    <p>Cliques 1 e 2: o raciocínio da física clássica. Clique 3: a animação mostra o que ela previa: o elétron perde energia (as ondinhas de luz), faz uma espiral e cai no núcleo, numa fração de segundo.</p>
+    <p>Clique 4: isso não acontece; a matéria existe. Gancho para Bohr.</p>
+  </aside>
+</section>
+
+<!-- 3. Os postulados de Bohr -->
+<section class="slide" data-nome="O modelo de Bohr">
+  <div class="conteudo">
+    <p class="olho">Niels Bohr · 1913</p>
+    <h2 class="titulo">Os elétrons em camadas</h2>
+    <div data-anima="atomo" data-anima-passo="0" data-w="500" data-h="460" data-p="11" data-n="12" data-rn="9" data-re="11" data-camadas="2,8,1" data-r0="78" data-dr="64" data-letras="K,L,M" style="position:absolute;left:10px;top:140px;width:500px;height:460px"></div>
+    <div style="position:absolute;left:600px;right:0;top:160px;display:flex;flex-direction:column;gap:16px">
+      <div class="linha-ex" data-passo="1">O elétron gira em volta do núcleo em <b>órbitas estacionárias</b> (as camadas).</div>
+      <div class="linha-ex" data-passo="2">Numa órbita estacionária, o elétron <b>não emite nem absorve energia</b>: por isso não cai.</div>
+      <div class="linha-ex" data-passo="3">Ao <b>mudar de órbita</b>, ele absorve ou emite uma quantidade <b>bem definida</b> de energia.</div>
+    </div>
+    <div class="caixa caixa-fundamental" data-passo="4" style="position:absolute;left:600px;right:0;top:620px">
+      <span class="rotulo">Energia quantizada</span>
+      <div class="texto" style="font-size:31px">A energia do elétron só pode ter <b>certos valores</b>, como os degraus de uma escada. Cada “pacote” de energia é um <b>quantum</b>.</div>
+    </div>
+  </div>
+  <aside class="notas">
+    <p>A figura é o átomo de sódio no modelo de Bohr: 11 prótons e 12 nêutrons no núcleo; 2 elétrons na camada K, 8 na L e 1 na M.</p>
+    <p>Um clique por postulado. Clique 4: a escada; dá para parar num degrau, nunca no meio dele.</p>
+  </aside>
+</section>
+
+<!-- 4. As camadas K a Q -->
+<section class="slide" data-nome="Camadas K a Q">
+  <div class="conteudo">
+    <p class="olho">As camadas são os níveis de energia</p>
+    <h2 class="titulo">Sete camadas, de K a Q</h2>
+    <svg class="niveis" viewBox="0 0 1160 600" style="position:absolute;left:600px;top:130px;width:1160px;height:600px;overflow:visible" aria-hidden="true">
+      <g data-passo="1">
+        <circle cx="40" cy="300" r="26" fill="#FFD10C" stroke="#B88A00" stroke-width="2"/>
+        <text x="40" y="309" text-anchor="middle" font-size="26" font-weight="800" fill="#8A6A00">+</text>
+        <g fill="none" stroke="#9C8CF0" stroke-width="5" stroke-linecap="round">
+          <path d="M115.5 237.0 A100 100 0 0 1 115.5 363.0"/><path d="M162.2 207.8 A162 162 0 0 1 162.2 392.2"/><path d="M208.8 178.6 A224 224 0 0 1 208.8 421.4"/>
+          <path d="M255.5 149.5 A286 286 0 0 1 255.5 450.5"/><path d="M302.1 120.3 A348 348 0 0 1 302.1 479.7"/><path d="M348.8 91.1 A410 410 0 0 1 348.8 508.9"/><path d="M395.4 61.9 A472 472 0 0 1 395.4 538.1"/>
+        </g>
+        <g font-size="34" font-weight="800" fill="#3F2FA0" text-anchor="middle">
+          <text x="115" y="222">K</text><text x="162" y="193">L</text><text x="209" y="164">M</text><text x="256" y="135">N</text><text x="302" y="106">O</text><text x="349" y="77">P</text><text x="395" y="48">Q</text>
+        </g>
+      </g>
+      <g data-passo="2" font-size="28" font-weight="800" fill="#5340B8" text-anchor="middle">
+        <text x="115" y="400">2</text><text x="162" y="429">8</text><text x="209" y="458">18</text><text x="256" y="487">32</text><text x="302" y="516">32</text><text x="349" y="545">18</text><text x="395" y="574">8</text>
+      </g>
+      <g data-passo="3">
+        <path d="M470 300 H700" stroke="#E5533D" stroke-width="6" stroke-linecap="round"/><path d="M688 286 l18 14 -18 14" fill="none" stroke="#E5533D" stroke-width="6" stroke-linecap="round" stroke-linejoin="round"/>
+        <text x="585" y="284" text-anchor="middle" font-size="26" font-weight="800" fill="#C63C28">mais energia</text>
+      </g>
+    </svg>
+    <div style="position:absolute;left:0;width:540px;top:155px;display:flex;flex-direction:column;gap:12px;--fs:28px">
+      <div class="linha-ex" data-passo="1" style="font-size:28px">As camadas recebem letras, de <b>dentro para fora</b>: K, L, M, N, O, P e Q.</div>
+      <div class="linha-ex" data-passo="2" style="font-size:28px">Embaixo de cada letra: o <b>máximo de elétrons</b> naquela camada, nos átomos conhecidos.</div>
+      <div class="linha-ex" data-passo="3" style="font-size:28px">Quanto mais longe do núcleo, <b>mais energia</b> tem o elétron.</div>
+    </div>
+  </div>
+  <aside class="notas">
+    <p>Clique 1: as sete camadas (níveis de energia). Clique 2: a capacidade máxima de cada uma nos átomos conhecidos: 2, 8, 18, 32, 32, 18 e 8. Clique 3: a energia cresce de dentro para fora.</p>
+    <p>A distribuição dos elétrons nas camadas é o assunto de Distribuição eletrônica, mais adiante.</p>
+  </aside>
+</section>
+
+<!-- 5. O salto do elétron -->
+<section class="slide" data-nome="O salto do elétron">
+  <div class="conteudo">
+    <p class="olho">Bohr · o salto</p>
+    <h2 class="titulo">Recebe energia, salta; volta, libera luz</h2>
+    <div data-anima="bohr-salto" data-anima-passo="1" data-cor="#E5533D" style="position:absolute;left:1060px;top:140px;width:700px;height:480px"></div>
+    <div style="position:absolute;left:0;width:960px;top:170px;display:flex;flex-direction:column;gap:16px">
+      <div class="linha-ex" data-passo="1">Ao <b>receber energia</b> (calor, eletricidade), o elétron <b>salta</b> para uma camada mais externa.</div>
+      <div class="linha-ex" data-passo="2">Lá ele fica <b>pouco tempo</b>: é o <b>estado excitado</b>, que não é estável.</div>
+      <div class="linha-ex" data-passo="3">Ao <b>voltar</b> à camada de origem, <b>libera</b> a energia em forma de <b>luz</b> (um fóton).</div>
+    </div>
+    <div class="caixa caixa-fundamental" data-passo="4" style="position:absolute;left:600px;right:0;top:660px">
+      <div class="texto" style="font-size:31px">A energia liberada é <b>igual</b> à recebida e tem valor certo: por isso a luz tem uma <b>cor definida</b>.</div>
+    </div>
+  </div>
+  <aside class="notas">
+    <p>Clique 1 liga a animação, que se repete: o pacote de energia (amarelo) chega, o elétron salta da camada K para a M, fica um tempo no estado excitado e volta, soltando a energia como luz (onda vermelha). O nome de cada fase aparece no alto da figura.</p>
+    <p>Cliques 2 a 4: o mesmo, em palavras. É o "salto quântico" do enunciado do IF 2018.</p>
+  </aside>
+</section>
+
+<!-- 6. Exemplo -->
+<section class="slide" data-nome="Exemplo: absorve ou emite?">
+  <div class="conteudo">
+    <p class="olho">Exemplo</p>
+    <h2 class="titulo">Absorve ou emite energia?</h2>
+    <svg viewBox="0 0 500 440" style="position:absolute;left:20px;top:150px;width:500px;height:440px;overflow:visible" aria-hidden="true">
+      <g stroke="#9C8CF0" stroke-width="5" stroke-linecap="round"><path d="M120 400 H460"/><path d="M120 290 H460"/><path d="M120 200 H460"/><path d="M120 130 H460"/></g>
+      <g font-family="Figtree,sans-serif" font-size="32" font-weight="800" fill="#3F2FA0" text-anchor="end"><text x="96" y="411">K</text><text x="96" y="301">L</text><text x="96" y="211">M</text><text x="96" y="141">N</text></g>
+      <text x="10" y="40" font-family="Figtree,sans-serif" font-size="24" font-weight="700" fill="#5E5A70">energia ↑</text>
+      <g data-passo="1"><path d="M220 282 V150" stroke="#FFB000" stroke-width="7" stroke-linecap="round"/><path d="M204 166 l16 -20 16 20" fill="none" stroke="#FFB000" stroke-width="7" stroke-linecap="round" stroke-linejoin="round"/>
+        <text x="206" y="252" text-anchor="end" font-family="Figtree,sans-serif" font-size="26" font-weight="800" fill="#B07800">absorve</text></g>
+      <g data-passo="3"><path d="M380 138 q14 12 0 24 q-14 12 0 24 q14 12 0 24 q-14 12 0 24 q14 12 0 24 V272" fill="none" stroke="#E5533D" stroke-width="6" stroke-linecap="round"/><path d="M364 258 l16 20 16 -20" fill="none" stroke="#E5533D" stroke-width="6" stroke-linecap="round" stroke-linejoin="round"/>
+        <text x="402" y="252" font-family="Figtree,sans-serif" font-size="26" font-weight="800" fill="#C63C28">emite luz</text></g>
+    </svg>
+    <div style="position:absolute;left:600px;right:0;top:160px;display:flex;flex-direction:column;gap:14px">
+      <p class="texto" style="margin:0;font-size:31px">(a) Um elétron passa da camada <b>L</b> para a camada <b>N</b>.</p>
+      <div class="linha-ex" data-passo="1">Vai para uma camada <b>mais externa</b>, de mais energia: <b>absorve</b> energia.</div>
+      <p class="texto" style="margin:8px 0 0;font-size:31px">(b) Depois, ele volta da camada <b>N</b> para a <b>L</b>.</p>
+      <div class="linha-ex" data-passo="2">Vai para uma camada <b>mais interna</b>: <b>emite</b> energia.</div>
+      <div class="linha-ex" data-passo="3">A energia sai como <b>luz</b>, e é <b>igual</b> à que ele absorveu na ida.</div>
+    </div>
+    <span class="pilula pilula-resposta" data-passo="4" style="position:absolute;left:600px;top:700px">Para fora: absorve. Para dentro: emite luz.</span>
+  </div>
+  <aside class="notas">
+    <p>A escada à esquerda: as camadas como degraus de energia. Peça a resposta antes de cada clique.</p>
+    <p>(a) L → N: absorve (seta amarela para cima). (b) N → L: emite (onda vermelha para baixo), com a mesma energia que absorveu.</p>
+  </aside>
+</section>
+
+<!-- 7. Espectro contínuo e descontínuo -->
+<section class="slide" data-nome="Espectros">
+  <div class="conteudo">
+    <p class="olho">O que Rutherford não explicava</p>
+    <h2 class="titulo">Espectro contínuo e espectro de linhas</h2>
+    <svg viewBox="0 0 1100 400" style="position:absolute;left:660px;top:160px;width:1100px;height:400px;overflow:visible" aria-hidden="true">
+      <g data-passo="1">
+        <text x="0" y="28" class="rot-esp">luz branca (do Sol ou de uma lâmpada comum)</text>
+        <rect x="0" y="44" width="1100" height="90" rx="12" fill="url(#gEspectro)"/>
+      </g>
+      <g data-passo="2">
+        <text x="0" y="214" class="rot-esp">luz do gás hidrogênio aquecido</text>
+        <g transform="translate(0 230)">
+        <rect x="0" y="0" width="1100" height="90" rx="10" fill="#15112B"/>
+        <rect class="linha-esp" x="33.7" y="4" width="6" height="82" fill="#7B2CFF" style="transition-delay:.3s"/>
+        <rect class="linha-esp" x="121.7" y="4" width="6" height="82" fill="#3F35FF" style="transition-delay:.6s"/>
+        <rect class="linha-esp" x="312.3" y="4" width="6" height="82" fill="#00B8FF" style="transition-delay:.9s"/>
+        <rect class="linha-esp" x="935.7" y="4" width="6" height="82" fill="#FF2200" style="transition-delay:1.2s"/>
+        </g>
+        <g class="rot-nm" text-anchor="middle"><text x="37" y="350">410 nm</text><text x="125" y="350">434</text><text x="315" y="350">486</text><text x="939" y="350">656 nm</text></g>
+      </g>
+    </svg>
+    <div style="position:absolute;left:0;width:600px;top:170px;display:flex;flex-direction:column;gap:16px">
+      <div class="linha-ex" data-passo="1" style="font-size:28px">A luz branca, num prisma, vira um <b>arco-íris contínuo</b>: todas as cores.</div>
+      <div class="linha-ex" data-passo="2" style="font-size:28px">A luz de um elemento aquecido dá só <b>algumas linhas coloridas</b>; o resto fica escuro: espectro <b>descontínuo</b>.</div>
+    </div>
+    <div class="caixa caixa-fundamental" data-passo="3" style="position:absolute;left:660px;right:0;top:630px">
+      <div class="texto" style="font-size:30px">Bohr explica: cada linha é um elétron <b>voltando</b> de uma camada para outra, com energia certa. <b>Energia certa, cor certa.</b></div>
+    </div>
+  </div>
+  <aside class="notas">
+    <p>Clique 1: o espectro contínuo. Clique 2: o espectro do hidrogênio; as linhas acendem uma a uma (violeta, azul, azul-esverdeada e vermelha). Os números são os comprimentos de onda, só para mostrar que as posições são as de verdade.</p>
+    <p>Clique 3: o modelo de Rutherford não explicava por que só aparecem algumas linhas. No de Bohr, as linhas são as transições eletrônicas: cada salto de volta tem uma energia fixa.</p>
+  </aside>
+</section>
+
+<!-- 8. Cada elemento, o seu espectro -->
+<section class="slide" data-nome="Cada elemento, seu espectro">
+  <div class="conteudo">
+    <p class="olho">A impressão digital do elemento</p>
+    <h2 class="titulo">Cada elemento tem o seu espectro</h2>
+    <svg viewBox="0 0 1100 340" style="position:absolute;left:660px;top:170px;width:1100px;height:340px;overflow:visible" aria-hidden="true">
+      <g data-passo="1">
+        <rect x="0" y="0" width="1100" height="64" rx="10" fill="#15112B"/>
+        <rect class="linha-esp" x="33.7" y="4" width="6" height="56" fill="#7B2CFF" style="transition-delay:0s"/>
+        <rect class="linha-esp" x="121.7" y="4" width="6" height="56" fill="#3F35FF" style="transition-delay:.25s"/>
+        <rect class="linha-esp" x="312.3" y="4" width="6" height="56" fill="#00B8FF" style="transition-delay:.5s"/>
+        <rect class="linha-esp" x="935.7" y="4" width="6" height="56" fill="#FF2200" style="transition-delay:.75s"/>
+      </g>
+      <g data-passo="2">
+        <rect x="0" y="92" width="1100" height="64" rx="10" fill="#15112B"/>
+        <rect class="linha-esp" x="169.3" y="96" width="6" height="56" fill="#2C4BFF" style="transition-delay:0s"/>
+        <rect class="linha-esp" x="257.3" y="96" width="6" height="56" fill="#008CFF" style="transition-delay:.25s"/>
+        <rect class="linha-esp" x="334.3" y="96" width="6" height="56" fill="#00D9E6" style="transition-delay:.5s"/>
+        <rect class="linha-esp" x="367.3" y="96" width="6" height="56" fill="#00FF8C" style="transition-delay:.75s"/>
+        <rect class="linha-esp" x="686.3" y="96" width="6" height="56" fill="#FFC400" style="transition-delay:1s"/>
+        <rect class="linha-esp" x="979.7" y="96" width="6" height="56" fill="#FF1500" style="transition-delay:1.25s"/>
+      </g>
+      <g data-passo="3">
+        <rect x="0" y="184" width="1100" height="64" rx="10" fill="#15112B"/>
+        <rect class="linha-esp" x="689" y="188" width="9" height="56" fill="#FFC000" style="transition-delay:0s"/>
+      </g>
+      <g data-passo="4">
+        <rect x="0" y="276" width="1100" height="64" rx="10" fill="#15112B"/>
+        <rect class="linha-esp" x="15.3" y="280" width="6" height="56" fill="#7A10FF" style="transition-delay:0s"/>
+        <rect class="linha-esp" x="129.0" y="280" width="6" height="56" fill="#3A33FF" style="transition-delay:.25s"/>
+        <rect class="linha-esp" x="532.3" y="280" width="6" height="56" fill="#86FF00" style="transition-delay:.5s"/>
+        <rect class="linha-esp" x="646.0" y="280" width="6" height="56" fill="#E8F000" style="transition-delay:.75s"/>
+        <rect class="linha-esp" x="653.3" y="280" width="6" height="56" fill="#F0E800" style="transition-delay:1s"/>
+      </g>
+    </svg>
+    <div style="position:absolute;left:300px;width:340px;top:170px;font:800 32px Figtree,sans-serif;color:#3F2FA0;text-align:right">
+      <div data-passo="1" style="position:absolute;right:0;top:12px">Hidrogênio</div>
+      <div data-passo="2" style="position:absolute;right:0;top:104px">Hélio</div>
+      <div data-passo="3" style="position:absolute;right:0;top:196px">Sódio</div>
+      <div data-passo="4" style="position:absolute;right:0;top:288px">Mercúrio</div>
+    </div>
+    <div class="caixa caixa-fundamental" data-passo="5" style="position:absolute;left:660px;right:0;top:600px">
+      <div class="texto" style="font-size:30px">As linhas de cada elemento são <b>só dele</b>, como uma impressão digital. Elas vêm das <b>transições eletrônicas</b>: os saltos de volta dos elétrons.</div>
+    </div>
+  </div>
+  <aside class="notas">
+    <p>Um clique por elemento; as linhas acendem uma a uma. Compare: nenhum espectro é igual ao outro. O sódio tem a linha amarela forte (na verdade, duas linhas muito juntas).</p>
+    <p>É assim que se descobre de que é feita uma estrela, só pela luz que chega dela. O hélio foi descoberto primeiro no espectro do Sol.</p>
+  </aside>
+</section>
+
+<!-- 9. Teste de chama -->
+<section class="slide" data-nome="Teste de chama">
+  <div class="conteudo">
+    <p class="olho">No laboratório</p>
+    <h2 class="titulo">O teste de chama</h2>
+    <svg viewBox="0 0 1160 420" style="position:absolute;left:600px;top:150px;width:1160px;height:420px;overflow:visible" aria-hidden="true">
+      <g class="bico" data-passo="1">
+        <use href="#chama" class="chama" x="50" y="40" width="120" height="220" fill="url(#chNa)"/>
+        <rect x="88" y="262" width="44" height="80" rx="8" fill="#9C98A8"/><rect x="62" y="336" width="96" height="18" rx="9" fill="#5E5A70"/>
+        <text x="110" y="398" text-anchor="middle">sódio</text>
+      </g>
+      <g class="bico" data-passo="2">
+        <use href="#chama" class="chama c2" x="280" y="40" width="120" height="220" fill="url(#chCa)"/>
+        <rect x="318" y="262" width="44" height="80" rx="8" fill="#9C98A8"/><rect x="292" y="336" width="96" height="18" rx="9" fill="#5E5A70"/>
+        <text x="340" y="398" text-anchor="middle">cálcio</text>
+      </g>
+      <g class="bico" data-passo="3">
+        <use href="#chama" class="chama c3" x="510" y="40" width="120" height="220" fill="url(#chSr)"/>
+        <rect x="548" y="262" width="44" height="80" rx="8" fill="#9C98A8"/><rect x="522" y="336" width="96" height="18" rx="9" fill="#5E5A70"/>
+        <text x="570" y="398" text-anchor="middle">estrôncio</text>
+      </g>
+      <g class="bico" data-passo="4">
+        <use href="#chama" class="chama c4" x="740" y="40" width="120" height="220" fill="url(#chBa)"/>
+        <rect x="778" y="262" width="44" height="80" rx="8" fill="#9C98A8"/><rect x="752" y="336" width="96" height="18" rx="9" fill="#5E5A70"/>
+        <text x="800" y="398" text-anchor="middle">bário</text>
+      </g>
+      <g class="bico" data-passo="5">
+        <use href="#chama" class="chama c5" x="970" y="40" width="120" height="220" fill="url(#chCu)"/>
+        <rect x="1008" y="262" width="44" height="80" rx="8" fill="#9C98A8"/><rect x="982" y="336" width="96" height="18" rx="9" fill="#5E5A70"/>
+        <text x="1030" y="398" text-anchor="middle">cobre</text>
+      </g>
+    </svg>
+    <div style="position:absolute;left:0;width:520px;top:170px;display:flex;flex-direction:column;gap:16px">
+      <div class="linha-ex" style="font-size:28px">Um pouco de <b>sal</b> do elemento vai à chama.</div>
+      <div class="linha-ex" style="font-size:28px">O calor faz os elétrons <b>saltarem</b>; ao voltar, eles emitem a <b>luz</b> do elemento.</div>
+    </div>
+    <div class="caixa caixa-fundamental" data-passo="6" style="position:absolute;left:600px;right:0;top:620px">
+      <div class="texto" style="font-size:30px">A <b>cor</b> da chama depende do <b>elemento</b>: serve para identificar o metal que está no sal.</div>
+    </div>
+  </div>
+  <aside class="notas">
+    <p>Um clique por chama: sais de sódio (amarelo), cálcio (vermelho-alaranjado), estrôncio (vermelho), bário (verde) e cobre (verde-azulado).</p>
+    <p>Em laboratório, um fio limpo molhado na solução do sal é levado à chama do bico de gás. Clique 6: a cor identifica o elemento, como o espectro.</p>
+  </aside>
+</section>
+
+<!-- 10. Fogos de artifício -->
+<section class="slide" data-nome="Fogos de artifício">
+  <div class="conteudo">
+    <p class="olho">No dia a dia</p>
+    <h2 class="titulo">As cores dos fogos de artifício</h2>
+    <svg data-passo="1" viewBox="0 0 640 440" style="position:absolute;left:1120px;top:140px;width:640px;height:440px" aria-hidden="true">
+      <rect x="0" y="0" width="640" height="440" rx="30" fill="#1C1433"/>
+      <g class="fogo" stroke="#E8102E"><circle cx="170" cy="150" r="96" fill="none" stroke="none"/><g stroke-width="5" stroke-linecap="round"><path d="M170 150 m0 -40 v-50"/><path d="M170 150 m0 40 v50"/><path d="M170 150 m40 0 h50"/><path d="M170 150 m-40 0 h-50"/><path d="M170 150 m28 -28 l36 -36"/><path d="M170 150 m-28 28 l-36 36"/><path d="M170 150 m28 28 l36 36"/><path d="M170 150 m-28 -28 l-36 -36"/></g></g>
+      <g class="fogo f2" stroke="#9BE33B"><circle cx="440" cy="130" r="96" fill="none" stroke="none"/><g stroke-width="5" stroke-linecap="round"><path d="M440 130 m0 -40 v-50"/><path d="M440 130 m0 40 v50"/><path d="M440 130 m40 0 h50"/><path d="M440 130 m-40 0 h-50"/><path d="M440 130 m28 -28 l36 -36"/><path d="M440 130 m-28 28 l-36 36"/><path d="M440 130 m28 28 l36 36"/><path d="M440 130 m-28 -28 l-36 -36"/></g></g>
+      <g class="fogo f3" stroke="#FFC000"><circle cx="300" cy="300" r="96" fill="none" stroke="none"/><g stroke-width="5" stroke-linecap="round"><path d="M300 300 m0 -40 v-50"/><path d="M300 300 m0 40 v50"/><path d="M300 300 m40 0 h50"/><path d="M300 300 m-40 0 h-50"/><path d="M300 300 m28 -28 l36 -36"/><path d="M300 300 m-28 28 l-36 36"/><path d="M300 300 m28 28 l36 36"/><path d="M300 300 m-28 -28 l-36 -36"/></g></g>
+      <g class="fogo f4" stroke="#B57BFF"><circle cx="510" cy="310" r="96" fill="none" stroke="none"/><g stroke-width="5" stroke-linecap="round"><path d="M510 310 m0 -40 v-50"/><path d="M510 310 m0 40 v50"/><path d="M510 310 m40 0 h50"/><path d="M510 310 m-40 0 h-50"/><path d="M510 310 m28 -28 l36 -36"/><path d="M510 310 m-28 28 l-36 36"/><path d="M510 310 m28 28 l36 36"/><path d="M510 310 m-28 -28 l-36 -36"/></g></g>
+    </svg>
+    <div style="position:absolute;left:0;width:1060px;top:160px;display:flex;flex-direction:column;gap:14px">
+      <div class="linha-ex" data-passo="1">A explosão da pólvora <b>fornece energia</b> aos sais misturados nela.</div>
+      <div class="linha-ex" data-passo="2">Os elétrons dos metais <b>saltam</b> para camadas mais externas.</div>
+      <div class="linha-ex" data-passo="3">Ao <b>voltar</b>, liberam a energia como <b>luz</b>, na cor do elemento.</div>
+    </div>
+    <table class="tabela" data-passo="4" style="position:absolute;left:600px;top:620px;font-size:27px">
+      <tr><th style="padding:8px 24px">Sal de</th><th style="padding:8px 24px">estrôncio</th><th style="padding:8px 24px">bário</th><th style="padding:8px 24px">sódio</th><th style="padding:8px 24px">cobre</th><th style="padding:8px 24px">estrôncio + cobre</th></tr>
+      <tr><td style="padding:8px 24px"><b>Cor</b></td><td style="padding:8px 24px">vermelho</td><td style="padding:8px 24px">verde</td><td style="padding:8px 24px">amarelo</td><td style="padding:8px 24px">azul</td><td style="padding:8px 24px">roxo</td></tr>
+    </table>
+  </div>
+  <aside class="notas">
+    <p>Clique 1: os estouros (vermelho do estrôncio, verde do bário, amarelo do sódio e roxo da mistura de estrôncio com cobre). Cliques 2 e 3: é o mesmo salto do elétron do teste de chama.</p>
+    <p>Clique 4: a tabela. O cobre dá azul nos fogos e verde-azulado na chama do laboratório; para o roxo, mistura-se o vermelho do estrôncio com o azul do cobre. Os fogos de artifício são o exemplo do slide da professora e da questão do IF 2018.</p>
+  </aside>
+</section>
+
+<!-- 11. Os quatro modelos -->
+<section class="slide" data-nome="Os quatro modelos">
+  <div class="conteudo">
+    <p class="olho">Comparando</p>
+    <h2 class="titulo">De Dalton a Bohr</h2>
+    <div class="grade4" style="position:absolute;left:0;right:0;top:150px">
+      <div data-passo="1"><svg viewBox="0 0 200 200" aria-hidden="true"><use href="#at-dalton"/></svg><p class="ano" style="margin:0">1808</p><h3>Dalton</h3>esfera maciça e indivisível (bola de bilhar)</div>
+      <div data-passo="2"><svg viewBox="0 0 200 200" aria-hidden="true"><use href="#at-thomson"/></svg><p class="ano" style="margin:0">1897</p><h3>Thomson</h3>esfera positiva com elétrons (pudim de passas)</div>
+      <div data-passo="3"><svg viewBox="0 0 200 200" aria-hidden="true"><use href="#at-rutherford"/></svg><p class="ano" style="margin:0">1911</p><h3>Rutherford</h3>núcleo pequeno e positivo; eletrosfera</div>
+      <div data-passo="4"><svg viewBox="0 0 200 200" aria-hidden="true"><use href="#at-bohr"/></svg><p class="ano" style="margin:0">1913</p><h3>Bohr</h3>elétrons em camadas de energia definida</div>
+    </div>
+    <div class="caixa caixa-fundamental" data-passo="5" style="position:absolute;left:600px;right:0;top:640px">
+      <span class="rotulo">Modelo de Rutherford-Bohr</span>
+      <div class="texto" style="font-size:30px">O <b>núcleo</b> de Rutherford com as <b>camadas</b> de Bohr: é o modelo que usamos daqui em diante.</div>
+    </div>
+  </div>
+  <aside class="notas">
+    <p>Um clique por modelo. Bom slide para o print.</p>
+    <p>Clique 5: a junção dos dois últimos é o modelo cobrado no 9º ano e no IF (o edital fala em "Rutherford-Bohr").</p>
+  </aside>
+</section>
+
+<!-- Questão 1 -->
+<section class="slide questao" data-nome="Questão 1">
+  <div class="conteudo">
+    <div class="area-resolucao"></div>
+    <span class="pilula pilula-pausa" data-em="1:some">Pause o vídeo e tente</span>
+    <div class="painel-questao" style="gap:10px">
+      <p class="olho">Questão 1 · IF Sudeste MG 2018</p>
+      <p class="enunciado" style="font-size:19px;line-height:1.35">A queima de fogos em Copacabana, no Rio de Janeiro, para celebrar a passagem de Ano Novo, é uma das maiores do mundo, atingindo de 15 a 20 minutos. Estima-se que 1 milhão de pessoas vão até às areias da Praia de Copacabana, para ver o espetáculo. A festa já se tornou uma das maiores atrações turísticas do Rio de Janeiro atraindo visitantes de todo o Brasil e do mundo.</p>
+      <p class="enunciado" style="font-size:15px;line-height:1.3;color:#5E5A70"><i>Queima de Fogos Copacabana | Reveillon Rio de Janeiro 2018.</i> Disponível em: &lt;http://www.riodejaneiroaqui.com/portugues/rio-reveillon.html&gt;. Acesso em: 31 mar de 2018. Adaptado.</p>
+      <p class="enunciado" style="font-size:19px;line-height:1.35">Para explicar esse show de cores no ar, podemos citar o fenômeno do “salto quântico”, que ocorre nos elétrons do átomo. Os elétrons do átomo estão divididos em níveis. Quando o elétron recebe um acréscimo de energia, ele tende a se mover para um nível mais energético, ou seja, o átomo está em um estado excitado. Esse estado excitado do átomo não é um estado em que ele se encontra estável, então o elétron tende a retornar a seu nível energético original. Ao fazer isso, a energia que o moveu de nível energético é liberada em forma de luz.</p>
+      <p class="enunciado" style="font-size:19px;line-height:1.35">Assinale a afirmativa <b>CORRETA</b> que indica o cientista que realizou o estudo do fenômeno do salto quântico.</p>
+      <ol class="alternativas curtas" style="gap:6px">
+        <li data-em="2:apaga" style="font-size:21px;padding:4px 14px"><b>A</b><span>Ernest Rutherford</span></li>
+        <li data-em="2:apaga" style="font-size:21px;padding:4px 14px"><b>B</b><span>John Dalton</span></li>
+        <li data-em="2:apaga" style="font-size:21px;padding:4px 14px"><b>C</b><span>Joseph John Thomson</span></li>
+        <li data-em="2:apaga" style="font-size:21px;padding:4px 14px"><b>D</b><span>Michael Faraday</span></li>
+        <li data-em="2:certo" style="font-size:21px;padding:4px 14px"><b>E</b><span>Niels Bohr</span></li>
+      </ol>
+    </div>
+  </div>
+  <aside class="resolucao">
+    <p class="dados"><b>Dados:</b> elétrons em níveis; salto e volta com luz.</p>
+    <ol class="passos">
+      <li>Elétrons em níveis de energia: camadas.</li>
+      <li>Recebe energia: salta para nível externo.</li>
+      <li>Volta: libera a energia como luz.</li>
+      <li>Camadas e saltos: modelo de Bohr (1913).</li>
+    </ol>
+    <p class="resposta"><b>Resposta:</b> Niels Bohr. <b>Gabarito E.</b></p>
+    <p class="atencao"><b>Destaque no quadro:</b> Níveis de energia, salto, luz: sempre Bohr.</p>
+    <ul class="erros">
+      <li><b>A</b> Rutherford propôs o núcleo; seu modelo não tinha níveis.</li>
+      <li><b>B</b> Dalton: esfera maciça, sem elétrons.</li>
+      <li><b>C</b> Thomson descobriu o elétron (pudim de passas), sem níveis.</li>
+      <li><b>D</b> Faraday estudou eletricidade e magnetismo; não propôs níveis.</li>
+    </ul>
+  </aside>
+  <aside class="notas">
+    <p>Clique 1 tira o aviso de pausa: resolva na área (D liga a caneta; E esconde o enunciado). Clique 2: gabarito E.</p>
+    <p>Questão oficial do IF Sudeste MG, prova de 2018 (2º semestre). O texto já descreve o salto; só falta o nome.</p>
+  </aside>
+</section>
+
+<!-- Questão 2 -->
+<section class="slide questao" data-nome="Questão 2">
+  <div class="conteudo">
+    <div class="area-resolucao"></div>
+    <span class="pilula pilula-pausa" data-em="1:some">Pause o vídeo e tente</span>
+    <div class="painel-questao">
+      <p class="olho">Questão 2 · IF Sudeste MG 2013</p>
+      <p class="enunciado" style="font-size:22px">Dentro da história da ciência, os cientistas tentaram compreender quais as características dos átomos, como eles interagem uns com os outros, e como essas características influenciam na formação de substâncias que observamos no nosso dia a dia. Indique a alternativa <b>INCORRETA:</b></p>
+      <ol class="alternativas" style="gap:7px">
+        <li data-em="2:apaga" style="font-size:20px;padding:5px 14px"><b>A</b><span>As substâncias, segundo Dalton, são formadas por uma proporção fixa de átomos.</span></li>
+        <li data-em="2:apaga" style="font-size:20px;padding:5px 14px"><b>B</b><span>O átomo, segundo Bohr, emite radiação na forma de luz, quando seus elétrons perdem energia, e decaem para um nível de energia mais interno.</span></li>
+        <li data-em="2:apaga" style="font-size:20px;padding:5px 14px"><b>C</b><span>O núcleo do átomo, segundo Rutherford, apresenta a maior porção da massa de um átomo.</span></li>
+        <li data-em="2:certo" style="font-size:20px;padding:5px 14px"><b>D</b><span>O átomo de um elemento qualquer é sempre igual a todos os seus átomos.</span></li>
+        <li data-em="2:apaga" style="font-size:20px;padding:5px 14px"><b>E</b><span>Segundo Thomson, o átomo apresenta carga positiva, tendo os elétrons carga negativa, resultando de um átomo neutro.</span></li>
+      </ol>
+    </div>
+  </div>
+  <aside class="resolucao">
+    <p class="dados"><b>Dados:</b> procurar a afirmação errada.</p>
+    <ol class="passos">
+      <li><b>A</b> Dalton: proporção fixa. Certa.</li>
+      <li><b>B</b> Bohr: volta e emite luz. Certa.</li>
+      <li><b>C</b> Rutherford: massa no núcleo. Certa.</li>
+      <li><b>E</b> Thomson: + e − dão neutro. Certa.</li>
+      <li><b>D</b> Há átomos do mesmo elemento diferentes.</li>
+    </ol>
+    <p class="resposta"><b>Resposta:</b> a D é falsa: existem isótopos. <b>Gabarito D.</b></p>
+    <p class="atencao"><b>Destaque no quadro:</b> Isótopos: mesmo elemento, massas diferentes. Derrubou essa ideia de Dalton.</p>
+    <ul class="erros">
+      <li><b>A</b> Está correta: Dalton dizia que os átomos se combinam em proporção fixa.</li>
+      <li><b>B</b> Está correta: o elétron que volta para nível interno emite luz.</li>
+      <li><b>C</b> Está correta: quase toda a massa fica no núcleo.</li>
+      <li><b>E</b> Está correta: esfera positiva com elétrons, átomo neutro.</li>
+    </ul>
+  </aside>
+  <aside class="notas">
+    <p>Clique 1 tira o aviso de pausa: resolva na área (D liga a caneta; E esconde o enunciado). Clique 2: gabarito D.</p>
+    <p>Questão oficial do IF Sudeste MG, prova de 2013. A D é uma ideia de Dalton que caiu com a descoberta dos isótopos (ex.: carbono-12 e carbono-14), assunto da próxima parte.</p>
+  </aside>
+</section>
+
+<!-- Resumo -->
+<section class="slide" data-nome="Resumo">
+  <div class="conteudo">
+    <p class="olho">Resumo</p>
+    <h2 class="titulo">O essencial</h2>
+    <div class="resumo" style="position:absolute;left:0;right:0;top:150px">
+      <div><b>Problema de Rutherford:</b> o elétron perderia energia e cairia no núcleo.</div>
+      <div><b>Bohr (1913):</b> órbitas estacionárias; ali o elétron não perde energia.</div>
+      <div><b>Camadas K a Q:</b> níveis de energia; mais longe do núcleo, mais energia.</div>
+      <div><b>Recebe energia:</b> salta para fora. <b>Volta:</b> libera a energia como luz.</div>
+      <div><b>Espectro de linhas:</b> cada elemento tem o seu, pelas transições eletrônicas.</div>
+      <div><b>Teste de chama e fogos:</b> a cor depende do elemento do sal.</div>
+    </div>
+    <div class="caixa caixa-atencao" style="position:absolute;left:580px;right:0;top:660px">
+      <div class="texto" style="font-size:30px"><b>Para fora</b> o elétron absorve energia; <b>para dentro</b>, emite luz.</div>
+    </div>
+  </div>
+  <aside class="notas"><p>Peça para tirarem um print desta tela.</p></aside>
+</section>
+
+<!-- A seguir -->
+<section class="slide capa" data-nome="A seguir">
+  <div class="estrelas"></div>
+  <div class="texto-capa" style="top:170px">
+    <span class="selo">Química · IF</span>
+    <p class="aula" style="font-size:26px">A seguir · Estrutura atômica · Parte única</p>
+    <h1 style="font-size:110px">Número atômico e de massa</h1>
+    <p class="sub">Prótons, nêutrons, elétrons, íons e isótopos</p>
+  </div>
+  <svg class="emblema" viewBox="0 0 640 640" aria-hidden="true">
+    <g fill="none" stroke="#fff" stroke-opacity=".5" stroke-width="4" stroke-dasharray="10 12"><circle cx="320" cy="320" r="170"/><circle cx="320" cy="320" r="250"/></g>
+    <g stroke="#1C1433" stroke-width="3"><circle cx="300" cy="300" r="34" fill="#FFD10C"/><circle cx="345" cy="305" r="34" fill="#C9C0F0"/><circle cx="318" cy="345" r="34" fill="#FFD10C"/><circle cx="280" cy="345" r="34" fill="#C9C0F0"/></g>
+    <g class="gira"><circle cx="320" cy="320" r="250" fill="none"/><circle cx="320" cy="70" r="18" fill="#fff"/></g>
+  </svg>
+  <img class="logo-capa" src="{{LOGO_BRANCO}}" alt="Quarks">
+  <aside class="notas"><p>Próxima: as partículas do átomo (prótons, nêutrons e elétrons), o número atômico e o número de massa, os íons e os isótopos.</p></aside>
+</section>
