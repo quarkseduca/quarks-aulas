@@ -251,7 +251,7 @@ def lugar_no_plano(meta, plano):
     """Acha o capítulo e o item do cronograma (planejamento/cronograma.json) que este arquivo cumpre."""
     parte = meta.get("parte", "")
     for cap in plano:
-        if parte == "Questões do PISM" and meta["assunto"] == cap["t"]:
+        if parte in ("Questões do PISM", "Questões do IF Sudeste") and meta["assunto"] == cap["t"]:
             return cap["n"], "pism"
         k = re.match(r"Parte (\d+) de (\d+)", parte)
         alvo = meta["assunto"] if k else meta["titulo"]  # parte única: o subcapítulo vai no título
@@ -308,8 +308,7 @@ def sistema(destino):
                               "de": len(mesmos), "top": x.get("top", []), "id": pid})
             pism = next((p for p, (c, it) in ligados.items() if c == cap["n"] and it == "pism"
                          and partes[p]["disc"] == disc and partes[p]["curso"] == curso), None)
-            if curso.startswith("pism") or pism:  # o IF não tem bloco de questões do PISM
-                itens.append({"pism": True, "t": "Questões do PISM", "id": pism})
+            itens.append({"pism": True, "t": "Questões do PISM" if curso.startswith("pism") else "Questões do IF Sudeste", "id": pism})
             lista.append({"n": cap["n"], "t": cap["t"], "itens": itens})
         soltos = [p for p, (c, it) in ligados.items() if c is None and partes[p]["disc"] == disc and partes[p]["curso"] == curso]
         if soltos:
