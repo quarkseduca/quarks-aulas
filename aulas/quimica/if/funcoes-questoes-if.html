@@ -1,0 +1,590 @@
+<!--aula
+{"disciplina": "quimica", "curso": "IF", "assunto": "Funções inorgânicas", "parte": "Questões do IF Sudeste", "titulo": "Questões do IF Sudeste"}
+-->
+<!-- Fonte: questões oficiais do IF Sudeste MG com capítulo Funções inorgânicas no banco (apostilas/questoes/oficiais/if), na maioria da lista da professora (aula 13): 2014-1 q45, 2013-1 extra q44, 2025-1 q34, 2023-1 q33, 2013-2 q41, 2013-1 extra q46, 2018-2 q35, 2019-1 q34, 2024-1 q34, 2017-1 q33, 2015-1 extra q34 e 2014-2 q46. -->
+<style>
+  .caixa, .grupo, .cartao, .linha-ex { box-sizing: border-box; }
+  .est { font-size: .6em; font-weight: 600; color: var(--cinza); letter-spacing: 0; }
+  .eq { font: 700 36px var(--fonte-titulo); color: var(--carvao); letter-spacing: -.01em; white-space: nowrap; }
+  .eq .s { color: var(--d); margin: 0 10px; }
+  .grupo { background: var(--branco); border: 2px solid var(--lilas-2); border-radius: 30px; padding: 24px 30px; }
+  .grupo h3 { margin: 0 0 6px; font: 800 42px var(--fonte-titulo); letter-spacing: -.02em; color: var(--roxo-titulo); }
+  .grupo p { margin: 0; font-size: 29px; line-height: 1.3; color: var(--carvao); }
+  .grupo p b { color: var(--roxo-titulo); }
+  .cartao { background: var(--branco); border: 2px solid var(--lilas-2); border-radius: 26px; padding: 18px 26px; font-size: 28px; line-height: 1.32; }
+  .cartao .f { font: 800 46px var(--fonte-titulo); color: var(--roxo-titulo); }
+  .cartao b { color: var(--roxo-titulo); }
+  .linha-ex { display: grid; align-items: center; gap: 20px; background: var(--branco); border: 2px solid var(--lilas-2); border-radius: 22px; padding: 10px 26px; font-size: 29px; line-height: 1.25; }
+  .linha-ex .f { font: 800 40px var(--fonte-titulo); color: var(--roxo-titulo); }
+  .linha-ex b { color: var(--roxo-titulo); }
+  .tag { justify-self: end; padding: 6px 18px; border-radius: 999px; font-weight: 800; font-size: 25px; background: var(--d-clara); color: var(--d-forte); white-space: nowrap; }
+  .tag.ac { background: #FDE3E0; color: #A8321F; } .tag.ba { background: #E0ECFB; color: #1F5FA8; } .tag.ne { background: #EEEDF2; color: #4A4757; } .tag.an { background: #FFF4C2; color: #8A6A00; } .tag.pe { background: #E3F6EC; color: #1C7A4D; }
+  .selo-x { display: inline-block; padding: 5px 20px; border-radius: 999px; background: var(--d-clara); color: var(--d-forte); font-size: 26px; font-weight: 800; }
+  .tabela.chem td, .tabela.chem th { padding: 10px 30px; }
+  .frascos text { font-family: 'Times New Roman', serif; }
+</style>
+
+<svg width="0" height="0" style="position:absolute" aria-hidden="true">
+  <defs>
+    <radialGradient id="gO" cx=".35" cy=".3" r=".8"><stop offset="0" stop-color="#FF8A7A"/><stop offset="1" stop-color="#C8301F"/></radialGradient>
+    <radialGradient id="gH" cx=".35" cy=".3" r=".8"><stop offset="0" stop-color="#FFFFFF"/><stop offset="1" stop-color="#C9C4DC"/></radialGradient>
+    <radialGradient id="gC" cx=".35" cy=".3" r=".8"><stop offset="0" stop-color="#8A8A96"/><stop offset="1" stop-color="#2E2E36"/></radialGradient>
+    <radialGradient id="gS" cx=".35" cy=".3" r=".8"><stop offset="0" stop-color="#FFE680"/><stop offset="1" stop-color="#D9A900"/></radialGradient>
+    <radialGradient id="gCa" cx=".35" cy=".3" r=".8"><stop offset="0" stop-color="#B7F0C8"/><stop offset="1" stop-color="#2E9E5B"/></radialGradient>
+    <radialGradient id="gN" cx=".35" cy=".3" r=".8"><stop offset="0" stop-color="#7FA8FF"/><stop offset="1" stop-color="#2A5BD0"/></radialGradient>
+    <radialGradient id="gNa" cx=".35" cy=".3" r=".8"><stop offset="0" stop-color="#D7CCFF"/><stop offset="1" stop-color="#6551D1"/></radialGradient>
+    <linearGradient id="gAgua" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#CFE6FA"/><stop offset="1" stop-color="#9CCBF2"/></linearGradient>
+  </defs>
+  <symbol id="m-co2" viewBox="0 0 170 130"><circle class="vib-a" cx="45" cy="65" r="24" fill="url(#gO)" stroke="#8E2115" stroke-width="2"/><circle class="vib-b" cx="125" cy="65" r="24" fill="url(#gO)" stroke="#8E2115" stroke-width="2"/><circle class="vib-a" cx="85" cy="65" r="27" fill="url(#gC)" stroke="#1C1C22" stroke-width="2"/></symbol>
+  <symbol id="m-so2" viewBox="0 0 170 130"><circle class="vib-a" cx="50" cy="82" r="23" fill="url(#gO)" stroke="#8E2115" stroke-width="2"/><circle class="vib-b" cx="120" cy="82" r="23" fill="url(#gO)" stroke="#8E2115" stroke-width="2"/><circle class="vib-a" cx="85" cy="52" r="30" fill="url(#gS)" stroke="#8A6A00" stroke-width="2"/></symbol>
+  <symbol id="m-h2o" viewBox="0 0 170 130"><circle class="vib-a" cx="48" cy="84" r="18" fill="url(#gH)" stroke="#8C84B8" stroke-width="2"/><circle class="vib-b" cx="122" cy="84" r="18" fill="url(#gH)" stroke="#8C84B8" stroke-width="2"/><circle class="vib-a" cx="85" cy="60" r="28" fill="url(#gO)" stroke="#8E2115" stroke-width="2"/></symbol>
+  <symbol id="m-so3" viewBox="0 0 170 130"><circle class="vib-a" cx="85" cy="22" r="19" fill="url(#gO)" stroke="#8E2115" stroke-width="2"/><circle class="vib-b" cx="40" cy="92" r="19" fill="url(#gO)" stroke="#8E2115" stroke-width="2"/><circle class="vib-a" cx="130" cy="92" r="19" fill="url(#gO)" stroke="#8E2115" stroke-width="2"/><circle class="vib-b" cx="85" cy="66" r="28" fill="url(#gS)" stroke="#8A6A00" stroke-width="2"/></symbol>
+  <symbol id="m-h2so4" viewBox="0 0 170 130"><circle class="vib-a" cx="85" cy="18" r="17" fill="url(#gO)" stroke="#8E2115" stroke-width="2"/><circle class="vib-b" cx="85" cy="112" r="17" fill="url(#gO)" stroke="#8E2115" stroke-width="2"/><circle class="vib-a" cx="36" cy="65" r="17" fill="url(#gO)" stroke="#8E2115" stroke-width="2"/><circle class="vib-b" cx="134" cy="65" r="17" fill="url(#gO)" stroke="#8E2115" stroke-width="2"/><circle class="vib-a" cx="14" cy="50" r="11" fill="url(#gH)" stroke="#8C84B8" stroke-width="2"/><circle class="vib-b" cx="156" cy="80" r="11" fill="url(#gH)" stroke="#8C84B8" stroke-width="2"/><circle class="vib-a" cx="85" cy="65" r="25" fill="url(#gS)" stroke="#8A6A00" stroke-width="2"/></symbol>
+  <symbol id="m-cao" viewBox="0 0 170 130"><circle class="vib-a" cx="62" cy="65" r="30" fill="url(#gCa)" stroke="#1D6B3C" stroke-width="2"/><circle class="vib-b" cx="118" cy="65" r="24" fill="url(#gO)" stroke="#8E2115" stroke-width="2"/></symbol>
+  <symbol id="m-caoh2" viewBox="0 0 170 130"><circle class="vib-a" cx="85" cy="65" r="30" fill="url(#gCa)" stroke="#1D6B3C" stroke-width="2"/><circle class="vib-b" cx="35" cy="65" r="20" fill="url(#gO)" stroke="#8E2115" stroke-width="2"/><circle class="vib-a" cx="135" cy="65" r="20" fill="url(#gO)" stroke="#8E2115" stroke-width="2"/><circle class="vib-b" cx="14" cy="50" r="11" fill="url(#gH)" stroke="#8C84B8" stroke-width="2"/><circle class="vib-a" cx="156" cy="80" r="11" fill="url(#gH)" stroke="#8C84B8" stroke-width="2"/></symbol>
+  <symbol id="m-co" viewBox="0 0 170 130"><circle class="vib-a" cx="62" cy="65" r="27" fill="url(#gC)" stroke="#1C1C22" stroke-width="2"/><circle class="vib-b" cx="110" cy="65" r="24" fill="url(#gO)" stroke="#8E2115" stroke-width="2"/></symbol>
+  <symbol id="m-no" viewBox="0 0 170 130"><circle class="vib-a" cx="62" cy="65" r="26" fill="url(#gN)" stroke="#1B3E94" stroke-width="2"/><circle class="vib-b" cx="110" cy="65" r="24" fill="url(#gO)" stroke="#8E2115" stroke-width="2"/></symbol>
+  <symbol id="m-n2o" viewBox="0 0 170 130"><circle class="vib-a" cx="38" cy="65" r="22" fill="url(#gN)" stroke="#1B3E94" stroke-width="2"/><circle class="vib-b" cx="82" cy="65" r="22" fill="url(#gN)" stroke="#1B3E94" stroke-width="2"/><circle class="vib-a" cx="128" cy="65" r="22" fill="url(#gO)" stroke="#8E2115" stroke-width="2"/></symbol>
+  <symbol id="m-h2o2" viewBox="0 0 170 130"><circle class="vib-a" cx="60" cy="70" r="24" fill="url(#gO)" stroke="#8E2115" stroke-width="2"/><circle class="vib-b" cx="110" cy="60" r="24" fill="url(#gO)" stroke="#8E2115" stroke-width="2"/><circle class="vib-a" cx="30" cy="98" r="14" fill="url(#gH)" stroke="#8C84B8" stroke-width="2"/><circle class="vib-b" cx="140" cy="32" r="14" fill="url(#gH)" stroke="#8C84B8" stroke-width="2"/></symbol>
+</svg>
+
+<!-- Capa -->
+<section class="slide capa" data-nome="Capa">
+  <div class="estrelas"></div>
+  <div class="texto-capa" style="top:150px">
+    <span class="selo">Química · IF</span>
+    <p class="aula">Funções inorgânicas</p>
+    <h1>Questões do IF Sudeste</h1>
+    <p class="sub">Provas oficiais, uma por tela</p>
+  </div>
+  <svg class="emblema" viewBox="0 0 640 640" aria-hidden="true">
+    <rect x="150" y="110" width="340" height="430" rx="34" fill="#fff" fill-opacity=".12" stroke="#fff" stroke-opacity=".6" stroke-width="4"/>
+    <g fill="#fff" fill-opacity=".7"><rect x="200" y="170" width="240" height="18" rx="9"/><rect x="200" y="210" width="200" height="18" rx="9"/><rect x="200" y="250" width="220" height="18" rx="9"/></g>
+    <g fill="none" stroke="#fff" stroke-opacity=".75" stroke-width="4"><circle cx="216" cy="330" r="16"/><circle cx="216" cy="390" r="16"/><circle cx="216" cy="450" r="16"/></g>
+    <circle cx="216" cy="390" r="16" fill="#FFD10C"/>
+    <g fill="#fff" fill-opacity=".55"><rect x="250" y="321" width="150" height="16" rx="8"/><rect x="250" y="381" width="170" height="16" rx="8"/><rect x="250" y="441" width="130" height="16" rx="8"/></g>
+    <circle cx="470" cy="130" r="54" fill="#FFD10C"/>
+    <path d="M446 132 L464 150 L496 112" fill="none" stroke="#292B2C" stroke-width="10" stroke-linecap="round" stroke-linejoin="round"/>
+  </svg>
+  <img class="logo-capa" src="{{LOGO_BRANCO}}" alt="Quarks">
+  <aside class="notas"><p>Fechamento de Funções inorgânicas: só questões que caíram no IF Sudeste MG, de ácidos, bases, sais, óxidos e pH. Em cada uma, pause, tente e depois confira a resolução.</p></aside>
+</section>
+
+<!-- IF 2014 -->
+<section class="slide questao" data-nome="IF 2014">
+  <div class="conteudo">
+    <div class="area-resolucao"></div>
+    <span class="pilula pilula-pausa" data-em="1:some">Pause o vídeo e tente</span>
+    <div class="painel-questao">
+      <p class="olho">Questão 1 · IF Sudeste MG 2014</p>
+      <p class="enunciado" style="font-size:23px">Abaixo são apresentadas algumas substâncias químicas encontradas no nosso cotidiano e suas aplicações:</p>
+      <p class="enunciado" style="font-size:23px">I - CaO – usado na agricultura para diminuir a acidez do solo e também na preparação de argamassa na construção civil.<br>II - HCl – utilizado na limpeza de pisos ou de superfícies metálicas.<br>III - Mg(OH)<sub>2</sub> – usado na medicina como antiácido estomacal.<br>IV - CaSO<sub>4</sub> – principal componente do giz.</p>
+      <p class="enunciado" style="font-size:23px">Essas substâncias podem ser classificadas, respectivamente, como:</p>
+      <ol class="alternativas" style="gap:8px">
+        <li data-em="2:certo" style="font-size:21px;padding:6px 14px"><b>A</b><span>I – Óxido; II – Ácido; III – Base; IV – Sal.</span></li>
+        <li data-em="2:apaga" style="font-size:21px;padding:6px 14px"><b>B</b><span>I – Base; II – Sal; III – Óxido; IV – Ácido.</span></li>
+        <li data-em="2:apaga" style="font-size:21px;padding:6px 14px"><b>C</b><span>I – Sal; II – Base; III – Ácido; IV – Óxido.</span></li>
+        <li data-em="2:apaga" style="font-size:21px;padding:6px 14px"><b>D</b><span>I – Ácido; II – Sal; III – Base; IV – Óxido.</span></li>
+        <li data-em="2:apaga" style="font-size:21px;padding:6px 14px"><b>E</b><span>I – Óxido; II – Base; III – Sal; IV – Óxido.</span></li>
+      </ol>
+    </div>
+  </div>
+  <aside class="resolucao">
+    <p class="dados"><b>Dados:</b> CaO, HCl, Mg(OH)<sub>2</sub>, CaSO<sub>4</sub>.</p>
+    <ol class="passos">
+      <li><b>CaO:</b> 2 elementos, um é O: óxido.</li>
+      <li><b>HCl:</b> libera H<sup>+</sup> em água: ácido.</li>
+      <li><b>Mg(OH)<sub>2</sub>:</b> metal + OH<sup>−</sup>: base.</li>
+      <li><b>CaSO<sub>4</sub>:</b> metal + ânion de ácido: sal.</li>
+    </ol>
+    <p class="resposta"><b>Resposta:</b> óxido, ácido, base e sal. <b>Gabarito A.</b></p>
+    <p class="atencao"><b>Destaque no quadro:</b> Óxido: 2 elementos com O. Ácido: H<sup>+</sup>. Base: OH<sup>−</sup>. Sal: o resto.</p>
+    <ul class="erros">
+      <li><b>B</b> CaO não tem OH (não é base); HCl é ácido; Mg(OH)<sub>2</sub> é base, não óxido.</li>
+      <li><b>C</b> CaO é óxido; HCl é ácido, não base; Mg(OH)<sub>2</sub> é base, não ácido.</li>
+      <li><b>D</b> CaO é óxido, não ácido; CaSO<sub>4</sub> tem 3 elementos: é sal, não óxido.</li>
+      <li><b>E</b> Acerta o CaO, mas erra os outros três.</li>
+    </ul>
+  </aside>
+  <aside class="notas">
+    <p>Clique 1 tira o aviso de pausa: resolva na área (D liga a caneta; E esconde o enunciado). Clique 2: gabarito A.</p>
+    <p>Questão oficial do IF Sudeste MG (2014), da lista da professora. Na lista dela faltava o item IV (CaSO₄, giz); aqui o enunciado está completo, como na prova.</p>
+  </aside>
+</section>
+
+<!-- IF 2013 -->
+<section class="slide questao" data-nome="IF 2013">
+  <div class="conteudo">
+    <div class="area-resolucao"></div>
+    <span class="pilula pilula-pausa" data-em="1:some">Pause o vídeo e tente</span>
+    <div class="painel-questao">
+      <p class="olho">Questão 2 · IF Sudeste MG 2013</p>
+      <p class="enunciado" style="font-size:26px">Dadas as espécies químicas abaixo, quais representam, respectivamente, uma base e um ácido de Arrhenius?</p>
+      <ol class="alternativas curtas">
+        <li data-em="2:apaga"><b>A</b><span>Na<sub>2</sub>CO<sub>3</sub>; HNO<sub>3</sub></span></li>
+        <li data-em="2:apaga"><b>B</b><span>Na<sub>2</sub>O; NaOH</span></li>
+        <li data-em="2:certo"><b>C</b><span>KOH; H<sub>2</sub>SO<sub>4</sub></span></li>
+        <li data-em="2:apaga"><b>D</b><span>HCl; KOH</span></li>
+        <li data-em="2:apaga"><b>E</b><span>NaOH; NaCl</span></li>
+      </ol>
+    </div>
+  </div>
+  <aside class="resolucao">
+    <p class="dados"><b>Dados:</b> pede base e ácido, <b>nessa ordem</b>.</p>
+    <ol class="passos">
+      <li><b>Base:</b> libera OH<sup>−</sup> (metal + OH).</li>
+      <li><b>Ácido:</b> libera H<sup>+</sup> (começa com H).</li>
+      <li><b>KOH</b> é base; <b>H<sub>2</sub>SO<sub>4</sub></b> é ácido.</li>
+    </ol>
+    <p class="resposta"><b>Resposta:</b> KOH e H<sub>2</sub>SO<sub>4</sub>. <b>Gabarito C.</b></p>
+    <p class="atencao"><b>Destaque no quadro:</b> Atenção à ordem pedida: base primeiro.</p>
+    <ul class="erros">
+      <li><b>A</b> Na<sub>2</sub>CO<sub>3</sub> é sal (carbonato de sódio), não base.</li>
+      <li><b>B</b> Na<sub>2</sub>O é óxido e NaOH é base, não ácido.</li>
+      <li><b>D</b> Tem ácido e base, mas na ordem trocada.</li>
+      <li><b>E</b> NaCl é sal, não ácido.</li>
+    </ul>
+  </aside>
+  <aside class="notas">
+    <p>Clique 1 tira o aviso de pausa: resolva na área (D liga a caneta; E esconde o enunciado). Clique 2: gabarito C.</p>
+    <p>Questão oficial do IF Sudeste MG (2013, prova extra).</p>
+  </aside>
+</section>
+
+<!-- IF 2025 -->
+<section class="slide questao" data-nome="IF 2025">
+  <div class="conteudo">
+    <div class="area-resolucao"></div>
+    <span class="pilula pilula-pausa" data-em="1:some">Pause o vídeo e tente</span>
+    <div class="painel-questao">
+      <p class="olho">Questão 3 · IF Sudeste MG 2025</p>
+      <p class="enunciado" style="font-size:24px">Segundo o conceito de Arrhenius, ácidos são substâncias que aumentam a concentração de íons hidrogênio, H<sup>+</sup>, quando solubilizadas em água. A função hidróxidos, são substâncias que, em solução aquosa, aumentam a concentração de íons hidroxila (OH<sup>−</sup>). Com base nos conceitos ácido-base de Arrhenius, assinale a alternativa que contenha a fórmula química de um ácido e de uma base, respectivamente.</p>
+      <ol class="alternativas curtas">
+        <li data-em="2:certo"><b>A</b><span>H<sub>2</sub>S e Mg(OH)<sub>2</sub></span></li>
+        <li data-em="2:apaga"><b>B</b><span>NH<sub>3</sub> e NaClO</span></li>
+        <li data-em="2:apaga"><b>C</b><span>HNO<sub>2</sub> e HCl</span></li>
+        <li data-em="2:apaga"><b>D</b><span>NaH e NaOH</span></li>
+        <li data-em="2:apaga"><b>E</b><span>BH<sub>3</sub> e NH<sub>4</sub>OH</span></li>
+      </ol>
+    </div>
+  </div>
+  <aside class="resolucao">
+    <p class="dados"><b>Dados:</b> ácido e base de Arrhenius, nessa ordem.</p>
+    <ol class="passos">
+      <li><b>H<sub>2</sub>S:</b> libera H<sup>+</sup> em água: ácido.</li>
+      <li><b>Mg(OH)<sub>2</sub>:</b> Mg<sup>2+</sup> e OH<sup>−</sup>: base.</li>
+    </ol>
+    <p class="resposta"><b>Resposta:</b> H<sub>2</sub>S e Mg(OH)<sub>2</sub>. <b>Gabarito A.</b></p>
+    <p class="atencao"><b>Destaque no quadro:</b> Ter H não basta: o H precisa sair como H<sup>+</sup> (ligado a ametal).</p>
+    <ul class="erros">
+      <li><b>B</b> NH<sub>3</sub> não libera H<sup>+</sup>; NaClO é sal.</li>
+      <li><b>C</b> Os dois são ácidos; falta a base.</li>
+      <li><b>D</b> NaH é hidreto (H ligado a metal), não ácido.</li>
+      <li><b>E</b> BH<sub>3</sub> não é ácido de Arrhenius.</li>
+    </ul>
+  </aside>
+  <aside class="notas">
+    <p>Clique 1 tira o aviso de pausa: resolva na área (D liga a caneta; E esconde o enunciado). Clique 2: gabarito A.</p>
+    <p>Questão oficial do IF Sudeste MG (2025), da lista da professora.</p>
+  </aside>
+</section>
+
+<!-- IF 2023 -->
+<section class="slide questao" data-nome="IF 2023">
+  <div class="conteudo">
+    <div class="area-resolucao"></div>
+    <span class="pilula pilula-pausa" data-em="1:some">Pause o vídeo e tente</span>
+    <div class="painel-questao">
+      <p class="olho">Questão 4 · IF Sudeste MG 2023</p>
+      <p class="enunciado" style="font-size:23px">As substâncias que compõem as funções inorgânicas são muito importantes no nosso dia a dia. Os ácidos, por exemplo, são substâncias que se ionizam em água e dão origem ao íon H<sup>+</sup> (H<sub>3</sub>O<sup>+</sup>), tornando o pH do meio abaixo de 7. Já as bases, liberam hidroxila (OH<sup>−</sup>) em meio aquoso, tornando o pH alcalino, isto é acima de 7. Nesse sentido, são exemplos de ácido e base, respectivamente:</p>
+      <ol class="alternativas curtas">
+        <li data-em="2:apaga"><b>A</b><span>CO<sub>2</sub> e Ca(OH)<sub>2</sub></span></li>
+        <li data-em="2:apaga"><b>B</b><span>H<sub>2</sub>S e NO</span></li>
+        <li data-em="2:apaga"><b>C</b><span>HNO<sub>3</sub> e HCl</span></li>
+        <li data-em="2:certo"><b>D</b><span>H<sub>2</sub>SO<sub>4</sub> e LiOH</span></li>
+        <li data-em="2:apaga"><b>E</b><span>SO<sub>2</sub> e H<sub>2</sub>O<sub>2</sub></span></li>
+      </ol>
+    </div>
+  </div>
+  <aside class="resolucao">
+    <p class="dados"><b>Dados:</b> ácido (pH < 7) e base (pH > 7), nessa ordem.</p>
+    <ol class="passos">
+      <li><b>H<sub>2</sub>SO<sub>4</sub> → 2 H<sup>+</sup> + SO<sub>4</sub><sup>2−</sup></b>: ácido.</li>
+      <li><b>LiOH → Li<sup>+</sup> + OH<sup>−</sup></b>: base.</li>
+      <li><b>CO<sub>2</sub>, NO, SO<sub>2</sub>:</b> óxidos.</li>
+    </ol>
+    <p class="resposta"><b>Resposta:</b> H<sub>2</sub>SO<sub>4</sub> e LiOH. <b>Gabarito D.</b></p>
+    <p class="atencao"><b>Destaque no quadro:</b> Ácido: pH abaixo de 7. Base: pH acima de 7.</p>
+    <ul class="erros">
+      <li><b>A</b> CO<sub>2</sub> é óxido (forma ácido com água, mas não é ácido).</li>
+      <li><b>B</b> NO é óxido neutro, não base.</li>
+      <li><b>C</b> Os dois são ácidos.</li>
+      <li><b>E</b> SO<sub>2</sub> é óxido e H<sub>2</sub>O<sub>2</sub> é peróxido.</li>
+    </ul>
+  </aside>
+  <aside class="notas">
+    <p>Clique 1 tira o aviso de pausa: resolva na área (D liga a caneta; E esconde o enunciado). Clique 2: gabarito D.</p>
+    <p>Questão oficial do IF Sudeste MG (2023), da lista da professora. É a que liga funções e pH.</p>
+  </aside>
+</section>
+
+<!-- IF 2013 -->
+<section class="slide questao" data-nome="IF 2013">
+  <div class="conteudo">
+    <div class="area-resolucao"></div>
+    <span class="pilula pilula-pausa" data-em="1:some">Pause o vídeo e tente</span>
+    <div class="painel-questao">
+      <p class="olho">Questão 5 · IF Sudeste MG 2013</p>
+      <p class="enunciado" style="font-size:23px">Diante dos compostos apresentados, H<sub>2</sub>S – H<sub>3</sub>PO<sub>4</sub> – Ca(OH)<sub>2</sub> – Sn(OH)<sub>4</sub>, podemos dizer que suas classificações são, respectivamente:</p>
+      <ol class="alternativas" style="gap:8px">
+        <li data-em="2:apaga" style="font-size:18px;padding:6px 14px"><b>A</b><span>Oxiácido, Triácido, moderado - Hidrácido, diácido, fraco - Dibase, forte, pouco solúvel - Tetrabase, fraca, praticamente insolúvel.</span></li>
+        <li data-em="2:apaga" style="font-size:18px;padding:6px 14px"><b>B</b><span>Hidrácido, diácido, fraco - Dibase, forte, pouco solúvel - Tetrabase, fraca, praticamente insolúvel - Oxiácido, Triácido, moderado.</span></li>
+        <li data-em="2:apaga" style="font-size:18px;padding:6px 14px"><b>C</b><span>Dibase, forte, pouco solúvel - Tetrabase, fraca, praticamente insolúvel - Hidrácido, diácido, fraco - Oxiácido, Triácido, moderado.</span></li>
+        <li data-em="2:apaga" style="font-size:18px;padding:6px 14px"><b>D</b><span>Tetrabase, fraca, praticamente insolúvel - Hidrácido, diácido, fraco - Oxiácido, Triácido, moderado - Dibase, forte, pouco solúvel.</span></li>
+        <li data-em="2:certo" style="font-size:18px;padding:6px 14px"><b>E</b><span>Hidrácido, diácido, fraco - Oxiácido, Triácido, moderado - Dibase, forte, pouco solúvel - Tetrabase, fraca, praticamente insolúvel.</span></li>
+      </ol>
+    </div>
+  </div>
+  <aside class="resolucao">
+    <p class="dados"><b>Dados:</b> H<sub>2</sub>S, H<sub>3</sub>PO<sub>4</sub>, Ca(OH)<sub>2</sub>, Sn(OH)<sub>4</sub>, nessa ordem.</p>
+    <ol class="passos">
+      <li><b>H<sub>2</sub>S:</b> sem O, 2 H: hidrácido, diácido, fraco.</li>
+      <li><b>H<sub>3</sub>PO<sub>4</sub>:</b> O − H = 4 − 3 = 1: moderado.</li>
+      <li><b>Ca(OH)<sub>2</sub>:</b> grupo 2: dibase forte, pouco solúvel.</li>
+      <li><b>Sn(OH)<sub>4</sub>:</b> 4 OH, não é grupo 1/2: fraca.</li>
+    </ol>
+    <p class="resposta"><b>Resposta:</b> a sequência da alternativa E. <b>Gabarito E.</b></p>
+    <p class="atencao"><b>Destaque no quadro:</b> Oxiácido: O − H ≥ 2 forte; = 1 moderado; = 0 fraco.</p>
+    <ul class="erros">
+      <li><b>A</b> Troca os dois ácidos: o H<sub>2</sub>S (1º) é que é hidrácido.</li>
+      <li><b>B</b> Põe o H<sub>3</sub>PO<sub>4</sub> por último; o 2º composto é ácido.</li>
+      <li><b>C</b> Começa pelas bases; os dois primeiros são ácidos.</li>
+      <li><b>D</b> Começa por tetrabase; o 1º composto é o H<sub>2</sub>S.</li>
+    </ul>
+  </aside>
+  <aside class="notas">
+    <p>Clique 1 tira o aviso de pausa: resolva na área (D liga a caneta; E esconde o enunciado). Clique 2: gabarito E.</p>
+    <p>Questão oficial do IF Sudeste MG (2013, 2º semestre). Revisão de classificação e força de ácidos e bases.</p>
+  </aside>
+</section>
+
+<!-- IF 2013 -->
+<section class="slide questao" data-nome="IF 2013">
+  <div class="conteudo">
+    <div class="area-resolucao"></div>
+    <span class="pilula pilula-pausa" data-em="1:some">Pause o vídeo e tente</span>
+    <div class="painel-questao">
+      <p class="olho">Questão 6 · IF Sudeste MG 2013</p>
+      <p class="enunciado" style="font-size:22px">A tabela a seguir apresenta características e aplicações de algumas substâncias:</p>
+      <table class="tabela" style="font-size:19px;width:100%"><tr><th style="padding:6px 12px;text-align:left">Nome</th><th style="padding:6px 12px;text-align:left">Aplicações e características</th></tr><tr><td style="padding:5px 12px;text-align:left">Ácido muriático</td><td style="padding:5px 12px;text-align:left">Limpeza doméstica</td></tr><tr><td style="padding:5px 12px;text-align:left">Ácido sulfúrico</td><td style="padding:5px 12px;text-align:left">Desidratante, solução de bateria</td></tr><tr><td style="padding:5px 12px;text-align:left">Hidróxido de magnésio</td><td style="padding:5px 12px;text-align:left">Antiácido</td></tr><tr><td style="padding:5px 12px;text-align:left">Sal de Cozinha</td><td style="padding:5px 12px;text-align:left">Cozinhar</td></tr></table>
+      <p class="enunciado" style="font-size:22px">As fórmulas das substâncias da tabela são, respectivamente:</p>
+      <ol class="alternativas" style="gap:8px">
+        <li data-em="2:certo" style="font-size:20px;padding:6px 14px"><b>A</b><span>HCl, H<sub>2</sub>SO<sub>4</sub>, Mg(OH)<sub>2</sub>, NaCl.</span></li>
+        <li data-em="2:apaga" style="font-size:20px;padding:6px 14px"><b>B</b><span>HClO, H<sub>2</sub>SO<sub>4</sub>, MgOH, NaCl<sub>2</sub>.</span></li>
+        <li data-em="2:apaga" style="font-size:20px;padding:6px 14px"><b>C</b><span>HCl, H<sub>2</sub>SO<sub>4</sub>, Mg(OH)<sub>2</sub>, NaCl<sub>2</sub>.</span></li>
+        <li data-em="2:apaga" style="font-size:20px;padding:6px 14px"><b>D</b><span>HClO<sub>2</sub>, H<sub>2</sub>SO<sub>3</sub>, MgOH, NaCl<sub>2</sub>.</span></li>
+        <li data-em="2:apaga" style="font-size:20px;padding:6px 14px"><b>E</b><span>HClO, H<sub>2</sub>SO<sub>3</sub>, Mg(OH)<sub>2</sub>, NaCl<sub>2</sub>.</span></li>
+      </ol>
+    </div>
+  </div>
+  <aside class="resolucao">
+    <p class="dados"><b>Dados:</b> nomes na ordem da tabela.</p>
+    <ol class="passos">
+      <li><b>Muriático:</b> ácido clorídrico, HCl.</li>
+      <li><b>Sulfúrico:</b> SO<sub>4</sub><sup>2−</sup> + 2 H = H<sub>2</sub>SO<sub>4</sub>.</li>
+      <li><b>Mg<sup>2+</sup> + 2 OH<sup>−</sup></b> = Mg(OH)<sub>2</sub>.</li>
+      <li><b>Na<sup>+</sup> + Cl<sup>−</sup></b> = NaCl.</li>
+    </ol>
+    <p class="resposta"><b>Resposta:</b> HCl, H<sub>2</sub>SO<sub>4</sub>, Mg(OH)<sub>2</sub>, NaCl. <b>Gabarito A.</b></p>
+    <p class="atencao"><b>Destaque no quadro:</b> A fórmula zera as cargas: Mg<sup>2+</sup> pede 2 OH; Na<sup>+</sup> pede 1 Cl.</p>
+    <ul class="erros">
+      <li><b>B</b> HClO é hipocloroso; MgOH e NaCl<sub>2</sub> não zeram as cargas.</li>
+      <li><b>C</b> O sal de cozinha é NaCl, não NaCl<sub>2</sub>.</li>
+      <li><b>D</b> HClO<sub>2</sub> (cloroso) e H<sub>2</sub>SO<sub>3</sub> (sulfuroso) são outros ácidos.</li>
+      <li><b>E</b> HClO e H<sub>2</sub>SO<sub>3</sub> são outros ácidos; NaCl<sub>2</sub> está errado.</li>
+    </ul>
+  </aside>
+  <aside class="notas">
+    <p>Clique 1 tira o aviso de pausa: resolva na área (D liga a caneta; E esconde o enunciado). Clique 2: gabarito A.</p>
+    <p>Questão oficial do IF Sudeste MG (2013, prova extra).</p>
+  </aside>
+</section>
+
+<!-- IF 2018 -->
+<section class="slide questao" data-nome="IF 2018">
+  <div class="conteudo">
+    <div class="area-resolucao"></div>
+    <span class="pilula pilula-pausa" data-em="1:some">Pause o vídeo e tente</span>
+    <div class="painel-questao">
+      <p class="olho">Questão 7 · IF Sudeste MG 2018</p>
+      <p class="enunciado" style="font-size:24px">Sobre a reação química representada abaixo:</p>
+      <p class="enunciado" style="font-size:24px;text-align:center;margin:0">HCl<span class="est">(aq)</span> + NaOH<span class="est">(aq)</span> → NaCl<span class="est">(aq)</span> + H<sub>2</sub>O<span class="est">(l)</span></p>
+      <p class="enunciado" style="font-size:24px">É <b>INCORRETO</b> afirmar que:</p>
+      <ol class="alternativas" style="gap:8px">
+        <li data-em="2:apaga"><b>A</b><span>nos reagentes, encontram-se um ácido e uma base.</span></li>
+        <li data-em="2:certo"><b>B</b><span>o ácido utilizado recebe o nome de ácido clórico.</span></li>
+        <li data-em="2:apaga"><b>C</b><span>os produtos formados são sal e água.</span></li>
+        <li data-em="2:apaga"><b>D</b><span>trata-se de uma reação de neutralização.</span></li>
+        <li data-em="2:apaga"><b>E</b><span>todas as substâncias da reação são classificadas como compostas.</span></li>
+      </ol>
+    </div>
+  </div>
+  <aside class="resolucao">
+    <p class="dados"><b>Dados:</b> procura a afirmativa <b>errada</b>.</p>
+    <ol class="passos">
+      <li><b>HCl:</b> hidrácido: termina em -ídrico.</li>
+      <li><b>Nome certo:</b> ácido clorídrico.</li>
+      <li><b>Ácido clórico</b> é o HClO<sub>3</sub>.</li>
+    </ol>
+    <p class="resposta"><b>Resposta:</b> o erro é chamar o HCl de ácido clórico. <b>Gabarito B.</b></p>
+    <p class="atencao"><b>Destaque no quadro:</b> Hidrácido: -ídrico (HCl). Oxiácido: -ico ou -oso (HClO<sub>3</sub>, clórico).</p>
+    <ul class="erros">
+      <li><b>A</b> Correta: HCl é ácido e NaOH é base.</li>
+      <li><b>C</b> Correta: NaCl (sal) e água.</li>
+      <li><b>D</b> Correta: ácido + base → sal + água.</li>
+      <li><b>E</b> Correta: todas têm mais de um elemento.</li>
+    </ul>
+  </aside>
+  <aside class="notas">
+    <p>Clique 1 tira o aviso de pausa: resolva na área (D liga a caneta; E esconde o enunciado). Clique 2: gabarito B.</p>
+    <p>Questão oficial do IF Sudeste MG (2018, 2º semestre).</p>
+  </aside>
+</section>
+
+<!-- IF 2019 -->
+<section class="slide questao" data-nome="IF 2019">
+  <div class="conteudo">
+    <div class="area-resolucao"></div>
+    <span class="pilula pilula-pausa" data-em="1:some">Pause o vídeo e tente</span>
+    <div class="painel-questao">
+      <p class="olho">Questão 8 · IF Sudeste MG 2019</p>
+      <p class="enunciado" style="font-size:21px">Para revisar o conteúdo, um professor levou alguns frascos contendo substâncias que representavam cada uma das funções químicas estudadas, como ilustra a figura abaixo. A atividade consistia em escrever o nome das substâncias representadas pelas fórmulas em seus respectivos frascos. Acertou todos os nomes o aluno que escreveu:</p>
+      <svg class="frascos" viewBox="0 0 520 150" width="500" height="144" aria-hidden="true" style="flex:none">
+        <g fill="#fff" stroke="#292B2C" stroke-width="2.5">
+          <path d="M20 40 h90 v100 q0 6 -6 6 h-78 q-6 0 -6 -6 z"/><rect x="38" y="18" width="54" height="22" rx="4"/>
+          <path d="M150 40 h90 v100 q0 6 -6 6 h-78 q-6 0 -6 -6 z"/><rect x="168" y="18" width="54" height="22" rx="4"/>
+          <path d="M280 40 h90 v100 q0 6 -6 6 h-78 q-6 0 -6 -6 z"/><rect x="298" y="18" width="54" height="22" rx="4"/>
+          <path d="M410 40 h90 v100 q0 6 -6 6 h-78 q-6 0 -6 -6 z"/><rect x="428" y="18" width="54" height="22" rx="4"/>
+        </g>
+        <g font-size="22" fill="#292B2C" text-anchor="middle">
+          <text x="65" y="84">Al(OH)<tspan font-size="15" dy="5">3</tspan></text><text x="65" y="124">1</text>
+          <text x="195" y="84">CaO</text><text x="195" y="124">2</text>
+          <text x="325" y="84">H<tspan font-size="15" dy="5">2</tspan><tspan dy="-5">SO</tspan><tspan font-size="15" dy="5">4</tspan></text><text x="325" y="124">3</text>
+          <text x="455" y="84">MgCl<tspan font-size="15" dy="5">2</tspan></text><text x="455" y="124">4</text>
+        </g>
+      </svg>
+      <ol class="alternativas" style="gap:8px">
+        <li data-em="2:certo" style="font-size:19px;padding:6px 14px"><b>A</b><span>1 – hidróxido de alumínio; 2 – óxido de cálcio; 3 – ácido sulfúrico; 4 – cloreto de magnésio.</span></li>
+        <li data-em="2:apaga" style="font-size:19px;padding:6px 14px"><b>B</b><span>1 – óxido de alumínio; 2 – hidróxido de carbono; 3 – ácido sulfuroso; 4 – cloreto de manganês.</span></li>
+        <li data-em="2:apaga" style="font-size:19px;padding:6px 14px"><b>C</b><span>1 – hidróxido de alumínio; 2 – óxido de carbono; 3 – ácido sulfúrico; 4 – clorato de magnésio.</span></li>
+        <li data-em="2:apaga" style="font-size:19px;padding:6px 14px"><b>D</b><span>1 – óxido de alumínio; 2 – óxido de cálcio; 3 – ácido sulfuroso; 4 – cloreto de magnésio.</span></li>
+        <li data-em="2:apaga" style="font-size:19px;padding:6px 14px"><b>E</b><span>1 – hidróxido de alumínio; 2 – hidróxido de cálcio; 3 – ácido sulfúrico; 4 – cloreto de magnésio.</span></li>
+      </ol>
+    </div>
+  </div>
+  <aside class="resolucao">
+    <p class="dados"><b>Dados:</b> Al(OH)<sub>3</sub>, CaO, H<sub>2</sub>SO<sub>4</sub>, MgCl<sub>2</sub>.</p>
+    <ol class="passos">
+      <li><b>1:</b> tem OH: hidróxido de alumínio.</li>
+      <li><b>2:</b> Ca é cálcio: óxido de cálcio.</li>
+      <li><b>3:</b> SO<sub>4</sub><sup>2−</sup> (-ato) → ácido sulfúrico.</li>
+      <li><b>4:</b> Mg + Cl<sup>−</sup>: cloreto de magnésio.</li>
+    </ol>
+    <p class="resposta"><b>Resposta:</b> hidróxido de alumínio, óxido de cálcio, ácido sulfúrico, cloreto de magnésio. <b>Gabarito A.</b></p>
+    <p class="atencao"><b>Destaque no quadro:</b> Ca é cálcio (C é carbono); Mg é magnésio (Mn é manganês).</p>
+    <ul class="erros">
+      <li><b>B</b> Al(OH)<sub>3</sub> é hidróxido; Ca não é carbono; H<sub>2</sub>SO<sub>4</sub> é sulfúrico; Mg não é manganês.</li>
+      <li><b>C</b> Ca é cálcio, não carbono; MgCl<sub>2</sub> é cloreto, não clorato (ClO<sub>3</sub><sup>−</sup>).</li>
+      <li><b>D</b> Al(OH)<sub>3</sub> tem OH: hidróxido; H<sub>2</sub>SO<sub>4</sub> é sulfúrico (sulfuroso é H<sub>2</sub>SO<sub>3</sub>).</li>
+      <li><b>E</b> CaO não tem OH: é óxido de cálcio, não hidróxido.</li>
+    </ul>
+  </aside>
+  <aside class="notas">
+    <p>Clique 1 tira o aviso de pausa: resolva na área (D liga a caneta; E esconde o enunciado). Clique 2: gabarito A.</p>
+    <p>Questão oficial do IF Sudeste MG (2019), da lista da professora. A figura dos frascos foi redesenhada com as mesmas fórmulas e números.</p>
+    <p>A pergunta (escrever o nome de cada frasco) foi posta antes da figura para caber na coluna.</p>
+  </aside>
+</section>
+
+<!-- IF 2024 -->
+<section class="slide questao" data-nome="IF 2024">
+  <div class="conteudo">
+    <div class="area-resolucao"></div>
+    <span class="pilula pilula-pausa" data-em="1:some">Pause o vídeo e tente</span>
+    <div class="painel-questao">
+      <p class="olho">Questão 9 · IF Sudeste MG 2024</p>
+      <p class="enunciado" style="font-size:22px">O ácido sulfúrico, H<sub>2</sub>SO<sub>4</sub>, é o produto químico mais produzido no mundo. Em solução aquosa, esse ácido é altamente corrosivo e ataca todos os metais. Ele é oleoso e, quando misturado à água, libera quantidades relevantes de calor. Por ser um ácido, a substância conduz eletricidade, neutraliza álcalis e corrói metais formando gás hidrogênio.</p>
+      <p class="enunciado" style="font-size:22px">Sobre o conceito de ácidos e sobre o ácido sulfúrico, citado no texto, assinale a alternativa <b>CORRETA</b>.</p>
+      <ol class="alternativas" style="gap:8px">
+        <li data-em="2:apaga" style="font-size:20px;padding:6px 14px"><b>A</b><span>Ácidos são substâncias que se ionizam em meio aquoso, liberando o ânion H<sup>+</sup>.</span></li>
+        <li data-em="2:apaga" style="font-size:20px;padding:6px 14px"><b>B</b><span>O ácido sulfúrico, ao ser ionizado em água, libera apenas ânions em meio aquoso.</span></li>
+        <li data-em="2:apaga" style="font-size:20px;padding:6px 14px"><b>C</b><span>O ácido sulfúrico conduz eletricidade por possuir características metálicas.</span></li>
+        <li data-em="2:certo" style="font-size:20px;padding:6px 14px"><b>D</b><span>O ácido sulfúrico pode neutralizar uma substância presente no leite de magnésia chamada hidróxido de magnésio.</span></li>
+        <li data-em="2:apaga" style="font-size:20px;padding:6px 14px"><b>E</b><span>No ácido sulfúrico, a ligação existente entre os átomos é de natureza iônica.</span></li>
+      </ol>
+    </div>
+  </div>
+  <aside class="resolucao">
+    <p class="dados"><b>Dados:</b> ácido de Arrhenius e neutralização.</p>
+    <ol class="passos">
+      <li><b>Leite de magnésia:</b> Mg(OH)<sub>2</sub>, uma base.</li>
+      <li><b>Neutralização:</b> H<sub>2</sub>SO<sub>4</sub> + Mg(OH)<sub>2</sub> → MgSO<sub>4</sub> + 2 H<sub>2</sub>O.</li>
+    </ol>
+    <p class="resposta"><b>Resposta:</b> o ácido sulfúrico neutraliza o hidróxido de magnésio. <b>Gabarito D.</b></p>
+    <p class="atencao"><b>Destaque no quadro:</b> H<sup>+</sup> é cátion (carga +), não ânion.</p>
+    <ul class="erros">
+      <li><b>A</b> H<sup>+</sup> é cátion, não ânion.</li>
+      <li><b>B</b> Libera cátions (H<sup>+</sup>) e ânions (SO<sub>4</sub><sup>2−</sup>).</li>
+      <li><b>C</b> Conduz porque forma íons livres em água, não por ser metálico.</li>
+      <li><b>E</b> H, S e O são ametais: ligações covalentes.</li>
+    </ul>
+  </aside>
+  <aside class="notas">
+    <p>Clique 1 tira o aviso de pausa: resolva na área (D liga a caneta; E esconde o enunciado). Clique 2: gabarito D.</p>
+    <p>Questão oficial do IF Sudeste MG (2024), da lista da professora. A referência do texto (material da USP) foi omitida na tela.</p>
+    <p>Confira a equação: 1 Mg, 1 S, 6 O e 4 H de cada lado.</p>
+  </aside>
+</section>
+
+<!-- IF 2017 -->
+<section class="slide questao" data-nome="IF 2017">
+  <div class="conteudo">
+    <div class="area-resolucao"></div>
+    <span class="pilula pilula-pausa" data-em="1:some">Pause o vídeo e tente</span>
+    <div class="painel-questao">
+      <p class="olho">Questão 10 · IF Sudeste MG 2017</p>
+      <p class="enunciado" style="font-size:23px">As reações de neutralização ocorrem quando reagimos um ácido e uma base, produzindo sal e água. A correção da acidez estomacal, por meio do uso de bicarbonato de sódio ou leite de magnésia, é um exemplo de uma reação de neutralização. Entre as equações listadas, qual delas <b>NÃO</b> corresponde a uma reação de neutralização?</p>
+      <ol class="alternativas" style="gap:8px">
+        <li data-em="2:apaga" style="font-size:20px;padding:6px 14px"><b>A</b><span>2KOH<span class="est">(aq)</span> + H<sub>2</sub>CO<sub>3</sub><span class="est">(aq)</span> → K<sub>2</sub>CO<sub>3</sub><span class="est">(aq)</span> + 2H<sub>2</sub>O<span class="est">(l)</span></span></li>
+        <li data-em="2:apaga" style="font-size:20px;padding:6px 14px"><b>B</b><span>Ca(OH)<sub>2</sub><span class="est">(aq)</span> + 2 HF<span class="est">(aq)</span> → CaF<sub>2</sub><span class="est">(aq)</span> + 2 H<sub>2</sub>O<span class="est">(l)</span></span></li>
+        <li data-em="2:certo" style="font-size:20px;padding:6px 14px"><b>C</b><span>CH<sub>4</sub><span class="est">(g)</span> + 2 O<sub>2</sub><span class="est">(g)</span> → CO<sub>2</sub><span class="est">(g)</span> + 2 H<sub>2</sub>O<span class="est">(l)</span></span></li>
+        <li data-em="2:apaga" style="font-size:20px;padding:6px 14px"><b>D</b><span>2 HCl<span class="est">(aq)</span> + Mg(OH)<sub>2</sub><span class="est">(aq)</span> → MgCl<sub>2</sub><span class="est">(aq)</span> + 2 H<sub>2</sub>O<span class="est">(l)</span></span></li>
+        <li data-em="2:apaga" style="font-size:20px;padding:6px 14px"><b>E</b><span>H<sub>3</sub>PO<sub>4</sub><span class="est">(aq)</span> + NaOH<span class="est">(aq)</span> → NaH<sub>2</sub>PO<sub>4</sub><span class="est">(aq)</span> + H<sub>2</sub>O<span class="est">(l)</span></span></li>
+      </ol>
+    </div>
+  </div>
+  <aside class="resolucao">
+    <p class="dados"><b>Dados:</b> neutralização: ácido + base → sal + água.</p>
+    <ol class="passos">
+      <li><b>A, B, D, E:</b> ácido + base → sal + água.</li>
+      <li><b>C:</b> CH<sub>4</sub> + O<sub>2</sub>: nem ácido nem base.</li>
+      <li><b>C</b> é combustão: forma CO<sub>2</sub>, sem sal.</li>
+    </ol>
+    <p class="resposta"><b>Resposta:</b> a combustão do metano. <b>Gabarito C.</b></p>
+    <p class="atencao"><b>Destaque no quadro:</b> Formar água não basta: neutralização precisa de ácido, base e sal.</p>
+    <ul class="erros">
+      <li><b>A</b> É neutralização: KOH + ácido carbônico → carbonato de potássio + água.</li>
+      <li><b>B</b> É neutralização: Ca(OH)<sub>2</sub> + HF → CaF<sub>2</sub> + água.</li>
+      <li><b>D</b> É neutralização: HCl + leite de magnésia → MgCl<sub>2</sub> + água.</li>
+      <li><b>E</b> É neutralização parcial: forma o sal NaH<sub>2</sub>PO<sub>4</sub> e água.</li>
+    </ul>
+  </aside>
+  <aside class="notas">
+    <p>Clique 1 tira o aviso de pausa: resolva na área (D liga a caneta; E esconde o enunciado). Clique 2: gabarito C.</p>
+    <p>Questão oficial do IF Sudeste MG (2017).</p>
+    <p>O CaF₂ e o Mg(OH)₂ estão como (aq) na prova; na verdade são pouco solúveis em água (o certo seria (s)). Não muda a resposta.</p>
+  </aside>
+</section>
+
+<!-- IF 2015 -->
+<section class="slide questao" data-nome="IF 2015">
+  <div class="conteudo">
+    <div class="area-resolucao"></div>
+    <span class="pilula pilula-pausa" data-em="1:some">Pause o vídeo e tente</span>
+    <div class="painel-questao">
+      <p class="olho">Questão 11 · IF Sudeste MG 2015</p>
+      <p class="enunciado" style="font-size:27px">Quantos mol de água são formados a partir da neutralização total de 5 mol de ácido sulfúrico por hidróxido de alumínio?</p>
+      <ol class="alternativas curtas">
+        <li data-em="2:apaga"><b>A</b><span>3</span></li>
+        <li data-em="2:apaga"><b>B</b><span>5</span></li>
+        <li data-em="2:apaga"><b>C</b><span>6</span></li>
+        <li data-em="2:certo"><b>D</b><span>10</span></li>
+        <li data-em="2:apaga"><b>E</b><span>15</span></li>
+      </ol>
+    </div>
+  </div>
+  <aside class="resolucao">
+    <p class="dados"><b>Dados:</b> 5 mol de H<sub>2</sub>SO<sub>4</sub>; base Al(OH)<sub>3</sub>; neutralização total.</p>
+    <ol class="passos">
+      <li><b>Equação:</b> 3 H<sub>2</sub>SO<sub>4</sub> + 2 Al(OH)<sub>3</sub> → Al<sub>2</sub>(SO<sub>4</sub>)<sub>3</sub> + 6 H<sub>2</sub>O</li>
+      <li><b>Proporção:</b> 3 mol de ácido → 6 mol de água</li>
+      <li><b>Para 5 mol:</b> 5 · 6/3 = 10 mol</li>
+      <li><b>Atalho:</b> cada H<sub>2</sub>SO<sub>4</sub> dá 2 H<sup>+</sup> → 2 H<sub>2</sub>O</li>
+    </ol>
+    <p class="resposta"><b>Resposta:</b> 10 mol de água. <b>Gabarito D.</b></p>
+    <p class="atencao"><b>Destaque no quadro:</b> Na neutralização total, cada H<sup>+</sup> vira uma molécula de água.</p>
+    <ul class="erros">
+      <li><b>A</b> É o coeficiente do ácido na equação, não a água de 5 mol.</li>
+      <li><b>B</b> Supõe 1 água por ácido; o H<sub>2</sub>SO<sub>4</sub> tem 2 H ionizáveis.</li>
+      <li><b>C</b> É a água de 3 mol de ácido, não de 5.</li>
+      <li><b>E</b> Usa as 3 OH da base: 5 · 3 = 15.</li>
+    </ul>
+  </aside>
+  <aside class="notas">
+    <p>Clique 1 tira o aviso de pausa: resolva na área (D liga a caneta; E esconde o enunciado). Clique 2: gabarito D.</p>
+    <p>Questão oficial do IF Sudeste MG (2015, prova extra). Junta neutralização (sais) e proporção da equação.</p>
+    <p>Confira o balanceamento: 2 Al, 3 S, 18 O e 12 H de cada lado.</p>
+  </aside>
+</section>
+
+<!-- IF 2014 -->
+<section class="slide questao" data-nome="IF 2014">
+  <div class="conteudo">
+    <div class="area-resolucao"></div>
+    <span class="pilula pilula-pausa" data-em="1:some">Pause o vídeo e tente</span>
+    <div class="painel-questao">
+      <p class="olho">Questão 12 · IF Sudeste MG 2014</p>
+      <p class="enunciado" style="font-size:21px">Um dos problemas ambientais mais sérios, que muitas regiões do mundo têm enfrentado, é a chuva ácida. Esse termo genérico abrange uma variedade de fenômenos, incluindo neblina ácida e neve ácida, todos eles correspondentes à precipitação atmosférica de quantidades substanciais de ácidos. Entre os principais causadores desse fenômeno está o dióxido de enxofre, produzido, principalmente, pela queima de combustíveis fósseis nos motores dos veículos. As reações abaixo explicam a formação da chuva ácida a partir deste composto:</p>
+      <p class="enunciado" style="font-size:23px;text-align:center;margin:0">2SO<sub>2</sub> + O<sub>2</sub> → 2SO<sub>3</sub><br>SO<sub>3</sub> + H<sub>2</sub>O → H<sub>2</sub>SO<sub>4</sub></p>
+      <p class="enunciado" style="font-size:21px">Dentre os compostos que aparecem nessas reações, qual deles é classificado como ácido?</p>
+      <ol class="alternativas curtas">
+        <li data-em="2:apaga"><b>A</b><span>SO<sub>2</sub></span></li>
+        <li data-em="2:apaga"><b>B</b><span>O<sub>2</sub></span></li>
+        <li data-em="2:apaga"><b>C</b><span>SO<sub>3</sub></span></li>
+        <li data-em="2:apaga"><b>D</b><span>H<sub>2</sub>O</span></li>
+        <li data-em="2:certo"><b>E</b><span>H<sub>2</sub>SO<sub>4</sub></span></li>
+      </ol>
+    </div>
+  </div>
+  <aside class="resolucao">
+    <p class="dados"><b>Dados:</b> SO<sub>2</sub>, O<sub>2</sub>, SO<sub>3</sub>, H<sub>2</sub>O, H<sub>2</sub>SO<sub>4</sub>.</p>
+    <ol class="passos">
+      <li><b>SO<sub>2</sub>, SO<sub>3</sub>:</b> óxidos (ácidos), não ácidos.</li>
+      <li><b>O<sub>2</sub>:</b> substância simples.</li>
+      <li><b>H<sub>2</sub>SO<sub>4</sub> → 2 H<sup>+</sup> + SO<sub>4</sub><sup>2−</sup></b>: ácido.</li>
+    </ol>
+    <p class="resposta"><b>Resposta:</b> o H<sub>2</sub>SO<sub>4</sub>. <b>Gabarito E.</b></p>
+    <p class="atencao"><b>Destaque no quadro:</b> Óxido ácido forma ácido com a água, mas não é ácido.</p>
+    <ul class="erros">
+      <li><b>A</b> SO<sub>2</sub> é óxido (dióxido de enxofre).</li>
+      <li><b>B</b> O<sub>2</sub> é substância simples.</li>
+      <li><b>C</b> SO<sub>3</sub> é óxido: só forma o ácido ao reagir com água.</li>
+      <li><b>D</b> A água não é classificada como ácido.</li>
+    </ul>
+  </aside>
+  <aside class="notas">
+    <p>Clique 1 tira o aviso de pausa: resolva na área (D liga a caneta; E esconde o enunciado). Clique 2: gabarito E.</p>
+    <p>Questão oficial do IF Sudeste MG (2014, 2º semestre). Fecha o capítulo voltando aos óxidos e à chuva ácida.</p>
+  </aside>
+</section>
+
+<!-- Encerramento -->
+<section class="slide capa" data-nome="Encerramento">
+  <div class="estrelas"></div>
+  <div class="texto-capa" style="top:170px">
+    <span class="selo">Química · IF</span>
+    <p class="aula" style="font-size:26px">Fim da Química do IF</p>
+    <h1 style="font-size:110px">Química do IF Sudeste: completa</h1>
+    <p class="sub">Matéria, reações, átomo, ligações e funções inorgânicas</p>
+  </div>
+  <svg class="emblema" viewBox="0 0 640 640" aria-hidden="true">
+    <g class="gira-lento"><ellipse cx="320" cy="320" rx="300" ry="128" fill="none" stroke="#fff" stroke-opacity=".38" stroke-width="2" transform="rotate(-10 320 320)"/></g>
+    <g class="gira"><ellipse cx="320" cy="320" rx="236" ry="196" fill="none" stroke="#FFD10C" stroke-opacity=".75" stroke-width="2.5" stroke-dasharray="3 14" stroke-linecap="round" transform="rotate(-8 320 320)"/>
+      <circle cx="84" cy="300" r="13" fill="#FFD10C" stroke="#fff" stroke-width="3"/></g>
+    <circle cx="200" cy="320" r="70" fill="#fff" fill-opacity=".9"/><circle cx="440" cy="320" r="70" fill="#fff" fill-opacity=".9"/>
+    <circle cx="320" cy="320" r="92" fill="#FFD10C"/>
+    <g font-family="Bricolage Grotesque, sans-serif" font-weight="800" text-anchor="middle"><text x="200" y="342" font-size="64" fill="#4B39B3">O</text><text x="440" y="342" font-size="64" fill="#4B39B3">O</text><text x="320" y="348" font-size="76" fill="#292B2C">C</text></g>
+  </svg>
+  <img class="logo-capa" src="{{LOGO_BRANCO}}" alt="Quarks">
+  <aside class="notas"><p>Fim da Química do IF: os cinco capítulos (matéria e transformações, reações químicas, estrutura atômica, ligações químicas e funções inorgânicas) estão vistos. Hora de revisar pelas listas e pelas provas anteriores.</p></aside>
+</section>

@@ -1,0 +1,454 @@
+<!--aula
+{"disciplina": "quimica", "curso": "IF", "assunto": "Funções inorgânicas", "parte": "Parte única", "titulo": "Indicadores e pH"}
+-->
+<!-- Fonte: apostila IF, Química, 4.7 Indicadores ácido-base (tabela de cores e escala de pH com materiais do dia a dia); matriz do IF Sudeste (funções inorgânicas). Os slides da professora não trazem este tópico. Questões: PISM I 2017 e PISM I 2021 (oficiais, UFJF). -->
+<style>
+  .caixa, .grupo, .cartao, .linha-ex { box-sizing: border-box; }
+  .est { font-size: .6em; font-weight: 600; color: var(--cinza); letter-spacing: 0; }
+  .eq { font: 700 36px var(--fonte-titulo); color: var(--carvao); letter-spacing: -.01em; white-space: nowrap; }
+  .eq .s { color: var(--d); margin: 0 10px; }
+  .grupo { background: var(--branco); border: 2px solid var(--lilas-2); border-radius: 30px; padding: 24px 30px; }
+  .grupo h3 { margin: 0 0 6px; font: 800 42px var(--fonte-titulo); letter-spacing: -.02em; color: var(--roxo-titulo); }
+  .grupo p { margin: 0; font-size: 29px; line-height: 1.3; color: var(--carvao); }
+  .grupo p b { color: var(--roxo-titulo); }
+  .cartao { background: var(--branco); border: 2px solid var(--lilas-2); border-radius: 26px; padding: 18px 26px; font-size: 28px; line-height: 1.32; }
+  .cartao .f { font: 800 46px var(--fonte-titulo); color: var(--roxo-titulo); }
+  .cartao b { color: var(--roxo-titulo); }
+  .linha-ex { display: grid; align-items: center; gap: 20px; background: var(--branco); border: 2px solid var(--lilas-2); border-radius: 22px; padding: 10px 26px; font-size: 29px; line-height: 1.25; }
+  .linha-ex .f { font: 800 40px var(--fonte-titulo); color: var(--roxo-titulo); }
+  .linha-ex b { color: var(--roxo-titulo); }
+  .tag { justify-self: end; padding: 6px 18px; border-radius: 999px; font-weight: 800; font-size: 25px; background: var(--d-clara); color: var(--d-forte); white-space: nowrap; }
+  .tag.ac { background: #FDE3E0; color: #A8321F; } .tag.ba { background: #E0ECFB; color: #1F5FA8; } .tag.ne { background: #EEEDF2; color: #4A4757; } .tag.an { background: #FFF4C2; color: #8A6A00; } .tag.pe { background: #E3F6EC; color: #1C7A4D; }
+  .selo-x { display: inline-block; padding: 5px 20px; border-radius: 999px; background: var(--d-clara); color: var(--d-forte); font-size: 26px; font-weight: 800; }
+  .tabela.chem td, .tabela.chem th { padding: 10px 30px; }
+  /* gota que cai no copo; o líquido muda de cor quando a gota chega */
+  @keyframes pinga { 0% { transform: translateY(0); opacity: 0; } 10% { opacity: 1; } 70% { transform: translateY(150px); opacity: 1; } 78%, 100% { transform: translateY(150px); opacity: 0; } }
+  .gota { opacity: 0; }
+  .slide.ativo .mostra .gota, .slide.ativo .mostra.gota { animation: pinga 1.6s ease-in forwards; }
+  .liq { transition: fill 1.6s ease 1.1s; }
+  .rep .liq { fill: #7B4FA8; }
+  .rep-acido .gota.mostra ~ .liq { fill: #E8579A; }
+  .rep-base .gota.mostra ~ .liq { fill: #3FA86A; }
+  .fen-base .gota.mostra ~ .liq { fill: #F48FC3; }
+  .fen .liq { fill: #EAF4FB; }
+  /* ondinha no líquido para mostrar que ele foi mexido */
+  @keyframes balanca { 0%,100% { transform: translateX(0); } 50% { transform: translateX(-6px); } }
+  .onda { transform-box: fill-box; }
+  .slide.ativo .mostra .onda { animation: balanca 3s ease-in-out infinite; }
+  /* papel de tornassol que mergulha e muda de cor de baixo para cima */
+  @keyframes mergulha { 0% { transform: translateY(0); } 35%, 100% { transform: translateY(120px); } }
+  .papel { transform-box: view-box; }
+  .slide.ativo .mostra .papel { animation: mergulha 2.4s ease-in-out forwards; }
+  .papel .molhado { transform-box: fill-box; transform-origin: 50% 100%; transform: scaleY(0); transition: transform 2s ease 1.2s; }
+  .mostra .papel .molhado { transform: scaleY(1); }
+  .copo-rot { font: 700 26px Figtree, sans-serif; fill: #292B2C; }
+  .copo-tit { font: 800 30px var(--fonte-titulo); fill: #3F2FA0; }
+  .cor { display: inline-block; width: 30px; height: 30px; border-radius: 50%; vertical-align: -6px; margin-right: 10px; border: 2px solid rgba(0,0,0,.12); }
+  .ph-marca text { font: 700 22px Figtree, sans-serif; fill: #292B2C; }
+  .ph-marca path { stroke: #5E5A70; stroke-width: 2.5; }
+  .fato { display: grid; grid-template-columns: 54px 1fr; gap: 16px; align-items: start; font-size: 30px; line-height: 1.32; }
+  .fato .n { width: 54px; height: 54px; border-radius: 50%; display: grid; place-items: center; background: var(--d-clara); color: var(--d-forte); font: 800 26px var(--fonte-titulo); }
+  .fato b { color: var(--roxo-titulo); }
+</style>
+
+<svg width="0" height="0" style="position:absolute" aria-hidden="true">
+  <defs>
+    <radialGradient id="gO" cx=".35" cy=".3" r=".8"><stop offset="0" stop-color="#FF8A7A"/><stop offset="1" stop-color="#C8301F"/></radialGradient>
+    <radialGradient id="gH" cx=".35" cy=".3" r=".8"><stop offset="0" stop-color="#FFFFFF"/><stop offset="1" stop-color="#C9C4DC"/></radialGradient>
+    <radialGradient id="gC" cx=".35" cy=".3" r=".8"><stop offset="0" stop-color="#8A8A96"/><stop offset="1" stop-color="#2E2E36"/></radialGradient>
+    <radialGradient id="gS" cx=".35" cy=".3" r=".8"><stop offset="0" stop-color="#FFE680"/><stop offset="1" stop-color="#D9A900"/></radialGradient>
+    <radialGradient id="gCa" cx=".35" cy=".3" r=".8"><stop offset="0" stop-color="#B7F0C8"/><stop offset="1" stop-color="#2E9E5B"/></radialGradient>
+    <radialGradient id="gN" cx=".35" cy=".3" r=".8"><stop offset="0" stop-color="#7FA8FF"/><stop offset="1" stop-color="#2A5BD0"/></radialGradient>
+    <radialGradient id="gNa" cx=".35" cy=".3" r=".8"><stop offset="0" stop-color="#D7CCFF"/><stop offset="1" stop-color="#6551D1"/></radialGradient>
+    <linearGradient id="gAgua" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#CFE6FA"/><stop offset="1" stop-color="#9CCBF2"/></linearGradient>
+  </defs>
+  <symbol id="m-co2" viewBox="0 0 170 130"><circle class="vib-a" cx="45" cy="65" r="24" fill="url(#gO)" stroke="#8E2115" stroke-width="2"/><circle class="vib-b" cx="125" cy="65" r="24" fill="url(#gO)" stroke="#8E2115" stroke-width="2"/><circle class="vib-a" cx="85" cy="65" r="27" fill="url(#gC)" stroke="#1C1C22" stroke-width="2"/></symbol>
+  <symbol id="m-so2" viewBox="0 0 170 130"><circle class="vib-a" cx="50" cy="82" r="23" fill="url(#gO)" stroke="#8E2115" stroke-width="2"/><circle class="vib-b" cx="120" cy="82" r="23" fill="url(#gO)" stroke="#8E2115" stroke-width="2"/><circle class="vib-a" cx="85" cy="52" r="30" fill="url(#gS)" stroke="#8A6A00" stroke-width="2"/></symbol>
+  <symbol id="m-h2o" viewBox="0 0 170 130"><circle class="vib-a" cx="48" cy="84" r="18" fill="url(#gH)" stroke="#8C84B8" stroke-width="2"/><circle class="vib-b" cx="122" cy="84" r="18" fill="url(#gH)" stroke="#8C84B8" stroke-width="2"/><circle class="vib-a" cx="85" cy="60" r="28" fill="url(#gO)" stroke="#8E2115" stroke-width="2"/></symbol>
+  <symbol id="m-so3" viewBox="0 0 170 130"><circle class="vib-a" cx="85" cy="22" r="19" fill="url(#gO)" stroke="#8E2115" stroke-width="2"/><circle class="vib-b" cx="40" cy="92" r="19" fill="url(#gO)" stroke="#8E2115" stroke-width="2"/><circle class="vib-a" cx="130" cy="92" r="19" fill="url(#gO)" stroke="#8E2115" stroke-width="2"/><circle class="vib-b" cx="85" cy="66" r="28" fill="url(#gS)" stroke="#8A6A00" stroke-width="2"/></symbol>
+  <symbol id="m-h2so4" viewBox="0 0 170 130"><circle class="vib-a" cx="85" cy="18" r="17" fill="url(#gO)" stroke="#8E2115" stroke-width="2"/><circle class="vib-b" cx="85" cy="112" r="17" fill="url(#gO)" stroke="#8E2115" stroke-width="2"/><circle class="vib-a" cx="36" cy="65" r="17" fill="url(#gO)" stroke="#8E2115" stroke-width="2"/><circle class="vib-b" cx="134" cy="65" r="17" fill="url(#gO)" stroke="#8E2115" stroke-width="2"/><circle class="vib-a" cx="14" cy="50" r="11" fill="url(#gH)" stroke="#8C84B8" stroke-width="2"/><circle class="vib-b" cx="156" cy="80" r="11" fill="url(#gH)" stroke="#8C84B8" stroke-width="2"/><circle class="vib-a" cx="85" cy="65" r="25" fill="url(#gS)" stroke="#8A6A00" stroke-width="2"/></symbol>
+  <symbol id="m-cao" viewBox="0 0 170 130"><circle class="vib-a" cx="62" cy="65" r="30" fill="url(#gCa)" stroke="#1D6B3C" stroke-width="2"/><circle class="vib-b" cx="118" cy="65" r="24" fill="url(#gO)" stroke="#8E2115" stroke-width="2"/></symbol>
+  <symbol id="m-caoh2" viewBox="0 0 170 130"><circle class="vib-a" cx="85" cy="65" r="30" fill="url(#gCa)" stroke="#1D6B3C" stroke-width="2"/><circle class="vib-b" cx="35" cy="65" r="20" fill="url(#gO)" stroke="#8E2115" stroke-width="2"/><circle class="vib-a" cx="135" cy="65" r="20" fill="url(#gO)" stroke="#8E2115" stroke-width="2"/><circle class="vib-b" cx="14" cy="50" r="11" fill="url(#gH)" stroke="#8C84B8" stroke-width="2"/><circle class="vib-a" cx="156" cy="80" r="11" fill="url(#gH)" stroke="#8C84B8" stroke-width="2"/></symbol>
+  <symbol id="m-co" viewBox="0 0 170 130"><circle class="vib-a" cx="62" cy="65" r="27" fill="url(#gC)" stroke="#1C1C22" stroke-width="2"/><circle class="vib-b" cx="110" cy="65" r="24" fill="url(#gO)" stroke="#8E2115" stroke-width="2"/></symbol>
+  <symbol id="m-no" viewBox="0 0 170 130"><circle class="vib-a" cx="62" cy="65" r="26" fill="url(#gN)" stroke="#1B3E94" stroke-width="2"/><circle class="vib-b" cx="110" cy="65" r="24" fill="url(#gO)" stroke="#8E2115" stroke-width="2"/></symbol>
+  <symbol id="m-n2o" viewBox="0 0 170 130"><circle class="vib-a" cx="38" cy="65" r="22" fill="url(#gN)" stroke="#1B3E94" stroke-width="2"/><circle class="vib-b" cx="82" cy="65" r="22" fill="url(#gN)" stroke="#1B3E94" stroke-width="2"/><circle class="vib-a" cx="128" cy="65" r="22" fill="url(#gO)" stroke="#8E2115" stroke-width="2"/></symbol>
+  <symbol id="m-h2o2" viewBox="0 0 170 130"><circle class="vib-a" cx="60" cy="70" r="24" fill="url(#gO)" stroke="#8E2115" stroke-width="2"/><circle class="vib-b" cx="110" cy="60" r="24" fill="url(#gO)" stroke="#8E2115" stroke-width="2"/><circle class="vib-a" cx="30" cy="98" r="14" fill="url(#gH)" stroke="#8C84B8" stroke-width="2"/><circle class="vib-b" cx="140" cy="32" r="14" fill="url(#gH)" stroke="#8C84B8" stroke-width="2"/></symbol>
+</svg>
+
+<!-- Capa -->
+<section class="slide capa" data-nome="Capa">
+  <div class="estrelas"></div>
+  <div class="texto-capa" style="top:150px">
+    <span class="selo">Química · IF</span>
+    <p class="aula">Funções inorgânicas</p>
+    <h1>Indicadores e pH</h1>
+    <p class="sub">Como saber se é ácido ou básico, e quanto</p>
+  </div>
+  <svg class="emblema" viewBox="0 0 640 640" aria-hidden="true">
+    <g class="gira-lento"><ellipse cx="320" cy="320" rx="300" ry="128" fill="none" stroke="#fff" stroke-opacity=".38" stroke-width="2" transform="rotate(-10 320 320)"/></g>
+    <g><rect x="90" y="300" width="66" height="70" fill="#E0383E"/><rect x="156" y="300" width="66" height="70" fill="#F08A1C"/><rect x="222" y="300" width="66" height="70" fill="#FFD10C"/><rect x="288" y="300" width="66" height="70" fill="#9BCB5A"/><rect x="354" y="300" width="66" height="70" fill="#3FA88A"/><rect x="420" y="300" width="66" height="70" fill="#3A73C9"/><rect x="486" y="300" width="66" height="70" fill="#6551D1"/></g>
+    <rect x="90" y="300" width="462" height="70" rx="0" fill="none" stroke="#fff" stroke-width="4"/>
+    <path d="M321 170 q44 62 44 92 a44 44 0 0 1 -88 0 q0 -30 44 -92 z" fill="#fff" fill-opacity=".92"/>
+    <text x="321" y="460" text-anchor="middle" font-family="Bricolage Grotesque, sans-serif" font-weight="800" font-size="90" fill="#fff">pH</text>
+  </svg>
+  <img class="logo-capa" src="{{LOGO_BRANCO}}" alt="Quarks">
+  <aside class="notas"><p>Hoje: os indicadores ácido-base (repolho roxo, tornassol e fenolftaleína) e a escala de pH, com os valores de materiais do dia a dia. Fecha o capítulo de funções inorgânicas.</p></aside>
+</section>
+
+<!-- Repolho roxo -->
+<section class="slide" data-nome="Repolho roxo">
+  <div class="conteudo">
+    <p class="olho">Indicadores ácido-base</p>
+    <h2 class="titulo">O teste do repolho roxo</h2>
+    <div style="position:absolute;left:0;top:140px;width:1000px;height:440px">
+      <svg viewBox="0 0 1000 440" style="width:1000px;height:440px" aria-hidden="true">
+        <g data-passo="1"><g class="rep">
+          
+          <path d="M60 110 h160 l-14 210 q-2 16 -18 16 h-96 q-16 0 -18 -16 z" fill="#FFFFFF" stroke="#9A95AD" stroke-width="5" stroke-linejoin="round"/>
+          <path class="liq onda" d="M68 190 q20 -8 40 0 t40 0 t40 0 t28 0 l-10 128 q-2 10 -12 10 h-92 q-10 0 -12 -10 z"/>
+          <text class="copo-tit" x="140" y="380" text-anchor="middle">roxo</text>
+          <text class="copo-rot" x="140" y="414" text-anchor="middle">água de repolho</text>
+        </g>
+        <g class="rep rep-acido">
+          <path class="gota" data-passo="2" d="M490 20 q14 20 14 30 a14 14 0 0 1 -28 0 q0 -10 14 -30 z" fill="#FFE680" stroke="#8A6A00" stroke-width="2"/>
+          <path d="M410 110 h160 l-14 210 q-2 16 -18 16 h-96 q-16 0 -18 -16 z" fill="#FFFFFF" stroke="#9A95AD" stroke-width="5" stroke-linejoin="round"/>
+          <path class="liq onda" d="M418 190 q20 -8 40 0 t40 0 t40 0 t28 0 l-10 128 q-2 10 -12 10 h-92 q-10 0 -12 -10 z"/>
+          <text class="copo-tit" x="490" y="380" text-anchor="middle">ácido</text>
+          <text class="copo-rot" x="490" y="414" text-anchor="middle">+ limão</text>
+        </g>
+        <g class="rep rep-base">
+          <path class="gota" data-passo="3" d="M840 20 q14 20 14 30 a14 14 0 0 1 -28 0 q0 -10 14 -30 z" fill="#DDEBFF" stroke="#8A6A00" stroke-width="2"/>
+          <path d="M760 110 h160 l-14 210 q-2 16 -18 16 h-96 q-16 0 -18 -16 z" fill="#FFFFFF" stroke="#9A95AD" stroke-width="5" stroke-linejoin="round"/>
+          <path class="liq onda" d="M768 190 q20 -8 40 0 t40 0 t40 0 t28 0 l-10 128 q-2 10 -12 10 h-92 q-10 0 -12 -10 z"/>
+          <text class="copo-tit" x="840" y="380" text-anchor="middle">básico</text>
+          <text class="copo-rot" x="840" y="414" text-anchor="middle">+ água com sabão</text>
+        </g></g>
+      </svg>
+    </div>
+    <div style="position:absolute;left:1060px;right:0;top:150px;display:flex;flex-direction:column;gap:20px">
+      <div class="fato" data-passo="1"><span class="n">1</span><span>Ferva folhas de <b>repolho roxo</b> e guarde a água roxa.</span></div>
+      <div class="fato" data-passo="2"><span class="n">2</span><span>Pingue <b>limão</b> (ácido): fica <b>rosa</b>.</span></div>
+      <div class="fato" data-passo="3"><span class="n">3</span><span>Pingue <b>água com sabão</b> (básica): fica <b>verde</b>.</span></div>
+    </div>
+    <div class="caixa caixa-fundamental" data-passo="4" style="position:absolute;left:580px;right:0;top:620px;padding:20px 30px">
+      <span class="rotulo">Indicador ácido-base</span>
+      <div class="texto" style="font-size:30px">Substância que <b>muda de cor</b> conforme o meio é <b>ácido</b> ou <b>básico</b>. O repolho roxo tem um.</div>
+    </div>
+  </div>
+  <aside class="notas">
+    <p>Clique 1: a água roxa do repolho. Clique 2: a gota de limão cai e a água fica rosa. Clique 3: a gota de água com sabão cai e a água fica verde. Clique 4: a definição.</p>
+    <p>Dá para fazer em casa ou na sala: é o experimento mais barato de indicador. Em meio muito básico o repolho chega ao amarelo.</p>
+  </aside>
+</section>
+
+<!-- Cores dos indicadores -->
+<section class="slide" data-nome="Cores dos indicadores">
+  <div class="conteudo">
+    <p class="olho">Indicadores ácido-base</p>
+    <h2 class="titulo">Cada indicador, uma cor</h2>
+    <table class="tabela chem" style="position:absolute;left:0;right:0;top:150px;font-size:32px">
+      <tr><th style="text-align:left">Indicador</th><th style="text-align:left">Em ácido</th><th style="text-align:left">Em base</th></tr>
+      <tr data-passo="1"><td style="text-align:left"><b>Papel de tornassol</b></td><td style="text-align:left"><span class="cor" style="background:#E0383E"></span>vermelho</td><td style="text-align:left"><span class="cor" style="background:#3A73C9"></span>azul</td></tr>
+      <tr data-passo="2"><td style="text-align:left"><b>Fenolftaleína</b></td><td style="text-align:left"><span class="cor" style="background:#FFFFFF"></span>incolor</td><td style="text-align:left"><span class="cor" style="background:#F48FC3"></span>rosa</td></tr>
+      <tr data-passo="3"><td style="text-align:left"><b>Repolho roxo</b></td><td style="text-align:left"><span class="cor" style="background:#E8579A"></span>vermelho ou rosa</td><td style="text-align:left"><span class="cor" style="background:#3FA86A"></span>verde ou amarelo</td></tr>
+    </table>
+    <div class="caixa caixa-atencao" data-passo="4" style="position:absolute;left:580px;right:0;top:560px;padding:20px 30px">
+      <span class="rotulo">Pegadinha</span>
+      <div class="texto" style="font-size:30px">A <b>fenolftaleína</b> é incolor também em meio <b>neutro</b>: ela só fica rosa em meio <b>básico</b>. Incolor não prova que é ácido.</div>
+    </div>
+  </div>
+  <aside class="notas">
+    <p>Um clique por indicador (tabela da apostila). Peça a cor antes de mostrar.</p>
+    <p>A fenolftaleína fica rosa a partir de pH em torno de 8; abaixo disso é incolor, seja ácido ou neutro. O tornassol vira perto do neutro: vermelho em ácido e azul em base.</p>
+  </aside>
+</section>
+
+<!-- Papel de tornassol -->
+<section class="slide" data-nome="Papel de tornassol">
+  <div class="conteudo">
+    <p class="olho">Indicadores ácido-base</p>
+    <h2 class="titulo">O papel de tornassol</h2>
+    <div style="position:absolute;left:0;top:140px;width:1000px;height:460px">
+      <svg viewBox="0 0 1000 460" style="width:1000px;height:460px" aria-hidden="true">
+        <path d="M150 200 h200 l-16 200 q-2 16 -18 16 h-132 q-16 0 -18 -16 z" fill="#FFFFFF" fill-opacity=".55" stroke="#9A95AD" stroke-width="5" stroke-linejoin="round"/>
+        <path d="M156 260 h188 l-11 138 q-2 10 -12 10 h-132 q-10 0 -12 -10 z" fill="#FFF3B0" fill-opacity=".45"/>
+        <path d="M630 200 h200 l-16 200 q-2 16 -18 16 h-132 q-16 0 -18 -16 z" fill="#FFFFFF" fill-opacity=".55" stroke="#9A95AD" stroke-width="5" stroke-linejoin="round"/>
+        <path d="M636 260 h188 l-11 138 q-2 10 -12 10 h-132 q-10 0 -12 -10 z" fill="#DDEBFF" fill-opacity=".45"/>
+        <g data-passo="1"><g class="papel">
+          <rect x="232" y="20" width="36" height="170" rx="6" fill="#3A73C9" stroke="#5E5A70" stroke-width="2"/>
+          <rect class="molhado" x="232" y="140" width="36" height="50" rx="6" fill="#E0383E"/>
+        </g></g>
+        <g data-passo="2"><g class="papel">
+          <rect x="712" y="20" width="36" height="170" rx="6" fill="#E0383E" stroke="#5E5A70" stroke-width="2"/>
+          <rect class="molhado" x="712" y="140" width="36" height="50" rx="6" fill="#3A73C9"/>
+        </g></g>
+        <text class="copo-tit" x="250" y="450" text-anchor="middle">vinagre (ácido)</text>
+        <text class="copo-tit" x="730" y="450" text-anchor="middle">sabão (base)</text>
+      </svg>
+    </div>
+    <div style="position:absolute;left:1060px;right:0;top:150px;display:flex;flex-direction:column;gap:22px">
+      <div class="fato" data-passo="1"><span class="n">1</span><span>Papel <b>azul</b> no ácido: fica <b>vermelho</b>.</span></div>
+      <div class="fato" data-passo="2"><span class="n">2</span><span>Papel <b>vermelho</b> na base: fica <b>azul</b>.</span></div>
+      <div class="fato" data-passo="3"><span class="n">3</span><span>No meio <b>neutro</b>, nenhum dos dois muda.</span></div>
+    </div>
+    <div class="caixa caixa-fundamental" data-passo="3" style="position:absolute;left:580px;right:0;top:640px;padding:20px 30px">
+      <div class="texto" style="font-size:30px">Para lembrar: <b>ácido avermelha</b> o tornassol; <b>base azula</b>.</div>
+    </div>
+  </div>
+  <aside class="notas">
+    <p>Clique 1: a tira azul mergulha no vinagre e a parte molhada fica vermelha. Clique 2: a tira vermelha mergulha na água com sabão e fica azul. Clique 3: no neutro (água pura, água com sal) nada muda.</p>
+    <p>Por isso se usam as duas tiras: com uma só não dá para separar neutro de um dos lados.</p>
+  </aside>
+</section>
+
+<!-- Escala de pH -->
+<section class="slide" data-nome="Escala de pH">
+  <div class="conteudo">
+    <p class="olho">Escala de pH</p>
+    <h2 class="titulo">A escala de pH</h2>
+    <svg viewBox="0 0 1760 420" style="position:absolute;left:0;top:130px;width:1760px;height:420px" aria-hidden="true">
+      <rect x="60" y="210" width="116" height="70" fill="#D9283A"/><rect x="176" y="210" width="116" height="70" fill="#E2552A"/><rect x="292" y="210" width="116" height="70" fill="#EC8A12"/><rect x="408" y="210" width="116" height="70" fill="#F5A70A"/><rect x="524" y="210" width="116" height="70" fill="#FFD10C"/><rect x="640" y="210" width="116" height="70" fill="#D8CE2E"/><rect x="756" y="210" width="116" height="70" fill="#9BC85E"/><rect x="872" y="210" width="116" height="70" fill="#6BBE86"/><rect x="988" y="210" width="116" height="70" fill="#47AA94"/><rect x="1104" y="210" width="116" height="70" fill="#2E92A8"/><rect x="1220" y="210" width="116" height="70" fill="#3576C6"/><rect x="1336" y="210" width="116" height="70" fill="#3E58D6"/><rect x="1452" y="210" width="116" height="70" fill="#5450D2"/><rect x="1568" y="210" width="116" height="70" fill="#6551D1"/>
+      <rect x="60" y="210" width="1624" height="70" fill="none" stroke="#fff" stroke-width="3"/>
+      <g style="font:700 26px Figtree,sans-serif" fill="#292B2C"><text x="60" y="316" text-anchor="middle">0</text><text x="176" y="316" text-anchor="middle">1</text><text x="292" y="316" text-anchor="middle">2</text><text x="408" y="316" text-anchor="middle">3</text><text x="524" y="316" text-anchor="middle">4</text><text x="640" y="316" text-anchor="middle">5</text><text x="756" y="316" text-anchor="middle">6</text><text x="872" y="316" text-anchor="middle">7</text><text x="988" y="316" text-anchor="middle">8</text><text x="1104" y="316" text-anchor="middle">9</text><text x="1220" y="316" text-anchor="middle">10</text><text x="1336" y="316" text-anchor="middle">11</text><text x="1452" y="316" text-anchor="middle">12</text><text x="1568" y="316" text-anchor="middle">13</text><text x="1684" y="316" text-anchor="middle">14</text></g>
+      <g class="ph-marca" data-passo="1"><path d="M176 200 V206"/><path d="M169 196 l7 12 7 -12 z" fill="#5E5A70" stroke="none"/><text x="176" y="190" text-anchor="middle">suco gástrico</text></g><g class="ph-marca" data-passo="1"><path d="M292 150 V206"/><path d="M285 196 l7 12 7 -12 z" fill="#5E5A70" stroke="none"/><text x="292" y="140" text-anchor="middle">limão</text></g><g class="ph-marca" data-passo="1"><path d="M408 200 V206"/><path d="M401 196 l7 12 7 -12 z" fill="#5E5A70" stroke="none"/><text x="408" y="190" text-anchor="middle">vinagre</text></g><g class="ph-marca" data-passo="1"><path d="M640 150 V206"/><path d="M633 196 l7 12 7 -12 z" fill="#5E5A70" stroke="none"/><text x="640" y="140" text-anchor="middle">café</text></g><g class="ph-marca" data-passo="2"><path d="M872 50 V206"/><path d="M865 196 l7 12 7 -12 z" fill="#5E5A70" stroke="none"/><text x="866" y="40" text-anchor="end">água pura</text></g><g class="ph-marca" data-passo="2"><path d="M918.4000000000001 150 V206"/><path d="M911.4000000000001 196 l7 12 7 -12 z" fill="#5E5A70" stroke="none"/><text x="918.4000000000001" y="140" text-anchor="middle">sangue</text></g><g class="ph-marca" data-passo="3"><path d="M988 100 V206"/><path d="M981 196 l7 12 7 -12 z" fill="#5E5A70" stroke="none"/><text x="988" y="90" text-anchor="middle">água do mar</text></g><g class="ph-marca" data-passo="3"><path d="M1220 200 V206"/><path d="M1213 196 l7 12 7 -12 z" fill="#5E5A70" stroke="none"/><text x="1220" y="190" text-anchor="middle">água com sabão</text></g><g class="ph-marca" data-passo="3"><path d="M1336 150 V206"/><path d="M1329 196 l7 12 7 -12 z" fill="#5E5A70" stroke="none"/><text x="1336" y="140" text-anchor="middle">amoníaco</text></g><g class="ph-marca" data-passo="3"><path d="M1452 100 V206"/><path d="M1445 196 l7 12 7 -12 z" fill="#5E5A70" stroke="none"/><text x="1452" y="90" text-anchor="middle">água sanitária</text></g><g class="ph-marca" data-passo="3"><path d="M1684 200 V206"/><path d="M1677 196 l7 12 7 -12 z" fill="#5E5A70" stroke="none"/><text x="1684" y="190" text-anchor="middle">soda cáustica</text></g>
+      <g data-passo="1"><path d="M790.8 370 H70" stroke="#C2384F" stroke-width="6" stroke-linecap="round"/><path d="M84 358 l-16 12 16 12" fill="none" stroke="#C2384F" stroke-width="6" stroke-linecap="round" stroke-linejoin="round"/><text x="442.79999999999995" y="408" text-anchor="middle" style="font:800 30px var(--fonte-titulo)" fill="#C2384F">ácido: pH menor que 7</text></g>
+      <g data-passo="2"><text x="872" y="380" dominant-baseline="middle" text-anchor="middle" style="font:800 30px var(--fonte-titulo)" fill="#292B2C">neutro</text></g>
+      <g data-passo="3"><path d="M953.2 370 H1674" stroke="#4B39B3" stroke-width="6" stroke-linecap="round"/><path d="M1660 358 l16 12 -16 12" fill="none" stroke="#4B39B3" stroke-width="6" stroke-linecap="round" stroke-linejoin="round"/><text x="1301.1999999999998" y="408" text-anchor="middle" style="font:800 30px var(--fonte-titulo)" fill="#4B39B3">básico: pH maior que 7</text></g>
+    </svg>
+    <div class="caixa caixa-fundamental" data-passo="4" style="position:absolute;left:580px;right:0;top:620px;padding:20px 30px">
+      <span class="rotulo">A escala de pH (de 0 a 14 nas soluções do dia a dia)</span>
+      <div class="texto" style="font-size:29px">pH <b>&lt; 7</b>: ácido. pH <b>= 7</b>: neutro. pH <b>&gt; 7</b>: básico. Quanto mais longe de 7, mais forte.</div>
+    </div>
+  </div>
+  <aside class="notas">
+    <p>Os indicadores dizem se é ácido ou básico; o pH diz quanto. Clique 1: os ácidos do dia a dia. Clique 2: a água pura (7) e o sangue (7,4, levemente básico). Clique 3: os básicos. Clique 4: a regra.</p>
+    <p>Valores aproximados, os mesmos da figura da apostila. O pH da soda cáustica depende da concentração; o 14 é o de uma solução bem concentrada.</p>
+  </aside>
+</section>
+
+<!-- Lendo a escala -->
+<section class="slide" data-nome="Lendo a escala">
+  <div class="conteudo">
+    <p class="olho">Escala de pH</p>
+    <h2 class="titulo">Lendo a escala de pH</h2>
+    <div style="position:absolute;left:0;right:0;top:150px;display:grid;grid-template-columns:1fr 1fr;gap:36px">
+      <div class="grupo" data-passo="1" style="height:250px">
+        <h3>Menor pH, mais ácido</h3>
+        <p>O <b>limão</b> (pH 2) é mais ácido que o <b>café</b> (pH 5). A <b>soda</b> (pH 14) é mais básica que o <b>sabão</b> (pH 10).</p>
+      </div>
+      <div class="grupo" data-passo="2" style="height:250px">
+        <h3>De onde vem o pH</h3>
+        <p><b>Ácidos</b> liberam H<sup>+</sup> na água: pH abaixo de 7. <b>Bases</b> liberam OH<sup>−</sup>: pH acima de 7.</p>
+      </div>
+    </div>
+    <div style="position:absolute;left:0;right:0;top:430px;display:grid;grid-template-columns:1fr 1fr;gap:36px">
+      <div class="grupo" data-passo="3" style="height:170px">
+        <h3>Como medir</h3>
+        <p><b>Papel indicador universal</b> (uma cor para cada pH) ou <b>medidor de pH</b>, eletrônico.</p>
+      </div>
+      <div class="grupo" data-passo="4" style="height:170px">
+        <h3>Ligando com óxidos</h3>
+        <p>Chuva normal: pH ≈ 5,6. <b>Chuva ácida</b>: pH abaixo de 5,6.</p>
+      </div>
+    </div>
+    <div class="caixa caixa-atencao" data-passo="5" style="position:absolute;left:580px;right:0;top:650px;padding:18px 30px">
+      <div class="texto" style="font-size:29px">Cuidado com a leitura: o número <b>menor</b> indica o meio <b>mais ácido</b>.</div>
+    </div>
+  </div>
+  <aside class="notas">
+    <p>Clique 1: a comparação (o erro mais comum é achar que pH maior é mais ácido). Clique 2: a ligação com Arrhenius, que está no texto da questão do IF 2023. Clique 3: como medir (nas estações de tratamento, o pH da água é medido e corrigido). Clique 4: a chuva ácida da aula de óxidos. Clique 5: a pegadinha.</p>
+  </aside>
+</section>
+
+<!-- Exemplo: ácido, neutro ou básico -->
+<section class="slide" data-nome="Exemplo: ácido, neutro ou básico">
+  <div class="conteudo">
+    <p class="olho">Exemplo</p>
+    <h2 class="titulo">Ácido, neutro ou básico?</h2>
+    <p class="texto" style="position:absolute;left:0;right:0;top:146px;margin:0;font-size:31px">Classifique pelo pH e diga a cor com <b>fenolftaleína</b>: suco de limão (pH 2), água pura (pH 7) e água com sabão (pH 10).</p>
+    <div style="position:absolute;left:0;right:0;top:250px;display:flex;flex-direction:column;gap:16px">
+      <div class="linha-ex" data-passo="1" style="grid-template-columns:300px 130px 1fr 170px;padding:12px 26px"><b style="font-size:32px">suco de limão</b><span class="f" style="font-size:34px">pH 2</span><span>2 &lt; 7: <b>ácido</b>; com fenolftaleína, incolor</span><span class="tag ac">ácido</span></div>
+      <div class="linha-ex" data-passo="2" style="grid-template-columns:300px 130px 1fr 170px;padding:12px 26px"><b style="font-size:32px">água pura</b><span class="f" style="font-size:34px">pH 7</span><span><b>neutra</b>; com fenolftaleína, incolor</span><span class="tag ne">neutro</span></div>
+      <div class="linha-ex" data-passo="3" style="grid-template-columns:300px 130px 1fr 170px;padding:12px 26px"><b style="font-size:32px">água com sabão</b><span class="f" style="font-size:34px">pH 10</span><span>10 &gt; 7: <b>básica</b>; com fenolftaleína, rosa</span><span class="tag ba">básico</span></div>
+    </div>
+    <div class="caixa caixa-fundamental" data-passo="4" style="position:absolute;left:580px;right:0;top:620px;padding:18px 30px">
+      <div class="texto" style="font-size:29px"><b>Resposta:</b> ácido, neutro e básico. Só a água com sabão deixa a fenolftaleína <b>rosa</b>.</div>
+    </div>
+  </div>
+  <aside class="notas">
+    <p>Peça a resposta antes de cada clique. Um clique por material (exemplo da apostila, com a cor da fenolftaleína acrescentada).</p>
+  </aside>
+</section>
+
+<!-- Exemplo: frascos sem rótulo -->
+<section class="slide" data-nome="Exemplo: frascos sem rótulo">
+  <div class="conteudo">
+    <p class="olho">Exemplo</p>
+    <h2 class="titulo">Qual frasco é qual?</h2>
+    <div style="position:absolute;left:0;top:140px;width:1000px;height:440px">
+      <svg viewBox="0 0 1000 440" style="width:1000px;height:440px" aria-hidden="true">
+        <g class="fen">
+          <path class="gota" data-passo="1" d="M140 20 q14 20 14 30 a14 14 0 0 1 -28 0 q0 -10 14 -30 z" fill="#FFFFFF" stroke="#8A6A00" stroke-width="2"/>
+          <path d="M60 110 h160 l-14 210 q-2 16 -18 16 h-96 q-16 0 -18 -16 z" fill="#FFFFFF" stroke="#9A95AD" stroke-width="5" stroke-linejoin="round"/>
+          <path class="liq onda" d="M68 190 q20 -8 40 0 t40 0 t40 0 t28 0 l-10 128 q-2 10 -12 10 h-92 q-10 0 -12 -10 z"/>
+          <text class="copo-tit" x="140" y="380" text-anchor="middle">frasco A</text>
+          <text class="copo-rot" x="140" y="414" text-anchor="middle">?</text>
+        </g>
+        <g class="fen">
+          <path class="gota" data-passo="1" d="M490 20 q14 20 14 30 a14 14 0 0 1 -28 0 q0 -10 14 -30 z" fill="#FFFFFF" stroke="#8A6A00" stroke-width="2"/>
+          <path d="M410 110 h160 l-14 210 q-2 16 -18 16 h-96 q-16 0 -18 -16 z" fill="#FFFFFF" stroke="#9A95AD" stroke-width="5" stroke-linejoin="round"/>
+          <path class="liq onda" d="M418 190 q20 -8 40 0 t40 0 t40 0 t28 0 l-10 128 q-2 10 -12 10 h-92 q-10 0 -12 -10 z"/>
+          <text class="copo-tit" x="490" y="380" text-anchor="middle">frasco B</text>
+          <text class="copo-rot" x="490" y="414" text-anchor="middle">?</text>
+        </g>
+        <g class="fen fen-base">
+          <path class="gota" data-passo="1" d="M840 20 q14 20 14 30 a14 14 0 0 1 -28 0 q0 -10 14 -30 z" fill="#FFFFFF" stroke="#8A6A00" stroke-width="2"/>
+          <path d="M760 110 h160 l-14 210 q-2 16 -18 16 h-96 q-16 0 -18 -16 z" fill="#FFFFFF" stroke="#9A95AD" stroke-width="5" stroke-linejoin="round"/>
+          <path class="liq onda" d="M768 190 q20 -8 40 0 t40 0 t40 0 t28 0 l-10 128 q-2 10 -12 10 h-92 q-10 0 -12 -10 z"/>
+          <text class="copo-tit" x="840" y="380" text-anchor="middle">frasco C</text>
+          <text class="copo-rot" x="840" y="414" text-anchor="middle">?</text>
+        </g>
+      </svg>
+    </div>
+    <p class="texto" style="position:absolute;left:1060px;right:0;top:146px;margin:0;font-size:29px">Três frascos sem rótulo: <b>vinagre</b>, <b>água</b> e <b>soda</b>. Pingamos <b>fenolftaleína</b> em todos.</p>
+    <div style="position:absolute;left:1060px;right:0;top:260px;display:flex;flex-direction:column;gap:14px">
+      <div class="linha-ex" data-passo="2" style="grid-template-columns:1fr;padding:12px 22px"><span>C ficou <b>rosa</b>: é a <b>soda</b> (básica).</span></div>
+      <div class="linha-ex" data-passo="3" style="grid-template-columns:1fr;padding:12px 22px"><span>A e B ficaram <b>incolores</b>: ácido ou neutro?</span></div>
+      <div class="linha-ex" data-passo="4" style="grid-template-columns:1fr;padding:12px 22px"><span>Tornassol <b>azul</b>: fica vermelho só no <b>vinagre</b>; a água não muda.</span></div>
+    </div>
+    <div class="caixa caixa-atencao" data-passo="5" style="position:absolute;left:580px;right:0;top:640px;padding:18px 30px">
+      <div class="texto" style="font-size:29px">A fenolftaleína separa a <b>base</b>; para separar <b>ácido</b> de <b>neutro</b>, use o tornassol azul.</div>
+    </div>
+  </div>
+  <aside class="notas">
+    <p>Clique 1: a gota de fenolftaleína cai nos três frascos; só o C fica rosa. Clique 2: conclusão sobre o C. Clique 3: o problema com A e B. Clique 4: o tornassol resolve. Clique 5: a lição.</p>
+    <p>Prepara para a questão do PISM 2021, em que a fenolftaleína fica incolor para o sal e para o ácido.</p>
+  </aside>
+</section>
+
+<!-- Questão 1 -->
+<section class="slide questao" data-nome="Questão 1">
+  <div class="conteudo">
+    <div class="area-resolucao"></div>
+    <span class="pilula pilula-pausa" data-em="1:some">Pause o vídeo e tente</span>
+    <div class="painel-questao">
+      <p class="olho">Questão 1 · PISM I 2017</p>
+      <p class="enunciado" style="font-size:22px">Um estudante foi ao laboratório e realizou uma série de experimentos para identificar um determinado composto químico. As observações sobre esse composto estão descritas abaixo:</p>
+      <table class="tabela" style="font-size:19px;width:100%"><tr><td style="padding:6px 12px;text-align:left"><b>Observação 1</b></td><td style="padding:6px 12px;text-align:left">Possuía propriedades corrosivas.</td></tr><tr><td style="padding:6px 12px;text-align:left"><b>Observação 2</b></td><td style="padding:6px 12px;text-align:left">Possuía alta solubilidade em água.</td></tr><tr><td style="padding:6px 12px;text-align:left"><b>Observação 3</b></td><td style="padding:6px 12px;text-align:left">O papel de tornassol ficou vermelho em contato com ele.</td></tr><tr><td style="padding:6px 12px;text-align:left"><b>Observação 4</b></td><td style="padding:6px 12px;text-align:left">Apresentou condução de corrente elétrica quando dissolvido em água.</td></tr></table>
+      <p class="enunciado" style="font-size:22px">Baseado nas observações feitas pelo estudante, pode-se afirmar que o composto analisado é:</p>
+      <ol class="alternativas curtas">
+        <li data-em="2:certo"><b>A</b><span>HCl</span></li>
+        <li data-em="2:apaga"><b>B</b><span>NaOH</span></li>
+        <li data-em="2:apaga"><b>C</b><span>NaCl</span></li>
+        <li data-em="2:apaga"><b>D</b><span>I<sub>2</sub></span></li>
+        <li data-em="2:apaga"><b>E</b><span>CH<sub>4</sub></span></li>
+      </ol>
+    </div>
+  </div>
+  <aside class="resolucao">
+    <p class="dados"><b>Dados:</b> corrosivo, solúvel, tornassol vermelho, conduz em água.</p>
+    <ol class="passos">
+      <li><b>Obs. 3:</b> tornassol vermelho → <b>ácido</b>.</li>
+      <li><b>Ácido da lista:</b> só o HCl.</li>
+      <li><b>Obs. 4:</b> HCl → H<sup>+</sup> + Cl<sup>−</sup>: íons conduzem.</li>
+      <li><b>Obs. 1 e 2:</b> ácido clorídrico: corrosivo e solúvel.</li>
+    </ol>
+    <p class="resposta"><b>Resposta:</b> o composto é o HCl. <b>Gabarito A.</b></p>
+    <p class="atencao"><b>Destaque no quadro:</b> Tornassol: ácido avermelha, base azula.</p>
+    <ul class="erros">
+      <li><b>B</b> NaOH é base: deixaria o tornassol azul.</li>
+      <li><b>C</b> NaCl é sal neutro: não muda o tornassol.</li>
+      <li><b>D</b> I<sub>2</sub> quase não se dissolve em água e não conduz.</li>
+      <li><b>E</b> CH<sub>4</sub> é gás insolúvel em água: não forma íons.</li>
+    </ul>
+  </aside>
+  <aside class="notas">
+    <p>Clique 1 tira o aviso de pausa: resolva na área (D liga a caneta; E esconde o enunciado). Clique 2: gabarito A.</p>
+    <p>Questão oficial do PISM I 2017 (UFJF), dia 1. Não há questão de indicadores nas provas do IF Sudeste do banco; esta é do vestibular seriado da UFJF, nas fontes do Quarks.</p>
+  </aside>
+</section>
+
+<!-- Questão 2 -->
+<section class="slide questao" data-nome="Questão 2">
+  <div class="conteudo">
+    <div class="area-resolucao"></div>
+    <span class="pilula pilula-pausa" data-em="1:some">Pause o vídeo e tente</span>
+    <div class="painel-questao">
+      <p class="olho">Questão 2 · PISM I 2021</p>
+      <p class="enunciado" style="font-size:21px">Os dados do quadro a seguir mostram o comportamento elétrico de quatro substâncias em solução aquosa, testadas num circuito com uma lâmpada.</p>
+      <table class="tabela" style="font-size:19px;width:100%"><tr><th style="padding:6px 10px">Substância</th><th style="padding:6px 10px">Brilho da lâmpada</th><th style="padding:6px 10px">Cor com fenolftaleína</th></tr><tr><td style="padding:5px 10px">A</td><td style="padding:5px 10px">Intenso</td><td style="padding:5px 10px">Incolor</td></tr><tr><td style="padding:5px 10px">B</td><td style="padding:5px 10px">Pouco intenso</td><td style="padding:5px 10px">Incolor</td></tr><tr><td style="padding:5px 10px">C</td><td style="padding:5px 10px">Sem brilho</td><td style="padding:5px 10px">Incolor</td></tr><tr><td style="padding:5px 10px">D</td><td style="padding:5px 10px">Intenso</td><td style="padding:5px 10px">Rosa</td></tr></table>
+      <p class="enunciado" style="font-size:21px">De acordo com as informações do quadro, as substâncias A, B, C e D podem ser, respectivamente:</p>
+      <ol class="alternativas" style="gap:8px">
+        <li data-em="2:apaga" style="font-size:19px;padding:6px 14px"><b>A</b><span>NaCl, NaOH, Açúcar, Ácido Acético diluído.</span></li>
+        <li data-em="2:apaga" style="font-size:19px;padding:6px 14px"><b>B</b><span>NaOH, NaCl, Açúcar, Ácido Acético diluído.</span></li>
+        <li data-em="2:apaga" style="font-size:19px;padding:6px 14px"><b>C</b><span>NaOH, Ácido Acético diluído, Açúcar, NaCl.</span></li>
+        <li data-em="2:apaga" style="font-size:19px;padding:6px 14px"><b>D</b><span>Ácido Acético diluído, NaCl, Açúcar, NaOH.</span></li>
+        <li data-em="2:certo" style="font-size:19px;padding:6px 14px"><b>E</b><span>NaCl, Ácido Acético diluído, Açúcar, NaOH.</span></li>
+      </ol>
+    </div>
+  </div>
+  <aside class="resolucao">
+    <p class="dados"><b>Dados:</b> brilho = quantidade de íons; fenolftaleína rosa = base.</p>
+    <ol class="passos">
+      <li><b>D:</b> rosa → base; brilho intenso: NaOH.</li>
+      <li><b>C:</b> sem brilho, sem íons: açúcar.</li>
+      <li><b>B:</b> pouco brilho: ácido fraco (acético).</li>
+      <li><b>A:</b> brilho intenso, incolor: sal neutro, NaCl.</li>
+    </ol>
+    <p class="resposta"><b>Resposta:</b> NaCl, ácido acético, açúcar, NaOH. <b>Gabarito E.</b></p>
+    <p class="atencao"><b>Destaque no quadro:</b> Fenolftaleína incolor não prova ácido: o NaCl (neutro) também fica incolor.</p>
+    <ul class="erros">
+      <li><b>A</b> NaOH em B daria rosa e brilho intenso; ácido acético em D não ficaria rosa.</li>
+      <li><b>B</b> NaOH em A deixaria a solução rosa.</li>
+      <li><b>C</b> NaOH em A daria rosa; NaCl em D não ficaria rosa (é neutro).</li>
+      <li><b>D</b> Ácido acético é fraco: não daria brilho intenso em A.</li>
+    </ul>
+  </aside>
+  <aside class="notas">
+    <p>Clique 1 tira o aviso de pausa: resolva na área (D liga a caneta; E esconde o enunciado). Clique 2: gabarito E.</p>
+    <p>Questão oficial do PISM I 2021 (UFJF), dia 1. A figura do circuito com a lâmpada foi trocada por uma frase no enunciado (e "de acordo com a figura e as informações do quadro" virou "de acordo com as informações do quadro"); o quadro está completo.</p>
+    <p>Também revisa ácido forte e fraco (aula de ácidos) e o açúcar molecular (ligações).</p>
+  </aside>
+</section>
+
+<!-- Resumo -->
+<section class="slide" data-nome="Resumo">
+  <div class="conteudo">
+    <p class="olho">Resumo</p>
+    <h2 class="titulo">O essencial</h2>
+    <div class="resumo" style="position:absolute;left:0;right:0;top:150px">
+      <div><b>Indicador:</b> muda de cor conforme o meio é ácido ou básico.</div>
+      <div><b>Tornassol:</b> vermelho em ácido, azul em base.</div>
+      <div><b>Fenolftaleína:</b> incolor em ácido e em neutro; <b>rosa</b> em base.</div>
+      <div><b>Repolho roxo:</b> rosa em ácido, verde (ou amarelo) em base.</div>
+      <div><b>pH:</b> &lt; 7 ácido; = 7 neutro; &gt; 7 básico (escala de 0 a 14).</div>
+      <div><b>Menor pH, mais ácido:</b> limão (2) é mais ácido que café (5).</div>
+    </div>
+    <div class="caixa caixa-atencao" style="position:absolute;left:580px;right:0;top:660px">
+      <div class="texto" style="font-size:30px">Fenolftaleína incolor <b>não</b> prova que é ácido: o meio neutro também fica incolor.</div>
+    </div>
+  </div>
+  <aside class="notas"><p>Peça para tirarem um print desta tela.</p></aside>
+</section>
+
+<!-- A seguir -->
+<section class="slide capa" data-nome="A seguir">
+  <div class="estrelas"></div>
+  <div class="texto-capa" style="top:170px">
+    <span class="selo">Química · IF</span>
+    <p class="aula" style="font-size:26px">A seguir · Funções inorgânicas · Questões do IF Sudeste</p>
+    <h1>Questões do IF Sudeste</h1>
+    <p class="sub">Ácidos, bases, sais, óxidos e pH nas provas</p>
+  </div>
+  <svg class="emblema" viewBox="0 0 640 640" aria-hidden="true">
+    <rect x="150" y="110" width="340" height="430" rx="34" fill="#fff" fill-opacity=".12" stroke="#fff" stroke-opacity=".6" stroke-width="4"/>
+    <g fill="#fff" fill-opacity=".7"><rect x="200" y="170" width="240" height="18" rx="9"/><rect x="200" y="210" width="200" height="18" rx="9"/><rect x="200" y="250" width="220" height="18" rx="9"/></g>
+    <g fill="none" stroke="#fff" stroke-opacity=".75" stroke-width="4"><circle cx="216" cy="330" r="16"/><circle cx="216" cy="390" r="16"/><circle cx="216" cy="450" r="16"/></g>
+    <circle cx="216" cy="390" r="16" fill="#FFD10C"/>
+    <g fill="#fff" fill-opacity=".55"><rect x="250" y="321" width="150" height="16" rx="8"/><rect x="250" y="381" width="170" height="16" rx="8"/><rect x="250" y="441" width="130" height="16" rx="8"/></g>
+    <circle cx="470" cy="130" r="54" fill="#FFD10C"/>
+    <path d="M446 132 L464 150 L496 112" fill="none" stroke="#292B2C" stroke-width="10" stroke-linecap="round" stroke-linejoin="round"/>
+  </svg>
+  <img class="logo-capa" src="{{LOGO_BRANCO}}" alt="Quarks">
+  <aside class="notas"><p>Próxima: as questões oficiais do IF Sudeste sobre todo o capítulo de funções inorgânicas.</p></aside>
+</section>

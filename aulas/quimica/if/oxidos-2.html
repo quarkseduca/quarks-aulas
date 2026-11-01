@@ -1,0 +1,474 @@
+<!--aula
+{"disciplina": "quimica", "curso": "IF", "assunto": "Óxidos", "parte": "Parte 2 de 2", "titulo": "Óxidos no cotidiano e no ambiente", "scripts": ["animacoes-oxidos.js"]}
+-->
+<!-- Fonte: slides da professora (Química IF 2026, aula 12: monóxido de carbono, poluição atmosférica, gases de efeito estufa e chuva ácida), completados com a apostila IF, Química, 4.4 Óxidos (óxidos no cotidiano e no ambiente) e 13.1 Química ambiental (só o que toca os óxidos). Questões: IF Sudeste MG 2020 (oficiais). -->
+<style>
+  .caixa, .grupo, .cartao, .linha-ex { box-sizing: border-box; }
+  .est { font-size: .6em; font-weight: 600; color: var(--cinza); letter-spacing: 0; }
+  .eq { font: 700 36px var(--fonte-titulo); color: var(--carvao); letter-spacing: -.01em; white-space: nowrap; }
+  .eq .s { color: var(--d); margin: 0 10px; }
+  .grupo { background: var(--branco); border: 2px solid var(--lilas-2); border-radius: 30px; padding: 24px 30px; }
+  .grupo h3 { margin: 0 0 6px; font: 800 42px var(--fonte-titulo); letter-spacing: -.02em; color: var(--roxo-titulo); }
+  .grupo p { margin: 0; font-size: 29px; line-height: 1.3; color: var(--carvao); }
+  .grupo p b { color: var(--roxo-titulo); }
+  .cartao { background: var(--branco); border: 2px solid var(--lilas-2); border-radius: 26px; padding: 18px 26px; font-size: 28px; line-height: 1.32; }
+  .cartao .f { font: 800 46px var(--fonte-titulo); color: var(--roxo-titulo); }
+  .cartao b { color: var(--roxo-titulo); }
+  .linha-ex { display: grid; align-items: center; gap: 20px; background: var(--branco); border: 2px solid var(--lilas-2); border-radius: 22px; padding: 10px 26px; font-size: 29px; line-height: 1.25; }
+  .linha-ex .f { font: 800 40px var(--fonte-titulo); color: var(--roxo-titulo); }
+  .linha-ex b { color: var(--roxo-titulo); }
+  .tag { justify-self: end; padding: 6px 18px; border-radius: 999px; font-weight: 800; font-size: 25px; background: var(--d-clara); color: var(--d-forte); white-space: nowrap; }
+  .tag.ac { background: #FDE3E0; color: #A8321F; } .tag.ba { background: #E0ECFB; color: #1F5FA8; } .tag.ne { background: #EEEDF2; color: #4A4757; } .tag.an { background: #FFF4C2; color: #8A6A00; } .tag.pe { background: #E3F6EC; color: #1C7A4D; }
+  .selo-x { display: inline-block; padding: 5px 20px; border-radius: 999px; background: var(--d-clara); color: var(--d-forte); font-size: 26px; font-weight: 800; }
+  .tabela.chem td, .tabela.chem th { padding: 10px 30px; }
+  /* reação: os reagentes se encontram e some cada um; o produto aparece no meio (ciclo de 7 s) */
+  @keyframes vem-d { 0%, 12% { transform: translateX(0); opacity: 1; } 46% { transform: translateX(var(--dx)); opacity: 1; } 54%, 100% { transform: translateX(var(--dx)); opacity: 0; } }
+  @keyframes vem-e { 0%, 12% { transform: translateX(0); opacity: 1; } 46% { transform: translateX(calc(-1 * var(--dx))); opacity: 1; } 54%, 100% { transform: translateX(calc(-1 * var(--dx))); opacity: 0; } }
+  @keyframes nasce { 0%, 46% { opacity: 0; transform: scale(.7); } 58%, 90% { opacity: 1; transform: scale(1); } 100% { opacity: 0; transform: scale(1); } }
+  .reage { position: relative; }
+  .reage .r1, .reage .r2, .reage .p { position: absolute; top: 0; display: flex; flex-direction: column; align-items: center; gap: 2px; font: 800 32px var(--fonte-titulo); color: var(--roxo-titulo); }
+  .reage .p { opacity: 0; }
+  .reage svg { width: 170px; height: 130px; }
+  .reage .mais { position: absolute; top: 46px; font: 800 44px var(--fonte-titulo); color: var(--d); }
+  .slide.ativo .mostra .reage .r1, .slide.ativo .mostra.reage .r1 { animation: vem-d 7s ease-in-out infinite; }
+  .slide.ativo .mostra .reage .r2, .slide.ativo .mostra.reage .r2 { animation: vem-e 7s ease-in-out infinite; }
+  .slide.ativo .mostra .reage .p, .slide.ativo .mostra.reage .p { animation: nasce 7s ease-in-out infinite; }
+  @keyframes some-mais { 0%, 12% { opacity: 1; } 28%, 100% { opacity: 0; } }
+  .slide.ativo .mostra .reage .mais, .slide.ativo .mostra.reage .mais { animation: some-mais 7s ease-in-out infinite; }
+  /* átomos que vibram de leve */
+  @keyframes vib-a { 0%,100% { transform: translate(0,0); } 25% { transform: translate(1.6px,-1.2px); } 50% { transform: translate(-.8px,1.4px); } 75% { transform: translate(-1.4px,-.6px); } }
+  @keyframes vib-b { 0%,100% { transform: translate(0,0); } 25% { transform: translate(-1.4px,1px); } 50% { transform: translate(1.2px,-1.4px); } 75% { transform: translate(.6px,1.2px); } }
+  .slide.ativo .mostra svg.vibra .vib-a, .slide.ativo svg.vibra.sempre .vib-a { animation: vib-a 1.6s ease-in-out infinite; }
+  .slide.ativo .mostra svg.vibra .vib-b, .slide.ativo svg.vibra.sempre .vib-b { animation: vib-b 1.6s ease-in-out infinite; }
+  /* bolhas de gás que sobem */
+  @keyframes bolha { 0% { transform: translateY(0); opacity: 0; } 15% { opacity: 1; } 85% { opacity: 1; } 100% { transform: translateY(var(--sobe, -110px)); opacity: 0; } }
+  .bolhas circle { opacity: 0; }
+  .slide.ativo .mostra .bolhas circle { animation: bolha 3.6s linear infinite; }
+  .bolhas circle:nth-child(2) { animation-delay: -.6s !important; } .bolhas circle:nth-child(3) { animation-delay: -1.3s !important; } .bolhas circle:nth-child(4) { animation-delay: -2s !important; } .bolhas circle:nth-child(5) { animation-delay: -2.6s !important; } .bolhas circle:nth-child(6) { animation-delay: -3.1s !important; } .bolhas circle:nth-child(7) { animation-delay: -1.7s !important; } .bolhas circle:nth-child(8) { animation-delay: -.3s !important; }
+  /* vapor (calor) que sobe */
+  @keyframes fumaca { 0% { transform: translateY(0); opacity: 0; } 20% { opacity: .85; } 100% { transform: translateY(-50px); opacity: 0; } }
+  .vapor path { opacity: 0; }
+  .slide.ativo .mostra .vapor path { animation: fumaca 3s ease-out infinite; }
+  .vapor path:nth-child(2) { animation-delay: -1s !important; } .vapor path:nth-child(3) { animation-delay: -2s !important; } .vapor path:nth-child(4) { animation-delay: -.5s !important; }
+  /* chama que tremula */
+  @keyframes chama { 0%,100% { transform: scaleY(1) skewX(0); } 35% { transform: scaleY(.9) skewX(2deg); } 70% { transform: scaleY(1.04) skewX(-2deg); } }
+  .chama { transform-box: fill-box; transform-origin: 50% 100%; }
+  .slide.ativo .mostra .chama { animation: chama 1.6s ease-in-out infinite; }
+  .mol { display: flex; flex-direction: column; align-items: center; gap: 0; font: 800 30px var(--fonte-titulo); color: var(--roxo-titulo); }
+  .eqs { display: flex; flex-direction: column; gap: 14px; }
+  .fato { display: grid; grid-template-columns: 54px 1fr; gap: 16px; align-items: start; font-size: 30px; line-height: 1.32; }
+  .fato .n { width: 54px; height: 54px; border-radius: 50%; display: grid; place-items: center; background: var(--d-clara); color: var(--d-forte); font: 800 26px var(--fonte-titulo); }
+  .fato b { color: var(--roxo-titulo); }
+  .col3 h3 { margin: 0 0 8px; font: 800 38px var(--fonte-titulo); color: var(--roxo-titulo); }
+  .col3 .gases { font: 800 34px var(--fonte-titulo); color: var(--d-forte); margin: 4px 0 10px; }
+  .painel-anim { background: var(--branco); border: 2px solid var(--lilas-2); border-radius: 26px; overflow: hidden; }
+  .leg { font-size: 24px; font-weight: 700; color: var(--cinza); }
+</style>
+
+<svg width="0" height="0" style="position:absolute" aria-hidden="true">
+  <defs>
+    <radialGradient id="gO" cx=".35" cy=".3" r=".8"><stop offset="0" stop-color="#FF8A7A"/><stop offset="1" stop-color="#C8301F"/></radialGradient>
+    <radialGradient id="gH" cx=".35" cy=".3" r=".8"><stop offset="0" stop-color="#FFFFFF"/><stop offset="1" stop-color="#C9C4DC"/></radialGradient>
+    <radialGradient id="gC" cx=".35" cy=".3" r=".8"><stop offset="0" stop-color="#8A8A96"/><stop offset="1" stop-color="#2E2E36"/></radialGradient>
+    <radialGradient id="gS" cx=".35" cy=".3" r=".8"><stop offset="0" stop-color="#FFE680"/><stop offset="1" stop-color="#D9A900"/></radialGradient>
+    <radialGradient id="gCa" cx=".35" cy=".3" r=".8"><stop offset="0" stop-color="#B7F0C8"/><stop offset="1" stop-color="#2E9E5B"/></radialGradient>
+    <radialGradient id="gN" cx=".35" cy=".3" r=".8"><stop offset="0" stop-color="#7FA8FF"/><stop offset="1" stop-color="#2A5BD0"/></radialGradient>
+    <radialGradient id="gNa" cx=".35" cy=".3" r=".8"><stop offset="0" stop-color="#D7CCFF"/><stop offset="1" stop-color="#6551D1"/></radialGradient>
+    <linearGradient id="gAgua" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#CFE6FA"/><stop offset="1" stop-color="#9CCBF2"/></linearGradient>
+  </defs>
+  <symbol id="m-co2" viewBox="0 0 170 130"><circle class="vib-a" cx="45" cy="65" r="24" fill="url(#gO)" stroke="#8E2115" stroke-width="2"/><circle class="vib-b" cx="125" cy="65" r="24" fill="url(#gO)" stroke="#8E2115" stroke-width="2"/><circle class="vib-a" cx="85" cy="65" r="27" fill="url(#gC)" stroke="#1C1C22" stroke-width="2"/></symbol>
+  <symbol id="m-so2" viewBox="0 0 170 130"><circle class="vib-a" cx="50" cy="82" r="23" fill="url(#gO)" stroke="#8E2115" stroke-width="2"/><circle class="vib-b" cx="120" cy="82" r="23" fill="url(#gO)" stroke="#8E2115" stroke-width="2"/><circle class="vib-a" cx="85" cy="52" r="30" fill="url(#gS)" stroke="#8A6A00" stroke-width="2"/></symbol>
+  <symbol id="m-h2o" viewBox="0 0 170 130"><circle class="vib-a" cx="48" cy="84" r="18" fill="url(#gH)" stroke="#8C84B8" stroke-width="2"/><circle class="vib-b" cx="122" cy="84" r="18" fill="url(#gH)" stroke="#8C84B8" stroke-width="2"/><circle class="vib-a" cx="85" cy="60" r="28" fill="url(#gO)" stroke="#8E2115" stroke-width="2"/></symbol>
+  <symbol id="m-so3" viewBox="0 0 170 130"><circle class="vib-a" cx="85" cy="22" r="19" fill="url(#gO)" stroke="#8E2115" stroke-width="2"/><circle class="vib-b" cx="40" cy="92" r="19" fill="url(#gO)" stroke="#8E2115" stroke-width="2"/><circle class="vib-a" cx="130" cy="92" r="19" fill="url(#gO)" stroke="#8E2115" stroke-width="2"/><circle class="vib-b" cx="85" cy="66" r="28" fill="url(#gS)" stroke="#8A6A00" stroke-width="2"/></symbol>
+  <symbol id="m-h2so4" viewBox="0 0 170 130"><circle class="vib-a" cx="85" cy="18" r="17" fill="url(#gO)" stroke="#8E2115" stroke-width="2"/><circle class="vib-b" cx="85" cy="112" r="17" fill="url(#gO)" stroke="#8E2115" stroke-width="2"/><circle class="vib-a" cx="36" cy="65" r="17" fill="url(#gO)" stroke="#8E2115" stroke-width="2"/><circle class="vib-b" cx="134" cy="65" r="17" fill="url(#gO)" stroke="#8E2115" stroke-width="2"/><circle class="vib-a" cx="14" cy="50" r="11" fill="url(#gH)" stroke="#8C84B8" stroke-width="2"/><circle class="vib-b" cx="156" cy="80" r="11" fill="url(#gH)" stroke="#8C84B8" stroke-width="2"/><circle class="vib-a" cx="85" cy="65" r="25" fill="url(#gS)" stroke="#8A6A00" stroke-width="2"/></symbol>
+  <symbol id="m-cao" viewBox="0 0 170 130"><circle class="vib-a" cx="62" cy="65" r="30" fill="url(#gCa)" stroke="#1D6B3C" stroke-width="2"/><circle class="vib-b" cx="118" cy="65" r="24" fill="url(#gO)" stroke="#8E2115" stroke-width="2"/></symbol>
+  <symbol id="m-caoh2" viewBox="0 0 170 130"><circle class="vib-a" cx="85" cy="65" r="30" fill="url(#gCa)" stroke="#1D6B3C" stroke-width="2"/><circle class="vib-b" cx="35" cy="65" r="20" fill="url(#gO)" stroke="#8E2115" stroke-width="2"/><circle class="vib-a" cx="135" cy="65" r="20" fill="url(#gO)" stroke="#8E2115" stroke-width="2"/><circle class="vib-b" cx="14" cy="50" r="11" fill="url(#gH)" stroke="#8C84B8" stroke-width="2"/><circle class="vib-a" cx="156" cy="80" r="11" fill="url(#gH)" stroke="#8C84B8" stroke-width="2"/></symbol>
+  <symbol id="m-co" viewBox="0 0 170 130"><circle class="vib-a" cx="62" cy="65" r="27" fill="url(#gC)" stroke="#1C1C22" stroke-width="2"/><circle class="vib-b" cx="110" cy="65" r="24" fill="url(#gO)" stroke="#8E2115" stroke-width="2"/></symbol>
+  <symbol id="m-no" viewBox="0 0 170 130"><circle class="vib-a" cx="62" cy="65" r="26" fill="url(#gN)" stroke="#1B3E94" stroke-width="2"/><circle class="vib-b" cx="110" cy="65" r="24" fill="url(#gO)" stroke="#8E2115" stroke-width="2"/></symbol>
+  <symbol id="m-n2o" viewBox="0 0 170 130"><circle class="vib-a" cx="38" cy="65" r="22" fill="url(#gN)" stroke="#1B3E94" stroke-width="2"/><circle class="vib-b" cx="82" cy="65" r="22" fill="url(#gN)" stroke="#1B3E94" stroke-width="2"/><circle class="vib-a" cx="128" cy="65" r="22" fill="url(#gO)" stroke="#8E2115" stroke-width="2"/></symbol>
+  <symbol id="m-h2o2" viewBox="0 0 170 130"><circle class="vib-a" cx="60" cy="70" r="24" fill="url(#gO)" stroke="#8E2115" stroke-width="2"/><circle class="vib-b" cx="110" cy="60" r="24" fill="url(#gO)" stroke="#8E2115" stroke-width="2"/><circle class="vib-a" cx="30" cy="98" r="14" fill="url(#gH)" stroke="#8C84B8" stroke-width="2"/><circle class="vib-b" cx="140" cy="32" r="14" fill="url(#gH)" stroke="#8C84B8" stroke-width="2"/></symbol>
+</svg>
+
+<!-- Capa -->
+<section class="slide capa" data-nome="Capa">
+  <div class="estrelas"></div>
+  <div class="texto-capa" style="top:150px">
+    <span class="selo">Química · IF</span>
+    <p class="aula">Óxidos · Parte 2 de 2</p>
+    <h1 style="font-size:110px">Óxidos no cotidiano e no ambiente</h1>
+    <p class="sub">Principais óxidos, chuva ácida e efeito estufa</p>
+  </div>
+  <svg class="emblema" viewBox="0 0 640 640" aria-hidden="true">
+    <g fill="#fff" fill-opacity=".9"><circle cx="250" cy="230" r="80"/><circle cx="350" cy="190" r="100"/><circle cx="440" cy="240" r="74"/><rect x="190" y="230" width="320" height="80" rx="40"/></g>
+    <g fill="#FFD10C"><path d="M250 360 q16 24 16 36 a16 16 0 0 1 -32 0 q0 -12 16 -36 z"/><path d="M340 400 q16 24 16 36 a16 16 0 0 1 -32 0 q0 -12 16 -36 z"/><path d="M430 360 q16 24 16 36 a16 16 0 0 1 -32 0 q0 -12 16 -36 z"/><path d="M300 480 q16 24 16 36 a16 16 0 0 1 -32 0 q0 -12 16 -36 z"/><path d="M390 500 q16 24 16 36 a16 16 0 0 1 -32 0 q0 -12 16 -36 z"/></g>
+  </svg>
+  <img class="logo-capa" src="{{LOGO_BRANCO}}" alt="Quarks">
+  <aside class="notas"><p>Hoje: os óxidos que aparecem no dia a dia (gás carbônico, monóxido de carbono, cal, areia, ferrugem) e os que poluem o ar: chuva ácida e efeito estufa.</p></aside>
+</section>
+
+<!-- Gás carbônico -->
+<section class="slide" data-nome="Gás carbônico">
+  <div class="conteudo">
+    <p class="olho">Principais óxidos</p>
+    <h2 class="titulo">Gás carbônico, CO₂</h2>
+    <div data-passo="1" style="position:absolute;left:0;top:150px;width:520px;height:440px">
+      <svg viewBox="0 0 520 440" style="width:520px;height:440px" aria-hidden="true">
+        <path d="M150 60 h220 l-24 340 q-2 20 -22 20 h-128 q-20 0 -22 -20 z" fill="#FFF8E6" stroke="#9A95AD" stroke-width="5" stroke-linejoin="round"/>
+        <path d="M162 130 h196 l-19 266 q-1 14 -15 14 h-128 q-14 0 -15 -14 z" fill="#F6E3B8"/>
+        <g class="bolhas" style="--sobe:-250px"><circle cx="200" cy="390" r="7" fill="#fff" stroke="#C9A85A" stroke-width="2"/><circle cx="240" cy="395" r="5" fill="#fff" stroke="#C9A85A" stroke-width="2"/><circle cx="270" cy="392" r="8" fill="#fff" stroke="#C9A85A" stroke-width="2"/><circle cx="300" cy="396" r="6" fill="#fff" stroke="#C9A85A" stroke-width="2"/><circle cx="325" cy="390" r="5" fill="#fff" stroke="#C9A85A" stroke-width="2"/><circle cx="220" cy="394" r="6" fill="#fff" stroke="#C9A85A" stroke-width="2"/><circle cx="285" cy="388" r="4" fill="#fff" stroke="#C9A85A" stroke-width="2"/><circle cx="255" cy="396" r="6" fill="#fff" stroke="#C9A85A" stroke-width="2"/></g>
+        <svg class="vibra" x="380" y="40" width="130" height="100" viewBox="0 0 170 130"><use href="#m-co2"/></svg>
+        <text x="445" y="168" text-anchor="middle" font-family="Figtree,sans-serif" font-weight="800" font-size="30" fill="#3F2FA0">CO₂</text>
+      </svg>
+    </div>
+    <div style="position:absolute;left:580px;right:0;top:150px;display:flex;flex-direction:column;gap:20px">
+      <div class="fato" data-passo="1"><span class="n">1</span><span>Sai da <b>respiração</b> e da <b>combustão completa</b> (carvão, gasolina, gás, madeira).</span></div>
+      <div class="fato" data-passo="2"><span class="n">2</span><span><b>Água com gás</b> e refrigerante: o gás dissolvido forma um ácido fraco, por isso o gosto levemente azedo.</span></div>
+      <div data-passo="2" style="padding-left:70px"><div class="eq" style="font-size:34px">CO<sub>2</sub><span class="est">(g)</span> <span class="s" style="margin:0 4px">+</span> H<sub>2</sub>O<span class="est">(l)</span> <span class="s">⇌</span> H<sub>2</sub>CO<sub>3</sub><span class="est">(aq)</span></div></div>
+      <div class="fato" data-passo="3"><span class="n">3</span><span><b>Gelo-seco</b>: CO<sub>2</sub> sólido, que <b>sublima</b> a −78 °C (efeito de "fumaça" em shows).</span></div>
+      <div class="caixa caixa-fundamental" data-passo="4" style="padding:18px 30px">
+        <div class="texto" style="font-size:29px">CO<sub>2</sub>: <b>óxido ácido</b> (anidrido carbônico). Em excesso no ar, <b>intensifica o efeito estufa</b>.</div>
+      </div>
+    </div>
+  </div>
+  <aside class="notas">
+    <p>Clique 1: de onde vem. Clique 2: o refrigerante: as bolhas que sobem são o CO₂ que sai da solução quando a garrafa é aberta. Clique 3: o gelo-seco. Clique 4: a classificação e o problema ambiental (aprofundado adiante).</p>
+    <p>A seta dupla indica que a reação vai e volta: ao abrir a garrafa, o CO₂ escapa e o ácido carbônico se desfaz.</p>
+  </aside>
+</section>
+
+<!-- Monóxido de carbono -->
+<section class="slide" data-nome="Monóxido de carbono">
+  <div class="conteudo">
+    <p class="olho">Principais óxidos</p>
+    <h2 class="titulo">Monóxido de carbono, CO</h2>
+    <div style="position:absolute;left:0;top:150px;width:520px;height:440px">
+      <svg viewBox="0 0 520 440" style="width:520px;height:440px" aria-hidden="true">
+        <g data-passo="1">
+          <path class="chama" d="M130 330 q-60 -70 0 -170 q60 100 0 170 z" fill="#5AA9F0" opacity=".9"/>
+          <path class="chama" d="M130 330 q-30 -40 0 -95 q30 55 0 95 z" fill="#D9EEFF"/>
+          <rect x="70" y="330" width="120" height="26" rx="8" fill="#9A95AD"/>
+          <text x="130" y="400" text-anchor="middle" font-family="Figtree,sans-serif" font-weight="800" font-size="28" fill="#1F5FA8">completa</text>
+          <text x="130" y="432" text-anchor="middle" font-family="Figtree,sans-serif" font-weight="700" font-size="24" fill="#5E5A70">muito O₂: CO₂</text>
+        </g>
+        <g data-passo="2">
+          <path class="chama" d="M390 330 q-75 -80 -10 -200 q20 40 40 30 q50 70 -30 170 z" fill="#FFB020"/>
+          <path class="chama" d="M390 330 q-35 -45 0 -110 q35 65 0 110 z" fill="#FFE680"/>
+          <g fill="#4A4757" opacity=".55"><circle cx="370" cy="110" r="14"/><circle cx="395" cy="88" r="18"/><circle cx="420" cy="66" r="13"/></g>
+          <rect x="330" y="330" width="120" height="26" rx="8" fill="#9A95AD"/>
+          <text x="390" y="400" text-anchor="middle" font-family="Figtree,sans-serif" font-weight="800" font-size="28" fill="#A8321F">incompleta</text>
+          <text x="390" y="432" text-anchor="middle" font-family="Figtree,sans-serif" font-weight="700" font-size="24" fill="#5E5A70">pouco O₂: CO e fuligem</text>
+        </g>
+      </svg>
+    </div>
+    <div style="position:absolute;left:580px;right:0;top:150px;display:flex;flex-direction:column;gap:16px">
+      <p class="rot" style="margin:0;font-size:24px;font-weight:800;letter-spacing:.08em;text-transform:uppercase;color:var(--d-forte)" data-passo="1">Combustão do metano (gás natural)</p>
+      <div class="eq" data-passo="1" style="font-size:34px">CH<sub>4</sub><span class="est">(g)</span> <span class="s" style="margin:0 4px">+</span> 2 O<sub>2</sub><span class="est">(g)</span> <span class="s">→</span> CO<sub>2</sub><span class="est">(g)</span> <span class="s" style="margin:0 4px">+</span> 2 H<sub>2</sub>O<span class="est">(l)</span></div>
+      <div class="eq" data-passo="2" style="font-size:34px">2 CH<sub>4</sub><span class="est">(g)</span> <span class="s" style="margin:0 4px">+</span> 3 O<sub>2</sub><span class="est">(g)</span> <span class="s">→</span> 2 CO<span class="est">(g)</span> <span class="s" style="margin:0 4px">+</span> 4 H<sub>2</sub>O<span class="est">(l)</span></div>
+      <div class="fato" data-passo="3"><span class="n">!</span><span>Fontes: queima de <b>gasolina</b>, <b>querosene</b> e <b>óleo diesel</b>; aquecedor a gás e carro ligado em lugar fechado.</span></div>
+      <div class="caixa caixa-atencao" data-passo="4" style="padding:18px 30px">
+        <div class="texto" style="font-size:29px">O CO é <b>extremamente tóxico</b>: liga-se à hemoglobina no lugar do oxigênio e o sangue deixa de levar O<sub>2</sub> às células. Não tem cor nem cheiro.</div>
+      </div>
+    </div>
+  </div>
+  <aside class="notas">
+    <p>Clique 1: combustão completa (chama azul, oxigênio de sobra): forma CO₂. Clique 2: combustão incompleta (chama amarela, pouco oxigênio): forma CO e fuligem. Clique 3: as fontes do material da professora. Clique 4: por que é tão perigoso.</p>
+    <p>Confira o clique 2: 2 C, 8 H, 6 O de cada lado. Lembre que o CO é um óxido neutro: não reage com água, ácido nem base.</p>
+  </aside>
+</section>
+
+<!-- Cal virgem -->
+<section class="slide" data-nome="Cal virgem">
+  <div class="conteudo">
+    <p class="olho">Principais óxidos</p>
+    <h2 class="titulo">Cal virgem, CaO</h2>
+    <div style="position:absolute;left:0;top:150px;width:520px;height:440px">
+      <svg viewBox="0 0 520 440" style="width:520px;height:440px" aria-hidden="true">
+        <g data-passo="2">
+          <path d="M120 200 h280 l-30 210 h-220 z" fill="#E9E6F2" stroke="#7F7A99" stroke-width="5" stroke-linejoin="round"/>
+          <path d="M132 260 h256 l-21 146 h-214 z" fill="url(#gAgua)"/>
+          <g fill="#FFFFFF" stroke="#B9B0C9" stroke-width="3"><rect x="180" y="236" width="50" height="40" rx="10"/><rect x="250" y="244" width="56" height="38" rx="10"/><rect x="316" y="236" width="44" height="40" rx="10"/></g>
+          <g class="vapor" fill="none" stroke="#B9B0E6" stroke-width="7" stroke-linecap="round"><path d="M190 190 q-14 -20 0 -40 q14 -20 0 -40"/><path d="M260 190 q-14 -20 0 -40 q14 -20 0 -40"/><path d="M330 190 q-14 -20 0 -40 q14 -20 0 -40"/><path d="M225 186 q-14 -20 0 -40 q14 -20 0 -40"/></g>
+          <text x="260" y="40" text-anchor="middle" font-family="Figtree,sans-serif" font-weight="800" font-size="28" fill="#C2384F">esquenta muito!</text>
+        </g>
+      </svg>
+    </div>
+    <div style="position:absolute;left:580px;right:0;top:150px;display:flex;flex-direction:column;gap:16px">
+      <p style="margin:0;font-size:24px;font-weight:800;letter-spacing:.08em;text-transform:uppercase;color:var(--d-forte)" data-passo="1">Do calcário à cal virgem (aquecimento)</p>
+      <div class="eq" data-passo="1" style="font-size:36px">CaCO<sub>3</sub><span class="est">(s)</span> <span class="s">→</span> CaO<span class="est">(s)</span> <span class="s" style="margin:0 4px">+</span> CO<sub>2</sub><span class="est">(g)</span></div>
+      <p style="margin:0;font-size:24px;font-weight:800;letter-spacing:.08em;text-transform:uppercase;color:var(--d-forte)" data-passo="2">Cal virgem + água: cal hidratada</p>
+      <div class="eq" data-passo="2" style="font-size:36px">CaO<span class="est">(s)</span> <span class="s" style="margin:0 4px">+</span> H<sub>2</sub>O<span class="est">(l)</span> <span class="s">→</span> Ca(OH)<sub>2</sub><span class="est">(s)</span></div>
+      <div class="fato" data-passo="3"><span class="n">1</span><span><b>Construção:</b> argamassa e pintura a cal (caiação).</span></div>
+      <div class="fato" data-passo="3"><span class="n">2</span><span><b>Agricultura:</b> corrige a <b>acidez do solo</b> (calagem): é óxido básico.</span></div>
+    </div>
+    <div class="caixa caixa-atencao" data-passo="4" style="position:absolute;left:580px;right:0;top:640px;padding:18px 30px">
+      <div class="texto" style="font-size:29px">Cal virgem é <b>óxido</b> (CaO); cal hidratada é <b>base</b> (Ca(OH)<sub>2</sub>). Não confunda os dois.</div>
+    </div>
+  </div>
+  <aside class="notas">
+    <p>Clique 1: a cal virgem é obtida aquecendo o calcário (o CO₂ sai). Clique 2: com água, vira cal hidratada; a reação libera muito calor (por isso o vapor e o cuidado com a pele). Clique 3: os usos. Clique 4: a confusão mais comum.</p>
+    <p>Calagem: a cal (básica) neutraliza a acidez do solo. Volta na questão 2 desta parte.</p>
+  </aside>
+</section>
+
+<!-- Outros óxidos -->
+<section class="slide" data-nome="Outros óxidos">
+  <div class="conteudo">
+    <p class="olho">Principais óxidos</p>
+    <h2 class="titulo">Outros óxidos do dia a dia</h2>
+    <div style="position:absolute;left:0;right:0;top:150px;display:grid;grid-template-columns:1fr 1fr;gap:24px 30px">
+      <div class="cartao" data-passo="1" style="height:200px"><span class="f">SiO<sub>2</sub></span> <b style="font-size:30px">dióxido de silício</b><p style="margin:8px 0 0">areia, quartzo e vidro: o óxido mais abundante da crosta terrestre</p></div>
+      <div class="cartao" data-passo="2" style="height:200px"><span class="f">Fe<sub>2</sub>O<sub>3</sub></span> <b style="font-size:30px">óxido de ferro (III)</b><p style="margin:8px 0 0">a ferrugem e a hematita, o principal minério de ferro</p></div>
+      <div class="cartao" data-passo="3" style="height:200px"><span class="f">Al<sub>2</sub>O<sub>3</sub></span> <b style="font-size:30px">óxido de alumínio</b><p style="margin:8px 0 0">a alumina da bauxita, de onde se tira o alumínio</p></div>
+      <div class="cartao" data-passo="4" style="height:200px"><span class="f">H<sub>2</sub>O<sub>2</sub></span> <b style="font-size:30px">peróxido de hidrogênio</b><p style="margin:8px 0 0">a água oxigenada: antisséptico e clareador</p></div>
+    </div>
+    <div class="caixa caixa-fundamental" data-passo="5" style="position:absolute;left:580px;right:0;top:640px;padding:18px 30px">
+      <div class="texto" style="font-size:29px">Os óxidos estão nas rochas, nos minérios e na água: a própria H<sub>2</sub>O é o óxido do hidrogênio.</div>
+    </div>
+  </div>
+  <aside class="notas">
+    <p>Um clique por cartão. Pergunte antes onde cada um aparece.</p>
+    <p>O SiO₂ aparece no texto da questão do IF 2023 (o mais abundante da crosta). A ferrugem é a mais citada: o ferro reage com o oxigênio e a umidade do ar.</p>
+  </aside>
+</section>
+
+<!-- Chuva ácida -->
+<section class="slide" data-nome="Chuva ácida">
+  <div class="conteudo">
+    <p class="olho">Poluição atmosférica</p>
+    <h2 class="titulo">Chuva ácida</h2>
+    <div class="painel-anim" style="position:absolute;left:0;top:150px;width:820px;height:440px">
+      <div data-anima="chuvaacida" data-anima-passo="1" data-w="820" data-h="440" style="width:820px;height:440px"></div>
+    </div>
+    <div style="position:absolute;left:870px;right:0;top:150px;display:flex;flex-direction:column;gap:18px">
+      <div class="fato" data-passo="1"><span class="n">1</span><span>Queima de <b>carvão</b> e de <b>combustíveis fósseis</b> solta <b>óxidos de enxofre</b> (SO<sub>2</sub>, SO<sub>3</sub>) e <b>de nitrogênio</b> (NO, NO<sub>2</sub>).</span></div>
+      <div class="fato" data-passo="2"><span class="n">2</span><span>Na nuvem, eles reagem com a água e formam <b>ácidos</b>, que voltam com a chuva.</span></div>
+      <div class="fato" data-passo="3"><span class="n">3</span><span>Chuva normal já é levemente ácida (pH ≈ 5,6, por causa do CO<sub>2</sub>). <b>Chuva ácida: pH abaixo de 5,6.</b></span></div>
+    </div>
+    <div class="caixa caixa-atencao" data-passo="4" style="position:absolute;left:580px;right:0;top:640px;padding:18px 30px">
+      <div class="texto" style="font-size:29px"><b>Efeitos:</b> corrói <b>mármore</b>, monumentos e metais; acidifica <b>lagos e solos</b>; prejudica as plantas.</div>
+    </div>
+  </div>
+  <aside class="notas">
+    <p>Clique 1: a chaminé (amarelo: SO₂) e o escapamento (azul: NO₂) soltam óxidos que sobem até a nuvem. Clique 2: a nuvem escurece e a chuva ácida cai sobre a estátua de mármore, que vai ficando manchada. Clique 3: o pH. Clique 4: os efeitos.</p>
+    <p>Na figura, enxofre em amarelo, nitrogênio em azul e oxigênio em vermelho. O NO, que sai do motor, se transforma em NO₂ no ar.</p>
+  </aside>
+</section>
+
+<!-- Reações da chuva ácida -->
+<section class="slide" data-nome="Reações da chuva ácida">
+  <div class="conteudo">
+    <p class="olho">Poluição atmosférica</p>
+    <h2 class="titulo">As reações da chuva ácida</h2>
+    <div class="eqs" style="position:absolute;left:0;right:0;top:150px;gap:18px">
+      <div class="linha-ex" data-passo="1" style="grid-template-columns:740px 1fr;padding:10px 26px"><div class="eq" style="font-size:34px">SO<sub>2</sub><span class="est">(g)</span> <span class="s" style="margin:0 4px">+</span> H<sub>2</sub>O<span class="est">(l)</span> <span class="s">→</span> H<sub>2</sub>SO<sub>3</sub><span class="est">(aq)</span></div><span>ácido sulfuroso</span></div>
+      <div class="linha-ex" data-passo="2" style="grid-template-columns:740px 1fr;padding:10px 26px"><div class="eq" style="font-size:34px">2 SO<sub>2</sub><span class="est">(g)</span> <span class="s" style="margin:0 4px">+</span> O<sub>2</sub><span class="est">(g)</span> <span class="s">→</span> 2 SO<sub>3</sub><span class="est">(g)</span></div><span>o SO<sub>2</sub> vira SO<sub>3</sub> no ar</span></div>
+      <div class="linha-ex" data-passo="3" style="grid-template-columns:740px 1fr;padding:10px 26px"><div class="eq" style="font-size:34px">SO<sub>3</sub><span class="est">(g)</span> <span class="s" style="margin:0 4px">+</span> H<sub>2</sub>O<span class="est">(l)</span> <span class="s">→</span> H<sub>2</sub>SO<sub>4</sub><span class="est">(aq)</span></div><span><b>ácido sulfúrico</b> (forte)</span></div>
+      <div class="linha-ex" data-passo="4" style="grid-template-columns:740px 1fr;padding:10px 26px"><div class="eq" style="font-size:34px">2 NO<sub>2</sub><span class="est">(g)</span> <span class="s" style="margin:0 4px">+</span> H<sub>2</sub>O<span class="est">(l)</span> <span class="s">→</span> HNO<sub>3</sub><span class="est">(aq)</span> <span class="s" style="margin:0 4px">+</span> HNO<sub>2</sub><span class="est">(aq)</span></div><span>ácido nítrico e ácido nitroso</span></div>
+    </div>
+    <div class="caixa caixa-fundamental" data-passo="5" style="position:absolute;left:580px;right:0;top:600px;padding:18px 30px">
+      <span class="rotulo">O mármore corroído</span>
+      <div style="margin-top:4px"><div class="eq" style="font-size:31px">CaCO<sub>3</sub><span class="est">(s)</span> <span class="s" style="margin:0 4px">+</span> H<sub>2</sub>SO<sub>4</sub><span class="est">(aq)</span> <span class="s">→</span> CaSO<sub>4</sub><span class="est">(s)</span> <span class="s" style="margin:0 4px">+</span> H<sub>2</sub>O<span class="est">(l)</span> <span class="s" style="margin:0 4px">+</span> CO<sub>2</sub><span class="est">(g)</span></div></div>
+    </div>
+  </div>
+  <aside class="notas">
+    <p>Um clique por equação (todas do material da professora). Peça o nome do ácido antes de mostrar.</p>
+    <p>Clique 5: o ácido ataca o carbonato de cálcio do mármore e do calcário; sai gás carbônico. Confira: 1 Ca, 1 S, 1 C, 2 H e 7 O de cada lado.</p>
+    <p>Confira o clique 4: 2 N, 2 H e 5 O de cada lado.</p>
+  </aside>
+</section>
+
+<!-- Efeito estufa -->
+<section class="slide" data-nome="Efeito estufa">
+  <div class="conteudo">
+    <p class="olho">Poluição atmosférica</p>
+    <h2 class="titulo">Efeito estufa</h2>
+    <div style="position:absolute;left:0;top:150px;display:flex;gap:30px">
+      <div style="display:flex;flex-direction:column;align-items:center;gap:6px" data-passo="1">
+        <div class="painel-anim"><div data-anima="estufa" data-anima-passo="1" data-w="500" data-h="380" data-co2="2" data-semente="5" style="width:500px;height:380px"></div></div>
+        <span class="selo-x">pouco CO₂</span>
+      </div>
+      <div style="display:flex;flex-direction:column;align-items:center;gap:6px" data-passo="2">
+        <div class="painel-anim"><div data-anima="estufa" data-anima-passo="2" data-w="500" data-h="380" data-co2="8" data-semente="9" style="width:500px;height:380px"></div></div>
+        <span class="selo-x">muito CO₂</span>
+      </div>
+    </div>
+    <div style="position:absolute;left:1090px;right:0;top:150px;display:flex;flex-direction:column;gap:16px">
+      <p class="leg" style="margin:0"><span style="color:#D99A00">━</span> luz do Sol &nbsp; <span style="color:#E5533D">∿</span> calor (infravermelho)</p>
+      <div class="fato" data-passo="1"><span class="n">1</span><span>A luz aquece o chão, que devolve <b>calor</b>. Os gases estufa <b>retêm</b> parte dele.</span></div>
+      <div class="fato" data-passo="2"><span class="n">2</span><span>Mais gás, mais calor retido: <b>aquecimento global</b>.</span></div>
+      <div class="fato" data-passo="3"><span class="n">3</span><span>Gases: <b>CO<sub>2</sub></b>, CH<sub>4</sub> e <b>N<sub>2</sub>O</b> (e o vapor de água).</span></div>
+    </div>
+    <div class="caixa caixa-fundamental" data-passo="4" style="position:absolute;left:580px;right:0;top:600px;padding:18px 30px">
+      <div class="texto" style="font-size:28px">O efeito estufa é <b>natural e necessário</b> (sem ele a Terra seria fria demais). O problema é o <b>excesso</b>: queima de combustíveis fósseis e desmatamento.</div>
+    </div>
+  </div>
+  <aside class="notas">
+    <p>Clique 1: com pouco CO₂, a maior parte do calor (ondas vermelhas) escapa para o espaço. Clique 2: com muito CO₂, as moléculas devolvem mais calor para o chão. Deixe as duas rodando e compare. Clique 3: os gases (CO₂ e N₂O estão no material da professora; o metano vem da apostila). Clique 4: o natural e o excesso.</p>
+    <p>As moléculas de CO₂ vibram quando absorvem o calor e o reemitem em qualquer direção: parte volta para o chão.</p>
+  </aside>
+</section>
+
+<!-- Um poluente, um problema -->
+<section class="slide" data-nome="Um poluente, um problema">
+  <div class="conteudo">
+    <p class="olho">Poluição atmosférica</p>
+    <h2 class="titulo">Um poluente, um problema</h2>
+    <div style="position:absolute;left:0;right:0;top:150px;display:grid;grid-template-columns:repeat(4,1fr);gap:24px">
+      <div class="grupo col3" data-passo="1" style="height:300px;background:#FDE3E0"><h3>Chuva ácida</h3><p class="gases">SO₂, SO₃, NO₂</p><p>formam ácidos com a água da chuva</p></div>
+      <div class="grupo col3" data-passo="2" style="height:300px;background:#FFF4C2"><h3>Efeito estufa</h3><p class="gases">CO₂, CH₄, N₂O</p><p>retêm calor e aquecem o planeta</p></div>
+      <div class="grupo col3" data-passo="3" style="height:300px;background:#E0ECFB"><h3>Camada de ozônio</h3><p class="gases">CFC</p><p>destroem o O₃, que filtra a radiação ultravioleta</p></div>
+      <div class="grupo col3" data-passo="4" style="height:300px;background:#EEEDF2"><h3>Intoxicação</h3><p class="gases">CO</p><p>impede o sangue de levar oxigênio</p></div>
+    </div>
+    <div class="caixa caixa-atencao" data-passo="5" style="position:absolute;left:580px;right:0;top:640px;padding:18px 30px">
+      <div class="texto" style="font-size:29px"><b>Efeito estufa não é buraco no ozônio:</b> são problemas diferentes, com gases diferentes.</div>
+    </div>
+  </div>
+  <aside class="notas">
+    <p>Um clique por problema. As questões costumam pedir para ligar o gás ao problema.</p>
+    <p>O CFC não é óxido; entra aqui só para não ser confundido com os gases do efeito estufa.</p>
+  </aside>
+</section>
+
+<!-- Exemplo: cada óxido, um problema -->
+<section class="slide" data-nome="Exemplo: cada óxido, um problema">
+  <div class="conteudo">
+    <p class="olho">Exemplo</p>
+    <h2 class="titulo">Qual problema cada óxido causa?</h2>
+    <p class="texto" style="position:absolute;left:0;right:0;top:146px;margin:0;font-size:31px">Ligue cada óxido ao problema que ele causa: SO<sub>2</sub>, CO<sub>2</sub>, CO e NO<sub>2</sub>.</p>
+    <div style="position:absolute;left:0;right:0;top:214px;display:flex;flex-direction:column;gap:14px">
+      <div class="linha-ex" data-passo="1" style="grid-template-columns:150px 1fr 240px;padding:10px 26px"><span class="f">SO<sub>2</sub></span><span>óxido ácido: com a água da chuva forma ácido</span><span class="tag ac">chuva ácida</span></div>
+      <div class="linha-ex" data-passo="2" style="grid-template-columns:150px 1fr 240px;padding:10px 26px"><span class="f">CO<sub>2</sub></span><span>retém o calor que a Terra devolve</span><span class="tag an">efeito estufa</span></div>
+      <div class="linha-ex" data-passo="3" style="grid-template-columns:150px 1fr 240px;padding:10px 26px"><span class="f">CO</span><span>combustão incompleta; liga-se à hemoglobina</span><span class="tag ne">tóxico</span></div>
+      <div class="linha-ex" data-passo="4" style="grid-template-columns:150px 1fr 240px;padding:10px 26px"><span class="f">NO<sub>2</sub></span><span>com água forma HNO<sub>3</sub> e HNO<sub>2</sub></span><span class="tag ac">chuva ácida</span></div>
+    </div>
+    <div class="caixa caixa-fundamental" data-passo="5" style="position:absolute;left:580px;right:0;top:640px;padding:18px 30px">
+      <div class="texto" style="font-size:29px"><b>Resposta:</b> SO<sub>2</sub> e NO<sub>2</sub>: chuva ácida; CO<sub>2</sub>: efeito estufa; CO: tóxico.</div>
+    </div>
+  </div>
+  <aside class="notas">
+    <p>Peça a resposta antes de cada clique. Um clique por óxido.</p>
+    <p>O CO₂ também deixa a chuva levemente ácida (pH ≈ 5,6), mas não é ele que causa a chuva ácida.</p>
+  </aside>
+</section>
+
+<!-- Questão 1 -->
+<section class="slide questao" data-nome="Questão 1">
+  <div class="conteudo">
+    <div class="area-resolucao"></div>
+    <span class="pilula pilula-pausa" data-em="1:some">Pause o vídeo e tente</span>
+    <div class="painel-questao">
+      <p class="olho">Questão 1 · IF Sudeste MG 2020</p>
+      <p class="enunciado" style="font-size:22px">Um dos mais sérios problemas ambientais enfrentado por muitas regiões é a chuva ácida. Esse fenômeno corresponde à precipitação atmosférica de quantidades consideráveis de ácidos, o que pode provocar danos ao solo, construções, carros e outros. Entre os principais causadores desse fenômeno, está o dióxido de enxofre, produzido principalmente pela queima de combustíveis fósseis nos motores dos veículos. As reações abaixo explicam a formação da chuva ácida a partir deste composto:</p>
+      <p class="enunciado" style="font-size:24px;text-align:center;margin:0">2SO<sub>2</sub> + O<sub>2</sub> → 2SO<sub>3</sub><br>SO<sub>3</sub> + H<sub>2</sub>O → H<sub>2</sub>SO<sub>4</sub></p>
+      <p class="enunciado" style="font-size:22px">Dentre os compostos que aparecem nessas reações, qual deles é responsável por aumentar a acidez da água da chuva?</p>
+      <ol class="alternativas curtas">
+        <li data-em="2:apaga"><b>A</b><span>SO<sub>2</sub></span></li>
+        <li data-em="2:apaga"><b>B</b><span>O<sub>2</sub></span></li>
+        <li data-em="2:apaga"><b>C</b><span>SO<sub>3</sub></span></li>
+        <li data-em="2:apaga"><b>D</b><span>H<sub>2</sub>O</span></li>
+        <li data-em="2:certo"><b>E</b><span>H<sub>2</sub>SO<sub>4</sub></span></li>
+      </ol>
+    </div>
+  </div>
+  <aside class="resolucao">
+    <p class="dados"><b>Dados:</b> duas reações; qual substância deixa a chuva ácida.</p>
+    <ol class="passos">
+      <li><b>SO<sub>2</sub>, SO<sub>3</sub>:</b> óxidos ácidos (não são ácidos).</li>
+      <li><b>SO<sub>3</sub> + H<sub>2</sub>O</b> forma o H<sub>2</sub>SO<sub>4</sub>.</li>
+      <li><b>H<sub>2</sub>SO<sub>4</sub> → 2 H<sup>+</sup> + SO<sub>4</sub><sup>2−</sup></b>: o H<sup>+</sup> dá a acidez.</li>
+    </ol>
+    <p class="resposta"><b>Resposta:</b> o ácido sulfúrico, H<sub>2</sub>SO<sub>4</sub>. <b>Gabarito E.</b></p>
+    <p class="atencao"><b>Destaque no quadro:</b> O óxido causa; o ácido formado é que deixa a chuva ácida.</p>
+    <ul class="erros">
+      <li><b>A</b> O SO<sub>2</sub> inicia o processo, mas é um óxido; a acidez vem do ácido formado.</li>
+      <li><b>B</b> O O<sub>2</sub> só transforma o SO<sub>2</sub> em SO<sub>3</sub>; não é ácido.</li>
+      <li><b>C</b> O SO<sub>3</sub> é o passo intermediário: só depois de reagir com a água forma o ácido.</li>
+      <li><b>D</b> A água pura é neutra: ela recebe o ácido, não causa a acidez.</li>
+    </ul>
+  </aside>
+  <aside class="notas">
+    <p>Clique 1 tira o aviso de pausa: resolva na área (D liga a caneta; E esconde o enunciado). Clique 2: gabarito E.</p>
+    <p>Questão oficial do IF Sudeste MG (2020), da lista da professora. A do IF 2014 (2º semestre) tem o mesmo texto e pergunta qual composto é ácido: a resposta também é o H₂SO₄.</p>
+  </aside>
+</section>
+
+<!-- Questão 2 -->
+<section class="slide questao" data-nome="Questão 2">
+  <div class="conteudo">
+    <div class="area-resolucao"></div>
+    <span class="pilula pilula-pausa" data-em="1:some">Pause o vídeo e tente</span>
+    <div class="painel-questao">
+      <p class="olho">Questão 2 · IF Sudeste MG 2020</p>
+      <p class="enunciado" style="font-size:24px">A cal é um composto químico formado pela combinação do elemento Cálcio (Ca) com o elemento Oxigênio (O). Dentre as aplicações dessa substância, podemos destacar a utilização na construção civil para elaboração de argamassas e preparação dos processos de pintura e também o seu uso na agricultura, para produzir hidróxido de cálcio, que tem por finalidade o controle da acidez do solo.</p>
+      <p class="enunciado" style="font-size:24px">A respeito da cal, é <b>CORRETO</b> afirmar que:</p>
+      <ol class="alternativas" style="gap:8px">
+        <li data-em="2:apaga"><b>A</b><span>é um composto covalente.</span></li>
+        <li data-em="2:apaga"><b>B</b><span>apresenta fórmula CaO<sub>2</sub>.</span></li>
+        <li data-em="2:apaga"><b>C</b><span>se forma por compartilhamento de elétrons.</span></li>
+        <li data-em="2:certo"><b>D</b><span>possui ânion O<sup>2−</sup>.</span></li>
+        <li data-em="2:apaga"><b>E</b><span>possui cátion Ca<sup>+</sup>.</span></li>
+      </ol>
+    </div>
+  </div>
+  <aside class="resolucao">
+    <p class="dados"><b>Dados:</b> Ca (grupo 2, metal) e O (grupo 16, ametal).</p>
+    <ol class="passos">
+      <li><b>Ca:</b> perde 2 e⁻ → Ca<sup>2+</sup>.</li>
+      <li><b>O:</b> ganha 2 e⁻ → O<sup>2−</sup>.</li>
+      <li><b>Metal + ametal:</b> ligação iônica.</li>
+      <li><b>Cargas</b> +2 e −2: 1 para 1 → CaO.</li>
+    </ol>
+    <p class="resposta"><b>Resposta:</b> a cal tem o ânion O<sup>2−</sup>. <b>Gabarito D.</b></p>
+    <p class="atencao"><b>Destaque no quadro:</b> Cal virgem CaO: óxido básico e iônico (Ca<sup>2+</sup> O<sup>2−</sup>).</p>
+    <ul class="erros">
+      <li><b>A</b> Metal com ametal: composto iônico, não covalente.</li>
+      <li><b>B</b> Com Ca<sup>2+</sup> e O<sup>2−</sup>, um de cada basta: CaO, não CaO<sub>2</sub> (que seria um peróxido).</li>
+      <li><b>C</b> Compartilhar elétrons é ligação covalente; na cal há transferência.</li>
+      <li><b>E</b> O cálcio perde 2 elétrons: o cátion é Ca<sup>2+</sup>.</li>
+    </ul>
+  </aside>
+  <aside class="notas">
+    <p>Clique 1 tira o aviso de pausa: resolva na área (D liga a caneta; E esconde o enunciado). Clique 2: gabarito D.</p>
+    <p>Questão oficial do IF Sudeste MG (2020). Junta óxidos com ligação iônica (revisão do capítulo de ligações).</p>
+  </aside>
+</section>
+
+<!-- Resumo -->
+<section class="slide" data-nome="Resumo">
+  <div class="conteudo">
+    <p class="olho">Resumo</p>
+    <h2 class="titulo">O essencial</h2>
+    <div class="resumo" style="position:absolute;left:0;right:0;top:150px">
+      <div><b>CO<sub>2</sub>:</b> respiração e combustão completa; óxido ácido; efeito estufa.</div>
+      <div><b>CO:</b> combustão incompleta; óxido neutro; muito tóxico.</div>
+      <div><b>Cal virgem CaO</b> + água → cal hidratada Ca(OH)<sub>2</sub>: argamassa e acidez do solo.</div>
+      <div><b>Chuva ácida</b> (pH < 5,6): óxidos de <b>enxofre</b> e de <b>nitrogênio</b> + água → ácidos.</div>
+      <div><b>Efeito estufa:</b> CO<sub>2</sub>, CH<sub>4</sub> e N<sub>2</sub>O retêm calor; o excesso aquece o planeta.</div>
+      <div><b>SiO<sub>2</sub></b> areia e vidro; <b>Fe<sub>2</sub>O<sub>3</sub></b> ferrugem; <b>H<sub>2</sub>O<sub>2</sub></b> água oxigenada.</div>
+    </div>
+    <div class="caixa caixa-atencao" style="position:absolute;left:580px;right:0;top:660px">
+      <div class="texto" style="font-size:30px">Quem deixa a chuva ácida é o <b>ácido</b> (H<sub>2</sub>SO<sub>4</sub>, HNO<sub>3</sub>), formado a partir do óxido.</div>
+    </div>
+  </div>
+  <aside class="notas"><p>Peça para tirarem um print desta tela.</p></aside>
+</section>
+
+<!-- A seguir -->
+<section class="slide capa" data-nome="A seguir">
+  <div class="estrelas"></div>
+  <div class="texto-capa" style="top:170px">
+    <span class="selo">Química · IF</span>
+    <p class="aula" style="font-size:26px">A seguir · Funções inorgânicas · Parte única</p>
+    <h1>Indicadores e pH</h1>
+    <p class="sub">Como saber se é ácido ou básico, e quanto</p>
+  </div>
+  <svg class="emblema" viewBox="0 0 640 640" aria-hidden="true">
+    <g class="gira-lento"><ellipse cx="320" cy="320" rx="300" ry="128" fill="none" stroke="#fff" stroke-opacity=".38" stroke-width="2" transform="rotate(-10 320 320)"/></g>
+    <g><rect x="90" y="300" width="66" height="70" fill="#E0383E"/><rect x="156" y="300" width="66" height="70" fill="#F08A1C"/><rect x="222" y="300" width="66" height="70" fill="#FFD10C"/><rect x="288" y="300" width="66" height="70" fill="#9BCB5A"/><rect x="354" y="300" width="66" height="70" fill="#3FA88A"/><rect x="420" y="300" width="66" height="70" fill="#3A73C9"/><rect x="486" y="300" width="66" height="70" fill="#6551D1"/></g>
+    <rect x="90" y="300" width="462" height="70" rx="0" fill="none" stroke="#fff" stroke-width="4"/>
+    <path d="M321 170 q44 62 44 92 a44 44 0 0 1 -88 0 q0 -30 44 -92 z" fill="#fff" fill-opacity=".92"/>
+    <text x="321" y="460" text-anchor="middle" font-family="Bricolage Grotesque, sans-serif" font-weight="800" font-size="90" fill="#fff">pH</text>
+  </svg>
+  <img class="logo-capa" src="{{LOGO_BRANCO}}" alt="Quarks">
+  <aside class="notas"><p>Próxima: os indicadores ácido-base (fenolftaleína, tornassol, repolho roxo) e a escala de pH.</p></aside>
+</section>
