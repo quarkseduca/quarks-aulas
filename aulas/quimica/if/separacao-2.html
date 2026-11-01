@@ -1,0 +1,633 @@
+<!--aula
+{"disciplina": "quimica", "curso": "IF", "assunto": "Separação de misturas", "parte": "Parte 2 de 2", "titulo": "Destilação e tratamento de água", "scripts": ["animacoes-separacao.js"]}
+-->
+<!-- Fonte: slides da professora (Química IF 2026, aula 03: misturas homogêneas, destilação na indústria, tratamento de água e de esgoto), completados com a apostila IF, Química, 1.3 Separação de misturas (Cesama, Juiz de Fora). Questões: FCC-SP e F. Zona Leste-SP (material da professora) e IF Sudeste MG 2017 extra (oficial). Exemplo: UFV (material da professora). -->
+<style>
+  .caixa, .card, .bloco-part { box-sizing: border-box; }
+  .card { background: var(--branco); border: 2px solid var(--lilas-2); border-radius: 28px; padding: 18px 22px 20px; text-align: center; display: flex; flex-direction: column; align-items: center; gap: 8px; }
+  .card h3 { margin: 0; font: 800 40px var(--fonte-titulo); letter-spacing: -.02em; color: var(--roxo-titulo); }
+  .card p { margin: 0; font-size: 26px; line-height: 1.3; color: var(--carvao); }
+  .card p b { color: var(--roxo-titulo); }
+  .card svg { display: block; }
+  .metodo { display: inline-block; padding: 6px 20px; border-radius: 999px; background: var(--d-clara); color: var(--d-forte); font-size: 26px; font-weight: 800; }
+  .fig text { font-family: Figtree, sans-serif; }
+  .fig .rot { font: 700 24px Figtree, sans-serif; fill: #292B2C; }
+  .fig .rot-f { font: 800 26px Figtree, sans-serif; fill: #3F2FA0; }
+  .fig .fio { fill: none; stroke: #8C84B8; stroke-width: 2.5; }
+  .lista-passos { display: flex; flex-direction: column; gap: 16px; }
+  .lista-passos > div { background: var(--branco); border: 2px solid var(--lilas-2); border-radius: 24px; padding: 14px 24px; font-size: 29px; line-height: 1.3; box-sizing: border-box; }
+  .lista-passos > div b { color: var(--roxo-titulo); }
+  .lista-passos.mini { gap: 8px; }
+  .lista-passos.mini > div { font-size: 27px; padding: 9px 20px; }
+  .tab-q { border-collapse: collapse; font-size: 21px; line-height: 1.3; }
+  .tab-q th { text-align: left; padding: 4px 10px; background: var(--d-clara); color: var(--d-forte); }
+  .tab-q td { padding: 3px 10px; border-top: 1px solid var(--lilas-2); }
+  .tag { display: inline-block; padding: 4px 16px; border-radius: 999px; font-size: 22px; font-weight: 800; }
+  .tag-s { background: var(--d-clara); color: var(--d-forte); }
+  .tag-b { background: #FFF4C2; color: #8A6A00; }
+  .lista-passos .n { display: inline-grid; place-items: center; width: 40px; height: 40px; margin-right: 10px; border-radius: 50%; background: var(--d); color: #fff; font-weight: 800; font-size: 24px; vertical-align: 2px; }
+  .linha-ex { background: var(--branco); border: 2px solid var(--lilas-2); border-radius: 24px; padding: 14px 26px; font-size: 30px; line-height: 1.3; box-sizing: border-box; }
+  .linha-ex b { color: var(--roxo-titulo); }
+  .mapa { position: absolute; inset: 0; }
+  .mapa .no { position: absolute; box-sizing: border-box; display: grid; place-items: center; text-align: center; background: var(--branco); border: 2px solid var(--lilas-2); border-radius: 26px; padding: 10px 20px; font-size: 27px; line-height: 1.25; }
+  .mapa .no b { font: 800 33px var(--fonte-titulo); color: var(--roxo-titulo); }
+  .mapa .no.raiz { background: var(--d); border-color: var(--d); }
+  .mapa .no.raiz b { color: #fff; }
+  .mapa .no.meio { background: var(--d-clara); }
+  .mapa .no.folha { justify-items: start; text-align: left; }
+  .mapa svg.fios { position: absolute; inset: 0; overflow: visible; }
+  .mapa svg.fios path { fill: none; stroke: var(--roxo-claro); stroke-width: 4; stroke-linecap: round; stroke-dasharray: 400; stroke-dashoffset: 400; transition: stroke-dashoffset 1.2s ease-in-out, opacity .45s; }
+  .mapa svg.fios path.mostra { stroke-dashoffset: 0; }
+
+  /* ---------- Animações (só na tela aberta e depois que a figura aparece) ---------- */
+  /* gotas que pingam (filtração, destilação): --d é a altura da queda */
+  @keyframes pinga { 0% { transform: translateY(0); opacity: 0; } 10% { opacity: 1; } 85% { opacity: 1; } 100% { transform: translateY(var(--d, 60px)); opacity: 0; } }
+  .pingo { opacity: 0; }
+  .slide.ativo .mostra .pingo { animation: pinga 1.3s ease-in infinite; }
+  .pingo.b { animation-delay: -.65s !important; }
+  /* peneira: a areia fina cai pelos furos, as pedras ficam */
+  @keyframes cai-fino { 0% { transform: translateY(0); opacity: 0; } 12% { opacity: 1; } 88% { opacity: 1; } 100% { transform: translateY(78px); opacity: 0; } }
+  .cai-fino circle { opacity: 0; }
+  .slide.ativo .mostra .cai-fino circle { animation: cai-fino 1.8s ease-in infinite; }
+  .cai-fino circle:nth-child(2n) { animation-delay: -.6s !important; } .cai-fino circle:nth-child(3n) { animation-delay: -1.2s !important; }
+  /* peneira balança de leve */
+  @keyframes balanca { 0%,100% { transform: translateX(0); } 50% { transform: translateX(6px); } }
+  .slide.ativo .mostra .balanca { animation: balanca 1.2s ease-in-out infinite; }
+  /* catação: a pinça tira a pedrinha */
+  @keyframes cata { 0%,25% { transform: translate(0,0); opacity: 1; } 60%,85% { transform: translate(70px,-74px); opacity: 1; } 100% { transform: translate(70px,-74px); opacity: 0; } }
+  .slide.ativo .mostra .cata { animation: cata 5s ease-in-out infinite; }
+  /* ventilação: o vento leva a palha; o grão cai reto */
+  @keyframes vento { 0% { transform: translate(0,0); opacity: 0; } 12% { opacity: 1; } 100% { transform: translate(190px,10px); opacity: 0; } }
+  @keyframes grao { 0% { transform: translateY(0); opacity: 0; } 10% { opacity: 1; } 90% { opacity: 1; } 100% { transform: translateY(100px); opacity: 0; } }
+  .palha path, .graos-v ellipse { opacity: 0; }
+  .slide.ativo .mostra .palha path { animation: vento 2.6s ease-out infinite; }
+  .slide.ativo .mostra .graos-v ellipse { animation: grao 1.6s ease-in infinite; }
+  .palha path:nth-child(2) { animation-delay: -.9s !important; } .palha path:nth-child(3) { animation-delay: -1.7s !important; }
+  .graos-v ellipse:nth-child(2) { animation-delay: -.55s !important; } .graos-v ellipse:nth-child(3) { animation-delay: -1.1s !important; }
+  @keyframes sopra { to { stroke-dashoffset: -44; } }
+  .sopro path { stroke-dasharray: 26 18; }
+  .slide.ativo .mostra .sopro path { animation: sopra 1s linear infinite; }
+  /* levigação: a água arrasta a areia para fora da bateia; o ouro fica */
+  @keyframes arrasta { 0% { transform: translate(0,0); opacity: 0; } 10% { opacity: 1; } 62% { transform: translate(210px,-66px); opacity: 1; } 100% { transform: translate(262px,64px); opacity: 0; } }
+  .arrasta circle { opacity: 0; }
+  .slide.ativo .mostra .arrasta circle { animation: arrasta 4.5s ease-in-out infinite; }
+  .arrasta circle:nth-child(2) { animation-delay: -.9s !important; } .arrasta circle:nth-child(3) { animation-delay: -1.8s !important; } .arrasta circle:nth-child(4) { animation-delay: -2.7s !important; } .arrasta circle:nth-child(5) { animation-delay: -3.6s !important; }
+  @keyframes corre { to { stroke-dashoffset: -60; } }
+  .corrente { stroke-dasharray: 22 16; }
+  .slide.ativo .mostra .corrente { animation: corre 1.4s linear infinite; }
+  /* dissolução: o sal some na água; na evaporação, o sal volta em cristais e a água baixa */
+  @keyframes dissolve { 0%,15% { transform: scale(1); opacity: 1; } 100% { transform: scale(0); opacity: 0; } }
+  .dissolve rect { transform-box: fill-box; transform-origin: center; }
+  .slide.ativo .mostra .dissolve rect { animation: dissolve 5s ease-in forwards; }
+  .dissolve rect:nth-child(2) { animation-delay: .6s !important; } .dissolve rect:nth-child(3) { animation-delay: 1.2s !important; } .dissolve rect:nth-child(4) { animation-delay: 1.8s !important; }
+  @keyframes cristal { 0%,20% { transform: scale(0); } 100% { transform: scale(1); } }
+  .cristais rect { transform-box: fill-box; transform-origin: 50% 100%; transform: scale(0); }
+  .slide.ativo .mostra .cristais rect { animation: cristal 6s ease-out forwards; }
+  .cristais rect:nth-child(2n) { animation-delay: 1s !important; } .cristais rect:nth-child(3n) { animation-delay: 2s !important; }
+  @keyframes baixa { 0%,10% { transform: scaleY(1); } 100% { transform: scaleY(.12); } }
+  .baixa { transform-box: fill-box; transform-origin: 50% 100%; }
+  .slide.ativo .mostra .baixa { animation: baixa 7s ease-in-out forwards; }
+  @keyframes sobe-v { 0% { transform: translateY(0); opacity: 0; } 25% { opacity: .9; } 100% { transform: translateY(-80px); opacity: 0; } }
+  .vapor path { opacity: 0; }
+  .slide.ativo .mostra .vapor path { animation: sobe-v 3.6s ease-out infinite; }
+  .vapor path:nth-child(2) { animation-delay: -1.2s !important; } .vapor path:nth-child(3) { animation-delay: -2.4s !important; } .vapor path:nth-child(4) { animation-delay: -.6s !important; }
+  @keyframes chama { 0%,100% { transform: scaleY(1); } 50% { transform: scaleY(.86); } }
+  .chama { transform-box: fill-box; transform-origin: 50% 100%; }
+  .slide.ativo .mostra .chama { animation: chama 1.8s ease-in-out infinite; }
+  /* centrífuga: o rotor gira devagar (na vida real, milhares de voltas por minuto) */
+  @keyframes rotor { to { transform: rotate(360deg); } }
+  .rotor { transform-box: fill-box; transform-origin: center; }
+  .slide.ativo .mostra .rotor { animation: rotor 24s linear infinite; }
+  /* tubos e canos: a água correndo */
+  @keyframes flui { to { stroke-dashoffset: -40; } }
+  .flui { stroke-dasharray: 14 26; }
+  .slide.ativo .mostra .flui { animation: flui 1.2s linear infinite; }
+  /* floculação: a sujeira fina se junta em flocos; na decantação, os flocos descem */
+  @keyframes junta { 0%,10% { transform: translate(var(--x), var(--y)); } 100% { transform: translate(calc(var(--x) * .22), calc(var(--y) * .22)); } }
+  .slide.ativo .mostra .junta circle { animation: junta 4.5s ease-in-out both; }
+  @keyframes assenta { 0% { transform: translateY(0); opacity: 0; } 12% { opacity: 1; } 85% { opacity: 1; } 100% { transform: translateY(66px); opacity: 0; } }
+  .assenta circle { opacity: 0; }
+  .slide.ativo .mostra .assenta circle { animation: assenta 5s ease-in infinite; }
+  .assenta circle:nth-child(2) { animation-delay: -1.3s !important; } .assenta circle:nth-child(3) { animation-delay: -2.6s !important; } .assenta circle:nth-child(4) { animation-delay: -3.8s !important; }
+  /* filtro da ETA: as gotas atravessam as camadas */
+  @keyframes atravessa { 0% { transform: translateY(0); opacity: 0; } 10% { opacity: 1; } 90% { opacity: 1; } 100% { transform: translateY(96px); opacity: 0; } }
+  .atravessa circle { opacity: 0; }
+  .slide.ativo .mostra .atravessa circle { animation: atravessa 3s linear infinite; }
+  .atravessa circle:nth-child(2) { animation-delay: -1s !important; } .atravessa circle:nth-child(3) { animation-delay: -2s !important; }
+  /* torre de petróleo: os vapores sobem */
+  @keyframes sobe-t { 0% { transform: translateY(0); opacity: 0; } 15% { opacity: .9; } 100% { transform: translateY(-380px); opacity: 0; } }
+  .sobe-t circle { opacity: 0; }
+  .slide.ativo .mostra .sobe-t circle { animation: sobe-t 6s linear infinite; }
+  .sobe-t circle:nth-child(2) { animation-delay: -1.5s !important; } .sobe-t circle:nth-child(3) { animation-delay: -3s !important; } .sobe-t circle:nth-child(4) { animation-delay: -4.5s !important; }
+</style>
+
+<svg width="0" height="0" style="position:absolute" aria-hidden="true">
+  <defs>
+    <linearGradient id="gAguaS" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#CFE6FA"/><stop offset="1" stop-color="#9CCBF2"/></linearGradient>
+    <linearGradient id="gOleoS" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#FFE680"/><stop offset="1" stop-color="#F2C400"/></linearGradient>
+    <linearGradient id="gChamaS" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#7FB4FF"/><stop offset="1" stop-color="#2E6FE0"/></linearGradient>
+    <linearGradient id="gVidro" x1="0" y1="0" x2="1" y2="0"><stop offset="0" stop-color="#FFFFFF" stop-opacity=".9"/><stop offset="1" stop-color="#EAF4FF" stop-opacity=".9"/></linearGradient>
+  </defs>
+</svg>
+
+<!-- Capa -->
+<section class="slide capa" data-nome="Capa">
+  <div class="estrelas"></div>
+  <div class="texto-capa" style="top:150px">
+    <span class="selo">Química · IF</span>
+    <p class="aula">Separação de misturas · Parte 2 de 2</p>
+    <h1 style="font-size:110px">Destilação e tratamento de água</h1>
+    <p class="sub">Separando misturas homogêneas</p>
+  </div>
+  <svg class="emblema" viewBox="0 0 640 640" aria-hidden="true">
+    <g class="gira-lento"><ellipse cx="320" cy="320" rx="300" ry="128" fill="none" stroke="#fff" stroke-opacity=".38" stroke-width="2" transform="rotate(-10 320 320)"/></g>
+    <g class="gira"><ellipse cx="320" cy="320" rx="236" ry="196" fill="none" stroke="#FFD10C" stroke-opacity=".75" stroke-width="2.5" stroke-dasharray="3 14" stroke-linecap="round" transform="rotate(-8 320 320)"/>
+      <circle cx="84" cy="300" r="13" fill="#FFD10C" stroke="#fff" stroke-width="3"/></g>
+    <circle cx="320" cy="320" r="132" fill="#FFD10C"/>
+    <image href="{{SYM_ROXO}}" x="238" y="238" width="164" height="164"/>
+  </svg>
+  <img class="logo-capa" src="{{LOGO_BRANCO}}" alt="Quarks">
+  <aside class="notas"><p>Hoje: como separar misturas homogêneas (evaporação, destilação simples e fracionada), a destilação na indústria (petróleo e ar) e o caminho da água: o tratamento de água e o de esgoto.</p></aside>
+</section>
+
+<!-- Evaporação -->
+<section class="slide" data-nome="Evaporação">
+  <div class="conteudo">
+    <p class="olho">Misturas homogêneas</p>
+    <h2 class="titulo">Evaporação: as salinas</h2>
+    <div class="lista-passos" style="position:absolute;left:0;width:820px;top:160px">
+      <div data-passo="1"><span class="n">1</span><b>Homogênea:</b> na água do mar, o sal está dissolvido; não dá para filtrar nem decantar.</div>
+      <div data-passo="2"><span class="n">2</span><b>Evaporação:</b> a água evapora ao sol e o sal fica no tanque. É assim nas <b>salinas</b>.</div>
+      <div data-passo="3"><span class="n">3</span>O problema: a <b>água se perde</b> no ar.</div>
+    </div>
+    <div data-passo="2" style="position:absolute;left:940px;top:140px;width:780px;height:440px">
+      <svg class="fig" viewBox="0 0 780 440" width="780" height="440" aria-hidden="true">
+        <circle cx="690" cy="70" r="42" fill="#FFD10C"/>
+        <g stroke="#FFD10C" stroke-width="6" stroke-linecap="round"><path d="M690 8 V-6 M690 132 V146 M628 70 H614 M752 70 H766 M646 26 L636 16 M734 114 L744 124 M646 114 L636 124 M734 26 L744 16"/></g>
+        <rect x="0" y="330" width="780" height="110" fill="#EFE6D2"/>
+        <path d="M40 296 H580 V346 a10 10 0 0 1 -10 10 H50 a10 10 0 0 1 -10 -10 Z" fill="#F7F3EA" stroke="#C9B994" stroke-width="4"/>
+        <rect class="baixa" x="44" y="300" width="532" height="52" fill="url(#gAguaS)"/>
+        <g class="cristais" fill="#fff" stroke="#9A95AD" stroke-width="1.5"><rect x="90" y="340" width="12" height="12"/><rect x="150" y="342" width="10" height="10"/><rect x="210" y="340" width="12" height="12"/><rect x="270" y="341" width="11" height="11"/><rect x="330" y="340" width="12" height="12"/><rect x="390" y="342" width="10" height="10"/><rect x="450" y="340" width="12" height="12"/><rect x="510" y="341" width="11" height="11"/></g>
+        <g class="vapor" fill="none" stroke="#B9B0E6" stroke-width="5" stroke-linecap="round"><path d="M140 290 q10 -14 0 -28 q-10 -14 0 -28"/><path d="M260 290 q10 -14 0 -28 q-10 -14 0 -28"/><path d="M380 290 q10 -14 0 -28 q-10 -14 0 -28"/><path d="M500 290 q10 -14 0 -28 q-10 -14 0 -28"/></g>
+        <path d="M610 352 L670 270 L730 352 Z" fill="#fff" stroke="#C9C4DC" stroke-width="3"/>
+        <text class="rot" x="310" y="396" text-anchor="middle">tanque raso com água do mar</text>
+        <text class="rot" x="670" y="396" text-anchor="middle">sal</text>
+      </svg>
+    </div>
+    <div class="caixa caixa-fundamental" data-passo="4" style="position:absolute;left:580px;right:0;top:640px">
+      <span class="rotulo">Mistura homogênea</span>
+      <div class="texto" style="font-size:30px">Para separar, usamos a diferença de <b>ponto de ebulição</b>: a água vira vapor e o sal, que só ferve a temperaturas altíssimas, fica.</div>
+    </div>
+  </div>
+  <aside class="notas">
+    <p>Clique 1: por que a parte anterior não serve aqui. Clique 2: a água do tanque baixa, o vapor sobe e os cristais de sal aparecem no fundo. Clique 3: o problema da evaporação. Clique 4: a ideia de toda a parte de hoje.</p>
+    <p>A evaporação já apareceu como última etapa da dissolução fracionada (areia e sal). Para recuperar a água, usa-se a destilação.</p>
+  </aside>
+</section>
+
+<!-- Destilação simples -->
+<section class="slide" data-nome="Destilação simples">
+  <div class="conteudo">
+    <p class="olho">Misturas homogêneas · sólido dissolvido</p>
+    <h2 class="titulo">Destilação simples</h2>
+    <div class="lista-passos" style="position:absolute;left:0;width:640px;top:160px">
+      <div data-passo="1"><span class="n">1</span><b>Aquece:</b> a água ferve e vira vapor; o sal não evapora.</div>
+      <div data-passo="2"><span class="n">2</span><b>Condensador:</b> o vapor passa por um tubo resfriado por água fria e volta a ser líquido.</div>
+      <div data-passo="3"><span class="n">3</span><b>Destilado:</b> a água pura cai no frasco coletor; o sal fica no balão.</div>
+    </div>
+    <div style="position:absolute;left:720px;top:110px;width:1000px;height:620px">
+      <svg class="fig" viewBox="0 0 1000 620" width="1000" height="620" aria-hidden="true">
+        <rect x="30" y="590" width="190" height="16" rx="6" fill="#B8B3C9"/><rect x="70" y="120" width="10" height="470" fill="#9A95AD"/>
+        <rect x="80" y="296" width="132" height="8" fill="#9A95AD"/>
+        <rect x="215" y="229" width="30" height="115" fill="url(#gVidro)"/><path d="M215 340 V229 M245 340 V229" stroke="#7F7A99" stroke-width="5"/>
+        <defs><clipPath id="cb0"><circle cx="230" cy="410" r="72"/></clipPath><clipPath id="ce0"><path d="M701 465 V492 L651 590 a8 8 0 0 0 7 12 H776 a8 8 0 0 0 7 -12 L733 492 V465 Z"/></clipPath></defs>
+        <circle cx="230" cy="410" r="75" fill="url(#gVidro)" stroke="#7F7A99" stroke-width="5"/><rect x="217.5" y="326" width="25" height="20" fill="#fff"/>
+        <g clip-path="url(#cb0)"><rect x="150" y="402" width="160" height="90" fill="url(#gAguaS)"/></g>
+        <rect x="140" y="487" width="180" height="8" rx="3" fill="#9A95AD"/><path d="M150 491 H310" stroke="#C9C4DC" stroke-width="2" stroke-dasharray="4 6"/>
+        <path d="M160 495 L140 600 M300 495 L320 600" stroke="#7F7A99" stroke-width="6" stroke-linecap="round"/>
+        <path class="chama" d="M230 505 C212 526 216 542 230 542 C244 542 248 526 230 505 Z" fill="url(#gChamaS)"/><rect x="221" y="542" width="18" height="50" fill="#7F7A99"/><rect x="195" y="588" width="70" height="14" rx="5" fill="#6B6878"/>
+        <rect x="211" y="221" width="38" height="18" rx="4" fill="#6B5B4E"/>
+        <rect x="226" y="120" width="8" height="142" rx="4" fill="#fff" stroke="#7F7A99" stroke-width="2.5"/><rect x="228" y="180" width="4" height="82" fill="#E5533D"/><circle cx="230" cy="262" r="7" fill="#E5533D"/>
+        <g transform="translate(245 262) rotate(19)">
+          <rect x="64" y="-60" width="16" height="36" fill="#E6F2FC" stroke="#7F7A99" stroke-width="3"/><rect x="384" y="-60" width="16" height="36" fill="#E6F2FC" stroke="#7F7A99" stroke-width="3"/>
+          <rect x="40" y="-27" width="400" height="54" rx="27" fill="#E6F2FC" stroke="#7F7A99" stroke-width="4"/>
+          <path class="flui" d="M400 -17 H64 M400 17 H64" stroke="#5DA9E9" stroke-width="4" fill="none"/>
+          <rect x="0" y="-8" width="482" height="16" rx="8" fill="#fff" stroke="#7F7A99" stroke-width="3"/>
+        </g>
+        <path d="M700.7 418.9 L716.7 431.9 V468.9" fill="none" stroke="#7F7A99" stroke-width="12" stroke-linecap="round"/><path d="M700.7 418.9 L716.7 431.9 V468.9" fill="none" stroke="#fff" stroke-width="6" stroke-linecap="round"/>
+        <path d="M701 465 V492 L651 590 a8 8 0 0 0 7 12 H776 a8 8 0 0 0 7 -12 L733 492 V465 Z" fill="url(#gVidro)"/>
+        <g data-anima="destila" data-anima-passo="1" data-liquido="0.58" data-bx0="185" data-bx1="275" data-by0="412" data-by1="476" data-c0="600" data-c1="550">
+          <path class="caminho" d="M230 400 V262 L245 262 L700.7 418.9 L716.7 431.9 V456.9" fill="none" stroke="none"/>
+          <g clip-path="url(#ce0)"><rect class="coletado" x="637" y="600" width="160" height="2" fill="url(#gAguaS)"/></g>
+        </g>
+        <path d="M701 465 V492 L651 590 a8 8 0 0 0 7 12 H776 a8 8 0 0 0 7 -12 L733 492 V465" fill="none" stroke="#7F7A99" stroke-width="5" stroke-linejoin="round"/>
+        <g data-passo="1"><text class="rot" x="252" y="140">termômetro</text>
+          <text class="rot" x="322" y="442">balão de destilação</text><path class="fio" d="M300 440 H316"/>
+          <text class="rot" x="336" y="500">tela de aquecimento</text>
+          <text class="rot" x="336" y="574">bico de Bunsen</text></g>
+        <g data-passo="2"><text class="rot-f" x="520" y="272" text-anchor="middle">condensador</text>
+          <text class="rot" x="351" y="225">saída de água</text>
+          <text class="rot" x="651" y="329">entrada de água fria</text></g>
+        <g data-passo="3"><text class="rot-f" x="797" y="535">destilado</text><text class="rot" x="797" y="565">(água pura)</text>
+          <text class="rot" x="140" y="380" text-anchor="end">água</text><text class="rot" x="140" y="408" text-anchor="end">e sal</text></g>
+      </svg>
+    </div>
+  </div>
+  <aside class="notas">
+    <p>Clique 1: começa o aquecimento: bolhas no balão e o vapor (lilás) subindo. Clique 2: no condensador, o vapor esfria e vira gotas (azuis); a água fria entra pela ponta mais baixa e sai pela mais alta, para o tubo ficar sempre cheio e frio. Clique 3: o destilado pinga no frasco e o sal fica no balão.</p>
+    <p>O bulbo do termômetro fica na altura da saída lateral: ele mede a temperatura do vapor que vai para o condensador (100 °C enquanto sai água, ao nível do mar).</p>
+    <p>Correção do material da professora: a figura dela tem "tela com amianto". O amianto é proibido no Brasil (faz mal à saúde) e hoje se usa tela de aquecimento sem amianto (ou manta aquecedora). Na figura daqui está a tela de aquecimento comum.</p>
+  </aside>
+</section>
+
+<!-- Destilação fracionada -->
+<section class="slide" data-nome="Destilação fracionada">
+  <div class="conteudo">
+    <p class="olho">Misturas homogêneas · líquidos miscíveis</p>
+    <h2 class="titulo">Destilação fracionada</h2>
+    <div class="lista-passos" style="position:absolute;left:0;width:640px;top:160px">
+      <div data-passo="1"><span class="n">1</span><b>Líquidos miscíveis</b> com PE diferentes: álcool (78 °C) e água (100 °C).</div>
+      <div data-passo="2"><span class="n">2</span>Na <b>coluna de fracionamento</b>, o vapor de maior PE condensa e volta; o de menor PE passa.</div>
+      <div data-passo="3"><span class="n">3</span>Sai primeiro o de <b>menor PE</b>: o álcool.</div>
+    </div>
+    <div style="position:absolute;left:720px;top:110px;width:1000px;height:620px">
+      <svg class="fig" viewBox="0 0 1000 620" width="1000" height="620" aria-hidden="true">
+        <rect x="-20" y="590" width="190" height="16" rx="6" fill="#B8B3C9"/><rect x="20" y="40" width="10" height="550" fill="#9A95AD"/>
+        <rect x="30" y="296" width="182" height="8" fill="#9A95AD"/>
+        <rect x="215" y="154" width="30" height="190" fill="url(#gVidro)"/><path d="M215 340 V154 M245 340 V154" stroke="#7F7A99" stroke-width="5"/>
+        <circle cx="223" cy="190" r="6" fill="#fff" stroke="#B9B0E6" stroke-width="2"/><circle cx="237" cy="202" r="6" fill="#fff" stroke="#B9B0E6" stroke-width="2"/><circle cx="223" cy="214" r="6" fill="#fff" stroke="#B9B0E6" stroke-width="2"/><circle cx="237" cy="226" r="6" fill="#fff" stroke="#B9B0E6" stroke-width="2"/><circle cx="223" cy="238" r="6" fill="#fff" stroke="#B9B0E6" stroke-width="2"/><circle cx="237" cy="250" r="6" fill="#fff" stroke="#B9B0E6" stroke-width="2"/><circle cx="223" cy="262" r="6" fill="#fff" stroke="#B9B0E6" stroke-width="2"/><circle cx="237" cy="274" r="6" fill="#fff" stroke="#B9B0E6" stroke-width="2"/><circle cx="223" cy="286" r="6" fill="#fff" stroke="#B9B0E6" stroke-width="2"/><circle cx="237" cy="298" r="6" fill="#fff" stroke="#B9B0E6" stroke-width="2"/><circle cx="223" cy="310" r="6" fill="#fff" stroke="#B9B0E6" stroke-width="2"/><circle cx="237" cy="322" r="6" fill="#fff" stroke="#B9B0E6" stroke-width="2"/><circle cx="223" cy="334" r="6" fill="#fff" stroke="#B9B0E6" stroke-width="2"/>
+        <defs><clipPath id="cb1"><circle cx="230" cy="410" r="72"/></clipPath><clipPath id="ce1"><path d="M692 397 V424 L642 522 a8 8 0 0 0 7 12 H767 a8 8 0 0 0 7 -12 L724 424 V397 Z"/></clipPath></defs>
+        <circle cx="230" cy="410" r="75" fill="url(#gVidro)" stroke="#7F7A99" stroke-width="5"/><rect x="217.5" y="326" width="25" height="20" fill="#fff"/>
+        <g clip-path="url(#cb1)"><rect x="150" y="402" width="160" height="90" fill="#F2E6A8"/></g>
+        <rect x="150" y="402" width="160" height="90" fill="url(#gAguaS)" opacity=".55" clip-path="url(#cb1)"/>
+        <rect x="140" y="487" width="180" height="8" rx="3" fill="#9A95AD"/><path d="M150 491 H310" stroke="#C9C4DC" stroke-width="2" stroke-dasharray="4 6"/>
+        <path d="M160 495 L140 600 M300 495 L320 600" stroke="#7F7A99" stroke-width="6" stroke-linecap="round"/>
+        <path class="chama" d="M230 505 C212 526 216 542 230 542 C244 542 248 526 230 505 Z" fill="url(#gChamaS)"/><rect x="221" y="542" width="18" height="50" fill="#7F7A99"/><rect x="195" y="588" width="70" height="14" rx="5" fill="#6B6878"/>
+        <rect x="211" y="146" width="38" height="18" rx="4" fill="#6B5B4E"/>
+        <rect x="226" y="40" width="8" height="130" rx="4" fill="#fff" stroke="#7F7A99" stroke-width="2.5"/><rect x="228" y="100" width="4" height="70" fill="#E5533D"/><circle cx="230" cy="170" r="7" fill="#E5533D"/>
+        <g transform="translate(245 170) rotate(22)">
+          <rect x="64" y="-60" width="16" height="36" fill="#E6F2FC" stroke="#7F7A99" stroke-width="3"/><rect x="384" y="-60" width="16" height="36" fill="#E6F2FC" stroke="#7F7A99" stroke-width="3"/>
+          <rect x="40" y="-27" width="400" height="54" rx="27" fill="#E6F2FC" stroke="#7F7A99" stroke-width="4"/>
+          <path class="flui" d="M400 -17 H64 M400 17 H64" stroke="#5DA9E9" stroke-width="4" fill="none"/>
+          <rect x="0" y="-8" width="482" height="16" rx="8" fill="#fff" stroke="#7F7A99" stroke-width="3"/>
+        </g>
+        <path d="M691.9 350.6 L707.9 363.6 V400.6" fill="none" stroke="#7F7A99" stroke-width="12" stroke-linecap="round"/><path d="M691.9 350.6 L707.9 363.6 V400.6" fill="none" stroke="#fff" stroke-width="6" stroke-linecap="round"/>
+        <path d="M692 397 V424 L642 522 a8 8 0 0 0 7 12 H767 a8 8 0 0 0 7 -12 L724 424 V397 Z" fill="url(#gVidro)"/>
+        <g data-anima="destila" data-anima-passo="1" data-liquido="0.63" data-bx0="185" data-bx1="275" data-by0="412" data-by1="476" data-c0="532" data-c1="482">
+          <path class="caminho" d="M230 400 V170 L245 170 L691.9 350.6 L707.9 363.6 V388.6" fill="none" stroke="none"/>
+          <g clip-path="url(#ce1)"><rect class="coletado" x="628" y="532" width="160" height="2" fill="#F2E6A8"/></g>
+        </g>
+        <path d="M692 397 V424 L642 522 a8 8 0 0 0 7 12 H767 a8 8 0 0 0 7 -12 L724 424 V397" fill="none" stroke="#7F7A99" stroke-width="5" stroke-linejoin="round"/>
+        <g data-passo="1"><text class="rot" x="140" y="430" text-anchor="end">álcool</text><text class="rot" x="140" y="458" text-anchor="end">e água</text></g>
+        <g data-passo="2"><text class="rot" x="200" y="236" text-anchor="end">coluna de</text><text class="rot" x="200" y="264" text-anchor="end">fracionamento</text>
+          <text class="rot" x="252" y="66">termômetro: 78 °C</text>
+          <text class="rot" x="647" y="257">condensador</text></g>
+        <g data-passo="3"><text class="rot-f" x="788" y="467">álcool</text><text class="rot" x="788" y="497">sai primeiro</text>
+          <text class="rot" x="322" y="560">a água fica no balão</text></g>
+      </svg>
+    </div>
+  </div>
+  <aside class="notas">
+    <p>Clique 1: a mistura de álcool e água ferve. Clique 2: a coluna cheia de bolinhas de vidro: o vapor de água condensa nelas e volta ao balão; o vapor de álcool chega ao topo. O termômetro fica perto de 78 °C enquanto sai o álcool. Clique 3: o álcool é recolhido primeiro.</p>
+    <p>Na prática, o álcool que sai é o de 96 °GL (96% de álcool): é a mistura azeotrópica vista em Estados físicos, que ferve com temperatura constante e não se separa mais por destilação.</p>
+    <p>A diferença para a simples é a coluna: ela permite separar líquidos com PE próximos.</p>
+  </aside>
+</section>
+
+<!-- Destilação na indústria -->
+<section class="slide" data-nome="Destilação na indústria">
+  <div class="conteudo">
+    <p class="olho">Destilação fracionada</p>
+    <h2 class="titulo">Na refinaria e no ar</h2>
+    <div class="lista-passos" style="position:absolute;left:0;width:780px;top:160px">
+      <div data-passo="1"><span class="n">1</span>O <b>petróleo</b> é uma mistura de muitas substâncias. Aquecido no forno, ele vira vapor e entra na torre.</div>
+      <div data-passo="2"><span class="n">2</span>A torre é <b>mais quente embaixo</b> e <b>mais fria em cima</b>: cada fração condensa numa altura.</div>
+      <div data-passo="3"><span class="n">3</span><b>Menor PE sobe mais:</b> o gás e a gasolina saem no topo; o asfalto fica embaixo.</div>
+    </div>
+    <div data-passo="1" style="position:absolute;left:920px;top:120px;width:760px;height:520px">
+      <svg class="fig" viewBox="0 0 760 520" width="760" height="520" aria-hidden="true">
+        <rect x="20" y="410" width="120" height="96" rx="14" fill="#E4DEFB" stroke="#7F7A99" stroke-width="4"/>
+        <g fill="#FF9A3D"><path class="chama" d="M52 498 q-14 -18 0 -34 q14 16 0 34 z"/><path class="chama" d="M80 498 q-16 -22 0 -40 q16 18 0 40 z"/><path class="chama" d="M108 498 q-14 -18 0 -34 q14 16 0 34 z"/></g>
+        <text class="rot" x="80" y="400" text-anchor="middle">forno</text>
+        <path d="M140 450 H220" stroke="#C9C4DC" stroke-width="12"/><path class="flui" d="M140 450 H220" stroke="#3A2E2A" stroke-width="6"/>
+        <rect x="220" y="20" width="120" height="490" rx="40" fill="#F4F1FB" stroke="#7F7A99" stroke-width="5"/>
+        <path d="M232 82 H328" stroke="#B9B0E6" stroke-width="3"/><path d="M232 142 H328" stroke="#B9B0E6" stroke-width="3"/><path d="M232 202 H328" stroke="#B9B0E6" stroke-width="3"/><path d="M232 262 H328" stroke="#B9B0E6" stroke-width="3"/><path d="M232 322 H328" stroke="#B9B0E6" stroke-width="3"/><path d="M232 382 H328" stroke="#B9B0E6" stroke-width="3"/><path d="M232 442 H328" stroke="#B9B0E6" stroke-width="3"/>
+        <g class="sobe-t" fill="#C9C0F0"><circle cx="252" cy="470" r="8"/><circle cx="282" cy="470" r="8"/><circle cx="310" cy="470" r="8"/><circle cx="268" cy="470" r="8"/></g>
+        <path d="M340 52 H420" stroke="#C9C4DC" stroke-width="10" stroke-linecap="round"/><path class="flui" d="M340 52 H420" stroke="#8C7BEA" stroke-width="5"/><text class="rot" x="432" y="60">gás (GLP)</text><path d="M340 112 H420" stroke="#C9C4DC" stroke-width="10" stroke-linecap="round"/><path class="flui" d="M340 112 H420" stroke="#8C7BEA" stroke-width="5"/><text class="rot" x="432" y="120">gasolina</text><path d="M340 172 H420" stroke="#C9C4DC" stroke-width="10" stroke-linecap="round"/><path class="flui" d="M340 172 H420" stroke="#8C7BEA" stroke-width="5"/><text class="rot" x="432" y="180">nafta</text><path d="M340 232 H420" stroke="#C9C4DC" stroke-width="10" stroke-linecap="round"/><path class="flui" d="M340 232 H420" stroke="#8C7BEA" stroke-width="5"/><text class="rot" x="432" y="240">querosene</text><path d="M340 292 H420" stroke="#C9C4DC" stroke-width="10" stroke-linecap="round"/><path class="flui" d="M340 292 H420" stroke="#8C7BEA" stroke-width="5"/><text class="rot" x="432" y="300">óleo diesel</text><path d="M340 352 H420" stroke="#C9C4DC" stroke-width="10" stroke-linecap="round"/><path class="flui" d="M340 352 H420" stroke="#8C7BEA" stroke-width="5"/><text class="rot" x="432" y="360">óleo combustível</text><path d="M340 412 H420" stroke="#C9C4DC" stroke-width="10" stroke-linecap="round"/><path class="flui" d="M340 412 H420" stroke="#8C7BEA" stroke-width="5"/><text class="rot" x="432" y="420">óleo lubrificante</text><path d="M340 478 H420" stroke="#C9C4DC" stroke-width="10" stroke-linecap="round"/><path class="flui" d="M340 478 H420" stroke="#8C7BEA" stroke-width="5"/><text class="rot" x="432" y="486">asfalto (betume)</text>
+        <g data-passo="2"><path d="M180 470 V44" stroke="#8C7BEA" stroke-width="5" marker-end="url(#pontaT)"/>
+          <text class="rot" x="164" y="60" text-anchor="end" style="font-size:21px">mais</text><text class="rot" x="164" y="84" text-anchor="end" style="font-size:21px">frio</text>
+          <text class="rot" x="164" y="300" text-anchor="end" style="font-size:21px">mais</text><text class="rot" x="164" y="324" text-anchor="end" style="font-size:21px">quente</text></g>
+        <defs><marker id="pontaT" viewBox="0 0 10 10" refX="6" refY="5" markerWidth="4" markerHeight="4" orient="auto"><path d="M0 0 L10 5 L0 10 z" fill="#8C7BEA"/></marker></defs>
+      </svg>
+    </div>
+    <div class="caixa caixa-atencao" data-passo="4" style="position:absolute;left:580px;right:0;top:660px">
+      <span class="rotulo">E o ar?</span>
+      <div class="texto" style="font-size:29px">Para separar o nitrogênio e o oxigênio, o ar é resfriado até virar líquido (<b>liquefação</b>) e depois passa por <b>destilação fracionada</b>.</div>
+    </div>
+  </div>
+  <aside class="notas">
+    <p>Clique 1: os vapores sobem pela torre e cada fração sai numa altura. Clique 2: a torre é mais fria em cima. Clique 3: a regra do PE. Clique 4: o ar, que cai em questão como "liquefação".</p>
+    <p>Correção do material da professora: a fração entre a nafta e o óleo diesel é o querosene ("paraffin" é o nome do querosene em inglês britânico; não é a parafina). As faixas de temperatura do material dela variam de livro para livro; aqui ficou só a ordem.</p>
+    <p>A questão do IF 2016 fala em "destilação para a decomposição em diferentes produtos": na destilação não há decomposição (reação); ela só separa substâncias que já estão no petróleo.</p>
+  </aside>
+</section>
+
+<!-- Exemplo: fluxograma -->
+<section class="slide" data-nome="Exemplo: fluxograma">
+  <div class="conteudo">
+    <p class="olho">Exemplo · UFV</p>
+    <h2 class="titulo">Água, álcool, areia e limalha de ferro</h2>
+    <div class="mapa">
+      <svg class="fios" aria-hidden="true" style="pointer-events:none">
+        <path class="mostra" d="M880 205 C880 250 510 240 510 290" style="stroke-dashoffset:0"/><path class="mostra" d="M880 205 C880 250 1250 240 1250 290" style="stroke-dashoffset:0"/>
+        <path class="mostra" d="M510 360 C510 400 330 400 330 450" style="stroke-dashoffset:0"/><path class="mostra" d="M510 360 C510 400 710 400 710 450" style="stroke-dashoffset:0"/>
+        <path class="mostra" d="M1250 360 C1250 400 1070 400 1070 450" style="stroke-dashoffset:0"/><path class="mostra" d="M1250 360 C1250 400 1430 400 1430 450" style="stroke-dashoffset:0"/>
+      </svg>
+      <div class="no raiz" style="left:520px;top:140px;width:720px;height:66px"><b style="font-size:30px">água + álcool + areia + limalha de ferro</b></div>
+      <div class="no meio" style="left:280px;top:290px;width:460px;height:70px"><b style="font-size:30px">areia + limalha de ferro</b></div>
+      <div class="no meio" style="left:1020px;top:290px;width:460px;height:70px"><b style="font-size:30px">água + álcool</b></div>
+      <div class="no" style="left:200px;top:450px;width:260px;height:66px">areia</div>
+      <div class="no" style="left:580px;top:450px;width:260px;height:66px">limalha de ferro</div>
+      <div class="no" style="left:940px;top:450px;width:260px;height:66px">água</div>
+      <div class="no" style="left:1300px;top:450px;width:260px;height:66px">álcool</div>
+      <span class="metodo" style="position:absolute;left:880px;top:228px;transform:translateX(-50%)">1</span>
+      <span class="metodo" data-passo="1" style="position:absolute;left:880px;top:228px;transform:translateX(-50%);white-space:nowrap;background:#fff;border:2px solid var(--d)">1 · filtração (ou decantação)</span>
+      <span class="metodo" style="position:absolute;left:510px;top:380px;transform:translateX(-50%)">2</span>
+      <span class="metodo" data-passo="2" style="position:absolute;left:510px;top:380px;transform:translateX(-50%);white-space:nowrap;background:#fff;border:2px solid var(--d)">2 · separação magnética</span>
+      <span class="metodo" style="position:absolute;left:1250px;top:380px;transform:translateX(-50%)">3</span>
+      <span class="metodo" data-passo="3" style="position:absolute;left:1250px;top:380px;transform:translateX(-50%);white-space:nowrap;background:#fff;border:2px solid var(--d)">3 · destilação fracionada</span>
+    </div>
+    <div class="caixa caixa-fundamental" data-passo="4" style="position:absolute;left:580px;right:0;top:640px">
+      <div class="texto" style="font-size:30px"><b>Ordem:</b> primeiro separe as fases (os sólidos do líquido); depois use o método certo em cada parte. Na destilação, o <b>álcool sai primeiro</b> (menor PE).</div>
+    </div>
+  </div>
+  <aside class="notas">
+    <p>Questão discursiva do material da professora (UFV): identificar os processos 1, 2 e 3 do fluxograma. Peça a resposta antes de cada clique.</p>
+    <p>Processo 1: a areia e a limalha não se dissolvem; filtrando, ficam no papel (a decantação também serve). Processo 2: o ímã separa a limalha da areia. Processo 3: água e álcool são miscíveis e têm PE diferentes: destilação fracionada.</p>
+  </aside>
+</section>
+
+<!-- Tratamento de água -->
+<section class="slide" data-nome="Tratamento de água">
+  <div class="conteudo">
+    <p class="olho">Do rio à torneira</p>
+    <h2 class="titulo">Tratamento de água</h2>
+    <p class="texto" style="position:absolute;left:0;right:0;top:146px;margin:0;font-size:29px">Na estação de tratamento de água (<b>ETA</b>), vários métodos trabalham em sequência. Em Juiz de Fora, quem trata e distribui a água é a <b>Cesama</b>.</p>
+    <div style="position:absolute;left:0;top:240px;width:1760px;height:330px">
+      <svg class="fig" viewBox="0 0 1760 330" width="1760" height="330" aria-hidden="true">
+        <g data-passo="1">
+          <path d="M0 120 q20 -10 40 0 t40 0 t40 0 t40 0 V200 H0 Z" fill="url(#gAguaS)"/>
+          <g stroke="#7F7A99" stroke-width="6"><path d="M180 96 V200 M196 96 V200 M212 96 V200"/></g>
+          <g fill="#5E9E4E"><ellipse cx="160" cy="140" rx="12" ry="6" transform="rotate(30 160 140)"/><ellipse cx="166" cy="170" rx="12" ry="6" transform="rotate(-20 166 170)"/></g>
+          <text class="rot-f" x="0" y="242" style="font-size:24px">1. Captação e grades</text>
+          <text class="rot" x="0" y="272" style="font-size:21px">seguram galhos e lixo</text>
+          <text class="rot" x="0" y="298" style="font-size:21px">(peneiração)</text>
+        </g>
+        <g data-passo="2">
+          <path d="M214 170 H300" stroke="#C9C4DC" stroke-width="14"/><path class="flui" d="M214 170 H300" stroke="#5DA9E9" stroke-width="6"/>
+          <rect x="300" y="60" width="230" height="140" rx="16" fill="#D5E4EE" stroke="#7F7A99" stroke-width="4"/>
+          <path d="M415 20 V150 M385 150 H445" stroke="#7F7A99" stroke-width="6" stroke-linecap="round"/>
+          <g class="junta"><circle cx="350" cy="110" r="5" fill="#9C6B3E" style="--x:-22px;--y:-14px"/><circle cx="350" cy="110" r="5" fill="#9C6B3E" style="--x:18px;--y:-18px"/><circle cx="350" cy="110" r="5" fill="#9C6B3E" style="--x:-16px;--y:16px"/><circle cx="350" cy="110" r="5" fill="#9C6B3E" style="--x:20px;--y:12px"/><circle cx="350" cy="110" r="5" fill="#9C6B3E" style="--x:0px;--y:-24px"/><circle cx="470" cy="120" r="5" fill="#9C6B3E" style="--x:-22px;--y:-14px"/><circle cx="470" cy="120" r="5" fill="#9C6B3E" style="--x:18px;--y:-18px"/><circle cx="470" cy="120" r="5" fill="#9C6B3E" style="--x:-16px;--y:16px"/><circle cx="470" cy="120" r="5" fill="#9C6B3E" style="--x:20px;--y:12px"/><circle cx="470" cy="120" r="5" fill="#9C6B3E" style="--x:0px;--y:-24px"/><circle cx="410" cy="175" r="5" fill="#9C6B3E" style="--x:-22px;--y:-14px"/><circle cx="410" cy="175" r="5" fill="#9C6B3E" style="--x:18px;--y:-18px"/><circle cx="410" cy="175" r="5" fill="#9C6B3E" style="--x:-16px;--y:16px"/><circle cx="410" cy="175" r="5" fill="#9C6B3E" style="--x:20px;--y:12px"/><circle cx="410" cy="175" r="5" fill="#9C6B3E" style="--x:0px;--y:-24px"/></g>
+          <text class="rot" x="415" y="14" text-anchor="middle" style="font-size:19px">sulfato de alumínio e cal</text>
+          <text class="rot-f" x="415" y="242" text-anchor="middle" style="font-size:24px">2. Coagulação</text>
+          <text class="rot-f" x="415" y="270" text-anchor="middle" style="font-size:24px">e floculação</text>
+          <text class="rot" x="415" y="298" text-anchor="middle" style="font-size:21px">a sujeira fina forma flocos</text>
+        </g>
+        <g data-passo="3">
+          <path d="M530 170 H600" stroke="#C9C4DC" stroke-width="14"/><path class="flui" d="M530 170 H600" stroke="#5DA9E9" stroke-width="6"/>
+          <rect x="600" y="60" width="230" height="140" rx="16" fill="#DCEBF6" stroke="#7F7A99" stroke-width="4"/>
+          <path d="M604 196 Q715 172 826 196 Z" fill="#9C6B3E"/>
+          <g class="assenta" fill="#9C6B3E"><circle cx="650" cy="96" r="9"/><circle cx="700" cy="90" r="8"/><circle cx="750" cy="98" r="9"/><circle cx="790" cy="92" r="8"/></g>
+          <text class="rot-f" x="715" y="242" text-anchor="middle" style="font-size:24px">3. Decantação</text>
+          <text class="rot" x="715" y="272" text-anchor="middle" style="font-size:21px">os flocos descem</text>
+          <text class="rot" x="715" y="298" text-anchor="middle" style="font-size:21px">e formam o lodo</text>
+        </g>
+        <g data-passo="4">
+          <path d="M830 80 H900" stroke="#C9C4DC" stroke-width="14"/><path class="flui" d="M830 80 H900" stroke="#5DA9E9" stroke-width="6"/>
+          <rect x="900" y="60" width="230" height="140" rx="16" fill="#fff" stroke="#7F7A99" stroke-width="4"/>
+          <rect x="904" y="64" width="222" height="32" fill="url(#gAguaS)"/><rect x="904" y="96" width="222" height="30" fill="#3A3A44"/><rect x="904" y="126" width="222" height="36" fill="#E2C48C"/><rect x="904" y="162" width="222" height="34" rx="10" fill="#B8B3C9"/>
+          <g fill="#8D8A98"><circle cx="930" cy="180" r="9"/><circle cx="965" cy="176" r="11"/><circle cx="1005" cy="182" r="8"/><circle cx="1045" cy="177" r="10"/><circle cx="1090" cy="181" r="9"/></g>
+          <g class="atravessa" fill="#5DA9E9"><circle cx="960" cy="74" r="5"/><circle cx="1015" cy="74" r="5"/><circle cx="1070" cy="74" r="5"/></g>
+          <text class="rot-f" x="1015" y="242" text-anchor="middle" style="font-size:24px">4. Filtração</text>
+          <text class="rot" x="1015" y="272" text-anchor="middle" style="font-size:21px">carvão ativado,</text>
+          <text class="rot" x="1015" y="298" text-anchor="middle" style="font-size:21px">areia e cascalho</text>
+        </g>
+        <g data-passo="5">
+          <path d="M1130 186 H1200" stroke="#C9C4DC" stroke-width="14"/><path class="flui" d="M1130 186 H1200" stroke="#5DA9E9" stroke-width="6"/>
+          <rect x="1200" y="60" width="230" height="140" rx="16" fill="url(#gAguaS)" stroke="#7F7A99" stroke-width="4"/>
+          <text class="rot" x="1315" y="40" text-anchor="middle" style="font-size:20px">cloro · flúor · cal</text>
+          <g fill="#fff" stroke="#7F7A99" stroke-width="3"><path d="M1270 46 v10 l-6 10 h12 l-6 -10" /><path d="M1315 46 v10 l-6 10 h12 l-6 -10"/><path d="M1360 46 v10 l-6 10 h12 l-6 -10"/></g>
+          <text class="rot-f" x="1315" y="242" text-anchor="middle" style="font-size:24px">5. Desinfecção</text>
+          <text class="rot-f" x="1315" y="270" text-anchor="middle" style="font-size:24px">e fluoretação</text>
+          <text class="rot" x="1315" y="298" text-anchor="middle" style="font-size:21px">o cloro mata micróbios</text>
+        </g>
+        <g data-passo="6">
+          <path d="M1430 186 H1500 V140 H1520" fill="none" stroke="#C9C4DC" stroke-width="14"/><path class="flui" d="M1430 186 H1500 V140 H1520" fill="none" stroke="#5DA9E9" stroke-width="6"/>
+          <rect x="1520" y="40" width="120" height="100" rx="14" fill="url(#gAguaS)" stroke="#7F7A99" stroke-width="4"/>
+          <path d="M1540 140 V200 M1620 140 V200" stroke="#7F7A99" stroke-width="6"/>
+          <path d="M1640 90 H1700 V150" fill="none" stroke="#C9C4DC" stroke-width="12"/><path class="flui" d="M1640 90 H1700 V150" fill="none" stroke="#5DA9E9" stroke-width="5"/>
+          <path d="M1670 150 L1710 116 L1750 150 V200 H1670 Z" fill="#fff" stroke="#7F7A99" stroke-width="4" stroke-linejoin="round"/><rect x="1700" y="170" width="18" height="30" fill="#B9B0E6"/>
+          <text class="rot-f" x="1640" y="242" text-anchor="middle" style="font-size:24px">6. Reservatório</text>
+          <text class="rot" x="1640" y="272" text-anchor="middle" style="font-size:21px">a água potável vai</text>
+          <text class="rot" x="1640" y="298" text-anchor="middle" style="font-size:21px">para as casas</text>
+        </g>
+      </svg>
+    </div>
+    <div class="caixa caixa-atencao" data-passo="7" style="position:absolute;left:580px;right:0;top:640px">
+      <span class="rotulo">Água tratada não é água pura</span>
+      <div class="texto" style="font-size:29px">Depois da ETA, a água é <b>potável</b>: pode ser bebida sem risco. Mas continua sendo uma <b>mistura</b>, com sais e um pouco de cloro dissolvidos.</div>
+    </div>
+  </div>
+  <aside class="notas">
+    <p>Um clique por etapa. 1: grades seguram galhos e lixo (peneiração). 2: o sulfato de alumínio (com cal) faz a sujeira fina se juntar em flocos. 3: os flocos descem e assentam (decantação). 4: a água atravessa carvão ativado, areia e cascalho (filtração; é a questão do IF 2017). 5: cloro mata os micróbios, flúor ajuda a prevenir cáries e a cal corrige a acidez. 6: reservatório e distribuição. 7: potável não é pura.</p>
+    <p>Repare: só as últimas etapas adicionam algo à água. A maior parte do tratamento é separação de misturas (peneiração, decantação e filtração).</p>
+  </aside>
+</section>
+
+<!-- Tratamento de esgoto -->
+<section class="slide" data-nome="Tratamento de esgoto">
+  <div class="conteudo">
+    <p class="olho">Da casa ao rio</p>
+    <h2 class="titulo">Tratamento de esgoto: 6 etapas</h2>
+    <div style="position:absolute;left:0;right:0;top:150px;display:grid;grid-template-columns:repeat(3,1fr);gap:22px 26px">
+      <div class="card" data-passo="1" style="align-items:flex-start;text-align:left;gap:6px"><h3 style="font-size:32px">1. Gradeamento</h3><p style="font-size:25px">Grades seguram o lixo grande: plástico, papel, panos.</p><span class="tag tag-s">separação</span></div>
+      <div class="card" data-passo="2" style="align-items:flex-start;text-align:left;gap:6px"><h3 style="font-size:32px">2. Caixa de areia</h3><p style="font-size:25px">A água corre devagar e a areia assenta no fundo (desarenador).</p><span class="tag tag-s">separação</span></div>
+      <div class="card" data-passo="3" style="align-items:flex-start;text-align:left;gap:6px"><h3 style="font-size:32px">3. Reator anaeróbio</h3><p style="font-size:25px">Bactérias que vivem sem oxigênio decompõem a matéria orgânica.</p><span class="tag tag-b">bactérias</span></div>
+      <div class="card" data-passo="4" style="align-items:flex-start;text-align:left;gap:6px"><h3 style="font-size:32px">4. Filtro biológico aerado</h3><p style="font-size:25px">Com ar soprado, outras bactérias continuam a decomposição.</p><span class="tag tag-b">bactérias</span></div>
+      <div class="card" data-passo="5" style="align-items:flex-start;text-align:left;gap:6px"><h3 style="font-size:32px">5. Decantação</h3><p style="font-size:25px">O lodo, o resto sólido, assenta e é retirado.</p><span class="tag tag-s">separação</span></div>
+      <div class="card" data-passo="6" style="align-items:flex-start;text-align:left;gap:6px"><h3 style="font-size:32px">6. Desinfecção</h3><p style="font-size:25px">Elimina os micróbios antes de a água voltar ao rio.</p><span class="tag tag-b">desinfecção</span></div>
+    </div>
+    <div class="caixa caixa-fundamental" data-passo="7" style="position:absolute;left:580px;right:0;top:640px">
+      <div class="texto" style="font-size:29px">Grades, caixa de areia e decantação <b>separam misturas</b>. Nos reatores, as bactérias <b>transformam</b> a matéria orgânica em outras substâncias: isso já é transformação química.</div>
+    </div>
+  </div>
+  <aside class="notas">
+    <p>As seis etapas são as do material da professora. Um clique por etapa; o selo mostra se é separação de mistura ou ação de bactérias.</p>
+    <p>Clique 7: o gancho para a próxima parte (fenômeno físico e fenômeno químico). O esgoto tratado não vira água potável: ele volta ao rio com muito menos sujeira e micróbios.</p>
+  </aside>
+</section>
+
+<!-- Questão 1 -->
+<section class="slide questao" data-nome="Questão 1">
+  <div class="conteudo">
+    <div class="area-resolucao"></div>
+    <span class="pilula pilula-pausa" data-em="1:some">Pause o vídeo e tente</span>
+    <div class="painel-questao">
+      <p class="olho">Questão 1 · FCC-SP</p>
+      <p class="enunciado" style="font-size:27px">A separação dos componentes de uma solução aquosa homogênea de cloreto de sódio pode ser feita por:</p>
+      <ol class="alternativas" style="gap:8px">
+        <li data-em="2:certo"><b>A</b><span>destilação.</span></li>
+        <li data-em="2:apaga"><b>B</b><span>decantação.</span></li>
+        <li data-em="2:apaga"><b>C</b><span>filtração.</span></li>
+        <li data-em="2:apaga"><b>D</b><span>adição de mais água.</span></li>
+        <li data-em="2:apaga"><b>E</b><span>adição de mais cloreto de sódio.</span></li>
+      </ol>
+    </div>
+  </div>
+  <aside class="resolucao">
+    <p class="dados"><b>Dados:</b> solução aquosa de NaCl: sal dissolvido, mistura homogênea.</p>
+    <ol class="passos">
+      <li>Homogênea: uma fase só, sal dissolvido.</li>
+      <li>Filtro e decantação não separam o dissolvido.</li>
+      <li>Aquecendo, a água ferve e o sal fica.</li>
+      <li>Água recolhida no condensador: destilação.</li>
+    </ol>
+    <p class="resposta"><b>Resposta:</b> destilação (simples). <b>Gabarito A.</b></p>
+    <p class="atencao"><b>Destaque no quadro:</b> Sólido dissolvido em líquido: destilação simples.</p>
+    <ul class="erros">
+      <li><b>B</b> Não há fase sólida para assentar: o sal está dissolvido.</li>
+      <li><b>C</b> O sal dissolvido passa pelo papel de filtro com a água.</li>
+      <li><b>D</b> Mais água só dilui a solução.</li>
+      <li><b>E</b> Mais sal só deixa a solução mais concentrada; nada se separa.</li>
+    </ul>
+  </aside>
+  <aside class="notas">
+    <p>Clique 1 tira o aviso de pausa: resolva na área (D liga a caneta; E esconde o enunciado). Clique 2: gabarito A.</p>
+    <p>Questão do material da professora.</p>
+  </aside>
+</section>
+
+<!-- Questão 2 -->
+<section class="slide questao" data-nome="Questão 2">
+  <div class="conteudo">
+    <div class="area-resolucao"></div>
+    <span class="pilula pilula-pausa" data-em="1:some">Pause o vídeo e tente</span>
+    <div class="painel-questao">
+      <p class="olho">Questão 2 · F. Zona Leste-SP</p>
+      <p class="enunciado" style="font-size:22px">Numere a segunda coluna de acordo com a primeira, escolhendo, em seguida, a opção correspondente à numeração correta, de cima para baixo.</p>
+      <table class="tab-q"><tr><th>Misturas</th><th>Métodos</th></tr>
+        <tr><td>1. oxigênio e nitrogênio</td><td>( ) destilação</td></tr><tr><td>2. óleo e água</td><td>( ) filtração</td></tr>
+        <tr><td>3. álcool e água</td><td>( ) separação magnética</td></tr><tr><td>4. ferro e enxofre</td><td>( ) decantação</td></tr>
+        <tr><td>5. ar e poeira</td><td>( ) liquefação</td></tr></table>
+      <ol class="alternativas curtas">
+        <li data-em="2:apaga"><b>A</b><span>1 – 4 – 5 – 2 – 3</span></li>
+        <li data-em="2:apaga"><b>B</b><span>1 – 5 – 4 – 3 – 2</span></li>
+        <li data-em="2:apaga"><b>C</b><span>3 – 2 – 4 – 5 – 1</span></li>
+        <li data-em="2:certo"><b>D</b><span>3 – 5 – 4 – 2 – 1</span></li>
+        <li data-em="2:apaga"><b>E</b><span>5 – 1 – 3 – 4 – 2</span></li>
+      </ol>
+    </div>
+  </div>
+  <aside class="resolucao">
+    <p class="dados"><b>Dados:</b> misturas 1 a 5 e métodos na ordem: destilação, filtração, separação magnética, decantação, liquefação.</p>
+    <ol class="passos">
+      <li>Destilação: álcool e água (3).</li>
+      <li>Filtração: ar e poeira (5).</li>
+      <li>Ímã: ferro e enxofre (4).</li>
+      <li>Decantação: óleo e água (2).</li>
+      <li>Liquefação: oxigênio e nitrogênio (1).</li>
+    </ol>
+    <p class="resposta"><b>Resposta:</b> 3 – 5 – 4 – 2 – 1. <b>Gabarito D.</b></p>
+    <p class="atencao"><b>Destaque no quadro:</b> Ar: liquefação e depois destilação fracionada.</p>
+    <ul class="erros">
+      <li><b>A</b> Destilação não separa O₂ e N₂ gasosos, e filtrar não separa ferro e enxofre.</li>
+      <li><b>B</b> Álcool e água são miscíveis: não decantam.</li>
+      <li><b>C</b> Filtração não separa óleo e água (os dois passam).</li>
+      <li><b>E</b> Destilação não separa ar e poeira; filtração não separa O₂ e N₂.</li>
+    </ul>
+  </aside>
+  <aside class="notas">
+    <p>Clique 1 tira o aviso de pausa: resolva na área (D liga a caneta; E esconde o enunciado). Clique 2: gabarito D.</p>
+    <p>Questão do material da professora. A "liquefação" da alternativa é a liquefação do ar seguida de destilação fracionada (slide da refinaria).</p>
+    <p>No ferro e enxofre (dois sólidos), o ímã atrai só o ferro.</p>
+  </aside>
+</section>
+
+<!-- Questão 3 -->
+<section class="slide questao" data-nome="Questão 3">
+  <div class="conteudo">
+    <div class="area-resolucao"></div>
+    <span class="pilula pilula-pausa" data-em="1:some">Pause o vídeo e tente</span>
+    <div class="painel-questao">
+      <p class="olho">Questão 3 · IF Sudeste MG 2017</p>
+      <p class="enunciado" style="font-size:22px">Quando desejamos separar os componentes de uma mistura, devemos usar processos específicos que são definidos de acordo com alguns fatores, como ponto de fusão, ponto de ebulição, densidade, solubilidade, tipo de mistura (homogênea ou heterogênea), entre outros. Assinale a alternativa que apresenta a associação <b>CORRETA</b> entre a mistura e o método de separação adequado.</p>
+      <ol class="alternativas" style="gap:8px">
+        <li data-em="2:apaga" style="font-size:20px;padding:6px 14px"><b>A</b><span>Mistura homogênea líquido/líquido – Decantação.</span></li>
+        <li data-em="2:apaga" style="font-size:20px;padding:6px 14px"><b>B</b><span>Mistura homogênea gás/gás – Filtração.</span></li>
+        <li data-em="2:certo" style="font-size:20px;padding:6px 14px"><b>C</b><span>Mistura homogênea sólido/líquido – Destilação simples.</span></li>
+        <li data-em="2:apaga" style="font-size:20px;padding:6px 14px"><b>D</b><span>Mistura heterogênea líquido/líquido – Peneiração.</span></li>
+        <li data-em="2:apaga" style="font-size:20px;padding:6px 14px"><b>E</b><span>Mistura heterogênea sólido/líquido – Destilação fracionada.</span></li>
+      </ol>
+    </div>
+  </div>
+  <aside class="resolucao">
+    <p class="dados"><b>Dados:</b> cinco pares mistura – método.</p>
+    <ol class="passos">
+      <li>Homogênea sólido/líquido: sal na água.</li>
+      <li>Dissolvido não filtra nem decanta.</li>
+      <li>A água ferve e o sal fica: destilação simples.</li>
+    </ol>
+    <p class="resposta"><b>Resposta:</b> homogênea sólido/líquido – destilação simples. <b>Gabarito C.</b></p>
+    <p class="atencao"><b>Destaque no quadro:</b> Simples: sólido dissolvido. Fracionada: líquidos miscíveis.</p>
+    <ul class="erros">
+      <li><b>A</b> Decantação só separa misturas heterogêneas.</li>
+      <li><b>B</b> Gases se misturam por igual: filtro não separa.</li>
+      <li><b>D</b> Líquidos imiscíveis: funil de separação, não peneira.</li>
+      <li><b>E</b> Sólido não dissolvido: filtração ou decantação.</li>
+    </ul>
+  </aside>
+  <aside class="notas">
+    <p>Clique 1 tira o aviso de pausa: resolva na área (D liga a caneta; E esconde o enunciado). Clique 2: gabarito C.</p>
+    <p>Questão oficial do IF Sudeste MG (2017, prova extra: 2017-1-extra).</p>
+  </aside>
+</section>
+
+<!-- Resumo -->
+<section class="slide" data-nome="Resumo">
+  <div class="conteudo">
+    <p class="olho">Resumo</p>
+    <h2 class="titulo">O essencial</h2>
+    <div class="resumo" style="position:absolute;left:0;right:0;top:150px">
+      <div><b>Homogênea:</b> separa pela diferença de <b>ponto de ebulição</b>.</div>
+      <div><b>Evaporação:</b> o sólido fica e a água se perde (salinas).</div>
+      <div><b>Destilação simples:</b> sólido dissolvido; o vapor condensa no condensador.</div>
+      <div><b>Destilação fracionada:</b> líquidos miscíveis; o de <b>menor PE sai primeiro</b>.</div>
+      <div><b>Petróleo:</b> torre de fracionamento. <b>Ar:</b> liquefação e destilação.</div>
+      <div><b>ETA:</b> floculação, decantação, filtração e desinfecção: água <b>potável</b>, não pura.</div>
+    </div>
+    <div class="caixa caixa-atencao" style="position:absolute;left:580px;right:0;top:660px">
+      <div class="texto" style="font-size:30px">No condensador, a água fria entra pela ponta <b>mais baixa</b> e sai pela mais alta.</div>
+    </div>
+  </div>
+  <aside class="notas"><p>Peça para tirarem um print desta tela.</p></aside>
+</section>
+
+<!-- A seguir -->
+<section class="slide capa" data-nome="A seguir">
+  <div class="estrelas"></div>
+  <div class="texto-capa" style="top:170px">
+    <span class="selo">Química · IF</span>
+    <p class="aula" style="font-size:26px">A seguir · Matéria e transformações · Parte única</p>
+    <h1 style="font-size:110px">Fenômenos físicos e químicos</h1>
+    <p class="sub">Surgiu uma substância nova?</p>
+  </div>
+  <svg class="emblema" viewBox="0 0 640 640" aria-hidden="true">
+    <rect x="110" y="260" width="150" height="150" rx="30" fill="#fff" fill-opacity=".85"/>
+    <path d="M300 335 H360" stroke="#FFD10C" stroke-width="10" stroke-linecap="round"/><path d="M346 318 L366 335 L346 352" fill="none" stroke="#FFD10C" stroke-width="10" stroke-linecap="round" stroke-linejoin="round"/>
+    <path d="M480 470 C400 420 420 340 470 290 C470 340 500 350 510 320 C560 380 560 440 480 470 Z" fill="#FFD10C"/>
+    <path d="M482 455 C450 430 455 395 478 370 C482 395 498 400 502 385 C520 410 515 440 482 455 Z" fill="#fff" fill-opacity=".8"/>
+    <ellipse cx="185" cy="440" rx="80" ry="12" fill="#fff" fill-opacity=".35"/>
+  </svg>
+  <img class="logo-capa" src="{{LOGO_BRANCO}}" alt="Quarks">
+  <aside class="notas"><p>Próxima: fenômeno físico (a substância continua a mesma, como na separação de misturas) e fenômeno químico (surgem substâncias novas, como nas bactérias do esgoto).</p></aside>
+</section>
