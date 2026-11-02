@@ -24,8 +24,8 @@ Ordem do dono (02/11/2026), que vale também para a apostila de Física do IF: A
 
 | Subcapítulo | Fonte | Lote e questão | Código | Assunto |
 |---|---|---|---|---|
-| Observação do céu | Modelo IF | if-fisica-observacao-do-ceu m001 | a gravar | Gnômon no pátio: sombra às 8 h, 12 h e 16 h, em junho e em dezembro |
-| Sistema Solar e Universo | Modelo IF | if-fisica-universo m001 | a gravar | Quatro fichas: Júpiter, Plutão, cometa e Via Láctea |
+| Observação do céu | Modelo IF | if-fisica-observacao-do-ceu m001 | FIS-8721 | Gnômon no pátio: sombra às 8 h, 12 h e 16 h, em junho e em dezembro |
+| Sistema Solar e Universo | Modelo IF | if-fisica-universo m001 | FIS-8731 | Quatro fichas: Júpiter, Plutão, cometa e Via Láctea |
 
 ### 2. Mecânica
 **Questões do IF Sudeste**
@@ -68,8 +68,8 @@ Sobras para as partes: Temperatura e calor: 2015-2 q31; Propagação do calor: 2
 
 | Subcapítulo | Fonte | Lote e questão | Código | Assunto |
 |---|---|---|---|---|
-| Lentes e instrumentos ópticos | Modelo PISM | ae-portal-lentes-f2 p01 | FIS-5375 | Lente da lupa, de bordas finas: convergente |
-| O olho humano | Modelo PISM | pism2-fisica-visao-humana m002 | FIS-1133 | Professor de 52 anos afasta o celular: presbiopia |
+| Lentes e instrumentos ópticos | Modelo IF | if-fisica-lentes-e-instrumentos-opticos m001 | FIS-8758 | Lupa ao Sol queima a folha: a convergente junta a luz no foco |
+| O olho humano | Modelo IF | if-fisica-o-olho-humano m004 | FIS-8771 | Senhor de 52 anos afasta o celular para ler: presbiopia |
 
 Sobras para as partes: Luz e cores: 2013-1 q34; Reflexão e refração: 2014-1 q35.
 
@@ -106,7 +106,7 @@ Sobras para as partes: Ondas e som: 2017-1-extra q29, 2016-1-extra q30, 2015-1-e
 
 | Subcapítulo | Fonte | Lote e questão | Código | Assunto |
 |---|---|---|---|---|
-| Usinas de energia elétrica | Modelo IF | if-fisica-energia-e-sociedade m001 | a gravar | Usina de Marmelos e as usinas de hoje |
+| Usinas de energia elétrica | Modelo IF | if-fisica-energia-e-sociedade m001 | FIS-8796 | Usina de Marmelos e as usinas de hoje |
 
 Sobras para as partes: Circuitos elétricos: 2020-1 q31.
 
