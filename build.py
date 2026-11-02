@@ -251,8 +251,9 @@ def lugar_no_plano(meta, plano):
     """Acha o capítulo e o item do cronograma (planejamento/cronograma.json) que este arquivo cumpre."""
     parte = meta.get("parte", "")
     for cap in plano:
-        if parte in ("Questões do PISM", "Questões do IF Sudeste") and meta["assunto"] == cap["t"]:
-            return cap["n"], "pism"
+        q = re.match(r"Questões do (PISM|IF Sudeste)(?: · Parte (\d+) de \d+)?$", parte)
+        if q and meta["assunto"] == cap["t"]:
+            return cap["n"], ("pism" if not cap.get("questoes") else ("pism", int(q.group(2) or 1)))
         k = re.match(r"Parte (\d+) de (\d+)", parte)
         alvo = meta["assunto"] if k else meta["titulo"]  # parte única: o subcapítulo vai no título
         if not k and meta["assunto"] != cap["t"]:
@@ -306,9 +307,19 @@ def sistema(destino):
                             and partes[p]["disc"] == disc and partes[p]["curso"] == curso), None)
                 itens.append({"sub": f'{cap["n"]}.{subs.index(x["sub"]) + 1}', "t": x["t"], "k": mesmos.index(x) + 1,
                               "de": len(mesmos), "top": x.get("top", []), "id": pid})
-            pism = next((p for p, (c, it) in ligados.items() if c == cap["n"] and it == "pism"
-                         and partes[p]["disc"] == disc and partes[p]["curso"] == curso), None)
-            itens.append({"pism": True, "t": "Questões do PISM" if curso.startswith("pism") else "Questões do IF Sudeste", "id": pism})
+            nome_q = "Questões do PISM" if curso.startswith("pism") else "Questões do IF Sudeste"
+            blocos = cap.get("questoes") or []
+            if not blocos:
+                pism = next((p for p, (c, it) in ligados.items() if c == cap["n"] and it == "pism"
+                             and partes[p]["disc"] == disc and partes[p]["curso"] == curso), None)
+                itens.append({"pism": True, "t": nome_q, "id": pism})
+            for k, b in enumerate(blocos, 1):  # blocos planejados de questões oficiais (1 ou 2 por capítulo)
+                pid = next((p for p, (c, it) in ligados.items() if c == cap["n"] and it == ("pism", k)
+                            and partes[p]["disc"] == disc and partes[p]["curso"] == curso), None)
+                nomes = {x["t"]: True for x in cap["partes"]}
+                cob = [t for t in nomes if any(q.get("sub") == t for q in b["q"])]
+                itens.append({"pism": True, "plano": True, "t": nome_q, "k": k, "de": len(blocos), "id": pid,
+                              "nq": len(b["q"]), "top": cob})
             lista.append({"n": cap["n"], "t": cap["t"], "itens": itens})
         soltos = [p for p, (c, it) in ligados.items() if c is None and partes[p]["disc"] == disc and partes[p]["curso"] == curso]
         if soltos:
