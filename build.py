@@ -319,7 +319,7 @@ def sistema(destino):
                 nomes = {x["t"]: True for x in cap["partes"]}
                 cob = [t for t in nomes if any(q.get("sub") == t for q in b["q"])]
                 itens.append({"pism": True, "plano": True, "t": nome_q, "k": k, "de": len(blocos), "id": pid,
-                              "nq": len(b["q"]), "top": cob})
+                              "nq": len(b["q"]), "nm": sum(1 for q in b["q"] if q.get("modelo")), "top": cob})
             lista.append({"n": cap["n"], "t": cap["t"], "itens": itens})
         soltos = [p for p, (c, it) in ligados.items() if c is None and partes[p]["disc"] == disc and partes[p]["curso"] == curso]
         if soltos:

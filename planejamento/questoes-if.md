@@ -6,9 +6,12 @@ Plano de 02/11/2026, a pedido do dono: **um ou dois blocos de questões oficiais
 - **Questões reservadas:** quem fizer os slides de uma parte do IF **não usa** nenhuma questão desta lista; usa as "sobras" de cada capítulo (no fim desta página) ou questões de prática.
 - Arquivo do bloco: `aulas/<disciplina>/if/<capitulo>-questoes-if.html` (parte "Questões do IF Sudeste"; com dois blocos, "Questões do IF Sudeste · Parte 1 de 2" e "· Parte 2 de 2"). Na Química o bloco 1 de cada capítulo já existe.
 - Fonte: `apostilas/questoes/oficiais/if/` no cérebro (24 provas, 2013 a 2026). Escolha feita por agente pela classificação das questões (capítulo, subcapítulo e descritor) e pelas mais recentes primeiro: **conferir ao montar os slides**.
+- **Questões Modelo** (decisão do dono, 02/11/2026): subcapítulo sem questão oficial disponível leva uma questão Modelo do banco (Modelo IF, ou Modelo PISM no nível do IF) no mesmo bloco. As de Astronomia e Usinas foram criadas agora e ainda não estão gravadas no banco. **Depois da prova de 22/11/2026** (primeira do edital novo), trocar as Modelo pelas oficiais que couberem.
 - Física: só entram questões do que a matriz pede (as de cinemática, leis de Newton, energia mecânica, hidrostática, eletrostática e magnetismo ficam fora, como os capítulos).
 
-## Física (21 questões)
+## Física (21 oficiais + 7 Modelo)
+
+Ordem do dono (02/11/2026), que vale também para a apostila de Física do IF: Astronomia, Mecânica, Termologia, Óptica, Ondas e Eletricidade.
 
 ### 1. Astronomia
 **Questões do IF Sudeste**
@@ -17,7 +20,12 @@ Plano de 02/11/2026, a pedido do dono: **um ou dois blocos de questões oficiais
 |---|---|---|---|---|
 | Sistema Sol, Terra e Lua | 2013-1-extra | 34 | FIS-0579 | A Lua é um satélite natural do planeta Terra. Sobre a Lua, leia as seguintes afirmativas: … |
 
-Sem questão oficial do IF disponível (a prova não cobrou ou a questão já está numa parte): Observação do céu, Sistema Solar e Universo.
+**Questões Modelo** (no mesmo bloco; o IF ainda não cobrou o subcapítulo ou a questão oficial já está numa parte; trocar por oficial quando sair)
+
+| Subcapítulo | Fonte | Lote e questão | Código | Assunto |
+|---|---|---|---|---|
+| Observação do céu | Modelo IF | if-fisica-observacao-do-ceu m001 | a gravar | Gnômon no pátio: sombra às 8 h, 12 h e 16 h, em junho e em dezembro |
+| Sistema Solar e Universo | Modelo IF | if-fisica-universo m001 | a gravar | Quatro fichas: Júpiter, Plutão, cometa e Via Láctea |
 
 ### 2. Mecânica
 **Questões do IF Sudeste**
@@ -39,25 +47,15 @@ Sem questão oficial do IF disponível (a prova não cobrou ou a questão já es
 | Propagação do calor | 2018-1 | 29 | FIS-0534 | Como forma de reduzirmos o aquecimento global, é comum encontrarmos sugestões de pequenas … |
 | Propagação do calor | 2017-1-extra | 30 | FIS-0546 | Em um churrasco entre amigos e familiares, observam-se algumas situações, tais como: I – g… |
 
-Sem questão oficial do IF disponível (a prova não cobrou ou a questão já está numa parte): Combustíveis e máquinas térmicas.
+**Questões Modelo** (no mesmo bloco; o IF ainda não cobrou o subcapítulo ou a questão oficial já está numa parte; trocar por oficial quando sair)
+
+| Subcapítulo | Fonte | Lote e questão | Código | Assunto |
+|---|---|---|---|---|
+| Combustíveis e máquinas térmicas | Modelo IF | if-fisica-termodinamica m007 | FIS-1683 | Etanol no lugar da gasolina: avanço e problema |
 
 Sobras para as partes: Temperatura e calor: 2015-2 q31; Propagação do calor: 2023-1 q30, 2014-1 q34, 2013-1 q35.
 
-### 4. Eletricidade
-**Questões do IF Sudeste**
-
-| Subcapítulo | Prova | Questão | Código | Assunto |
-|---|---|---|---|---|
-| Fontes e transformações de energia | 2014-1 | 37 | FIS-0530 | Ao acender uma vela, estamos presenciando a transformação de energia química em energia lu… |
-| Circuitos elétricos | 2016-2 | 29 | FIS-0590 | Sofia, uma garota muito curiosa, montou o circuito 1 abaixo, com duas pequenas lâmpadas in… |
-| Circuitos elétricos | 2019-2 | 30 | FIS-0603 | Um inventor está finalizando um projeto de instalação elétrica de iluminação em um carro d… |
-| Consumo de energia elétrica | 2018-2 | 28 | FIS-0597 | Com a necessidade cada vez maior de economizarmos energia elétrica, faz-se necessária a co… |
-
-Sem questão oficial do IF disponível (a prova não cobrou ou a questão já está numa parte): Usinas de energia elétrica.
-
-Sobras para as partes: Circuitos elétricos: 2020-1 q31.
-
-### 5. Óptica
+### 4. Óptica
 **Questões do IF Sudeste**
 
 | Subcapítulo | Prova | Questão | Código | Assunto |
@@ -66,11 +64,16 @@ Sobras para as partes: Circuitos elétricos: 2020-1 q31.
 | Luz e cores | 2015-2 | 30 | FIS-0513 | Um estilista quis impressionar o público durante o desfile da linha primavera verão 2016 e… |
 | Reflexão e refração | 2017-1 | 30 | FIS-0524 | Os responsáveis pela gestão do trânsito de algumas cidades colocam, em certas esquinas, um… |
 
-Sem questão oficial do IF disponível (a prova não cobrou ou a questão já está numa parte): Lentes e instrumentos ópticos, O olho humano.
+**Questões Modelo** (no mesmo bloco; o IF ainda não cobrou o subcapítulo ou a questão oficial já está numa parte; trocar por oficial quando sair)
+
+| Subcapítulo | Fonte | Lote e questão | Código | Assunto |
+|---|---|---|---|---|
+| Lentes e instrumentos ópticos | Modelo PISM | ae-portal-lentes-f2 p01 | FIS-5375 | Lente da lupa, de bordas finas: convergente |
+| O olho humano | Modelo PISM | pism2-fisica-visao-humana m002 | FIS-1133 | Professor de 52 anos afasta o celular: presbiopia |
 
 Sobras para as partes: Luz e cores: 2013-1 q34; Reflexão e refração: 2014-1 q35.
 
-### 6. Ondas
+### 5. Ondas
 **Questões do IF Sudeste**
 
 | Subcapítulo | Prova | Questão | Código | Assunto |
@@ -81,9 +84,31 @@ Sobras para as partes: Luz e cores: 2013-1 q34; Reflexão e refração: 2014-1 q
 | Ondas eletromagnéticas | 2019-1 | 31 | FIS-0573 | Sobre ondas mecânicas e eletromagnéticas, é INCORRETO afirmar que: |
 | Ondas eletromagnéticas | 2025-1 | 31 | FIS-0612 | Uma família que voltava para São João Nepomuceno, na Zona da Mata mineira, saiu ilesa da v… |
 
-Sem questão oficial do IF disponível (a prova não cobrou ou a questão já está numa parte): Radiações e saúde.
+**Questões Modelo** (no mesmo bloco; o IF ainda não cobrou o subcapítulo ou a questão oficial já está numa parte; trocar por oficial quando sair)
+
+| Subcapítulo | Fonte | Lote e questão | Código | Assunto |
+|---|---|---|---|---|
+| Radiações e saúde | Modelo IF | if-fisica-ondas m027 | FIS-0828 | Gestação: por que ultrassom e não raio X |
 
 Sobras para as partes: Ondas e som: 2017-1-extra q29, 2016-1-extra q30, 2015-1-extra q30; Ondas eletromagnéticas: 2014-1 q38.
+
+### 6. Eletricidade
+**Questões do IF Sudeste**
+
+| Subcapítulo | Prova | Questão | Código | Assunto |
+|---|---|---|---|---|
+| Fontes e transformações de energia | 2014-1 | 37 | FIS-0530 | Ao acender uma vela, estamos presenciando a transformação de energia química em energia lu… |
+| Circuitos elétricos | 2016-2 | 29 | FIS-0590 | Sofia, uma garota muito curiosa, montou o circuito 1 abaixo, com duas pequenas lâmpadas in… |
+| Circuitos elétricos | 2019-2 | 30 | FIS-0603 | Um inventor está finalizando um projeto de instalação elétrica de iluminação em um carro d… |
+| Consumo de energia elétrica | 2018-2 | 28 | FIS-0597 | Com a necessidade cada vez maior de economizarmos energia elétrica, faz-se necessária a co… |
+
+**Questões Modelo** (no mesmo bloco; o IF ainda não cobrou o subcapítulo ou a questão oficial já está numa parte; trocar por oficial quando sair)
+
+| Subcapítulo | Fonte | Lote e questão | Código | Assunto |
+|---|---|---|---|---|
+| Usinas de energia elétrica | Modelo IF | if-fisica-energia-e-sociedade m001 | a gravar | Usina de Marmelos e as usinas de hoje |
+
+Sobras para as partes: Circuitos elétricos: 2020-1 q31.
 
 ## Matemática (46 questões)
 
@@ -310,7 +335,7 @@ Sobras para as partes: Figuras de linguagem: 2026-1 q09, 2025-1 q05, 2023-1 q12,
 
 Sobras para as partes: Variação linguística: 2018-1 q03, 2018-1 q04, 2018-1 q06, 2017-2 q05, 2017-2 q10, 2015-1 q12 ….
 
-## Química (41 questões)
+## Química (41 oficiais + 3 Modelo)
 
 ### 1. Matéria e transformações
 **Questões do IF Sudeste · Parte 1 de 2** (pronto: `materia-questoes-if.html`)
@@ -338,7 +363,11 @@ Sobras para as partes: Variação linguística: 2018-1 q03, 2018-1 q04, 2018-1 q
 | Propriedades da matéria | 2016-1-extra | 33 | QUI-0319 | Indique o volume ocupado por uma massa de 5,0 g de um determinado gás, chamado G, de densi… |
 | Substâncias e misturas | 2018-2 | 33 | QUI-0361 | Um estudante muito empolgado com o conteúdo sobre misturas, estudado na aula de Química, r… |
 
-Sem questão oficial do IF disponível (a prova não cobrou ou a questão já está numa parte): Fenômenos físicos e químicos.
+**Questões Modelo** (no mesmo bloco; o IF ainda não cobrou o subcapítulo ou a questão oficial já está numa parte; trocar por oficial quando sair)
+
+| Subcapítulo | Fonte | Lote e questão | Código | Assunto |
+|---|---|---|---|---|
+| Fenômenos físicos e químicos | Modelo IF | if-quimica-fenomenos-fisicos-e-quimicos m005 | QUI-1024 | Bolhas: comprimido, água fervendo e refrigerante aberto |
 
 Sobras para as partes: Estados físicos: 2017-2 q35, 2015-2 q34; Propriedades da matéria: 2016-1-extra q34, 2014-2 q43, 2013-1 q41; Substâncias e misturas: 2017-1-extra q25, 2017-2 q34, 2015-1 q32, 2014-1-extra q46, 2013-1 q40, 2013-1 q43; Separação de misturas: 2015-2 q33.
 
@@ -386,7 +415,7 @@ Sobras para as partes: Número atômico e de massa: 2023-1 q35, 2019-1 q35, 2014
 Sobras para as partes: Ligação iônica: 2018-1 q34, 2014-1-extra q43, 2013-2 q43.
 
 ### 5. Funções inorgânicas
-**Questões do IF Sudeste** (pronto: `funcoes-questoes-if.html`)
+**Questões do IF Sudeste · Parte 1 de 2** (pronto: `funcoes-questoes-if.html`)
 
 | Subcapítulo | Prova | Questão | Código | Assunto |
 |---|---|---|---|---|
@@ -396,4 +425,9 @@ Sobras para as partes: Ligação iônica: 2018-1 q34, 2014-1-extra q43, 2013-2 q
 |  | 2014-1 | 45 | QUI-0293 | Abaixo são apresentadas algumas substâncias químicas encontradas no nosso cotidiano e suas… |
 | Reações e equações | 2013-1-extra | 40 | QUI-0341 | Balanceando a equação química abaixo, a soma dos menores coeficientes inteiros será: \ce{A… |
 
-Sem questão oficial do IF disponível (a prova não cobrou ou a questão já está numa parte): Sais, Indicadores e pH.
+**Questões do IF Sudeste · Parte 2 de 2** (só Modelo: as oficiais de Sais e de Indicadores e pH já estão nas partes)
+
+| Subcapítulo | Fonte | Lote e questão | Código | Assunto |
+|---|---|---|---|---|
+| Sais | Modelo IF | if-quimica-sais m007 | QUI-1016 | Ácido muriático e cal hidratada: o sal formado |
+| Indicadores e pH | Modelo PISM | pism3-quimica-indicadores-acido-base m002 | QUI-1331 | Repolho roxo no vinagre e no leite de magnésia |
