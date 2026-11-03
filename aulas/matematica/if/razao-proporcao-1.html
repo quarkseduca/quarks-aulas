@@ -1,0 +1,610 @@
+<!--aula
+{"disciplina": "matematica", "curso": "IF", "assunto": "Razão e proporção", "parte": "Parte 1 de 2", "titulo": "Razão, proporção e grandezas", "scripts": ["animacoes-comercial.js"]}
+-->
+<!-- Fonte: apostila IF, Matemática, cap. 2 (2.1 Razão e proporção: Razão e escala; Proporção e propriedade fundamental; Grandezas diretamente e inversamente proporcionais). Questões: oficiais IF Sudeste MG 2017-1 q20 (MAT-0338) e 2016-1 q22 (MAT-0477), sobras do bloco; Modelo IF do lote if-matematica-razao-e-proporcao, m006 (MAT-0631). -->
+<style>
+  .caixa, .co-card { box-sizing: border-box; }
+  .co-card { background: var(--branco); border: 2px solid var(--lilas-2); border-radius: 26px; padding: 18px 26px; font-size: 30px; line-height: 1.32; }
+  .co-card b { color: var(--roxo-titulo); }
+  .co-card.d { background: var(--d-clara); border-color: color-mix(in srgb, var(--d) 35%, transparent); }
+  .co-card h3 { margin: 0 0 6px; font: 800 34px var(--fonte-titulo); color: var(--roxo-titulo); letter-spacing: -.01em; }
+  .co-tag { display: inline-block; padding: 6px 20px; border-radius: 999px; font-weight: 800; font-size: 26px; white-space: nowrap; background: var(--d-clara); color: var(--d-forte); }
+  .co-tag.am { background: #FFF4C2; color: #8A6A00; }
+  .tabela.co-t { font-size: 36px; }
+  .tabela.co-t th { padding: 12px 34px; }
+  .tabela.co-t td { padding: 10px 34px; }
+  .tabela.co-t td.co-op { color: var(--d-forte); font-weight: 800; }
+  .co-grande { font-size: 64px; text-align: center; }
+  /* colunas de enunciado mais largas para questões longas (data-largo); E continua ampliando a área */
+  .questao[data-largo="1"] .area-resolucao { width: 1070px; } .questao[data-largo="1"] .painel-questao { left: 1110px; } .questao[data-largo="1"] .pilula-pausa { left: 535px; }
+  .questao[data-largo].amplia .area-resolucao { width: 1760px; } .questao[data-largo].amplia .pilula-pausa { left: 880px; }
+  .painel-questao .co-mini { font-size: 23px; border-collapse: separate; border-spacing: 0; background: #fff; border: 2px solid var(--lilas-2); border-radius: 16px; overflow: hidden; align-self: center; }
+  .painel-questao .co-mini th { background: var(--d-clara); color: var(--d-forte); padding: 5px 18px; font-weight: 800; }
+  .painel-questao .co-mini td { padding: 4px 18px; border-top: 2px solid var(--lilas); text-align: center; }
+  /* ---------- Animações (só na tela aberta) ---------- */
+  /* os 20 jogos aparecem um a um */
+  .co-jogo { transform-box: fill-box; transform-origin: center; }
+  .slide.ativo .co-jogo { animation: co-surge .5s ease-out both; }
+  @keyframes co-surge { from { transform: scale(0); opacity: 0; } to { transform: none; opacity: 1; } }
+  /* moldura de cada grupo de 5 */
+  .co-grupo { opacity: 0; transition: opacity .6s; }
+  .mostra .co-grupo { opacity: 1; }
+  /* traço que se desenha (rota no mapa, reta do gráfico) */
+  .co-traca { stroke-dasharray: 1; stroke-dashoffset: 1; }
+  .slide.ativo .co-traca { animation: co-desenha 2.6s ease-in-out .4s both; }
+  .slide.ativo .mostra .co-traca { animation: co-desenha-b 2.6s ease-in-out both; }
+  @keyframes co-desenha { from { stroke-dashoffset: 1; } to { stroke-dashoffset: 0; } }
+  @keyframes co-desenha-b { from { stroke-dashoffset: 1; } to { stroke-dashoffset: 0; } }
+  /* o bonequinho que vai de casa à escola, ida e volta, devagar */
+  .slide.ativo .co-anda { animation: co-anda 7s ease-in-out 3s infinite; }
+  @keyframes co-anda { 0%, 10% { transform: translateX(0); } 50%, 60% { transform: translateX(400px); } 100% { transform: translateX(0); } }
+  /* ingredientes da receita dobrada caem na tigela um a um */
+  .slide.ativo .mostra .co-cai { animation: co-cai .7s ease-out both; }
+  @keyframes co-cai { from { transform: translateY(-40px); opacity: 0; } to { transform: none; opacity: 1; } }
+  /* pontos do gráfico de cima que respiram de leve */
+  .slide.ativo .co-pulsa { transform-box: fill-box; transform-origin: center; animation: co-pulsa 5s ease-in-out infinite; }
+  @keyframes co-pulsa { 0%, 100% { transform: scale(1); } 50% { transform: scale(1.18); } }
+  @media (prefers-reduced-motion: reduce) { .co-traca { stroke-dashoffset: 0; } .co-grupo { transition: none; } }
+</style>
+<svg width="0" height="0" style="position:absolute" aria-hidden="true">
+  <symbol id="coXicara" viewBox="0 0 80 70">
+    <path d="M8 18 H58 V44 Q58 64 33 64 Q8 64 8 44 Z" fill="currentColor"/>
+    <path d="M58 26 Q74 26 74 38 Q74 50 58 50" fill="none" stroke="currentColor" stroke-width="7"/>
+    <ellipse cx="33" cy="18" rx="25" ry="6" fill="#fff" opacity=".8"/>
+  </symbol>
+  <symbol id="coOvo" viewBox="0 0 60 74">
+    <path d="M30 4 C48 4 56 34 56 46 C56 62 44 70 30 70 C16 70 4 62 4 46 C4 34 12 4 30 4 Z" fill="#FFF6DF" stroke="#E7C98A" stroke-width="4"/>
+    <ellipse cx="22" cy="28" rx="6" ry="10" fill="#fff" opacity=".9"/>
+  </symbol>
+</svg>
+
+<!-- 1. Capa -->
+<section class="slide capa" data-nome="Capa">
+  <div class="estrelas"></div>
+  <div class="texto-capa" style="top:170px">
+    <span class="selo">Matemática · IF</span>
+    <p class="aula">Razão e proporção · Parte 1 de 2</p>
+    <h1 style="font-size:124px">Razão, proporção e grandezas</h1>
+    <p class="sub">Comparar dividindo</p>
+  </div>
+  <svg class="emblema" viewBox="0 0 640 640" aria-hidden="true">
+    <g class="gira-lento"><ellipse cx="320" cy="320" rx="300" ry="128" fill="none" stroke="#fff" stroke-opacity=".38" stroke-width="2" transform="rotate(-10 320 320)"/></g>
+    <g class="gira"><ellipse cx="320" cy="320" rx="236" ry="196" fill="none" stroke="#FFD10C" stroke-opacity=".75" stroke-width="2.5" stroke-dasharray="3 14" stroke-linecap="round" transform="rotate(-8 320 320)"/>
+      <circle cx="84" cy="300" r="13" fill="var(--d)" stroke="#fff" stroke-width="3"/></g>
+    <circle cx="320" cy="320" r="150" fill="#FFD10C"/>
+    <g font-family="Bricolage Grotesque, Trebuchet MS, sans-serif" font-weight="800" fill="#4B258D" text-anchor="middle">
+      <text x="320" y="292" font-size="104">3</text>
+      <rect x="250" y="312" width="140" height="14" rx="7"/>
+      <text x="320" y="422" font-size="104">5</text>
+    </g>
+  </svg>
+  <img class="logo-capa" src="{{LOGO_BRANCO}}" alt="Quarks">
+  <aside class="notas">
+    <p>Hoje: razão (inclusive a escala de mapas), proporção e a propriedade fundamental, e os dois tipos de grandezas proporcionais. É a base da regra de três da Parte 2.</p>
+  </aside>
+</section>
+
+<!-- 2. Gancho: 12 de 20 jogos -->
+<section class="slide" data-nome="12 de 20 jogos">
+  <div class="conteudo">
+    <p class="olho">Para começar</p>
+    <h2 class="titulo">Ganhou 12 dos 20 jogos</h2>
+    <svg viewBox="0 0 820 440" width="820" height="440" style="position:absolute;left:0;top:150px;overflow:visible;font-family:Figtree,'Segoe UI',sans-serif" aria-hidden="true">
+      <g class="co-grupo" data-passo="1">
+        <rect x="0" y="0" width="560" height="96" rx="48" fill="#fff" stroke="var(--d)" stroke-width="3"/>
+        <rect x="0" y="110" width="560" height="96" rx="48" fill="#fff" stroke="var(--d)" stroke-width="3"/>
+        <rect x="0" y="220" width="560" height="96" rx="48" fill="#fff" stroke="var(--d)" stroke-width="3"/>
+        <rect x="0" y="330" width="560" height="96" rx="48" fill="#fff" stroke="var(--d)" stroke-width="3"/>
+        <g font-size="34" font-weight="800" fill="var(--d-forte)"><text x="590" y="60">3 de 5</text><text x="590" y="170">3 de 5</text><text x="590" y="280">3 de 5</text><text x="590" y="390">3 de 5</text></g>
+      </g>
+      <g>
+        <circle class="co-jogo" style="animation-delay:.05s" cx="60" cy="48" r="34" fill="var(--d)"/><circle class="co-jogo" style="animation-delay:.1s" cx="170" cy="48" r="34" fill="var(--d)"/><circle class="co-jogo" style="animation-delay:.15s" cx="280" cy="48" r="34" fill="var(--d)"/><circle class="co-jogo" style="animation-delay:.2s" cx="390" cy="48" r="34" fill="#DCD6F3"/><circle class="co-jogo" style="animation-delay:.25s" cx="500" cy="48" r="34" fill="#DCD6F3"/>
+        <circle class="co-jogo" style="animation-delay:.3s" cx="60" cy="158" r="34" fill="var(--d)"/><circle class="co-jogo" style="animation-delay:.35s" cx="170" cy="158" r="34" fill="var(--d)"/><circle class="co-jogo" style="animation-delay:.4s" cx="280" cy="158" r="34" fill="var(--d)"/><circle class="co-jogo" style="animation-delay:.45s" cx="390" cy="158" r="34" fill="#DCD6F3"/><circle class="co-jogo" style="animation-delay:.5s" cx="500" cy="158" r="34" fill="#DCD6F3"/>
+        <circle class="co-jogo" style="animation-delay:.55s" cx="60" cy="268" r="34" fill="var(--d)"/><circle class="co-jogo" style="animation-delay:.6s" cx="170" cy="268" r="34" fill="var(--d)"/><circle class="co-jogo" style="animation-delay:.65s" cx="280" cy="268" r="34" fill="var(--d)"/><circle class="co-jogo" style="animation-delay:.7s" cx="390" cy="268" r="34" fill="#DCD6F3"/><circle class="co-jogo" style="animation-delay:.75s" cx="500" cy="268" r="34" fill="#DCD6F3"/>
+        <circle class="co-jogo" style="animation-delay:.8s" cx="60" cy="378" r="34" fill="var(--d)"/><circle class="co-jogo" style="animation-delay:.85s" cx="170" cy="378" r="34" fill="var(--d)"/><circle class="co-jogo" style="animation-delay:.9s" cx="280" cy="378" r="34" fill="var(--d)"/><circle class="co-jogo" style="animation-delay:.95s" cx="390" cy="378" r="34" fill="#DCD6F3"/><circle class="co-jogo" style="animation-delay:1s" cx="500" cy="378" r="34" fill="#DCD6F3"/>
+      </g>
+    </svg>
+    <div style="position:absolute;left:960px;right:0;top:170px">
+      <div style="display:flex;gap:26px;align-items:center;font-size:30px;font-weight:700;color:var(--cinza)">
+        <span><svg width="34" height="34" style="vertical-align:-6px"><circle cx="17" cy="17" r="15" fill="var(--d)"/></svg> ganhou</span>
+        <span><svg width="34" height="34" style="vertical-align:-6px"><circle cx="17" cy="17" r="15" fill="#DCD6F3"/></svg> não ganhou</span>
+      </div>
+      <div class="contas" style="margin-top:40px;font-size:54px">
+        <div class="eq" data-passo="2"><span>\(\dfrac{12}{20}\)</span><span>\(=\)</span><span>\(\dfrac{12 \div 4}{20 \div 4}\)</span></div>
+        <div class="eq final" data-passo="3"><span>\(\phantom{\dfrac{1}{2}}\)</span><span>\(=\)</span><span>\(\dfrac{3}{5}\)</span></div>
+      </div>
+      <span class="pilula pilula-resposta" data-passo="4" style="margin-top:40px">3 de cada 5 jogos</span>
+    </div>
+  </div>
+  <aside class="notas">
+    <p>Os 20 jogos aparecem um a um. Clique 1: agrupe em 4 grupos de 5; em cada grupo, 3 vitórias.</p>
+    <p>Cliques 2 e 3: a divisão 12/20 simplificada por 4. Clique 4: comparar por divisão é o que chamamos de razão.</p>
+  </aside>
+</section>
+
+<!-- 3. Razão -->
+<section class="slide" data-nome="Razão">
+  <div class="conteudo">
+    <p class="olho">Definição</p>
+    <h2 class="titulo">Razão</h2>
+    <div class="caixa caixa-fundamental" style="position:absolute;left:0;width:760px;top:160px;padding:26px 34px">
+      <span class="rotulo">Razão entre \(a\) e \(b\), com \(b \neq 0\)</span>
+      <div style="display:grid;grid-template-columns:auto 1fr;align-items:center;column-gap:34px;margin-top:6px">
+        <div style="font-size:110px">\(\dfrac{a}{b}\)</div>
+        <div style="display:flex;flex-direction:column;gap:56px;font-size:32px;font-weight:700">
+          <span data-passo="1">\(a\): <b style="color:var(--d-forte)">antecedente</b></span>
+          <span data-passo="1">\(b\): <b style="color:var(--d-forte)">consequente</b></span>
+        </div>
+      </div>
+    </div>
+    <div style="position:absolute;left:880px;right:0;top:160px">
+      <p class="texto" style="margin:0 0 16px" data-passo="2"><b>A ordem importa.</b></p>
+      <div class="contas" style="font-size:48px;row-gap:24px">
+        <div class="eq" data-passo="2"><span>de 12 para 20:</span><span>\(\dfrac{12}{20}\)</span><span>\(= \dfrac{3}{5}\)</span></div>
+        <div class="eq" data-passo="3"><span>de 20 para 12:</span><span>\(\dfrac{20}{12}\)</span><span>\(= \dfrac{5}{3}\)</span></div>
+      </div>
+    </div>
+    <span class="pilula pilula-resposta" data-passo="4" style="position:absolute;right:0;top:640px">"de \(a\) para \(b\)": \(a\) em cima</span>
+  </div>
+  <aside class="notas">
+    <p>Clique 1: os nomes dos termos. Cliques 2 e 3: a mesma dupla de números em ordens diferentes dá razões diferentes (3/5 e 5/3).</p>
+    <p>Clique 4: a frase da prova "razão de a para b" põe o a no numerador.</p>
+  </aside>
+</section>
+
+<!-- 4. Escala -->
+<section class="slide" data-nome="Escala">
+  <div class="conteudo">
+    <p class="olho">Uma razão muito usada</p>
+    <h2 class="titulo">Escala</h2>
+    <div class="caixa caixa-fundamental" style="position:absolute;left:0;width:800px;top:160px;padding:26px 34px">
+      <span class="rotulo">Escala</span>
+      <div style="font-size:54px;margin:8px 0 6px">\(\text{escala} = \dfrac{\text{desenho}}{\text{real}}\)</div>
+      <div class="texto" style="font-size:32px"><b>na mesma unidade</b></div>
+    </div>
+    <div style="position:absolute;left:900px;right:0;top:160px">
+      <div style="font:800 96px var(--fonte-titulo);color:var(--roxo-titulo);letter-spacing:-.02em">1 : 20 000</div>
+      <div class="contas" style="margin-top:22px;font-size:44px">
+        <div class="eq" data-passo="1"><span>\(1\ \text{cm no mapa}\)</span><span>\(\to\)</span><span>\(20\,000\ \text{cm reais}\)</span></div>
+        <div class="eq" data-passo="2"><span>\(20\,000\ \text{cm}\)</span><span>\(=\)</span><span>\(\dfrac{20\,000}{100}\ \text{m}\)</span></div>
+        <div class="eq final" data-passo="3"><span></span><span>\(=\)</span><span>\(200\ \text{m}\)</span></div>
+      </div>
+    </div>
+    <div class="caixa" data-passo="4" style="position:absolute;left:560px;right:0;top:640px;padding:20px 30px;display:flex;gap:26px;align-items:center">
+      <span class="co-tag">1 m = 100 cm</span><span class="co-tag">1 km = 1 000 m</span><span class="co-tag">1 km = 100 000 cm</span>
+    </div>
+  </div>
+  <aside class="notas">
+    <p>Escala é desenho dividido por real, sempre na mesma unidade. Clique 1: 1 cm do mapa vale 20 000 cm reais. Cliques 2 e 3: em metros, 200 m.</p>
+    <p>Clique 4: a escada de conversão de Unidades de medida, que volta no próximo exemplo.</p>
+  </aside>
+</section>
+
+<!-- 5. Exemplo: casa e escola -->
+<section class="slide" data-nome="Exemplo: o mapa">
+  <div class="conteudo">
+    <p class="olho">Exemplo</p>
+    <h2 class="titulo">Da casa à escola</h2>
+    <svg viewBox="0 0 820 440" width="820" height="440" style="position:absolute;left:0;top:150px;overflow:visible;font-family:Figtree,'Segoe UI',sans-serif" aria-hidden="true">
+      <rect x="0" y="0" width="820" height="440" rx="30" fill="#fff" stroke="#E4DEFB" stroke-width="3"/>
+      <!-- ruas -->
+      <g stroke="#EEEAFB" stroke-width="34" stroke-linecap="round" fill="none">
+        <path d="M30 210 H790"/><path d="M200 30 V410"/><path d="M560 30 V410"/><path d="M30 80 Q300 120 790 60"/>
+      </g>
+      <g fill="#E4DEFB"><rect x="250" y="250" width="120" height="70" rx="12"/><rect x="400" y="250" width="120" height="110" rx="12"/><rect x="610" y="250" width="150" height="80" rx="12"/><rect x="250" y="120" width="260" height="56" rx="12"/><rect x="610" y="110" width="150" height="66" rx="12"/><rect x="40" y="250" width="120" height="120" rx="12"/></g>
+      <!-- rota -->
+      <path class="co-traca" pathLength="1" d="M150 210 H650" stroke="var(--d)" stroke-width="8" stroke-linecap="round" fill="none" stroke-dasharray="1"/>
+      <!-- casa -->
+      <g transform="translate(150 210)"><path d="M-40 -6 L0 -46 L40 -6 Z" fill="var(--d-forte)"/><rect x="-30" y="-8" width="60" height="44" rx="6" fill="var(--d)"/><rect x="-9" y="10" width="18" height="26" rx="3" fill="#fff"/></g>
+      <text x="150" y="276" text-anchor="middle" font-size="28" font-weight="800" fill="#3F2FA0">casa</text>
+      <!-- escola -->
+      <g transform="translate(650 210)"><rect x="-44" y="-40" width="88" height="76" rx="8" fill="#FFD10C"/><path d="M-52 -38 L0 -66 L52 -38 Z" fill="#E0B300"/><rect x="-10" y="6" width="20" height="30" rx="3" fill="#fff"/><rect x="-32" y="-24" width="16" height="16" rx="3" fill="#fff"/><rect x="16" y="-24" width="16" height="16" rx="3" fill="#fff"/></g>
+      <text x="650" y="276" text-anchor="middle" font-size="28" font-weight="800" fill="#8A6A00">escola</text>
+      <!-- quem anda -->
+      <g class="co-anda"><circle cx="200" cy="178" r="11" fill="#292B2C"/><path d="M190 202 Q200 186 210 202" stroke="#292B2C" stroke-width="8" fill="none" stroke-linecap="round"/></g>
+      <!-- régua -->
+      <g transform="translate(150 380)">
+        <rect x="-16" y="-24" width="532" height="48" rx="10" fill="#FFF4C2" stroke="#E7C98A" stroke-width="2"/>
+        <g stroke="#8A6A00" stroke-width="3"><line x1="0" y1="-24" x2="0" y2="0"/><line x1="100" y1="-24" x2="100" y2="-4"/><line x1="200" y1="-24" x2="200" y2="-4"/><line x1="300" y1="-24" x2="300" y2="-4"/><line x1="400" y1="-24" x2="400" y2="-4"/><line x1="500" y1="-24" x2="500" y2="0"/></g>
+        <g font-size="20" font-weight="800" fill="#8A6A00" text-anchor="middle"><text x="0" y="18">0</text><text x="100" y="18">1</text><text x="200" y="18">2</text><text x="300" y="18">3</text><text x="400" y="18">4</text><text x="500" y="18">5 cm</text></g>
+      </g>
+      <text x="800" y="36" text-anchor="end" font-size="24" font-weight="800" fill="#5E5A70">escala 1 : 20 000</text>
+    </svg>
+    <div style="position:absolute;left:920px;right:0;top:150px">
+      <p class="texto" style="margin:0 0 18px">No mapa: <b>5 cm</b>. E de verdade?</p>
+      <div class="contas">
+        <div class="eq" data-passo="1"><span>\(\text{real}\)</span><span>\(=\)</span><span>\(\text{mapa} \cdot 20\,000\)</span></div>
+        <div class="eq" data-passo="2"><span>\(\text{real}\)</span><span>\(=\)</span><span>\(5 \cdot 20\,000\)</span></div>
+        <div class="eq" data-passo="3"><span>\(\text{real}\)</span><span>\(=\)</span><span>\(100\,000\ \text{cm}\)</span></div>
+        <div class="eq final" data-passo="4"><span>\(\text{real}\)</span><span>\(=\)</span><span>\(1\ \text{km}\)</span></div>
+      </div>
+      <p class="texto" data-passo="5" style="margin:30px 0 0;font-size:32px">\(100\,000\ \text{cm} = 1\,000\ \text{m} = 1\ \text{km}\)</p>
+    </div>
+  </div>
+  <aside class="notas">
+    <p>Mapa redesenhado da apostila (escala 1 : 20 000). A rota se desenha e a régua mostra 5 cm entre casa e escola.</p>
+    <p>Uma linha por clique. Clique 5: a escada de conversão (cm → m divide por 100; m → km divide por 1 000).</p>
+  </aside>
+</section>
+
+<!-- 6. Proporção -->
+<section class="slide" data-nome="Proporção">
+  <div class="conteudo">
+    <p class="olho">Igualdade de razões</p>
+    <h2 class="titulo">Proporção</h2>
+    <div style="position:absolute;left:0;width:900px;top:160px;display:flex;flex-direction:column;gap:24px">
+      <div class="co-card" style="display:grid;grid-template-columns:150px 1fr;align-items:center;gap:10px">
+        <b style="font-size:30px">receita</b>
+        <div style="display:flex;gap:10px;align-items:center;color:#8C7BEA">
+          <svg width="80" height="70"><use href="#coXicara"/></svg><svg width="80" height="70"><use href="#coXicara"/></svg>
+          <span style="width:40px"></span>
+          <svg width="60" height="74"><use href="#coOvo"/></svg><svg width="60" height="74"><use href="#coOvo"/></svg><svg width="60" height="74"><use href="#coOvo"/></svg>
+        </div>
+      </div>
+      <div class="co-card" data-passo="1" style="display:grid;grid-template-columns:150px 1fr;align-items:center;gap:10px">
+        <b style="font-size:30px">em dobro</b>
+        <div style="display:flex;gap:6px;align-items:center;color:var(--d)">
+          <svg class="co-cai" width="66" height="58"><use href="#coXicara"/></svg><svg class="co-cai" style="animation-delay:.15s" width="66" height="58"><use href="#coXicara"/></svg><svg class="co-cai" style="animation-delay:.3s" width="66" height="58"><use href="#coXicara"/></svg><svg class="co-cai" style="animation-delay:.45s" width="66" height="58"><use href="#coXicara"/></svg>
+          <span style="width:14px"></span>
+          <svg class="co-cai" style="animation-delay:.6s" width="46" height="57"><use href="#coOvo"/></svg><svg class="co-cai" style="animation-delay:.7s" width="46" height="57"><use href="#coOvo"/></svg><svg class="co-cai" style="animation-delay:.8s" width="46" height="57"><use href="#coOvo"/></svg><svg class="co-cai" style="animation-delay:.9s" width="46" height="57"><use href="#coOvo"/></svg><svg class="co-cai" style="animation-delay:1s" width="46" height="57"><use href="#coOvo"/></svg><svg class="co-cai" style="animation-delay:1.1s" width="46" height="57"><use href="#coOvo"/></svg>
+        </div>
+      </div>
+      <p class="texto" style="margin:0;font-size:30px;color:var(--cinza)">xícaras de farinha : ovos</p>
+    </div>
+    <div style="position:absolute;left:1000px;right:0;top:170px;text-align:center">
+      <div style="font-size:70px;display:flex;justify-content:center;gap:30px;align-items:center">
+        <span>\(\dfrac{2}{3}\)</span><span data-passo="2">\(=\)</span><span data-passo="1">\(\dfrac{4}{6}\)</span>
+      </div>
+    </div>
+    <div class="caixa caixa-fundamental" data-passo="2" style="position:absolute;left:1000px;right:0;top:420px;padding:22px 30px">
+      <span class="rotulo">Proporção</span>
+      <div class="texto">Igualdade entre duas razões.</div>
+    </div>
+  </div>
+  <aside class="notas">
+    <p>A receita usa 2 xícaras de farinha para 3 ovos. Clique 1: quem dobra a receita usa 4 xícaras para 6 ovos.</p>
+    <p>Clique 2: as razões 2/3 e 4/6 são iguais. Uma igualdade de razões é uma proporção.</p>
+  </aside>
+</section>
+
+<!-- 7. Propriedade fundamental -->
+<section class="slide" data-nome="Propriedade fundamental">
+  <div class="conteudo">
+    <p class="olho">Propriedade fundamental</p>
+    <h2 class="titulo">Meios e extremos</h2>
+    <div class="caixa caixa-fundamental" style="position:absolute;left:0;width:820px;top:160px;padding:26px 34px;text-align:center">
+      <div style="position:relative;display:inline-block;font-size:100px;padding:10px 40px">
+        \(\dfrac{\color{#1E4FD8}{a}}{\color{#C2384F}{b}} = \dfrac{\color{#C2384F}{c}}{\color{#1E4FD8}{d}}\)
+        <svg data-passo="1" viewBox="0 0 400 250" width="400" height="250" style="position:absolute;left:50%;top:50%;transform:translate(-50%,-50%);overflow:visible" aria-hidden="true">
+          <path class="co-traca" pathLength="1" d="M70 60 Q200 125 330 190" stroke="#1E4FD8" stroke-width="5" fill="none" stroke-linecap="round" stroke-dasharray="1" opacity=".55"/>
+          <path class="co-traca" pathLength="1" d="M70 190 Q200 125 330 60" stroke="#C2384F" stroke-width="5" fill="none" stroke-linecap="round" stroke-dasharray="1" opacity=".55"/>
+        </svg>
+      </div>
+      <div data-passo="2" style="font-size:72px;margin-top:6px">\(\color{#1E4FD8}{a \cdot d} = \color{#C2384F}{b \cdot c}\)</div>
+    </div>
+    <div style="position:absolute;left:920px;right:0;top:160px;display:flex;flex-direction:column;gap:22px">
+      <div class="co-card" data-passo="2"><b style="color:#1E4FD8">extremos</b>: \(a\) e \(d\) &nbsp;·&nbsp; <b style="color:#C2384F">meios</b>: \(b\) e \(c\)</div>
+      <div class="co-card d" data-passo="3"><b>Produto dos extremos = produto dos meios</b><br>a "multiplicação cruzada"</div>
+      <div class="contas" data-passo="4" style="font-size:44px;margin-top:10px">
+        <div class="eq"><span>\(\dfrac{2}{3} = \dfrac{4}{6}:\)</span><span>\(2 \cdot 6 = 12\)</span><span>\(\quad 3 \cdot 4 = 12\ \color{#1F9D62}{\checkmark}\)</span></div>
+      </div>
+    </div>
+  </div>
+  <aside class="notas">
+    <p>Clique 1: o X da multiplicação cruzada se desenha. Clique 2: a · d = b · c. Clique 3: o nome da propriedade.</p>
+    <p>Clique 4: confira com a receita: 2 · 6 e 3 · 4 dão 12. A propriedade serve para achar um termo desconhecido.</p>
+  </aside>
+</section>
+
+<!-- 8. Exemplo: termo desconhecido -->
+<section class="slide" data-nome="Exemplo: o termo que falta">
+  <div class="conteudo">
+    <p class="olho">Exemplo</p>
+    <h2 class="titulo">O termo que falta</h2>
+    <div style="position:absolute;left:0;width:760px;top:160px;display:flex;align-items:center;gap:30px">
+      <div class="caixa caixa-fundamental" style="text-align:center;font-size:70px;padding:12px 40px">\(\dfrac{x}{12} = \dfrac{5}{4}\)</div>
+      <span class="co-tag" data-passo="1">multiplique em cruz</span>
+    </div>
+    <div class="contas" style="position:absolute;left:900px;top:160px;font-size:54px;row-gap:20px">
+      <div class="eq"><span>\(\dfrac{x}{12}\)</span><span>\(=\)</span><span>\(\dfrac{5}{4}\)</span></div>
+      <div class="eq" data-passo="1"><span>\(4 \cdot x\)</span><span>\(=\)</span><span>\(12 \cdot 5\)</span></div>
+      <div class="eq" data-passo="2"><span>\(4x\)</span><span>\(=\)</span><span>\(60\)</span></div>
+      <div class="eq" data-passo="3"><span>\(x\)</span><span>\(=\)</span><span>\(\dfrac{60}{4}\)</span></div>
+      <div class="eq final" data-passo="4"><span>\(x\)</span><span>\(=\)</span><span>\(15\)</span></div>
+    </div>
+    <div class="caixa" data-passo="5" style="position:absolute;left:0;width:760px;top:370px;padding:20px 30px">
+      <span class="rotulo">Conferência</span>
+      <div style="font-size:50px">\(\dfrac{15}{12} = \dfrac{15 \div 3}{12 \div 3} = \dfrac{5}{4}\ \color{#1F9D62}{\checkmark}\)</div>
+    </div>
+  </div>
+  <aside class="notas">
+    <p>Uma linha por clique: multiplicação cruzada, depois isole o x. Clique 5: conferência, 15/12 simplificada por 3 dá 5/4.</p>
+  </aside>
+</section>
+
+<!-- 9. Duas tabelas -->
+<section class="slide" data-nome="Pães e viagem">
+  <div class="conteudo">
+    <p class="olho">Grandezas proporcionais</p>
+    <h2 class="titulo">Os pães e a viagem</h2>
+    <div style="position:absolute;left:0;top:160px">
+      <p class="texto" style="margin:0 0 14px;font-size:32px"><b>Na padaria</b></p>
+      <table class="tabela co-t">
+        <tr><th>pães</th><th>preço (R$)</th><th data-passo="4">preço ÷ pães</th></tr>
+        <tr><td>1</td><td>0,80</td><td class="co-op" data-passo="4">0,80</td></tr>
+        <tr data-passo="1"><td>2</td><td>1,60</td><td class="co-op" data-passo="4">0,80</td></tr>
+        <tr data-passo="1"><td>5</td><td>4,00</td><td class="co-op" data-passo="4">0,80</td></tr>
+      </table>
+    </div>
+    <div style="position:absolute;left:920px;top:160px">
+      <p class="texto" style="margin:0 0 14px;font-size:32px"><b>Viagem de 120 km</b></p>
+      <table class="tabela co-t">
+        <tr><th>km/h</th><th>tempo (h)</th><th data-passo="5">km/h · h</th></tr>
+        <tr data-passo="2"><td>30</td><td>4</td><td class="co-op" data-passo="5">120</td></tr>
+        <tr data-passo="2"><td>60</td><td>2</td><td class="co-op" data-passo="5">120</td></tr>
+        <tr data-passo="2"><td>120</td><td>1</td><td class="co-op" data-passo="5">120</td></tr>
+      </table>
+    </div>
+    <span class="pilula pilula-resposta" data-passo="3" style="position:absolute;left:0;top:500px">pães dobram → preço dobra</span>
+    <span class="pilula pilula-resposta" data-passo="3" style="position:absolute;left:920px;top:500px;background:var(--roxo)">velocidade dobra → tempo cai à metade</span>
+  </div>
+  <aside class="notas">
+    <p>Clique 1: 1 pão R$ 0,80; 2 pães R$ 1,60; 5 pães R$ 4,00. Clique 2: a viagem de 120 km a 30, 60 e 120 km/h.</p>
+    <p>Clique 3: nos pães, a quantidade dobra e o preço dobra; na viagem, a velocidade dobra e o tempo cai pela metade.</p>
+    <p>Cliques 4 e 5: o que fica constante. Preço ÷ quantidade é sempre 0,80; velocidade × tempo é sempre 120.</p>
+  </aside>
+</section>
+
+<!-- 10. Os dois gráficos -->
+<section class="slide" data-nome="Razão constante, produto constante">
+  <div class="conteudo">
+    <p class="olho">Grandezas proporcionais</p>
+    <h2 class="titulo">O que fica constante</h2>
+    <div style="position:absolute;left:0;width:780px;top:140px">
+      <div style="display:flex;gap:18px;align-items:center;height:80px"><span class="co-tag">diretamente</span><span style="font-size:40px">\(\dfrac{\text{preço}}{\text{pães}} = 0{,}80\)</span></div>
+      <svg viewBox="0 0 760 390" width="680" height="349" style="display:block;margin-top:10px;overflow:visible;font-family:Figtree,'Segoe UI',sans-serif" aria-hidden="true">
+        <path d="M90 342 V20 M88 340 H740" stroke="#9C93C4" stroke-width="4" fill="none" stroke-linecap="round"/>
+        <path d="M80 34 L90 16 L100 34 M724 330 L742 340 L724 350" stroke="#9C93C4" stroke-width="4" fill="none" stroke-linecap="round" stroke-linejoin="round"/>
+        <text x="70" y="30" text-anchor="end" font-size="26" font-weight="800" fill="#5E5A70">R$</text>
+        <text x="740" y="318" text-anchor="end" font-size="26" font-weight="800" fill="#5E5A70">pães</text>
+        <g font-size="24" font-weight="700" fill="#5E5A70" text-anchor="middle"><text x="200" y="374">1</text><text x="310" y="374">2</text><text x="640" y="374">5</text></g>
+        <g font-size="24" font-weight="700" fill="#5E5A70" text-anchor="end"><text x="78" y="294">0,80</text><text x="78" y="238">1,60</text><text x="78" y="68">4,00</text></g>
+        <g stroke="#DCD6F3" stroke-width="2" stroke-dasharray="6 6" fill="none"><path d="M200 340 V286 H90"/><path d="M310 340 V230 H90"/><path d="M640 340 V60 H90"/></g>
+        <path class="co-traca" pathLength="1" d="M90 340 L700 9" stroke="var(--d-forte)" stroke-width="5" fill="none" stroke-linecap="round" stroke-dasharray="1"/>
+        <g fill="#fff" stroke="var(--d-forte)" stroke-width="4"><circle class="co-pulsa" cx="200" cy="286" r="10"/><circle class="co-pulsa" cx="310" cy="230" r="10" style="animation-delay:-1.6s"/><circle class="co-pulsa" cx="640" cy="60" r="10" style="animation-delay:-3.2s"/></g>
+        <circle cx="90" cy="340" r="9" fill="#FFD10C"/>
+      </svg>
+    </div>
+    <div data-passo="1" style="position:absolute;left:960px;right:0;top:140px">
+      <div style="display:flex;gap:18px;align-items:center;height:80px"><span class="co-tag am">inversamente</span><span style="font-size:40px">\(v \cdot t = 120\)</span></div>
+      <div data-anima="com-inversa" data-anima-passo="1" style="width:760px;height:470px;margin-top:10px"></div>
+    </div>
+  </div>
+  <aside class="notas">
+    <p>À esquerda, os pães: os pontos ficam numa reta que passa pela origem (0 pão, R$ 0,00), porque a razão é sempre 0,80.</p>
+    <p>Clique 1: a viagem. O ponto amarelo anda pela curva; o retângulo de lados v e t muda de forma, mas a área (a distância) é sempre 120 km. Mais rápido, menos tempo.</p>
+  </aside>
+</section>
+
+<!-- 11. Definição: dois tipos -->
+<section class="slide" data-nome="Dois tipos de proporcionalidade">
+  <div class="conteudo">
+    <p class="olho">Definição</p>
+    <h2 class="titulo">Dois tipos de proporcionalidade</h2>
+    <div style="position:absolute;left:0;right:0;top:170px;display:grid;grid-template-columns:1fr 1fr;gap:40px">
+      <div class="co-card d" style="padding:26px 34px">
+        <h3>Diretamente proporcionais</h3>
+        <div style="font-size:50px;margin:18px 0 10px;text-align:center">\(\times k \ \longrightarrow\ \times k\)</div>
+        <div style="text-align:center;margin-top:8px"><span class="co-tag">a razão fica constante</span></div>
+      </div>
+      <div class="co-card" data-passo="1" style="padding:26px 34px;background:#FFFBEA;border-color:#F5DD6B">
+        <h3>Inversamente proporcionais</h3>
+        <div style="font-size:50px;margin:18px 0 10px;text-align:center">\(\times k \ \longrightarrow\ \div k\)</div>
+        <div style="text-align:center;margin-top:8px"><span class="co-tag am">o produto fica constante</span></div>
+      </div>
+    </div>
+    <div style="position:absolute;left:0;right:0;top:470px;display:grid;grid-template-columns:1fr 1fr;gap:40px">
+      <p class="texto" data-passo="2" style="margin:0;font-size:32px">Uma é multiplicada por um número; a outra, pelo <b>mesmo</b> número.</p>
+      <p class="texto" data-passo="3" style="margin:0;font-size:32px">Uma é multiplicada por um número; a outra é <b>dividida</b> por ele.</p>
+    </div>
+  </div>
+  <aside class="notas">
+    <p>Os dois tipos da apostila. Diretamente: a outra é multiplicada pelo mesmo número e a razão fica constante. Clique 1: inversamente, a outra é dividida e o produto fica constante.</p>
+    <p>Cliques 2 e 3: a definição por extenso, como está na apostila.</p>
+  </aside>
+</section>
+
+<!-- 12. Atenção: crescer junto -->
+<section class="slide" data-nome="Atenção: crescer junto">
+  <div class="conteudo">
+    <p class="olho">Atenção</p>
+    <h2 class="titulo">Crescer junto não basta</h2>
+    <svg viewBox="0 0 760 400" width="760" height="400" style="position:absolute;left:0;top:160px;overflow:visible;font-family:Figtree,'Segoe UI',sans-serif" aria-hidden="true">
+      <path d="M90 362 V20 M88 360 H740" stroke="#9C93C4" stroke-width="4" fill="none" stroke-linecap="round"/>
+      <path d="M80 34 L90 16 L100 34 M724 350 L742 360 L724 370" stroke="#9C93C4" stroke-width="4" fill="none" stroke-linecap="round" stroke-linejoin="round"/>
+      <text x="110" y="34" font-size="26" font-weight="800" fill="#5E5A70">conta (R$)</text>
+      <text x="740" y="398" text-anchor="end" font-size="26" font-weight="800" fill="#5E5A70">consumo (kWh)</text>
+      <path class="co-traca" pathLength="1" d="M90 250 L700 60" stroke="var(--erro)" stroke-width="5" fill="none" stroke-linecap="round" stroke-dasharray="1"/>
+      <circle cx="90" cy="250" r="12" fill="#FFD10C" stroke="#fff" stroke-width="4"/>
+      <g data-passo="1"><path d="M110 250 H250" stroke="#8A6A00" stroke-width="3" stroke-dasharray="6 6"/><text x="260" y="258" font-size="28" font-weight="800" fill="#8A6A00">taxa fixa</text></g>
+      <g data-passo="2"><circle cx="90" cy="360" r="10" fill="none" stroke="var(--d-forte)" stroke-width="4"/><text x="114" y="340" font-size="26" font-weight="800" fill="var(--d-forte)">0 kWh ≠ R$ 0,00</text></g>
+    </svg>
+    <div class="caixa caixa-atencao" style="position:absolute;left:900px;right:0;top:170px">
+      <span class="rotulo">Atenção</span>
+      <div class="texto">A conta de luz cresce com o consumo, mas <b>não</b> é diretamente proporcional: tem uma taxa fixa.</div>
+    </div>
+    <span class="pilula pilula-resposta" data-passo="3" style="position:absolute;right:0;top:560px">Confira se a razão é constante</span>
+  </div>
+  <aside class="notas">
+    <p>Gráfico sem números, só para mostrar a forma: a reta não sai da origem. Clique 1: a taxa fixa. Clique 2: consumir 0 kWh não custa R$ 0,00.</p>
+    <p>Clique 3: crescer junto não basta; para ser diretamente proporcional, a razão tem de ser constante.</p>
+  </aside>
+</section>
+
+<!-- 13. Questão 1 -->
+<section class="slide questao" data-nome="Questão 1">
+  <div class="conteudo">
+    <div class="area-resolucao"></div>
+    <span class="pilula pilula-pausa" data-em="1:some">Pause o vídeo e tente</span>
+    <div class="painel-questao">
+      <p class="olho">Questão 1 · IF Sudeste MG 2017</p>
+      <p class="enunciado">O mapa de uma cidade será desenhado em uma escala em que 3cm correspondem a 6km. Um bairro dessa cidade ocupa, no mapa, uma região quadrada de 2cm de lado. Qual deve ser o perímetro desse bairro?</p>
+      <ol class="alternativas curtas">
+        <li data-em="2:apaga"><b>A</b><span>4km</span></li>
+        <li data-em="2:apaga"><b>B</b><span>8km</span></li>
+        <li data-em="2:certo"><b>C</b><span>16km</span></li>
+        <li data-em="2:apaga"><b>D</b><span>24km</span></li>
+        <li data-em="2:apaga"><b>E</b><span>32km</span></li>
+      </ol>
+    </div>
+  </div>
+  <aside class="resolucao">
+    <p class="dados"><b>Dados:</b> 3 cm → 6 km; lado no mapa 2 cm.</p>
+    <ol class="passos">
+      <li>\(\dfrac{3}{6} = \dfrac{2}{\ell}\)</li>
+      <li>\(3\ell = 12\)</li>
+      <li>\(\ell = 4\ \text{km}\)</li>
+      <li>\(P = 4 \cdot 4 = 16\ \text{km}\)</li>
+    </ol>
+    <p class="resposta"><b>Resposta:</b> perímetro de 16 km. <b>Gabarito C.</b></p>
+    <p class="atencao"><b>Destaque no quadro:</b> Primeiro o lado real pela escala; depois o perímetro.</p>
+    <ul class="erros">
+      <li><b>A</b> Para no lado real (4 km).</li>
+      <li><b>B</b> Perímetro no mapa (8 cm), sem a escala.</li>
+      <li><b>D</b> Usa 6 km como lado: 4 · 6.</li>
+      <li><b>E</b> Multiplica 8 cm pelo lado real, 4 km.</li>
+    </ul>
+  </aside>
+  <aside class="notas">
+    <p>Clique 1 tira o aviso de pausa: resolva na área (D liga a caneta; E esconde o enunciado). Clique 2: gabarito C.</p>
+    <p>Questão oficial do IF Sudeste MG 2017-1, q20, MAT-0338 (sobra do bloco). Atalho: cada 1 cm do mapa vale 2 km; perímetro no mapa 8 cm, real 16 km.</p>
+  </aside>
+</section>
+
+<!-- 14. Questão 2 -->
+<section class="slide questao" data-nome="Questão 2">
+  <div class="conteudo">
+    <div class="area-resolucao"></div>
+    <span class="pilula pilula-pausa" data-em="1:some">Pause o vídeo e tente</span>
+    <div class="painel-questao">
+      <p class="olho">Questão 2 · IF Sudeste MG 2016</p>
+      <p class="enunciado" style="font-size:25px">Um automóvel leva uma hora e vinte minutos para ir da Marginal Pinheiros, uma das vias de São Paulo, ao centro da cidade, com a velocidade de 60 km/h. O limite de velocidade nessa via foi reduzido para 50 km/h. Então, nas mesmas condições de trânsito, quanto tempo o automóvel levará para chegar ao centro da cidade?</p>
+      <ol class="alternativas">
+        <li data-em="2:apaga"><b>A</b><span>uma hora e 30 minutos</span></li>
+        <li data-em="2:certo"><b>B</b><span>uma hora e 36 minutos</span></li>
+        <li data-em="2:apaga"><b>C</b><span>uma hora e 40 minutos</span></li>
+        <li data-em="2:apaga"><b>D</b><span>uma hora e 44 minutos</span></li>
+        <li data-em="2:apaga"><b>E</b><span>uma hora e 50 minutos</span></li>
+      </ol>
+    </div>
+  </div>
+  <aside class="resolucao">
+    <p class="dados"><b>Dados:</b> \(t_1 = 80\ \text{min}\); \(v_1 = 60\); \(v_2 = 50\) (km/h).</p>
+    <ol class="passos">
+      <li>Mesma distância: inversa.</li>
+      <li>\(60 \cdot 80 = 50 \cdot t_2\)</li>
+      <li>\(4\,800 = 50 \cdot t_2\)</li>
+      <li>\(t_2 = 96\ \text{min}\)</li>
+      <li>\(96\ \text{min} = 1\ \text{h}\ 36\ \text{min}\)</li>
+    </ol>
+    <p class="resposta"><b>Resposta:</b> uma hora e 36 minutos. <b>Gabarito B.</b></p>
+    <p class="atencao"><b>Destaque no quadro:</b> 1 h 20 min = 80 min, e não 1,2 h.</p>
+    <ul class="erros">
+      <li><b>A</b> Soma 10 min, um por km/h a menos.</li>
+      <li><b>C</b> Acha 1,6 h e lê 0,6 h como 40 min.</li>
+      <li><b>D</b> Lê 1 h 20 min como 1,2 h: dá 1,44 h.</li>
+      <li><b>E</b> Soma 30 min sem conta.</li>
+    </ul>
+  </aside>
+  <aside class="notas">
+    <p>Clique 1 tira o aviso de pausa: resolva na área (D liga a caneta; E esconde o enunciado). Clique 2: gabarito B.</p>
+    <p>Questão oficial do IF Sudeste MG 2016-1, q22, MAT-0477 (não está reservada para o bloco). Para a mesma distância, v · t é constante. Trabalhar em minutos evita o erro de 1 h 20 min = 1,2 h.</p>
+  </aside>
+</section>
+
+<!-- 15. Questão 3 -->
+<section class="slide questao" data-nome="Questão 3">
+  <div class="conteudo">
+    <div class="area-resolucao"></div>
+    <span class="pilula pilula-pausa" data-em="1:some">Pause o vídeo e tente</span>
+    <div class="painel-questao" style="gap:12px">
+      <p class="olho">Questão 3 · Modelo IF</p>
+      <p class="enunciado" style="font-size:25px">Num sítio, um tanque é enchido por torneiras iguais, todas com a mesma vazão. A tabela mostra o tempo para encher o tanque vazio de acordo com o número de torneiras abertas.</p>
+      <table class="co-mini">
+        <tr><th>Torneiras abertas</th><th>Tempo para encher (min)</th></tr>
+        <tr><td>2</td><td>90</td></tr><tr><td>3</td><td>60</td></tr><tr><td>5</td><td>\(a\)</td></tr><tr><td>\(b\)</td><td>15</td></tr>
+      </table>
+      <p class="enunciado" style="font-size:25px">Os valores de \(a\) e \(b\) são:</p>
+      <ol class="alternativas" style="gap:8px">
+        <li data-em="2:apaga" style="padding:5px 14px"><b>A</b><span>\(a = 100\) e \(b = 12\)</span></li>
+        <li data-em="2:apaga" style="padding:5px 14px"><b>B</b><span>\(a = 18\) e \(b = 6\)</span></li>
+        <li data-em="2:apaga" style="padding:5px 14px"><b>C</b><span>\(a = 36\) e \(b = 6\)</span></li>
+        <li data-em="2:apaga" style="padding:5px 14px"><b>D</b><span>\(a = 12\) e \(b = 36\)</span></li>
+        <li data-em="2:certo" style="padding:5px 14px"><b>E</b><span>\(a = 36\) e \(b = 12\)</span></li>
+      </ol>
+    </div>
+  </div>
+  <aside class="resolucao">
+    <p class="dados"><b>Dados:</b> 2 torneiras, 90 min; 3 torneiras, 60 min.</p>
+    <ol class="passos">
+      <li>\(2 \cdot 90 = 3 \cdot 60 = 180\): inversa.</li>
+      <li>\(5 \cdot a = 180\)</li>
+      <li>\(a = 36\)</li>
+      <li>\(b \cdot 15 = 180\)</li>
+      <li>\(b = 12\)</li>
+    </ol>
+    <p class="resposta"><b>Resposta:</b> \(a = 36\) e \(b = 12\). <b>Gabarito E.</b></p>
+    <p class="atencao"><b>Destaque no quadro:</b> Inversamente: o produto torneiras × tempo é constante.</p>
+    <ul class="erros">
+      <li><b>A</b> Calcula a como se fosse direta: 100.</li>
+      <li><b>B</b> Toma 90 min como o tempo de 1 torneira.</li>
+      <li><b>C</b> Acerta a, mas faz b = 90 ÷ 15.</li>
+      <li><b>D</b> Troca os valores de a e b.</li>
+    </ul>
+  </aside>
+  <aside class="notas">
+    <p>Clique 1 tira o aviso de pausa: resolva na área (D liga a caneta; E esconde o enunciado). Clique 2: gabarito E.</p>
+    <p>Questão Modelo IF, lote if-matematica-razao-e-proporcao, m006, MAT-0631. Conferir se está na apostila publicada (Banco de questões &gt; Apostilas). Mais torneiras, menos tempo: produto constante, 180.</p>
+  </aside>
+</section>
+
+<!-- 16. Resumo -->
+<section class="slide" data-nome="Resumo">
+  <div class="conteudo">
+    <p class="olho">Resumo</p>
+    <h2 class="titulo">O essencial</h2>
+    <div class="resumo" style="position:absolute;left:0;right:0;top:150px">
+      <div><b>Razão</b> de \(a\) para \(b\): \(\dfrac{a}{b}\), com \(b \neq 0\). A ordem importa.</div>
+      <div><b>Escala</b> = desenho : real, <b>na mesma unidade</b>.</div>
+      <div><b>Proporção</b>: igualdade de razões, \(\dfrac{a}{b} = \dfrac{c}{d}\).</div>
+      <div><b>Propriedade fundamental</b>: \(a \cdot d = b \cdot c\) (extremos e meios).</div>
+      <div><b>Diretamente</b> proporcionais: a <b>razão</b> é constante.</div>
+      <div><b>Inversamente</b> proporcionais: o <b>produto</b> é constante.</div>
+    </div>
+    <div class="caixa caixa-atencao" style="position:absolute;left:560px;right:0;top:640px;padding:20px 30px">
+      <div class="texto" style="font-size:30px">Crescer junto não basta: confira se a razão é constante.</div>
+    </div>
+  </div>
+  <aside class="notas"><p>Peça para tirarem um print desta tela.</p></aside>
+</section>
+
+<!-- 17. A seguir -->
+<section class="slide capa" data-nome="A seguir">
+  <div class="estrelas"></div>
+  <div class="texto-capa" style="top:170px">
+    <span class="selo">Matemática · IF</span>
+    <p class="aula" style="font-size:26px">A seguir · Razão e proporção · Parte 2 de 2</p>
+    <h1 style="font-size:118px">Divisão proporcional e regra de três</h1>
+    <p class="sub">Achar o quarto valor</p>
+  </div>
+  <svg class="emblema" viewBox="0 0 640 640" aria-hidden="true">
+    <g class="gira-lento"><ellipse cx="320" cy="320" rx="300" ry="128" fill="none" stroke="#fff" stroke-opacity=".38" stroke-width="2" transform="rotate(-10 320 320)"/></g>
+    <circle cx="320" cy="320" r="150" fill="#FFD10C"/>
+    <g font-family="Bricolage Grotesque, Trebuchet MS, sans-serif" font-weight="800" fill="#4B258D" text-anchor="middle" font-size="76">
+      <text x="250" y="296">3</text><text x="390" y="296">18</text><text x="250" y="400">5</text><text x="390" y="400">x</text>
+    </g>
+    <path d="M300 270 L340 370 M340 270 L300 370" stroke="#4B258D" stroke-width="7" stroke-linecap="round" opacity=".6"/>
+  </svg>
+  <img class="logo-capa" src="{{LOGO_BRANCO}}" alt="Quarks">
+  <aside class="notas"><p>Próxima parte: dividir um total em partes proporcionais e a regra de três, simples (direta e inversa) e composta.</p></aside>
+</section>
