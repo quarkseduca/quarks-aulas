@@ -1,0 +1,554 @@
+<!--aula
+{"disciplina": "matematica", "curso": "IF", "assunto": "Contagem e probabilidade", "parte": "Parte 2 de 2", "titulo": "Probabilidade"}
+-->
+<!-- Fonte: apostila IF, Matemática, cap. 7 (7.2 Contagem e probabilidade: blocos "Espaço amostral e eventos", "Probabilidade como razão
+     e porcentagem" e "Probabilidade da união").
+     Questões (todas da apostila, nenhuma reservada para o bloco do fim do capítulo): Modelo IF if-matematica-probabilidade m002 (MAT-0657);
+     IF Sudeste MG 2017-1 q17 (MAT-0335), 2018-1 q15 (MAT-0356) e 2015-1 q17 (MAT-0290). -->
+<style>
+  .caixa, .cartao { box-sizing: border-box; }
+  .fig { position: absolute; overflow: visible; font-family: Figtree, 'Segoe UI', sans-serif; }
+  .rot { font-family: Figtree, 'Segoe UI', sans-serif; font-weight: 700; font-size: 28px; fill: #5E5A70; }
+  .rot-forte { font-family: Figtree, 'Segoe UI', sans-serif; font-weight: 800; font-size: 32px; fill: #3F2FA0; }
+  .cartao { background: var(--branco); border: 2px solid var(--lilas-2); border-radius: 28px; padding: 20px 26px; }
+  .cartao h3 { margin: 0 0 6px; font: 800 36px var(--fonte-titulo); letter-spacing: -.02em; color: var(--roxo-titulo); }
+  .cartao p { margin: 0; font-size: 28px; line-height: 1.3; }
+  .conj { font-size: 40px; }
+  .grade { display: grid; grid-template-columns: 150px repeat(6, 1fr); gap: 10px; font-size: 30px; }
+  .grade > div { background: var(--branco); border: 2px solid var(--lilas-2); border-radius: 16px; padding: 12px 6px; text-align: center; font-weight: 700; transition: background .4s, border-color .4s; }
+  .grade > div.cab { background: none; border: 0; font-weight: 800; color: var(--roxo-titulo); }
+  .grade > div.luz { background: #FFF4C2; border-color: #E0A800; }
+  /* moeda que gira e dado que balança: o resultado depende do acaso */
+  .moeda { transform-box: fill-box; transform-origin: center; }
+  @keyframes gira-moeda { 0%, 100% { transform: scaleX(1); } 50% { transform: scaleX(.08); } }
+  .slide.ativo .mostra .moeda { animation: gira-moeda 2.6s ease-in-out infinite; }
+  .dado { transform-box: fill-box; transform-origin: center; }
+  @keyframes balanca { 0%, 100% { transform: rotate(-7deg); } 50% { transform: rotate(7deg); } }
+  .slide.ativo .mostra .dado { animation: balanca 4s ease-in-out infinite; }
+  /* bolas da urna que se mexem de leve */
+  .bola { transform-box: fill-box; transform-origin: center; }
+  @keyframes mexe { 0%, 100% { transform: translate(0, 0); } 33% { transform: translate(2px, -2px); } 66% { transform: translate(-2px, 1px); } }
+  .slide.ativo .bola { animation: mexe 5s ease-in-out infinite; }
+  .bola:nth-child(2n) { animation-delay: -1.7s !important; } .bola:nth-child(3n) { animation-delay: -3.1s !important; }
+  /* dois conjuntos que se aproximam até mostrar a parte comum */
+  .vai-e { transform: translateX(-90px); } .vai-d { transform: translateX(90px); }
+  .slide.ativo .mostra .vai-e, .slide.ativo .mostra .vai-d { animation: junta 2.2s ease-in-out forwards; }
+  @keyframes junta { to { transform: none; } }
+  .comum { opacity: 0; }
+  .slide.ativo .mostra .comum { animation: aparece .8s ease-out 2s forwards; }
+  @keyframes aparece { to { opacity: 1; } }
+  @media (prefers-reduced-motion: reduce) { .vai-e, .vai-d { transform: none; } .comum { opacity: 1; } }
+  /* barra de probabilidade que se enche */
+  .enche { transform-box: fill-box; transform-origin: 0 50%; transform: scaleX(0); }
+  .slide.ativo .mostra .enche { animation: enche 1.6s ease-out forwards; }
+  @keyframes enche { to { transform: scaleX(1); } }
+  @media (prefers-reduced-motion: reduce) { .enche { transform: none; } }
+</style>
+
+
+<!-- 1. Capa -->
+<section class="slide capa" data-nome="Capa">
+  <div class="estrelas"></div>
+  <div class="texto-capa">
+    <span class="selo">Matemática · IF</span>
+    <p class="aula">Contagem e probabilidade · Parte 2 de 2</p>
+    <h1>Probabilidade</h1>
+    <p class="sub">Casos favoráveis sobre casos possíveis</p>
+  </div>
+  <svg class="emblema" viewBox="0 0 640 640" aria-hidden="true">
+    <g class="gira-lento"><ellipse cx="320" cy="320" rx="300" ry="128" fill="none" stroke="#fff" stroke-opacity=".38" stroke-width="2" transform="rotate(-10 320 320)"/></g>
+    <rect x="150" y="200" width="240" height="240" rx="44" fill="#fff" transform="rotate(-12 270 320)"/>
+    <g fill="var(--d)" transform="rotate(-12 270 320)"><circle cx="210" cy="260" r="22"/><circle cx="330" cy="260" r="22"/><circle cx="270" cy="320" r="22"/><circle cx="210" cy="380" r="22"/><circle cx="330" cy="380" r="22"/></g>
+    <circle cx="470" cy="200" r="80" fill="#FFD10C"/><circle cx="470" cy="200" r="58" fill="none" stroke="#E0A800" stroke-width="6"/>
+  </svg>
+  <img class="logo-capa" src="{{LOGO_BRANCO}}" alt="Quarks">
+  <aside class="notas">
+    <p>Hoje: espaço amostral e evento, a probabilidade como razão (em fração, decimal e porcentagem), a chance de não acontecer e a probabilidade da união ("ou"). Fecha o conteúdo de Matemática do IF; depois vem o bloco de questões do capítulo.</p>
+  </aside>
+</section>
+
+<!-- 2. Experimento aleatório -->
+<section class="slide" data-nome="Experimento aleatório">
+  <div class="conteudo">
+    <p class="olho">Acaso</p>
+    <h2 class="titulo">Não sei o resultado, mas sei os possíveis</h2>
+    <svg class="fig" viewBox="0 0 520 420" width="520" height="420" style="left:0;top:160px" aria-hidden="true">
+      <g data-passo="1"><g class="moeda"><circle cx="130" cy="150" r="100" fill="#FFD10C" stroke="#E0A800" stroke-width="8"/><text x="130" y="166" text-anchor="middle" font-size="42" font-weight="800" fill="#8A6A00" font-family="'Bricolage Grotesque',Figtree,sans-serif">cara</text></g></g>
+      <g data-passo="2"><g class="dado"><rect x="300" y="200" width="180" height="180" rx="34" fill="#fff" stroke="var(--d)" stroke-width="6"/>
+        <g fill="var(--d)"><circle cx="345" cy="245" r="15"/><circle cx="435" cy="245" r="15"/><circle cx="390" cy="290" r="15"/><circle cx="345" cy="335" r="15"/><circle cx="435" cy="335" r="15"/></g></g></g>
+    </svg>
+    <div style="position:absolute;left:620px;right:0;top:170px;display:flex;flex-direction:column;gap:22px">
+      <div class="cartao" data-passo="1"><h3>Moeda</h3><p class="conj">{cara, coroa}</p></div>
+      <div class="cartao" data-passo="2"><h3>Dado</h3><p class="conj">{1, 2, 3, 4, 5, 6}</p></div>
+      <div class="caixa caixa-fundamental" data-passo="3">
+        <span class="rotulo">Experimento aleatório</span>
+        <div class="texto" style="font-size:32px">Pode ser repetido, e o resultado <b>depende do acaso</b>.</div>
+      </div>
+    </div>
+  </div>
+  <aside class="notas">
+    <p>A moeda gira e o dado balança: ninguém sabe o que vai sair, mas todo mundo sabe o que <b>pode</b> sair. Clique 3: experimento aleatório.</p>
+  </aside>
+</section>
+
+<!-- 3. Espaço amostral e evento -->
+<section class="slide" data-nome="Espaço amostral e evento">
+  <div class="conteudo">
+    <p class="olho">Definição</p>
+    <h2 class="titulo">Espaço amostral e evento</h2>
+    <div style="position:absolute;left:0;right:0;top:160px;display:grid;grid-template-columns:1fr 1fr;gap:30px">
+      <div class="caixa caixa-fundamental" data-passo="1"><span class="rotulo">Espaço amostral</span><div class="texto" style="font-size:32px">Todos os resultados <b>possíveis</b>.</div><div class="conj" style="margin-top:8px">{1, 2, 3, 4, 5, 6}</div></div>
+      <div class="caixa caixa-fundamental" data-passo="2"><span class="rotulo">Evento</span><div class="texto" style="font-size:32px">Os resultados que <b>interessam</b>.</div><div class="conj" style="margin-top:8px">“par”: {2, 4, 6}</div></div>
+    </div>
+    <div style="position:absolute;left:600px;right:0;top:480px;display:grid;grid-template-columns:1fr 1fr;gap:26px">
+      <div class="cartao" data-passo="3"><h3>Evento certo</h3><p>“sair de 1 a 6”: o próprio espaço amostral</p></div>
+      <div class="cartao" data-passo="4"><h3>Evento impossível</h3><p>“sair 7”: o vazio, { }</p></div>
+    </div>
+  </div>
+  <aside class="notas">
+    <p>Um evento é um subconjunto do espaço amostral (eles viram conjuntos no capítulo 1). Cliques 3 e 4: os dois eventos com nome especial.</p>
+  </aside>
+</section>
+
+<!-- 4. Moeda e dado -->
+<section class="slide" data-nome="Moeda e dado: 12 resultados">
+  <div class="conteudo">
+    <p class="olho">Duas etapas</p>
+    <h2 class="titulo">Moeda e dado juntos</h2>
+    <div class="grade" style="position:absolute;left:600px;right:0;top:170px">
+      <div class="cab"></div><div class="cab">1</div><div class="cab">2</div><div class="cab">3</div><div class="cab">4</div><div class="cab">5</div><div class="cab">6</div>
+      <div class="cab" data-passo="1">cara</div><div data-passo="1">C1</div><div data-passo="1">C2</div><div data-passo="1">C3</div><div data-passo="1">C4</div><div data-passo="1" data-em="4:luz">C5</div><div data-passo="1" data-em="4:luz">C6</div>
+      <div class="cab" data-passo="1">coroa</div><div data-passo="1">K1</div><div data-passo="1">K2</div><div data-passo="1">K3</div><div data-passo="1">K4</div><div data-passo="1">K5</div><div data-passo="1">K6</div>
+    </div>
+    <div class="contas" style="position:absolute;left:640px;top:440px;font-size:48px">
+      <div class="eq" data-passo="2"><span>\(n\)</span><span>\(=\)</span><span>\(2 \cdot 6\)</span></div>
+      <div class="eq final" data-passo="2"><span>\(n\)</span><span>\(=\)</span><span>\(12\)</span></div>
+    </div>
+    <div class="caixa" data-passo="3" style="position:absolute;left:1180px;right:0;top:440px;padding:18px 26px">
+      <span class="rotulo">Evento</span>
+      <div class="texto" style="font-size:30px">“cara e número maior que 4”</div>
+      <div class="texto" data-passo="4" style="font-size:30px;margin-top:6px">{(cara; 5), (cara; 6)}: <b>2</b></div>
+    </div>
+    <div class="caixa caixa-fundamental" style="position:absolute;left:0;width:520px;top:170px">
+      <div class="texto" style="font-size:32px">Contar o espaço amostral: <b>princípio multiplicativo</b>.</div>
+    </div>
+  </div>
+  <aside class="notas">
+    <p>Clique 1: os 12 resultados (C = cara, K = coroa). Clique 2: 2 resultados da moeda vezes 6 do dado.</p>
+    <p>Cliques 3 e 4: o exemplo "Listar o evento" da apostila: a moeda dá cara e o dado dá 5 ou 6.</p>
+  </aside>
+</section>
+
+<!-- 5. Probabilidade -->
+<section class="slide" data-nome="Probabilidade">
+  <div class="conteudo">
+    <p class="olho">Fórmula</p>
+    <h2 class="titulo">Probabilidade</h2>
+    <div class="caixa caixa-fundamental" style="position:absolute;left:0;right:0;top:150px;text-align:center;padding:22px">
+      <div class="texto">Com resultados <b>equiprováveis</b> (mesma chance):</div>
+      <div style="font-size:70px;margin-top:8px">\(P(A) = \dfrac{\text{casos favoráveis}}{\text{casos possíveis}}\)</div>
+    </div>
+    <svg class="fig" viewBox="0 0 1100 200" width="1100" height="200" style="left:640px;top:560px" aria-hidden="true">
+      <line x1="40" y1="80" x2="1060" y2="80" stroke="#C9C0F0" stroke-width="10" stroke-linecap="round"/>
+      <g data-passo="1"><circle cx="40" cy="80" r="18" fill="#C2384F"/><text x="40" y="40" text-anchor="middle" class="rot-forte">0</text><text x="40" y="140" text-anchor="middle" class="rot">impossível</text></g>
+      <g data-passo="1"><circle cx="1060" cy="80" r="18" fill="var(--certo)"/><text x="1060" y="40" text-anchor="middle" class="rot-forte">1</text><text x="1060" y="140" text-anchor="middle" class="rot">certo</text></g>
+      <g data-passo="2"><circle cx="550" cy="80" r="18" fill="var(--d)"/><text x="550" y="40" text-anchor="middle" class="rot-forte">1/2 = 0,5 = 50%</text></g>
+    </svg>
+    <p class="texto" data-passo="2" style="position:absolute;left:0;width:520px;top:480px;margin:0">Fração, decimal ou porcentagem.</p>
+  </div>
+  <aside class="notas">
+    <p>Equiprováveis: cada resultado tem a mesma chance (dado comum, moeda honesta, bolas iguais na urna). Clique 1: a probabilidade vai de 0 (impossível) a 1 (certo).</p>
+    <p>Clique 2: o mesmo número pode vir em três formas; "chance de 3 em 6" é 1/2, 0,5 ou 50%.</p>
+  </aside>
+</section>
+
+<!-- 6. Exemplo: dado e urna -->
+<section class="slide" data-nome="Exemplo: dado e urna">
+  <div class="conteudo">
+    <p class="olho">Exemplo</p>
+    <h2 class="titulo">Dado par; bola azul</h2>
+    <svg class="fig" viewBox="0 0 280 270" width="280" height="270" style="left:1420px;top:150px" aria-hidden="true">
+      <path d="M20 40 Q20 0 60 0 H220 Q260 0 260 40 V220 Q260 260 220 260 H60 Q20 260 20 220 Z" fill="#fff" stroke="#9C93C4" stroke-width="5"/>
+      <g>
+        <circle class="bola" cx="70" cy="200" r="24" fill="#2F6BFF"/><circle class="bola" cx="120" cy="210" r="24" fill="#2F6BFF"/><circle class="bola" cx="95" cy="160" r="24" fill="#2F6BFF"/>
+        <circle class="bola" cx="170" cy="205" r="24" fill="#C2384F"/><circle class="bola" cx="220" cy="200" r="24" fill="#C2384F"/><circle class="bola" cx="145" cy="160" r="24" fill="#C2384F"/><circle class="bola" cx="195" cy="155" r="24" fill="#C2384F"/><circle class="bola" cx="120" cy="112" r="24" fill="#C2384F"/>
+        <circle class="bola" cx="170" cy="110" r="24" fill="#fff" stroke="#9C93C4" stroke-width="3"/><circle class="bola" cx="220" cy="110" r="24" fill="#fff" stroke="#9C93C4" stroke-width="3"/>
+      </g>
+    </svg>
+    <p class="texto" style="position:absolute;left:0;top:160px;margin:0;width:520px">a) Sair <b>par</b> num dado.</p>
+    <p class="texto" style="position:absolute;left:640px;top:160px;margin:0;width:760px">b) Urna: <b>3 azuis</b>, 5 vermelhas e 2 brancas. Sair <b>azul</b>.</p>
+    <div class="contas" style="position:absolute;left:0;top:250px;font-size:48px;row-gap:16px">
+      <div class="eq" data-passo="1"><span>\(P(\text{par})\)</span><span>\(=\)</span><span>\(\dfrac{3}{6}\)</span></div>
+      <div class="eq" data-passo="2"><span>\(P(\text{par})\)</span><span>\(=\)</span><span>\(\dfrac{1}{2}\)</span></div>
+      <div class="eq final" data-passo="3"><span>\(P(\text{par})\)</span><span>\(=\)</span><span>\(50\%\)</span></div>
+    </div>
+    <div class="contas" style="position:absolute;left:660px;top:440px;font-size:48px;row-gap:16px">
+      <div class="eq" data-passo="4"><span>\(P(\text{azul})\)</span><span>\(=\)</span><span>\(\dfrac{3}{3 + 5 + 2}\)</span></div>
+      <div class="eq" data-passo="5"><span>\(P(\text{azul})\)</span><span>\(=\)</span><span>\(\dfrac{3}{10}\)</span></div>
+      <div class="eq final" data-passo="6"><span>\(P(\text{azul})\)</span><span>\(=\)</span><span>\(30\%\)</span></div>
+    </div>
+  </div>
+  <aside class="notas">
+    <p>Apostila, exemplo "Dado e urna". a) 3 faces pares em 6. b) 3 bolas azuis em 10 bolas no total.</p>
+  </aside>
+</section>
+
+<!-- 7. Moeda e dado: probabilidade -->
+<section class="slide" data-nome="Exemplo: moeda e dado">
+  <div class="conteudo">
+    <p class="olho">Exemplo</p>
+    <h2 class="titulo">Cara e número maior que 4</h2>
+    <div class="grade" style="position:absolute;left:0;width:820px;top:170px;font-size:26px">
+      <div class="cab"></div><div class="cab">1</div><div class="cab">2</div><div class="cab">3</div><div class="cab">4</div><div class="cab">5</div><div class="cab">6</div>
+      <div class="cab">cara</div><div>C1</div><div>C2</div><div>C3</div><div>C4</div><div class="luz">C5</div><div class="luz">C6</div>
+      <div class="cab">coroa</div><div>K1</div><div>K2</div><div>K3</div><div>K4</div><div>K5</div><div>K6</div>
+    </div>
+    <div class="contas" style="position:absolute;left:1000px;top:180px;font-size:54px;row-gap:20px">
+      <div class="eq" data-passo="1"><span>\(P\)</span><span>\(=\)</span><span>\(\dfrac{2}{12}\)</span></div>
+      <div class="eq final" data-passo="2"><span>\(P\)</span><span>\(=\)</span><span>\(\dfrac{1}{6}\)</span></div>
+    </div>
+    <div class="caixa" style="position:absolute;left:0;width:540px;top:420px;padding:18px 28px">
+      <div class="texto" style="font-size:32px"><b>12</b> possíveis · <b>2</b> favoráveis</div>
+    </div>
+  </div>
+  <aside class="notas">
+    <p>Apostila, exemplo "Moeda e dado". Os 12 resultados do slide anterior; 2 deles servem.</p>
+  </aside>
+</section>
+
+<!-- 8. Não acontecer -->
+<section class="slide" data-nome="Não acontecer">
+  <div class="conteudo">
+    <p class="olho">O que falta para 1</p>
+    <h2 class="titulo">A chance de não acontecer</h2>
+    <svg class="fig" viewBox="0 0 1100 160" width="1100" height="160" style="left:640px;top:160px" aria-hidden="true">
+      <text x="0" y="36" class="rot-forte">Chuva</text>
+      <rect x="0" y="60" width="1000" height="70" rx="35" fill="#fff" stroke="#E4DEFB" stroke-width="2"/>
+      <g data-passo="1"><rect class="enche" x="0" y="60" width="300" height="70" rx="35" fill="#2F6BFF"/><text x="150" y="106" text-anchor="middle" font-size="32" font-weight="800" fill="#fff">30% chove</text></g>
+      <g data-passo="2"><text x="650" y="106" text-anchor="middle" class="rot-forte">70% não chove</text></g>
+    </svg>
+    <div class="contas" style="position:absolute;left:660px;top:400px;font-size:50px;row-gap:18px">
+      <div class="eq" data-passo="3"><span>\(P(\text{não azul})\)</span><span>\(=\)</span><span>\(1 - \dfrac{3}{10}\)</span></div>
+      <div class="eq final" data-passo="4"><span>\(P(\text{não azul})\)</span><span>\(=\)</span><span>\(\dfrac{7}{10}\)</span></div>
+    </div>
+    <div class="caixa caixa-fundamental" style="position:absolute;left:0;width:520px;top:170px">
+      <div class="texto" style="font-size:34px">\(P(\text{não}) = 1 - P\)</div>
+    </div>
+  </div>
+  <aside class="notas">
+    <p>Cliques 1 e 2: se a chance de chover é 30%, a de não chover é 70% (juntas fazem 100%). Cliques 3 e 4: na urna, não sair azul é 1 − 3/10 = 7/10 (as 5 vermelhas e as 2 brancas).</p>
+  </aside>
+</section>
+
+<!-- 9. Atenção: total certo -->
+<section class="slide" data-nome="Atenção: conte o total certo">
+  <div class="conteudo">
+    <p class="olho">Atenção</p>
+    <h2 class="titulo">Conte o total certo</h2>
+    <svg class="fig" viewBox="0 0 280 270" width="280" height="270" style="left:120px;top:180px" aria-hidden="true">
+      <path d="M20 40 Q20 0 60 0 H220 Q260 0 260 40 V220 Q260 260 220 260 H60 Q20 260 20 220 Z" fill="#fff" stroke="#9C93C4" stroke-width="5"/>
+      <g>
+        <circle class="bola" cx="70" cy="200" r="24" fill="#2F6BFF"/><circle class="bola" cx="120" cy="210" r="24" fill="#2F6BFF"/><circle class="bola" cx="95" cy="160" r="24" fill="#2F6BFF"/>
+        <circle class="bola" cx="170" cy="205" r="24" fill="#C2384F"/><circle class="bola" cx="220" cy="200" r="24" fill="#C2384F"/><circle class="bola" cx="145" cy="160" r="24" fill="#C2384F"/><circle class="bola" cx="195" cy="155" r="24" fill="#C2384F"/><circle class="bola" cx="120" cy="112" r="24" fill="#C2384F"/>
+        <circle class="bola" cx="170" cy="110" r="24" fill="#fff" stroke="#9C93C4" stroke-width="3"/><circle class="bola" cx="220" cy="110" r="24" fill="#fff" stroke="#9C93C4" stroke-width="3"/>
+      </g>
+    </svg>
+    <div style="position:absolute;left:640px;right:0;top:170px;display:flex;flex-direction:column;gap:22px">
+      <div class="linha-tag cartao" data-passo="1" style="display:flex;justify-content:space-between;align-items:center"><span style="font-size:34px">3 cores → \(P(\text{azul}) = \dfrac{1}{3}\)</span><span class="riscado" style="font-size:30px;font-weight:800">errado</span></div>
+      <div class="linha-tag cartao" data-passo="2" style="display:flex;justify-content:space-between;align-items:center"><span style="font-size:34px">10 bolas → \(P(\text{azul}) = \dfrac{3}{10}\)</span><span style="font-size:30px;font-weight:800;color:var(--certo)">certo</span></div>
+      <div class="caixa caixa-atencao" data-passo="3"><div class="texto">O denominador é o número de <b>todos os resultados</b>, e não de cores ou tipos.</div></div>
+    </div>
+  </div>
+  <aside class="notas">
+    <p>O erro mais comum: dividir pelo número de cores. As cores não têm a mesma chance; as bolas, sim.</p>
+  </aside>
+</section>
+
+<!-- 10. União -->
+<section class="slide" data-nome="Probabilidade da união">
+  <div class="conteudo">
+    <p class="olho">“Ou”</p>
+    <h2 class="titulo">Futebol ou vôlei?</h2>
+    <p class="texto" style="position:absolute;left:0;top:150px;margin:0">Turma de 40: <b>18</b> jogam futebol, <b>12</b> vôlei e <b>5</b> os dois.</p>
+    <svg class="fig" viewBox="0 0 560 360" width="560" height="360" style="left:0;top:240px" aria-hidden="true">
+      <rect x="0" y="0" width="560" height="360" rx="30" fill="#fff" stroke="#E4DEFB" stroke-width="2"/>
+      <text x="540" y="345" text-anchor="end" class="rot">turma: 40</text>
+      <g data-passo="1">
+        <g class="vai-e"><circle cx="210" cy="190" r="130" fill="#2F6BFF" fill-opacity=".22" stroke="#2F6BFF" stroke-width="5"/><text x="130" y="44" text-anchor="middle" class="rot-forte" style="fill:#1E4FD8">futebol</text></g>
+        <g class="vai-d"><circle cx="350" cy="190" r="130" fill="#E0A800" fill-opacity=".22" stroke="#E0A800" stroke-width="5"/><text x="430" y="44" text-anchor="middle" class="rot-forte" style="fill:#8A6A00">vôlei</text></g>
+        <g class="comum"><text x="145" y="204" text-anchor="middle" class="rot-forte" style="font-size:44px">13</text><text x="280" y="204" text-anchor="middle" class="rot-forte" style="font-size:44px;fill:#C2384F">5</text><text x="415" y="204" text-anchor="middle" class="rot-forte" style="font-size:44px">7</text></g>
+      </g>
+    </svg>
+    <div class="caixa caixa-atencao" data-passo="2" style="position:absolute;left:640px;right:0;top:240px;padding:18px 28px">
+      <div class="texto" style="font-size:32px">\(18 + 12 = 30\)? Os <b>5</b> foram contados <b>duas vezes</b>.</div>
+    </div>
+    <div class="contas" style="position:absolute;left:680px;top:400px;font-size:46px;row-gap:14px">
+      <div class="eq" data-passo="3"><span>\(\text{favoráveis}\)</span><span>\(=\)</span><span>\(18 + 12 - 5 = 25\)</span></div>
+      <div class="eq" data-passo="4"><span>\(P\)</span><span>\(=\)</span><span>\(\dfrac{25}{40}\)</span></div>
+      <div class="eq final" data-passo="5"><span>\(P\)</span><span>\(=\)</span><span>\(0{,}625 = 62{,}5\%\)</span></div>
+    </div>
+  </div>
+  <aside class="notas">
+    <p>A situação da apostila. Clique 1: os dois grupos se aproximam e aparece a parte comum: 5 jogam os dois; só futebol 18 − 5 = 13; só vôlei 12 − 5 = 7.</p>
+    <p>Clique 2: somar 18 + 12 conta os 5 duas vezes. Cliques 3 a 5: 25 jogam pelo menos um; 25/40 = 62,5%. É a mesma ideia de n(A ∪ B) de Conjuntos.</p>
+  </aside>
+</section>
+
+<!-- 11. Fórmula da união -->
+<section class="slide" data-nome="Fórmula da união">
+  <div class="conteudo">
+    <p class="olho">Fórmula</p>
+    <h2 class="titulo">Probabilidade da união</h2>
+    <div class="caixa caixa-fundamental" style="position:absolute;left:0;right:0;top:150px;text-align:center;padding:20px">
+      <div style="font-size:60px">\(P(A \text{ ou } B) = P(A) + P(B) - P(A \text{ e } B)\)</div>
+    </div>
+    <p class="texto" style="position:absolute;left:0;top:330px;margin:0;width:540px">Dado: <b>par</b> ou <b>maior que 3</b>?</p>
+    <div style="position:absolute;left:0;width:540px;top:410px;display:flex;flex-direction:column;gap:10px;font-size:32px">
+      <div data-passo="1">par: {2, 4, 6}</div>
+      <div data-passo="1">maior que 3: {4, 5, 6}</div>
+      <div data-passo="1"><b>os dois: {4, 6}</b></div>
+    </div>
+    <div class="contas" style="position:absolute;left:660px;top:330px;font-size:46px;row-gap:14px">
+      <div class="eq" data-passo="2"><span>\(P\)</span><span>\(=\)</span><span>\(\dfrac{3}{6} + \dfrac{3}{6} - \dfrac{2}{6}\)</span></div>
+      <div class="eq" data-passo="3"><span>\(P\)</span><span>\(=\)</span><span>\(\dfrac{4}{6}\)</span></div>
+      <div class="eq final" data-passo="4"><span>\(P\)</span><span>\(=\)</span><span>\(\dfrac{2}{3}\)</span></div>
+    </div>
+    <div class="caixa" data-passo="5" style="position:absolute;left:1240px;right:0;top:360px;padding:18px 26px">
+      <span class="rotulo">Conferindo</span>
+      <div class="texto" style="font-size:30px">{2, 4, 5, 6}: 4 de 6 ✓</div>
+    </div>
+  </div>
+  <aside class="notas">
+    <p>O "ou" inclui os casos em que os dois acontecem; por isso a parte comum é subtraída uma vez. Apostila, exemplo "Par ou maior que 3".</p>
+  </aside>
+</section>
+
+<!-- 12. Sem parte comum -->
+<section class="slide" data-nome="Sem parte comum">
+  <div class="conteudo">
+    <p class="olho">Quando não acontecem juntos</p>
+    <h2 class="titulo">Azul ou branca: só some</h2>
+    <svg class="fig" viewBox="0 0 280 270" width="280" height="270" style="left:120px;top:180px" aria-hidden="true">
+      <path d="M20 40 Q20 0 60 0 H220 Q260 0 260 40 V220 Q260 260 220 260 H60 Q20 260 20 220 Z" fill="#fff" stroke="#9C93C4" stroke-width="5"/>
+      <g>
+        <circle class="bola" cx="70" cy="200" r="24" fill="#2F6BFF"/><circle class="bola" cx="120" cy="210" r="24" fill="#2F6BFF"/><circle class="bola" cx="95" cy="160" r="24" fill="#2F6BFF"/>
+        <circle class="bola" cx="170" cy="205" r="24" fill="#C2384F"/><circle class="bola" cx="220" cy="200" r="24" fill="#C2384F"/><circle class="bola" cx="145" cy="160" r="24" fill="#C2384F"/><circle class="bola" cx="195" cy="155" r="24" fill="#C2384F"/><circle class="bola" cx="120" cy="112" r="24" fill="#C2384F"/>
+        <circle class="bola" cx="170" cy="110" r="24" fill="#fff" stroke="#9C93C4" stroke-width="3"/><circle class="bola" cx="220" cy="110" r="24" fill="#fff" stroke="#9C93C4" stroke-width="3"/>
+      </g>
+    </svg>
+    <div class="contas" style="position:absolute;left:660px;top:170px;font-size:50px;row-gap:16px">
+      <div class="eq" data-passo="1"><span>\(P\)</span><span>\(=\)</span><span>\(\dfrac{3}{10} + \dfrac{2}{10}\)</span></div>
+      <div class="eq" data-passo="2"><span>\(P\)</span><span>\(=\)</span><span>\(\dfrac{5}{10}\)</span></div>
+      <div class="eq final" data-passo="3"><span>\(P\)</span><span>\(=\)</span><span>\(50\%\)</span></div>
+    </div>
+    <div class="caixa caixa-atencao" data-passo="4" style="position:absolute;left:640px;right:0;top:560px">
+      <span class="rotulo">Procure a parte comum</span>
+      <div class="texto" style="font-size:32px">Algum resultado está nos dois eventos? Se estiver, <b>subtraia</b>. Se não, <b>só some</b>.</div>
+    </div>
+  </div>
+  <aside class="notas">
+    <p>Na urna, nenhuma bola é azul e branca ao mesmo tempo: a parte comum é vazia.</p>
+    <p>Clique 4: exemplo da apostila: se os defeituosos são todos azuis, nenhum defeituoso é preto, e "defeituoso ou preto" é soma simples. É a questão 4 daqui a pouco.</p>
+  </aside>
+</section>
+
+<!-- 13. Questão 1 -->
+<section class="slide questao" data-nome="Questão 1">
+  <div class="conteudo">
+    <div class="area-resolucao"></div>
+    <span class="pilula pilula-pausa" data-em="1:some">Pause o vídeo e tente</span>
+    <div class="painel-questao">
+      <p class="olho">Questão 1 · Modelo IF</p>
+      <p class="enunciado">Num jogo de tabuleiro, cada jogador lança, ao mesmo tempo, uma moeda e um dado comum de seis faces. Quantos resultados possíveis formam o evento “sair coroa na moeda e número par no dado”?</p>
+      <ol class="alternativas curtas">
+        <li data-em="2:certo"><b>A</b><span>3</span></li>
+        <li data-em="2:apaga"><b>B</b><span>4</span></li>
+        <li data-em="2:apaga"><b>C</b><span>6</span></li>
+        <li data-em="2:apaga"><b>D</b><span>8</span></li>
+        <li data-em="2:apaga"><b>E</b><span>12</span></li>
+      </ol>
+      <p class="fonte">Modelo IF · MAT-0657</p>
+    </div>
+  </div>
+  <aside class="resolucao">
+    <p class="dados"><b>Dados:</b> moeda: coroa (1 jeito); dado: par (2, 4 ou 6).</p>
+    <ol class="passos">
+      <li>\(E = \{(\text{coroa}; 2), (\text{coroa}; 4), (\text{coroa}; 6)\}\)</li>
+      <li><b>Conta:</b> \(1 \cdot 3 = 3\)</li>
+    </ol>
+    <p class="resposta"><b>Resposta:</b> 3 resultados. <b>Gabarito A.</b></p>
+    <p class="atencao"><b>Destaque no quadro:</b> Evento ≠ espaço amostral: só os resultados que interessam.</p>
+    <ul class="erros">
+      <li><b>B</b> Soma 1 + 3.</li>
+      <li><b>C</b> 2 · 3: conta também os de cara.</li>
+      <li><b>D</b> Soma 2 + 6.</li>
+      <li><b>E</b> É o espaço amostral inteiro (2 · 6).</li>
+    </ul>
+  </aside>
+  <aside class="notas">
+    <p>Clique 1 tira o aviso de pausa: resolva na área (D liga a caneta; E esconde o enunciado). Clique 2: gabarito A.</p>
+    <p>Modelo IF, lote if-matematica-probabilidade, m002, MAT-0657.</p>
+  </aside>
+</section>
+
+<!-- 14. Questão 2 -->
+<section class="slide questao" data-nome="Questão 2">
+  <div class="conteudo">
+    <div class="area-resolucao"></div>
+    <span class="pilula pilula-pausa" data-em="1:some">Pause o vídeo e tente</span>
+    <div class="painel-questao">
+      <p class="olho">Questão 2 · IF Sudeste MG 2017</p>
+      <p class="enunciado">Em uma urna, temos 5 bolas brancas, 10 bolas pretas e 15 bolas verdes. Retirando-se ao acaso uma bola, qual a probabilidade de se tirar uma bola verde?</p>
+      <ol class="alternativas curtas">
+        <li data-em="2:certo"><b>A</b><span>\(\dfrac{1}{2}\)</span></li>
+        <li data-em="2:apaga"><b>B</b><span>\(\dfrac{1}{3}\)</span></li>
+        <li data-em="2:apaga"><b>C</b><span>\(\dfrac{1}{4}\)</span></li>
+        <li data-em="2:apaga"><b>D</b><span>\(\dfrac{1}{5}\)</span></li>
+        <li data-em="2:apaga"><b>E</b><span>\(\dfrac{1}{6}\)</span></li>
+      </ol>
+      <p class="fonte">IF Sudeste MG 2017 · questão 17 · MAT-0335</p>
+    </div>
+  </div>
+  <aside class="resolucao">
+    <p class="dados"><b>Dados:</b> 5 brancas, 10 pretas, 15 verdes.</p>
+    <ol class="passos">
+      <li><b>Possíveis:</b> \(5 + 10 + 15 = 30\)</li>
+      <li><b>Favoráveis:</b> 15 verdes</li>
+      <li>\(P = \dfrac{15}{30} = \dfrac{1}{2}\)</li>
+    </ol>
+    <p class="resposta"><b>Resposta:</b> \(\dfrac{1}{2}\). <b>Gabarito A.</b></p>
+    <p class="atencao"><b>Destaque no quadro:</b> Divida pelo total de bolas, não pelo número de cores.</p>
+    <ul class="erros">
+      <li><b>B</b> É a chance da preta (10/30), ou "3 cores".</li>
+      <li><b>C</b> Não é a chance de cor nenhuma.</li>
+      <li><b>D</b> Compara brancas com não brancas (5/25).</li>
+      <li><b>E</b> É a chance da branca (5/30).</li>
+    </ul>
+  </aside>
+  <aside class="notas">
+    <p>Clique 1 tira o aviso de pausa. Clique 2: gabarito A.</p>
+    <p>Questão oficial do IF Sudeste MG 2017-1, q17, MAT-0335.</p>
+  </aside>
+</section>
+
+<!-- 15. Questão 3 -->
+<section class="slide questao" data-nome="Questão 3">
+  <div class="conteudo">
+    <div class="area-resolucao"></div>
+    <span class="pilula pilula-pausa" data-em="1:some">Pause o vídeo e tente</span>
+    <div class="painel-questao">
+      <p class="olho">Questão 3 · IF Sudeste MG 2018</p>
+      <p class="enunciado">Ao lançar uma moeda 3 vezes e observar a face voltada para cima, qual a probabilidade de sair exatamente 2 caras?</p>
+      <ol class="alternativas curtas">
+        <li data-em="2:apaga"><b>A</b><span>\(\dfrac{1}{8}\)</span></li>
+        <li data-em="2:apaga"><b>B</b><span>\(\dfrac{1}{3}\)</span></li>
+        <li data-em="2:certo"><b>C</b><span>\(\dfrac{3}{8}\)</span></li>
+        <li data-em="2:apaga"><b>D</b><span>\(\dfrac{1}{2}\)</span></li>
+        <li data-em="2:apaga"><b>E</b><span>\(\dfrac{2}{3}\)</span></li>
+      </ol>
+      <p class="fonte">IF Sudeste MG 2018 · questão 15 · MAT-0356</p>
+    </div>
+  </div>
+  <aside class="resolucao">
+    <p class="dados"><b>Dados:</b> 3 lançamentos; C = cara, K = coroa.</p>
+    <ol class="passos">
+      <li><b>Possíveis:</b> \(2 \cdot 2 \cdot 2 = 8\)</li>
+      <li><b>Exatamente 2 caras:</b> CCK, CKC, KCC</li>
+      <li>\(P = \dfrac{3}{8}\)</li>
+    </ol>
+    <p class="resposta"><b>Resposta:</b> \(\dfrac{3}{8}\). <b>Gabarito C.</b></p>
+    <p class="atencao"><b>Destaque no quadro:</b> As duas caras podem sair em posições diferentes: liste todas.</p>
+    <ul class="erros">
+      <li><b>A</b> Conta só uma ordem (CCK).</li>
+      <li><b>B</b> Usa 3 como total de casos.</li>
+      <li><b>D</b> É "pelo menos 2 caras" (4/8), com CCC.</li>
+      <li><b>E</b> "2 em 3" não é probabilidade.</li>
+    </ul>
+  </aside>
+  <aside class="notas">
+    <p>Clique 1 tira o aviso de pausa. Clique 2: gabarito C.</p>
+    <p>Questão oficial do IF Sudeste MG 2018-1, q15, MAT-0356. Se quiser, desenhe a árvore das 8 sequências no quadro.</p>
+  </aside>
+</section>
+
+<!-- 16. Questão 4 -->
+<section class="slide questao" data-nome="Questão 4">
+  <div class="conteudo">
+    <div class="area-resolucao"></div>
+    <span class="pilula pilula-pausa" data-em="1:some">Pause o vídeo e tente</span>
+    <div class="painel-questao">
+      <p class="olho">Questão 4 · IF Sudeste MG 2015</p>
+      <p class="enunciado">Uma caixa contém 40 canetas azuis e 60 canetas pretas. A metade das canetas azuis está com defeito. Ao ser escolhida uma dessas canetas ao acaso, qual é a probabilidade de estar com defeito ou ser preta?</p>
+      <ol class="alternativas curtas">
+        <li data-em="2:apaga"><b>A</b><span>70%</span></li>
+        <li data-em="2:apaga"><b>B</b><span>75%</span></li>
+        <li data-em="2:certo"><b>C</b><span>80%</span></li>
+        <li data-em="2:apaga"><b>D</b><span>85%</span></li>
+        <li data-em="2:apaga"><b>E</b><span>90%</span></li>
+      </ol>
+      <p class="fonte">IF Sudeste MG 2015 · questão 17 · MAT-0290</p>
+    </div>
+  </div>
+  <aside class="resolucao">
+    <p class="dados"><b>Dados:</b> 40 azuis e 60 pretas (100 canetas); defeito: metade das azuis.</p>
+    <ol class="passos">
+      <li><b>Com defeito:</b> \(40 \div 2 = 20\) (todas azuis)</li>
+      <li><b>Parte comum</b> (defeito e preta): nenhuma</li>
+      <li><b>Favoráveis:</b> \(20 + 60 = 80\)</li>
+      <li>\(P = \dfrac{80}{100} = 80\%\)</li>
+    </ol>
+    <p class="resposta"><b>Resposta:</b> 80%. <b>Gabarito C.</b></p>
+    <p class="atencao"><b>Destaque no quadro:</b> Antes de somar, procure a parte comum.</p>
+    <ul class="erros">
+      <li><b>A</b> Conta 10 com defeito: 10 + 60.</li>
+      <li><b>B</b> Precisaria de 15 com defeito.</li>
+      <li><b>D</b> Precisaria de 25 com defeito.</li>
+      <li><b>E</b> Precisaria de 30 com defeito, ou conta canetas duas vezes.</li>
+    </ul>
+  </aside>
+  <aside class="notas">
+    <p>Clique 1 tira o aviso de pausa. Clique 2: gabarito C.</p>
+    <p>Questão oficial do IF Sudeste MG 2015-1, q17, MAT-0290. Na prova está "A metade das canetas azuis estão com defeito"; aqui a concordância ficou "está". É o caso citado na apostila: os defeituosos são todos azuis, então "defeito ou preta" é soma simples.</p>
+  </aside>
+</section>
+
+<!-- 17. Resumo -->
+<section class="slide" data-nome="Resumo">
+  <div class="conteudo">
+    <p class="olho">Resumo</p>
+    <h2 class="titulo">O essencial</h2>
+    <div class="resumo" style="position:absolute;left:0;right:0;top:150px">
+      <div><b>Espaço amostral:</b> todos os resultados possíveis. <b>Evento:</b> os que interessam.</div>
+      <div>Duas etapas? Conte o espaço amostral pelo <b>princípio multiplicativo</b>.</div>
+      <div>\(P = \dfrac{\text{favoráveis}}{\text{possíveis}}\), de 0 a 1 (0% a 100%).</div>
+      <div><b>Não acontecer:</b> \(1 - P\). Divida pelo <b>total de resultados</b>.</div>
+      <div>\(P(A \text{ ou } B) = P(A) + P(B) - P(A \text{ e } B)\)</div>
+      <div>Sem parte comum: <b>só some</b>.</div>
+    </div>
+  </div>
+  <aside class="notas">
+    <p>Peça um print desta tela.</p>
+  </aside>
+</section>
+
+<!-- 18. A seguir -->
+<section class="slide capa" data-nome="A seguir">
+  <div class="estrelas"></div>
+  <div class="texto-capa" style="top:150px">
+    <span class="selo">Matemática · IF</span>
+    <p class="aula">A seguir · Estatística e probabilidade</p>
+    <h1 style="font-size:104px">Questões do IF Sudeste</h1>
+    <p class="sub">Provas oficiais, uma por tela</p>
+  </div>
+  <svg class="emblema" viewBox="0 0 640 640" aria-hidden="true">
+    <rect x="150" y="110" width="340" height="430" rx="34" fill="#fff" fill-opacity=".12" stroke="#fff" stroke-opacity=".6" stroke-width="4"/>
+    <g fill="#fff" fill-opacity=".7"><rect x="200" y="170" width="240" height="18" rx="9"/><rect x="200" y="210" width="200" height="18" rx="9"/><rect x="200" y="250" width="220" height="18" rx="9"/></g>
+    <g fill="none" stroke="#fff" stroke-opacity=".75" stroke-width="4"><circle cx="216" cy="330" r="16"/><circle cx="216" cy="390" r="16"/><circle cx="216" cy="450" r="16"/></g>
+    <circle cx="216" cy="390" r="16" fill="#FFD10C"/>
+    <g fill="#fff" fill-opacity=".55"><rect x="250" y="321" width="150" height="16" rx="8"/><rect x="250" y="381" width="170" height="16" rx="8"/><rect x="250" y="441" width="130" height="16" rx="8"/></g>
+    <circle cx="470" cy="130" r="54" fill="#FFD10C"/>
+    <path d="M446 132 L464 150 L496 112" fill="none" stroke="#292B2C" stroke-width="10" stroke-linecap="round" stroke-linejoin="round"/>
+  </svg>
+  <img class="logo-capa" src="{{LOGO_BRANCO}}" alt="Quarks">
+  <aside class="notas"><p>Fim de Contagem e probabilidade. A seguir, o bloco "Questões do IF Sudeste" de Estatística e probabilidade, o último da Matemática do IF.</p></aside>
+</section>

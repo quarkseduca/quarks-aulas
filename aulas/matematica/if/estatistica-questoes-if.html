@@ -1,0 +1,245 @@
+<!--aula
+{"disciplina": "matematica", "curso": "IF", "assunto": "Estatística e probabilidade", "parte": "Questões do IF Sudeste", "titulo": "Questões do IF Sudeste"}
+-->
+<!-- Fonte: bloco "Questões do IF Sudeste" de Estatística e probabilidade em planejamento/questoes-if.md e no campo "questoes" do cronograma:
+     IF Sudeste MG 2026-1 q17 (MAT-0549), 2026-1 q23 (MAT-0555), 2025-1 q21 (MAT-0542) e 2023-1 q20 (MAT-0452). Nenhuma delas aparece
+     nas partes do capítulo (as partes usaram MAT-1102, MAT-1098, MAT-1103, MAT-0522, MAT-0503, MAT-1109, MAT-0501, MAT-0489, MAT-3386,
+     MAT-3385, MAT-0657, MAT-0335, MAT-0356 e MAT-0290). Este bloco encerra a Matemática do IF. -->
+<style>
+  .painel-questao .fig-q { width: 500px; display: block; margin: 0 auto; overflow: visible; }
+  .painel-questao .alternativas.miudas li { font-size: 19px; padding: 3px 12px; line-height: 1.22; }
+  .painel-questao .alternativas.miudas { gap: 6px; }
+  .tab-jogos { border-collapse: separate; border-spacing: 0; font-size: 20px; background: var(--branco); border: 2px solid var(--lilas-2); border-radius: 14px; overflow: hidden; font-variant-numeric: tabular-nums; }
+  .tab-jogos th, .tab-jogos td { padding: 6px 7px; text-align: center; border-left: 1px solid var(--lilas); }
+  .tab-jogos th { background: var(--d-clara); color: var(--d-forte); font-weight: 800; }
+  .tab-jogos tr + tr td, .tab-jogos tr + tr th { border-top: 2px solid var(--lilas); }
+</style>
+
+<!-- Capa -->
+<section class="slide capa" data-nome="Capa">
+  <div class="estrelas"></div>
+  <div class="texto-capa" style="top:150px">
+    <span class="selo">Matemática · IF</span>
+    <p class="aula">Estatística e probabilidade</p>
+    <h1 style="font-size:104px">Questões do IF Sudeste</h1>
+    <p class="sub">Provas oficiais, uma por tela</p>
+  </div>
+  <svg class="emblema" viewBox="0 0 640 640" aria-hidden="true">
+    <rect x="150" y="110" width="340" height="430" rx="34" fill="#fff" fill-opacity=".12" stroke="#fff" stroke-opacity=".6" stroke-width="4"/>
+    <g fill="#fff" fill-opacity=".7"><rect x="200" y="170" width="240" height="18" rx="9"/><rect x="200" y="210" width="200" height="18" rx="9"/></g>
+    <line x1="200" y1="470" x2="440" y2="470" stroke="#fff" stroke-opacity=".8" stroke-width="4"/>
+    <rect x="215" y="380" width="40" height="90" rx="6" fill="#fff" fill-opacity=".7"/><rect x="275" y="330" width="40" height="140" rx="6" fill="#FFD10C"/><rect x="335" y="400" width="40" height="70" rx="6" fill="#fff" fill-opacity=".7"/><rect x="395" y="300" width="40" height="170" rx="6" fill="#fff" fill-opacity=".7"/>
+    <circle cx="470" cy="130" r="54" fill="#FFD10C"/>
+    <path d="M446 132 L464 150 L496 112" fill="none" stroke="#292B2C" stroke-width="10" stroke-linecap="round" stroke-linejoin="round"/>
+  </svg>
+  <img class="logo-capa" src="{{LOGO_BRANCO}}" alt="Quarks">
+  <aside class="notas"><p>Fechamento de Estatística e probabilidade e de toda a Matemática do IF: quatro questões que caíram no IF Sudeste MG, duas de Estatística (gráfico e média) e duas de Contagem e probabilidade. Em cada uma, pause, tente e depois confira a resolução.</p></aside>
+</section>
+
+<!-- IF 2026 · quem mora sozinho -->
+<section class="slide questao" data-nome="IF 2026 · quem mora sozinho">
+  <div class="conteudo">
+    <div class="area-resolucao"></div>
+    <span class="pilula pilula-pausa" data-em="1:some">Pause o vídeo e tente</span>
+    <div class="painel-questao">
+      <p class="olho">IF Sudeste MG 2026 · Questão 17</p>
+      <p class="enunciado" style="font-size:22px">Observe o gráfico abaixo que exibe o percentual de brasileiros que moram sozinhos, de acordo com a idade e gênero.</p>
+      <svg class="fig-q" viewBox="0 0 500 315" style="height:250px" aria-hidden="true">
+        <text x="0" y="18" font-family="Figtree,'Segoe UI',sans-serif" font-size="19" font-weight="800" fill="#292B2C">Percentual que mora sozinho no Brasil</text>
+        <text x="0" y="38" font-family="Figtree,'Segoe UI',sans-serif" font-size="14" font-weight="600" fill="#5E5A70">Em 2024, por idade e gênero</text>
+        <line x1="40" y1="268.0" x2="480" y2="268.0" stroke="#5E5A70" stroke-width="2"/>
+        <line x1="40" y1="234.7" x2="480" y2="234.7" stroke="#DCD6F3" stroke-width="1"/>
+        <line x1="40" y1="201.3" x2="480" y2="201.3" stroke="#DCD6F3" stroke-width="2"/>
+        <line x1="40" y1="168.0" x2="480" y2="168.0" stroke="#DCD6F3" stroke-width="1"/>
+        <line x1="40" y1="134.7" x2="480" y2="134.7" stroke="#DCD6F3" stroke-width="2"/>
+        <line x1="40" y1="101.3" x2="480" y2="101.3" stroke="#DCD6F3" stroke-width="1"/>
+        <line x1="40" y1="68.0" x2="480" y2="68.0" stroke="#DCD6F3" stroke-width="2"/>
+        <g font-family="Figtree,'Segoe UI',sans-serif" font-size="14" font-weight="700" fill="#5E5A70"><text x="40" y="63.0">30% com esta idade e gênero</text><text x="40" y="129.7">20%</text><text x="40" y="196.3">10%</text><text x="40" y="263.0">0%</text></g>
+        <line x1="40" y1="222.7" x2="480" y2="222.7" stroke="#292B2C" stroke-width="1.5" stroke-dasharray="4 4"/><text x="478" y="217.7" text-anchor="end" font-family="Figtree,'Segoe UI',sans-serif" font-size="14" font-weight="700" fill="#292B2C">Média nacional 6,8%</text>
+        <path d="M40.0 268.0 C47.7 268.0 74.7 268.3 86.3 268.0 C97.9 267.7 101.8 271.0 109.5 266.0 C117.2 261.0 126.5 245.4 132.6 238.0 C138.8 230.6 141.9 226.3 146.5 221.3 C151.2 216.3 155.0 211.1 160.4 208.0 C165.8 204.9 172.0 203.7 178.9 202.7 C185.9 201.7 194.4 202.2 202.1 202.0 C209.8 201.8 217.5 201.9 225.3 201.3 C233.0 200.8 240.7 199.8 248.4 198.7 C256.1 197.6 263.9 196.8 271.6 194.7 C279.3 192.6 287.0 188.8 294.7 186.0 C302.5 183.2 311.7 179.9 317.9 178.0 C324.1 176.1 327.9 175.7 331.8 174.7 C335.6 173.7 335.6 173.3 341.1 172.0 C346.5 170.7 356.5 168.8 364.2 166.7 C371.9 164.6 379.6 161.3 387.4 159.3 C395.1 157.3 402.8 154.9 410.5 154.7 C418.2 154.4 426.0 155.8 433.7 158.0 C441.4 160.2 453.0 166.3 456.8 168.0" fill="none" stroke="#E8762B" stroke-width="3.5"/>
+        <path d="M40.0 268.0 C47.7 268.0 74.7 268.2 86.3 268.0 C97.9 267.8 101.8 267.8 109.5 266.7 C117.2 265.6 126.5 264.4 132.6 261.3 C138.8 258.2 141.9 251.3 146.5 248.0 C151.2 244.7 155.0 242.3 160.4 241.3 C165.8 240.3 172.0 241.2 178.9 242.0 C185.9 242.8 194.4 245.0 202.1 246.0 C209.8 247.0 217.5 248.3 225.3 248.0 C233.0 247.7 240.7 247.3 248.4 244.0 C256.1 240.7 263.9 234.6 271.6 228.0 C279.3 221.4 287.0 212.0 294.7 204.7 C302.5 197.3 311.7 189.0 317.9 184.0 C324.1 179.0 327.9 177.9 331.8 174.7 C335.6 171.4 335.6 170.8 341.1 164.7 C346.5 158.6 356.5 148.0 364.2 138.0 C371.9 128.0 379.6 113.0 387.4 104.7 C395.1 96.3 404.4 91.1 410.5 88.0 C416.7 84.9 420.6 85.6 424.4 86.0 C428.3 86.4 428.3 86.4 433.7 90.7 C439.1 94.9 453.0 107.9 456.8 111.3" fill="none" stroke="#7B2FBF" stroke-width="3.5"/>
+        <g font-family="Figtree,'Segoe UI',sans-serif" font-size="15" font-weight="700"><text x="299.4" y="74.7" fill="#7B2FBF">Tendência feminina</text><text x="364.2" y="198.0" fill="#E8762B">Tendência masculina</text></g>
+        <g font-family="Figtree,'Segoe UI',sans-serif" font-size="15" font-weight="800" fill="#292B2C" text-anchor="middle"><text x="40.0" y="290">0</text><text x="86.3" y="290">10</text><text x="132.6" y="290">20</text><text x="178.9" y="290">30</text><text x="225.3" y="290">40</text><text x="271.6" y="290">50</text><text x="317.9" y="290">60</text><text x="364.2" y="290">70</text><text x="410.5" y="290">80</text><text x="456.8" y="290">90</text></g>
+        <text x="456.8" y="308" text-anchor="middle" font-family="Figtree,'Segoe UI',sans-serif" font-size="14" font-weight="800" fill="#292B2C">ANOS</text>
+      </svg>
+      <p class="enunciado" style="font-size:22px">Com base no gráfico, pode-se afirmar que:</p>
+      <ol class="alternativas miudas">
+        <li data-em="2:apaga"><b>A</b><span>aos 20 anos, há mais mulheres morando sozinhas do que homens.</span></li>
+        <li data-em="2:apaga"><b>B</b><span>há um crescimento no número de mulheres morando sozinhas entre 30 e 40 anos.</span></li>
+        <li data-em="2:certo"><b>C</b><span>na faixa etária dos 30 aos 40 anos, praticamente não há alteração no número de homens morando sozinhos.</span></li>
+        <li data-em="2:apaga"><b>D</b><span>o número de mulheres morando sozinhas supera o de homens a partir da faixa dos 50 anos.</span></li>
+        <li data-em="2:apaga"><b>E</b><span>na faixa dos 80 anos, a diferença entre mulheres e homens morando sozinhos é maior que 20%.</span></li>
+      </ol>
+      <p class="fonte" style="font-size:15px">IF Sudeste MG 2026 · questão 17 · MAT-0549 · gráfico: Pnad 2024 (IBGE), Nexo Jornal, redesenhado</p>
+    </div>
+  </div>
+  <aside class="resolucao">
+    <p class="dados"><b>Dados:</b> laranja: homens; roxo: mulheres; eixo: % de cada idade.</p>
+    <ol class="passos">
+      <li><b>20 anos:</b> homens ≈ 5%, mulheres ≈ 1% → A falsa</li>
+      <li><b>30 a 40 (mulheres):</b> desce de ≈ 4% para ≈ 3% → B falsa</li>
+      <li><b>30 a 40 (homens):</b> quase reta em ≈ 10% → C certa</li>
+      <li><b>50 anos:</b> mulheres ≈ 6% &lt; homens ≈ 11% → D falsa</li>
+      <li><b>80 anos:</b> 27% − 17% ≈ 10 pontos → E falsa</li>
+    </ol>
+    <p class="resposta"><b>Resposta:</b> entre 30 e 40 anos, a curva dos homens fica quase na horizontal. <b>Gabarito C.</b></p>
+    <p class="atencao"><b>Destaque no quadro:</b> Curva na horizontal = quase não muda; as curvas só se cruzam perto dos 63 anos.</p>
+    <ul class="erros">
+      <li><b>A</b> Aos 20, a curva masculina está acima.</li>
+      <li><b>B</b> A curva feminina desce entre 30 e 40.</li>
+      <li><b>D</b> Aos 50, as mulheres ainda estão abaixo.</li>
+      <li><b>E</b> A diferença é de cerca de 10 pontos.</li>
+    </ul>
+  </aside>
+  <aside class="notas">
+    <p>Clique 1 tira o aviso de pausa: resolva na área (D liga a caneta; E esconde o enunciado). Clique 2: gabarito C.</p>
+    <p>Questão oficial do IF Sudeste MG 2026-1, q17, MAT-0549. O gráfico da prova (do Nexo Jornal) foi redesenhado em SVG com as curvas aproximadas pelos valores da resolução do banco (as bolinhas dos dados ficaram de fora). Para leitura fina, confira com o PDF da prova. As alternativas D e E foram levemente encurtadas, sem mudar o sentido ("o número de homens morando sozinhos" → "o de homens"; "na faixa etária dos 80 anos" → "na faixa dos 80 anos").</p>
+  </aside>
+</section>
+
+<!-- IF 2026 · pontos no vôlei -->
+<section class="slide questao" data-nome="IF 2026 · pontos no vôlei">
+  <div class="conteudo">
+    <div class="area-resolucao"></div>
+    <span class="pilula pilula-pausa" data-em="1:some">Pause o vídeo e tente</span>
+    <div class="painel-questao">
+      <p class="olho">IF Sudeste MG 2026 · Questão 23</p>
+      <p class="enunciado">A tabela abaixo representa a pontuação de um jogador de vôlei nos onze primeiros jogos de seu time em uma competição.</p>
+      <table class="tab-jogos">
+        <tr><th>Jogo</th><td>1</td><td>2</td><td>3</td><td>4</td><td>5</td><td>6</td><td>7</td><td>8</td><td>9</td><td>10</td><td>11</td></tr>
+        <tr><th>Pontos</th><td>4</td><td>13</td><td>6</td><td>4</td><td>10</td><td>12</td><td>6</td><td>10</td><td>15</td><td>13</td><td>6</td></tr>
+      </table>
+      <p class="enunciado">A média aritmética dos pontos do jogador nos onze jogos é:</p>
+      <ol class="alternativas curtas">
+        <li data-em="2:apaga"><b>A</b><span>5</span></li>
+        <li data-em="2:apaga"><b>B</b><span>6</span></li>
+        <li data-em="2:apaga"><b>C</b><span>8</span></li>
+        <li data-em="2:certo"><b>D</b><span>9</span></li>
+        <li data-em="2:apaga"><b>E</b><span>10</span></li>
+      </ol>
+      <p class="fonte">IF Sudeste MG 2026 · questão 23 · MAT-0555</p>
+    </div>
+  </div>
+  <aside class="resolucao">
+    <p class="dados"><b>Dados:</b> 11 jogos; pontos 4, 13, 6, 4, 10, 12, 6, 10, 15, 13, 6.</p>
+    <ol class="passos">
+      <li><b>Agrupe:</b> \(4 + 4 = 8\); \(6 + 6 + 6 = 18\); \(10 + 10 = 20\)</li>
+      <li><b>O resto:</b> \(13 + 13 + 12 + 15 = 53\)</li>
+      <li><b>Soma:</b> \(8 + 18 + 20 + 53 = 99\)</li>
+      <li>\(\bar{x} = \dfrac{99}{11} = 9\)</li>
+    </ol>
+    <p class="resposta"><b>Resposta:</b> 9 pontos por jogo. <b>Gabarito D.</b></p>
+    <p class="atencao"><b>Destaque no quadro:</b> Pediu a média: as outras medidas viram alternativas erradas.</p>
+    <ul class="erros">
+      <li><b>A</b> Não é medida nenhuma dos dados.</li>
+      <li><b>B</b> 6 é a moda (aparece 3 vezes).</li>
+      <li><b>C</b> Erro na soma ou na divisão.</li>
+      <li><b>E</b> 10 é a mediana (6º valor em ordem).</li>
+    </ul>
+  </aside>
+  <aside class="notas">
+    <p>Clique 1 tira o aviso de pausa. Clique 2: gabarito D.</p>
+    <p>Questão oficial do IF Sudeste MG 2026-1, q23, MAT-0555 (no banco ela fica em Porcentagem e juros simples > Média aritmética; o plano a pôs neste bloco). Ótima para retomar a dica "Como cai no IF": em ordem, 4, 4, 6, 6, 6, 10, 10, 12, 13, 13, 15; moda 6, mediana 10, média 9.</p>
+  </aside>
+</section>
+
+<!-- IF 2025 · cartas UNO -->
+<section class="slide questao" data-nome="IF 2025 · cartas UNO">
+  <div class="conteudo">
+    <div class="area-resolucao"></div>
+    <span class="pilula pilula-pausa" data-em="1:some">Pause o vídeo e tente</span>
+    <div class="painel-questao">
+      <p class="olho">IF Sudeste MG 2025 · Questão 21</p>
+      <p class="enunciado" style="font-size:24px">Um jogo de cartas UNO possui ao todo 108 cartas nas cores verde, amarelo, vermelho e azul. Para cada cor, existem as cartas de 0 a 9 e ainda as que possuem ações especiais: “pular”, “comprar 2” e “inverter”. Todas essas cartas são duplicadas, com exceção do 0. Além das cartas citadas, o jogo ainda possui 4 cartas “coringa que mudam de cor” e 4 cartas “coringa comprar 4”. Escolhendo uma carta ao acaso, qual a probabilidade de ser retirada uma carta com o número 8 nas cores verde ou amarelo?</p>
+      <ol class="alternativas curtas">
+        <li data-em="2:certo"><b>A</b><span>\(\dfrac{1}{27}\)</span></li>
+        <li data-em="2:apaga"><b>B</b><span>\(\dfrac{1}{25}\)</span></li>
+        <li data-em="2:apaga"><b>C</b><span>\(\dfrac{2}{27}\)</span></li>
+        <li data-em="2:apaga"><b>D</b><span>\(\dfrac{19}{108}\)</span></li>
+        <li data-em="2:apaga"><b>E</b><span>\(\dfrac{19}{54}\)</span></li>
+      </ol>
+      <p class="fonte">IF Sudeste MG 2025 · questão 21 · MAT-0542</p>
+    </div>
+  </div>
+  <aside class="resolucao">
+    <p class="dados"><b>Dados:</b> 108 cartas; de 1 a 9 duplicadas em cada cor.</p>
+    <ol class="passos">
+      <li><b>Favoráveis:</b> 2 cartas "8 verde" e 2 "8 amarelo" → 4</li>
+      <li><b>Possíveis:</b> 108 (coringas também podem sair)</li>
+      <li>\(P = \dfrac{4}{108} = \dfrac{1}{27}\)</li>
+      <li><b>Confira o total:</b> \(4 \cdot (1 + 18 + 6) + 8 = 108\)</li>
+    </ol>
+    <p class="resposta"><b>Resposta:</b> \(\dfrac{1}{27}\). <b>Gabarito A.</b></p>
+    <p class="atencao"><b>Destaque no quadro:</b> "Duplicadas": cada 8 aparece duas vezes em cada cor.</p>
+    <ul class="erros">
+      <li><b>B</b> Usa 100 cartas: esquece os 8 coringas.</li>
+      <li><b>C</b> 8/108: conta os 8 das quatro cores.</li>
+      <li><b>D</b> Conta as 19 numeradas de uma cor.</li>
+      <li><b>E</b> Conta todas as numeradas verdes e amarelas.</li>
+    </ul>
+  </aside>
+  <aside class="notas">
+    <p>Clique 1 tira o aviso de pausa. Clique 2: gabarito A.</p>
+    <p>Questão oficial do IF Sudeste MG 2025-1, q21, MAT-0542. Por cor: um 0, dois de cada número de 1 a 9 (18) e dois de cada ação especial (6): 25 cartas; 4 cores dão 100, com os 8 coringas, 108. Os dois eventos (8 verde, 8 amarelo) não têm parte comum: só some.</p>
+  </aside>
+</section>
+
+<!-- IF 2023 · camisas e saias -->
+<section class="slide questao" data-nome="IF 2023 · camisas e saias">
+  <div class="conteudo">
+    <div class="area-resolucao"></div>
+    <span class="pilula pilula-pausa" data-em="1:some">Pause o vídeo e tente</span>
+    <div class="painel-questao">
+      <p class="olho">IF Sudeste MG 2023 · Questão 20</p>
+      <p class="enunciado">Angelina gosta muito da Patrulha Canina e tem 5 camisas com estampas desse desenho. Ela também ama usar saias e possui 7, das quais 4 são lisas (de uma única cor). Para combinar com uma camisa estampada, a mãe da menina sugere usar saias lisas. Dessa forma, de quantas maneiras Angelina pode combinar uma camisa da Patrulha Canina com uma saia lisa?</p>
+      <ol class="alternativas curtas">
+        <li data-em="2:apaga"><b>A</b><span>35</span></li>
+        <li data-em="2:apaga"><b>B</b><span>28</span></li>
+        <li data-em="2:certo"><b>C</b><span>20</span></li>
+        <li data-em="2:apaga"><b>D</b><span>15</span></li>
+        <li data-em="2:apaga"><b>E</b><span>5</span></li>
+      </ol>
+      <p class="fonte">IF Sudeste MG 2023 · questão 20 · MAT-0452</p>
+    </div>
+  </div>
+  <aside class="resolucao">
+    <p class="dados"><b>Dados:</b> 5 camisas estampadas; 4 saias lisas (de 7 saias).</p>
+    <ol class="passos">
+      <li><b>Camisa e saia:</b> duas etapas → multiplique</li>
+      <li><b>Só as lisas:</b> 4 opções de saia</li>
+      <li>\(5 \cdot 4 = 20\)</li>
+    </ol>
+    <p class="resposta"><b>Resposta:</b> 20 maneiras. <b>Gabarito C.</b></p>
+    <p class="atencao"><b>Destaque no quadro:</b> Leia a restrição: das 7 saias, só 4 valem.</p>
+    <ul class="erros">
+      <li><b>A</b> Usa as 7 saias.</li>
+      <li><b>B</b> 7 · 4: mistura o total de saias com as lisas.</li>
+      <li><b>D</b> Usa as 3 saias que não são lisas.</li>
+      <li><b>E</b> Conta só as camisas.</li>
+    </ul>
+  </aside>
+  <aside class="notas">
+    <p>Clique 1 tira o aviso de pausa. Clique 2: gabarito C.</p>
+    <p>Questão oficial do IF Sudeste MG 2023-1, q20, MAT-0452.</p>
+  </aside>
+</section>
+
+<!-- Fim -->
+<section class="slide capa" data-nome="Fim">
+  <div class="estrelas"></div>
+  <div class="texto-capa" style="top:150px">
+    <span class="selo">Matemática · IF</span>
+    <p class="aula">Fim da Matemática do IF</p>
+    <h1 style="font-size:104px">Todo o edital, do começo ao fim</h1>
+    <p class="sub">Agora é revisar e treinar com as provas</p>
+  </div>
+  <svg class="emblema" viewBox="0 0 640 640" aria-hidden="true">
+    <g class="gira-lento"><ellipse cx="320" cy="320" rx="300" ry="128" fill="none" stroke="#fff" stroke-opacity=".38" stroke-width="2" transform="rotate(-10 320 320)"/></g>
+    <g class="gira"><ellipse cx="320" cy="320" rx="236" ry="196" fill="none" stroke="#FFD10C" stroke-opacity=".75" stroke-width="2.5" stroke-dasharray="3 14" stroke-linecap="round" transform="rotate(-8 320 320)"/>
+      <circle cx="84" cy="300" r="13" fill="#FFD10C" stroke="#fff" stroke-width="3"/></g>
+    <circle cx="320" cy="320" r="132" fill="#FFD10C"/>
+    <image href="{{SYM_ROXO}}" x="238" y="238" width="164" height="164"/>
+  </svg>
+  <img class="logo-capa" src="{{LOGO_BRANCO}}" alt="Quarks">
+  <aside class="notas"><p>Este bloco encerra a Matemática do IF: os 7 capítulos do edital (Números e operações, Matemática comercial, Álgebra, Funções, Geometria plana, Trigonometria, e Estatística e probabilidade). Sugira refazer as questões dos blocos "Questões do IF Sudeste" de cada capítulo como revisão.</p></aside>
+</section>

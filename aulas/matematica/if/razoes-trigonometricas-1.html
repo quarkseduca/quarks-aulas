@@ -1,0 +1,582 @@
+<!--aula
+{"disciplina": "matematica", "curso": "IF", "assunto": "Razões trigonométricas", "parte": "Parte 1 de 2", "titulo": "Seno, cosseno e tangente", "scripts": ["animacoes-trigonometria.js"]}
+-->
+<!-- Fonte: apostila IF, Matemática, cap. 6 (6.1 Razões trigonométricas: blocos "Seno, cosseno e tangente" e "Ângulos notáveis").
+     Questões (todas da apostila, nenhuma reservada para o bloco do fim do capítulo): Modelo IF if-matematica-triangulo-retangulo m001 (MAT-0646);
+     IF Sudeste MG 2017-1-extra q22 (MAT-0386), 2017-1 q15 (MAT-0333) e 2013-1-extra q24 (MAT-0466). -->
+<style>
+  .caixa, .cartao { box-sizing: border-box; }
+  .fig { position: absolute; overflow: visible; font-family: Figtree, 'Segoe UI', sans-serif; }
+  .rot { font-family: Figtree, 'Segoe UI', sans-serif; font-weight: 700; font-size: 30px; fill: #5E5A70; }
+  .rot-forte { font-family: Figtree, 'Segoe UI', sans-serif; font-weight: 800; font-size: 34px; fill: #3F2FA0; }
+  .rot-op { font-family: Figtree, 'Segoe UI', sans-serif; font-weight: 800; font-size: 32px; fill: #8A6A00; }
+  .rot-adj { font-family: Figtree, 'Segoe UI', sans-serif; font-weight: 800; font-size: 32px; fill: #0F8B8D; }
+  .rot-hip { font-family: Figtree, 'Segoe UI', sans-serif; font-weight: 800; font-size: 32px; fill: var(--d-forte); }
+  .cartao { background: var(--branco); border: 2px solid var(--lilas-2); border-radius: 28px; padding: 20px 26px; }
+  .cartao h3 { margin: 0 0 6px; font: 800 36px var(--fonte-titulo); letter-spacing: -.02em; color: var(--roxo-titulo); }
+  .cartao p { margin: 0; font-size: 28px; line-height: 1.3; }
+  .linha-nome { display: grid; grid-template-columns: 26px 1fr; gap: 18px; align-items: center; font-size: 34px; line-height: 1.25; }
+  .linha-nome i { width: 26px; height: 26px; border-radius: 50%; display: block; }
+  .tres { display: grid; grid-template-columns: repeat(3, 1fr); gap: 26px; }
+  .tres .cartao { text-align: center; }
+  .tres .formula { font-size: 44px; margin: 6px 0 4px; }
+  .tres svg { width: 300px; height: 150px; display: block; margin: 0 auto; }
+  .contas.cinco { grid-template-columns: auto auto auto auto auto; }
+  .contas.cinco .final > span:nth-child(5) { justify-self: start; background: var(--d-clara); border: 2px solid color-mix(in srgb, var(--d) 40%, transparent); border-radius: 18px; padding: 2px 18px; margin-left: -6px; }
+  .contas.cinco .final > span:nth-child(3) { background: none; border: 0; padding: 0; margin: 0; }
+  .tab-notaveis { font-size: 44px; }
+  .tab-notaveis th, .tab-notaveis td { padding: 14px 44px; }
+  .tab-notaveis td:first-child { font-weight: 800; color: var(--roxo-titulo); }
+  .painel-questao .fig-q { width: 500px; height: 250px; display: block; margin: 0 auto; overflow: visible; }
+  /* traço que se desenha quando aparece (uma vez) */
+  .desenha { stroke-dasharray: var(--L, 1200); stroke-dashoffset: var(--L, 1200); }
+  .slide.ativo .mostra .desenha, .slide.ativo .desenha.mostra, .slide.ativo .desenha.ja { animation: traca 1.8s ease-in-out forwards; }
+  @keyframes traca { to { stroke-dashoffset: 0; } }
+  @media (prefers-reduced-motion: reduce) { .desenha { stroke-dashoffset: 0; } }
+  /* o ângulo marcado pulsa de leve: "é em relação a ele que os lados ganham nome" */
+  @keyframes pulsa-arco { 0%, 100% { stroke-width: 5; } 50% { stroke-width: 9; } }
+  .slide.ativo .arco-vivo { animation: pulsa-arco 4s ease-in-out infinite; }
+  .slide.ativo .mostra .arco-vivo, .slide.ativo .arco-vivo.mostra { animation: pulsa-arco 4s ease-in-out infinite; }
+</style>
+
+<!-- 1. Capa -->
+<section class="slide capa" data-nome="Capa">
+  <div class="estrelas"></div>
+  <div class="texto-capa" style="top:150px">
+    <span class="selo">Matemática · IF</span>
+    <p class="aula">Razões trigonométricas · Parte 1 de 2</p>
+    <h1 style="font-size:104px">Seno, cosseno e tangente</h1>
+    <p class="sub">Razões que dependem só do ângulo</p>
+  </div>
+  <svg class="emblema" viewBox="0 0 640 640" aria-hidden="true">
+    <g class="gira-lento"><ellipse cx="320" cy="320" rx="300" ry="128" fill="none" stroke="#fff" stroke-opacity=".38" stroke-width="2" transform="rotate(-10 320 320)"/></g>
+    <g class="gira"><ellipse cx="320" cy="320" rx="236" ry="196" fill="none" stroke="#FFD10C" stroke-opacity=".75" stroke-width="2.5" stroke-dasharray="3 14" stroke-linecap="round" transform="rotate(-8 320 320)"/>
+      <circle cx="84" cy="300" r="13" fill="var(--d)" stroke="#fff" stroke-width="3"/></g>
+    <path d="M150 470 L490 470 L490 215 Z" fill="#fff" fill-opacity=".14" stroke="#fff" stroke-width="7" stroke-linejoin="round"/>
+    <path d="M462 470 V442 H490" fill="none" stroke="#fff" stroke-width="5"/>
+    <path d="M490 470 L490 215" stroke="#FFD10C" stroke-width="11" stroke-linecap="round"/>
+    <path d="M240 470 A90 90 0 0 0 222 416" fill="none" stroke="#FFD10C" stroke-width="7" stroke-linecap="round"/>
+    <text x="252" y="452" fill="#FFD10C" font-size="46" font-weight="800" font-style="italic" font-family="Figtree,'Segoe UI',sans-serif">α</text>
+  </svg>
+  <img class="logo-capa" src="{{LOGO_BRANCO}}" alt="Quarks">
+  <aside class="notas">
+    <p>Hoje: os nomes dos lados do triângulo retângulo, as três razões (seno, cosseno e tangente) e a tabela dos ângulos de 30°, 45° e 60°. Na parte 2, os problemas de altura e distância.</p>
+  </aside>
+</section>
+
+<!-- 2. Gancho: duas rampas -->
+<section class="slide" data-nome="Duas rampas">
+  <div class="conteudo">
+    <p class="olho">Para começar</p>
+    <h2 class="titulo">Qual rampa é mais inclinada?</h2>
+    <svg class="fig" viewBox="0 0 900 420" width="900" height="420" style="left:0;top:170px" aria-hidden="true">
+      <!-- rampa longa: 5 m de comprimento, sobe 3 m -->
+      <path d="M40 380 L360 380 L360 140 Z" fill="var(--d-clara)" stroke="var(--d-forte)" stroke-width="5" stroke-linejoin="round"/>
+      <path d="M336 380 V356 H360" fill="none" stroke="#292B2C" stroke-width="3"/>
+      <text class="rot-hip" x="170" y="238" transform="rotate(-36.87 170 238)">5 m</text>
+      <text class="rot-op" x="376" y="272">3 m</text>
+      <path d="M118 380 A78 78 0 0 0 102 333" fill="none" stroke="#3F2FA0" stroke-width="5"/>
+      <!-- rampa curta: 2,5 m, sobe 1,5 m -->
+      <path d="M540 380 L700 380 L700 260 Z" fill="var(--d-clara)" stroke="var(--d-forte)" stroke-width="5" stroke-linejoin="round"/>
+      <path d="M680 380 V360 H700" fill="none" stroke="#292B2C" stroke-width="3"/>
+      <text class="rot-hip" x="560" y="318" transform="rotate(-36.87 560 318)">2,5 m</text>
+      <text class="rot-op" x="716" y="332">1,5 m</text>
+      <path d="M618 380 A78 78 0 0 0 602 333" fill="none" stroke="#3F2FA0" stroke-width="5"/>
+    </svg>
+    <div style="position:absolute;left:1000px;right:0;top:190px">
+      <div class="contas" style="font-size:50px">
+        <div class="eq" data-passo="1"><span>\(\dfrac{3}{5}\)</span><span>\(=\)</span><span>\(0{,}6\)</span></div>
+        <div class="eq" data-passo="2"><span>\(\dfrac{1{,}5}{2{,}5}\)</span><span>\(=\)</span><span>\(0{,}6\)</span></div>
+      </div>
+      <span class="pilula pilula-resposta" data-passo="3" style="margin-top:40px">Mesma inclinação</span>
+    </div>
+    <div class="caixa caixa-fundamental" data-passo="4" style="position:absolute;left:600px;right:0;top:640px;padding:20px 34px">
+      <div class="texto">Mesmo ângulo, <b>mesma razão</b> entre os lados: os triângulos são semelhantes.</div>
+    </div>
+  </div>
+  <aside class="notas">
+    <p>Pergunte antes de clicar: a rampa grande parece mais inclinada? Cliques 1 e 2: subida dividida pelo comprimento dá 0,6 nas duas.</p>
+    <p>Clique 4: em triângulos retângulos com o mesmo ângulo agudo, as razões entre os lados são sempre as mesmas (semelhança, que eles viram em Geometria plana).</p>
+  </aside>
+</section>
+
+<!-- 3. Animação: mesmo ângulo, mesma razão -->
+<section class="slide" data-nome="Mesmo ângulo, mesma razão">
+  <div class="conteudo">
+    <p class="olho">O que não muda</p>
+    <h2 class="titulo">O triângulo cresce, a razão fica</h2>
+    <div data-anima="trig-semelhantes" data-anima-passo="1" style="position:absolute;left:0;top:130px;width:1080px;height:470px"></div>
+    <div class="caixa caixa-fundamental" data-passo="2" style="position:absolute;left:1140px;right:0;top:200px">
+      <span class="rotulo">Razão trigonométrica</span>
+      <div class="texto" style="font-size:34px">Depende <b>só do ângulo</b>, e não do tamanho do triângulo.</div>
+    </div>
+  </div>
+  <aside class="notas">
+    <p><b>Clique 1:</b> o triângulo muda de tamanho devagar, sempre com o mesmo ângulo α. Ele passa por 1,5 e 2,5 (a rampa curta) e por 3 e 5 (a rampa longa). O quadro mostra os lados mudando e a divisão sempre dando 0,60.</p>
+    <p>Clique 2: por isso dá para dar nome a essa razão: ela é uma característica do ângulo.</p>
+  </aside>
+</section>
+
+<!-- 4. Os nomes dos lados -->
+<section class="slide" data-nome="Os nomes dos lados">
+  <div class="conteudo">
+    <p class="olho">Triângulo retângulo</p>
+    <h2 class="titulo">Os nomes dependem do ângulo</h2>
+    <svg class="fig" viewBox="0 0 640 440" width="640" height="440" style="left:0;top:126px" aria-hidden="true">
+      <path d="M40 400 L600 400 L600 80 Z" fill="var(--d-clara)" stroke="var(--d-forte)" stroke-width="5" stroke-linejoin="round"/>
+      <path d="M572 400 V372 H600" fill="none" stroke="#292B2C" stroke-width="3"/>
+      <g data-passo="1"><line x1="40" y1="400" x2="600" y2="80" stroke="var(--d)" stroke-width="10" stroke-linecap="round"/>
+        <text class="rot-hip" x="250" y="216" transform="rotate(-29.74 250 216)">hipotenusa</text></g>
+      <g data-em="5:some">
+        <path class="arco-vivo" d="M110 400 A70 70 0 0 0 100.8 365.3" fill="none" stroke="#3F2FA0" stroke-width="5"/>
+        <text x="118" y="388" font-size="36" font-weight="800" font-style="italic" fill="#3F2FA0" font-family="Figtree,'Segoe UI',sans-serif">α</text>
+        <g data-passo="2"><line x1="600" y1="400" x2="600" y2="80" stroke="#FFB800" stroke-width="10" stroke-linecap="round"/><text class="rot-op" x="622" y="230">cateto</text><text class="rot-op" x="622" y="268">oposto</text></g>
+        <g data-passo="3"><line x1="40" y1="400" x2="600" y2="400" stroke="#0F8B8D" stroke-width="10" stroke-linecap="round"/><text class="rot-adj" x="320" y="446" text-anchor="middle">cateto adjacente</text></g>
+      </g>
+      <g data-passo="5">
+        <path class="arco-vivo" d="M600 140 A60 60 0 0 1 547.9 109.7" fill="none" stroke="#3F2FA0" stroke-width="5"/>
+        <text x="558" y="160" font-size="36" font-weight="800" font-style="italic" fill="#3F2FA0" font-family="Figtree,'Segoe UI',sans-serif">β</text>
+        <line x1="40" y1="400" x2="600" y2="400" stroke="#FFB800" stroke-width="10" stroke-linecap="round"/><text class="rot-op" x="320" y="446" text-anchor="middle">cateto oposto</text>
+        <line x1="600" y1="400" x2="600" y2="80" stroke="#0F8B8D" stroke-width="10" stroke-linecap="round"/><text class="rot-adj" x="622" y="230">cateto</text><text class="rot-adj" x="622" y="268">adjacente</text>
+      </g>
+    </svg>
+    <div style="position:absolute;left:900px;right:0;top:170px;display:flex;flex-direction:column;gap:26px">
+      <div class="linha-nome" data-passo="1"><i style="background:var(--d)"></i><span><b>Hipotenusa:</b> de frente para o ângulo reto</span></div>
+      <div class="linha-nome" data-passo="2"><i style="background:#FFB800"></i><span><b>Cateto oposto:</b> de frente para α</span></div>
+      <div class="linha-nome" data-passo="3"><i style="background:#0F8B8D"></i><span><b>Cateto adjacente:</b> forma α com a hipotenusa</span></div>
+      <div class="caixa caixa-atencao" data-passo="4" style="padding:20px 30px">
+        <span class="rotulo">Atenção</span>
+        <div class="texto" style="font-size:32px">E se o ângulo for o outro, β?</div>
+      </div>
+      <span class="pilula pilula-resposta" data-passo="5">Trocou o ângulo, trocam os nomes</span>
+    </div>
+  </div>
+  <aside class="notas">
+    <p>Uma etiqueta por clique. A hipotenusa nunca muda de nome: é sempre o lado de frente para o ângulo reto, e o maior lado.</p>
+    <p>Cliques 4 e 5: com o ângulo β, o cateto que era oposto vira adjacente e vice-versa. Regra da apostila: <b>marque o ângulo antes de dar nome aos lados</b>.</p>
+  </aside>
+</section>
+
+<!-- 5. As três razões -->
+<section class="slide" data-nome="Seno, cosseno e tangente">
+  <div class="conteudo">
+    <p class="olho">Fórmula</p>
+    <h2 class="titulo">As três razões</h2>
+    <div class="tres" style="position:absolute;left:0;right:0;top:150px">
+      <div class="cartao" data-passo="1">
+        <h3>Seno</h3>
+        <div class="formula">\(\text{sen}\,\alpha = \dfrac{\text{cateto oposto}}{\text{hipotenusa}}\)</div>
+        <svg viewBox="0 0 300 150" aria-hidden="true"><path d="M30 130 L270 130 L270 20 Z" fill="var(--lilas-fundo)" stroke="#C9C0F0" stroke-width="3"/>
+          <line x1="270" y1="130" x2="270" y2="20" stroke="#FFB800" stroke-width="9" stroke-linecap="round"/><line x1="30" y1="130" x2="270" y2="20" stroke="var(--d)" stroke-width="9" stroke-linecap="round"/>
+          <path d="M80 130 A50 50 0 0 0 75.5 109" fill="none" stroke="#3F2FA0" stroke-width="4"/><text x="88" y="124" font-size="26" font-weight="800" font-style="italic" fill="#3F2FA0">α</text></svg>
+      </div>
+      <div class="cartao" data-passo="2">
+        <h3>Cosseno</h3>
+        <div class="formula">\(\cos\alpha = \dfrac{\text{cateto adjacente}}{\text{hipotenusa}}\)</div>
+        <svg viewBox="0 0 300 150" aria-hidden="true"><path d="M30 130 L270 130 L270 20 Z" fill="var(--lilas-fundo)" stroke="#C9C0F0" stroke-width="3"/>
+          <line x1="30" y1="130" x2="270" y2="130" stroke="#0F8B8D" stroke-width="9" stroke-linecap="round"/><line x1="30" y1="130" x2="270" y2="20" stroke="var(--d)" stroke-width="9" stroke-linecap="round"/>
+          <path d="M80 130 A50 50 0 0 0 75.5 109" fill="none" stroke="#3F2FA0" stroke-width="4"/><text x="88" y="124" font-size="26" font-weight="800" font-style="italic" fill="#3F2FA0">α</text></svg>
+      </div>
+      <div class="cartao" data-passo="3">
+        <h3>Tangente</h3>
+        <div class="formula">\(\text{tg}\,\alpha = \dfrac{\text{cateto oposto}}{\text{cateto adjacente}}\)</div>
+        <svg viewBox="0 0 300 150" aria-hidden="true"><path d="M30 130 L270 130 L270 20 Z" fill="var(--lilas-fundo)" stroke="#C9C0F0" stroke-width="3"/>
+          <line x1="270" y1="130" x2="270" y2="20" stroke="#FFB800" stroke-width="9" stroke-linecap="round"/><line x1="30" y1="130" x2="270" y2="130" stroke="#0F8B8D" stroke-width="9" stroke-linecap="round"/>
+          <path d="M80 130 A50 50 0 0 0 75.5 109" fill="none" stroke="#3F2FA0" stroke-width="4"/><text x="88" y="124" font-size="26" font-weight="800" font-style="italic" fill="#3F2FA0">α</text></svg>
+      </div>
+    </div>
+    <div class="caixa caixa-fundamental" data-passo="4" style="position:absolute;left:600px;right:0;top:600px;padding:20px 34px">
+      <div class="texto" style="font-size:34px">\(\text{sen}\) e \(\cos\) de ângulo agudo: <b>entre 0 e 1</b>, porque a hipotenusa é o maior lado.</div>
+    </div>
+  </div>
+  <aside class="notas">
+    <p>Uma razão por clique. Nos desenhos, os dois lados usados ficam coloridos: amarelo é o oposto, verde é o adjacente, azul é a hipotenusa.</p>
+    <p>Clique 4: se der seno maior que 1, a razão está de cabeça para baixo.</p>
+  </aside>
+</section>
+
+<!-- 6. Exemplo 3, 4, 5 -->
+<section class="slide" data-nome="Exemplo: triângulo 3, 4, 5">
+  <div class="conteudo">
+    <p class="olho">Exemplo</p>
+    <h2 class="titulo">O triângulo 3, 4, 5</h2>
+    <svg class="fig" viewBox="0 0 560 440" width="560" height="440" style="left:0;top:150px" aria-hidden="true">
+      <path d="M40 390 L440 390 L440 90 Z" fill="var(--d-clara)" stroke="var(--d-forte)" stroke-width="5" stroke-linejoin="round"/>
+      <path d="M414 390 V364 H440" fill="none" stroke="#292B2C" stroke-width="3"/>
+      <line x1="440" y1="390" x2="440" y2="90" stroke="#FFB800" stroke-width="9" stroke-linecap="round"/>
+      <line x1="40" y1="390" x2="440" y2="390" stroke="#0F8B8D" stroke-width="9" stroke-linecap="round"/>
+      <text class="rot-op" x="462" y="252" style="font-size:44px">3</text>
+      <text class="rot-adj" x="240" y="438" text-anchor="middle" style="font-size:44px">4</text>
+      <text class="rot-hip" x="212" y="214" style="font-size:44px">5</text>
+      <path d="M115 390 A75 75 0 0 0 100 345" fill="none" stroke="#3F2FA0" stroke-width="5"/>
+      <text x="122" y="376" font-size="36" font-weight="800" font-style="italic" fill="#3F2FA0">α</text>
+      <g data-passo="4"><path d="M440 150 A60 60 0 0 1 392 126" fill="none" stroke="#C2384F" stroke-width="5"/>
+        <text x="398" y="168" font-size="36" font-weight="800" font-style="italic" fill="#C2384F">β</text></g>
+    </svg>
+    <div class="contas cinco" style="position:absolute;left:640px;top:160px;font-size:50px;row-gap:26px">
+      <div class="eq final" data-passo="1"><span>\(\text{sen}\,\alpha\)</span><span>\(=\)</span><span>\(\dfrac{3}{5}\)</span><span>\(=\)</span><span>\(0{,}6\)</span></div>
+      <div class="eq final" data-passo="2"><span>\(\cos\alpha\)</span><span>\(=\)</span><span>\(\dfrac{4}{5}\)</span><span>\(=\)</span><span>\(0{,}8\)</span></div>
+      <div class="eq final" data-passo="3"><span>\(\text{tg}\,\alpha\)</span><span>\(=\)</span><span>\(\dfrac{3}{4}\)</span><span>\(=\)</span><span>\(0{,}75\)</span></div>
+    </div>
+    <div class="caixa caixa-atencao" data-passo="4" style="position:absolute;left:1240px;right:0;top:160px;padding:22px 30px">
+      <span class="rotulo">E o ângulo β?</span>
+      <div class="texto" style="font-size:36px">\(\text{sen}\,\beta = \dfrac{4}{5}\)</div>
+      <div class="texto" style="font-size:30px;margin-top:8px">Para β, o 4 é que é <b>oposto</b>.</div>
+    </div>
+  </div>
+  <aside class="notas">
+    <p>Apostila, exemplo "O triângulo 3, 4, 5". Em relação a α: oposto 3, adjacente 4, hipotenusa 5. Uma razão por clique.</p>
+    <p>Clique 4: para o outro ângulo agudo, β, os catetos trocam de nome. Repare que sen β = 4/5 = cos α. Isso vai ser útil nas questões.</p>
+  </aside>
+</section>
+
+<!-- 7. 45° -->
+<section class="slide" data-nome="Ângulo de 45°">
+  <div class="conteudo">
+    <p class="olho">Ângulos notáveis</p>
+    <h2 class="titulo">45°: a diagonal do quadrado</h2>
+    <svg class="fig" viewBox="0 0 520 450" width="520" height="450" style="left:0;top:150px" aria-hidden="true">
+      <rect x="70" y="40" width="340" height="340" fill="#fff" stroke="#C9C0F0" stroke-width="4" rx="4"/>
+      <g data-passo="1">
+        <path d="M70 380 L410 380 L410 40 Z" fill="var(--d-clara)"/>
+        <line class="desenha" style="--L:490" x1="70" y1="380" x2="410" y2="40" stroke="var(--d)" stroke-width="8" stroke-linecap="round"/>
+        <path d="M384 380 V354 H410" fill="none" stroke="#292B2C" stroke-width="3"/>
+        <path d="M140 380 A70 70 0 0 0 119.5 330.5" fill="none" stroke="#3F2FA0" stroke-width="5"/>
+        <text x="146" y="362" class="rot-forte">45°</text>
+        <text class="rot-hip" x="196" y="196" transform="rotate(-45 196 196)">ℓ√2</text>
+      </g>
+      <text class="rot-adj" x="240" y="424" text-anchor="middle">ℓ</text>
+      <text class="rot-op" x="428" y="222">ℓ</text>
+    </svg>
+    <div class="contas" style="position:absolute;left:640px;top:160px;font-size:46px;row-gap:22px">
+      <div class="eq" data-passo="2"><span>\(\text{sen}\,45°\)</span><span>\(=\)</span><span>\(\dfrac{\ell}{\ell\sqrt{2}}\)</span></div>
+      <div class="eq" data-passo="3"><span></span><span>\(=\)</span><span>\(\dfrac{1}{\sqrt{2}}\)</span></div>
+      <div class="eq final" data-passo="4"><span></span><span>\(=\)</span><span>\(\dfrac{\sqrt{2}}{2}\)</span></div>
+      <div class="eq final" data-passo="5"><span>\(\cos 45°\)</span><span>\(=\)</span><span>\(\dfrac{\sqrt{2}}{2}\)</span></div>
+      <div class="eq final" data-passo="6"><span>\(\text{tg}\,45°\)</span><span>\(=\)</span><span>\(\dfrac{\ell}{\ell} = 1\)</span></div>
+    </div>
+    <div class="caixa" data-passo="5" style="position:absolute;left:1240px;right:0;top:470px;padding:18px 26px">
+      <div class="texto" style="font-size:30px">Os dois catetos medem \(\ell\): oposto e adjacente <b>iguais</b>.</div>
+    </div>
+  </div>
+  <aside class="notas">
+    <p>Clique 1: a diagonal corta o quadrado em dois triângulos retângulos com ângulos de 45°. A diagonal mede ℓ√2 (Teorema de Pitágoras, já visto).</p>
+    <p>Cliques 2 a 4: o ℓ se cancela; 1/√2 racionalizado dá √2/2. Clique 5: o cosseno é igual, porque os catetos são iguais. Clique 6: tangente 1.</p>
+  </aside>
+</section>
+
+<!-- 8. 30° e 60° -->
+<section class="slide" data-nome="Ângulos de 30° e 60°">
+  <div class="conteudo">
+    <p class="olho">Ângulos notáveis</p>
+    <h2 class="titulo">30° e 60°: meio triângulo equilátero</h2>
+    <svg class="fig" viewBox="0 0 520 460" width="520" height="460" style="left:0;top:116px" aria-hidden="true">
+      <path d="M40 420 L480 420 L260 39 Z" fill="#fff" stroke="#C9C0F0" stroke-width="4" stroke-linejoin="round"/>
+      <g data-passo="1">
+        <path d="M40 420 L260 420 L260 39 Z" fill="var(--d-clara)"/>
+        <line class="desenha" style="--L:385" x1="260" y1="39" x2="260" y2="420" stroke="#FFB800" stroke-width="8" stroke-linecap="round"/>
+        <path d="M236 420 V396 H260" fill="none" stroke="#292B2C" stroke-width="3"/>
+        <path d="M95 420 A55 55 0 0 0 67.5 372.4" fill="none" stroke="#3F2FA0" stroke-width="5"/>
+        <text x="96" y="404" class="rot-forte" style="font-size:30px">60°</text>
+        <path d="M260 104 A65 65 0 0 1 227.5 95.3" fill="none" stroke="#C2384F" stroke-width="5"/>
+        <text x="212" y="140" class="rot-forte" style="font-size:30px;fill:#C2384F">30°</text>
+        <text class="rot-op" x="272" y="250" style="font-size:30px">ℓ√3/2</text>
+        <text class="rot-adj" x="150" y="456" text-anchor="middle" style="font-size:30px">ℓ/2</text>
+      </g>
+      <text class="rot-hip" x="112" y="220" style="font-size:32px">ℓ</text>
+      <text class="rot" x="388" y="220">ℓ</text>
+    </svg>
+    <div style="position:absolute;left:600px;top:150px;width:560px">
+      <p class="olho" data-passo="2" style="color:#C2384F">Em relação ao 30°</p>
+      <div class="contas" style="font-size:36px;row-gap:16px">
+        <div class="eq final" data-passo="2"><span>\(\text{sen}\,30°\)</span><span>\(=\)</span><span>\(\dfrac{\ell/2}{\ell} = \dfrac{1}{2}\)</span></div>
+        <div class="eq final" data-passo="3"><span>\(\cos 30°\)</span><span>\(=\)</span><span>\(\dfrac{\ell\sqrt{3}/2}{\ell} = \dfrac{\sqrt{3}}{2}\)</span></div>
+        <div class="eq final" data-passo="4"><span>\(\text{tg}\,30°\)</span><span>\(=\)</span><span>\(\dfrac{1}{\sqrt{3}} = \dfrac{\sqrt{3}}{3}\)</span></div>
+      </div>
+    </div>
+    <div style="position:absolute;left:1200px;top:150px;right:0">
+      <p class="olho" data-passo="5">Em relação ao 60°</p>
+      <div class="contas" style="font-size:36px;row-gap:16px">
+        <div class="eq final" data-passo="5"><span>\(\text{sen}\,60°\)</span><span>\(=\)</span><span>\(\dfrac{\ell\sqrt{3}/2}{\ell} = \dfrac{\sqrt{3}}{2}\)</span></div>
+        <div class="eq final" data-passo="6"><span>\(\cos 60°\)</span><span>\(=\)</span><span>\(\dfrac{\ell/2}{\ell} = \dfrac{1}{2}\)</span></div>
+        <div class="eq final" data-passo="7"><span>\(\text{tg}\,60°\)</span><span>\(=\)</span><span>\(\dfrac{\ell\sqrt{3}/2}{\ell/2} = \sqrt{3}\)</span></div>
+      </div>
+    </div>
+    <div class="caixa caixa-fundamental" data-passo="8" style="position:absolute;left:600px;right:0;top:640px;padding:18px 32px">
+      <div class="texto" style="font-size:32px">O \(\ell\) <b>sempre se cancela</b>: os valores servem para qualquer triângulo com esses ângulos.</div>
+    </div>
+  </div>
+  <aside class="notas">
+    <p>Clique 1: a altura divide o equilátero em dois triângulos retângulos: hipotenusa ℓ, cateto menor ℓ/2 (oposto ao 30°) e cateto maior ℓ√3/2 (a altura, oposta ao 60°).</p>
+    <p>Cliques 2 a 7: uma razão por clique. Na tg 30°: (ℓ/2) ÷ (ℓ√3/2) = 1/√3, e racionalizando, √3/3. Repare que o oposto do 30° é o adjacente do 60°.</p>
+  </aside>
+</section>
+
+<!-- 9. Tabela -->
+<section class="slide" data-nome="Tabela dos ângulos notáveis">
+  <div class="conteudo">
+    <p class="olho">Para guardar</p>
+    <h2 class="titulo">A tabela dos notáveis</h2>
+    <table class="tabela tab-notaveis" style="position:absolute;left:880px;top:150px">
+      <tr><th></th><th>30°</th><th>45°</th><th>60°</th></tr>
+      <tr data-passo="1"><td>sen</td><td>\(\dfrac{1}{2}\)</td><td>\(\dfrac{\sqrt{2}}{2}\)</td><td>\(\dfrac{\sqrt{3}}{2}\)</td></tr>
+      <tr data-passo="2"><td>cos</td><td>\(\dfrac{\sqrt{3}}{2}\)</td><td>\(\dfrac{\sqrt{2}}{2}\)</td><td>\(\dfrac{1}{2}\)</td></tr>
+      <tr data-passo="3"><td>tg</td><td>\(\dfrac{\sqrt{3}}{3}\)</td><td>\(1\)</td><td>\(\sqrt{3}\)</td></tr>
+    </table>
+    <div style="position:absolute;left:0;width:780px;top:160px;display:flex;flex-direction:column;gap:22px">
+      <div class="cartao" data-passo="4"><h3>Seno</h3><p>Numeradores \(1\), \(\sqrt{2}\), \(\sqrt{3}\), todos sobre 2.</p></div>
+      <div class="cartao" data-passo="5"><h3>Cosseno</h3><p>A linha do seno, <b>de trás para a frente</b>.</p></div>
+      <div class="cartao" data-passo="6"><h3>Tangente</h3><p>Seno dividido pelo cosseno.</p></div>
+    </div>
+  </div>
+  <aside class="notas">
+    <p>Cliques 1 a 3: uma linha por vez. Cliques 4 a 6: o truque da apostila para lembrar (dica "Para lembrar a tabela").</p>
+    <p>Confira com eles a tangente: tg 60° = (√3/2) ÷ (1/2) = √3. Peça um print desta tela.</p>
+  </aside>
+</section>
+
+<!-- 10. Exemplo: os catetos pelo ângulo -->
+<section class="slide" data-nome="Exemplo: catetos pelo ângulo">
+  <div class="conteudo">
+    <p class="olho">Exemplo</p>
+    <h2 class="titulo">Hipotenusa 10 cm e ângulo de 30°</h2>
+    <svg class="fig" viewBox="0 0 600 440" width="600" height="440" style="left:0;top:150px" aria-hidden="true">
+      <path d="M40 380 L520 380 L520 103 Z" fill="var(--d-clara)" stroke="var(--d-forte)" stroke-width="5" stroke-linejoin="round"/>
+      <path d="M494 380 V354 H520" fill="none" stroke="#292B2C" stroke-width="3"/>
+      <line x1="520" y1="380" x2="520" y2="103" stroke="#FFB800" stroke-width="9" stroke-linecap="round"/>
+      <line x1="40" y1="380" x2="520" y2="380" stroke="#0F8B8D" stroke-width="9" stroke-linecap="round"/>
+      <path d="M130 380 A90 90 0 0 0 118 335" fill="none" stroke="#3F2FA0" stroke-width="5"/>
+      <text x="138" y="364" class="rot-forte">30°</text>
+      <text class="rot-hip" x="240" y="214" transform="rotate(-30 240 214)" style="font-size:40px">10 cm</text>
+      <text x="540" y="256" font-size="46" font-weight="800" font-style="italic" fill="#8A6A00">x</text>
+      <text x="280" y="430" text-anchor="middle" font-size="46" font-weight="800" font-style="italic" fill="#0F8B8D">y</text>
+    </svg>
+    <div class="contas" style="position:absolute;left:680px;top:170px;font-size:46px;row-gap:22px">
+      <div class="eq" data-passo="1"><span>\(\text{sen}\,30°\)</span><span>\(=\)</span><span>\(\dfrac{x}{10}\)</span></div>
+      <div class="eq" data-passo="2"><span>\(\dfrac{1}{2}\)</span><span>\(=\)</span><span>\(\dfrac{x}{10}\)</span></div>
+      <div class="eq final" data-passo="3"><span>\(x\)</span><span>\(=\)</span><span>\(5\ \text{cm}\)</span></div>
+    </div>
+    <div class="contas" style="position:absolute;left:1240px;top:170px;font-size:46px;row-gap:22px">
+      <div class="eq" data-passo="4"><span>\(\cos 30°\)</span><span>\(=\)</span><span>\(\dfrac{y}{10}\)</span></div>
+      <div class="eq" data-passo="5"><span>\(\dfrac{\sqrt{3}}{2}\)</span><span>\(=\)</span><span>\(\dfrac{y}{10}\)</span></div>
+      <div class="eq final" data-passo="6"><span>\(y\)</span><span>\(=\)</span><span>\(5\sqrt{3}\ \text{cm}\)</span></div>
+    </div>
+    <span class="pilula pilula-resposta" data-passo="7" style="position:absolute;right:0;top:640px">Com \(\sqrt{3} \approx 1{,}7\): \(y \approx 8{,}5\ \text{cm}\)</span>
+  </div>
+  <aside class="notas">
+    <p>Apostila, exemplo "Os catetos pelo ângulo". O oposto (x) liga com a hipotenusa: seno. O adjacente (y) liga com a hipotenusa: cosseno.</p>
+    <p>Repare: o cateto oposto ao 30° é a metade da hipotenusa. Clique 7: valor aproximado, 5 · 1,7 = 8,5 cm.</p>
+  </aside>
+</section>
+
+<!-- 11. Questão 1 -->
+<section class="slide questao" data-nome="Questão 1">
+  <div class="conteudo">
+    <div class="area-resolucao"></div>
+    <span class="pilula pilula-pausa" data-em="1:some">Pause o vídeo e tente</span>
+    <div class="painel-questao">
+      <p class="olho">Questão 1 · Modelo IF</p>
+      <p class="enunciado">No triângulo retângulo da figura, as medidas dos lados estão na mesma unidade.</p>
+      <svg class="fig-q" viewBox="0 0 500 250" aria-hidden="true">
+        <path d="M60 220 L450 220 L60 12 Z" fill="var(--d-clara)" stroke="#2C2A9E" stroke-width="4" stroke-linejoin="round"/>
+        <path d="M60 196 H84 V220" fill="none" stroke="#292B2C" stroke-width="3"/>
+        <path d="M385 220 A65 65 0 0 1 392.6 189.4" fill="none" stroke="var(--d)" stroke-width="4"/>
+        <g font-family="Figtree,'Segoe UI',sans-serif" font-size="30" fill="#292B2C" font-weight="700">
+          <text x="30" y="126" text-anchor="middle">8</text><text x="255" y="254" text-anchor="middle">15</text><text x="270" y="104">17</text>
+          <text x="352" y="206" font-style="italic">α</text></g>
+      </svg>
+      <p class="enunciado">A tangente do ângulo \(\alpha\) é igual a:</p>
+      <ol class="alternativas curtas">
+        <li data-em="2:apaga"><b>A</b><span>\(\dfrac{8}{17}\)</span></li>
+        <li data-em="2:apaga"><b>B</b><span>\(\dfrac{15}{17}\)</span></li>
+        <li data-em="2:certo"><b>C</b><span>\(\dfrac{8}{15}\)</span></li>
+        <li data-em="2:apaga"><b>D</b><span>\(\dfrac{15}{8}\)</span></li>
+        <li data-em="2:apaga"><b>E</b><span>\(\dfrac{17}{8}\)</span></li>
+      </ol>
+      <p class="fonte">Modelo IF · MAT-0646</p>
+    </div>
+  </div>
+  <aside class="resolucao">
+    <p class="dados"><b>Dados:</b> catetos 8 e 15; hipotenusa 17.</p>
+    <ol class="passos">
+      <li><b>Marque α</b> e dê nome aos lados</li>
+      <li><b>Oposto a α:</b> 8 · <b>adjacente a α:</b> 15</li>
+      <li>\(\text{tg}\,\alpha = \dfrac{\text{oposto}}{\text{adjacente}} = \dfrac{8}{15}\)</li>
+    </ol>
+    <p class="resposta"><b>Resposta:</b> \(\text{tg}\,\alpha = \dfrac{8}{15}\). <b>Gabarito C.</b></p>
+    <p class="atencao"><b>Destaque no quadro:</b> Tangente não usa a hipotenusa.</p>
+    <ul class="erros">
+      <li><b>A</b> 8/17 é o seno de α.</li>
+      <li><b>B</b> 15/17 é o cosseno de α.</li>
+      <li><b>D</b> Inverte a razão: é a tangente do outro ângulo agudo.</li>
+      <li><b>E</b> Hipotenusa sobre oposto: inverte o seno.</li>
+    </ul>
+  </aside>
+  <aside class="notas">
+    <p>Clique 1 tira o aviso de pausa: resolva na área (D liga a caneta; E esconde o enunciado). Clique 2: gabarito C.</p>
+    <p>Modelo IF, lote if-matematica-triangulo-retangulo, m001, MAT-0646. Figura refeita em SVG a partir da figura do lote.</p>
+  </aside>
+</section>
+
+<!-- 12. Questão 2 -->
+<section class="slide questao" data-nome="Questão 2">
+  <div class="conteudo">
+    <div class="area-resolucao"></div>
+    <span class="pilula pilula-pausa" data-em="1:some">Pause o vídeo e tente</span>
+    <div class="painel-questao">
+      <p class="olho">Questão 2 · IF Sudeste MG 2017</p>
+      <p class="enunciado">O seno do ângulo de 30º e o cosseno do ângulo de 60º são, respectivamente:</p>
+      <ol class="alternativas">
+        <li data-em="2:apaga"><b>A</b><span>\(\dfrac{1}{2}\) e \(\dfrac{\sqrt{3}}{2}\)</span></li>
+        <li data-em="2:certo"><b>B</b><span>\(\dfrac{1}{2}\) e \(\dfrac{1}{2}\)</span></li>
+        <li data-em="2:apaga"><b>C</b><span>\(\dfrac{\sqrt{2}}{2}\) e \(\dfrac{\sqrt{2}}{2}\)</span></li>
+        <li data-em="2:apaga"><b>D</b><span>\(\dfrac{\sqrt{3}}{2}\) e \(\dfrac{1}{2}\)</span></li>
+        <li data-em="2:apaga"><b>E</b><span>\(\dfrac{1}{2}\) e \(\dfrac{\sqrt{2}}{2}\)</span></li>
+      </ol>
+      <p class="fonte">IF Sudeste MG 2017 (prova extra) · questão 22 · MAT-0386</p>
+    </div>
+  </div>
+  <aside class="resolucao">
+    <p class="dados"><b>Dados:</b> pede sen 30° e cos 60°.</p>
+    <ol class="passos">
+      <li><b>Tabela:</b> \(\text{sen}\,30° = \dfrac{1}{2}\)</li>
+      <li><b>Tabela:</b> \(\cos 60° = \dfrac{1}{2}\)</li>
+      <li>30° + 60° = 90°: o oposto de um é o adjacente do outro</li>
+    </ol>
+    <p class="resposta"><b>Resposta:</b> \(\dfrac{1}{2}\) e \(\dfrac{1}{2}\). <b>Gabarito B.</b></p>
+    <p class="atencao"><b>Destaque no quadro:</b> sen 30° = cos 60° (meio triângulo equilátero).</p>
+    <ul class="erros">
+      <li><b>A</b> √3/2 é o cosseno de 30°, não de 60°.</li>
+      <li><b>C</b> São os valores de 45°.</li>
+      <li><b>D</b> √3/2 é o seno de 60°.</li>
+      <li><b>E</b> √2/2 é o cosseno de 45°.</li>
+    </ul>
+  </aside>
+  <aside class="notas">
+    <p>Clique 1 tira o aviso de pausa. Clique 2: gabarito B.</p>
+    <p>Questão oficial do IF Sudeste MG 2017-1-extra, q22, MAT-0386. Na prova as alternativas vêm com vírgula ("1/2, 1/2"); aqui troquei por "e" para não confundir com a vírgula decimal.</p>
+  </aside>
+</section>
+
+<!-- 13. Questão 3 -->
+<section class="slide questao" data-nome="Questão 3">
+  <div class="conteudo">
+    <div class="area-resolucao"></div>
+    <span class="pilula pilula-pausa" data-em="1:some">Pause o vídeo e tente</span>
+    <div class="painel-questao">
+      <p class="olho">Questão 3 · IF Sudeste MG 2017</p>
+      <p class="enunciado">Considere um triângulo retângulo cuja medida de um de seus ângulos agudos é 30º, e sua hipotenusa mede 8 cm. Nessas condições, qual a medida do cateto oposto ao ângulo de 30º?</p>
+      <ol class="alternativas">
+        <li data-em="2:apaga"><b>A</b><span>\(\dfrac{4\sqrt{3}}{2}\) cm</span></li>
+        <li data-em="2:apaga"><b>B</b><span>\(\dfrac{\sqrt{3}}{2}\) cm</span></li>
+        <li data-em="2:apaga"><b>C</b><span>\(\dfrac{1}{2}\) cm</span></li>
+        <li data-em="2:certo"><b>D</b><span>4 cm</span></li>
+        <li data-em="2:apaga"><b>E</b><span>6 cm</span></li>
+      </ol>
+      <p class="fonte">IF Sudeste MG 2017 · questão 15 · MAT-0333</p>
+    </div>
+  </div>
+  <aside class="resolucao">
+    <p class="dados"><b>Dados:</b> ângulo 30°; hipotenusa 8 cm; cateto oposto \(x\).</p>
+    <ol class="passos">
+      <li><b>Oposto e hipotenusa:</b> seno</li>
+      <li>\(\text{sen}\,30° = \dfrac{x}{8}\)</li>
+      <li>\(\dfrac{1}{2} = \dfrac{x}{8}\)</li>
+      <li>\(2x = 8 \Rightarrow x = 4\ \text{cm}\)</li>
+    </ol>
+    <p class="resposta"><b>Resposta:</b> 4 cm, a metade da hipotenusa. <b>Gabarito D.</b></p>
+    <p class="atencao"><b>Destaque no quadro:</b> Oposto ao 30° = metade da hipotenusa.</p>
+    <ul class="erros">
+      <li><b>A</b> Usa o cosseno de 30° (seria o cateto adjacente) e ainda não multiplica direito.</li>
+      <li><b>B</b> É só o valor de cos 30°, sem multiplicar pela hipotenusa.</li>
+      <li><b>C</b> É só o valor de sen 30°, sem multiplicar pela hipotenusa.</li>
+      <li><b>E</b> Não sai de nenhuma razão de 30°.</li>
+    </ul>
+  </aside>
+  <aside class="notas">
+    <p>Clique 1 tira o aviso de pausa. Clique 2: gabarito D.</p>
+    <p>Questão oficial do IF Sudeste MG 2017-1, q15, MAT-0333.</p>
+  </aside>
+</section>
+
+<!-- 14. Questão 4 -->
+<section class="slide questao" data-nome="Questão 4">
+  <div class="conteudo">
+    <div class="area-resolucao"></div>
+    <span class="pilula pilula-pausa" data-em="1:some">Pause o vídeo e tente</span>
+    <div class="painel-questao">
+      <p class="olho">Questão 4 · IF Sudeste MG 2013</p>
+      <p class="enunciado">O triângulo ABC é retângulo em A. Se o seno do ângulo B é 0,8, qual o valor da tangente do ângulo C?</p>
+      <ol class="alternativas curtas">
+        <li data-em="2:apaga"><b>A</b><span>0,25</span></li>
+        <li data-em="2:apaga"><b>B</b><span>0,5</span></li>
+        <li data-em="2:certo"><b>C</b><span>0,75</span></li>
+        <li data-em="2:apaga"><b>D</b><span>1</span></li>
+        <li data-em="2:apaga"><b>E</b><span>1,25</span></li>
+      </ol>
+      <p class="fonte">IF Sudeste MG 2013 (prova extra) · questão 24 · MAT-0466</p>
+    </div>
+  </div>
+  <aside class="resolucao">
+    <p class="dados"><b>Dados:</b> reto em A; \(\text{sen}\,B = 0{,}8\).</p>
+    <ol class="passos">
+      <li><b>Hipotenusa</b> BC: tome \(BC = 10\)</li>
+      <li>\(\text{sen}\,B = \dfrac{AC}{10} = 0{,}8 \Rightarrow AC = 8\)</li>
+      <li><b>Pitágoras:</b> \(AB^2 = 100 - 64 = 36 \Rightarrow AB = 6\)</li>
+      <li><b>Para C:</b> oposto AB = 6, adjacente AC = 8</li>
+      <li>\(\text{tg}\,C = \dfrac{6}{8} = 0{,}75\)</li>
+    </ol>
+    <p class="resposta"><b>Resposta:</b> \(\text{tg}\,C = 0{,}75\). <b>Gabarito C.</b></p>
+    <p class="atencao"><b>Destaque no quadro:</b> Só a razão importa: escolha a hipotenusa 10 e ache o triângulo 6, 8, 10.</p>
+    <ul class="erros">
+      <li><b>A</b> Não é razão nenhuma do triângulo 6, 8, 10.</li>
+      <li><b>B</b> Não é razão nenhuma do triângulo 6, 8, 10.</li>
+      <li><b>D</b> Seria tangente de 45°, mas os catetos são diferentes.</li>
+      <li><b>E</b> É 1 ÷ 0,8: inverte o seno de B.</li>
+    </ul>
+  </aside>
+  <aside class="notas">
+    <p>Clique 1 tira o aviso de pausa. Clique 2: gabarito C.</p>
+    <p>Questão oficial do IF Sudeste MG 2013-1-extra, q24, MAT-0466. Mostre que tg C = 6/8 e tg B = 8/6: ângulos diferentes, catetos trocados.</p>
+  </aside>
+</section>
+
+<!-- 15. Resumo -->
+<section class="slide" data-nome="Resumo">
+  <div class="conteudo">
+    <p class="olho">Resumo</p>
+    <h2 class="titulo">O essencial</h2>
+    <div class="resumo" style="position:absolute;left:0;right:0;top:150px">
+      <div>\(\text{sen} = \dfrac{\text{oposto}}{\text{hipotenusa}}\) · \(\cos = \dfrac{\text{adjacente}}{\text{hipotenusa}}\)</div>
+      <div>\(\text{tg} = \dfrac{\text{oposto}}{\text{adjacente}}\) · as razões dependem <b>só do ângulo</b></div>
+      <div><b>Marque o ângulo</b> antes de dar nome aos catetos.</div>
+      <div>\(\text{sen}\,30° = \cos 60° = \dfrac{1}{2}\) · \(\text{sen}\,60° = \cos 30° = \dfrac{\sqrt{3}}{2}\)</div>
+      <div>\(\text{sen}\,45° = \cos 45° = \dfrac{\sqrt{2}}{2}\) · \(\text{tg}\,45° = 1\)</div>
+      <div>\(\text{tg}\,30° = \dfrac{\sqrt{3}}{3}\) · \(\text{tg}\,60° = \sqrt{3}\)</div>
+    </div>
+  </div>
+  <aside class="notas">
+    <p>Peça um print desta tela.</p>
+  </aside>
+</section>
+
+<!-- 16. A seguir -->
+<section class="slide capa" data-nome="A seguir">
+  <div class="estrelas"></div>
+  <div class="texto-capa" style="top:150px">
+    <span class="selo">Matemática · IF</span>
+    <p class="aula" style="font-size:26px">A seguir · Razões trigonométricas · Parte 2 de 2</p>
+    <h1 style="font-size:104px">Problemas de altura e distância</h1>
+    <p class="sub">Medir um prédio sem subir nele</p>
+  </div>
+  <svg class="emblema" viewBox="0 0 640 640" aria-hidden="true">
+    <rect x="400" y="140" width="130" height="380" rx="10" fill="#fff" fill-opacity=".18" stroke="#fff" stroke-width="5"/>
+    <g fill="#fff" fill-opacity=".45"><rect x="425" y="175" width="30" height="40" rx="4"/><rect x="475" y="175" width="30" height="40" rx="4"/><rect x="425" y="245" width="30" height="40" rx="4"/><rect x="475" y="245" width="30" height="40" rx="4"/><rect x="425" y="315" width="30" height="40" rx="4"/><rect x="475" y="315" width="30" height="40" rx="4"/></g>
+    <line x1="60" y1="520" x2="600" y2="520" stroke="#fff" stroke-width="5" stroke-linecap="round"/>
+    <line x1="120" y1="520" x2="400" y2="140" stroke="#FFD10C" stroke-width="7" stroke-dasharray="14 12" stroke-linecap="round"/>
+    <circle cx="120" cy="520" r="16" fill="#FFD10C"/>
+    <path d="M200 520 A80 80 0 0 0 167 456" fill="none" stroke="#FFD10C" stroke-width="6"/>
+  </svg>
+  <img class="logo-capa" src="{{LOGO_BRANCO}}" alt="Quarks">
+  <aside class="notas"><p>Próxima parte: como escolher a razão certa nos problemas de altura e distância (prédio, escada, avião).</p></aside>
+</section>

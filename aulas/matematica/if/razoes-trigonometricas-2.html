@@ -1,0 +1,467 @@
+<!--aula
+{"disciplina": "matematica", "curso": "IF", "assunto": "Razões trigonométricas", "parte": "Parte 2 de 2", "titulo": "Problemas de altura e distância"}
+-->
+<!-- Fonte: apostila IF, Matemática, cap. 6 (6.1 Razões trigonométricas: bloco "Problemas de altura e distância", com o passo a passo,
+     os exemplos do prédio e da escada e o cuidado com "sen 30° = 1/2").
+     Questões (todas da apostila, nenhuma reservada para o bloco do fim do capítulo): Modelo IF if-matematica-triangulo-retangulo m005 (MAT-0650);
+     IF Sudeste MG 2016-1-extra q16 (MAT-0403), 2013-1 q25 (MAT-0376) e 2018-2 q16 (MAT-0504). -->
+<style>
+  .caixa, .cartao { box-sizing: border-box; }
+  .fig { position: absolute; overflow: visible; font-family: Figtree, 'Segoe UI', sans-serif; }
+  .rot { font-family: Figtree, 'Segoe UI', sans-serif; font-weight: 700; font-size: 30px; fill: #5E5A70; }
+  .rot-forte { font-family: Figtree, 'Segoe UI', sans-serif; font-weight: 800; font-size: 34px; fill: #3F2FA0; }
+  .rot-op { font-family: Figtree, 'Segoe UI', sans-serif; font-weight: 800; font-size: 32px; fill: #8A6A00; }
+  .rot-adj { font-family: Figtree, 'Segoe UI', sans-serif; font-weight: 800; font-size: 32px; fill: #0F8B8D; }
+  .rot-hip { font-family: Figtree, 'Segoe UI', sans-serif; font-weight: 800; font-size: 32px; fill: var(--d-forte); }
+  .cartao { background: var(--branco); border: 2px solid var(--lilas-2); border-radius: 28px; padding: 20px 26px; }
+  .cartao h3 { margin: 0 0 6px; font: 800 36px var(--fonte-titulo); letter-spacing: -.02em; color: var(--roxo-titulo); }
+  .cartao p { margin: 0; font-size: 28px; line-height: 1.3; }
+  .passos5 { counter-reset: p; display: flex; flex-direction: column; gap: 16px; }
+  .passos5 > div { counter-increment: p; display: grid; grid-template-columns: 64px 1fr; gap: 20px; align-items: center; background: var(--branco); border: 2px solid var(--lilas-2); border-radius: 24px; padding: 12px 24px; font-size: 32px; line-height: 1.25; }
+  .passos5 > div::before { content: counter(p); width: 56px; height: 56px; border-radius: 50%; display: grid; place-items: center; background: var(--d); color: #fff; font: 800 30px var(--fonte-titulo); }
+  .escolha { display: grid; grid-template-columns: 220px 1fr 150px; gap: 22px; align-items: center; background: var(--branco); border: 2px solid var(--lilas-2); border-radius: 26px; padding: 12px 28px; font-size: 32px; }
+  .escolha svg { width: 220px; height: 120px; }
+  .escolha .razao { font: 800 48px var(--fonte-titulo); color: var(--roxo-titulo); text-align: right; }
+  .painel-questao .fig-q { width: 500px; display: block; margin: 0 auto; overflow: visible; }
+  /* traço que se desenha quando aparece (uma vez) */
+  .desenha { stroke-dasharray: var(--L, 1200); stroke-dashoffset: var(--L, 1200); }
+  .slide.ativo .mostra .desenha, .slide.ativo .desenha.mostra, .slide.ativo .desenha.ja { animation: traca 1.8s ease-in-out forwards; }
+  @keyframes traca { to { stroke-dashoffset: 0; } }
+  @media (prefers-reduced-motion: reduce) { .desenha { stroke-dashoffset: 0; } }
+  /* a linha de visão sobe do chão até o topo do prédio e para ali: é o ângulo que o observador mede */
+  .visada { transform-box: view-box; transform-origin: 140px 420px; transform: rotate(60deg); }
+  @keyframes sobe-visada { 0%, 12% { transform: rotate(60deg); } 62%, 100% { transform: rotate(0deg); } }
+  .slide.ativo .mostra .visada { animation: sobe-visada 7s ease-in-out infinite; }
+  @media (prefers-reduced-motion: reduce) { .visada { transform: none; } }
+  /* o avião sobe pela reta de 60°, e a altitude cresce junto */
+  @keyframes voa { 0%, 8% { transform: translate(0, 0); opacity: 0; } 14% { opacity: 1; } 80% { transform: translate(var(--vx), var(--vy)); opacity: 1; } 92%, 100% { transform: translate(var(--vx), var(--vy)); opacity: 0; } }
+  .aviao { transform-box: view-box; opacity: 0; }
+  .slide.ativo .aviao { animation: voa 6s ease-in-out infinite; }
+  @media (prefers-reduced-motion: reduce) { .aviao { opacity: 1; transform: translate(var(--vx), var(--vy)); } }
+</style>
+
+<!-- 1. Capa -->
+<section class="slide capa" data-nome="Capa">
+  <div class="estrelas"></div>
+  <div class="texto-capa" style="top:150px">
+    <span class="selo">Matemática · IF</span>
+    <p class="aula">Razões trigonométricas · Parte 2 de 2</p>
+    <h1 style="font-size:104px">Problemas de altura e distância</h1>
+    <p class="sub">Medir sem subir</p>
+  </div>
+  <svg class="emblema" viewBox="0 0 640 640" aria-hidden="true">
+    <g class="gira-lento"><ellipse cx="320" cy="320" rx="300" ry="128" fill="none" stroke="#fff" stroke-opacity=".38" stroke-width="2" transform="rotate(-10 320 320)"/></g>
+    <rect x="400" y="140" width="130" height="380" rx="10" fill="#fff" fill-opacity=".18" stroke="#fff" stroke-width="5"/>
+    <g fill="#fff" fill-opacity=".45"><rect x="425" y="175" width="30" height="40" rx="4"/><rect x="475" y="175" width="30" height="40" rx="4"/><rect x="425" y="245" width="30" height="40" rx="4"/><rect x="475" y="245" width="30" height="40" rx="4"/><rect x="425" y="315" width="30" height="40" rx="4"/><rect x="475" y="315" width="30" height="40" rx="4"/></g>
+    <line x1="60" y1="520" x2="600" y2="520" stroke="#fff" stroke-width="5" stroke-linecap="round"/>
+    <line x1="120" y1="520" x2="400" y2="140" stroke="#FFD10C" stroke-width="7" stroke-dasharray="14 12" stroke-linecap="round"/>
+    <circle cx="120" cy="520" r="16" fill="#FFD10C"/>
+    <path d="M200 520 A80 80 0 0 0 167 456" fill="none" stroke="#FFD10C" stroke-width="6"/>
+  </svg>
+  <img class="logo-capa" src="{{LOGO_BRANCO}}" alt="Quarks">
+  <aside class="notas">
+    <p>Hoje: usar seno, cosseno e tangente para achar alturas e distâncias que não dá para medir com a trena. O segredo é escolher a razão que liga o lado que você tem ao lado que você quer.</p>
+  </aside>
+</section>
+
+<!-- 2. Gancho -->
+<section class="slide" data-nome="Medir sem subir">
+  <div class="conteudo">
+    <p class="olho">Para começar</p>
+    <h2 class="titulo">A altura do prédio, do chão</h2>
+    <svg class="fig" viewBox="0 0 640 460" width="640" height="460" style="left:0;top:130px" aria-hidden="true">
+      <line x1="20" y1="420" x2="620" y2="420" stroke="#BFB6E6" stroke-width="6" stroke-linecap="round"/>
+      <rect x="370" y="22" width="150" height="398" rx="8" fill="#fff" stroke="#9C93C4" stroke-width="4"/>
+      <g fill="#E4DEFB"><rect x="392" y="50" width="40" height="46" rx="5"/><rect x="458" y="50" width="40" height="46" rx="5"/><rect x="392" y="130" width="40" height="46" rx="5"/><rect x="458" y="130" width="40" height="46" rx="5"/><rect x="392" y="210" width="40" height="46" rx="5"/><rect x="458" y="210" width="40" height="46" rx="5"/><rect x="392" y="290" width="40" height="46" rx="5"/><rect x="458" y="290" width="40" height="46" rx="5"/></g>
+      <g data-passo="2"><path d="M140 420 L370 420 L370 22 Z" fill="var(--d)" fill-opacity=".14"/>
+        <line x1="140" y1="420" x2="370" y2="420" stroke="#0F8B8D" stroke-width="8" stroke-linecap="round"/>
+        <text class="rot-adj" x="255" y="458" text-anchor="middle">30 m</text>
+        <line x1="370" y1="420" x2="370" y2="22" stroke="#FFB800" stroke-width="8" stroke-linecap="round"/>
+        <text x="330" y="230" font-size="46" font-weight="800" font-style="italic" fill="#8A6A00" text-anchor="end">h</text></g>
+      <g data-passo="1"><line class="visada" x1="140" y1="420" x2="370" y2="22" stroke="var(--d)" stroke-width="6" stroke-dasharray="16 12" stroke-linecap="round"/></g>
+      <circle cx="140" cy="420" r="14" fill="#FFD10C" stroke="#292B2C" stroke-width="3"/>
+      <g data-passo="3"><path d="M210 420 A70 70 0 0 0 175 359.4" fill="none" stroke="#3F2FA0" stroke-width="6"/>
+        <text x="214" y="396" class="rot-forte">60°</text></g>
+    </svg>
+    <div style="position:absolute;left:760px;right:0;top:180px;display:flex;flex-direction:column;gap:26px">
+      <div class="cartao" data-passo="1"><h3>O ângulo</h3><p>Do chão, mire o topo e meça o ângulo da visada.</p></div>
+      <div class="cartao" data-passo="2"><h3>A distância</h3><p>Até o pé do prédio: 30 m.</p></div>
+      <span class="pilula pilula-resposta" data-passo="4">Prédio, chão e visada: um triângulo retângulo</span>
+    </div>
+  </div>
+  <aside class="notas">
+    <p>Clique 1: a linha de visão sobe do chão até o topo (é o ângulo que um aplicativo de celular mede). Clique 2: a distância até o prédio. Clique 3: 60°.</p>
+    <p>Clique 4: com um lado e um ângulo, a trigonometria dá o resto. A conta vem daqui a pouco.</p>
+  </aside>
+</section>
+
+<!-- 3. Passo a passo -->
+<section class="slide" data-nome="Passo a passo">
+  <div class="conteudo">
+    <p class="olho">Passo a passo</p>
+    <h2 class="titulo">Altura e distância</h2>
+    <div class="passos5" style="position:absolute;left:560px;right:0;top:150px">
+      <div data-passo="1"><span>Desenhe e ache o <b>triângulo retângulo</b>.</span></div>
+      <div data-passo="2"><span>Marque o <b>ângulo conhecido</b>.</span></div>
+      <div data-passo="3"><span>Em relação a ele: o lado que você <b>tem</b> e o que você <b>quer</b>.</span></div>
+      <div data-passo="4"><span>Escolha a razão que <b>liga esses dois lados</b>.</span></div>
+      <div data-passo="5"><span>Resolva e <b>confira no desenho</b>.</span></div>
+    </div>
+    <svg class="fig" viewBox="0 0 440 400" width="440" height="400" style="left:0;top:170px" aria-hidden="true">
+      <path d="M30 360 L400 360 L400 60 Z" fill="var(--d-clara)" stroke="var(--d-forte)" stroke-width="5" stroke-linejoin="round" data-passo="1"/>
+      <path d="M376 360 V336 H400" fill="none" stroke="#292B2C" stroke-width="3" data-passo="1"/>
+      <g data-passo="2"><path d="M100 360 A70 70 0 0 0 84.4 316" fill="none" stroke="#3F2FA0" stroke-width="6"/><text x="106" y="344" font-size="36" font-weight="800" font-style="italic" fill="#3F2FA0">α</text></g>
+      <g data-passo="3"><line x1="30" y1="360" x2="400" y2="360" stroke="#0F8B8D" stroke-width="9" stroke-linecap="round"/><text class="rot-adj" x="215" y="396" text-anchor="middle">tenho</text>
+        <line x1="400" y1="360" x2="400" y2="60" stroke="#FFB800" stroke-width="9" stroke-linecap="round"/><text class="rot-op" x="414" y="218">quero</text></g>
+    </svg>
+  </div>
+  <aside class="notas">
+    <p>É a caixa "Passo a passo" da apostila. Um passo por clique; o desenho acompanha os passos 1 a 3.</p>
+    <p>O passo 4 é o coração do problema: o próximo slide mostra como escolher.</p>
+  </aside>
+</section>
+
+<!-- 4. Qual razão -->
+<section class="slide" data-nome="Qual razão usar">
+  <div class="conteudo">
+    <p class="olho">Passo 4</p>
+    <h2 class="titulo">Qual razão liga os dois lados?</h2>
+    <div style="position:absolute;left:560px;right:0;top:150px;display:flex;flex-direction:column;gap:22px">
+      <div class="escolha" data-passo="1">
+        <svg viewBox="0 0 220 120" aria-hidden="true"><path d="M20 105 L200 105 L200 15 Z" fill="var(--lilas-fundo)" stroke="#C9C0F0" stroke-width="3"/><line x1="200" y1="105" x2="200" y2="15" stroke="#FFB800" stroke-width="9" stroke-linecap="round"/><line x1="20" y1="105" x2="200" y2="15" stroke="var(--d)" stroke-width="9" stroke-linecap="round"/><path d="M64 105 A44 44 0 0 0 59.4 85.3" fill="none" stroke="#3F2FA0" stroke-width="4"/></svg>
+        <span><b>Oposto</b> e <b>hipotenusa</b></span><span class="razao">sen</span>
+      </div>
+      <div class="escolha" data-passo="2">
+        <svg viewBox="0 0 220 120" aria-hidden="true"><path d="M20 105 L200 105 L200 15 Z" fill="var(--lilas-fundo)" stroke="#C9C0F0" stroke-width="3"/><line x1="20" y1="105" x2="200" y2="105" stroke="#0F8B8D" stroke-width="9" stroke-linecap="round"/><line x1="20" y1="105" x2="200" y2="15" stroke="var(--d)" stroke-width="9" stroke-linecap="round"/><path d="M64 105 A44 44 0 0 0 59.4 85.3" fill="none" stroke="#3F2FA0" stroke-width="4"/></svg>
+        <span><b>Adjacente</b> e <b>hipotenusa</b></span><span class="razao">cos</span>
+      </div>
+      <div class="escolha" data-passo="3">
+        <svg viewBox="0 0 220 120" aria-hidden="true"><path d="M20 105 L200 105 L200 15 Z" fill="var(--lilas-fundo)" stroke="#C9C0F0" stroke-width="3"/><line x1="200" y1="105" x2="200" y2="15" stroke="#FFB800" stroke-width="9" stroke-linecap="round"/><line x1="20" y1="105" x2="200" y2="105" stroke="#0F8B8D" stroke-width="9" stroke-linecap="round"/><path d="M64 105 A44 44 0 0 0 59.4 85.3" fill="none" stroke="#3F2FA0" stroke-width="4"/></svg>
+        <span><b>Oposto</b> e <b>adjacente</b></span><span class="razao">tg</span>
+      </div>
+    </div>
+    <div class="caixa caixa-atencao" data-passo="4" style="position:absolute;left:0;width:480px;top:170px">
+      <span class="rotulo">Altura e chão</span>
+      <div class="texto" style="font-size:32px">Sem a hipotenusa na história, quase sempre é a <b>tangente</b>.</div>
+    </div>
+  </div>
+  <aside class="notas">
+    <p>Uma linha por clique. Os dois lados da conta (o que tenho e o que quero) decidem a razão.</p>
+    <p>Clique 4: nos problemas de prédio e torre, a altura (oposto) e a distância no chão (adjacente) pedem tangente; na escada e no avião, a hipotenusa entra e vem o seno ou o cosseno.</p>
+  </aside>
+</section>
+
+<!-- 5. Exemplo: o prédio -->
+<section class="slide" data-nome="Exemplo: a altura do prédio">
+  <div class="conteudo">
+    <p class="olho">Exemplo</p>
+    <h2 class="titulo">A altura do prédio</h2>
+    <svg class="fig" viewBox="0 0 640 460" width="640" height="460" style="left:0;top:130px" aria-hidden="true">
+      <line x1="20" y1="420" x2="620" y2="420" stroke="#BFB6E6" stroke-width="6" stroke-linecap="round"/>
+      <rect x="370" y="22" width="150" height="398" rx="8" fill="#fff" stroke="#9C93C4" stroke-width="4"/>
+      <path d="M140 420 L370 420 L370 22 Z" fill="var(--d)" fill-opacity=".14"/>
+      <line x1="140" y1="420" x2="370" y2="420" stroke="#0F8B8D" stroke-width="8" stroke-linecap="round"/>
+      <text class="rot-adj" x="255" y="458" text-anchor="middle">30 m</text>
+      <line x1="370" y1="420" x2="370" y2="22" stroke="#FFB800" stroke-width="8" stroke-linecap="round"/>
+      <text x="330" y="230" font-size="46" font-weight="800" font-style="italic" fill="#8A6A00" text-anchor="end">h</text>
+      <line x1="140" y1="420" x2="370" y2="22" stroke="var(--d)" stroke-width="6" stroke-dasharray="16 12" stroke-linecap="round"/>
+      <circle cx="140" cy="420" r="14" fill="#FFD10C" stroke="#292B2C" stroke-width="3"/>
+      <path d="M210 420 A70 70 0 0 0 175 359.4" fill="none" stroke="#3F2FA0" stroke-width="6"/>
+      <text x="214" y="396" class="rot-forte">60°</text>
+    </svg>
+    <div class="caixa" data-passo="1" style="position:absolute;left:720px;right:0;top:140px;padding:16px 28px">
+      <div class="texto" style="font-size:32px"><b>h</b>: oposto · <b>30 m</b>: adjacente → <b>tangente</b></div>
+    </div>
+    <div class="contas" style="position:absolute;left:760px;top:270px;font-size:48px;row-gap:20px">
+      <div class="eq" data-passo="2"><span>\(\text{tg}\,60°\)</span><span>\(=\)</span><span>\(\dfrac{h}{30}\)</span></div>
+      <div class="eq" data-passo="3"><span>\(\sqrt{3}\)</span><span>\(=\)</span><span>\(\dfrac{h}{30}\)</span></div>
+      <div class="eq" data-passo="4"><span>\(h\)</span><span>\(=\)</span><span>\(30\sqrt{3}\)</span></div>
+      <div class="eq" data-passo="5"><span>\(h\)</span><span>\(\approx\)</span><span>\(30 \cdot 1{,}7\)</span></div>
+      <div class="eq final" data-passo="6"><span>\(h\)</span><span>\(\approx\)</span><span>\(51\ \text{m}\)</span></div>
+    </div>
+  </div>
+  <aside class="notas">
+    <p>Apostila, exemplo "A altura do prédio": observador a 30 m, vê o topo a 60°. Despreze a altura dos olhos e use √3 ≈ 1,7.</p>
+    <p>Confira no desenho (passo 5): 51 m é maior que 30 m, e tem de ser, porque o ângulo passa de 45°.</p>
+  </aside>
+</section>
+
+<!-- 6. Exemplo: a escada -->
+<section class="slide" data-nome="Exemplo: a escada">
+  <div class="conteudo">
+    <p class="olho">Exemplo</p>
+    <h2 class="titulo">A escada na parede</h2>
+    <svg class="fig" viewBox="0 0 560 460" width="560" height="460" style="left:0;top:130px" aria-hidden="true">
+      <rect x="430" y="40" width="70" height="380" fill="#EDE9FB" stroke="#C9C0F0" stroke-width="3"/>
+      <line x1="40" y1="420" x2="540" y2="420" stroke="#BFB6E6" stroke-width="6" stroke-linecap="round"/>
+      <g stroke="#6E6A80" stroke-width="6" stroke-linecap="round">
+        <line x1="250" y1="420" x2="430" y2="108"/><line x1="232" y1="410" x2="412" y2="98"/>
+        <g stroke-width="4"><line x1="263" y1="374" x2="245" y2="364"/><line x1="290" y1="327" x2="272" y2="317"/><line x1="317" y1="281" x2="299" y2="271"/><line x1="344" y1="234" x2="326" y2="224"/><line x1="371" y1="187" x2="353" y2="177"/><line x1="398" y1="141" x2="380" y2="131"/></g>
+      </g>
+      <text class="rot-hip" x="270" y="250" transform="rotate(-60 270 250)">6 m</text>
+      <g data-passo="1"><line class="desenha" style="--L:320" x1="452" y1="420" x2="452" y2="108" stroke="#FFB800" stroke-width="8" stroke-linecap="round"/>
+        <text x="470" y="276" font-size="46" font-weight="800" font-style="italic" fill="#8A6A00">h</text></g>
+      <path d="M310 420 A60 60 0 0 0 280 368" fill="none" stroke="#3F2FA0" stroke-width="6"/>
+      <text x="318" y="398" class="rot-forte">60°</text>
+    </svg>
+    <div class="caixa" data-passo="1" style="position:absolute;left:640px;right:0;top:140px;padding:16px 28px">
+      <div class="texto" style="font-size:32px"><b>6 m</b>: hipotenusa · <b>h</b>: oposto → <b>seno</b></div>
+    </div>
+    <div class="contas" style="position:absolute;left:720px;top:240px;font-size:44px;row-gap:16px">
+      <div class="eq" data-passo="2"><span>\(\text{sen}\,60°\)</span><span>\(=\)</span><span>\(\dfrac{h}{6}\)</span></div>
+      <div class="eq" data-passo="3"><span>\(\dfrac{\sqrt{3}}{2}\)</span><span>\(=\)</span><span>\(\dfrac{h}{6}\)</span></div>
+      <div class="eq" data-passo="4"><span>\(h\)</span><span>\(=\)</span><span>\(3\sqrt{3}\)</span></div>
+      <div class="eq final" data-passo="5"><span>\(h\)</span><span>\(\approx\)</span><span>\(5{,}1\ \text{m}\)</span></div>
+    </div>
+    <span class="pilula pilula-pausa" data-passo="6" style="position:absolute;right:0;top:640px">E a distância do pé da escada à parede?</span>
+    <span class="pilula pilula-resposta" data-passo="7" style="position:absolute;right:0;top:730px">\(\cos 60° = \dfrac{d}{6} \Rightarrow d = 3\ \text{m}\)</span>
+  </div>
+  <aside class="notas">
+    <p>Apostila, exemplo "A escada na parede": escada de 6 m, 60° com o chão. A escada é a hipotenusa; a altura é o cateto oposto: seno. 3√3 ≈ 3 · 1,7 = 5,1 m.</p>
+    <p>Cliques 6 e 7 (extra, mesma figura): o pé da escada é o cateto adjacente, então cosseno: 6 · 1/2 = 3 m.</p>
+  </aside>
+</section>
+
+<!-- 7. Atenção -->
+<section class="slide" data-nome="Atenção: seno não é metade">
+  <div class="conteudo">
+    <p class="olho">Atenção</p>
+    <h2 class="titulo">\(\text{sen}\,30° = \frac{1}{2}\) não é “metade do ângulo”</h2>
+    <div class="caixa caixa-atencao" style="position:absolute;left:0;right:0;top:160px">
+      <div class="texto">O seno é uma <b>razão entre lados</b>. O ângulo é medido em <b>graus</b>.</div>
+    </div>
+    <p class="texto" data-passo="1" style="position:absolute;left:0;top:330px;margin:0">O dobro do ângulo dá o dobro do seno?</p>
+    <div class="contas" style="position:absolute;left:640px;top:420px;font-size:50px;row-gap:22px">
+      <div class="eq" data-passo="2"><span>\(2 \cdot \text{sen}\,30°\)</span><span>\(=\)</span><span>\(2 \cdot \dfrac{1}{2} = 1\)</span></div>
+      <div class="eq final" data-passo="3"><span>\(\text{sen}\,60°\)</span><span>\(=\)</span><span>\(\dfrac{\sqrt{3}}{2} \approx 0{,}87\)</span></div>
+    </div>
+    <span class="pilula pilula-resposta" data-passo="4" style="position:absolute;right:0;top:470px">Não!</span>
+  </div>
+  <aside class="notas">
+    <p>Último cuidado da apostila. Cliques 2 e 3: dobrar o ângulo não dobra o seno (1 contra 0,87). Erro comum: "sen 60° = 2 · sen 30°".</p>
+  </aside>
+</section>
+
+<!-- 8. Questão 1 -->
+<section class="slide questao" data-nome="Questão 1">
+  <div class="conteudo">
+    <div class="area-resolucao"></div>
+    <span class="pilula pilula-pausa" data-em="1:some">Pause o vídeo e tente</span>
+    <div class="painel-questao">
+      <p class="olho">Questão 1 · Modelo IF</p>
+      <p class="enunciado" style="font-size:24px">Para medir a altura de um prédio, uma estudante ficou a 60 m dele, num terreno plano. Com um aplicativo do celular, ela mediu o ângulo de 30° entre a horizontal e a linha que vai dos seus olhos até o topo do prédio. Os olhos dela estão a 1,5 m do chão, como mostra a figura.</p>
+      <svg class="fig-q" viewBox="0 0 500 200" style="height:200px" aria-hidden="true">
+        <line x1="10" y1="190" x2="490" y2="190" stroke="#5E5A70" stroke-width="3"/>
+        <rect x="400" y="20" width="70" height="170" fill="#fff" stroke="#2C2A9E" stroke-width="3"/>
+        <circle cx="52" cy="140" r="9" fill="#2C2A9E"/><path d="M52 150 V176 M52 176 L42 190 M52 176 L62 190 M40 160 H64" stroke="#2C2A9E" stroke-width="4" stroke-linecap="round" fill="none"/>
+        <line x1="60" y1="140" x2="400" y2="140" stroke="#5E5A70" stroke-width="2" stroke-dasharray="8 6"/>
+        <line x1="60" y1="140" x2="400" y2="20" stroke="var(--d)" stroke-width="3"/>
+        <path d="M120 140 A60 60 0 0 0 116.6 120" fill="none" stroke="var(--d)" stroke-width="3"/>
+        <g font-family="Figtree,'Segoe UI',sans-serif" font-size="22" font-weight="700" fill="#292B2C">
+          <text x="126" y="134">30°</text><text x="230" y="164" text-anchor="middle">60 m</text><text x="18" y="172">1,5 m</text></g>
+      </svg>
+      <p class="enunciado" style="font-size:24px">Use \(\sqrt{3} \approx 1{,}7\). A altura do prédio é de, aproximadamente:</p>
+      <ol class="alternativas curtas">
+        <li data-em="2:apaga"><b>A</b><span>21,5 m</span></li>
+        <li data-em="2:apaga"><b>B</b><span>31,5 m</span></li>
+        <li data-em="2:apaga"><b>C</b><span>34 m</span></li>
+        <li data-em="2:certo"><b>D</b><span>35,5 m</span></li>
+        <li data-em="2:apaga"><b>E</b><span>52,5 m</span></li>
+      </ol>
+      <p class="fonte">Modelo IF · MAT-0650</p>
+    </div>
+  </div>
+  <aside class="resolucao">
+    <p class="dados"><b>Dados:</b> 60 m; 30°; olhos a 1,5 m; \(\sqrt{3} \approx 1{,}7\).</p>
+    <ol class="passos">
+      <li><b>Acima dos olhos:</b> \(x\) é oposto; 60 m é adjacente → tg</li>
+      <li>\(\text{tg}\,30° = \dfrac{x}{60} \Rightarrow \dfrac{\sqrt{3}}{3} = \dfrac{x}{60}\)</li>
+      <li>\(x = 20\sqrt{3} \approx 20 \cdot 1{,}7 = 34\ \text{m}\)</li>
+      <li><b>Some os olhos:</b> \(H \approx 34 + 1{,}5 = 35{,}5\ \text{m}\)</li>
+    </ol>
+    <p class="resposta"><b>Resposta:</b> cerca de 35,5 m. <b>Gabarito D.</b></p>
+    <p class="atencao"><b>Destaque no quadro:</b> O triângulo começa na altura dos olhos: some 1,5 m no fim.</p>
+    <ul class="erros">
+      <li><b>A</b> Usa tg 30° = 1/3, sem o √3.</li>
+      <li><b>B</b> Usa o seno: 60 m é cateto, não hipotenusa.</li>
+      <li><b>C</b> Esquece de somar a altura dos olhos.</li>
+      <li><b>E</b> Usa o cosseno: 60 · 0,85 + 1,5.</li>
+    </ul>
+  </aside>
+  <aside class="notas">
+    <p>Clique 1 tira o aviso de pausa: resolva na área (D liga a caneta; E esconde o enunciado). Clique 2: gabarito D.</p>
+    <p>Modelo IF, lote if-matematica-triangulo-retangulo, m005, MAT-0650. Figura refeita em SVG. Diferente do exemplo, aqui a altura dos olhos conta.</p>
+  </aside>
+</section>
+
+<!-- 9. Questão 2 -->
+<section class="slide questao" data-nome="Questão 2">
+  <div class="conteudo">
+    <div class="area-resolucao"></div>
+    <span class="pilula pilula-pausa" data-em="1:some">Pause o vídeo e tente</span>
+    <div class="painel-questao">
+      <p class="olho">Questão 2 · IF Sudeste MG 2016</p>
+      <p class="enunciado">Uma escada está apoiada em uma parede vertical num ponto a uma altura de 3 m do solo. Sabendo-se que a medida do ângulo formado entre a escada e a parede é de 30º, qual a distância da parede ao pé da escada?</p>
+      <ol class="alternativas curtas">
+        <li data-em="2:certo"><b>A</b><span>\(\sqrt{3}\) m</span></li>
+        <li data-em="2:apaga"><b>B</b><span>2 m</span></li>
+        <li data-em="2:apaga"><b>C</b><span>\(3\sqrt{3}\) m</span></li>
+        <li data-em="2:apaga"><b>D</b><span>\(\frac{\sqrt{3}}{2}\) m</span></li>
+        <li data-em="2:apaga"><b>E</b><span>3 m</span></li>
+      </ol>
+      <p class="fonte">IF Sudeste MG 2016 (prova extra) · questão 16 · MAT-0403</p>
+    </div>
+  </div>
+  <aside class="resolucao">
+    <p class="dados"><b>Dados:</b> altura 3 m; 30° entre a escada e a <b>parede</b>.</p>
+    <ol class="passos">
+      <li><b>O 30° fica no topo</b>, junto da parede</li>
+      <li><b>Para ele:</b> 3 m é adjacente; \(d\) é oposto → tg</li>
+      <li>\(\text{tg}\,30° = \dfrac{d}{3} \Rightarrow \dfrac{\sqrt{3}}{3} = \dfrac{d}{3}\)</li>
+      <li>\(d = \sqrt{3}\ \text{m}\ (\approx 1{,}7\ \text{m})\)</li>
+    </ol>
+    <p class="resposta"><b>Resposta:</b> \(\sqrt{3}\) m. <b>Gabarito A.</b></p>
+    <p class="atencao"><b>Destaque no quadro:</b> Desenhe primeiro: o ângulo é com a parede, não com o chão.</p>
+    <ul class="erros">
+      <li><b>B</b> Não sai de nenhuma razão; a escada mede \(2\sqrt{3}\) m.</li>
+      <li><b>C</b> Põe o 30° entre a escada e o chão.</li>
+      <li><b>D</b> É só o valor de cos 30°.</li>
+      <li><b>E</b> Seria a distância com 45°.</li>
+    </ul>
+  </aside>
+  <aside class="notas">
+    <p>Clique 1 tira o aviso de pausa. Clique 2: gabarito A.</p>
+    <p>Questão oficial do IF Sudeste MG 2016-1-extra, q16, MAT-0403. A prova não tem figura: peça que desenhem (passo 1).</p>
+  </aside>
+</section>
+
+<!-- 10. Questão 3 -->
+<section class="slide questao" data-nome="Questão 3">
+  <div class="conteudo">
+    <div class="area-resolucao"></div>
+    <span class="pilula pilula-pausa" data-em="1:some">Pause o vídeo e tente</span>
+    <div class="painel-questao">
+      <p class="olho">Questão 3 · IF Sudeste MG 2013</p>
+      <p class="enunciado" style="font-size:26px">Um avião decola, fazendo um ângulo de 60º com a pista, e viaja em linha reta a uma velocidade de 300 km/h. Após 10 minutos de voo, a altitude desse avião é de:</p>
+      <svg class="fig-q" viewBox="0 0 500 220" style="height:220px" aria-hidden="true">
+        <line x1="20" y1="200" x2="480" y2="200" stroke="#5E5A70" stroke-width="5" stroke-linecap="round"/>
+        <line x1="120" y1="200" x2="230" y2="10" stroke="var(--d)" stroke-width="3" stroke-dasharray="8 6"/>
+        <line x1="230" y1="200" x2="230" y2="10" stroke="#5E5A70" stroke-width="2" stroke-dasharray="4 6"/>
+        <path d="M170 200 A50 50 0 0 0 145 156.7" fill="none" stroke="var(--d)" stroke-width="3"/>
+        <text x="176" y="188" font-family="Figtree,'Segoe UI',sans-serif" font-size="22" font-weight="700" fill="#292B2C">60°</text>
+        <g class="aviao" style="--vx:110px;--vy:-190px"><g transform="translate(120 200) rotate(-60)"><path d="M-22 -5 H18 Q30 0 18 5 H-22 Z M-6 -5 L4 -22 H10 L6 -5 Z M-6 5 L4 22 H10 L6 5 Z M-22 -5 L-28 -14 H-22 L-14 -5 Z" fill="#2C2A9E"/></g></g>
+      </svg>
+      <ol class="alternativas curtas">
+        <li data-em="2:apaga"><b>A</b><span>50 km</span></li>
+        <li data-em="2:certo"><b>B</b><span>\(25\sqrt{3}\) km</span></li>
+        <li data-em="2:apaga"><b>C</b><span>25 km</span></li>
+        <li data-em="2:apaga"><b>D</b><span>\(50\sqrt{3}\) km</span></li>
+        <li data-em="2:apaga"><b>E</b><span>70 km</span></li>
+      </ol>
+      <p class="fonte">IF Sudeste MG 2013 · questão 25 · MAT-0376</p>
+    </div>
+  </div>
+  <aside class="resolucao">
+    <p class="dados"><b>Dados:</b> 60°; 300 km/h; 10 min.</p>
+    <ol class="passos">
+      <li><b>Tempo em horas:</b> \(10\ \text{min} = \dfrac{1}{6}\ \text{h}\)</li>
+      <li><b>Distância voada:</b> \(300 \cdot \dfrac{1}{6} = 50\ \text{km}\) (hipotenusa)</li>
+      <li><b>Altitude:</b> oposto a 60° → seno</li>
+      <li>\(\text{sen}\,60° = \dfrac{h}{50} \Rightarrow h = \dfrac{50\sqrt{3}}{2} = 25\sqrt{3}\ \text{km}\)</li>
+    </ol>
+    <p class="resposta"><b>Resposta:</b> \(25\sqrt{3}\) km. <b>Gabarito B.</b></p>
+    <p class="atencao"><b>Destaque no quadro:</b> O caminho do avião é a hipotenusa; a altitude é o cateto oposto.</p>
+    <ul class="erros">
+      <li><b>A</b> É a distância voada, não a altitude.</li>
+      <li><b>C</b> Usa o cosseno: é a distância na horizontal.</li>
+      <li><b>D</b> Usa a tangente com a hipotenusa.</li>
+      <li><b>E</b> Não sai de nenhuma razão correta.</li>
+    </ul>
+  </aside>
+  <aside class="notas">
+    <p>Clique 1 tira o aviso de pausa. Clique 2: gabarito B. O aviãozinho sobe pela reta de 60° para mostrar que a distância voada é a hipotenusa.</p>
+    <p>Questão oficial do IF Sudeste MG 2013-1, q25, MAT-0376. Figura refeita em SVG.</p>
+  </aside>
+</section>
+
+<!-- 11. Questão 4 -->
+<section class="slide questao" data-nome="Questão 4">
+  <div class="conteudo">
+    <div class="area-resolucao"></div>
+    <span class="pilula pilula-pausa" data-em="1:some">Pause o vídeo e tente</span>
+    <div class="painel-questao">
+      <p class="olho">Questão 4 · IF Sudeste MG 2018</p>
+      <p class="enunciado">Qual a área de um triângulo ABC isósceles, cuja base BC mede 12 cm, e a tangente do ângulo B é \(\frac{4}{3}\)?</p>
+      <ol class="alternativas curtas">
+        <li data-em="2:certo"><b>A</b><span>48 cm²</span></li>
+        <li data-em="2:apaga"><b>B</b><span>27 cm²</span></li>
+        <li data-em="2:apaga"><b>C</b><span>144 cm²</span></li>
+        <li data-em="2:apaga"><b>D</b><span>54 cm²</span></li>
+        <li data-em="2:apaga"><b>E</b><span>24 cm²</span></li>
+      </ol>
+      <p class="fonte">IF Sudeste MG 2018 (2ª prova do ano) · questão 16 · MAT-0504</p>
+    </div>
+  </div>
+  <aside class="resolucao">
+    <p class="dados"><b>Dados:</b> isósceles; base BC = 12 cm; \(\text{tg}\,B = \dfrac{4}{3}\).</p>
+    <ol class="passos">
+      <li><b>Altura AM</b> cai no meio da base: \(BM = 6\)</li>
+      <li><b>No triângulo ABM:</b> \(\text{tg}\,B = \dfrac{h}{6} = \dfrac{4}{3}\)</li>
+      <li>\(3h = 24 \Rightarrow h = 8\ \text{cm}\)</li>
+      <li><b>Área:</b> \(\dfrac{12 \cdot 8}{2} = 48\ \text{cm}^2\)</li>
+    </ol>
+    <p class="resposta"><b>Resposta:</b> 48 cm². <b>Gabarito A.</b></p>
+    <p class="atencao"><b>Destaque no quadro:</b> No isósceles, a altura da base faz dois triângulos retângulos.</p>
+    <ul class="erros">
+      <li><b>B</b> Inverte a tangente: h = 4,5.</li>
+      <li><b>C</b> 12²: trata a base como lado de quadrado.</li>
+      <li><b>D</b> Inverte a tangente e esquece o ÷ 2.</li>
+      <li><b>E</b> Área de só uma metade.</li>
+    </ul>
+  </aside>
+  <aside class="notas">
+    <p>Clique 1 tira o aviso de pausa. Clique 2: gabarito A.</p>
+    <p>Questão oficial do IF Sudeste MG 2018-2, q16, MAT-0504. Sem figura na prova: desenhe o isósceles e a altura.</p>
+  </aside>
+</section>
+
+<!-- 12. Resumo -->
+<section class="slide" data-nome="Resumo">
+  <div class="conteudo">
+    <p class="olho">Resumo</p>
+    <h2 class="titulo">O essencial</h2>
+    <div class="resumo" style="position:absolute;left:0;right:0;top:150px">
+      <div><b>Desenhe</b> e ache o triângulo retângulo; marque o ângulo conhecido.</div>
+      <div><b>Tenho e quero:</b> a razão que liga esses dois lados.</div>
+      <div>Oposto e hipotenusa: <b>sen</b> · adjacente e hipotenusa: <b>cos</b></div>
+      <div>Oposto e adjacente (altura e chão): <b>tg</b></div>
+      <div>Some a <b>altura dos olhos</b> quando o enunciado der.</div>
+      <div>\(\text{sen}\,30° = \dfrac{1}{2}\) é razão entre lados, <b>não metade do ângulo</b>.</div>
+    </div>
+  </div>
+  <aside class="notas">
+    <p>Peça um print desta tela.</p>
+  </aside>
+</section>
+
+<!-- 13. A seguir -->
+<section class="slide capa" data-nome="A seguir">
+  <div class="estrelas"></div>
+  <div class="texto-capa" style="top:150px">
+    <span class="selo">Matemática · IF</span>
+    <p class="aula">A seguir · Trigonometria</p>
+    <h1 style="font-size:104px">Questões do IF Sudeste</h1>
+    <p class="sub">Provas oficiais, uma por tela</p>
+  </div>
+  <svg class="emblema" viewBox="0 0 640 640" aria-hidden="true">
+    <rect x="150" y="110" width="340" height="430" rx="34" fill="#fff" fill-opacity=".12" stroke="#fff" stroke-opacity=".6" stroke-width="4"/>
+    <path d="M200 470 L440 470 L440 300 Z" fill="none" stroke="#fff" stroke-opacity=".8" stroke-width="5" stroke-linejoin="round"/>
+    <path d="M420 470 V450 H440" fill="none" stroke="#fff" stroke-opacity=".8" stroke-width="4"/>
+    <path d="M260 470 A60 60 0 0 0 250 436" fill="none" stroke="#FFD10C" stroke-width="6"/>
+    <g fill="#fff" fill-opacity=".7"><rect x="200" y="170" width="240" height="18" rx="9"/><rect x="200" y="210" width="180" height="18" rx="9"/></g>
+    <circle cx="470" cy="130" r="54" fill="#FFD10C"/>
+    <path d="M446 132 L464 150 L496 112" fill="none" stroke="#292B2C" stroke-width="10" stroke-linecap="round" stroke-linejoin="round"/>
+  </svg>
+  <img class="logo-capa" src="{{LOGO_BRANCO}}" alt="Quarks">
+  <aside class="notas"><p>Fim de Razões trigonométricas. A seguir, o bloco "Questões do IF Sudeste" de Trigonometria: duas questões oficiais das provas.</p></aside>
+</section>

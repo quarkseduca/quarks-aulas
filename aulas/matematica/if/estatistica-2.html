@@ -1,0 +1,714 @@
+<!--aula
+{"disciplina": "matematica", "curso": "IF", "assunto": "Estatística", "parte": "Parte 2 de 2", "titulo": "Gráficos e análise de dados", "scripts": ["animacoes-estatistica.js"]}
+-->
+<!-- Fonte: apostila IF, Matemática, cap. 7 (7.1 Estatística: "Tabelas de frequência e porcentagem" (comparar grupos), "Gráficos de colunas,
+     setores e linhas", "Análise de dados e argumentos", "Moda" e "Mediana") e cap. 2 (Porcentagem e juros simples: "Média aritmética",
+     relembrada aqui porque o cronograma põe "Média aritmética e análise de dados" nesta parte).
+     Questões (todas da apostila, nenhuma reservada para o bloco do fim do capítulo): IF Sudeste MG 2019-2 q23 (MAT-0522),
+     2018-2 q15 (MAT-0503) e 2018-2 q13 (MAT-0501); Modelo IF if-matematica-graficos-e-tabelas m014 (MAT-1109). -->
+<style>
+  .caixa, .cartao { box-sizing: border-box; }
+  .fig { position: absolute; overflow: visible; font-family: Figtree, 'Segoe UI', sans-serif; }
+  .rot { font-family: Figtree, 'Segoe UI', sans-serif; font-weight: 700; font-size: 26px; fill: #5E5A70; }
+  .rot-forte { font-family: Figtree, 'Segoe UI', sans-serif; font-weight: 800; font-size: 30px; fill: #3F2FA0; }
+  .cartao { background: var(--branco); border: 2px solid var(--lilas-2); border-radius: 28px; padding: 20px 26px; }
+  .cartao h3 { margin: 0 0 6px; font: 800 36px var(--fonte-titulo); letter-spacing: -.02em; color: var(--roxo-titulo); }
+  .cartao p { margin: 0; font-size: 28px; line-height: 1.3; }
+  .tres { display: grid; grid-template-columns: repeat(3, 1fr); gap: 26px; }
+  .tres .cartao { text-align: center; }
+  .tres svg { width: 300px; height: 190px; display: block; margin: 0 auto 8px; }
+  .tag { display: inline-block; padding: 5px 20px; border-radius: 999px; font-weight: 800; font-size: 26px; white-space: nowrap; }
+  .tag-v { background: var(--certo-claro); color: var(--certo); }
+  .tag-x { background: var(--erro-claro); color: var(--erro); }
+  .linha-tag { display: grid; grid-template-columns: 1fr auto; align-items: center; gap: 18px; background: var(--branco); border: 2px solid var(--lilas-2); border-radius: 22px; padding: 16px 26px; font-size: 32px; }
+  .lista-num { display: flex; gap: 12px; flex-wrap: wrap; }
+  .lista-num span { min-width: 74px; text-align: center; background: var(--branco); border: 2px solid var(--lilas-2); border-radius: 18px; padding: 6px 10px; font: 800 38px var(--fonte-titulo); color: var(--roxo-titulo); }
+  .lista-num span.luz { background: #FFF4C2; border-color: #F5DD6B; }
+  .tab-irmaos { font-size: 36px; }
+  .tab-irmaos th, .tab-irmaos td { padding: 8px 40px; }
+  .tab-irmaos tr.luz td { background: #FFF4C2; font-weight: 800; }
+  .comp { font-size: 36px; }
+  .comp th, .comp td { padding: 10px 36px; }
+  .painel-questao .fig-q { width: 500px; display: block; margin: 0 auto; overflow: visible; }
+  .painel-questao .alternativas.miudas li { font-size: 21px; padding: 5px 12px; }
+  /* colunas que sobem do eixo quando o gráfico aparece */
+  .cresce { transform-box: fill-box; transform-origin: 50% 100%; transform: scaleY(0); }
+  .slide.ativo .mostra .cresce, .slide.ativo .cresce.ja { animation: sobe 1.4s cubic-bezier(.3,.7,.3,1) forwards; }
+  .cresce:nth-of-type(2) { animation-delay: .25s !important; } .cresce:nth-of-type(3) { animation-delay: .5s !important; } .cresce:nth-of-type(4) { animation-delay: .75s !important; }
+  @keyframes sobe { to { transform: scaleY(1); } }
+  @media (prefers-reduced-motion: reduce) { .cresce { transform: none; } }
+  /* fatias do gráfico de setores que se abrem uma depois da outra */
+  .fatia { stroke-dasharray: 0 var(--C); }
+  .slide.ativo .mostra .fatia { animation: abre 1s ease-out both; }
+  @keyframes abre { from { stroke-dasharray: 0 var(--C); } to { stroke-dasharray: var(--len) var(--C); } }
+  @media (prefers-reduced-motion: reduce) { .fatia { stroke-dasharray: var(--len) var(--C); } }
+  /* traço que se desenha */
+  .desenha { stroke-dasharray: var(--L, 1200); stroke-dashoffset: var(--L, 1200); }
+  .slide.ativo .mostra .desenha, .slide.ativo .desenha.mostra { animation: traca 2.4s ease-in-out forwards; }
+  @keyframes traca { to { stroke-dashoffset: 0; } }
+  @media (prefers-reduced-motion: reduce) { .desenha { stroke-dashoffset: 0; } }
+  /* média: as notas se nivelam no valor que daria a mesma soma, e voltam */
+  .nivela { transform-box: fill-box; transform-origin: 50% 100%; }
+  @keyframes nivela { 0%, 20% { transform: scaleY(1); } 45%, 75% { transform: scaleY(var(--k)); } 100% { transform: scaleY(1); } }
+  .slide.ativo .mostra .nivela { animation: nivela 7s ease-in-out infinite; }
+  @keyframes some-media { 0%, 20% { opacity: 0; } 45%, 75% { opacity: 1; } 100% { opacity: 0; } }
+  .slide.ativo .mostra .linha-media { animation: some-media 7s ease-in-out infinite; }
+  .linha-media { opacity: 0; }
+  @media (prefers-reduced-motion: reduce) { .linha-media { opacity: 1; } }
+  /* moda: as bolinhas caem na coluna do seu número */
+  .cai { opacity: 0; transform: translateY(-40px); }
+  .slide.ativo .mostra .cai { animation: cai .6s ease-out forwards; }
+  @keyframes cai { to { opacity: 1; transform: none; } }
+  @media (prefers-reduced-motion: reduce) { .cai { opacity: 1; transform: none; } }
+  /* barras de 100% que se enchem até a porcentagem */
+  .enche { transform-box: fill-box; transform-origin: 0 50%; transform: scaleX(0); }
+  .slide.ativo .mostra .enche { animation: enche 1.6s ease-out forwards; }
+  @keyframes enche { to { transform: scaleX(1); } }
+  @media (prefers-reduced-motion: reduce) { .enche { transform: none; } }
+</style>
+
+<!-- 1. Capa -->
+<section class="slide capa" data-nome="Capa">
+  <div class="estrelas"></div>
+  <div class="texto-capa" style="top:150px">
+    <span class="selo">Matemática · IF</span>
+    <p class="aula">Estatística · Parte 2 de 2</p>
+    <h1 style="font-size:104px">Gráficos e análise de dados</h1>
+    <p class="sub">O que os números dizem num olhar</p>
+  </div>
+  <svg class="emblema" viewBox="0 0 640 640" aria-hidden="true">
+    <g class="gira-lento"><ellipse cx="320" cy="320" rx="300" ry="128" fill="none" stroke="#fff" stroke-opacity=".38" stroke-width="2" transform="rotate(-10 320 320)"/></g>
+    <line x1="110" y1="500" x2="540" y2="500" stroke="#fff" stroke-width="5" stroke-linecap="round"/>
+    <rect x="140" y="300" width="70" height="200" rx="10" fill="#fff" fill-opacity=".8"/>
+    <rect x="240" y="240" width="70" height="260" rx="10" fill="#fff" fill-opacity=".8"/>
+    <rect x="340" y="330" width="70" height="170" rx="10" fill="#fff" fill-opacity=".8"/>
+    <rect x="440" y="180" width="70" height="320" rx="10" fill="#FFD10C"/>
+    <polyline points="175,250 275,190 375,280 475,130" fill="none" stroke="#FFD10C" stroke-width="7" stroke-linejoin="round" stroke-linecap="round"/>
+  </svg>
+  <img class="logo-capa" src="{{LOGO_BRANCO}}" alt="Quarks">
+  <aside class="notas">
+    <p>Hoje: porcentagem para comparar grupos, os três gráficos (colunas, setores e linhas), como ler e argumentar com dados, o gráfico que engana e as três medidas: média, moda e mediana.</p>
+  </aside>
+</section>
+
+<!-- 2. Porcentagem para comparar -->
+<section class="slide" data-nome="Porcentagem para comparar">
+  <div class="conteudo">
+    <p class="olho">Porcentagem em estatística</p>
+    <h2 class="titulo">Qual turma usa mais o ônibus?</h2>
+    <svg class="fig" viewBox="0 0 1000 300" width="1000" height="300" style="left:0;top:160px" aria-hidden="true">
+      <text x="0" y="40" class="rot-forte">Turma A: 18 de 40 alunos</text>
+      <text x="0" y="200" class="rot-forte">Turma B: 12 de 25 alunos</text>
+      <g data-passo="1"><rect x="0" y="60" width="1000" height="60" rx="30" fill="#fff" stroke="#E4DEFB" stroke-width="2"/>
+        <rect class="enche" x="0" y="60" width="450" height="60" rx="30" fill="var(--d)"/><text x="470" y="102" class="rot-forte">45%</text></g>
+      <g data-passo="3"><rect x="0" y="220" width="1000" height="60" rx="30" fill="#fff" stroke="#E4DEFB" stroke-width="2"/>
+        <rect class="enche" x="0" y="220" width="480" height="60" rx="30" fill="#E0A800"/><text x="500" y="262" class="rot-forte">48%</text></g>
+    </svg>
+    <div class="contas" style="position:absolute;left:1120px;top:300px;font-size:44px;row-gap:18px">
+      <div class="eq" data-passo="2"><span>\(f_B\)</span><span>\(=\)</span><span>\(\dfrac{12}{25} \cdot 100\%\)</span></div>
+      <div class="eq" data-passo="2"><span>\(f_B\)</span><span>\(=\)</span><span>\(0{,}48 \cdot 100\%\)</span></div>
+      <div class="eq final" data-passo="3"><span>\(f_B\)</span><span>\(=\)</span><span>\(48\%\)</span></div>
+    </div>
+    <span class="pilula pilula-resposta" data-passo="4" style="position:absolute;right:0;top:640px">Menos alunos, mas proporção maior</span>
+  </div>
+  <aside class="notas">
+    <p>Da apostila: com a porcentagem dá para comparar grupos de tamanhos diferentes. Turma A: 45% (a da parte 1). Turma B: 12 de 25.</p>
+    <p>Clique 4: 12 é menos que 18, mas 48% é mais que 45%. Comparar só a quantidade engana quando os totais são diferentes.</p>
+  </aside>
+</section>
+
+<!-- 3. Qual gráfico -->
+<section class="slide" data-nome="Qual gráfico usar">
+  <div class="conteudo">
+    <p class="olho">Gráficos</p>
+    <h2 class="titulo">Cada gráfico, uma pergunta</h2>
+    <div class="tres" style="position:absolute;left:0;right:0;top:160px">
+      <div class="cartao" data-passo="1">
+        <svg viewBox="0 0 300 190" aria-hidden="true"><line x1="20" y1="170" x2="280" y2="170" stroke="#9C93C4" stroke-width="4"/>
+          <rect class="cresce" x="40" y="30" width="44" height="140" rx="6" fill="#2F6BFF"/><rect class="cresce" x="104" y="92" width="44" height="78" rx="6" fill="#6551D1"/><rect class="cresce" x="168" y="108" width="44" height="62" rx="6" fill="#0F8B8D"/><rect class="cresce" x="232" y="139" width="44" height="31" rx="6" fill="#E0A800"/></svg>
+        <h3>Colunas</h3><p>Comparar <b>categorias</b>.</p>
+      </div>
+      <div class="cartao" data-passo="2">
+        <svg viewBox="0 0 300 190" aria-hidden="true"><circle class="fatia" cx="150" cy="95" r="42.5" fill="none" stroke="#2F6BFF" stroke-width="85" stroke-dasharray="120.17 267.04" stroke-dashoffset="-0.00" transform="rotate(-90 150 95)" style="--len:120.17px;--C:267.04px;animation-delay:0.0s"/>
+      <circle class="fatia" cx="150" cy="95" r="42.5" fill="none" stroke="#6551D1" stroke-width="85" stroke-dasharray="66.76 267.04" stroke-dashoffset="-120.17" transform="rotate(-90 150 95)" style="--len:66.76px;--C:267.04px;animation-delay:0.5s"/>
+      <circle class="fatia" cx="150" cy="95" r="42.5" fill="none" stroke="#0F8B8D" stroke-width="85" stroke-dasharray="53.41 267.04" stroke-dashoffset="-186.92" transform="rotate(-90 150 95)" style="--len:53.41px;--C:267.04px;animation-delay:1.0s"/>
+      <circle class="fatia" cx="150" cy="95" r="42.5" fill="none" stroke="#E0A800" stroke-width="85" stroke-dasharray="26.70 267.04" stroke-dashoffset="-240.33" transform="rotate(-90 150 95)" style="--len:26.70px;--C:267.04px;animation-delay:1.5s"/></svg>
+        <h3>Setores</h3><p>Partes de <b>um todo</b>.</p>
+      </div>
+      <div class="cartao" data-passo="3">
+        <svg viewBox="0 0 300 190" aria-hidden="true"><line x1="20" y1="170" x2="280" y2="170" stroke="#9C93C4" stroke-width="4"/>
+          <polyline class="desenha" style="--L:420" points="30,120 80,100 130,130 180,85 230,40 275,70" fill="none" stroke="var(--d)" stroke-width="6" stroke-linejoin="round" stroke-linecap="round"/></svg>
+        <h3>Linhas</h3><p>Evolução <b>no tempo</b>.</p>
+      </div>
+    </div>
+  </div>
+  <aside class="notas">
+    <p>A dica da apostila: comparar categorias, colunas ou barras; partes de um todo, setores; evolução no tempo, linhas. Um gráfico por clique.</p>
+  </aside>
+</section>
+
+<!-- 4. Colunas -->
+<section class="slide" data-nome="Gráfico de colunas">
+  <div class="conteudo">
+    <p class="olho">Gráfico de colunas</p>
+    <h2 class="titulo">A altura é a frequência</h2>
+    <svg class="fig" viewBox="0 0 860 470" width="860" height="470" style="left:600px;top:150px" aria-hidden="true">
+      <g stroke="#E4DEFB" stroke-width="2"><line x1="80" y1="380" x2="840" y2="380"/><line x1="80" y1="290" x2="840" y2="290"/><line x1="80" y1="200" x2="840" y2="200"/><line x1="80" y1="110" x2="840" y2="110"/><line x1="80" y1="20" x2="840" y2="20"/></g>
+      <g class="rot" text-anchor="end"><text x="66" y="389">0</text><text x="66" y="299">5</text><text x="66" y="209">10</text><text x="66" y="119">15</text><text x="66" y="29">20</text></g>
+      <line x1="80" y1="380" x2="840" y2="380" stroke="#5E5A70" stroke-width="3"/>
+      <g data-passo="1">
+        <rect class="cresce" x="120" y="56" width="120" height="324" rx="10" fill="#2F6BFF"/>
+        <rect class="cresce" x="300" y="200" width="120" height="180" rx="10" fill="#6551D1"/>
+        <rect class="cresce" x="480" y="236" width="120" height="144" rx="10" fill="#0F8B8D"/>
+        <rect class="cresce" x="660" y="308" width="120" height="72" rx="10" fill="#E0A800"/>
+        <g class="rot-forte" text-anchor="middle"><text x="180" y="44">18</text><text x="360" y="188">10</text><text x="540" y="224">8</text><text x="720" y="296">4</text></g>
+      </g>
+      <g class="rot" text-anchor="middle"><text x="180" y="420">ônibus</text><text x="360" y="420">a pé</text><text x="540" y="420">carro</text><text x="720" y="420">bicicleta</text></g>
+      <text x="0" y="200" class="rot" transform="rotate(-90 20 200)" text-anchor="middle">alunos</text>
+    </svg>
+    <div style="position:absolute;left:0;width:520px;top:170px;display:flex;flex-direction:column;gap:22px">
+      <div class="cartao" data-passo="2"><h3>Compara</h3><p>Num olhar: o ônibus ganha; a bicicleta é a menor.</p></div>
+      <div class="cartao" data-passo="3"><h3>Deitado</h3><p>Com as colunas na horizontal, vira gráfico de <b>barras</b>.</p></div>
+    </div>
+  </div>
+  <aside class="notas">
+    <p>Os mesmos 40 alunos da parte 1 (18, 10, 8 e 4). Clique 1: as colunas sobem até a frequência de cada transporte.</p>
+  </aside>
+</section>
+
+<!-- 5. Setores -->
+<section class="slide" data-nome="Gráfico de setores">
+  <div class="conteudo">
+    <p class="olho">Gráfico de setores</p>
+    <h2 class="titulo">A pizza: partes de um todo</h2>
+    <svg class="fig" viewBox="0 0 520 480" width="520" height="480" style="left:20px;top:130px" aria-hidden="true">
+      <g data-passo="1">
+      <circle class="fatia" cx="240" cy="240" r="90.0" fill="none" stroke="#2F6BFF" stroke-width="180" stroke-dasharray="254.47 565.49" stroke-dashoffset="-0.00" transform="rotate(-90 240 240)" style="--len:254.47px;--C:565.49px;animation-delay:0.0s"/>
+      <circle class="fatia" cx="240" cy="240" r="90.0" fill="none" stroke="#6551D1" stroke-width="180" stroke-dasharray="141.37 565.49" stroke-dashoffset="-254.47" transform="rotate(-90 240 240)" style="--len:141.37px;--C:565.49px;animation-delay:0.5s"/>
+      <circle class="fatia" cx="240" cy="240" r="90.0" fill="none" stroke="#0F8B8D" stroke-width="180" stroke-dasharray="113.10 565.49" stroke-dashoffset="-395.84" transform="rotate(-90 240 240)" style="--len:113.10px;--C:565.49px;animation-delay:1.0s"/>
+      <circle class="fatia" cx="240" cy="240" r="90.0" fill="none" stroke="#E0A800" stroke-width="180" stroke-dasharray="56.55 565.49" stroke-dashoffset="-508.94" transform="rotate(-90 240 240)" style="--len:56.55px;--C:565.49px;animation-delay:1.5s"/>
+      <text x="350.2" y="232.3" text-anchor="middle" font-family="Figtree,'Segoe UI',sans-serif" font-size="28" font-weight="800" fill="#fff">45%</text>
+      <text x="189.3" y="349.2" text-anchor="middle" font-family="Figtree,'Segoe UI',sans-serif" font-size="28" font-weight="800" fill="#fff">25%</text>
+      <text x="133.9" y="215.3" text-anchor="middle" font-family="Figtree,'Segoe UI',sans-serif" font-size="28" font-weight="800" fill="#fff">20%</text>
+      <text x="205.5" y="143.7" text-anchor="middle" font-family="Figtree,'Segoe UI',sans-serif" font-size="28" font-weight="800" fill="#fff">10%</text>
+      </g>
+    </svg>
+    <div style="position:absolute;left:600px;top:150px;width:520px;display:flex;flex-direction:column;gap:12px" data-passo="1">
+      <div class="linha-tag" style="font-size:28px;padding:8px 22px"><span><i style="display:inline-block;width:22px;height:22px;border-radius:50%;background:#2F6BFF;margin-right:12px"></i>ônibus</span><b>45%</b></div>
+      <div class="linha-tag" style="font-size:28px;padding:8px 22px"><span><i style="display:inline-block;width:22px;height:22px;border-radius:50%;background:#6551D1;margin-right:12px"></i>a pé</span><b>25%</b></div>
+      <div class="linha-tag" style="font-size:28px;padding:8px 22px"><span><i style="display:inline-block;width:22px;height:22px;border-radius:50%;background:#0F8B8D;margin-right:12px"></i>carro</span><b>20%</b></div>
+      <div class="linha-tag" style="font-size:28px;padding:8px 22px"><span><i style="display:inline-block;width:22px;height:22px;border-radius:50%;background:#E0A800;margin-right:12px"></i>bicicleta</span><b>10%</b></div>
+    </div>
+    <div class="caixa caixa-fundamental" data-passo="2" style="position:absolute;left:1200px;right:0;top:150px;padding:20px 28px">
+      <div class="texto" style="font-size:32px">Volta toda: <b>360°</b><br>25% → <b>90°</b></div>
+    </div>
+    <div class="contas" style="position:absolute;left:640px;top:520px;font-size:42px;row-gap:14px">
+      <div class="eq" data-passo="3"><span>\(\text{ângulo}\)</span><span>\(=\)</span><span>\(\dfrac{\text{porcentagem}}{100} \cdot 360°\)</span></div>
+      <div class="eq" data-passo="4"><span>\(\text{ângulo}\)</span><span>\(=\)</span><span>\(0{,}45 \cdot 360°\)</span></div>
+      <div class="eq final" data-passo="5"><span>\(\text{ângulo}\)</span><span>\(=\)</span><span>\(162°\)</span></div>
+    </div>
+  </div>
+  <aside class="notas">
+    <p>Clique 1: as fatias se abrem, cada uma proporcional à porcentagem (os mesmos dados). Clique 2: a volta toda tem 360°; a fatia de 25% (a pé) é um quarto da pizza, 90°.</p>
+    <p>Cliques 3 a 5: o ângulo do setor do ônibus (exemplo da apostila), 0,45 · 360° = 162°.</p>
+  </aside>
+</section>
+
+<!-- 6. Linhas -->
+<section class="slide" data-nome="Gráfico de linhas">
+  <div class="conteudo">
+    <p class="olho">Gráfico de linhas</p>
+    <h2 class="titulo">Consumo de água da casa (m³)</h2>
+    <svg class="fig" viewBox="0 0 760 470" width="760" height="470" style="left:20px;top:130px" aria-hidden="true">
+      <g stroke="#E4DEFB" stroke-width="2"><line x1="60" y1="420" x2="740" y2="420"/><line x1="60" y1="330" x2="740" y2="330"/><line x1="60" y1="240" x2="740" y2="240"/><line x1="60" y1="150" x2="740" y2="150"/><line x1="60" y1="60" x2="740" y2="60"/></g>
+      <g class="rot" text-anchor="end"><text x="46" y="429">0</text><text x="46" y="339">5</text><text x="46" y="249">10</text><text x="46" y="159">15</text><text x="46" y="69">20</text></g>
+      <line x1="60" y1="420" x2="740" y2="420" stroke="#5E5A70" stroke-width="3"/>
+      <g class="rot" text-anchor="middle"><text x="110" y="460">jan</text><text x="230" y="460">fev</text><text x="350" y="460">mar</text><text x="470" y="460">abr</text><text x="590" y="460">mai</text><text x="710" y="460">jun</text></g>
+      <polyline class="desenha ja" style="--L:760" points="110,204 230,168 350,222 470,150 590,96 710,132" fill="none" stroke="var(--d)" stroke-width="7" stroke-linejoin="round" stroke-linecap="round"/>
+      <g fill="var(--d-forte)"><circle cx="110" cy="204" r="9"/><circle cx="230" cy="168" r="9"/><circle cx="350" cy="222" r="9"/><circle cx="470" cy="150" r="9"/><circle cx="590" cy="96" r="9"/><circle cx="710" cy="132" r="9"/></g>
+      <g data-passo="1"><circle cx="590" cy="96" r="20" fill="none" stroke="#E0A800" stroke-width="5"/><text x="590" y="62" text-anchor="middle" class="rot-forte">18</text></g>
+      <g data-passo="2"><circle cx="350" cy="222" r="20" fill="none" stroke="#E0A800" stroke-width="5"/><text x="350" y="272" text-anchor="middle" class="rot-forte">11</text></g>
+      <g data-passo="3"><path d="M370 214 L450 158" stroke="#C2384F" stroke-width="6" stroke-linecap="round"/><text x="470" y="128" text-anchor="middle" class="rot-forte" style="fill:#C2384F">15</text></g>
+    </svg>
+    <div style="position:absolute;left:860px;right:0;top:160px;display:flex;flex-direction:column;gap:18px">
+      <div class="linha-tag" data-passo="1"><span>Maior consumo</span><b>maio, 18 m³</b></div>
+      <div class="linha-tag" data-passo="2"><span>Menor consumo</span><b>março, 11 m³</b></div>
+      <div class="linha-tag" data-passo="3"><span>Maior aumento</span><b>março → abril</b></div>
+    </div>
+    <div class="contas" style="position:absolute;left:900px;top:470px;font-size:42px;row-gap:14px">
+      <div class="eq" data-passo="4"><span>\(\text{aumento}\)</span><span>\(=\)</span><span>\(C_{\text{abr}} - C_{\text{mar}}\)</span></div>
+      <div class="eq" data-passo="5"><span>\(\text{aumento}\)</span><span>\(=\)</span><span>\(15 - 11\)</span></div>
+      <div class="eq final" data-passo="6"><span>\(\text{aumento}\)</span><span>\(=\)</span><span>\(4\ \text{m}^3\)</span></div>
+    </div>
+  </div>
+  <aside class="notas">
+    <p>A linha se desenha mês a mês (jan 12, fev 14, mar 11, abr 15, mai 18, jun 16). Antes de tudo, leia o título, os eixos e a unidade (m³).</p>
+    <p>Cliques 1 e 2: leituras diretas. Cliques 3 a 6: a leitura que pede conta. Os outros aumentos são menores: jan→fev 2, abr→mai 3.</p>
+  </aside>
+</section>
+
+<!-- 7. Argumentos -->
+<section class="slide" data-nome="Argumentar com dados">
+  <div class="conteudo">
+    <p class="olho">Análise de dados</p>
+    <h2 class="titulo">O gráfico sustenta a frase?</h2>
+    <div style="position:absolute;left:0;right:0;top:170px;display:flex;flex-direction:column;gap:22px">
+      <div class="linha-tag"><span>“O consumo subiu de março a maio.”</span><span class="tag tag-v" data-passo="1">sustentado</span></div>
+      <div class="linha-tag"><span>“O consumo vai continuar subindo em julho.”</span><span class="tag tag-x" data-passo="2">não sustentado</span></div>
+    </div>
+    <div class="caixa caixa-fundamental" data-passo="3" style="position:absolute;left:600px;right:0;top:470px">
+      <div class="texto">Um argumento correto se apoia no que os dados mostram e <b>não vai além deles</b>. Em junho, o consumo caiu.</div>
+    </div>
+  </div>
+  <aside class="notas">
+    <p>Mesmo gráfico do slide anterior. Clique 1: 11 → 15 → 18, subiu mesmo. Clique 2: o gráfico não fala de julho, e ainda mostra queda em junho (18 → 16).</p>
+  </aside>
+</section>
+
+<!-- 8. Eixo cortado -->
+<section class="slide" data-nome="Gráfico que engana">
+  <div class="conteudo">
+    <p class="olho">Atenção</p>
+    <h2 class="titulo">Onde o eixo começa?</h2>
+    <svg class="fig" viewBox="0 0 1000 400" width="1000" height="400" style="left:600px;top:140px" aria-hidden="true">
+      <g data-passo="0">
+        <text x="200" y="20" text-anchor="middle" class="rot-forte" style="fill:#C2384F">eixo começando em 48</text>
+        <line x1="60" y1="320" x2="380" y2="320" stroke="#5E5A70" stroke-width="3"/><line x1="60" y1="40" x2="60" y2="320" stroke="#5E5A70" stroke-width="3"/>
+        <g class="rot" text-anchor="end" style="font-size:22px"><text x="50" y="328">48</text><text x="50" y="235">51</text><text x="50" y="141">54</text><text x="50" y="48">57</text></g>
+        <rect class="cresce ja" x="100" y="257.8" width="90" height="62.2" rx="8" fill="#9C93C4"/>
+        <rect class="cresce ja" x="240" y="102.2" width="90" height="217.8" rx="8" fill="var(--d)"/>
+        <g class="rot" text-anchor="middle"><text x="145" y="356">A: 50</text><text x="285" y="356">B: 55</text></g>
+      </g>
+      <g data-passo="1">
+        <text x="760" y="20" text-anchor="middle" class="rot-forte" style="fill:var(--certo)">eixo começando em 0</text>
+        <line x1="620" y1="320" x2="940" y2="320" stroke="#5E5A70" stroke-width="3"/><line x1="620" y1="40" x2="620" y2="320" stroke="#5E5A70" stroke-width="3"/>
+        <g class="rot" text-anchor="end" style="font-size:22px"><text x="610" y="328">0</text><text x="610" y="181">30</text><text x="610" y="48">57</text></g>
+        <rect class="cresce" x="660" y="74.4" width="90" height="245.6" rx="8" fill="#9C93C4"/>
+        <rect class="cresce" x="800" y="49.8" width="90" height="270.2" rx="8" fill="var(--d)"/>
+        <g class="rot" text-anchor="middle"><text x="705" y="356">A: 50</text><text x="845" y="356">B: 55</text></g>
+      </g>
+    </svg>
+    <div class="caixa caixa-atencao" style="position:absolute;left:0;width:540px;top:160px">
+      <div class="texto" style="font-size:32px">À esquerda, B parece ter <b>mais que o triplo</b> de A.</div>
+    </div>
+    <div class="contas" style="position:absolute;left:660px;top:580px;font-size:42px;row-gap:14px">
+      <div class="eq" data-passo="2"><span>\(\dfrac{55 - 50}{50}\)</span><span>\(=\)</span><span>\(\dfrac{5}{50} = 0{,}1\)</span></div>
+      <div class="eq final" data-passo="3"><span></span><span>\(=\)</span><span>\(10\%\ \text{a mais}\)</span></div>
+    </div>
+  </div>
+  <aside class="notas">
+    <p>A figura da apostila: os mesmos dados (50 e 55 vendas), com o eixo cortado em 48 e com o eixo começando em zero. Clique 1: o gráfico honesto.</p>
+    <p>Cliques 2 e 3: B vende só 10% a mais que A. Moral da apostila: antes de comparar alturas, veja se o eixo começa no zero.</p>
+  </aside>
+</section>
+
+<!-- 9. Média -->
+<section class="slide" data-nome="Média aritmética">
+  <div class="conteudo">
+    <p class="olho">Relembrando · média aritmética</p>
+    <h2 class="titulo">As notas de Ana: 6, 7, 8 e 9</h2>
+    <svg class="fig" viewBox="0 0 560 440" width="560" height="440" style="left:0;top:150px" aria-hidden="true">
+      <line x1="20" y1="400" x2="540" y2="400" stroke="#5E5A70" stroke-width="3"/>
+      <g data-passo="1">
+        <rect class="nivela" style="--k:1.25" x="50" y="160" width="90" height="240" rx="10" fill="#8FB0FF"/>
+        <rect class="nivela" style="--k:1.0714" x="170" y="120" width="90" height="280" rx="10" fill="#6E95FF"/>
+        <rect class="nivela" style="--k:0.9375" x="290" y="80" width="90" height="320" rx="10" fill="#2F6BFF"/>
+        <rect class="nivela" style="--k:0.8333" x="410" y="40" width="90" height="360" rx="10" fill="#1E4FD8"/>
+        <g class="rot-forte" text-anchor="middle" style="fill:#fff"><text x="95" y="386">6</text><text x="215" y="386">7</text><text x="335" y="386">8</text><text x="455" y="386">9</text></g>
+        <g class="linha-media"><line x1="30" y1="100" x2="530" y2="100" stroke="#E0A800" stroke-width="5" stroke-dasharray="14 10"/><text x="540" y="92" class="rot-forte" style="fill:#8A6A00">7,5</text></g>
+      </g>
+    </svg>
+    <div class="caixa caixa-fundamental" data-passo="2" style="position:absolute;left:680px;right:0;top:150px;padding:18px 30px">
+      <div class="texto" style="font-size:32px">Um valor só que, repetido, dá <b>a mesma soma</b>.</div>
+    </div>
+    <div class="contas" style="position:absolute;left:720px;top:330px;font-size:46px;row-gap:16px">
+      <div class="eq" data-passo="3"><span>\(\bar{x}\)</span><span>\(=\)</span><span>\(\dfrac{6 + 7 + 8 + 9}{4}\)</span></div>
+      <div class="eq" data-passo="4"><span>\(\bar{x}\)</span><span>\(=\)</span><span>\(\dfrac{30}{4}\)</span></div>
+      <div class="eq final" data-passo="5"><span>\(\bar{x}\)</span><span>\(=\)</span><span>\(7{,}5\)</span></div>
+    </div>
+    <span class="pilula pilula-pausa" data-passo="6" style="position:absolute;right:0;top:760px">Nenhuma prova teve 7,5</span>
+  </div>
+  <aside class="notas">
+    <p>A média foi vista em Porcentagem e juros simples; o cronograma pede que ela volte aqui, junto com a análise de dados. Clique 1: as colunas se nivelam em 7,5 e voltam: o que sobra na de 9 completa a de 6.</p>
+    <p>Clique 6: a média não precisa ser um dos valores. E lembre: um valor extremo puxa a média (vai aparecer na mediana).</p>
+  </aside>
+</section>
+
+<!-- 10. Moda -->
+<section class="slide" data-nome="Moda">
+  <div class="conteudo">
+    <p class="olho">Moda</p>
+    <h2 class="titulo">Qual número de tênis repor?</h2>
+    <div class="lista-num" style="position:absolute;left:0;right:0;top:160px">
+      <span>36</span><span class="luz">38</span><span>37</span><span class="luz">38</span><span>40</span><span class="luz">38</span><span>37</span><span>39</span><span class="luz">38</span><span>36</span>
+    </div>
+    <svg class="fig" viewBox="0 0 900 360" width="900" height="360" style="left:620px;top:270px" aria-hidden="true">
+      <line x1="40" y1="300" x2="860" y2="300" stroke="#5E5A70" stroke-width="3"/>
+      <g class="rot-forte" text-anchor="middle"><text x="120" y="344">36</text><text x="290" y="344">37</text><text x="460" y="344">38</text><text x="630" y="344">39</text><text x="800" y="344">40</text></g>
+      <g data-passo="1" fill="var(--d)">
+        <circle class="cai" cx="120" cy="268" r="24"/><circle class="cai" cx="120" cy="212" r="24" style="animation-delay:.9s"/>
+        <circle class="cai" cx="290" cy="268" r="24" style="animation-delay:.6s"/><circle class="cai" cx="290" cy="212" r="24" style="animation-delay:1.5s"/>
+        <circle class="cai" cx="630" cy="268" r="24" style="animation-delay:1.2s"/><circle class="cai" cx="800" cy="268" r="24" style="animation-delay:.3s"/>
+      </g>
+      <g data-passo="1" fill="#E0A800">
+        <circle class="cai" cx="460" cy="268" r="24" style="animation-delay:.15s"/><circle class="cai" cx="460" cy="212" r="24" style="animation-delay:.75s"/>
+        <circle class="cai" cx="460" cy="156" r="24" style="animation-delay:1.35s"/><circle class="cai" cx="460" cy="100" r="24" style="animation-delay:1.8s"/>
+      </g>
+      <text data-passo="2" x="460" y="52" text-anchor="middle" class="rot-forte" style="fill:#8A6A00">4 vezes</text>
+    </svg>
+    <div class="caixa caixa-fundamental" data-passo="2" style="position:absolute;left:0;width:540px;top:290px">
+      <span class="rotulo">Moda</span>
+      <div class="texto" style="font-size:34px">O valor que <b>mais se repete</b>: <b>38</b>.</div>
+    </div>
+    <span class="pilula pilula-pausa" data-passo="3" style="position:absolute;left:620px;top:660px">Média 37,7: ninguém calça 37,7</span>
+  </div>
+  <aside class="notas">
+    <p>Apostila, bloco "Moda": os últimos 10 pares vendidos. Clique 1: cada venda cai na coluna do seu número (36 e 37: 2 vezes; 38: 4 vezes; 39 e 40: 1 vez).</p>
+    <p>Clique 3: a média (377 ÷ 10 = 37,7) não responde à pergunta do gerente; a moda responde.</p>
+  </aside>
+</section>
+
+<!-- 11. Mais sobre a moda -->
+<section class="slide" data-nome="Moda: casos e tabela">
+  <div class="conteudo">
+    <p class="olho">Moda</p>
+    <h2 class="titulo">Duas modas, nenhuma, ou numa tabela</h2>
+    <div style="position:absolute;left:0;width:760px;top:160px;display:flex;flex-direction:column;gap:16px">
+      <div class="linha-tag" data-passo="1"><span>2, <b>3</b>, <b>3</b>, 5, <b>7</b>, <b>7</b></span><span class="tag" style="background:var(--d-clara);color:var(--d-forte)">bimodal: 3 e 7</span></div>
+      <div class="linha-tag" data-passo="2"><span>4, 6, 8, 10</span><span class="tag" style="background:var(--lilas);color:var(--cinza)">amodal</span></div>
+      <div class="linha-tag" data-passo="3"><span>cor preferida mais votada</span><span class="tag" style="background:#FFE9DF;color:#A8431B">serve para categoria</span></div>
+    </div>
+    <table class="tabela tab-irmaos" data-passo="4" style="position:absolute;left:900px;top:160px">
+      <tr><th>Irmãos</th><th>Alunos</th></tr>
+      <tr data-em="5:luz"><td>0</td><td>5</td></tr><tr><td>1</td><td>3</td></tr><tr><td>2</td><td>4</td></tr><tr><td>3</td><td>3</td></tr>
+    </table>
+    <div class="caixa caixa-atencao" data-passo="6" style="position:absolute;left:1300px;right:0;top:160px;padding:20px 26px">
+      <span class="rotulo">Atenção</span>
+      <div class="texto" style="font-size:30px">A moda é <b>0 irmão</b> (o valor), e não 5 (a frequência).</div>
+    </div>
+  </div>
+  <aside class="notas">
+    <p>Cliques 1 a 3: um conjunto pode ter duas modas, nenhuma moda, e a moda serve até para variáveis qualitativas (não existe "média das cores").</p>
+    <p>Cliques 4 a 6: numa tabela, a moda está na linha de maior frequência. Os 15 alunos da apostila: maior frequência 5, na linha do 0.</p>
+  </aside>
+</section>
+
+<!-- 12. Mediana -->
+<section class="slide" data-nome="Mediana">
+  <div class="conteudo">
+    <p class="olho">Mediana</p>
+    <h2 class="titulo">O valor do meio, em ordem</h2>
+    <p class="texto" style="position:absolute;left:0;top:140px;margin:0">Minutos até a escola de 7 alunos:</p>
+    <div data-anima="estat-ordena" data-anima-passo="1" style="position:absolute;left:560px;top:200px;width:1120px;height:300px"></div>
+    <div class="caixa caixa-fundamental" data-passo="2" style="position:absolute;left:0;width:520px;top:230px;padding:20px 28px">
+      <span class="rotulo">Mediana</span>
+      <div class="texto" style="font-size:32px">Metade dos valores abaixo, metade acima.</div>
+    </div>
+    <div style="position:absolute;left:600px;right:0;top:530px;display:grid;grid-template-columns:1fr 1fr;gap:18px">
+      <div class="cartao" data-passo="2"><h3>Quantidade ímpar</h3><p>O valor do meio: aqui, o 4º. <b>Mediana: 15 min.</b></p></div>
+      <div class="cartao" data-passo="3"><h3>Quantidade par</h3><p>A média dos <b>dois do meio</b>.</p></div>
+    </div>
+  </div>
+  <aside class="notas">
+    <p>Apostila, exemplo "Quantidade ímpar": 12, 25, 8, 18, 30, 10, 15. Clique 1: os cartões deslizam para a ordem crescente (8, 10, 12, 15, 18, 25, 30) e o 15 acende, com 3 valores de cada lado.</p>
+    <p>Atenção da apostila: o 18, que estava no meio da lista original (o cartão de contorno tracejado no começo), não é a mediana. Ordene antes!</p>
+  </aside>
+</section>
+
+<!-- 13. Mediana par -->
+<section class="slide" data-nome="Mediana: quantidade par">
+  <div class="conteudo">
+    <p class="olho">Mediana</p>
+    <h2 class="titulo">Salários: 2, 2, 3 e 13 mil reais</h2>
+    <div class="lista-num" style="position:absolute;left:0;top:160px;width:540px">
+      <span>2</span><span class="luz">2</span><span class="luz">3</span><span>13</span>
+    </div>
+    <div class="contas" style="position:absolute;left:640px;top:160px;font-size:46px;row-gap:16px">
+      <div class="eq" data-passo="1"><span>\(\text{mediana}\)</span><span>\(=\)</span><span>\(\dfrac{2 + 3}{2}\)</span></div>
+      <div class="eq" data-passo="2"><span>\(\text{mediana}\)</span><span>\(=\)</span><span>\(\dfrac{5}{2}\)</span></div>
+      <div class="eq final" data-passo="3"><span>\(\text{mediana}\)</span><span>\(=\)</span><span>\(2{,}5\ \text{mil}\)</span></div>
+    </div>
+    <table class="tabela comp" data-passo="4" style="position:absolute;left:1240px;top:160px">
+      <tr><th>medida</th><th>valor</th></tr>
+      <tr><td>média</td><td>5 mil</td></tr><tr><td>moda</td><td>2 mil</td></tr><tr data-em="5:luz" style="font-weight:800"><td>mediana</td><td>2,5 mil</td></tr>
+    </table>
+    <div class="caixa caixa-fundamental" data-passo="5" style="position:absolute;left:640px;right:0;top:560px;padding:20px 30px">
+      <div class="texto" style="font-size:32px">O 13 <b>puxa a média</b>, mas quase não mexe na mediana: ela descreve melhor o salário típico.</div>
+    </div>
+  </div>
+  <aside class="notas">
+    <p>Apostila, exemplo "Quantidade par". Quatro valores: os dois do meio são 2 e 3. Clique 4: as três medidas lado a lado (média 20 ÷ 4 = 5; moda 2; mediana 2,5).</p>
+    <p>Numa tabela, conte posições: nos 15 alunos dos irmãos, a mediana é o 8º valor. Do 1º ao 5º é 0; do 6º ao 8º é 1. Mediana: 1 irmão.</p>
+  </aside>
+</section>
+
+<!-- 14. Como cai no IF -->
+<section class="slide" data-nome="Média, moda ou mediana?">
+  <div class="conteudo">
+    <p class="olho">Como cai no IF</p>
+    <h2 class="titulo">Qual das três foi pedida?</h2>
+    <div class="tres" style="position:absolute;left:0;right:0;top:170px">
+      <div class="cartao" data-passo="1"><h3>Média</h3><p>Soma ÷ quantidade. A que <b>mais cai</b>, de lista, tabela ou gráfico.</p></div>
+      <div class="cartao" data-passo="2"><h3>Moda</h3><p>A que <b>mais se repete</b>. Serve para categorias.</p></div>
+      <div class="cartao" data-passo="3"><h3>Mediana</h3><p>O <b>meio</b>, depois de ordenar.</p></div>
+    </div>
+    <div class="caixa caixa-atencao" data-passo="4" style="position:absolute;left:600px;right:0;top:520px">
+      <div class="texto">Nas alternativas, as outras duas medidas aparecem como <b>respostas erradas</b>.</div>
+    </div>
+  </div>
+  <aside class="notas">
+    <p>A dica "Como cai no IF" da apostila. Leia o comando da questão duas vezes antes de calcular.</p>
+  </aside>
+</section>
+
+<!-- 15. Questão 1 -->
+<section class="slide questao" data-nome="Questão 1">
+  <div class="conteudo">
+    <div class="area-resolucao"></div>
+    <span class="pilula pilula-pausa" data-em="1:some">Pause o vídeo e tente</span>
+    <div class="painel-questao">
+      <p class="olho">Questão 1 · IF Sudeste MG 2019</p>
+      <p class="enunciado" style="font-size:25px">Uma loja promoveu uma pesquisa com 1200 clientes a fim de medir a satisfação deles. Os dados obtidos estão apresentados no gráfico a seguir:</p>
+      <svg class="fig-q" viewBox="0 0 500 280" style="height:260px" aria-hidden="true">
+        <text x="250" y="20" text-anchor="middle" font-family="Figtree,'Segoe UI',sans-serif" font-size="20" font-weight="800" fill="#292B2C">Satisfação dos Clientes</text>
+        <circle class="" cx="250" cy="160" r="52.5" fill="none" stroke="#2C2A9E" stroke-width="105" stroke-dasharray="138.54 329.87" stroke-dashoffset="-0.00" transform="rotate(-90 250 160)" style="--len:138.54px;--C:329.87px;animation-delay:0.0s"/>
+      <circle class="" cx="250" cy="160" r="52.5" fill="none" stroke="#8FB0FF" stroke-width="105" stroke-dasharray="168.23 329.87" stroke-dashoffset="-138.54" transform="rotate(-90 250 160)" style="--len:168.23px;--C:329.87px;animation-delay:0.5s"/>
+      <circle class="" cx="250" cy="160" r="52.5" fill="none" stroke="#C2384F" stroke-width="105" stroke-dasharray="23.09 329.87" stroke-dashoffset="-306.78" transform="rotate(-90 250 160)" style="--len:23.09px;--C:329.87px;animation-delay:1.0s"/>
+      <text x="313.1" y="151.5" text-anchor="middle" font-family="Figtree,'Segoe UI',sans-serif" font-size="22" font-weight="800" fill="#fff">42%</text>
+      <text x="192.0" y="197.3" text-anchor="middle" font-family="Figtree,'Segoe UI',sans-serif" font-size="22" font-weight="800" fill="#fff">51%</text>
+        <g font-family="Figtree,'Segoe UI',sans-serif" font-size="18" font-weight="700" fill="#292B2C">
+          <text x="368" y="110">Muito satisfeito</text><text x="368" y="132">42%</text>
+          <text x="40" y="214">Satisfeito</text><text x="40" y="236">51%</text>
+          <text x="222" y="48" text-anchor="end">Insatisfeito 7%</text></g>
+      </svg>
+      <p class="enunciado" style="font-size:25px">Quantos clientes declararam-se insatisfeitos com a loja?</p>
+      <ol class="alternativas curtas">
+        <li data-em="2:apaga"><b>A</b><span>80</span></li>
+        <li data-em="2:certo"><b>B</b><span>84</span></li>
+        <li data-em="2:apaga"><b>C</b><span>90</span></li>
+        <li data-em="2:apaga"><b>D</b><span>94</span></li>
+        <li data-em="2:apaga"><b>E</b><span>100</span></li>
+      </ol>
+      <p class="fonte">IF Sudeste MG 2019 (2ª prova do ano) · questão 23 · MAT-0522</p>
+    </div>
+  </div>
+  <aside class="resolucao">
+    <p class="dados"><b>Dados:</b> 1200 clientes; insatisfeitos: 7%.</p>
+    <ol class="passos">
+      <li>\(I = 7\% \cdot 1200\)</li>
+      <li>\(I = \dfrac{7}{100} \cdot 1200 = 7 \cdot 12\)</li>
+      <li>\(I = 84\)</li>
+    </ol>
+    <p class="resposta"><b>Resposta:</b> 84 clientes. <b>Gabarito B.</b></p>
+    <p class="atencao"><b>Destaque no quadro:</b> Porcentagem do setor × total = quantidade.</p>
+    <ul class="erros">
+      <li><b>A</b> Arredonda antes de calcular.</li>
+      <li><b>C</b> Seria 7,5% de 1200.</li>
+      <li><b>D</b> Erra 7 · 12.</li>
+      <li><b>E</b> Estima a fatia "a olho" (cerca de 8%).</li>
+    </ul>
+  </aside>
+  <aside class="notas">
+    <p>Clique 1 tira o aviso de pausa: resolva na área (D liga a caneta; E esconde o enunciado). Clique 2: gabarito B.</p>
+    <p>Questão oficial do IF Sudeste MG 2019-2, q23, MAT-0522. Gráfico refeito em SVG com as mesmas porcentagens (42%, 51% e 7%). Confira: 42 + 51 + 7 = 100.</p>
+  </aside>
+</section>
+
+<!-- 16. Questão 2 -->
+<section class="slide questao" data-nome="Questão 2">
+  <div class="conteudo">
+    <div class="area-resolucao"></div>
+    <span class="pilula pilula-pausa" data-em="1:some">Pause o vídeo e tente</span>
+    <div class="painel-questao">
+      <p class="olho">Questão 2 · IF Sudeste MG 2018</p>
+      <p class="enunciado" style="font-size:23px">O gráfico a seguir fornece, a cada 2 horas, a temperatura de certa cidade, em um determinado dia. De acordo com o gráfico é <b>CORRETO</b> afirmar:</p>
+      <svg class="fig-q" viewBox="0 0 500 300" style="height:250px" aria-hidden="true">
+        <line x1="50" y1="250.0" x2="480" y2="250.0" stroke="#E4DEFB" stroke-width="2"/>
+        <line x1="50" y1="237.9" x2="480" y2="237.9" stroke="#E4DEFB" stroke-width="1"/>
+        <line x1="50" y1="225.8" x2="480" y2="225.8" stroke="#E4DEFB" stroke-width="2"/>
+        <line x1="50" y1="213.7" x2="480" y2="213.7" stroke="#E4DEFB" stroke-width="1"/>
+        <line x1="50" y1="201.6" x2="480" y2="201.6" stroke="#E4DEFB" stroke-width="2"/>
+        <line x1="50" y1="189.5" x2="480" y2="189.5" stroke="#E4DEFB" stroke-width="1"/>
+        <line x1="50" y1="177.4" x2="480" y2="177.4" stroke="#E4DEFB" stroke-width="2"/>
+        <line x1="50" y1="165.3" x2="480" y2="165.3" stroke="#E4DEFB" stroke-width="1"/>
+        <line x1="50" y1="153.2" x2="480" y2="153.2" stroke="#E4DEFB" stroke-width="2"/>
+        <line x1="50" y1="141.1" x2="480" y2="141.1" stroke="#E4DEFB" stroke-width="1"/>
+        <line x1="50" y1="128.9" x2="480" y2="128.9" stroke="#E4DEFB" stroke-width="2"/>
+        <line x1="50" y1="116.8" x2="480" y2="116.8" stroke="#E4DEFB" stroke-width="1"/>
+        <line x1="50" y1="104.7" x2="480" y2="104.7" stroke="#E4DEFB" stroke-width="2"/>
+        <line x1="50" y1="92.6" x2="480" y2="92.6" stroke="#E4DEFB" stroke-width="1"/>
+        <line x1="50" y1="80.5" x2="480" y2="80.5" stroke="#E4DEFB" stroke-width="2"/>
+        <line x1="50" y1="68.4" x2="480" y2="68.4" stroke="#E4DEFB" stroke-width="1"/>
+        <line x1="50" y1="56.3" x2="480" y2="56.3" stroke="#E4DEFB" stroke-width="2"/>
+        <line x1="50" y1="44.2" x2="480" y2="44.2" stroke="#E4DEFB" stroke-width="1"/>
+        <line x1="50" y1="32.1" x2="480" y2="32.1" stroke="#E4DEFB" stroke-width="2"/>
+        <line x1="50" y1="20.0" x2="480" y2="20.0" stroke="#E4DEFB" stroke-width="1"/>
+        <g font-family="Figtree,'Segoe UI',sans-serif" font-size="17" font-weight="700" fill="#5E5A70" text-anchor="end"><text x="44" y="255.0">10</text><text x="44" y="230.8">12</text><text x="44" y="206.6">14</text><text x="44" y="182.4">16</text><text x="44" y="158.2">18</text><text x="44" y="133.9">20</text><text x="44" y="109.7">22</text><text x="44" y="85.5">24</text><text x="44" y="61.3">26</text><text x="44" y="37.1">28</text></g>
+        <g font-family="Figtree,'Segoe UI',sans-serif" font-size="16" font-weight="700" fill="#5E5A70" text-anchor="middle"><text x="50.0" y="272">0</text><text x="85.8" y="272">2</text><text x="121.7" y="272">4</text><text x="157.5" y="272">6</text><text x="193.3" y="272">8</text><text x="229.2" y="272">10</text><text x="265.0" y="272">12</text><text x="300.8" y="272">14</text><text x="336.7" y="272">16</text><text x="372.5" y="272">18</text><text x="408.3" y="272">20</text><text x="444.2" y="272">22</text><text x="480.0" y="272">24</text></g>
+        <line x1="50" y1="250" x2="480" y2="250" stroke="#5E5A70" stroke-width="2"/><line x1="50" y1="20" x2="50" y2="250" stroke="#5E5A70" stroke-width="2"/>
+        <polyline points="50.0,153.2 85.8,165.3 121.7,189.5 157.5,177.4 193.3,141.1 229.2,92.6 265.0,56.3 300.8,44.2 336.7,32.1 372.5,80.5 408.3,104.7 444.2,116.8" fill="none" stroke="var(--d)" stroke-width="4" stroke-linejoin="round"/>
+        <rect x="44.0" y="147.2" width="12" height="12" transform="rotate(45 50.0 153.2)" fill="var(--d-forte)"/><rect x="79.8" y="159.3" width="12" height="12" transform="rotate(45 85.8 165.3)" fill="var(--d-forte)"/><rect x="115.7" y="183.5" width="12" height="12" transform="rotate(45 121.7 189.5)" fill="var(--d-forte)"/><rect x="151.5" y="171.4" width="12" height="12" transform="rotate(45 157.5 177.4)" fill="var(--d-forte)"/><rect x="187.3" y="135.1" width="12" height="12" transform="rotate(45 193.3 141.1)" fill="var(--d-forte)"/><rect x="223.2" y="86.6" width="12" height="12" transform="rotate(45 229.2 92.6)" fill="var(--d-forte)"/><rect x="259.0" y="50.3" width="12" height="12" transform="rotate(45 265.0 56.3)" fill="var(--d-forte)"/><rect x="294.8" y="38.2" width="12" height="12" transform="rotate(45 300.8 44.2)" fill="var(--d-forte)"/><rect x="330.7" y="26.1" width="12" height="12" transform="rotate(45 336.7 32.1)" fill="var(--d-forte)"/><rect x="366.5" y="74.5" width="12" height="12" transform="rotate(45 372.5 80.5)" fill="var(--d-forte)"/><rect x="402.3" y="98.7" width="12" height="12" transform="rotate(45 408.3 104.7)" fill="var(--d-forte)"/><rect x="438.2" y="110.8" width="12" height="12" transform="rotate(45 444.2 116.8)" fill="var(--d-forte)"/>
+        <text x="265" y="296" text-anchor="middle" font-family="Figtree,'Segoe UI',sans-serif" font-size="17" font-weight="700" fill="#292B2C">Tempo (horas)</text>
+        <text x="8" y="135" text-anchor="middle" font-family="Figtree,'Segoe UI',sans-serif" font-size="17" font-weight="700" fill="#292B2C" transform="rotate(-90 8 135)">Temperatura (°C)</text>
+      </svg>
+      <ol class="alternativas miudas">
+        <li data-em="2:apaga"><b>A</b><span>A temperatura atingiu seu ponto mais alto ao meio-dia.</span></li>
+        <li data-em="2:apaga"><b>B</b><span>A temperatura subiu entre quatro da manhã e seis da tarde.</span></li>
+        <li data-em="2:certo"><b>C</b><span>A temperatura atingiu seu ponto mais baixo às quatro da manhã.</span></li>
+        <li data-em="2:apaga"><b>D</b><span>A temperatura caiu entre zero e seis horas da manhã.</span></li>
+        <li data-em="2:apaga"><b>E</b><span>A temperatura variou entre 18 °C e 28 °C nesse dia.</span></li>
+      </ol>
+      <p class="fonte">IF Sudeste MG 2018 (2ª prova do ano) · questão 15 · MAT-0503</p>
+    </div>
+  </div>
+  <aside class="resolucao">
+    <p class="dados"><b>Dados:</b> eixo x: hora; eixo y: temperatura (°C).</p>
+    <ol class="passos">
+      <li><b>Ponto mais baixo:</b> 15 °C às 4 h → C correta</li>
+      <li><b>Ponto mais alto:</b> 28 °C às 16 h (não ao meio-dia)</li>
+      <li><b>De 16 h a 18 h:</b> caiu de 28 para 24</li>
+      <li><b>De 4 h a 6 h:</b> subiu de 15 para 16</li>
+    </ol>
+    <p class="resposta"><b>Resposta:</b> o ponto mais baixo foi às quatro da manhã. <b>Gabarito C.</b></p>
+    <p class="atencao"><b>Destaque no quadro:</b> Confira cada alternativa no gráfico, ponto a ponto.</p>
+    <ul class="erros">
+      <li><b>A</b> Ao meio-dia: 26 °C; o máximo, 28 °C, foi às 16 h.</li>
+      <li><b>B</b> Subiu até as 16 h e caiu até as 18 h.</li>
+      <li><b>D</b> Caiu até as 4 h e subiu até as 6 h.</li>
+      <li><b>E</b> O mínimo foi 15 °C, não 18 °C.</li>
+    </ul>
+  </aside>
+  <aside class="notas">
+    <p>Clique 1 tira o aviso de pausa. Clique 2: gabarito C.</p>
+    <p>Questão oficial do IF Sudeste MG 2018-2, q15, MAT-0503. Gráfico refeito em SVG com os mesmos pontos: 0 h 18; 2 h 17; 4 h 15; 6 h 16; 8 h 19; 10 h 23; 12 h 26; 14 h 27; 16 h 28; 18 h 24; 20 h 22; 22 h 21. Na prova a alternativa A diz "meio dia"; aqui ficou "meio-dia".</p>
+  </aside>
+</section>
+
+<!-- 17. Questão 3 -->
+<section class="slide questao" data-nome="Questão 3">
+  <div class="conteudo">
+    <div class="area-resolucao"></div>
+    <span class="pilula pilula-pausa" data-em="1:some">Pause o vídeo e tente</span>
+    <div class="painel-questao">
+      <p class="olho">Questão 3 · Modelo IF</p>
+      <p class="enunciado" style="font-size:24px">Uma sorveteria publicou o gráfico abaixo com a frase: “Nossas vendas de picolé <b>triplicaram</b> de janeiro para fevereiro!”.</p>
+      <svg class="fig-q" viewBox="0 0 500 270" style="height:260px" aria-hidden="true">
+        <g stroke="#E4DEFB" stroke-width="2"><line x1="110" y1="203.4" x2="460" y2="203.4"/><line x1="110" y1="172.9" x2="460" y2="172.9"/><line x1="110" y1="142.3" x2="460" y2="142.3"/><line x1="110" y1="111.7" x2="460" y2="111.7"/><line x1="110" y1="81.1" x2="460" y2="81.1"/><line x1="110" y1="50.6" x2="460" y2="50.6"/><line x1="110" y1="20.0" x2="460" y2="20.0"/></g>
+        <g font-family="Figtree,'Segoe UI',sans-serif" font-size="18" font-weight="700" fill="#292B2C" text-anchor="end"><text x="102" y="240.0">190</text><text x="102" y="209.4">195</text><text x="102" y="178.9">200</text><text x="102" y="148.3">205</text><text x="102" y="117.7">210</text><text x="102" y="87.1">215</text><text x="102" y="56.6">220</text><text x="102" y="26.0">225</text></g>
+        <rect x="140" y="172.9" width="120" height="61.1" fill="#2F6BFF"/>
+        <rect x="310" y="50.6" width="120" height="183.4" fill="#2F6BFF"/>
+        <line x1="110" y1="234" x2="460" y2="234" stroke="#292B2C" stroke-width="3"/><line x1="110" y1="10" x2="110" y2="234" stroke="#292B2C" stroke-width="3"/>
+        <g font-family="Figtree,'Segoe UI',sans-serif" font-size="19" font-weight="700" fill="#292B2C" text-anchor="middle"><text x="200" y="260">janeiro</text><text x="370" y="260">fevereiro</text></g>
+        <text x="30" y="127" text-anchor="middle" font-family="Figtree,'Segoe UI',sans-serif" font-size="17" font-weight="700" fill="#292B2C" transform="rotate(-90 30 127)">picolés vendidos</text>
+      </svg>
+      <p class="enunciado" style="font-size:24px">Olhando com atenção os números do eixo vertical, de janeiro para fevereiro as vendas de picolé, na verdade, aumentaram:</p>
+      <ol class="alternativas curtas">
+        <li data-em="2:certo"><b>A</b><span>10%</span></li>
+        <li data-em="2:apaga"><b>B</b><span>20%</span></li>
+        <li data-em="2:apaga"><b>C</b><span>110%</span></li>
+        <li data-em="2:apaga"><b>D</b><span>200%</span></li>
+        <li data-em="2:apaga"><b>E</b><span>300%</span></li>
+      </ol>
+      <p class="fonte">Modelo IF · MAT-1109</p>
+    </div>
+  </div>
+  <aside class="resolucao">
+    <p class="dados"><b>Dados:</b> eixo começa em 190; janeiro 200; fevereiro 220.</p>
+    <ol class="passos">
+      <li><b>Aumento:</b> \(220 - 200 = 20\) picolés</li>
+      <li>\(p = \dfrac{20}{200} \cdot 100\%\)</li>
+      <li>\(p = 10\%\)</li>
+    </ol>
+    <p class="resposta"><b>Resposta:</b> aumentaram só 10%. <b>Gabarito A.</b></p>
+    <p class="atencao"><b>Destaque no quadro:</b> Eixo cortado: compare os números, não as alturas.</p>
+    <ul class="erros">
+      <li><b>B</b> Usa os 20 picolés como porcentagem.</li>
+      <li><b>C</b> 220 ÷ 200 = 1,1: fevereiro é 110% de janeiro, não o aumento.</li>
+      <li><b>D</b> Compara as alturas desenhadas (10 e 30 acima do 190).</li>
+      <li><b>E</b> Acredita no anúncio.</li>
+    </ul>
+  </aside>
+  <aside class="notas">
+    <p>Clique 1 tira o aviso de pausa. Clique 2: gabarito A.</p>
+    <p>Modelo IF, lote if-matematica-graficos-e-tabelas, m014, MAT-1109. Gráfico refeito em SVG (eixo de 190 a 225, como no original: as marcas de 5 em 5 até 220 e o topo em 225).</p>
+  </aside>
+</section>
+
+<!-- 18. Questão 4 -->
+<section class="slide questao" data-nome="Questão 4">
+  <div class="conteudo">
+    <div class="area-resolucao"></div>
+    <span class="pilula pilula-pausa" data-em="1:some">Pause o vídeo e tente</span>
+    <div class="painel-questao">
+      <p class="olho">Questão 4 · IF Sudeste MG 2018</p>
+      <p class="enunciado">Uma loja tem 5 funcionários, e a média salarial deles é de R$ 1.400,00. O dono da loja resolveu aumentar em R$ 50,00 o salário de cada um dos funcionários. Com relação à média dos salários, após o aumento, é <b>CORRETO</b> afirmar que:</p>
+      <ol class="alternativas">
+        <li data-em="2:apaga"><b>A</b><span>continua sendo R$ 1.400,00.</span></li>
+        <li data-em="2:apaga"><b>B</b><span>é de R$ 1.410,00.</span></li>
+        <li data-em="2:certo"><b>C</b><span>é de R$ 1.450,00.</span></li>
+        <li data-em="2:apaga"><b>D</b><span>é de R$ 1.500,00.</span></li>
+        <li data-em="2:apaga"><b>E</b><span>é de R$ 1.700,00.</span></li>
+      </ol>
+      <p class="fonte">IF Sudeste MG 2018 (2ª prova do ano) · questão 13 · MAT-0501</p>
+    </div>
+  </div>
+  <aside class="resolucao">
+    <p class="dados"><b>Dados:</b> 5 funcionários; média 1400; + 50 para cada um.</p>
+    <ol class="passos">
+      <li><b>Soma antes:</b> \(1400 \cdot 5 = 7000\)</li>
+      <li><b>Aumento total:</b> \(5 \cdot 50 = 250\)</li>
+      <li><b>Soma depois:</b> \(7000 + 250 = 7250\)</li>
+      <li><b>Nova média:</b> \(7250 \div 5 = 1450\)</li>
+    </ol>
+    <p class="resposta"><b>Resposta:</b> R$ 1.450,00. <b>Gabarito C.</b></p>
+    <p class="atencao"><b>Destaque no quadro:</b> Todos ganham + 50 → a média ganha + 50.</p>
+    <ul class="erros">
+      <li><b>A</b> Se todos aumentaram, a média não fica igual.</li>
+      <li><b>B</b> Divide os 50 entre os 5 funcionários.</li>
+      <li><b>D</b> Soma 100, o dobro do aumento.</li>
+      <li><b>E</b> Soma 300: mais que todo o aumento da folha.</li>
+    </ul>
+  </aside>
+  <aside class="notas">
+    <p>Clique 1 tira o aviso de pausa. Clique 2: gabarito C.</p>
+    <p>Questão oficial do IF Sudeste MG 2018-2, q13, MAT-0501 (no banco ela fica em Porcentagem e juros simples, mas está nas sobras de Estatística em planejamento/questoes-if.md). Na prova está "R$ 1.400,00 reais" (redundante); aqui ficou só "R$ 1.400,00".</p>
+  </aside>
+</section>
+
+<!-- 19. Resumo -->
+<section class="slide" data-nome="Resumo">
+  <div class="conteudo">
+    <p class="olho">Resumo</p>
+    <h2 class="titulo">O essencial</h2>
+    <div class="resumo" style="position:absolute;left:0;right:0;top:150px">
+      <div><b>Porcentagem</b> compara grupos de tamanhos diferentes.</div>
+      <div><b>Colunas:</b> categorias. <b>Setores:</b> partes do todo (\(\% \cdot 360°\)). <b>Linhas:</b> tempo.</div>
+      <div>Argumento correto <b>não vai além dos dados</b>. Desconfie de <b>eixo cortado</b>.</div>
+      <div><b>Média:</b> soma ÷ quantidade; um valor extremo a puxa.</div>
+      <div><b>Moda:</b> o valor que mais se repete (pode ter duas ou nenhuma).</div>
+      <div><b>Mediana:</b> o meio dos dados <b>em ordem</b>; par: média dos dois do meio.</div>
+    </div>
+  </div>
+  <aside class="notas">
+    <p>Peça um print desta tela.</p>
+  </aside>
+</section>
+
+<!-- 20. A seguir -->
+<section class="slide capa" data-nome="A seguir">
+  <div class="estrelas"></div>
+  <div class="texto-capa" style="top:150px">
+    <span class="selo">Matemática · IF</span>
+    <p class="aula" style="font-size:28px">A seguir · Contagem e probabilidade · Parte 1 de 2</p>
+    <h1 style="font-size:104px">Árvore e princípio multiplicativo</h1>
+    <p class="sub">Contar sem esquecer nem repetir</p>
+  </div>
+  <svg class="emblema" viewBox="0 0 640 640" aria-hidden="true">
+    <circle cx="140" cy="320" r="22" fill="#FFD10C"/>
+    <g stroke="#fff" stroke-width="5" stroke-linecap="round" fill="none"><path d="M160 310 L300 200 M160 330 L300 440"/><path d="M320 200 L470 130 M320 200 L470 200 M320 200 L470 270 M320 440 L470 370 M320 440 L470 440 M320 440 L470 510"/></g>
+    <g fill="#fff"><circle cx="310" cy="200" r="16"/><circle cx="310" cy="440" r="16"/></g>
+    <g fill="#FFD10C"><circle cx="485" cy="130" r="13"/><circle cx="485" cy="200" r="13"/><circle cx="485" cy="270" r="13"/><circle cx="485" cy="370" r="13"/><circle cx="485" cy="440" r="13"/><circle cx="485" cy="510" r="13"/></g>
+  </svg>
+  <img class="logo-capa" src="{{LOGO_BRANCO}}" alt="Quarks">
+  <aside class="notas"><p>Próxima parte: começa Contagem e probabilidade, com a árvore de possibilidades e o princípio multiplicativo.</p></aside>
+</section>

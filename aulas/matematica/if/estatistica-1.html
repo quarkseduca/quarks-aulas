@@ -1,0 +1,453 @@
+<!--aula
+{"disciplina": "matematica", "curso": "IF", "assunto": "Estatística", "parte": "Parte 1 de 2", "titulo": "Pesquisa, variáveis e tabelas", "scripts": ["animacoes-estatistica.js"]}
+-->
+<!-- Fonte: apostila IF, Matemática, cap. 7 (7.1 Estatística: blocos "Pesquisa estatística: população, amostra e variáveis" e
+     "Tabelas de frequência e porcentagem").
+     Questões (todas da apostila, nenhuma reservada para o bloco do fim do capítulo): Modelo IF if-matematica-graficos-e-tabelas
+     m007 (MAT-1102), m003 (MAT-1098) e m008 (MAT-1103). -->
+<style>
+  .caixa, .cartao { box-sizing: border-box; }
+  .fig { position: absolute; overflow: visible; font-family: Figtree, 'Segoe UI', sans-serif; }
+  .rot { font-family: Figtree, 'Segoe UI', sans-serif; font-weight: 700; font-size: 28px; fill: #5E5A70; }
+  .rot-forte { font-family: Figtree, 'Segoe UI', sans-serif; font-weight: 800; font-size: 32px; fill: #3F2FA0; }
+  .cartao { background: var(--branco); border: 2px solid var(--lilas-2); border-radius: 28px; padding: 20px 26px; }
+  .cartao h3 { margin: 0 0 6px; font: 800 38px var(--fonte-titulo); letter-spacing: -.02em; color: var(--roxo-titulo); }
+  .cartao p { margin: 0; font-size: 29px; line-height: 1.32; }
+  .tag { display: inline-block; padding: 5px 20px; border-radius: 999px; font-weight: 800; font-size: 26px; white-space: nowrap; }
+  .tag-ql { background: #FFE9DF; color: #A8431B; }
+  .tag-qt { background: var(--d-clara); color: var(--d-forte); }
+  .linha-tag { display: grid; grid-template-columns: 1fr auto; align-items: center; gap: 18px; background: var(--branco); border: 2px solid var(--lilas-2); border-radius: 22px; padding: 14px 26px; font-size: 34px; }
+  .exemplos { display: flex; flex-wrap: wrap; gap: 10px; margin-top: 14px; }
+  .exemplos span { background: var(--lilas-fundo); border: 2px solid var(--lilas-2); border-radius: 999px; padding: 4px 18px; font-size: 26px; font-weight: 600; }
+  .tab-transp { font-size: 38px; }
+  .tab-transp th, .tab-transp td { padding: 10px 44px; }
+  .tab-transp td:first-child { text-align: left; }
+  .tab-transp tr.total td { font-weight: 800; color: var(--roxo-titulo); background: var(--lilas-fundo); }
+  .painel-questao .tabela { font-size: 22px; border-radius: 16px; }
+  .painel-questao .tabela th { padding: 5px 18px; }
+  .painel-questao .tabela td { padding: 3px 18px; }
+  /* as pessoas da amostra acendem uma de cada vez, espalhadas pela população */
+  .pessoa { fill: #C9C0F0; }
+  @keyframes acende { 0%, 100% { r: 11; } 50% { r: 15; } }
+  .amostra .pessoa { fill: var(--d); }
+  .slide.ativo .amostra.mostra .pessoa { animation: acende 4.5s ease-in-out infinite; }
+  .amostra .pessoa:nth-child(3n) { animation-delay: -1.5s !important; } .amostra .pessoa:nth-child(3n+1) { animation-delay: -3s !important; }
+</style>
+
+<svg width="0" height="0" style="position:absolute" aria-hidden="true">
+  <defs>
+    <g id="povo">
+      <circle class="pessoa" cx="0" cy="0" r="11"/><circle class="pessoa" cx="48" cy="12" r="11"/><circle class="pessoa" cx="96" cy="-4" r="11"/><circle class="pessoa" cx="144" cy="10" r="11"/><circle class="pessoa" cx="192" cy="0" r="11"/><circle class="pessoa" cx="240" cy="14" r="11"/><circle class="pessoa" cx="288" cy="2" r="11"/><circle class="pessoa" cx="336" cy="12" r="11"/><circle class="pessoa" cx="384" cy="-2" r="11"/><circle class="pessoa" cx="432" cy="10" r="11"/>
+    </g>
+  </defs>
+</svg>
+
+<!-- 1. Capa -->
+<section class="slide capa" data-nome="Capa">
+  <div class="estrelas"></div>
+  <div class="texto-capa" style="top:150px">
+    <span class="selo">Matemática · IF</span>
+    <p class="aula">Estatística · Parte 1 de 2</p>
+    <h1 style="font-size:104px">Pesquisa, variáveis e tabelas</h1>
+    <p class="sub">Perguntar, contar e organizar</p>
+  </div>
+  <svg class="emblema" viewBox="0 0 640 640" aria-hidden="true">
+    <g class="gira-lento"><ellipse cx="320" cy="320" rx="300" ry="128" fill="none" stroke="#fff" stroke-opacity=".38" stroke-width="2" transform="rotate(-10 320 320)"/></g>
+    <rect x="140" y="150" width="360" height="340" rx="30" fill="#fff" fill-opacity=".14" stroke="#fff" stroke-width="4"/>
+    <line x1="140" y1="230" x2="500" y2="230" stroke="#fff" stroke-width="4"/>
+    <line x1="140" y1="310" x2="500" y2="310" stroke="#fff" stroke-opacity=".6" stroke-width="3"/><line x1="140" y1="390" x2="500" y2="390" stroke="#fff" stroke-opacity=".6" stroke-width="3"/>
+    <line x1="330" y1="150" x2="330" y2="490" stroke="#fff" stroke-opacity=".6" stroke-width="3"/>
+    <rect x="352" y="250" width="120" height="40" rx="20" fill="#FFD10C"/><rect x="352" y="330" width="80" height="40" rx="20" fill="#FFD10C" fill-opacity=".8"/><rect x="352" y="410" width="60" height="40" rx="20" fill="#FFD10C" fill-opacity=".6"/>
+    <g fill="#fff"><rect x="170" y="258" width="120" height="24" rx="12"/><rect x="170" y="338" width="90" height="24" rx="12"/><rect x="170" y="418" width="110" height="24" rx="12"/></g>
+  </svg>
+  <img class="logo-capa" src="{{LOGO_BRANCO}}" alt="Quarks">
+  <aside class="notas">
+    <p>Começa o último capítulo. Hoje: o que é uma pesquisa estatística (população, amostra e variáveis) e como organizar as respostas numa tabela de frequências, com a porcentagem de cada resposta.</p>
+  </aside>
+</section>
+
+<!-- 2. Gancho -->
+<section class="slide" data-nome="Como chegam à escola">
+  <div class="conteudo">
+    <p class="olho">Para começar</p>
+    <h2 class="titulo">Como os estudantes chegam à escola?</h2>
+    <svg class="fig" viewBox="0 0 520 420" width="520" height="420" style="left:20px;top:170px" aria-hidden="true">
+      <rect x="-20" y="-20" width="520" height="420" rx="34" fill="#fff" stroke="#E4DEFB" stroke-width="2"/>
+      <use href="#povo" x="22" y="30"/><use href="#povo" x="40" y="78"/><use href="#povo" x="18" y="126"/><use href="#povo" x="36" y="174"/><use href="#povo" x="22" y="222"/><use href="#povo" x="40" y="270"/><use href="#povo" x="18" y="318"/>
+      <g class="amostra" data-passo="2">
+        <circle class="pessoa" cx="70" cy="42" r="11"/><circle class="pessoa" cx="328" cy="30" r="11"/><circle class="pessoa" cx="232" cy="86" r="11"/><circle class="pessoa" cx="424" cy="88" r="11"/>
+        <circle class="pessoa" cx="114" cy="122" r="11"/><circle class="pessoa" cx="306" cy="136" r="11"/><circle class="pessoa" cx="84" cy="184" r="11"/><circle class="pessoa" cx="420" cy="184" r="11"/>
+        <circle class="pessoa" cx="214" cy="232" r="11"/><circle class="pessoa" cx="376" cy="280" r="11"/><circle class="pessoa" cx="136" cy="330" r="11"/><circle class="pessoa" cx="402" cy="328" r="11"/>
+      </g>
+    </svg>
+    <div style="position:absolute;left:660px;right:0;top:180px;display:flex;flex-direction:column;gap:28px">
+      <div class="cartao" data-passo="1"><h3>Perguntar a cada um?</h3><p>Trabalho enorme: a cidade tem milhares de estudantes.</p></div>
+      <div class="cartao" data-passo="2"><h3>Perguntar a uma parte</h3><p>Bem escolhida, espalhada por toda a cidade.</p></div>
+      <span class="pilula pilula-resposta" data-passo="3">Conclusões sobre todos: pesquisa estatística</span>
+    </div>
+  </div>
+  <aside class="notas">
+    <p>A situação da apostila: a prefeitura quer saber como os estudantes da cidade chegam à escola. Clique 1: perguntar a todos é caro e demorado.</p>
+    <p>Clique 2: as bolinhas que acendem são os entrevistados, espalhados por toda a figura (por toda a cidade). Clique 3: isso é uma pesquisa estatística.</p>
+  </aside>
+</section>
+
+<!-- 3. População e amostra -->
+<section class="slide" data-nome="População e amostra">
+  <div class="conteudo">
+    <p class="olho">Definição</p>
+    <h2 class="titulo">População e amostra</h2>
+    <div style="position:absolute;left:0;right:0;top:160px;display:grid;grid-template-columns:1fr 1fr;gap:34px">
+      <div class="caixa caixa-fundamental" data-passo="1">
+        <span class="rotulo">População</span>
+        <div class="texto">O conjunto de <b>todos</b> os elementos que se quer estudar.</div>
+        <div class="exemplos"><span>todos os estudantes da cidade</span></div>
+      </div>
+      <div class="caixa caixa-fundamental" data-passo="2">
+        <span class="rotulo">Amostra</span>
+        <div class="texto">A <b>parte</b> da população que é de fato pesquisada.</div>
+        <div class="exemplos"><span>os estudantes entrevistados</span></div>
+      </div>
+    </div>
+    <div class="caixa caixa-atencao" data-passo="3" style="position:absolute;left:600px;right:0;top:520px">
+      <span class="rotulo">Para valer para todos</span>
+      <div class="texto">A amostra precisa <b>representar bem</b> a população.</div>
+    </div>
+  </div>
+  <aside class="notas">
+    <p>Cliques 1 e 2: as duas definições da apostila, com o exemplo da prefeitura. Clique 3: a condição para a conclusão valer; o próximo slide mostra o que acontece quando ela falha.</p>
+  </aside>
+</section>
+
+<!-- 4. Amostra boa e amostra ruim -->
+<section class="slide" data-nome="Amostra que representa">
+  <div class="conteudo">
+    <p class="olho">Amostra</p>
+    <h2 class="titulo">Representa ou distorce?</h2>
+    <div style="position:absolute;left:600px;right:0;top:160px;display:grid;grid-template-columns:1fr 1fr;gap:30px">
+      <div class="cartao" data-passo="1" style="text-align:center">
+        <svg viewBox="0 0 460 300" width="460" height="300" aria-hidden="true">
+          <rect x="10" y="10" width="440" height="280" rx="28" fill="var(--lilas-fundo)" stroke="#C9C0F0" stroke-width="3"/>
+          <g fill="#E4DEFB"><rect x="40" y="40" width="110" height="70" rx="12"/><rect x="175" y="40" width="110" height="70" rx="12"/><rect x="310" y="40" width="110" height="70" rx="12"/><rect x="40" y="130" width="110" height="70" rx="12"/><rect x="175" y="130" width="110" height="70" rx="12"/><rect x="310" y="130" width="110" height="70" rx="12"/><rect x="40" y="220" width="110" height="50" rx="12"/><rect x="175" y="220" width="110" height="50" rx="12"/><rect x="310" y="220" width="110" height="50" rx="12"/></g>
+          <g fill="var(--d)"><circle cx="80" cy="70" r="10"/><circle cx="240" cy="84" r="10"/><circle cx="370" cy="62" r="10"/><circle cx="100" cy="170" r="10"/><circle cx="220" cy="160" r="10"/><circle cx="380" cy="176" r="10"/><circle cx="70" cy="248" r="10"/><circle cx="250" cy="244" r="10"/><circle cx="350" cy="250" r="10"/></g>
+        </svg>
+        <p style="margin-top:8px"><span class="tag tag-qt" style="background:var(--certo-claro);color:var(--certo)">representa</span> espalhada por todos os bairros</p>
+      </div>
+      <div class="cartao" data-passo="2" style="text-align:center">
+        <svg viewBox="0 0 460 300" width="460" height="300" aria-hidden="true">
+          <rect x="10" y="10" width="440" height="280" rx="28" fill="var(--lilas-fundo)" stroke="#C9C0F0" stroke-width="3"/>
+          <g fill="#E4DEFB"><rect x="40" y="40" width="110" height="70" rx="12"/><rect x="175" y="40" width="110" height="70" rx="12"/><rect x="310" y="40" width="110" height="70" rx="12"/><rect x="40" y="130" width="110" height="70" rx="12"/><rect x="175" y="130" width="110" height="70" rx="12" fill="#FFF4C2"/><rect x="310" y="130" width="110" height="70" rx="12"/><rect x="40" y="220" width="110" height="50" rx="12"/><rect x="175" y="220" width="110" height="50" rx="12"/><rect x="310" y="220" width="110" height="50" rx="12"/></g>
+          <text x="230" y="125" text-anchor="middle" font-size="20" font-weight="800" fill="#8A6A00" font-family="Figtree,'Segoe UI',sans-serif">centro</text>
+          <rect x="268" y="146" width="12" height="40" rx="4" fill="#8A6A00"/><rect x="258" y="140" width="32" height="12" rx="4" fill="#8A6A00"/>
+          <g fill="var(--erro)"><circle cx="196" cy="150" r="10"/><circle cx="220" cy="166" r="10"/><circle cx="244" cy="150" r="10"/><circle cx="198" cy="182" r="10"/><circle cx="246" cy="184" r="10"/><circle cx="222" cy="140" r="10"/><circle cx="260" cy="194" r="10"/><circle cx="190" cy="166" r="10"/><circle cx="234" cy="190" r="10"/></g>
+        </svg>
+        <p style="margin-top:8px"><span class="tag" style="background:var(--erro-claro);color:var(--erro)">distorce</span> só uma escola do centro</p>
+      </div>
+    </div>
+    <div class="caixa caixa-atencao" data-passo="3" style="position:absolute;left:0;width:540px;top:170px">
+      <div class="texto" style="font-size:32px">Perto dos pontos de ônibus, quase todos vêm de ônibus. A cidade inteira, não.</div>
+    </div>
+  </div>
+  <aside class="notas">
+    <p>Clique 1: amostra espalhada pela cidade. Clique 2: só os alunos de uma escola do centro, perto dos pontos de ônibus (o exemplo da apostila). Clique 3: essa amostra daria uma ideia distorcida: "ônibus" apareceria demais.</p>
+  </aside>
+</section>
+
+<!-- 5. Variáveis -->
+<section class="slide" data-nome="Tipos de variável">
+  <div class="conteudo">
+    <p class="olho">O que se pergunta ou se mede</p>
+    <h2 class="titulo">Variável: dois tipos</h2>
+    <div style="position:absolute;left:0;right:0;top:160px;display:grid;grid-template-columns:1fr 1fr;gap:34px">
+      <div class="cartao" data-passo="1">
+        <h3>Qualitativa</h3>
+        <p>A resposta é uma <b>qualidade ou categoria</b>.</p>
+        <div class="exemplos"><span>meio de transporte</span><span>cor preferida</span><span>bairro</span></div>
+      </div>
+      <div class="cartao" data-passo="2">
+        <h3>Quantitativa</h3>
+        <p>A resposta é um <b>número</b> que vem de <b>contagem ou medida</b>.</p>
+        <div class="exemplos"><span>idade</span><span>número de irmãos</span><span>altura</span></div>
+      </div>
+    </div>
+    <span class="pilula pilula-pausa" data-passo="3" style="position:absolute;right:0;top:560px">Pergunte: é um número que se conta ou se mede?</span>
+  </div>
+  <aside class="notas">
+    <p>Variável é o que se pergunta ou se mede em cada elemento. Clique 3: a pergunta que decide o tipo (a mesma do exemplo a seguir).</p>
+  </aside>
+</section>
+
+<!-- 6. Exemplo: ficha de matrícula -->
+<section class="slide" data-nome="Exemplo: ficha de matrícula">
+  <div class="conteudo">
+    <p class="olho">Exemplo</p>
+    <h2 class="titulo">Classifique as variáveis da ficha</h2>
+    <div style="position:absolute;left:600px;right:0;top:160px;display:flex;flex-direction:column;gap:18px">
+      <div class="linha-tag"><span>Nome do bairro</span><span class="tag tag-ql" data-passo="1">qualitativa</span></div>
+      <div class="linha-tag"><span>Idade</span><span class="tag tag-qt" data-passo="2">quantitativa</span></div>
+      <div class="linha-tag"><span>Número de irmãos</span><span class="tag tag-qt" data-passo="3">quantitativa</span></div>
+      <div class="linha-tag"><span>Esporte preferido</span><span class="tag tag-ql" data-passo="4">qualitativa</span></div>
+    </div>
+    <svg class="fig" viewBox="0 0 420 440" width="420" height="440" style="left:40px;top:150px" aria-hidden="true">
+      <rect x="20" y="10" width="380" height="420" rx="26" fill="#fff" stroke="#C9C0F0" stroke-width="3"/>
+      <rect x="20" y="10" width="380" height="70" rx="26" fill="var(--d-clara)"/>
+      <text x="210" y="56" text-anchor="middle" class="rot-forte" style="font-size:28px">FICHA DE MATRÍCULA</text>
+      <g fill="#E4DEFB"><rect x="50" y="110" width="320" height="26" rx="13"/><rect x="50" y="190" width="200" height="26" rx="13"/><rect x="50" y="270" width="260" height="26" rx="13"/><rect x="50" y="350" width="290" height="26" rx="13"/></g>
+      <g fill="#C9C0F0"><rect x="50" y="146" width="160" height="14" rx="7"/><rect x="50" y="226" width="90" height="14" rx="7"/><rect x="50" y="306" width="130" height="14" rx="7"/><rect x="50" y="386" width="180" height="14" rx="7"/></g>
+    </svg>
+  </div>
+  <aside class="notas">
+    <p>Apostila, exemplo "Classificar variáveis". Antes de cada clique, pergunte à turma: é um número que se conta ou mede?</p>
+    <p>Resposta: bairro e esporte preferido são qualitativas; idade e número de irmãos são quantitativas.</p>
+  </aside>
+</section>
+
+<!-- 7. Atenção -->
+<section class="slide" data-nome="Atenção: número que é nome">
+  <div class="conteudo">
+    <p class="olho">Atenção</p>
+    <h2 class="titulo">Número nem sempre é quantitativo</h2>
+    <svg class="fig" viewBox="0 0 900 360" width="900" height="360" style="left:640px;top:170px" aria-hidden="true">
+      <path d="M90 60 L150 30 Q190 60 230 30 L290 60 L330 130 L280 150 L270 120 L270 320 L110 320 L110 120 L100 150 L50 130 Z" fill="var(--d)" stroke="var(--d-escura)" stroke-width="4" stroke-linejoin="round"/>
+      <text x="190" y="250" text-anchor="middle" font-size="120" font-weight="800" fill="#fff" font-family="'Bricolage Grotesque',Figtree,sans-serif">10</text>
+      <g data-passo="1">
+        <rect x="420" y="110" width="440" height="150" rx="24" fill="#fff" stroke="#C9C0F0" stroke-width="3"/>
+        <text x="450" y="160" font-size="26" font-weight="700" fill="#5E5A70" font-family="Figtree,'Segoe UI',sans-serif">CEP</text>
+        <text x="450" y="226" font-size="58" font-weight="800" fill="#3F2FA0" font-family="'Bricolage Grotesque',Figtree,sans-serif" style="letter-spacing:.04em">36000-000</text>
+      </g>
+    </svg>
+    <div class="caixa caixa-atencao" style="position:absolute;left:0;width:560px;top:170px">
+      <div class="texto" style="font-size:34px">Não medem nem contam nada: funcionam como <b>nomes</b>.</div>
+    </div>
+    <span class="pilula pilula-resposta" data-passo="2" style="position:absolute;right:0;top:600px">Variável qualitativa</span>
+  </div>
+  <aside class="notas">
+    <p>O número da camisa e o CEP são números, mas somar ou tirar a média deles não faz sentido. Clique 2: são variáveis qualitativas.</p>
+    <p>O CEP do desenho é só ilustrativo (o formato de Juiz de Fora começa com 36).</p>
+  </aside>
+</section>
+
+<!-- 8. Contando as respostas -->
+<section class="slide" data-nome="Frequência absoluta">
+  <div class="conteudo">
+    <p class="olho">Organizando as respostas</p>
+    <h2 class="titulo">40 alunos: “Como você vem para a escola?”</h2>
+    <div data-anima="estat-contagem" data-anima-passo="1" style="position:absolute;left:0;top:160px;width:1120px;height:470px"></div>
+    <div class="caixa caixa-fundamental" data-passo="2" style="position:absolute;left:1220px;right:0;top:180px">
+      <span class="rotulo">Frequência absoluta</span>
+      <div class="texto" style="font-size:34px">Quantas vezes cada resposta <b>apareceu</b>.</div>
+    </div>
+    <div class="caixa" data-passo="3" style="position:absolute;left:1220px;right:0;top:420px">
+      <div class="texto" style="font-size:34px">\(18 + 10 + 8 + 4 = 40\)</div>
+      <div class="texto" style="font-size:28px">A soma é o <b>total</b>.</div>
+    </div>
+  </div>
+  <aside class="notas">
+    <p><b>Clique 1:</b> as 40 respostas saem do monte, uma de cada vez, e vão para a linha certa; o contador de cada linha sobe. É exatamente o que se faz ao contar uma pesquisa.</p>
+    <p>Clique 2: esse número é a frequência absoluta. Clique 3: somando todas, volta o total de alunos.</p>
+  </aside>
+</section>
+
+<!-- 9. Tabela de frequências -->
+<section class="slide" data-nome="Tabela de frequências">
+  <div class="conteudo">
+    <p class="olho">Tabela de frequências</p>
+    <h2 class="titulo">E a porcentagem de cada resposta?</h2>
+    <table class="tabela tab-transp" style="position:absolute;left:0;top:150px">
+      <tr><th>Transporte</th><th>Alunos</th><th data-passo="1">Porcentagem</th></tr>
+      <tr><td>ônibus</td><td>18</td><td data-passo="2">45%</td></tr>
+      <tr><td>a pé</td><td>10</td><td data-passo="3">25%</td></tr>
+      <tr><td>carro</td><td>8</td><td data-passo="3">20%</td></tr>
+      <tr><td>bicicleta</td><td>4</td><td data-passo="3">10%</td></tr>
+      <tr class="total"><td>total</td><td>40</td><td data-passo="4">100%</td></tr>
+    </table>
+    <div class="caixa caixa-fundamental" data-passo="1" style="position:absolute;left:880px;right:0;top:150px;text-align:center">
+      <span class="rotulo">Frequência relativa</span>
+      <div style="font-size:42px">\(\dfrac{\text{frequência absoluta}}{\text{total}} \cdot 100\%\)</div>
+    </div>
+    <div class="contas" style="position:absolute;left:900px;top:400px;font-size:44px;row-gap:18px">
+      <div class="eq" data-passo="2"><span>\(f\)</span><span>\(=\)</span><span>\(\dfrac{18}{40} \cdot 100\%\)</span></div>
+      <div class="eq" data-passo="2"><span>\(f\)</span><span>\(=\)</span><span>\(0{,}45 \cdot 100\%\)</span></div>
+      <div class="eq final" data-passo="2"><span>\(f\)</span><span>\(=\)</span><span>\(45\%\)</span></div>
+    </div>
+    <span class="pilula pilula-resposta" data-passo="4" style="position:absolute;right:0;top:760px">As porcentagens somam 100%</span>
+  </div>
+  <aside class="notas">
+    <p>Clique 1: a frequência relativa compara cada contagem com o total; costuma vir em porcentagem (parte dividida pelo todo, vezes 100). Clique 2: a conta do ônibus, de onde vem o 45% (exemplo da apostila).</p>
+    <p>Clique 3: as outras três, que a turma pode conferir de cabeça (10 de 40 é um quarto, 25%; 8 de 40 é 20%; 4 de 40 é 10%). Clique 4: tudo soma 100%.</p>
+  </aside>
+</section>
+
+<!-- 10. Questão 1 -->
+<section class="slide questao" data-nome="Questão 1">
+  <div class="conteudo">
+    <div class="area-resolucao"></div>
+    <span class="pilula pilula-pausa" data-em="1:some">Pause o vídeo e tente</span>
+    <div class="painel-questao">
+      <p class="olho">Questão 1 · Modelo IF</p>
+      <p class="enunciado" style="font-size:25px">A tabela mostra o número de visitantes de um museu em cada dia de uma semana. O museu fica fechado às segundas-feiras.</p>
+      <table class="tabela">
+        <tr><th>Dia</th><th>Visitantes</th></tr>
+        <tr><td>terça-feira</td><td>145</td></tr><tr><td>quarta-feira</td><td>200</td></tr><tr><td>quinta-feira</td><td>198</td></tr>
+        <tr><td>sexta-feira</td><td>236</td></tr><tr><td>sábado</td><td>312</td></tr><tr><td>domingo</td><td>287</td></tr>
+      </table>
+      <p class="enunciado" style="font-size:25px">Em quantos dias dessa semana o museu recebeu <b>mais de</b> 200 visitantes?</p>
+      <ol class="alternativas curtas">
+        <li data-em="2:apaga"><b>A</b><span>2</span></li>
+        <li data-em="2:certo"><b>B</b><span>3</span></li>
+        <li data-em="2:apaga"><b>C</b><span>4</span></li>
+        <li data-em="2:apaga"><b>D</b><span>5</span></li>
+        <li data-em="2:apaga"><b>E</b><span>6</span></li>
+      </ol>
+      <p class="fonte">Modelo IF · MAT-1102</p>
+    </div>
+  </div>
+  <aside class="resolucao">
+    <p class="dados"><b>Dados:</b> 6 dias abertos; "mais de 200" = 201 ou mais.</p>
+    <ol class="passos">
+      <li><b>Não passam:</b> terça 145, quarta 200, quinta 198</li>
+      <li><b>Passam:</b> sexta 236, sábado 312, domingo 287</li>
+    </ol>
+    <p class="resposta"><b>Resposta:</b> 3 dias. <b>Gabarito B.</b></p>
+    <p class="atencao"><b>Destaque no quadro:</b> "Mais de 200" não inclui o próprio 200.</p>
+    <ul class="erros">
+      <li><b>A</b> Conta só o fim de semana.</li>
+      <li><b>C</b> Conta a quarta, com exatamente 200.</li>
+      <li><b>D</b> Conta a quarta (200) e a quinta (198).</li>
+      <li><b>E</b> Conta todos os dias abertos.</li>
+    </ul>
+  </aside>
+  <aside class="notas">
+    <p>Clique 1 tira o aviso de pausa: resolva na área (D liga a caneta; E esconde o enunciado). Clique 2: gabarito B.</p>
+    <p>Modelo IF, lote if-matematica-graficos-e-tabelas, m007, MAT-1102.</p>
+  </aside>
+</section>
+
+<!-- 11. Questão 2 -->
+<section class="slide questao" data-nome="Questão 2">
+  <div class="conteudo">
+    <div class="area-resolucao"></div>
+    <span class="pilula pilula-pausa" data-em="1:some">Pause o vídeo e tente</span>
+    <div class="painel-questao">
+      <p class="olho">Questão 2 · Modelo IF</p>
+      <p class="enunciado" style="font-size:25px">A tabela mostra a população de algumas cidades da Zona da Mata mineira no Censo de 2022.</p>
+      <table class="tabela">
+        <tr><th>Cidade</th><th>População (habitantes)</th></tr>
+        <tr><td>Cataguases</td><td>66 261</td></tr><tr><td>Juiz de Fora</td><td>540 756</td></tr><tr><td>Manhuaçu</td><td>91 886</td></tr>
+        <tr><td>Muriaé</td><td>104 108</td></tr><tr><td>Ubá</td><td>103 365</td></tr><tr><td>Viçosa</td><td>76 430</td></tr>
+      </table>
+      <p style="margin:0;font-size:17px;color:var(--cinza)">Fonte: IBGE, Censo Demográfico 2022.</p>
+      <p class="enunciado" style="font-size:25px">Depois de Juiz de Fora, qual cidade da tabela tinha a maior população?</p>
+      <ol class="alternativas curtas">
+        <li data-em="2:apaga"><b>A</b><span>Ubá</span></li>
+        <li data-em="2:apaga"><b>B</b><span>Manhuaçu</span></li>
+        <li data-em="2:apaga"><b>C</b><span>Viçosa</span></li>
+        <li data-em="2:apaga"><b>D</b><span>Cataguases</span></li>
+        <li data-em="2:certo"><b>E</b><span>Muriaé</span></li>
+      </ol>
+      <p class="fonte">Modelo IF · MAT-1098</p>
+    </div>
+  </div>
+  <aside class="resolucao">
+    <p class="dados"><b>Dados:</b> tabela em ordem alfabética, não de tamanho.</p>
+    <ol class="passos">
+      <li><b>Acima de 100 mil</b> (fora JF): Muriaé e Ubá</li>
+      <li><b>Compare os milhares:</b> 104 mil &gt; 103 mil</li>
+    </ol>
+    <p class="resposta"><b>Resposta:</b> Muriaé. <b>Gabarito E.</b></p>
+    <p class="atencao"><b>Destaque no quadro:</b> Compare da classe maior para a menor (milhares antes das unidades).</p>
+    <ul class="erros">
+      <li><b>A</b> Compara só os últimos algarismos (365 &gt; 108).</li>
+      <li><b>B</b> Pega a linha logo abaixo de Juiz de Fora.</li>
+      <li><b>C</b> É a última linha da tabela.</li>
+      <li><b>D</b> É a primeira linha, mas a menor cidade.</li>
+    </ul>
+  </aside>
+  <aside class="notas">
+    <p>Clique 1 tira o aviso de pausa. Clique 2: gabarito E.</p>
+    <p>Modelo IF, lote if-matematica-graficos-e-tabelas, m003, MAT-1098.</p>
+  </aside>
+</section>
+
+<!-- 12. Questão 3 -->
+<section class="slide questao" data-nome="Questão 3">
+  <div class="conteudo">
+    <div class="area-resolucao"></div>
+    <span class="pilula pilula-pausa" data-em="1:some">Pause o vídeo e tente</span>
+    <div class="painel-questao">
+      <p class="olho">Questão 3 · Modelo IF</p>
+      <p class="enunciado" style="font-size:25px">Os 40 alunos de uma turma disseram quantos irmãos têm. A tabela mostra o resultado, mas uma porcentagem não foi preenchida.</p>
+      <table class="tabela">
+        <tr><th>Irmãos</th><th>Alunos</th><th>Porcentagem</th></tr>
+        <tr><td>nenhum</td><td>10</td><td>25%</td></tr><tr><td>1</td><td>14</td><td>?</td></tr><tr><td>2</td><td>9</td><td>22,5%</td></tr>
+        <tr><td>3 ou mais</td><td>7</td><td>17,5%</td></tr><tr><td>total</td><td>40</td><td>100%</td></tr>
+      </table>
+      <p class="enunciado" style="font-size:25px">Qual é a porcentagem que falta na tabela?</p>
+      <ol class="alternativas curtas">
+        <li data-em="2:apaga"><b>A</b><span>14%</span></li>
+        <li data-em="2:apaga"><b>B</b><span>22,5%</span></li>
+        <li data-em="2:apaga"><b>C</b><span>25%</span></li>
+        <li data-em="2:certo"><b>D</b><span>35%</span></li>
+        <li data-em="2:apaga"><b>E</b><span>65%</span></li>
+      </ol>
+      <p class="fonte">Modelo IF · MAT-1103</p>
+    </div>
+  </div>
+  <aside class="resolucao">
+    <p class="dados"><b>Dados:</b> 14 alunos com 1 irmão; total 40.</p>
+    <ol class="passos">
+      <li>\(f = \dfrac{14}{40} \cdot 100\%\)</li>
+      <li>\(f = 0{,}35 \cdot 100\% = 35\%\)</li>
+      <li><b>Confira:</b> \(25 + 35 + 22{,}5 + 17{,}5 = 100\)</li>
+    </ol>
+    <p class="resposta"><b>Resposta:</b> 35%. <b>Gabarito D.</b></p>
+    <p class="atencao"><b>Destaque no quadro:</b> Parte ÷ total × 100%; no fim, tudo soma 100%.</p>
+    <ul class="erros">
+      <li><b>A</b> Usa o número de alunos como porcentagem.</li>
+      <li><b>B</b> Copia a linha de baixo.</li>
+      <li><b>C</b> Copia a linha de cima.</li>
+      <li><b>E</b> É quem não tem 1 irmão: 100% − 35%.</li>
+    </ul>
+  </aside>
+  <aside class="notas">
+    <p>Clique 1 tira o aviso de pausa. Clique 2: gabarito D.</p>
+    <p>Modelo IF, lote if-matematica-graficos-e-tabelas, m008, MAT-1103. Na tabela da questão, "Número de irmãos" virou "Irmãos" só para caber na coluna.</p>
+  </aside>
+</section>
+
+<!-- 13. Resumo -->
+<section class="slide" data-nome="Resumo">
+  <div class="conteudo">
+    <p class="olho">Resumo</p>
+    <h2 class="titulo">O essencial</h2>
+    <div class="resumo" style="position:absolute;left:0;right:0;top:150px">
+      <div><b>População:</b> o todo. <b>Amostra:</b> a parte pesquisada, que precisa representar o todo.</div>
+      <div><b>Variável qualitativa:</b> categoria (transporte, cor, bairro).</div>
+      <div><b>Variável quantitativa:</b> número de contagem ou medida (idade, irmãos, altura).</div>
+      <div>Número que funciona como nome (camisa, CEP): <b>qualitativa</b>.</div>
+      <div><b>Frequência absoluta:</b> quantas vezes a resposta apareceu.</div>
+      <div><b>Frequência relativa:</b> \(\dfrac{\text{parte}}{\text{total}} \cdot 100\%\); tudo soma 100%.</div>
+    </div>
+  </div>
+  <aside class="notas">
+    <p>Peça um print desta tela.</p>
+  </aside>
+</section>
+
+<!-- 14. A seguir -->
+<section class="slide capa" data-nome="A seguir">
+  <div class="estrelas"></div>
+  <div class="texto-capa" style="top:150px">
+    <span class="selo">Matemática · IF</span>
+    <p class="aula">A seguir · Estatística · Parte 2 de 2</p>
+    <h1 style="font-size:104px">Gráficos e análise de dados</h1>
+    <p class="sub">Colunas, setores, linhas e médias</p>
+  </div>
+  <svg class="emblema" viewBox="0 0 640 640" aria-hidden="true">
+    <circle cx="320" cy="320" r="190" fill="#fff" fill-opacity=".14" stroke="#fff" stroke-width="4"/>
+    <path d="M320 320 L320 130 A190 190 0 0 1 468.6 438.4 Z" fill="#FFD10C"/>
+    <path d="M320 320 L468.6 438.4 A190 190 0 0 1 171.4 438.4 Z" fill="#fff" fill-opacity=".7"/>
+  </svg>
+  <img class="logo-capa" src="{{LOGO_BRANCO}}" alt="Quarks">
+  <aside class="notas"><p>Próxima parte: os gráficos de colunas, setores e linhas, a porcentagem nos gráficos e as medidas média, moda e mediana.</p></aside>
+</section>
