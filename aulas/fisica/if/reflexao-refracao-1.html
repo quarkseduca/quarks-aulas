@@ -1,7 +1,7 @@
 <!--aula
-{"disciplina": "fisica", "curso": "IF", "assunto": "Óptica", "parte": "Parte única", "titulo": "Reflexão e refração", "scripts": ["animacoes-optica.js"]}
+{"disciplina": "fisica", "curso": "IF", "assunto": "Reflexão e refração", "parte": "Parte 1 de 2", "titulo": "Reflexão e espelhos", "scripts": ["animacoes-optica.js"]}
 -->
-<!-- Fonte: apostila IF, Física, cap. 4 Óptica (4.2 Reflexão e refração, todos os blocos: "Reflexão da luz e espelhos planos", "Espelhos côncavos e convexos", "Imagens no espelho côncavo", "Imagens no espelho convexo", "Refração no dia a dia", "Luz branca e dispersão", exemplos, atenções e o resumo). Questões: Modelo IF if-fisica-reflexao-e-refracao m001 (FIS-8755) e m003 (FIS-8757), Modelo IF if-fisica-cor m005 (FIS-1301) e a oficial que sobrou para as partes, IF Sudeste MG 2014-1 q35 (FIS-0528). A oficial 2017-1 q30 (FIS-0524) fica reservada para o bloco do fim do capítulo. Esquemas fora de escala; as figuras de espelhos curvos foram traçadas com a geometria certa (foco no meio entre C e V). -->
+<!-- Fonte: apostila IF, Física, cap. 4 Óptica (4.2 Reflexão e refração, blocos "Reflexão da luz e espelhos planos", "Espelhos côncavos e convexos", "Imagens no espelho côncavo", "Imagens no espelho convexo", com os exemplos, as atenções e a parte do resumo sobre reflexão). Parte 1 de 2: veio da antiga parte única reflexao-refracao.html, dividida a pedido do dono (03/11/2026). Questões: Modelo IF if-fisica-reflexao-e-refracao m001 (FIS-8755) e a oficial que sobrou para as partes, IF Sudeste MG 2014-1 q35 (FIS-0528). A oficial 2017-1 q30 (FIS-0524) fica reservada para o bloco do fim do capítulo. Esquemas fora de escala; as figuras de espelhos curvos foram traçadas com a geometria certa (foco no meio entre C e V). -->
 <style>
   .caixa, .painel, .linha-ex { box-sizing: border-box; }
   .linha-ex { background: var(--branco); border: 2px solid var(--lilas-2); border-radius: 24px; padding: 14px 26px; font-size: 30px; line-height: 1.3; }
@@ -79,21 +79,20 @@
   <div class="estrelas"></div>
   <div class="texto-capa">
     <span class="selo">Física · IF</span>
-    <p class="aula">Óptica</p>
-    <h1>Reflexão e refração</h1>
-    <p class="sub">Espelhos, o lápis "quebrado" e o arco-íris</p>
+    <p class="aula">Reflexão e refração · Parte 1 de 2</p>
+    <h1>Reflexão e espelhos</h1>
+    <p class="sub">Espelho plano, côncavo e convexo</p>
   </div>
   <svg class="emblema" viewBox="0 0 640 640" aria-hidden="true">
     <g class="gira-lento"><ellipse cx="320" cy="320" rx="300" ry="128" fill="none" stroke="#fff" stroke-opacity=".38" stroke-width="2" transform="rotate(-10 320 320)"/></g>
-    <path d="M200 120 L300 420 L520 420 Z" fill="#fff" opacity=".9"/>
-    <path d="M40 330 L245 290" stroke="#fff" stroke-width="12" stroke-linecap="round"/>
-    <path d="M245 290 L420 330" stroke="#fff" stroke-opacity=".7" stroke-width="10"/>
-    <g stroke-width="11" stroke-linecap="round"><path d="M420 330 L620 360" stroke="#E53935"/><path d="M420 335 L620 395" stroke="#FDD835"/><path d="M420 340 L620 430" stroke="#43A047"/><path d="M420 345 L620 465" stroke="#1E88E5"/><path d="M420 350 L620 500" stroke="#8E24AA"/></g>
+    <rect x="90" y="430" width="460" height="18" rx="9" fill="#fff"/>
+    <path d="M320 430 L320 120" stroke="#fff" stroke-opacity=".6" stroke-width="4" stroke-dasharray="12 10"/>
+    <path d="M130 170 L320 430 L510 170" fill="none" stroke="#FFD10C" stroke-width="14" stroke-linecap="round" stroke-linejoin="round"/>
   </svg>
   <img class="logo-capa" src="{{LOGO_BRANCO}}" alt="Quarks">
   <aside class="notas">
-    <p>Parte única do subcapítulo Reflexão e refração. Três blocos: reflexão (espelho plano, espelhos curvos), refração (lápis, piscina) e dispersão (prisma, arco-íris). É a parte mais longa do capítulo (cerca de 30 minutos), porque a apostila tem os espelhos côncavos e convexos dentro deste subcapítulo e o cronograma prevê uma parte só. Se precisar, pare depois do slide do espelho convexo e retome na refração.</p>
-    <p>Tudo da apostila IF, cap. 4, 4.2. Sem lei de Snell e sem equação de Gauss (fora da matriz do IF).</p>
+    <p>Parte 1 de 2 do subcapítulo Reflexão e refração: reflexão da luz, espelho plano e espelhos esféricos (côncavo e convexo), com as imagens que eles formam. A refração e a dispersão da luz branca ficam para a Parte 2.</p>
+    <p>Tudo da apostila IF, cap. 4, 4.2. Sem equação de Gauss (fora da matriz do IF).</p>
   </aside>
 </section>
 
@@ -419,152 +418,6 @@
   <aside class="notas"><p>Exemplo "Qual espelho?" da apostila. Peça a resposta antes de cada clique.</p></aside>
 </section>
 
-<!-- 14. Refração: o lápis -->
-<section class="slide" data-nome="Refração: o lápis quebrado">
-  <div class="conteudo">
-    <p class="olho">Refração</p>
-    <h2 class="titulo">Quem mudou de caminho foi a luz</h2>
-    <svg viewBox="0 0 800 520" width="720" height="468" style="position:absolute;left:0;top:140px;overflow:visible" aria-hidden="true">
-      <rect x="120" y="300" width="360" height="200" fill="url(#opAgua)" opacity=".85"/>
-      <g class="ondula"><path d="M100 300 q20 -6 40 0 t40 0 t40 0 t40 0 t40 0 t40 0 t40 0 t40 0 t40 0 t40 0" fill="none" stroke="#5E9FD6" stroke-width="3"/></g>
-      <path d="M120 60 V500 H480 V60" fill="none" stroke="#7F7A99" stroke-width="6" stroke-linejoin="round"/>
-      <!-- lápis fora da água -->
-      <path d="M140 84 L230 300" stroke="#FFB300" stroke-width="18" stroke-linecap="round"/>
-      <path d="M140 84 L150 108" stroke="#F48FB1" stroke-width="18" stroke-linecap="round"/>
-      <!-- posição real (tracejada) e aparente -->
-      <g data-passo="2"><path d="M230 300 L300 468" stroke="#7F7A99" stroke-width="4" stroke-dasharray="8 7"/><text x="310" y="490" class="rot" style="font-size:20px">posição real</text></g>
-      <path d="M230 300 L300 400" stroke="#FFB300" stroke-width="18" stroke-linecap="round"/>
-      <path d="M292 388 L300 400" stroke="#5E4B35" stroke-width="10" stroke-linecap="round"/>
-      <g data-passo="1">
-        <path class="raio" d="M300 468 L420 300 L755 20" marker-end="url(#opSetaA)"/>
-        <path class="prolonga" d="M420 300 L300 400"/>
-        <line x1="420" y1="230" x2="420" y2="380" stroke="#5E5A70" stroke-width="2.5" stroke-dasharray="6 6"/>
-        <g transform="translate(762 14)"><path d="M-30 0 q30 -26 60 0 q-30 26 -60 0 z" fill="#fff" stroke="#292B2C" stroke-width="3"/><circle r="11" fill="#3F2FA0"/></g>
-      </g>
-      <text x="136" y="336" text-anchor="start" class="rot" style="fill:#3F6E99">água</text>
-    </svg>
-    <div style="position:absolute;left:820px;right:0;top:150px;display:flex;flex-direction:column;gap:16px">
-      <p class="texto" style="margin:0;font-size:27px">Um lápis num copo com água, visto de lado, parece <b>quebrado</b> na superfície.</p>
-      <div class="linha-ex" style="font-size:26px">A luz é mais rápida no <b>ar</b>, mais lenta na <b>água</b> e mais ainda no <b>vidro</b>.</div>
-      <div class="caixa caixa-fundamental" data-passo="1" style="padding:14px 26px">
-        <span class="rotulo">Refração</span>
-        <div class="texto" style="font-size:27px">Passagem da luz de um meio para outro, <b>com mudança de velocidade</b>. Se a luz chega <b>inclinada</b>, também <b>muda de direção</b>.</div>
-      </div>
-      <div class="linha-ex" data-passo="2" style="font-size:26px">O cérebro supõe que a luz veio em <b>linha reta</b> e "vê" a ponta do lápis <b>mais alta</b> do que ela está.</div>
-    </div>
-  </div>
-  <aside class="notas">
-    <p>Clique 1: a luz que sai da ponta do lápis desvia ao passar da água para o ar (afasta-se da linha tracejada vertical, a normal) e chega ao olho. O prolongamento em linha reta (tracejado amarelo) chega a um ponto mais alto: é onde vemos a ponta. Clique 2: a posição real, mais funda.</p>
-    <p>Esquema fora de escala, com o desvio calculado para a água. Na apostila não há índice de refração nem lei de Snell (fora do IF).</p>
-  </aside>
-</section>
-
-<!-- 15. Refração no dia a dia -->
-<section class="slide" data-nome="Refração no dia a dia">
-  <div class="conteudo">
-    <p class="olho">Refração no dia a dia</p>
-    <h2 class="titulo">Onde a refração aparece</h2>
-    <div style="position:absolute;left:0;width:860px;top:150px;display:flex;flex-direction:column;gap:14px">
-      <div class="linha-ex" data-passo="1" style="font-size:27px">A <b>piscina</b> parece mais rasa: o fundo parece mais perto da superfície.</div>
-      <div class="linha-ex" data-passo="2" style="font-size:27px">O <b>peixe</b> visto de fora do aquário parece estar num lugar diferente do real.</div>
-      <div class="linha-ex" data-passo="3" style="font-size:27px">As <b>lentes</b> dos óculos e da lupa desviam a luz por refração.</div>
-      <div class="linha-ex" data-passo="4" style="font-size:27px">O <b>arco-íris</b> e o <b>prisma</b> separam as cores por refração (a dispersão, daqui a pouco).</div>
-    </div>
-    <div class="painel" data-passo="5" style="position:absolute;left:920px;right:0;top:150px">
-      <h3>Luz perpendicular não desvia</h3>
-      <svg viewBox="0 0 560 320" width="100%" height="300" aria-hidden="true" data-anima="opt-fotons" data-anima-passo="5">
-        <rect x="0" y="150" width="560" height="170" fill="url(#opAgua)" opacity=".85"/>
-        <text x="540" y="40" text-anchor="end" class="rot">ar</text><text x="540" y="300" text-anchor="end" class="rot">água</text>
-        <path class="raio" d="M120 10 L120 300" style="stroke:#C2384F" data-cor="#C2384F"/>
-        <line x1="380" y1="40" x2="380" y2="300" stroke="#5E5A70" stroke-width="2.5" stroke-dasharray="6 6"/>
-        <path class="raio" d="M260 10 L380 150 L458.6 290" style="stroke:#C2384F" data-cor="#C2384F"/>
-      </svg>
-      <p>Perpendicular: muda de <b>velocidade</b>, mas <b>não de direção</b>. O desvio só aparece quando a luz chega <b>inclinada</b>.</p>
-    </div>
-  </div>
-  <aside class="notas">
-    <p>Cliques 1 a 4: a lista da apostila. Clique 5: a atenção da apostila com dois lasers: o da esquerda entra perpendicular e segue reto; o da direita entra inclinado e se aproxima da normal (tracejada). Nos dois houve refração, porque a velocidade mudou (é a questão 3 desta parte).</p>
-  </aside>
-</section>
-
-<!-- 16. Exemplo: a piscina engana -->
-<section class="slide" data-nome="Exemplo: a piscina engana">
-  <div class="conteudo">
-    <p class="olho">Exemplo</p>
-    <h2 class="titulo">A piscina engana</h2>
-    <svg viewBox="0 0 760 420" width="760" height="420" style="position:absolute;left:0;top:150px;overflow:visible" aria-hidden="true">
-      <path d="M40 150 H720 V350 H40 Z" fill="url(#opAgua)" opacity=".9"/>
-      <g class="ondula"><path d="M20 150 q20 -6 40 0 t40 0 t40 0 t40 0 t40 0 t40 0 t40 0 t40 0 t40 0 t40 0 t40 0 t40 0 t40 0 t40 0 t40 0 t40 0 t40 0 t40 0" fill="none" stroke="#5E9FD6" stroke-width="3"/></g>
-      <path d="M40 120 V350 H720 V120" fill="none" stroke="#7F7A99" stroke-width="6"/>
-      <path d="M44 330 H716" stroke="#3F2FA0" stroke-width="6"/>
-      <text x="700" y="378" text-anchor="end" class="rot" style="fill:#3F2FA0;font-weight:800">fundo real</text>
-      <g data-passo="1">
-        <path class="raio" d="M420 330 L320 150 L210 20" marker-end="url(#opSetaA)"/>
-        <g transform="translate(200 12)"><path d="M-30 0 q30 -26 60 0 q-30 26 -60 0 z" fill="#fff" stroke="#292B2C" stroke-width="3"/><circle r="11" fill="#3F2FA0"/></g>
-      </g>
-      <g data-passo="2">
-        <path class="prolonga" d="M320 150 L420 268"/>
-        <path d="M44 268 H716" stroke="#D6336C" stroke-width="4" stroke-dasharray="12 8"/>
-        <text x="700" y="304" text-anchor="end" class="rot" style="fill:#D6336C;font-weight:800">onde o fundo parece estar</text>
-      </g>
-    </svg>
-    <div style="position:absolute;left:840px;right:0;top:150px;display:flex;flex-direction:column;gap:16px">
-      <p class="texto" style="margin:0;font-size:28px">Davi vê o fundo de uma piscina e acha que ela tem só <b>1 m</b> de profundidade. Na verdade, ela tem mais ou menos que isso? Por quê?</p>
-      <div class="linha-ex" data-passo="1" style="font-size:27px">A luz que vem do fundo <b>desvia ao sair da água para o ar</b>...</div>
-      <div class="linha-ex" data-passo="2" style="font-size:27px">... e o fundo parece <b>mais perto</b> da superfície.</div>
-    </div>
-    <div class="caixa caixa-atencao" data-passo="3" style="position:absolute;left:580px;right:0;top:640px;padding:16px 28px">
-      <div class="texto" style="font-size:28px">A piscina é <b>mais funda</b> do que parece. Nunca pule numa piscina ou num rio <b>sem saber a profundidade real</b>.</div>
-    </div>
-  </div>
-  <aside class="notas">
-    <p>Exemplo "A piscina engana" da apostila. Clique 1: o caminho da luz do fundo até o olho de Davi. Clique 2: o prolongamento em linha reta, que leva a um fundo mais alto (a ilusão). Clique 3: a resposta e o alerta de segurança (o Corpo de Bombeiros faz essa campanha nas cachoeiras da Zona da Mata).</p>
-  </aside>
-</section>
-
-<!-- 17. Dispersão -->
-<section class="slide" data-nome="Luz branca e dispersão">
-  <div class="conteudo">
-    <p class="olho">Luz branca e dispersão</p>
-    <h2 class="titulo">A luz branca é uma mistura</h2>
-    <svg viewBox="0 0 760 460" width="760" height="460" style="position:absolute;left:0;top:130px;overflow:visible" aria-hidden="true">
-      <rect x="0" y="0" width="760" height="460" rx="34" fill="#1C1433"/>
-      <path d="M300 60 L440 330 L160 330 Z" fill="url(#opVidro)" opacity=".55" stroke="#E0F4F4" stroke-width="3"/>
-      <path d="M20 270 L216 222" stroke="#FFFFFF" stroke-width="10" stroke-linecap="round"/>
-      <path d="M216 222 L370 195" stroke="#FFFFFF" stroke-width="8" opacity=".85"/>
-      <text x="40" y="310" class="rot" style="fill:#E4DEFB">luz branca</text>
-      <g data-passo="1" class="leque" stroke-width="9" stroke-linecap="round" fill="none">
-        <path class="traca" pathLength="1" d="M370 195 L730 240" stroke="#E53935"/>
-        <path class="traca" pathLength="1" d="M370 195 L730 268" stroke="#FB8C00"/>
-        <path class="traca" pathLength="1" d="M370 195 L730 296" stroke="#FDD835"/>
-        <path class="traca" pathLength="1" d="M370 195 L730 324" stroke="#43A047"/>
-        <path class="traca" pathLength="1" d="M370 195 L730 352" stroke="#1E88E5"/>
-        <path class="traca" pathLength="1" d="M370 195 L730 380" stroke="#3949AB"/>
-        <path class="traca" pathLength="1" d="M370 195 L730 408" stroke="#8E24AA"/>
-      </g>
-      <text x="300" y="380" text-anchor="middle" class="rot" style="fill:#E4DEFB">prisma</text>
-    </svg>
-    <div style="position:absolute;left:820px;right:0;top:140px;display:flex;flex-direction:column;gap:14px">
-      <p class="texto" style="margin:0;font-size:27px">No século XVII, <b>Isaac Newton</b> fez a luz do Sol atravessar um <b>prisma</b>. Ela saiu separada em <b>vermelho, laranja, amarelo, verde, azul, anil e violeta</b>.</p>
-      <div class="caixa caixa-fundamental" data-passo="2" style="padding:14px 26px">
-        <span class="rotulo">Dispersão da luz</span>
-        <div class="texto" style="font-size:27px">A luz branca é a <b>mistura de várias cores</b>. Ao passar do ar para o vidro ou para a água, cada cor desvia um pouco diferente, e as cores se separam.</div>
-      </div>
-      <div class="linha-ex" data-passo="3" style="font-size:26px;display:grid;grid-template-columns:150px 1fr;gap:16px;align-items:center">
-        <svg viewBox="0 0 150 90" width="150" height="90" aria-hidden="true"><path d="M10 86 A65 65 0 0 1 140 86" fill="none" stroke="url(#opArco)" stroke-width="22"/><circle cx="20" cy="22" r="12" fill="#FFD10C"/></svg>
-        <span><b>Arco-íris:</b> cada gota de chuva é um pequeno prisma. Só aparece com gotas no ar e o <b>Sol às nossas costas</b> (como no jato da mangueira).</span>
-      </div>
-    </div>
-    <div class="caixa caixa-atencao" data-passo="4" style="position:absolute;left:580px;right:0;top:680px;padding:14px 28px">
-      <div class="texto" style="font-size:27px"><b>O prisma não pinta a luz:</b> as cores já estavam na luz branca; ele só as separa.</div>
-    </div>
-  </div>
-  <aside class="notas">
-    <p>Clique 1: o leque de cores se abre do outro lado do prisma (o vermelho desvia menos e o violeta mais; a apostila não cobra essa ordem dos desvios). Clique 2: a definição. Clique 3: o arco-íris (de manhã, com o Sol no leste, o arco aparece a oeste: é a questão 4). Clique 4: a atenção da apostila.</p>
-    <p>Liga com Luz e cores: lá somamos luzes para formar o branco; aqui o branco se separa em cores.</p>
-  </aside>
-</section>
-
 <!-- Questão 1 -->
 <section class="slide questao" data-nome="Questão 1">
   <div class="conteudo">
@@ -649,89 +502,6 @@
   </aside>
 </section>
 
-<!-- Questão 3 -->
-<section class="slide questao" data-nome="Questão 3">
-  <div class="conteudo">
-    <div class="area-resolucao"></div>
-    <span class="pilula pilula-pausa" data-em="1:some">Pause o vídeo e tente</span>
-    <div class="painel-questao" style="gap:12px">
-      <p class="olho">Questão 3 · Modelo IF</p>
-      <p class="enunciado" style="font-size:22px;line-height:1.33">Numa sala escura, a professora apontou uma caneta laser para a superfície da água de um aquário, de cima para baixo. Primeiro, o feixe chegou <b>perpendicular</b> à superfície; depois, chegou <b>inclinado</b>. Um pouco de leite misturado à água deixava ver o caminho da luz.</p>
-      <p class="enunciado" style="font-size:22px;line-height:1.33">Depois, os alunos fizeram quatro afirmações:</p>
-      <p class="enunciado" style="font-size:22px;line-height:1.33">I. Com o feixe perpendicular, a luz mudou de velocidade ao entrar na água, mas seguiu na mesma direção.<br>II. Com o feixe inclinado, a luz mudou de direção ao entrar na água.<br>III. Com o feixe perpendicular, a luz não sofreu refração, pois nem a velocidade dela mudou.<br>IV. O lápis que parece quebrado num copo com água é explicado pela reflexão da luz na superfície da água.</p>
-      <p class="enunciado" style="font-size:22px;line-height:1.33">Estão <b>CORRETAS</b> apenas as afirmações</p>
-      <ol class="alternativas curtas">
-        <li data-em="2:apaga"><b>A</b><span>I</span></li>
-        <li data-em="2:apaga"><b>B</b><span>II</span></li>
-        <li data-em="2:apaga"><b>C</b><span>II e III</span></li>
-        <li data-em="2:apaga"><b>D</b><span>II e IV</span></li>
-        <li data-em="2:certo"><b>E</b><span>I e II</span></li>
-      </ol>
-    </div>
-  </div>
-  <aside class="resolucao">
-    <p class="dados"><b>Dados:</b> laser perpendicular e inclinado entrando na água.</p>
-    <ol class="passos">
-      <li><b>I</b> Perpendicular: muda a velocidade, não desvia: V.</li>
-      <li><b>II</b> Inclinado: muda de direção: V.</li>
-      <li><b>III</b> Mudou a velocidade: houve refração: F.</li>
-      <li><b>IV</b> Lápis "quebrado" é refração: F.</li>
-    </ol>
-    <p class="resposta"><b>Resposta:</b> I e II. <b>Gabarito E.</b></p>
-    <p class="atencao"><b>Destaque no quadro:</b> Refração = mudança de velocidade; desvio só se chegar inclinada.</p>
-    <ul class="erros">
-      <li><b>A</b> Falta a II.</li>
-      <li><b>B</b> Falta a I.</li>
-      <li><b>C</b> Aceita a III e deixa a I de fora.</li>
-      <li><b>D</b> Aceita a IV e deixa a I de fora.</li>
-    </ul>
-  </aside>
-  <aside class="notas">
-    <p>Clique 1 tira o aviso de pausa: resolva na área (D liga a caneta; E esconde o enunciado). Clique 2: gabarito E.</p>
-    <p>Modelo IF, lote if-fisica-reflexao-e-refracao, m003, FIS-8757 (está na apostila, 4.2). É a atenção "Luz perpendicular não desvia".</p>
-  </aside>
-</section>
-
-<!-- Questão 4 -->
-<section class="slide questao" data-nome="Questão 4">
-  <div class="conteudo">
-    <div class="area-resolucao"></div>
-    <span class="pilula pilula-pausa" data-em="1:some">Pause o vídeo e tente</span>
-    <div class="painel-questao">
-      <p class="olho">Questão 4 · Modelo IF</p>
-      <p class="enunciado" style="font-size:25px">Numa manhã em Juiz de Fora, logo depois de uma chuva rápida, o Sol acabou de nascer no lado <b>leste</b> do céu e ainda há muitas gotas de água no ar. Júlia quer ver um arco-íris.</p>
-      <p class="enunciado" style="font-size:25px">Para ter mais chance de ver o arco-íris, Júlia deve olhar para o lado</p>
-      <ol class="alternativas">
-        <li data-em="2:certo" style="font-size:22px"><b>A</b><span>oeste, de costas para o Sol, onde ainda há gotas de chuva no ar.</span></li>
-        <li data-em="2:apaga" style="font-size:22px"><b>B</b><span>leste, na direção do Sol, porque é de lá que vem a luz.</span></li>
-        <li data-em="2:apaga" style="font-size:22px"><b>C</b><span>de cima, esperando o meio-dia, quando o Sol estiver mais alto.</span></li>
-        <li data-em="2:apaga" style="font-size:22px"><b>D</b><span>que quiser, porque o arco-íris aparece em todas as direções.</span></li>
-        <li data-em="2:apaga" style="font-size:22px"><b>E</b><span>onde o céu já estiver limpo e sem nenhuma gota de água.</span></li>
-      </ol>
-    </div>
-  </div>
-  <aside class="resolucao">
-    <p class="dados"><b>Dados:</b> manhã, Sol no leste, gotas no ar.</p>
-    <ol class="passos">
-      <li>Cada gota é um pequeno prisma.</li>
-      <li>A luz volta das gotas para quem está de costas para o Sol.</li>
-      <li>Sol no leste: olhar para o oeste.</li>
-    </ol>
-    <p class="resposta"><b>Resposta:</b> oeste, de costas para o Sol. <b>Gabarito A.</b></p>
-    <p class="atencao"><b>Destaque no quadro:</b> Arco-íris: gotas no ar e Sol às costas.</p>
-    <ul class="erros">
-      <li><b>B</b> Olhando para o Sol, a luz das gotas não chega ao olho.</li>
-      <li><b>C</b> O que importa é o Sol às costas, não o meio-dia.</li>
-      <li><b>D</b> Depende da posição do Sol e das gotas.</li>
-      <li><b>E</b> Sem gotas não há dispersão.</li>
-    </ul>
-  </aside>
-  <aside class="notas">
-    <p>Clique 1 tira o aviso de pausa: resolva na área (D liga a caneta; E esconde o enunciado). Clique 2: gabarito A.</p>
-    <p>Modelo IF, lote if-fisica-cor, m005, FIS-1301 (classificada em Reflexão e refração, Dispersão da luz; está na apostila, 4.2).</p>
-  </aside>
-</section>
-
 <!-- Resumo -->
 <section class="slide" data-nome="Resumo">
   <div class="conteudo">
@@ -741,12 +511,12 @@
       <div><b>Reflexão:</b> a luz volta; \(i = r\), medidos a partir da <b>normal</b>.</div>
       <div><b>Espelho plano:</b> mesmo tamanho, mesma distância atrás do espelho, direita e esquerda trocadas; periscópio: dois espelhos a 45°.</div>
       <div><b>Côncavo</b> junta os raios paralelos no foco (antena, farol, forno solar, telescópio).</div>
+      <div><b>Imagem no côncavo</b> depende de onde está o objeto: maior e direita só entre F e V.</div>
+      <div><b>Real</b> (raios se cruzam): invertida. <b>Virtual</b> (só prolongamentos): direita.</div>
       <div><b>Convexo</b> espalha: imagem sempre virtual, direita e menor, campo visual maior (esquinas, garagens, lojas).</div>
-      <div><b>Refração:</b> a luz muda de meio e de velocidade; chegando inclinada, muda de direção (lápis "quebrado", piscina mais rasa).</div>
-      <div><b>Dispersão:</b> a luz branca é mistura de cores; o prisma e as gotas de chuva as separam.</div>
     </div>
   </div>
-  <aside class="notas"><p>O resumo do 4.2 da apostila. Peça para tirarem um print desta tela.</p></aside>
+  <aside class="notas"><p>A parte do resumo do 4.2 da apostila sobre reflexão e espelhos, com a tabela do côncavo e a regra de real e virtual. Peça para tirarem um print desta tela.</p></aside>
 </section>
 
 <!-- A seguir -->
@@ -754,15 +524,16 @@
   <div class="estrelas"></div>
   <div class="texto-capa" style="top:170px">
     <span class="selo">Física · IF</span>
-    <p class="aula" style="font-size:26px">A seguir · Lentes e instrumentos ópticos · Parte 1 de 2</p>
-    <h1 style="font-size:104px">Lentes convergentes e divergentes</h1>
-    <p class="sub">A lupa que aumenta e a que queima</p>
+    <p class="aula" style="font-size:26px">A seguir · Reflexão e refração · Parte 2 de 2</p>
+    <h1>Refração e prismas</h1>
+    <p class="sub">O lápis "quebrado", a piscina e o arco-íris</p>
   </div>
   <svg class="emblema" viewBox="0 0 640 640" aria-hidden="true">
-    <path d="M320 120 Q400 320 320 520 Q240 320 320 120 Z" fill="#fff" opacity=".9"/>
-    <g stroke="#FFD10C" stroke-width="9" stroke-linecap="round" fill="none"><path d="M40 220 H300 L540 320"/><path d="M40 320 H560"/><path d="M40 420 H300 L540 320"/></g>
-    <circle cx="540" cy="320" r="16" fill="#FFD10C"/>
+    <path d="M200 120 L300 420 L520 420 Z" fill="#fff" opacity=".9"/>
+    <path d="M40 330 L245 290" stroke="#fff" stroke-width="12" stroke-linecap="round"/>
+    <path d="M245 290 L420 330" stroke="#fff" stroke-opacity=".7" stroke-width="10"/>
+    <g stroke-width="11" stroke-linecap="round"><path d="M420 330 L620 360" stroke="#E53935"/><path d="M420 335 L620 395" stroke="#FDD835"/><path d="M420 340 L620 430" stroke="#43A047"/><path d="M420 345 L620 465" stroke="#1E88E5"/><path d="M420 350 L620 500" stroke="#8E24AA"/></g>
   </svg>
   <img class="logo-capa" src="{{LOGO_BRANCO}}" alt="Quarks">
-  <aside class="notas"><p>A seguir, Lentes e instrumentos ópticos, Parte 1: lentes convergentes e divergentes e as imagens que elas formam.</p></aside>
+  <aside class="notas"><p>A seguir, Reflexão e refração, Parte 2: a refração da luz (lápis, piscina, luz perpendicular) e a dispersão da luz branca no prisma e no arco-íris.</p></aside>
 </section>
