@@ -1,0 +1,367 @@
+<!--aula
+{"disciplina": "matematica", "curso": "IF", "assunto": "Geometria plana", "parte": "Questões do IF Sudeste · Parte 1 de 2", "titulo": "Questões do IF Sudeste"}
+-->
+<!-- Fonte: bloco "Questões do IF Sudeste · Parte 1 de 2" de Geometria plana em planejamento/questoes-if.md e no campo "questoes" do cronograma (sete oficiais: 2014-1 q15 MAT-0343; 2016-1 q14 MAT-0469; 2016-1-extra q15 MAT-0402; 2026-1 q18 MAT-0550; 2025-1 q17 MAT-0538; 2024-1 q13 MAT-0297; 2023-1 q19 MAT-0451), transcritas de apostilas/questoes/oficiais/if no cérebro, com as figuras da prova redesenhadas. Nenhuma delas aparece nas partes do capítulo. -->
+<style>
+  .caixa { box-sizing: border-box; }
+  .rot-fig { font-family: Figtree, "Segoe UI", sans-serif; font-weight: 700; font-size: 18px; fill: #292B2C; }
+</style>
+
+<!-- Capa -->
+<section class="slide capa" data-nome="Capa">
+  <div class="estrelas"></div>
+  <div class="texto-capa" style="top:150px">
+    <span class="selo">Matemática · IF</span>
+    <p class="aula">Geometria plana · Parte 1 de 2</p>
+    <h1>Questões do IF Sudeste</h1>
+    <p class="sub">Provas oficiais, uma por tela</p>
+  </div>
+  <svg class="emblema" viewBox="0 0 640 640" aria-hidden="true">
+    <rect x="150" y="110" width="340" height="430" rx="34" fill="#fff" fill-opacity=".12" stroke="#fff" stroke-opacity=".6" stroke-width="4"/>
+    <g fill="#fff" fill-opacity=".7"><rect x="200" y="170" width="240" height="18" rx="9"/><rect x="200" y="210" width="200" height="18" rx="9"/><rect x="200" y="250" width="220" height="18" rx="9"/></g>
+    <g fill="none" stroke="#fff" stroke-opacity=".75" stroke-width="4"><circle cx="216" cy="330" r="16"/><circle cx="216" cy="390" r="16"/><circle cx="216" cy="450" r="16"/></g>
+    <circle cx="216" cy="390" r="16" fill="#FFD10C"/>
+    <g fill="#fff" fill-opacity=".55"><rect x="250" y="321" width="150" height="16" rx="8"/><rect x="250" y="381" width="170" height="16" rx="8"/><rect x="250" y="441" width="130" height="16" rx="8"/></g>
+    <circle cx="470" cy="130" r="54" fill="#FFD10C"/>
+    <path d="M446 132 L464 150 L496 112" fill="none" stroke="#292B2C" stroke-width="10" stroke-linecap="round" stroke-linejoin="round"/>
+  </svg>
+  <img class="logo-capa" src="{{LOGO_BRANCO}}" alt="Quarks">
+  <aside class="notas"><p>Primeiro bloco do fechamento de Geometria plana: só questões que caíram no IF Sudeste MG, de ângulos e paralelas, triângulos e quadriláteros, Tales e semelhança, Pitágoras. Em cada uma, pause, tente e depois confira a resolução.</p></aside>
+</section>
+
+<!-- IF 2014 · paralelas -->
+<section class="slide questao" data-nome="IF 2014 · paralelas">
+  <div class="conteudo">
+    <div class="area-resolucao"></div>
+    <span class="pilula pilula-pausa" data-em="1:some">Pause o vídeo e tente</span>
+    <div class="painel-questao">
+      <p class="olho" style="font-size:24px">IF Sudeste MG 2014 · Questão 15</p>
+      <p class="enunciado">Na figura abaixo, as retas paralelas r e s são intersectadas pela reta t. Nessas condições, x + y é igual a:</p>
+      <svg viewBox="0 0 470 280" style="width:470px;height:280px;display:block;margin:0 auto" aria-hidden="true">
+        <line x1="10" y1="90" x2="450" y2="90" stroke="#292B2C" stroke-width="3"/><line x1="10" y1="190" x2="450" y2="190" stroke="#292B2C" stroke-width="3"/>
+        <line x1="60" y1="275" x2="420" y2="35" stroke="#292B2C" stroke-width="3"/>
+        <path d="M377.5 90 A40 40 0 0 0 370.8 67.8" fill="none" stroke="#2F6BFF" stroke-width="3"/>
+        <path d="M297.5 90 A40 40 0 0 0 304.2 112.2" fill="none" stroke="#2F6BFF" stroke-width="3"/>
+        <path d="M232.5 190 A45 45 0 0 1 150.1 215" fill="none" stroke="#2F6BFF" stroke-width="3"/>
+        <text x="382" y="80" class="rot-fig" font-size="22">2x + 20°</text>
+        <text x="282" y="124" class="rot-fig" font-size="22" text-anchor="end">2y</text>
+        <text x="214" y="256" class="rot-fig" font-size="22">3x − 40°</text>
+        <text x="458" y="96" class="rot-fig">r</text><text x="458" y="196" class="rot-fig">s</text><text x="426" y="30" class="rot-fig">t</text>
+      </svg>
+      <ol class="alternativas curtas">
+        <li data-em="2:apaga"><b>A</b><span>40°</span></li>
+        <li data-em="2:apaga"><b>B</b><span>50°</span></li>
+        <li data-em="2:apaga"><b>C</b><span>60°</span></li>
+        <li data-em="2:apaga"><b>D</b><span>80°</span></li>
+        <li data-em="2:certo"><b>E</b><span>90°</span></li>
+      </ol>
+    </div>
+  </div>
+  <aside class="resolucao">
+    <p class="dados"><b>Dados:</b> \(r \parallel s\); \(2x + 20°\) em r e \(3x - 40°\) em s, do mesmo lado de t.</p>
+    <ol class="passos">
+      <li>Colaterais (um agudo, um obtuso no desenho): somam 180°: \((2x + 20) + (3x - 40) = 180\)</li>
+      <li>\(5x - 20 = 180 \Rightarrow x = 40°\)</li>
+      <li>Opostos pelo vértice: \(2y = 2x + 20 = 100\)</li>
+      <li>\(y = 50°\)</li>
+      <li>\(x + y = 40 + 50 = 90°\)</li>
+    </ol>
+    <p class="resposta"><b>Resposta:</b> 90°. <b>Gabarito E.</b></p>
+    <p class="atencao"><b>Destaque no quadro:</b> Com paralelas, agudo e obtuso somam 180°; nunca iguale um agudo a um obtuso.</p>
+    <ul class="erros">
+      <li><b>A</b> Só o x.</li>
+      <li><b>B</b> Só o y.</li>
+      <li><b>C</b> Igualou \(2x + 20 = 3x - 40\).</li>
+      <li><b>D</b> É \(2x\), não \(x + y\).</li>
+    </ul>
+  </aside>
+  <aside class="notas">
+    <p>Clique 1 tira o aviso de pausa: resolva na área (D liga a caneta; E esconde o enunciado). Clique 2: gabarito E.</p>
+    <p>Questão oficial do IF Sudeste MG 2014-1, q15, MAT-0343 (Ângulos e paralelismo). Figura da prova redesenhada. Conferido: 5x = 200, x = 40; 2y = 100, y = 50; soma 90 (gabarito E). <b>Para conferência humana:</b> com x = 40, o ângulo 2x + 20 vale 100° e o 3x − 40 vale 80°, ao contrário do desenho da prova (que mostra o primeiro agudo e o segundo obtuso). A figura da prova não está em escala; o que vale é que os dois ângulos são colaterais (do mesmo lado de t, um em cada paralela) e somam 180°. A resolução do banco chama de "agudo" e "obtuso" pelo desenho; vale avisar a turma se alguém notar.</p>
+  </aside>
+</section>
+
+<!-- IF 2016 · paralelogramo e razão -->
+<section class="slide questao" data-nome="IF 2016 · paralelogramo">
+  <div class="conteudo">
+    <div class="area-resolucao"></div>
+    <span class="pilula pilula-pausa" data-em="1:some">Pause o vídeo e tente</span>
+    <div class="painel-questao">
+      <p class="olho" style="font-size:24px">IF Sudeste MG 2016 · Questão 14</p>
+      <p class="enunciado">O perímetro de um paralelogramo mede 42 cm, e a razão entre as medidas de dois lados consecutivos é \(\dfrac{2}{5}\). A medida do maior lado desse paralelogramo será:</p>
+      <ol class="alternativas">
+        <li data-em="2:apaga"><b>A</b><span>um número múltiplo de 4.</span></li>
+        <li data-em="2:apaga"><b>B</b><span>um número par.</span></li>
+        <li data-em="2:apaga"><b>C</b><span>um número divisor de 12.</span></li>
+        <li data-em="2:certo"><b>D</b><span>um número múltiplo de 5.</span></li>
+        <li data-em="2:apaga"><b>E</b><span>um número divisível por 7.</span></li>
+      </ol>
+    </div>
+  </div>
+  <aside class="resolucao">
+    <p class="dados"><b>Dados:</b> \(P = 42\ \text{cm}\); lados consecutivos na razão \(\dfrac{2}{5}\).</p>
+    <ol class="passos">
+      <li>Lados \(2k\) e \(5k\), dois de cada</li>
+      <li>\(2 \cdot 2k + 2 \cdot 5k = 42\)</li>
+      <li>\(14k = 42 \Rightarrow k = 3\)</li>
+      <li>Maior lado: \(5 \cdot 3 = 15\ \text{cm}\)</li>
+    </ol>
+    <p class="resposta"><b>Resposta:</b> 15 cm, múltiplo de 5. <b>Gabarito D.</b></p>
+    <p class="atencao"><b>Destaque no quadro:</b> Confira: 6 + 15 + 6 + 15 = 42.</p>
+    <ul class="erros">
+      <li><b>A</b> 15 não é múltiplo de 4.</li>
+      <li><b>B</b> 15 é ímpar (6 é o menor lado).</li>
+      <li><b>C</b> 15 não divide 12.</li>
+      <li><b>E</b> 42 e 14 são múltiplos de 7; o lado, não.</li>
+    </ul>
+  </aside>
+  <aside class="notas">
+    <p>Clique 1 tira o aviso de pausa. Clique 2: gabarito D.</p>
+    <p>Questão oficial do IF Sudeste MG 2016-1, q14, MAT-0469 (Triângulos e quadriláteros). Conferido: 14 · 3 = 42; lados 6 e 15.</p>
+  </aside>
+</section>
+
+<!-- IF 2016 extra · ângulos do paralelogramo -->
+<section class="slide questao" data-nome="IF 2016 · ângulos do paralelogramo">
+  <div class="conteudo">
+    <div class="area-resolucao"></div>
+    <span class="pilula pilula-pausa" data-em="1:some">Pause o vídeo e tente</span>
+    <div class="painel-questao">
+      <p class="olho" style="font-size:24px">IF Sudeste MG 2016 · Questão 15</p>
+      <p class="enunciado">Um quadrilátero convexo é um paralelogramo se, e somente se, ele tem os pares de lados opostos paralelos. Sabe-se que a diferença entre as medidas de dois ângulos de vértices consecutivos de um paralelogramo é 50º. O maior ângulo desse paralelogramo mede:</p>
+      <ol class="alternativas curtas">
+        <li data-em="2:apaga"><b>A</b><span>120º</span></li>
+        <li data-em="2:certo"><b>B</b><span>115º</span></li>
+        <li data-em="2:apaga"><b>C</b><span>105º</span></li>
+        <li data-em="2:apaga"><b>D</b><span>100º</span></li>
+        <li data-em="2:apaga"><b>E</b><span>95º</span></li>
+      </ol>
+    </div>
+  </div>
+  <aside class="resolucao">
+    <p class="dados"><b>Dados:</b> consecutivos: \(x - y = 50°\).</p>
+    <ol class="passos">
+      <li>Consecutivos são suplementares: \(x + y = 180°\)</li>
+      <li>Somando: \(2x = 230°\)</li>
+      <li>\(x = 115°\) (e \(y = 65°\))</li>
+    </ol>
+    <p class="resposta"><b>Resposta:</b> 115°. <b>Gabarito B.</b></p>
+    <p class="atencao"><b>Destaque no quadro:</b> No paralelogramo, ângulos vizinhos somam 180°.</p>
+    <ul class="erros">
+      <li><b>A</b> Diferença seria 60°.</li>
+      <li><b>C</b> Diferença seria 30°.</li>
+      <li><b>D</b> Diferença seria 20°.</li>
+      <li><b>E</b> Diferença seria 10°.</li>
+    </ul>
+  </aside>
+  <aside class="notas">
+    <p>Clique 1 tira o aviso de pausa. Clique 2: gabarito B.</p>
+    <p>Questão oficial do IF Sudeste MG, prova 2016-1 extra (segunda aplicação), q15, MAT-0402 (Triângulos e quadriláteros). Conferido: 115 + 65 = 180; 115 − 65 = 50.</p>
+  </aside>
+</section>
+
+<!-- IF 2026 · Tales -->
+<section class="slide questao" data-nome="IF 2026 · Tales">
+  <div class="conteudo">
+    <div class="area-resolucao"></div>
+    <span class="pilula pilula-pausa" data-em="1:some">Pause o vídeo e tente</span>
+    <div class="painel-questao">
+      <p class="olho" style="font-size:24px">IF Sudeste MG 2026 · Questão 18</p>
+      <p class="enunciado">Na figura abaixo estão representadas três retas r, s e t paralelas entre si e dois segmentos de reta AC e BD.</p>
+      <svg viewBox="0 0 380 250" style="width:400px;height:263px;display:block;margin:0 auto" aria-hidden="true">
+        <g stroke="#5E5A70" stroke-width="3"><line x1="0" y1="22" x2="360" y2="22"/><line x1="0" y1="143" x2="360" y2="143"/><line x1="0" y1="222" x2="360" y2="222"/></g>
+        <g stroke="#292B2C" stroke-width="3"><line x1="12" y1="22" x2="208" y2="222"/><line x1="270" y1="22" x2="138" y2="222"/></g>
+        <g fill="#2F6BFF"><circle cx="12" cy="22" r="5"/><circle cx="270" cy="22" r="5"/><circle cx="130.6" cy="143" r="5"/><circle cx="190.2" cy="143" r="5"/><circle cx="138" cy="222" r="5"/><circle cx="208" cy="222" r="5"/></g>
+        <g class="rot-fig"><text x="4" y="14">D</text><text x="262" y="14">C</text><text x="114" y="134">E</text><text x="196" y="134">F</text><text x="132" y="244">A</text><text x="204" y="244">B</text></g>
+        <g class="rot-fig" font-style="italic"><text x="366" y="28">r</text><text x="366" y="149">s</text><text x="366" y="228">t</text></g>
+      </svg>
+      <p class="enunciado">Sabendo que BD = 7 cm, AF = 2,4 cm e FC = 3,6 cm, a medida, em centímetros, de EB é:</p>
+      <ol class="alternativas curtas">
+        <li data-em="2:apaga"><b>A</b><span>1,6</span></li>
+        <li data-em="2:apaga"><b>B</b><span>2,4</span></li>
+        <li data-em="2:certo"><b>C</b><span>2,8</span></li>
+        <li data-em="2:apaga"><b>D</b><span>3,6</span></li>
+        <li data-em="2:apaga"><b>E</b><span>4,2</span></li>
+      </ol>
+    </div>
+  </div>
+  <aside class="resolucao">
+    <p class="dados"><b>Dados:</b> BD = 7; AF = 2,4; FC = 3,6 (cm).</p>
+    <ol class="passos">
+      <li>Tales: \(\dfrac{EB}{BD} = \dfrac{AF}{AC}\)</li>
+      <li>\(AC = 2{,}4 + 3{,}6 = 6\)</li>
+      <li>\(\dfrac{EB}{7} = \dfrac{2{,}4}{6}\)</li>
+      <li>\(EB = \dfrac{16{,}8}{6} = 2{,}8\ \text{cm}\)</li>
+    </ol>
+    <p class="resposta"><b>Resposta:</b> 2,8 cm. <b>Gabarito C.</b></p>
+    <p class="atencao"><b>Destaque no quadro:</b> Correspondentes ficam entre as mesmas paralelas: AF e EB entre t e s.</p>
+    <ul class="erros">
+      <li><b>A</b> Aplicou 2/3 em AF.</li>
+      <li><b>B</b> Copiou AF.</li>
+      <li><b>D</b> Copiou FC (que corresponde a ED).</li>
+      <li><b>E</b> É ED = 7 − 2,8.</li>
+    </ul>
+  </aside>
+  <aside class="notas">
+    <p>Clique 1 tira o aviso de pausa. Clique 2: gabarito C.</p>
+    <p>Questão oficial do IF Sudeste MG 2026-1, q18, MAT-0550 (Semelhança e Teorema de Tales). Figura da prova redesenhada. Conferido: 7 · 2,4 = 16,8; 16,8 ÷ 6 = 2,8.</p>
+  </aside>
+</section>
+
+<!-- IF 2025 · triângulos semelhantes -->
+<section class="slide questao" data-nome="IF 2025 · semelhança">
+  <div class="conteudo">
+    <div class="area-resolucao"></div>
+    <span class="pilula pilula-pausa" data-em="1:some">Pause o vídeo e tente</span>
+    <div class="painel-questao">
+      <p class="olho" style="font-size:24px">IF Sudeste MG 2025 · Questão 17</p>
+      <p class="enunciado">Observe os triângulos a seguir.</p>
+      <svg viewBox="0 0 560 200" style="width:600px;height:214px;display:block;margin:0 auto" aria-hidden="true">
+        <path d="M30 175 L280 175 L285 22 Z" fill="none" stroke="#4B39B3" stroke-width="4" stroke-linejoin="round"/>
+        <path d="M388 62 L520 62 L383 140 Z" fill="none" stroke="#4B39B3" stroke-width="4" stroke-linejoin="round"/>
+        <path d="M62 175 A32 32 0 0 0 57.5 158.9" fill="#E4DEFB" stroke="#4B39B3" stroke-width="2"/>
+        <path d="M285 22 L284 50 A28 28 0 0 1 260.6 36.6 Z" fill="#E4DEFB" stroke="#4B39B3" stroke-width="2"/>
+        <path d="M520 62 L494 62 A26 26 0 0 0 497.4 74.9 Z" fill="#E4DEFB" stroke="#4B39B3" stroke-width="2"/>
+        <path d="M383 140 L384.4 113 A27 27 0 0 1 406.4 126.6 Z" fill="#E4DEFB" stroke="#4B39B3" stroke-width="2"/>
+        <g class="rot-fig"><text x="14" y="190">A</text><text x="284" y="194">B</text><text x="290" y="18">C</text><text x="370" y="58">E</text><text x="526" y="58">D</text><text x="370" y="158">F</text></g>
+        <g class="rot-fig" font-style="italic" font-size="16"><text x="68" y="168">α</text><text x="264" y="58">β</text><text x="480" y="80">α</text><text x="402" y="112">β</text></g>
+        <g class="rot-fig" font-size="17"><text x="120" y="90">x + y</text><text x="140" y="196">x + 1</text><text x="292" y="110">3</text><text x="428" y="52">y + 0,5</text><text x="352" y="106">1,5</text><text x="452" y="112">x − 1</text></g>
+      </svg>
+      <p class="enunciado">Os valores de x e y são, respectivamente:</p>
+      <ol class="alternativas curtas">
+        <li data-em="2:certo"><b>A</b><span>4 e 2</span></li>
+        <li data-em="2:apaga"><b>B</b><span>7 e 7/2</span></li>
+        <li data-em="2:apaga"><b>C</b><span>5 e 3</span></li>
+        <li data-em="2:apaga"><b>D</b><span>5 e 5/2</span></li>
+        <li data-em="2:apaga"><b>E</b><span>3 e 2</span></li>
+      </ol>
+    </div>
+  </div>
+  <aside class="resolucao">
+    <p class="dados"><b>Dados:</b> α e β iguais nos dois: semelhantes (AA).</p>
+    <ol class="passos">
+      <li>\(A \leftrightarrow D\), \(C \leftrightarrow F\), \(B \leftrightarrow E\)</li>
+      <li>\(k = \dfrac{BC}{EF} = \dfrac{3}{1{,}5} = 2\)</li>
+      <li>\(x + 1 = 2(y + 0{,}5) \Rightarrow x = 2y\)</li>
+      <li>\(x + y = 2(x - 1) \Rightarrow y = x - 2\)</li>
+      <li>\(y = 2y - 2 \Rightarrow y = 2;\ x = 4\)</li>
+    </ol>
+    <p class="resposta"><b>Resposta:</b> x = 4 e y = 2. <b>Gabarito A.</b></p>
+    <p class="atencao"><b>Destaque no quadro:</b> Lados correspondentes ficam entre ângulos correspondentes. Confira: 5, 3, 6 e 2,5; 1,5; 3.</p>
+    <ul class="erros">
+      <li><b>B</b> AC = 10,5 e DF = 6: razão não é 2.</li>
+      <li><b>C</b> AB = 6 e DE = 3,5: razão não é 2.</li>
+      <li><b>D</b> Só uma das equações vale.</li>
+      <li><b>E</b> AB = 4 e DE = 2,5: razão não é 2.</li>
+    </ul>
+  </aside>
+  <aside class="notas">
+    <p>Clique 1 tira o aviso de pausa. Clique 2: gabarito A.</p>
+    <p>Questão oficial do IF Sudeste MG 2025-1, q17, MAT-0538 (Semelhança e Teorema de Tales). Figura da prova redesenhada, com as mesmas marcas de α e β. Conferido: com x = 4 e y = 2, lados 5, 3, 6 e 2,5, 1,5, 3 (razão 2).</p>
+  </aside>
+</section>
+
+<!-- IF 2024 · triângulo mágico -->
+<section class="slide questao" data-nome="IF 2024 · triângulo mágico">
+  <div class="conteudo">
+    <div class="area-resolucao"></div>
+    <span class="pilula pilula-pausa" data-em="1:some">Pause o vídeo e tente</span>
+    <div class="painel-questao">
+      <p class="olho" style="font-size:24px">IF Sudeste MG 2024 · Questão 13</p>
+      <p class="enunciado">Rodrigo, Válter e Toninho compõem o trio de ataque do time de futebol de sua escola. Esse trio de ataque é conhecido como “triângulo mágico”, em que a posição relativa entre cada atacante permanece constante. Se Válter está sempre 6 metros à esquerda de Rodrigo, e Toninho se mantém 8 metros à frente de Rodrigo, então a distância entre Válter e Toninho é de:</p>
+      <ol class="alternativas curtas">
+        <li data-em="2:apaga"><b>A</b><span>8 metros</span></li>
+        <li data-em="2:certo"><b>B</b><span>10 metros</span></li>
+        <li data-em="2:apaga"><b>C</b><span>12 metros</span></li>
+        <li data-em="2:apaga"><b>D</b><span>14 metros</span></li>
+        <li data-em="2:apaga"><b>E</b><span>16 metros</span></li>
+      </ol>
+    </div>
+  </div>
+  <aside class="resolucao">
+    <p class="dados"><b>Dados:</b> catetos 6 m e 8 m (ângulo reto em Rodrigo).</p>
+    <ol class="passos">
+      <li>"À esquerda" e "à frente": perpendiculares</li>
+      <li>\(a^2 = 6^2 + 8^2 = 36 + 64\)</li>
+      <li>\(a^2 = 100 \Rightarrow a = 10\ \text{m}\)</li>
+    </ol>
+    <p class="resposta"><b>Resposta:</b> 10 metros. <b>Gabarito B.</b></p>
+    <p class="atencao"><b>Destaque no quadro:</b> Faça o desenho: Rodrigo no canto do ângulo reto.</p>
+    <ul class="erros">
+      <li><b>A</b> É só um cateto.</li>
+      <li><b>C</b> Não sai de relação correta.</li>
+      <li><b>D</b> Somou os catetos.</li>
+      <li><b>E</b> Maior que a soma dos catetos: impossível.</li>
+    </ul>
+  </aside>
+  <aside class="notas">
+    <p>Clique 1 tira o aviso de pausa. Clique 2: gabarito B.</p>
+    <p>Questão oficial do IF Sudeste MG 2024-1, q13, MAT-0297 (Teorema de Pitágoras e relações métricas). Conferido: 36 + 64 = 100; √100 = 10 (o terno 6, 8, 10).</p>
+  </aside>
+</section>
+
+<!-- IF 2023 · papagaio -->
+<section class="slide questao" data-nome="IF 2023 · papagaio">
+  <div class="conteudo">
+    <div class="area-resolucao"></div>
+    <span class="pilula pilula-pausa" data-em="1:some">Pause o vídeo e tente</span>
+    <div class="painel-questao">
+      <p class="olho" style="font-size:24px">IF Sudeste MG 2023 · Questão 19</p>
+      <p class="enunciado" style="font-size:24px">Angelina fez com seu pai um papagaio com a forma de um quadrado. No final, quis fazer e colocar duas asas, ambas na forma de um triângulo retângulo, nos dois lados do papagaio. O comprimento c de um dos lados da asa tem medida igual à medida do lado do papagaio. Sabendo que a vareta reta, que passa no centro do quadrado, mede 30 centímetros (cm), qual é o valor do comprimento c da asa?</p>
+      <svg viewBox="0 0 420 200" style="width:400px;height:190px;display:block;margin:0 auto" aria-hidden="true">
+        <path d="M110 10 L200 100 L110 190 L20 100 Z" fill="#F9C6DE" stroke="#C2387F" stroke-width="4"/>
+        <line x1="110" y1="10" x2="110" y2="190" stroke="#A9744A" stroke-width="4"/>
+        <path d="M30 92 Q110 45 190 92" fill="none" stroke="#A9744A" stroke-width="3"/>
+        <text x="170" y="38" class="rot-fig" font-size="17">vareta reta</text><path d="M168 42 L116 60" stroke="#5E5A70" stroke-width="2"/>
+        <path d="M330 40 L330 170 L400 170 Z" fill="#FFE58A" stroke="#4B39B3" stroke-width="3"/>
+        <line x1="300" y1="40" x2="300" y2="170" stroke="#292B2C" stroke-width="3"/><path d="M294 40 h12 M294 170 h12" stroke="#292B2C" stroke-width="3"/>
+        <text x="308" y="112" class="rot-fig" font-size="22" font-style="italic">c</text>
+      </svg>
+      <ol class="alternativas curtas">
+        <li data-em="2:apaga"><b>A</b><span>15 cm</span></li>
+        <li data-em="2:certo"><b>B</b><span>\(15\sqrt{2}\) cm</span></li>
+        <li data-em="2:apaga"><b>C</b><span>\(15\sqrt{3}\) cm</span></li>
+        <li data-em="2:apaga"><b>D</b><span>30 cm</span></li>
+        <li data-em="2:apaga"><b>E</b><span>\(30\sqrt{2}\) cm</span></li>
+      </ol>
+    </div>
+  </div>
+  <aside class="resolucao">
+    <p class="dados"><b>Dados:</b> diagonal (vareta) \(d = 30\ \text{cm}\); \(c = \ell\).</p>
+    <ol class="passos">
+      <li>\(d^2 = \ell^2 + \ell^2 = 2\ell^2\)</li>
+      <li>\(900 = 2\ell^2 \Rightarrow \ell^2 = 450\)</li>
+      <li>\(\ell = \sqrt{225 \cdot 2} = 15\sqrt{2}\ \text{cm}\)</li>
+    </ol>
+    <p class="resposta"><b>Resposta:</b> \(c = 15\sqrt{2}\) cm. <b>Gabarito B.</b></p>
+    <p class="atencao"><b>Destaque no quadro:</b> \(d = \ell\sqrt{2}\): o lado é a diagonal dividida por \(\sqrt{2}\).</p>
+    <ul class="erros">
+      <li><b>A</b> Metade da vareta.</li>
+      <li><b>C</b> \(\sqrt{3}\) é do equilátero.</li>
+      <li><b>D</b> Tomou a diagonal como lado.</li>
+      <li><b>E</b> Multiplicou por \(\sqrt{2}\).</li>
+    </ul>
+  </aside>
+  <aside class="notas">
+    <p>Clique 1 tira o aviso de pausa. Clique 2: gabarito B.</p>
+    <p>Questão oficial do IF Sudeste MG 2023-1, q19, MAT-0451 (Teorema de Pitágoras e relações métricas). Figura da prova redesenhada: a vareta reta liga dois vértices opostos (é a diagonal). Conferido: 15√2 · √2 = 30.</p>
+  </aside>
+</section>
+
+<!-- A seguir -->
+<section class="slide capa" data-nome="A seguir">
+  <div class="estrelas"></div>
+  <div class="texto-capa" style="top:170px">
+    <span class="selo">Matemática · IF</span>
+    <p class="aula" style="font-size:28px">A seguir · Questões do IF Sudeste · Parte 2 de 2</p>
+    <h1>Questões do IF Sudeste</h1>
+    <p class="sub">Polígonos, circunferência e áreas</p>
+  </div>
+  <svg class="emblema" viewBox="0 0 640 640" aria-hidden="true">
+    <circle cx="320" cy="320" r="200" fill="none" stroke="#fff" stroke-width="6" stroke-opacity=".85"/>
+    <polygon points="520,320 420,493.2 220,493.2 120,320 220,146.8 420,146.8" fill="#FFD10C" fill-opacity=".85"/>
+    <image href="{{SYM_ROXO}}" x="250" y="250" width="140" height="140"/>
+  </svg>
+  <img class="logo-capa" src="{{LOGO_BRANCO}}" alt="Quarks">
+  <aside class="notas"><p>Segundo bloco do capítulo: as questões oficiais de polígonos regulares, circunferência e círculo e perímetros e áreas.</p></aside>
+</section>

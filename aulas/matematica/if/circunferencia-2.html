@@ -1,0 +1,484 @@
+<!--aula
+{"disciplina": "matematica", "curso": "IF", "assunto": "Circunferência e círculo", "parte": "Parte 2 de 2", "titulo": "Ângulos e comprimento", "scripts": ["animacoes-geometria-b.js"]}
+-->
+<!-- Fonte: apostila IF, Matemática, cap. 5 (5.6 Circunferência e círculo: Ângulo central e ângulo inscrito; Ângulos de vértice interno e externo; Comprimento da circunferência e de um arco; resumo). Questões: Modelo IF, lote if-matematica-circunferencia-e-circulo, m008 (MAT-0938); oficiais IF Sudeste MG 2016-1 q17 (MAT-0472) e 2013-1 q22 (MAT-0373), sobras do capítulo. As oficiais 2026-1 q15 e 2025-1 q16 (ângulos) estão reservadas para o bloco do fim do capítulo. -->
+<style>
+  .caixa { box-sizing: border-box; }
+  .rot { font-family: Figtree, "Segoe UI", sans-serif; font-weight: 800; fill: #3F2FA0; }
+  .rot-c { font-family: Figtree, "Segoe UI", sans-serif; font-weight: 700; fill: #5E5A70; }
+  .pequeno { font-size: 30px; line-height: 1.35; }
+  .onde { display: grid; grid-template-columns: repeat(4, 1fr); gap: 22px; }
+  .onde > div { background: var(--branco); border: 2px solid var(--lilas-2); border-radius: 26px; padding: 14px 18px 18px; text-align: center; font-size: 27px; line-height: 1.3; }
+  .onde b { display: block; font: 800 30px var(--fonte-titulo); color: var(--roxo-titulo); margin: 4px 0; }
+  .onde svg { display: block; margin: 0 auto; }
+  /* os arcos que o ângulo enxerga acendem devagar */
+  .slide.ativo .mostra .brilha { animation: brilha 4.8s ease-in-out infinite; }
+  @keyframes brilha { 0%, 100% { stroke-opacity: .55; } 50% { stroke-opacity: 1; } }
+</style>
+
+<!-- 1. Capa -->
+<section class="slide capa" data-nome="Capa">
+  <div class="estrelas"></div>
+  <div class="texto-capa" style="top:170px">
+    <span class="selo">Matemática · IF</span>
+    <p class="aula">Circunferência e círculo · Parte 2 de 2</p>
+    <h1 style="font-size:128px">Ângulos e comprimento</h1>
+    <p class="sub">Inscrito vale metade; uma volta vale 2πr</p>
+  </div>
+  <svg class="emblema" viewBox="0 0 640 640" aria-hidden="true">
+    <g class="gira-lento"><ellipse cx="320" cy="320" rx="300" ry="128" fill="none" stroke="#fff" stroke-opacity=".38" stroke-width="2" transform="rotate(-10 320 320)"/></g>
+    <circle cx="320" cy="320" r="236" fill="none" stroke="#fff" stroke-opacity=".75" stroke-width="4"/>
+    <g class="gira"><path d="M139.2 471.7 L320 84 L500.8 471.7" fill="none" stroke="#FFD10C" stroke-width="5" stroke-linejoin="round"/><circle cx="320" cy="84" r="13" fill="#FFD10C" stroke="#fff" stroke-width="3"/></g>
+    <circle cx="320" cy="320" r="132" fill="#FFD10C"/>
+    <image href="{{SYM_ROXO}}" x="238" y="238" width="164" height="164"/>
+  </svg>
+  <img class="logo-capa" src="{{LOGO_BRANCO}}" alt="Quarks">
+  <aside class="notas"><p>Segunda parte de Circunferência e círculo: ângulos (central, inscrito, de vértice dentro e fora do círculo) e o comprimento da circunferência e de um arco. Fecha o subcapítulo.</p></aside>
+</section>
+
+<!-- 2. Central e inscrito -->
+<section class="slide" data-nome="Ângulo central e inscrito">
+  <div class="conteudo">
+    <p class="olho">Ângulos na circunferência</p>
+    <h2 class="titulo">Central e inscrito</h2>
+    <svg viewBox="0 0 440 440" style="position:absolute;left:0;top:130px;width:470px;height:470px" aria-hidden="true">
+      <circle cx="220" cy="220" r="180" fill="#fff" stroke="#BFB6E6" stroke-width="5"/>
+      <path class="brilha" d="M82.1 335.7 A180 180 0 0 0 357.9 335.7" fill="none" stroke="var(--d)" stroke-width="12" stroke-linecap="round"/>
+      <g data-passo="1"><path d="M82.1 335.7 L220 220 L357.9 335.7" fill="none" stroke="#6551D1" stroke-width="5"/><path d="M184.8 249.6 A46 46 0 0 0 255.2 249.6" fill="none" stroke="#6551D1" stroke-width="4"/><text x="220" y="300" text-anchor="middle" class="rot" font-size="28" fill="#6551D1">100°</text></g>
+      <g data-passo="2"><path d="M82.1 335.7 L220 40 L357.9 335.7" fill="none" stroke="#E8A33A" stroke-width="5" stroke-linejoin="round"/><path d="M198.9 85.3 A50 50 0 0 0 241.1 85.3" fill="none" stroke="#E8A33A" stroke-width="4"/><text x="220" y="124" text-anchor="middle" class="rot" font-size="28" fill="#B5731A">50°</text><circle cx="220" cy="40" r="9" fill="#FFD10C" stroke="#292B2C" stroke-width="2"/></g>
+      <text x="220" y="430" text-anchor="middle" class="rot" font-size="28" fill="#1E4FD8">arco AB = 100°</text>
+      <g class="rot" font-size="28"><text x="58" y="364">A</text><text x="364" y="364">B</text></g>
+      <circle cx="220" cy="220" r="7" fill="#292B2C"/><text x="232" y="212" class="rot" font-size="26">O</text>
+    </svg>
+    <div style="position:absolute;left:580px;right:0;top:160px;display:flex;flex-direction:column;gap:20px">
+      <div class="caixa" data-passo="1" style="padding:18px 30px"><span class="rotulo">Ângulo central</span><div class="texto pequeno">vértice no <b>centro</b>. Mede o mesmo que o arco que ele enxerga.</div></div>
+      <div class="caixa" data-passo="2" style="padding:18px 30px"><span class="rotulo">Ângulo inscrito</span><div class="texto pequeno">vértice <b>sobre a circunferência</b> e lados que são cordas.</div></div>
+      <div class="caixa caixa-fundamental" data-passo="3" style="padding:18px 30px"><div class="texto" style="font-size:34px">O inscrito mede <b>metade</b> do central que enxerga o mesmo arco.</div></div>
+    </div>
+  </div>
+  <aside class="notas">
+    <p>Figura da apostila: o central de 100° e o inscrito de 50° enxergam o mesmo arco AB. Clique 1: o central. Clique 2: o inscrito. Clique 3: a regra.</p>
+  </aside>
+</section>
+
+<!-- 3. O inscrito não muda -->
+<section class="slide" data-nome="O inscrito não muda">
+  <div class="conteudo">
+    <p class="olho">Ângulo inscrito</p>
+    <h2 class="titulo">Ande com o vértice: continua 50°</h2>
+    <div data-anima="geob-inscrito" data-anima-passo="0" style="position:absolute;left:0;top:130px;width:560px;height:560px;transform:scale(.84);transform-origin:0 0"></div>
+    <div style="position:absolute;left:600px;right:0;top:170px">
+      <div class="caixa caixa-fundamental" style="padding:20px 30px;display:flex;gap:40px;align-items:center;justify-content:center">
+        <span style="font-size:58px">\(\text{central} = \text{arco}\)</span>
+        <span style="font-size:58px">\(\text{inscrito} = \dfrac{\text{arco}}{2}\)</span>
+      </div>
+      <p class="texto" data-passo="1" style="margin:30px 0 0">Todo inscrito que enxerga o arco de 100° mede 50°, <b>em qualquer ponto</b> do arco de cima.</p>
+      <p class="texto" data-passo="2" style="margin:20px 0 0;color:var(--cinza);font-size:32px">É por isso que, na potência de ponto, os triângulos tinham os mesmos ângulos.</p>
+    </div>
+  </div>
+  <aside class="notas">
+    <p>O vértice P anda pela circunferência e o ângulo continua 50°: ele só depende do arco que enxerga (100°). Clique 2 retoma a Parte 1: os ângulos inscritos que enxergam o mesmo arco são iguais, e daí vem a semelhança da potência de ponto.</p>
+  </aside>
+</section>
+
+<!-- 4. Semicircunferência -->
+<section class="slide" data-nome="Inscrito na semicircunferência">
+  <div class="conteudo">
+    <p class="olho">Consequência importante</p>
+    <h2 class="titulo">Na semicircunferência, o ângulo é reto</h2>
+    <div data-anima="geob-inscrito" data-modo="semi" data-anima-passo="0" style="position:absolute;left:0;top:130px;width:560px;height:560px;transform:scale(.84);transform-origin:0 0"></div>
+    <div style="position:absolute;left:600px;right:0;top:170px">
+      <div class="contas">
+        <div class="eq" data-passo="1"><span>\(\text{inscrito}\)</span><span>\(=\)</span><span>\(\dfrac{180°}{2}\)</span></div>
+        <div class="eq final" data-passo="2"><span>\(\text{inscrito}\)</span><span>\(=\)</span><span>\(90°\)</span></div>
+      </div>
+      <div class="caixa caixa-fundamental" data-passo="3" style="margin-top:34px;padding:20px 30px">
+        <div class="texto" style="font-size:32px">Triângulo com um lado sendo o <b>diâmetro</b> e o vértice oposto na circunferência é sempre <b>retângulo</b>.</div>
+      </div>
+    </div>
+  </div>
+  <aside class="notas">
+    <p>AB é diâmetro: o arco é de 180°, e a metade é 90°. O vértice anda e o ângulo reto fica (marca amarela). Da apostila. Questão de prova típica: o triângulo ABC com AB diâmetro é retângulo em C.</p>
+  </aside>
+</section>
+
+<!-- 5. Exemplo central e inscrito -->
+<section class="slide" data-nome="Exemplo: central e inscrito">
+  <div class="conteudo">
+    <p class="olho">Exemplo</p>
+    <h2 class="titulo">Central e inscrito</h2>
+    <p class="texto" style="position:absolute;left:0;right:0;top:150px;margin:0">Um arco mede <b>100°</b>. Quanto medem o ângulo central e um inscrito que enxergam esse arco?</p>
+    <div class="contas" style="position:absolute;left:0;top:280px">
+      <div class="eq" data-passo="1"><span>\(\text{central}\)</span><span>\(=\)</span><span>\(\text{arco}\)</span></div>
+      <div class="eq final" data-passo="2"><span>\(\text{central}\)</span><span>\(=\)</span><span>\(100°\)</span></div>
+    </div>
+    <div class="contas" style="position:absolute;left:760px;top:280px">
+      <div class="eq" data-passo="3"><span>\(\text{inscrito}\)</span><span>\(=\)</span><span>\(\dfrac{\text{arco}}{2}\)</span></div>
+      <div class="eq" data-passo="4"><span>\(\text{inscrito}\)</span><span>\(=\)</span><span>\(\dfrac{100°}{2}\)</span></div>
+      <div class="eq final" data-passo="5"><span>\(\text{inscrito}\)</span><span>\(=\)</span><span>\(50°\)</span></div>
+    </div>
+  </div>
+  <aside class="notas"><p>Exemplo "Central e inscrito" da apostila.</p></aside>
+</section>
+
+<!-- 6. Vértice dentro do círculo -->
+<section class="slide" data-nome="Vértice dentro">
+  <div class="conteudo">
+    <p class="olho">Ângulo de vértice interno</p>
+    <h2 class="titulo">Duas cordas que se cortam fora do centro</h2>
+    <svg viewBox="0 0 440 440" style="position:absolute;left:0;top:130px;width:470px;height:470px" aria-hidden="true">
+      <circle cx="220" cy="220" r="180" fill="#fff" stroke="#BFB6E6" stroke-width="5"/>
+      <path class="brilha" d="M104.3 357.9 A180 180 0 0 0 335.7 357.9" fill="none" stroke="var(--d)" stroke-width="12" stroke-linecap="round"/>
+      <path class="brilha" d="M281.6 50.9 A180 180 0 0 0 158.4 50.9" fill="none" stroke="#6551D1" stroke-width="12" stroke-linecap="round"/>
+      <line x1="104.3" y1="357.9" x2="281.6" y2="50.9" stroke="#292B2C" stroke-width="4"/>
+      <line x1="335.7" y1="357.9" x2="158.4" y2="50.9" stroke="#292B2C" stroke-width="4"/>
+      <path d="M201.5 189.6 A37 37 0 0 0 238.5 189.6" fill="none" stroke="#E8A33A" stroke-width="5"/>
+      <text x="220" y="225" text-anchor="middle" class="rot" font-size="28" fill="#B5731A">x</text>
+      <text x="220" y="425" text-anchor="middle" class="rot" font-size="28" fill="#1E4FD8">80°</text>
+      <text x="220" y="28" text-anchor="middle" class="rot" font-size="28" fill="#6551D1">40°</text>
+      <g data-passo="1"><line x1="281.6" y1="50.9" x2="335.7" y2="357.9" stroke="#E8A33A" stroke-width="5"/><path d="M220 157.6 L281.6 50.9 L335.7 357.9 Z" fill="rgba(255,209,12,.25)"/></g>
+      <g data-passo="2"><text x="268" y="122" text-anchor="middle" class="rot" font-size="22" fill="#B5731A">40°</text></g>
+      <g data-passo="3"><text x="340" y="312" class="rot" font-size="22" fill="#B5731A">20°</text></g>
+      <g class="rot" font-size="26"><text x="80" y="384">A</text><text x="344" y="384">B</text><text x="286" y="40">C</text><text x="132" y="40">D</text></g>
+    </svg>
+    <div style="position:absolute;left:580px;right:0;top:160px;display:flex;flex-direction:column;gap:16px">
+      <p class="texto pequeno" style="margin:0">\(x\) enxerga o arco de <b>80°</b>; o seu oposto pelo vértice, o de <b>40°</b>.</p>
+      <p class="texto pequeno" data-passo="1" style="margin:0">Ligue C a B: um triângulo com dois ângulos <b>inscritos</b>.</p>
+      <div class="contas" style="font-size:42px;row-gap:10px">
+        <div class="eq" data-passo="2"><span>\(\hat{C}\)</span><span>\(=\)</span><span>\(\dfrac{80°}{2} = 40°\)</span></div>
+        <div class="eq" data-passo="3"><span>\(\hat{B}\)</span><span>\(=\)</span><span>\(\dfrac{40°}{2} = 20°\)</span></div>
+        <div class="eq final" data-passo="4"><span>\(x\)</span><span>\(=\)</span><span>\(40° + 20° = 60°\)</span></div>
+      </div>
+      <p class="texto pequeno" data-passo="4" style="margin:0;color:var(--cinza)">\(x\) é ângulo <b>externo</b> do triângulo: a soma dos dois não adjacentes.</p>
+    </div>
+  </div>
+  <aside class="notas">
+    <p>Figura e raciocínio da apostila. O ângulo em C (lados CA e CB) enxerga o arco AB de 80°: mede 40°. O ângulo em B (lados BD e BC) enxerga o arco CD de 40°: mede 20°. x é externo do triângulo XCB, então vale 40° + 20° = 60°.</p>
+    <p>E 60° é a média dos arcos: (80° + 40°) ÷ 2. Próximo slide: a regra.</p>
+  </aside>
+</section>
+
+<!-- 7. Fórmulas dentro e fora + exemplo -->
+<section class="slide" data-nome="Vértice dentro e fora">
+  <div class="conteudo">
+    <p class="olho">Fórmula</p>
+    <h2 class="titulo">Vértice dentro e vértice fora</h2>
+    <div style="position:absolute;left:0;right:0;top:150px;display:grid;grid-template-columns:1fr 1fr;gap:40px">
+      <div class="caixa caixa-fundamental" style="padding:18px 30px;text-align:center"><span class="rotulo">Vértice dentro: metade da soma</span><div style="font-size:64px">\(x = \dfrac{a + b}{2}\)</div></div>
+      <div class="caixa caixa-fundamental" data-passo="5" style="padding:18px 30px;text-align:center"><span class="rotulo">Vértice fora: metade da diferença</span><div style="font-size:64px">\(x = \dfrac{a - b}{2}\)</div></div>
+    </div>
+    <div style="position:absolute;left:580px;width:640px;top:400px">
+      <p class="texto pequeno" style="margin:0 0 12px"><b>O arco que falta:</b> \(x = 50°\) e um arco de \(30°\).</p>
+      <div class="contas" style="font-size:42px;row-gap:10px">
+        <div class="eq" data-passo="1"><span>\(50°\)</span><span>\(=\)</span><span>\(\dfrac{a + 30°}{2}\)</span></div>
+        <div class="eq" data-passo="2"><span>\(100°\)</span><span>\(=\)</span><span>\(a + 30°\)</span></div>
+        <div class="eq final" data-passo="3"><span>\(a\)</span><span>\(=\)</span><span>\(70°\)</span></div>
+      </div>
+    </div>
+    <p class="texto pequeno" data-passo="5" style="position:absolute;left:1260px;right:0;top:400px;margin:0">Fora: \(a\) é o arco <b>maior</b> (longe do vértice) e \(b\), o <b>menor</b> (perto).</p>
+    <p class="texto pequeno" data-passo="4" style="position:absolute;left:0;width:520px;top:400px;margin:0;color:var(--cinza)">\(a\) e \(b\): os arcos enxergados pelo ângulo e pelo seu oposto pelo vértice.</p>
+  </div>
+  <aside class="notas">
+    <p>Fórmulas da apostila. Exemplo "O arco que falta": duas cordas se cortam e formam 50°; o ângulo enxerga um arco de 30°; o arco do lado oposto é 70°. Confere: (70 + 30) ÷ 2 = 50.</p>
+    <p>Clique 5: a regra do vértice fora, que vem no próximo slide.</p>
+  </aside>
+</section>
+
+<!-- 8. Vértice fora -->
+<section class="slide" data-nome="Vértice fora">
+  <div class="conteudo">
+    <p class="olho">Ângulo de vértice externo</p>
+    <h2 class="titulo">O vértice P fora do círculo</h2>
+    <svg viewBox="0 0 540 440" style="position:absolute;left:0;top:140px;width:540px;height:440px" aria-hidden="true">
+      <circle cx="330" cy="220" r="180" fill="#fff" stroke="#BFB6E6" stroke-width="5"/>
+      <path class="brilha" d="M433.2 367.4 A180 180 0 0 0 433.2 72.6" fill="none" stroke="var(--d)" stroke-width="12" stroke-linecap="round"/>
+      <path class="brilha" d="M156.1 173.4 A180 180 0 0 0 156.1 266.6" fill="none" stroke="#6551D1" stroke-width="12" stroke-linecap="round"/>
+      <line x1="28" y1="220" x2="433.2" y2="72.6" stroke="#292B2C" stroke-width="4"/>
+      <line x1="28" y1="220" x2="433.2" y2="367.4" stroke="#292B2C" stroke-width="4"/>
+      <path d="M84.4 199.5 A60 60 0 0 1 84.4 240.5" fill="none" stroke="#E8A33A" stroke-width="5"/>
+      <text x="100" y="230" class="rot" font-size="26" fill="#B5731A">x</text>
+      <circle cx="28" cy="220" r="9" fill="#FFD10C" stroke="#292B2C" stroke-width="2"/><text x="12" y="208" class="rot" font-size="26" text-anchor="end">P</text>
+      <text x="478" y="230" text-anchor="end" class="rot" font-size="28" fill="#1E4FD8">110°</text>
+      <text x="168" y="230" class="rot" font-size="26" fill="#6551D1">30°</text>
+    </svg>
+    <div class="contas" style="position:absolute;left:640px;top:170px">
+      <div class="eq" data-passo="1"><span>\(x\)</span><span>\(=\)</span><span>\(\dfrac{a - b}{2}\)</span></div>
+      <div class="eq" data-passo="2"><span>\(x\)</span><span>\(=\)</span><span>\(\dfrac{110° - 30°}{2}\)</span></div>
+      <div class="eq" data-passo="3"><span>\(x\)</span><span>\(=\)</span><span>\(\dfrac{80°}{2}\)</span></div>
+      <div class="eq final" data-passo="4"><span>\(x\)</span><span>\(=\)</span><span>\(40°\)</span></div>
+    </div>
+    <p class="texto pequeno" style="position:absolute;left:1240px;right:0;top:190px;margin:0">Os lados cortam a circunferência e deixam entre eles um arco <b>maior</b> (110°, o mais longe de P) e um <b>menor</b> (30°, o mais perto).</p>
+  </div>
+  <aside class="notas"><p>Exemplo da apostila (figura com P fora, arcos de 110° e 30°). Metade da diferença: 40°. Figura em escala.</p></aside>
+</section>
+
+<!-- 9. Atenção: onde está o vértice -->
+<section class="slide" data-nome="Onde está o vértice">
+  <div class="conteudo">
+    <p class="olho">Atenção</p>
+    <h2 class="titulo">Antes da regra, olhe o vértice</h2>
+    <div class="onde" style="position:absolute;left:0;right:0;top:160px">
+      <div data-passo="1"><svg viewBox="0 0 200 200" width="190" height="190"><circle cx="100" cy="100" r="80" fill="#fff" stroke="#BFB6E6" stroke-width="4"/><path d="M38.7 151.4 L100 100 L161.3 151.4" fill="none" stroke="#292B2C" stroke-width="4"/><path d="M38.7 151.4 A80 80 0 0 0 161.3 151.4" fill="none" stroke="var(--d)" stroke-width="8"/><circle cx="100" cy="100" r="7" fill="#FFD10C" stroke="#292B2C" stroke-width="2"/></svg><b>No centro</b>igual ao arco</div>
+      <div data-passo="2"><svg viewBox="0 0 200 200" width="190" height="190"><circle cx="100" cy="100" r="80" fill="#fff" stroke="#BFB6E6" stroke-width="4"/><path d="M38.7 151.4 L100 20 L161.3 151.4" fill="none" stroke="#292B2C" stroke-width="4"/><path d="M38.7 151.4 A80 80 0 0 0 161.3 151.4" fill="none" stroke="var(--d)" stroke-width="8"/><circle cx="100" cy="20" r="7" fill="#FFD10C" stroke="#292B2C" stroke-width="2"/></svg><b>Na circunferência</b>metade do arco</div>
+      <div data-passo="3"><svg viewBox="0 0 200 200" width="190" height="190"><circle cx="100" cy="100" r="80" fill="#fff" stroke="#BFB6E6" stroke-width="4"/><line x1="48.6" y1="161.3" x2="127.4" y2="24.8" stroke="#292B2C" stroke-width="4"/><line x1="151.4" y1="161.3" x2="72.6" y2="24.8" stroke="#292B2C" stroke-width="4"/><path d="M48.6 161.3 A80 80 0 0 0 151.4 161.3" fill="none" stroke="var(--d)" stroke-width="8"/><path d="M127.4 24.8 A80 80 0 0 0 72.6 24.8" fill="none" stroke="#6551D1" stroke-width="8"/><circle cx="100" cy="72" r="7" fill="#FFD10C" stroke="#292B2C" stroke-width="2"/></svg><b>Dentro, fora do centro</b>metade da soma</div>
+      <div data-passo="4"><svg viewBox="0 0 200 200" width="190" height="190"><circle cx="120" cy="100" r="70" fill="#fff" stroke="#BFB6E6" stroke-width="4"/><line x1="10" y1="100" x2="160" y2="42.7" stroke="#292B2C" stroke-width="4"/><line x1="10" y1="100" x2="160" y2="157.3" stroke="#292B2C" stroke-width="4"/><path d="M160 157.3 A70 70 0 0 0 160 42.7" fill="none" stroke="var(--d)" stroke-width="8"/><circle cx="10" cy="100" r="7" fill="#FFD10C" stroke="#292B2C" stroke-width="2"/></svg><b>Fora do círculo</b>metade da diferença</div>
+    </div>
+  </div>
+  <aside class="notas"><p>Atenção "Onde está o vértice" da apostila, em quatro figuras: no centro, igual ao arco; sobre a circunferência, metade do arco; dentro, fora do centro, metade da soma; fora do círculo, metade da diferença.</p></aside>
+</section>
+
+<!-- 10. Comprimento: o pi -->
+<section class="slide" data-nome="O número pi">
+  <div class="conteudo">
+    <p class="olho">Comprimento da circunferência</p>
+    <h2 class="titulo">Contorno ÷ diâmetro: sempre o mesmo número</h2>
+    <div data-anima="geob-pi" data-anima-passo="0" style="position:absolute;left:0;top:140px;width:1100px;height:330px"></div>
+    <div class="caixa caixa-fundamental" style="position:absolute;left:1140px;right:0;top:160px;padding:20px 30px">
+      <div style="font-size:64px;text-align:center">\(\pi = 3{,}14159\ldots\)</div>
+      <div class="texto pequeno" style="text-align:center">um número <b>irracional</b></div>
+    </div>
+    <div class="caixa" data-passo="1" style="position:absolute;left:600px;right:0;top:540px;padding:18px 30px;display:flex;align-items:center;gap:50px">
+      <span style="font-size:70px">\(C = 2\pi r\)</span>
+      <span class="texto pequeno">ou \(C = \pi d\). Use \(\pi \approx 3{,}14\), ou o valor que o enunciado der.</span>
+    </div>
+  </div>
+  <aside class="notas">
+    <p>Da apostila: meça o contorno de uma lata com um barbante e divida pelo diâmetro; com qualquer lata dá um pouco mais de 3. A roda desenrola uma volta inteira: são 3 diâmetros (barras) e mais um pedacinho.</p>
+    <p>Clique 1: a fórmula. As provas do IF já usaram π = 3,1 e π = 3,14.</p>
+  </aside>
+</section>
+
+<!-- 11. Arco -->
+<section class="slide" data-nome="Comprimento de um arco">
+  <div class="conteudo">
+    <p class="olho">Comprimento de um arco</p>
+    <h2 class="titulo">Use a fração da volta</h2>
+    <svg viewBox="0 0 440 440" style="position:absolute;left:0;top:140px;width:440px;height:440px" aria-hidden="true">
+      <circle cx="220" cy="220" r="180" fill="#fff" stroke="#BFB6E6" stroke-width="5"/>
+      <path d="M220 220 L400 220 A180 180 0 0 0 310 64.1 Z" fill="#E8F0FF"/>
+      <path d="M400 220 A180 180 0 0 0 310 64.1" fill="none" stroke="var(--d)" stroke-width="12" stroke-linecap="round"/>
+      <path d="M220 220 L400 220 M220 220 L310 64.1" stroke="#6551D1" stroke-width="4"/>
+      <path d="M270 220 A50 50 0 0 0 245 176.7" fill="none" stroke="#E8A33A" stroke-width="5"/>
+      <text x="282" y="196" class="rot" font-size="26" fill="#B5731A">α</text>
+      <text x="410" y="130" class="rot" font-size="28" fill="#1E4FD8">ℓ</text>
+      <circle cx="220" cy="220" r="7" fill="#292B2C"/>
+    </svg>
+    <div class="caixa caixa-fundamental" style="position:absolute;left:560px;right:0;top:160px;padding:20px 30px;text-align:center">
+      <div style="font-size:72px">\(\ell = \dfrac{\alpha}{360°} \cdot 2\pi r\)</div>
+    </div>
+    <div style="position:absolute;left:560px;right:0;top:400px;display:grid;grid-template-columns:1fr 1fr;gap:24px">
+      <div class="caixa" data-passo="1" style="padding:16px 26px"><span class="rotulo">90°</span><div class="texto pequeno">\(\dfrac{90}{360} = \dfrac{1}{4}\) da volta</div></div>
+      <div class="caixa" data-passo="2" style="padding:16px 26px"><span class="rotulo">60°</span><div class="texto pequeno">\(\dfrac{60}{360} = \dfrac{1}{6}\) da volta</div></div>
+    </div>
+  </div>
+  <aside class="notas"><p>Fórmula da apostila: o arco de α graus é a fração α/360° da circunferência inteira. Os cartões são só a leitura da fração (um quarto e um sexto de volta), para usar no exemplo e na questão 2.</p></aside>
+</section>
+
+<!-- 12. Exemplo: roda e arco -->
+<section class="slide" data-nome="Exemplo: a roda e o arco">
+  <div class="conteudo">
+    <p class="olho">Exemplo · use π = 3,14</p>
+    <h2 class="titulo">A roda e o arco</h2>
+    <div style="position:absolute;left:0;width:820px;top:150px">
+      <p class="texto pequeno" style="margin:0 0 16px"><b>a)</b> Roda de raio 30 cm: quanto anda em 1 volta? E em 100?</p>
+      <div class="contas" style="font-size:42px;row-gap:10px">
+        <div class="eq" data-passo="1"><span>\(C\)</span><span>\(=\)</span><span>\(2 \cdot 3{,}14 \cdot 30\)</span></div>
+        <div class="eq final" data-passo="2"><span>\(C\)</span><span>\(=\)</span><span>\(188{,}4\ \text{cm}\)</span></div>
+        <div class="eq" data-passo="3"><span>\(100\,C\)</span><span>\(=\)</span><span>\(18\,840\ \text{cm}\)</span></div>
+      </div>
+    </div>
+    <span class="pilula pilula-resposta" data-passo="4" style="position:absolute;left:0;top:520px">100 voltas: 188,4 m</span>
+    <div style="position:absolute;left:900px;right:0;top:150px">
+      <p class="texto pequeno" style="margin:0 0 16px"><b>b)</b> Arco de 60° com raio 6 cm?</p>
+      <div class="contas" style="font-size:42px;row-gap:10px">
+        <div class="eq" data-passo="5"><span>\(\ell\)</span><span>\(=\)</span><span>\(\dfrac{60}{360} \cdot 2 \cdot 3{,}14 \cdot 6\)</span></div>
+        <div class="eq" data-passo="6"><span>\(\ell\)</span><span>\(=\)</span><span>\(\dfrac{1}{6} \cdot 37{,}68\)</span></div>
+        <div class="eq final" data-passo="7"><span>\(\ell\)</span><span>\(=\)</span><span>\(6{,}28\ \text{cm}\)</span></div>
+      </div>
+    </div>
+  </div>
+  <aside class="notas">
+    <p>Exemplo "A roda e o arco" da apostila. a) 2 · 3,14 · 30 = 188,4 cm por volta; 100 voltas = 18 840 cm = 188,4 m. b) 2 · 3,14 · 6 = 37,68; um sexto disso é 6,28 cm.</p>
+  </aside>
+</section>
+
+<!-- 13. Atenção raio ou diâmetro -->
+<section class="slide" data-nome="Atenção: raio ou diâmetro">
+  <div class="conteudo">
+    <p class="olho">Atenção</p>
+    <h2 class="titulo">Raio ou diâmetro?</h2>
+    <div class="caixa caixa-atencao" style="position:absolute;left:0;right:0;top:160px;padding:22px 34px">
+      <div class="texto">A fórmula \(C = 2\pi r\) usa o <b>raio</b>. Se o problema der o <b>diâmetro</b>, divida por 2 antes ou use \(C = \pi d\).</div>
+    </div>
+    <div style="position:absolute;left:580px;right:0;top:400px;display:grid;grid-template-columns:1fr 1fr;gap:30px">
+      <div class="caixa" data-passo="1" style="padding:18px 28px"><span class="rotulo">Diâmetro 18 cm, π = 3,1</span><div style="font-size:44px">\(C = 3{,}1 \cdot 18 = 55{,}8\)</div></div>
+      <div class="caixa" data-passo="2" style="padding:18px 28px"><span class="rotulo" style="color:var(--erro)">Erro: diâmetro como raio</span><div style="font-size:44px">\(\color{#C2384F}{2 \cdot 3{,}1 \cdot 18 = 111{,}6}\ ✗\)</div></div>
+    </div>
+  </div>
+  <aside class="notas">
+    <p>Atenção "Raio ou diâmetro" da apostila. O exemplo numérico é da prova IF Sudeste MG 2017-2 q22 (MAT-0499, sobra do capítulo): o certo é 55,8 cm; usar o diâmetro como raio dá o dobro, 111,6 cm (uma das alternativas).</p>
+  </aside>
+</section>
+
+<!-- 14. Questão 1 -->
+<section class="slide questao" data-nome="Questão 1">
+  <div class="conteudo">
+    <div class="area-resolucao"></div>
+    <span class="pilula pilula-pausa" data-em="1:some">Pause o vídeo e tente</span>
+    <div class="painel-questao" style="gap:12px">
+      <p class="olho">Questão 1 · Modelo IF</p>
+      <p class="enunciado" style="font-size:23px">No mostrador circular de um relógio, as marcas dos números 1 a 12 dividem a circunferência em 12 arcos iguais. Foram traçados dois segmentos com uma ponta na marca do 12: um até a marca do 3 e outro até a marca do 7, como mostra a figura. A medida do ângulo \(x\), formado por esses dois segmentos, é</p>
+      <svg viewBox="0 0 300 290" style="width:255px;height:246px;display:block;margin:0 auto" aria-hidden="true">
+        <circle cx="150" cy="150" r="120" fill="#fff" stroke="#2C2A9E" stroke-width="5"/>
+        <g stroke="#2C2A9E" stroke-width="3"><line x1="210" y1="46.1" x2="204" y2="56.5"/><line x1="253.9" y1="90" x2="243.5" y2="96"/><line x1="270" y1="150" x2="258" y2="150"/><line x1="253.9" y1="210" x2="243.5" y2="204"/><line x1="210" y1="253.9" x2="204" y2="243.5"/><line x1="150" y1="270" x2="150" y2="258"/><line x1="90" y1="253.9" x2="96" y2="243.5"/><line x1="46.1" y1="210" x2="56.5" y2="204"/><line x1="30" y1="150" x2="42" y2="150"/><line x1="46.1" y1="90" x2="56.5" y2="96"/><line x1="90" y1="46.1" x2="96" y2="56.5"/><line x1="150" y1="30" x2="150" y2="42"/></g>
+        <g font-family="Figtree,sans-serif" font-size="20" font-weight="700" fill="#292B2C" text-anchor="middle"><text x="197.5" y="75.7">1</text><text x="232.3" y="110.5">2</text><text x="236" y="158">3</text><text x="232.3" y="205.5">4</text><text x="197.5" y="240.3">5</text><text x="150" y="253">6</text><text x="116" y="236">7</text><text x="67.7" y="205.5">8</text><text x="55" y="158">9</text><text x="67.7" y="110.5">10</text><text x="102.5" y="75.7">11</text><text x="126" y="66">12</text></g>
+        <path d="M150 30 L270 150 M150 30 L90 253.9" fill="none" stroke="#2F6BFF" stroke-width="4"/>
+        <path d="M144.8 49.3 A20 20 0 0 0 164.1 44.1" fill="none" stroke="#2F6BFF" stroke-width="3"/>
+        <text x="160" y="76" font-family="Figtree,sans-serif" font-size="20" font-weight="700" fill="#292B2C">x</text>
+        <g fill="#2C2A9E"><circle cx="150" cy="30" r="6"/><circle cx="270" cy="150" r="6"/><circle cx="90" cy="253.9" r="6"/></g>
+      </svg>
+      <ol class="alternativas curtas">
+        <li data-em="2:certo"><b>A</b><span>60°</span></li>
+        <li data-em="2:apaga"><b>B</b><span>75°</span></li>
+        <li data-em="2:apaga"><b>C</b><span>90°</span></li>
+        <li data-em="2:apaga"><b>D</b><span>120°</span></li>
+        <li data-em="2:apaga"><b>E</b><span>240°</span></li>
+      </ol>
+    </div>
+  </div>
+  <aside class="resolucao">
+    <p class="dados"><b>Dados:</b> 12 arcos iguais; vértice no 12, lados até 3 e 7.</p>
+    <ol class="passos">
+      <li>Cada arco: \(360° \div 12 = 30°\)</li>
+      <li>Do 3 ao 7: 4 arcos = \(120°\)</li>
+      <li>Vértice na circunferência: inscrito</li>
+      <li>\(x = 120° \div 2 = 60°\)</li>
+    </ol>
+    <p class="resposta"><b>Resposta:</b> 60°. <b>Gabarito A.</b></p>
+    <p class="atencao"><b>Destaque no quadro:</b> Conte os espaços entre os números (4), não os números (5). Inscrito = metade do arco.</p>
+    <ul class="erros">
+      <li><b>B</b> Contou 5 arcos.</li>
+      <li><b>C</b> Arco do 12 ao 3, fora do ângulo.</li>
+      <li><b>D</b> Arco (ou central), sem dividir por 2.</li>
+      <li><b>E</b> Arco maior, que passa pelo vértice.</li>
+    </ul>
+  </aside>
+  <aside class="notas">
+    <p>Clique 1 tira o aviso de pausa. Clique 2: gabarito A.</p>
+    <p>Modelo IF, lote if-matematica-circunferencia-e-circulo, m008, MAT-0938. Figura do banco redesenhada. Conferido: 4 · 30 = 120; 120 ÷ 2 = 60.</p>
+  </aside>
+</section>
+
+<!-- 15. Questão 2 -->
+<section class="slide questao" data-nome="Questão 2">
+  <div class="conteudo">
+    <div class="area-resolucao"></div>
+    <span class="pilula pilula-pausa" data-em="1:some">Pause o vídeo e tente</span>
+    <div class="painel-questao">
+      <p class="olho">Questão 2 · IF Sudeste MG 2016</p>
+      <p class="enunciado">O arco de uma circunferência mede \(2\pi\) cm de comprimento. Esse arco determina um ângulo central \(A\). Sabendo que a circunferência em questão mede \(12\pi\) cm de comprimento, qual a medida do ângulo central \(A\)?</p>
+      <ol class="alternativas curtas">
+        <li data-em="2:apaga"><b>A</b><span>90º</span></li>
+        <li data-em="2:certo"><b>B</b><span>60º</span></li>
+        <li data-em="2:apaga"><b>C</b><span>120º</span></li>
+        <li data-em="2:apaga"><b>D</b><span>150º</span></li>
+        <li data-em="2:apaga"><b>E</b><span>45º</span></li>
+      </ol>
+      <p class="fonte">IF Sudeste MG 2016 (prova 2016-1), questão 17.</p>
+    </div>
+  </div>
+  <aside class="resolucao">
+    <p class="dados"><b>Dados:</b> arco \(2\pi\) cm; circunferência \(12\pi\) cm.</p>
+    <ol class="passos">
+      <li>\(\dfrac{A}{360°} = \dfrac{2\pi}{12\pi}\)</li>
+      <li>\(\dfrac{A}{360°} = \dfrac{1}{6}\)</li>
+      <li>\(A = 360° \div 6 = 60°\)</li>
+    </ol>
+    <p class="resposta"><b>Resposta:</b> 60°. <b>Gabarito B.</b></p>
+    <p class="atencao"><b>Destaque no quadro:</b> O arco é 1/6 da volta, então o ângulo é 1/6 de 360°.</p>
+    <ul class="erros">
+      <li><b>A</b> Um quarto de volta (arco de \(3\pi\)).</li>
+      <li><b>C</b> Um terço de volta (arco de \(4\pi\)).</li>
+      <li><b>D</b> Arco de \(5\pi\).</li>
+      <li><b>E</b> Um oitavo de volta.</li>
+    </ul>
+  </aside>
+  <aside class="notas">
+    <p>Clique 1 tira o aviso de pausa. Clique 2: gabarito B.</p>
+    <p>Questão oficial do IF Sudeste MG 2016-1, q17, MAT-0472 (sobra do capítulo). Conferido: 2π/12π = 1/6; 360 ÷ 6 = 60.</p>
+  </aside>
+</section>
+
+<!-- 16. Questão 3 -->
+<section class="slide questao" data-nome="Questão 3">
+  <div class="conteudo">
+    <div class="area-resolucao"></div>
+    <span class="pilula pilula-pausa" data-em="1:some">Pause o vídeo e tente</span>
+    <div class="painel-questao">
+      <p class="olho">Questão 3 · IF Sudeste MG 2013</p>
+      <p class="enunciado">Uma corrida foi disputada em uma pista circular de 25 m de raio. Sabendo que Paulo percorreu 2355 m, quantas voltas completas ele deu na pista? (Adote \(\pi = 3{,}14\))</p>
+      <ol class="alternativas curtas">
+        <li data-em="2:certo"><b>A</b><span>15</span></li>
+        <li data-em="2:apaga"><b>B</b><span>16</span></li>
+        <li data-em="2:apaga"><b>C</b><span>17</span></li>
+        <li data-em="2:apaga"><b>D</b><span>18</span></li>
+        <li data-em="2:apaga"><b>E</b><span>19</span></li>
+      </ol>
+      <p class="fonte">IF Sudeste MG 2013 (prova 2013-1), questão 22.</p>
+    </div>
+  </div>
+  <aside class="resolucao">
+    <p class="dados"><b>Dados:</b> \(R = 25\ \text{m}\); 2355 m; \(\pi = 3{,}14\).</p>
+    <ol class="passos">
+      <li>\(C = 2 \cdot 3{,}14 \cdot 25 = 157\ \text{m}\)</li>
+      <li>\(n = 2355 \div 157\)</li>
+      <li>\(n = 15\) voltas</li>
+    </ol>
+    <p class="resposta"><b>Resposta:</b> 15 voltas. <b>Gabarito A.</b></p>
+    <p class="atencao"><b>Destaque no quadro:</b> Uma volta = comprimento da circunferência. Voltas = distância ÷ C.</p>
+    <ul class="erros">
+      <li><b>B</b> 16 voltas: 2512 m.</li>
+      <li><b>C</b> 17 voltas: 2669 m.</li>
+      <li><b>D</b> 18 voltas: 2826 m.</li>
+      <li><b>E</b> 19 voltas: 2983 m.</li>
+    </ul>
+  </aside>
+  <aside class="notas">
+    <p>Clique 1 tira o aviso de pausa. Clique 2: gabarito A.</p>
+    <p>Questão oficial do IF Sudeste MG 2013-1, q22, MAT-0373 (sobra do capítulo). Conferido: 2 · 3,14 · 25 = 157; 157 · 15 = 2355 (exato). As outras alternativas passam de 2355 m.</p>
+  </aside>
+</section>
+
+<!-- 17. Resumo -->
+<section class="slide" data-nome="Resumo">
+  <div class="conteudo">
+    <p class="olho">Resumo</p>
+    <h2 class="titulo">O essencial</h2>
+    <div class="resumo" style="position:absolute;left:0;right:0;top:150px;grid-template-columns:repeat(3,1fr)">
+      <div><b>Central</b> = arco. <b>Inscrito</b> = metade do arco.</div>
+      <div><b>Inscrito na semicircunferência</b> é reto (90°).</div>
+      <div><b>Vértice dentro:</b> metade da soma dos arcos. <b>Fora:</b> metade da diferença.</div>
+      <div>\(C = 2\pi r = \pi d\), com \(\pi \approx 3{,}14\).</div>
+      <div><b>Arco de α:</b> \(\dfrac{\alpha}{360°} \cdot 2\pi r\).</div>
+      <div><b>Raio ou diâmetro?</b> Confira antes de usar a fórmula.</div>
+    </div>
+  </div>
+  <aside class="notas"><p>Resumo da apostila (ângulos e comprimento). Peça para tirarem um print desta tela.</p></aside>
+</section>
+
+<!-- 18. A seguir -->
+<section class="slide capa" data-nome="A seguir">
+  <div class="estrelas"></div>
+  <div class="texto-capa" style="top:200px">
+    <span class="selo">Matemática · IF</span>
+    <p class="aula" style="font-size:28px">A seguir · Perímetros e áreas · Parte 1 de 2</p>
+    <h1 style="font-size:116px">Triângulos e quadriláteros</h1>
+    <p class="sub">Cercar ou gramar?</p>
+  </div>
+  <svg class="emblema" viewBox="0 0 640 640" aria-hidden="true">
+    <rect x="90" y="170" width="460" height="300" rx="10" fill="#fff" fill-opacity=".15" stroke="#fff" stroke-width="6"/>
+    <g fill="#FFD10C" fill-opacity=".8"><rect x="110" y="190" width="80" height="80" rx="8"/><rect x="200" y="190" width="80" height="80" rx="8"/><rect x="290" y="190" width="80" height="80" rx="8"/><rect x="110" y="280" width="80" height="80" rx="8"/><rect x="200" y="280" width="80" height="80" rx="8"/></g>
+  </svg>
+  <img class="logo-capa" src="{{LOGO_BRANCO}}" alt="Quarks">
+  <aside class="notas"><p>Próximo subcapítulo: Perímetros e áreas. Primeiro o perímetro e as áreas do retângulo, do paralelogramo, do trapézio, do losango e do triângulo.</p></aside>
+</section>

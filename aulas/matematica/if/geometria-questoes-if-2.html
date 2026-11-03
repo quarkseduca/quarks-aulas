@@ -1,0 +1,291 @@
+<!--aula
+{"disciplina": "matematica", "curso": "IF", "assunto": "Geometria plana", "parte": "Questões do IF Sudeste · Parte 2 de 2", "titulo": "Questões do IF Sudeste"}
+-->
+<!-- Fonte: bloco "Questões do IF Sudeste · Parte 2 de 2" de Geometria plana em planejamento/questoes-if.md e no campo "questoes" do cronograma (cinco oficiais: 2020-1 q23 MAT-0533; 2026-1 q15 MAT-0547; 2025-1 q16 MAT-0537; 2025-1 q18 MAT-0539; 2024-1 q18 MAT-0302), transcritas de apostilas/questoes/oficiais/if no cérebro, com as figuras da prova redesenhadas. Nenhuma delas aparece nas partes do capítulo. -->
+<style>
+  .caixa { box-sizing: border-box; }
+  .rot-fig { font-family: Figtree, "Segoe UI", sans-serif; font-weight: 700; font-size: 18px; fill: #292B2C; }
+</style>
+
+<!-- Capa -->
+<section class="slide capa" data-nome="Capa">
+  <div class="estrelas"></div>
+  <div class="texto-capa" style="top:150px">
+    <span class="selo">Matemática · IF</span>
+    <p class="aula">Geometria plana · Parte 2 de 2</p>
+    <h1>Questões do IF Sudeste</h1>
+    <p class="sub">Provas oficiais, uma por tela</p>
+  </div>
+  <svg class="emblema" viewBox="0 0 640 640" aria-hidden="true">
+    <rect x="150" y="110" width="340" height="430" rx="34" fill="#fff" fill-opacity=".12" stroke="#fff" stroke-opacity=".6" stroke-width="4"/>
+    <g fill="#fff" fill-opacity=".7"><rect x="200" y="170" width="240" height="18" rx="9"/><rect x="200" y="210" width="200" height="18" rx="9"/><rect x="200" y="250" width="220" height="18" rx="9"/></g>
+    <g fill="none" stroke="#fff" stroke-opacity=".75" stroke-width="4"><circle cx="216" cy="330" r="16"/><circle cx="216" cy="390" r="16"/><circle cx="216" cy="450" r="16"/></g>
+    <circle cx="216" cy="450" r="16" fill="#FFD10C"/>
+    <g fill="#fff" fill-opacity=".55"><rect x="250" y="321" width="150" height="16" rx="8"/><rect x="250" y="381" width="170" height="16" rx="8"/><rect x="250" y="441" width="130" height="16" rx="8"/></g>
+    <circle cx="470" cy="130" r="54" fill="#FFD10C"/>
+    <path d="M446 132 L464 150 L496 112" fill="none" stroke="#292B2C" stroke-width="10" stroke-linecap="round" stroke-linejoin="round"/>
+  </svg>
+  <img class="logo-capa" src="{{LOGO_BRANCO}}" alt="Quarks">
+  <aside class="notas"><p>Segundo bloco do fechamento de Geometria plana: questões oficiais do IF Sudeste MG de polígonos regulares, circunferência e círculo e perímetros e áreas. Em cada uma, pause, tente e depois confira a resolução.</p></aside>
+</section>
+
+<!-- IF 2020 · triângulo e hexágono -->
+<section class="slide questao" data-nome="IF 2020 · triângulo e hexágono">
+  <div class="conteudo">
+    <div class="area-resolucao"></div>
+    <span class="pilula pilula-pausa" data-em="1:some">Pause o vídeo e tente</span>
+    <div class="painel-questao">
+      <p class="olho" style="font-size:24px">IF Sudeste MG 2020 · Questão 23</p>
+      <p class="enunciado">Na figura abaixo, temos um triângulo equilátero circunscrito e um hexágono regular inscrito, em uma mesma circunferência. Sabendo-se que a área do triângulo é de 18 cm², a área do hexágono é igual a:</p>
+      <svg viewBox="0 0 330 250" style="width:330px;height:250px;display:block;margin:0 auto" aria-hidden="true">
+        <polygon points="160,10 30,235 290,235" fill="none" stroke="#292B2C" stroke-width="3" stroke-linejoin="round"/>
+        <circle cx="160" cy="160" r="75" fill="none" stroke="#292B2C" stroke-width="3"/>
+        <polygon points="160,85 95,122.5 95,197.5 160,235 225,197.5 225,122.5" fill="#E8F0FF" stroke="#2F6BFF" stroke-width="3" stroke-linejoin="round"/>
+        <g class="rot-fig" font-size="16"><text x="154" y="6">A</text><text x="12" y="246">B</text><text x="296" y="246">C</text><text x="155" y="80">F</text><text x="78" y="118">G</text><text x="78" y="206">H</text><text x="156" y="252">I</text><text x="232" y="206">J</text><text x="232" y="118">K</text></g>
+      </svg>
+      <ol class="alternativas curtas">
+        <li data-em="2:apaga"><b>A</b><span>\(3\sqrt{3}\) cm²</span></li>
+        <li data-em="2:certo"><b>B</b><span>9 cm²</span></li>
+        <li data-em="2:apaga"><b>C</b><span>\(6\sqrt{3}\) cm²</span></li>
+        <li data-em="2:apaga"><b>D</b><span>6 cm²</span></li>
+        <li data-em="2:apaga"><b>E</b><span>\(9\sqrt{3}\) cm²</span></li>
+      </ol>
+    </div>
+  </div>
+  <aside class="resolucao">
+    <p class="dados"><b>Dados:</b> \(A_{\triangle} = 18\ \text{cm}^2\); mesmo raio \(r\) para os dois.</p>
+    <ol class="passos">
+      <li>Triângulo circunscrito: \(L = 2r\sqrt{3}\)</li>
+      <li>\(18 = \dfrac{(2r\sqrt{3})^2\sqrt{3}}{4} = 3\sqrt{3}\,r^2\)</li>
+      <li>\(r^2 = \dfrac{18}{3\sqrt{3}} = 2\sqrt{3}\)</li>
+      <li>Hexágono inscrito: lado \(r\); \(A = 6 \cdot \dfrac{r^2\sqrt{3}}{4} = \dfrac{3\sqrt{3}}{2}\,r^2\)</li>
+      <li>\(A = \dfrac{3\sqrt{3}}{2} \cdot 2\sqrt{3} = 9\ \text{cm}^2\)</li>
+    </ol>
+    <p class="resposta"><b>Resposta:</b> 9 cm². <b>Gabarito B.</b></p>
+    <p class="atencao"><b>Destaque no quadro:</b> Para o triângulo, r é o apótema; para o hexágono, r é o lado. O hexágono tem metade da área do triângulo.</p>
+    <ul class="erros">
+      <li><b>A</b> Errou a relação raio e triângulo.</li>
+      <li><b>C</b> Usou \(r^2 = 4\) e sobrou \(\sqrt{3}\).</li>
+      <li><b>D</b> Chutou um terço de 18.</li>
+      <li><b>E</b> Um \(\sqrt{3}\) a mais no fim.</li>
+    </ul>
+  </aside>
+  <aside class="notas">
+    <p>Clique 1 tira o aviso de pausa: resolva na área (D liga a caneta; E esconde o enunciado). Clique 2: gabarito B.</p>
+    <p>Questão oficial do IF Sudeste MG 2020-1, q23, MAT-0533 (Polígonos regulares). Figura da prova redesenhada em escala: os vértices G, I e K do hexágono são os pontos de tangência. Conferido: (2r√3)² = 12r²; 12r²√3/4 = 3√3 r²; 18 ÷ 3√3 = 6/√3 = 2√3; (3√3/2) · 2√3 = 3 · 3 = 9.</p>
+    <p>Atalho visual: o triângulo pode ser cortado em 4 equiláteros iguais (pelos pontos médios), cada um de 4,5 cm², e o hexágono equivale a 2 deles.</p>
+  </aside>
+</section>
+
+<!-- IF 2026 · disco -->
+<section class="slide questao" data-nome="IF 2026 · disco">
+  <div class="conteudo">
+    <div class="area-resolucao"></div>
+    <span class="pilula pilula-pausa" data-em="1:some">Pause o vídeo e tente</span>
+    <div class="painel-questao" style="gap:10px">
+      <p class="olho" style="font-size:24px">IF Sudeste MG 2026 · Questão 15</p>
+      <p class="enunciado" style="font-size:20px">Uma empresa está avaliando um novo brinquedo de lançamento de discos que está em fase de testes. Os discos são de plástico, como na figura a seguir. A parte cinza é toda tampada e a parte branca representa a parte vazada do brinquedo. Os desenvolvedores do brinquedo perceberam que a medida do ângulo x, indicado no modelo, influencia no alcance do objeto ao ser lançado. Para que a distância de lançamento seja máxima, em condições ideais, o ângulo indicado deve estar no intervalo [30°, 50°].</p>
+      <svg viewBox="0 -10 410 420" style="width:250px;height:256px;display:block;margin:0 auto" aria-hidden="true">
+        <path d="M136.3 42.4 A170 170 0 0 0 45.9 271.8 L158.1 133.3 Z" fill="#D9D9DE"/>
+        <path d="M238.2 34.4 A170 170 0 0 1 214.8 369.4 L158.1 133.3 Z" fill="#D9D9DE"/>
+        <circle cx="200" cy="200" r="170" fill="none" stroke="#292B2C" stroke-width="3"/>
+        <line x1="136.3" y1="42.4" x2="214.8" y2="369.4" stroke="#292B2C" stroke-width="3"/>
+        <line x1="238.2" y1="34.4" x2="45.9" y2="271.8" stroke="#292B2C" stroke-width="3"/>
+        <path d="M143 151.95 A24 24 0 0 0 163.7 156.6" fill="none" stroke="#292B2C" stroke-width="2"/>
+        <g fill="#8E8AA0" stroke="#292B2C" stroke-width="1.5"><circle cx="136.3" cy="42.4" r="5"/><circle cx="238.2" cy="34.4" r="5"/><circle cx="45.9" cy="271.8" r="5"/><circle cx="214.8" cy="369.4" r="5"/><circle cx="158.1" cy="133.3" r="5"/><circle cx="200" cy="200" r="4"/></g>
+        <g class="rot-fig" font-size="30"><text x="108" y="34">D</text><text x="246" y="26">B</text><text x="8" y="290">C</text><text x="200" y="398">E</text><text x="168" y="124">I</text><text x="208" y="196">A</text></g>
+        <g class="rot-fig" font-size="30" font-style="italic"><text x="146" y="190">x</text><text x="100" y="352">α</text></g>
+        <text x="166" y="22" class="rot-fig" font-size="26">35°</text>
+      </svg>
+      <p class="enunciado" style="font-size:20px">Qual deve ser o intervalo da medida do arco α para que o brinquedo tenha o maior alcance nas condições ideais?</p>
+      <ol class="alternativas curtas">
+        <li data-em="2:apaga" style="font-size:20px"><b>A</b><span>[5°, 15°]</span></li>
+        <li data-em="2:apaga" style="font-size:20px"><b>B</b><span>[15°, 25°]</span></li>
+        <li data-em="2:certo" style="font-size:20px"><b>C</b><span>[25°, 65°]</span></li>
+        <li data-em="2:apaga" style="font-size:20px"><b>D</b><span>[65°, 85°]</span></li>
+        <li data-em="2:apaga" style="font-size:20px"><b>E</b><span>[85°, 95°]</span></li>
+      </ol>
+    </div>
+  </div>
+  <aside class="resolucao">
+    <p class="dados"><b>Dados:</b> arco DB = 35°; arco CE = α; \(30° \le x \le 50°\).</p>
+    <ol class="passos">
+      <li>Vértice dentro: \(x = \dfrac{\alpha + 35°}{2}\)</li>
+      <li>\(\alpha = 2x - 35°\)</li>
+      <li>\(x = 30°\): \(\alpha = 60° - 35° = 25°\)</li>
+      <li>\(x = 50°\): \(\alpha = 100° - 35° = 65°\)</li>
+    </ol>
+    <p class="resposta"><b>Resposta:</b> \(\alpha \in [25°, 65°]\). <b>Gabarito C.</b></p>
+    <p class="atencao"><b>Destaque no quadro:</b> Vértice dentro do círculo: metade da soma dos arcos (o do ângulo e o do seu oposto pelo vértice).</p>
+    <ul class="erros">
+      <li><b>A</b> Daria x entre 20° e 25°.</li>
+      <li><b>B</b> Daria x entre 25° e 30°.</li>
+      <li><b>D</b> Fez \(\alpha = x + 35°\).</li>
+      <li><b>E</b> Daria x entre 60° e 65°.</li>
+    </ul>
+  </aside>
+  <aside class="notas">
+    <p>Clique 1 tira o aviso de pausa. Clique 2: gabarito C.</p>
+    <p>Questão oficial do IF Sudeste MG 2026-1, q15, MAT-0547 (Circunferência e círculo). Figura da prova redesenhada (arco DB de 35°, cordas DE e BC se cortando em I, regiões cinzas). Conferido: 2 · 30 − 35 = 25; 2 · 50 − 35 = 65.</p>
+  </aside>
+</section>
+
+<!-- IF 2025 · estrela -->
+<section class="slide questao" data-nome="IF 2025 · estrela">
+  <div class="conteudo">
+    <div class="area-resolucao"></div>
+    <span class="pilula pilula-pausa" data-em="1:some">Pause o vídeo e tente</span>
+    <div class="painel-questao">
+      <p class="olho" style="font-size:24px">IF Sudeste MG 2025 · Questão 16</p>
+      <p class="enunciado">A figura a seguir representa uma estrela cujos cinco vértices A, B, C, D e E pertencem a uma circunferência, e os arcos definidos por cada par de vértices adjacentes são congruentes.</p>
+      <svg viewBox="0 0 300 280" style="width:260px;height:243px;display:block;margin:0 auto" aria-hidden="true">
+        <path d="M150 30 L220.5 247.1 L35.9 112.9 L264.1 112.9 L79.5 247.1 Z" fill="none" stroke="#292B2C" stroke-width="3" stroke-linejoin="round"/>
+        <g fill="#292B2C"><circle cx="150" cy="30" r="4"/><circle cx="264.1" cy="112.9" r="4"/><circle cx="220.5" cy="247.1" r="4"/><circle cx="79.5" cy="247.1" r="4"/><circle cx="35.9" cy="112.9" r="4"/></g>
+        <g class="rot-fig" font-size="20"><text x="144" y="22">A</text><text x="272" y="118">B</text><text x="226" y="268">C</text><text x="62" y="268">D</text><text x="12" y="118">E</text></g>
+      </svg>
+      <p class="enunciado">A medida do ângulo interno de cada vértice da estrela é:</p>
+      <ol class="alternativas curtas">
+        <li data-em="2:apaga"><b>A</b><span>18°</span></li>
+        <li data-em="2:certo"><b>B</b><span>36°</span></li>
+        <li data-em="2:apaga"><b>C</b><span>72°</span></li>
+        <li data-em="2:apaga"><b>D</b><span>180°</span></li>
+        <li data-em="2:apaga"><b>E</b><span>360°</span></li>
+      </ol>
+    </div>
+  </div>
+  <aside class="resolucao">
+    <p class="dados"><b>Dados:</b> 5 vértices na circunferência, 5 arcos iguais.</p>
+    <ol class="passos">
+      <li>Cada arco: \(360° \div 5 = 72°\)</li>
+      <li>A ponta A enxerga o arco CD (um dos 5)</li>
+      <li>Inscrito: \(\hat{A} = 72° \div 2 = 36°\)</li>
+    </ol>
+    <p class="resposta"><b>Resposta:</b> 36°. <b>Gabarito B.</b></p>
+    <p class="atencao"><b>Destaque no quadro:</b> Confere: as 5 pontas somam 5 · 36° = 180°.</p>
+    <ul class="erros">
+      <li><b>A</b> Dividiu duas vezes.</li>
+      <li><b>C</b> É o arco (ângulo central).</li>
+      <li><b>D</b> É a soma das 5 pontas.</li>
+      <li><b>E</b> É a volta inteira.</li>
+    </ul>
+  </aside>
+  <aside class="notas">
+    <p>Clique 1 tira o aviso de pausa. Clique 2: gabarito B.</p>
+    <p>Questão oficial do IF Sudeste MG 2025-1, q16, MAT-0537 (Circunferência e círculo). Figura da prova redesenhada (como na prova, a circunferência não aparece desenhada). Conferido: 360 ÷ 5 = 72; 72 ÷ 2 = 36.</p>
+  </aside>
+</section>
+
+<!-- IF 2025 · cômodo hexagonal -->
+<section class="slide questao" data-nome="IF 2025 · cômodo hexagonal">
+  <div class="conteudo">
+    <div class="area-resolucao"></div>
+    <span class="pilula pilula-pausa" data-em="1:some">Pause o vídeo e tente</span>
+    <div class="painel-questao">
+      <p class="olho" style="font-size:24px">IF Sudeste MG 2025 · Questão 18</p>
+      <p class="enunciado">Sandro está jogando um jogo de construção de ambientes e na fase em que está, seu avatar é uma abelha, e por isso, o cômodo a ser montado tem um formato hexagonal. O hexágono é regular e tem 6 cm de lado. Sandro colocou no ambiente duas camas de mesma medida (2 cm x 4 cm) e uma mesa quadrada com 2 cm de lado para servir de apoio aos moradores. Qual a medida, em cm², da área livre do cômodo montado por Sandro até o momento? (Considere \(\sqrt{3} \approx 1{,}7\)).</p>
+      <ol class="alternativas curtas">
+        <li data-em="2:apaga"><b>A</b><span>91,8</span></li>
+        <li data-em="2:apaga"><b>B</b><span>83,8</span></li>
+        <li data-em="2:apaga"><b>C</b><span>75,8</span></li>
+        <li data-em="2:certo"><b>D</b><span>71,8</span></li>
+        <li data-em="2:apaga"><b>E</b><span>20,0</span></li>
+      </ol>
+    </div>
+  </div>
+  <aside class="resolucao">
+    <p class="dados"><b>Dados:</b> hexágono de lado 6; camas 2 × 4 (duas); mesa 2 × 2; \(\sqrt{3} \approx 1{,}7\).</p>
+    <ol class="passos">
+      <li>\(A_H = 6 \cdot \dfrac{36\sqrt{3}}{4} = 54\sqrt{3}\)</li>
+      <li>\(A_H \approx 54 \cdot 1{,}7 = 91{,}8\)</li>
+      <li>Móveis: \(2 \cdot 8 + 4 = 20\)</li>
+      <li>Livre: \(91{,}8 - 20 = 71{,}8\ \text{cm}^2\)</li>
+    </ol>
+    <p class="resposta"><b>Resposta:</b> 71,8 cm². <b>Gabarito D.</b></p>
+    <p class="atencao"><b>Destaque no quadro:</b> Área livre = total − ocupada (figura composta com buracos).</p>
+    <ul class="erros">
+      <li><b>A</b> Não descontou os móveis.</li>
+      <li><b>B</b> Descontou só uma cama.</li>
+      <li><b>C</b> Esqueceu a mesa.</li>
+      <li><b>E</b> É a área ocupada.</li>
+    </ul>
+  </aside>
+  <aside class="notas">
+    <p>Clique 1 tira o aviso de pausa. Clique 2: gabarito D.</p>
+    <p>Questão oficial do IF Sudeste MG 2025-1, q18, MAT-0539 (Perímetros e áreas). Conferido: 36 ÷ 4 = 9; 6 · 9 = 54; 54 · 1,7 = 91,8; 91,8 − 20 = 71,8.</p>
+  </aside>
+</section>
+
+<!-- IF 2024 · bandeirinhas -->
+<section class="slide questao" data-nome="IF 2024 · bandeirinhas">
+  <div class="conteudo">
+    <div class="area-resolucao"></div>
+    <span class="pilula pilula-pausa" data-em="1:some">Pause o vídeo e tente</span>
+    <div class="painel-questao">
+      <p class="olho" style="font-size:24px">IF Sudeste MG 2024 · Questão 18</p>
+      <p class="enunciado" style="font-size:24px">Para decorar uma festa julina, Yan comprou folhas de papel seda para fazer bandeirinhas. Em uma folha, Yan distribui as bandeirinhas para cortá-las conforme figura abaixo.</p>
+      <svg viewBox="-30 0 380 360" style="width:300px;height:284px;display:block;margin:0 auto" aria-hidden="true">
+        <rect x="60" y="10" width="200" height="280" fill="#fff" stroke="#292B2C" stroke-width="3"/>
+        <g fill="#C9C9CF" stroke="#5E5A70" stroke-width="2">
+          <path d="M60 110 L90 130 L120 110 V170 H60 Z"/><path d="M120 110 L150 130 L180 110 V170 H120 Z"/><path d="M180 110 L210 130 L240 110 V170 H180 Z"/>
+          <path d="M60 170 L90 190 L120 170 V230 H60 Z"/><path d="M120 170 L150 190 L180 170 V230 H120 Z"/><path d="M180 170 L210 190 L240 170 V230 H180 Z"/>
+          <path d="M60 230 L90 250 L120 230 V290 H60 Z"/><path d="M120 230 L150 250 L180 230 V290 H120 Z"/><path d="M180 230 L210 250 L240 230 V290 H180 Z"/>
+          <path d="M60 50 L90 70 L120 50 V110 H60 Z"/><path d="M120 50 L150 70 L180 50 V110 H120 Z"/><path d="M180 50 L210 70 L240 50 V110 H180 Z"/>
+        </g>
+        <line x1="90" y1="250" x2="90" y2="290" stroke="#292B2C" stroke-width="2" stroke-dasharray="4 3"/><text x="94" y="276" class="rot-fig" font-size="13">10 cm</text>
+        <line x1="40" y1="230" x2="40" y2="290" stroke="#292B2C" stroke-width="2" stroke-dasharray="5 4"/><text x="36" y="264" class="rot-fig" font-size="15" text-anchor="end">15 cm</text>
+        <line x1="60" y1="305" x2="120" y2="305" stroke="#292B2C" stroke-width="2" stroke-dasharray="5 4"/><text x="90" y="322" class="rot-fig" font-size="14" text-anchor="middle">15 cm</text>
+        <line x1="60" y1="335" x2="260" y2="335" stroke="#292B2C" stroke-width="2" stroke-dasharray="5 4"/><text x="160" y="354" class="rot-fig" font-size="16" text-anchor="middle">50 cm</text>
+        <line x1="285" y1="10" x2="285" y2="290" stroke="#292B2C" stroke-width="2" stroke-dasharray="5 4"/><text x="290" y="154" class="rot-fig" font-size="16">70 cm</text>
+      </svg>
+      <p class="enunciado" style="font-size:24px">Com base nas informações apresentadas anteriormente, qual será o desperdício em cada papel?</p>
+      <ol class="alternativas curtas">
+        <li data-em="2:apaga" style="font-size:20px"><b>A</b><span>30 cm²</span></li>
+        <li data-em="2:apaga" style="font-size:20px"><b>B</b><span>800 cm²</span></li>
+        <li data-em="2:certo" style="font-size:20px"><b>C</b><span>1250 cm²</span></li>
+        <li data-em="2:apaga" style="font-size:20px"><b>D</b><span>1700 cm²</span></li>
+        <li data-em="2:apaga" style="font-size:20px"><b>E</b><span>2250 cm²</span></li>
+      </ol>
+    </div>
+  </div>
+  <aside class="resolucao">
+    <p class="dados"><b>Dados:</b> folha 50 × 70; 12 bandeirinhas de 15 × 15 com "bico" recortado (altura 10 no meio).</p>
+    <ol class="passos">
+      <li>Triângulo recortado: base 15, altura \(15 - 10 = 5\): \(37{,}5\)</li>
+      <li>Bandeirinha: \(225 - 37{,}5 = 187{,}5\)</li>
+      <li>12 bandeirinhas: \(12 \cdot 187{,}5 = 2250\)</li>
+      <li>Folha: \(50 \cdot 70 = 3500\)</li>
+      <li>Desperdício: \(3500 - 2250 = 1250\ \text{cm}^2\)</li>
+    </ol>
+    <p class="resposta"><b>Resposta:</b> 1250 cm². <b>Gabarito C.</b></p>
+    <p class="atencao"><b>Destaque no quadro:</b> Os triângulos recortados também são sobra de papel.</p>
+    <ul class="erros">
+      <li><b>A</b> Somou comprimentos (15 + 15).</li>
+      <li><b>B</b> Não contou os triângulos recortados.</li>
+      <li><b>D</b> Triângulo com altura 10.</li>
+      <li><b>E</b> É a área aproveitada.</li>
+    </ul>
+  </aside>
+  <aside class="notas">
+    <p>Clique 1 tira o aviso de pausa. Clique 2: gabarito C.</p>
+    <p>Questão oficial do IF Sudeste MG 2024-1, q18, MAT-0302 (Perímetros e áreas). Figura da prova redesenhada em escala (4 px por cm): 3 colunas e 4 fileiras de quadrados de 15 cm; o "bico" deixa 10 cm de altura no meio. Conferido: 15 · 5 ÷ 2 = 37,5; 225 − 37,5 = 187,5; 12 · 187,5 = 2250; 3500 − 2250 = 1250.</p>
+  </aside>
+</section>
+
+<!-- A seguir -->
+<section class="slide capa" data-nome="A seguir">
+  <div class="estrelas"></div>
+  <div class="texto-capa" style="top:190px">
+    <span class="selo">Matemática · IF</span>
+    <p class="aula" style="font-size:28px">A seguir · Razões trigonométricas · Parte 1 de 2</p>
+    <h1 style="font-size:124px">Seno, cosseno e tangente</h1>
+    <p class="sub">Começa o capítulo Trigonometria</p>
+  </div>
+  <svg class="emblema" viewBox="0 0 640 640" aria-hidden="true">
+    <path d="M100 500 H520 V200 Z" fill="#fff" fill-opacity=".15" stroke="#fff" stroke-width="6" stroke-linejoin="round"/>
+    <path d="M490 500 V470 H520" fill="none" stroke="#fff" stroke-width="4"/>
+    <path d="M190 500 A90 90 0 0 0 172 446" fill="none" stroke="#FFD10C" stroke-width="7"/>
+    <circle cx="100" cy="500" r="12" fill="#FFD10C"/>
+  </svg>
+  <img class="logo-capa" src="{{LOGO_BRANCO}}" alt="Quarks">
+  <aside class="notas"><p>Fim de Geometria plana. A seguir, o capítulo Trigonometria: seno, cosseno e tangente no triângulo retângulo e os ângulos notáveis. Usa Pitágoras e a semelhança deste capítulo.</p></aside>
+</section>

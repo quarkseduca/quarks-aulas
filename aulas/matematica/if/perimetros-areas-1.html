@@ -1,0 +1,394 @@
+<!--aula
+{"disciplina": "matematica", "curso": "IF", "assunto": "Perímetros e áreas", "parte": "Parte 1 de 2", "titulo": "Triângulos e quadriláteros"}
+-->
+<!-- Fonte: apostila IF, Matemática, cap. 5 (5.7 Perímetros e áreas: Perímetro e área de quadriláteros; Área de triângulos e de polígonos regulares, a parte do triângulo e do equilátero; resumo). Questões: Modelo IF, lote if-matematica-areas, m004 (MAT-0764); oficiais IF Sudeste MG 2017-1-extra q23 (MAT-0387) e 2016-2 q15 (MAT-0481), sobras do capítulo. As oficiais 2025-1 q18 e 2024-1 q18 estão reservadas para o bloco do fim do capítulo. Animações só de CSS (nesta parte não há JS). -->
+<style>
+  .caixa { box-sizing: border-box; }
+  .rot { font-family: Figtree, "Segoe UI", sans-serif; font-weight: 800; fill: #3F2FA0; }
+  .rot-c { font-family: Figtree, "Segoe UI", sans-serif; font-weight: 700; fill: #5E5A70; }
+  .pequeno { font-size: 30px; line-height: 1.35; }
+  /* um ponto dá a volta no terreno: é o perímetro */
+  .volta { stroke-dasharray: 70 930; stroke-dashoffset: 1000; }
+  .slide.ativo .mostra .volta { animation: volta 6s linear infinite; }
+  @keyframes volta { to { stroke-dashoffset: 0; } }
+  /* os quadradinhos enchem o retângulo, fileira por fileira */
+  .quad rect { opacity: 0; }
+  .slide.ativo .mostra .quad rect { animation: enche .5s ease-out forwards; }
+  @keyframes enche { to { opacity: 1; } }
+  /* paralelogramo: o triângulo da esquerda passa para a direita e vira retângulo */
+  .slide.ativo .mostra .passa { animation: passa 7s ease-in-out infinite; }
+  @keyframes passa { 0%, 18% { transform: translateX(0); } 50%, 82% { transform: translateX(300px); } 100% { transform: translateX(0); } }
+  /* trapézio e triângulo: a cópia gira meia volta em torno do meio de um lado e forma um paralelogramo */
+  .slide.ativo .mostra .meia-volta { animation: meia-volta 7s ease-in-out infinite; }
+  @keyframes meia-volta { 0%, 12% { transform: rotate(0); opacity: .15; } 20% { opacity: 1; } 50%, 85% { transform: rotate(180deg); opacity: 1; } 100% { transform: rotate(0); opacity: .15; } }
+</style>
+
+<!-- 1. Capa -->
+<section class="slide capa" data-nome="Capa">
+  <div class="estrelas"></div>
+  <div class="texto-capa" style="top:170px">
+    <span class="selo">Matemática · IF</span>
+    <p class="aula">Perímetros e áreas · Parte 1 de 2</p>
+    <h1 style="font-size:120px">Triângulos e quadriláteros</h1>
+    <p class="sub">Cercar ou gramar?</p>
+  </div>
+  <svg class="emblema" viewBox="0 0 640 640" aria-hidden="true">
+    <g class="gira-lento"><ellipse cx="320" cy="320" rx="300" ry="128" fill="none" stroke="#fff" stroke-opacity=".38" stroke-width="2" transform="rotate(-10 320 320)"/></g>
+    <g class="gira"><polygon points="120,460 520,460 420,180 220,180" fill="none" stroke="#FFD10C" stroke-width="5" stroke-linejoin="round"/><circle cx="520" cy="460" r="13" fill="#FFD10C" stroke="#fff" stroke-width="3"/></g>
+    <circle cx="320" cy="320" r="132" fill="#FFD10C"/>
+    <image href="{{SYM_ROXO}}" x="238" y="238" width="164" height="164"/>
+  </svg>
+  <img class="logo-capa" src="{{LOGO_BRANCO}}" alt="Quarks">
+  <aside class="notas"><p>Perímetros e áreas, primeira parte: perímetro, áreas do retângulo, do quadrado, do paralelogramo, do trapézio, do losango e do triângulo (com o equilátero). Na Parte 2: polígonos regulares, círculo, figuras compostas e planificações.</p></aside>
+</section>
+
+<!-- 2. Perímetro ou área -->
+<section class="slide" data-nome="Perímetro ou área">
+  <div class="conteudo">
+    <p class="olho">Perímetro e área</p>
+    <h2 class="titulo">Cercar ou gramar?</h2>
+    <div style="position:absolute;left:0;right:0;top:150px;display:grid;grid-template-columns:1fr 1fr;gap:40px">
+      <div class="caixa" data-passo="1" style="padding:18px 30px">
+        <svg viewBox="0 0 700 300" width="100%" height="270" aria-hidden="true">
+          <rect x="60" y="30" width="580" height="230" fill="#E3F6EC" stroke="#8C7BEA" stroke-width="6"/>
+          <rect class="volta" pathLength="1000" x="60" y="30" width="580" height="230" fill="none" stroke="#E8A33A" stroke-width="14" stroke-linecap="round"/>
+          <g stroke="#8C7BEA" stroke-width="5"><line x1="60" y1="18" x2="60" y2="42"/><line x1="205" y1="18" x2="205" y2="42"/><line x1="350" y1="18" x2="350" y2="42"/><line x1="495" y1="18" x2="495" y2="42"/><line x1="640" y1="18" x2="640" y2="42"/></g>
+        </svg>
+        <span class="rotulo">Perímetro: para cercar</span>
+        <div class="texto pequeno">a <b>soma dos lados</b>, o contorno (em m)</div>
+      </div>
+      <div class="caixa" data-passo="2" style="padding:18px 30px">
+        <svg viewBox="0 0 700 300" width="100%" height="270" aria-hidden="true">
+          <g class="quad" fill="#7FCB9E" stroke="#fff" stroke-width="3">
+            <rect x="60" y="30" width="116" height="76.7" style="animation-delay:0s"/><rect x="176" y="30" width="116" height="76.7" style="animation-delay:.2s"/><rect x="292" y="30" width="116" height="76.7" style="animation-delay:.4s"/><rect x="408" y="30" width="116" height="76.7" style="animation-delay:.6s"/><rect x="524" y="30" width="116" height="76.7" style="animation-delay:.8s"/>
+            <rect x="60" y="106.7" width="116" height="76.7" style="animation-delay:1s"/><rect x="176" y="106.7" width="116" height="76.7" style="animation-delay:1.2s"/><rect x="292" y="106.7" width="116" height="76.7" style="animation-delay:1.4s"/><rect x="408" y="106.7" width="116" height="76.7" style="animation-delay:1.6s"/><rect x="524" y="106.7" width="116" height="76.7" style="animation-delay:1.8s"/>
+            <rect x="60" y="183.3" width="116" height="76.7" style="animation-delay:2s"/><rect x="176" y="183.3" width="116" height="76.7" style="animation-delay:2.2s"/><rect x="292" y="183.3" width="116" height="76.7" style="animation-delay:2.4s"/><rect x="408" y="183.3" width="116" height="76.7" style="animation-delay:2.6s"/><rect x="524" y="183.3" width="116" height="76.7" style="animation-delay:2.8s"/>
+          </g>
+          <rect x="60" y="30" width="580" height="230" fill="none" stroke="#8C7BEA" stroke-width="6"/>
+        </svg>
+        <span class="rotulo">Área: para gramar</span>
+        <div class="texto pequeno">quanto da <b>superfície</b> ocupa (em m²)</div>
+      </div>
+    </div>
+    <div class="caixa caixa-fundamental" data-passo="3" style="position:absolute;left:580px;right:0;top:640px;padding:16px 30px">
+      <div class="texto" style="font-size:30px">Retângulo de 5 por 3: <b>3 fileiras de 5</b> quadradinhos, \(5 \cdot 3 = 15\).</div>
+    </div>
+  </div>
+  <aside class="notas">
+    <p>Situação da apostila: para cercar um terreno, o perímetro (soma dos lados); para gramar, a área (quanto da superfície ocupa, em m²). Clique 1: a marca laranja dá a volta (o contorno). Clique 2: os quadradinhos enchem o terreno.</p>
+    <p>Clique 3: a ideia de área do retângulo, 3 fileiras de 5 quadradinhos.</p>
+  </aside>
+</section>
+
+<!-- 3. Retângulo, quadrado e paralelogramo -->
+<section class="slide" data-nome="Paralelogramo">
+  <div class="conteudo">
+    <p class="olho">Área do paralelogramo</p>
+    <h2 class="titulo">Corte de um lado, encaixe do outro</h2>
+    <svg viewBox="0 0 760 330" style="position:absolute;left:0;top:150px;width:760px;height:330px" aria-hidden="true">
+      <polygon points="60,270 360,270 460,60 160,60" fill="#E8F0FF" stroke="var(--d)" stroke-width="6" stroke-linejoin="round"/>
+      <g data-passo="1"><line x1="160" y1="60" x2="160" y2="270" stroke="#5E5A70" stroke-width="4" stroke-dasharray="10 8"/><path d="M160 248 h22 v22" fill="none" stroke="#5E5A70" stroke-width="3"/><text x="172" y="176" class="rot" font-size="30" fill="#5E5A70">h</text></g>
+      <g data-passo="2"><g class="passa"><polygon points="60,270 160,270 160,60" fill="#FFE58A" stroke="#E8A33A" stroke-width="5" stroke-linejoin="round"/></g></g>
+      <text x="210" y="312" text-anchor="middle" class="rot" font-size="30">b</text>
+    </svg>
+    <div style="position:absolute;left:820px;right:0;top:160px;display:flex;flex-direction:column;gap:20px">
+      <div class="caixa caixa-fundamental" style="padding:18px 30px;display:flex;gap:40px;align-items:center"><span style="font-size:56px">\(A = b \cdot h\)</span><span class="texto pequeno">retângulo e paralelogramo</span></div>
+      <div class="caixa" style="padding:18px 30px;display:flex;gap:40px;align-items:center"><span style="font-size:56px">\(A = \ell^2\)</span><span class="texto pequeno">quadrado</span></div>
+      <p class="texto pequeno" data-passo="3" style="margin:0">O paralelogramo tem a <b>mesma área</b> do retângulo de mesma base e mesma altura.</p>
+    </div>
+  </div>
+  <aside class="notas">
+    <p>Da apostila: retângulo é base vezes altura; o paralelogramo também, porque cortando o triângulo de um lado e encaixando do outro ele vira um retângulo. Clique 1: a altura (perpendicular). Clique 2: o triângulo amarelo passa para a direita e volta.</p>
+  </aside>
+</section>
+
+<!-- 4. Trapézio -->
+<section class="slide" data-nome="Trapézio">
+  <div class="conteudo">
+    <p class="olho">Área do trapézio</p>
+    <h2 class="titulo">Dois trapézios iguais formam um paralelogramo</h2>
+    <svg viewBox="0 0 600 350" style="position:absolute;left:0;top:150px;width:660px;height:385px" aria-hidden="true">
+      <g data-passo="1"><polygon class="meia-volta" style="transform-origin:290px 190px" points="40,260 340,260 240,120 100,120" fill="#FFE58A" stroke="#E8A33A" stroke-width="5" stroke-linejoin="round"/></g>
+      <polygon points="40,260 340,260 240,120 100,120" fill="#E8F0FF" stroke="var(--d)" stroke-width="6" stroke-linejoin="round"/>
+      <line x1="100" y1="120" x2="100" y2="260" stroke="#5E5A70" stroke-width="3" stroke-dasharray="8 6"/><text x="110" y="200" class="rot" font-size="26" fill="#5E5A70">h</text>
+      <text x="190" y="296" text-anchor="middle" class="rot" font-size="28">B</text><text x="170" y="108" text-anchor="middle" class="rot" font-size="28">b</text>
+      <g data-passo="2"><path d="M40 310 H480 M40 300 V320 M480 300 V320" stroke="#1E4FD8" stroke-width="4"/><text x="260" y="342" text-anchor="middle" class="rot" font-size="26" fill="#1E4FD8">B + b</text></g>
+    </svg>
+    <div style="position:absolute;left:800px;right:0;top:170px;display:flex;flex-direction:column;gap:20px">
+      <p class="texto pequeno" data-passo="2" style="margin:0">Juntos: paralelogramo de base \(B + b\) e altura \(h\).</p>
+      <p class="texto pequeno" data-passo="3" style="margin:0">Cada trapézio é a <b>metade</b> dele:</p>
+      <div class="caixa caixa-fundamental" data-passo="3" style="padding:18px 30px;text-align:center"><span style="font-size:66px">\(A = \dfrac{(B + b) \cdot h}{2}\)</span></div>
+    </div>
+  </div>
+  <aside class="notas">
+    <p>Dedução da apostila. Clique 1: a cópia amarela gira meia volta em torno do meio do lado inclinado e se encaixa de cabeça para baixo: os dois trapézios formam um paralelogramo de base B + b. Cliques 2 e 3: a área é metade de (B + b) · h.</p>
+  </aside>
+</section>
+
+<!-- 5. Losango -->
+<section class="slide" data-nome="Losango">
+  <div class="conteudo">
+    <p class="olho">Área do losango</p>
+    <h2 class="titulo">Metade do produto das diagonais</h2>
+    <svg viewBox="0 0 480 360" style="position:absolute;left:0;top:150px;width:520px;height:390px" aria-hidden="true">
+      <rect data-passo="1" x="40" y="30" width="400" height="280" fill="#F7F5FE" stroke="#BFB6E6" stroke-width="4" stroke-dasharray="10 8"/>
+      <polygon points="240,30 440,170 240,310 40,170" fill="#E8F0FF" stroke="var(--d)" stroke-width="6" stroke-linejoin="round"/>
+      <line x1="40" y1="170" x2="440" y2="170" stroke="#6551D1" stroke-width="4"/><line x1="240" y1="30" x2="240" y2="310" stroke="#E8A33A" stroke-width="4"/>
+      <text x="380" y="160" class="rot" font-size="30" fill="#6551D1">D</text><text x="252" y="80" class="rot" font-size="30" fill="#B5731A">d</text>
+    </svg>
+    <div style="position:absolute;left:640px;right:0;top:170px;display:flex;flex-direction:column;gap:22px">
+      <div class="caixa caixa-fundamental" style="padding:18px 30px;text-align:center"><span style="font-size:70px">\(A = \dfrac{D \cdot d}{2}\)</span></div>
+      <p class="texto pequeno" data-passo="1" style="margin:0">O losango ocupa <b>metade</b> do retângulo \(D \times d\) que o envolve: cada triângulo de dentro tem um igual do lado de fora.</p>
+    </div>
+  </div>
+  <aside class="notas">
+    <p>Fórmula da apostila: D e d são as diagonais. A figura do retângulo em volta é um apoio para lembrar por que é metade (não está escrita na apostila; é a mesma ideia de "metade" do trapézio e do triângulo).</p>
+  </aside>
+</section>
+
+<!-- 6. Exemplo: terreno e trapézio -->
+<section class="slide" data-nome="Exemplo: terreno e trapézio">
+  <div class="conteudo">
+    <p class="olho">Exemplo</p>
+    <h2 class="titulo">Terreno e trapézio</h2>
+    <div style="position:absolute;left:0;width:820px;top:150px">
+      <p class="texto pequeno" style="margin:0 0 16px"><b>a)</b> Terreno retangular de 20 m por 12 m: perímetro e área?</p>
+      <div class="contas" style="font-size:42px;row-gap:12px">
+        <div class="eq" data-passo="1"><span>\(P\)</span><span>\(=\)</span><span>\(2 \cdot 20 + 2 \cdot 12\)</span></div>
+        <div class="eq final" data-passo="2"><span>\(P\)</span><span>\(=\)</span><span>\(64\ \text{m}\)</span></div>
+        <div class="eq final" data-passo="3"><span>\(A\)</span><span>\(=\)</span><span>\(20 \cdot 12 = 240\ \text{m}^2\)</span></div>
+      </div>
+    </div>
+    <div style="position:absolute;left:940px;right:0;top:150px">
+      <p class="texto pequeno" style="margin:0 0 16px"><b>b)</b> Trapézio: bases 10 cm e 6 cm, altura 4 cm.</p>
+      <div class="contas" style="font-size:42px;row-gap:12px">
+        <div class="eq" data-passo="4"><span>\(A\)</span><span>\(=\)</span><span>\(\dfrac{(10 + 6) \cdot 4}{2}\)</span></div>
+        <div class="eq" data-passo="5"><span>\(A\)</span><span>\(=\)</span><span>\(\dfrac{64}{2}\)</span></div>
+        <div class="eq final" data-passo="6"><span>\(A\)</span><span>\(=\)</span><span>\(32\ \text{cm}^2\)</span></div>
+      </div>
+    </div>
+  </div>
+  <aside class="notas"><p>Exemplo "Terreno e trapézio" da apostila. a) 40 + 24 = 64 m; 240 m². b) 16 · 4 = 64; 64 ÷ 2 = 32 cm². Repare na unidade: perímetro em m, área em m².</p></aside>
+</section>
+
+<!-- 7. Atenção: altura -->
+<section class="slide" data-nome="Atenção: a altura">
+  <div class="conteudo">
+    <p class="olho">Atenção</p>
+    <h2 class="titulo">A altura é perpendicular</h2>
+    <svg viewBox="0 0 760 330" style="position:absolute;left:0;top:160px;width:760px;height:330px" aria-hidden="true">
+      <polygon points="60,280 420,280 560,60 200,60" fill="#E8F0FF" stroke="var(--d)" stroke-width="6" stroke-linejoin="round"/>
+      <line x1="200" y1="60" x2="200" y2="280" stroke="#1F9D62" stroke-width="6"/><path d="M200 256 h24 v24" fill="none" stroke="#1F9D62" stroke-width="3"/>
+      <text x="214" y="180" class="rot" font-size="30" fill="#1F9D62">h</text>
+      <text x="112" y="150" class="rot" font-size="28" fill="#C2384F" text-anchor="end">lado</text>
+      <line x1="60" y1="280" x2="200" y2="60" stroke="#C2384F" stroke-width="6" stroke-dasharray="14 10" data-passo="1"/>
+    </svg>
+    <div class="caixa caixa-atencao" style="position:absolute;left:820px;right:0;top:170px;padding:22px 32px">
+      <div class="texto" style="font-size:32px">No paralelogramo e no trapézio, a altura é a distância <b>perpendicular</b> entre as bases, e não o lado inclinado.</div>
+    </div>
+  </div>
+  <aside class="notas"><p>Da apostila. O lado inclinado (vermelho) é sempre maior que a altura (verde). É o erro das alternativas "lado inclinado como altura" nas questões de área.</p></aside>
+</section>
+
+<!-- 8. Triângulo -->
+<section class="slide" data-nome="Área do triângulo">
+  <div class="conteudo">
+    <p class="olho">Área do triângulo</p>
+    <h2 class="titulo">Metade de um paralelogramo</h2>
+    <svg viewBox="0 0 640 320" style="position:absolute;left:0;top:150px;width:720px;height:360px" aria-hidden="true">
+      <g data-passo="1"><polygon class="meia-volta" style="transform-origin:320px 160px" points="60,270 400,270 240,50" fill="#FFE58A" stroke="#E8A33A" stroke-width="5" stroke-linejoin="round"/></g>
+      <polygon points="60,270 400,270 240,50" fill="#E8F0FF" stroke="var(--d)" stroke-width="6" stroke-linejoin="round"/>
+      <line x1="240" y1="50" x2="240" y2="270" stroke="#5E5A70" stroke-width="3" stroke-dasharray="8 6"/><path d="M240 250 h20 v20" fill="none" stroke="#5E5A70" stroke-width="3"/>
+      <text x="252" y="170" class="rot" font-size="28" fill="#5E5A70">h</text><text x="230" y="306" text-anchor="middle" class="rot" font-size="28">b</text>
+    </svg>
+    <div style="position:absolute;left:800px;right:0;top:170px;display:flex;flex-direction:column;gap:22px">
+      <p class="texto pequeno" data-passo="1" style="margin:0">Uma cópia girada completa um <b>paralelogramo</b> de mesma base e mesma altura.</p>
+      <div class="caixa caixa-fundamental" data-passo="2" style="padding:18px 30px;text-align:center"><span style="font-size:70px">\(A = \dfrac{b \cdot h}{2}\)</span></div>
+    </div>
+  </div>
+  <aside class="notas"><p>Da apostila: todo triângulo é metade de um paralelogramo com a mesma base e a mesma altura. Clique 1: a cópia gira meia volta em torno do meio do lado da direita e forma o paralelogramo.</p></aside>
+</section>
+
+<!-- 9. Equilátero -->
+<section class="slide" data-nome="Triângulo equilátero">
+  <div class="conteudo">
+    <p class="olho">Área do triângulo equilátero</p>
+    <h2 class="titulo">Base \(\ell\), altura do equilátero</h2>
+    <svg viewBox="0 0 400 360" style="position:absolute;left:0;top:160px;width:430px;height:387px" aria-hidden="true">
+      <polygon points="200,30 40,307.1 360,307.1" fill="#E8F0FF" stroke="var(--d)" stroke-width="6" stroke-linejoin="round"/>
+      <line x1="200" y1="30" x2="200" y2="307.1" stroke="#E8A33A" stroke-width="5"/><path d="M200 287 h20 v20" fill="none" stroke="#5E5A70" stroke-width="3"/>
+      <text x="212" y="190" class="rot" font-size="26" fill="#B5731A">h</text>
+      <text x="96" y="160" class="rot" font-size="28">ℓ</text><text x="294" y="160" class="rot" font-size="28">ℓ</text><text x="200" y="343" text-anchor="middle" class="rot" font-size="28">ℓ</text>
+    </svg>
+    <div class="contas" style="position:absolute;left:560px;top:170px;font-size:48px">
+      <div class="eq" data-passo="1"><span>\(A\)</span><span>\(=\)</span><span>\(\dfrac{b \cdot h}{2}\)</span></div>
+      <div class="eq" data-passo="2"><span>\(A\)</span><span>\(=\)</span><span>\(\dfrac{\ell \cdot \frac{\ell\sqrt{3}}{2}}{2}\)</span></div>
+      <div class="eq final" data-passo="3"><span>\(A\)</span><span>\(=\)</span><span>\(\dfrac{\ell^2\sqrt{3}}{4}\)</span></div>
+    </div>
+    <div class="caixa" data-passo="4" style="position:absolute;left:1180px;right:0;top:180px;padding:18px 28px">
+      <span class="rotulo">Confira: lado 4</span>
+      <div style="font-size:44px">\(A = \dfrac{16\sqrt{3}}{4} = 4\sqrt{3}\)</div>
+    </div>
+  </div>
+  <aside class="notas">
+    <p>Da apostila: a altura do equilátero de lado ℓ é ℓ√3/2 (Pitágoras, subcapítulo anterior), e a área fica ℓ²√3/4. O cartão "lado 4" é a primeira conta do exemplo do hexágono, que vem na Parte 2.</p>
+  </aside>
+</section>
+
+<!-- 10. Questão 1 -->
+<section class="slide questao" data-nome="Questão 1">
+  <div class="conteudo">
+    <div class="area-resolucao"></div>
+    <span class="pilula pilula-pausa" data-em="1:some">Pause o vídeo e tente</span>
+    <div class="painel-questao" style="gap:12px">
+      <p class="olho">Questão 1 · Modelo IF</p>
+      <p class="enunciado" style="font-size:24px">Um terreno tem a forma de um trapézio retângulo, com as medidas indicadas na figura. O dono vai cobrir todo o terreno com grama, que custa R$ 8,00 o metro quadrado, já com a colocação. Quanto ele vai gastar?</p>
+      <svg viewBox="0 0 330 170" style="width:330px;height:170px;display:block;margin:0 auto" aria-hidden="true">
+        <polygon points="40,30 210,30 290,140 40,140" fill="#E8F0FF" stroke="#2C2A9E" stroke-width="4" stroke-linejoin="round"/>
+        <path d="M40 44 h14 v-14 M40 126 h14 v14" fill="none" stroke="#292B2C" stroke-width="2"/>
+        <g font-family="Figtree,sans-serif" font-size="18" font-weight="700" fill="#292B2C"><text x="125" y="22" text-anchor="middle">14 m</text><text x="165" y="162" text-anchor="middle">20 m</text><text x="32" y="90" text-anchor="end">8 m</text><text x="258" y="80">10 m</text></g>
+      </svg>
+      <ol class="alternativas curtas">
+        <li data-em="2:apaga"><b>A</b><span>R$ 416,00</span></li>
+        <li data-em="2:certo"><b>B</b><span>R$ 1.088,00</span></li>
+        <li data-em="2:apaga"><b>C</b><span>R$ 1.280,00</span></li>
+        <li data-em="2:apaga"><b>D</b><span>R$ 1.360,00</span></li>
+        <li data-em="2:apaga"><b>E</b><span>R$ 2.176,00</span></li>
+      </ol>
+    </div>
+  </div>
+  <aside class="resolucao">
+    <p class="dados"><b>Dados:</b> \(B = 20\), \(b = 14\), \(h = 8\) (m); R$ 8 por m².</p>
+    <ol class="passos">
+      <li>\(A = \dfrac{(20 + 14) \cdot 8}{2}\)</li>
+      <li>\(A = \dfrac{34 \cdot 8}{2} = 136\ \text{m}^2\)</li>
+      <li>Gasto: \(136 \cdot 8 = 1088\)</li>
+    </ol>
+    <p class="resposta"><b>Resposta:</b> R$ 1.088,00. <b>Gabarito B.</b></p>
+    <p class="atencao"><b>Destaque no quadro:</b> A altura é o lado com os ângulos retos (8 m); o de 10 m é inclinado.</p>
+    <ul class="erros">
+      <li><b>A</b> Perímetro (52 m) vezes o preço.</li>
+      <li><b>C</b> Só base maior vezes altura.</li>
+      <li><b>D</b> Lado inclinado como altura.</li>
+      <li><b>E</b> Esqueceu de dividir por 2.</li>
+    </ul>
+  </aside>
+  <aside class="notas">
+    <p>Clique 1 tira o aviso de pausa. Clique 2: gabarito B.</p>
+    <p>Modelo IF, lote if-matematica-areas, m004, MAT-0764. Figura do banco redesenhada. Conferido: 34 · 8 = 272; 272 ÷ 2 = 136; 136 · 8 = 1088.</p>
+  </aside>
+</section>
+
+<!-- 11. Questão 2 -->
+<section class="slide questao" data-nome="Questão 2">
+  <div class="conteudo">
+    <div class="area-resolucao"></div>
+    <span class="pilula pilula-pausa" data-em="1:some">Pause o vídeo e tente</span>
+    <div class="painel-questao">
+      <p class="olho">Questão 2 · IF Sudeste MG 2017</p>
+      <p class="enunciado">Considere um triângulo retângulo cujas medidas dos catetos são 8,2 cm e 5,4 cm. Qual alternativa expressa a área desse triângulo?</p>
+      <ol class="alternativas curtas">
+        <li data-em="2:apaga"><b>A</b><span>66,28 cm²</span></li>
+        <li data-em="2:apaga"><b>B</b><span>55,14 cm²</span></li>
+        <li data-em="2:apaga"><b>C</b><span>44,28 cm²</span></li>
+        <li data-em="2:apaga"><b>D</b><span>33,28 cm²</span></li>
+        <li data-em="2:certo"><b>E</b><span>22,14 cm²</span></li>
+      </ol>
+      <p class="fonte">IF Sudeste MG 2017 (prova 2017-1, extra), questão 23.</p>
+    </div>
+  </div>
+  <aside class="resolucao">
+    <p class="dados"><b>Dados:</b> catetos 8,2 cm e 5,4 cm.</p>
+    <ol class="passos">
+      <li>Catetos são perpendiculares: base e altura.</li>
+      <li>\(A = \dfrac{8{,}2 \cdot 5{,}4}{2}\)</li>
+      <li>\(A = \dfrac{44{,}28}{2} = 22{,}14\ \text{cm}^2\)</li>
+    </ol>
+    <p class="resposta"><b>Resposta:</b> 22,14 cm². <b>Gabarito E.</b></p>
+    <p class="atencao"><b>Destaque no quadro:</b> No triângulo retângulo, um cateto é a base e o outro é a altura.</p>
+    <ul class="erros">
+      <li><b>A</b> Não sai dos dados.</li>
+      <li><b>B</b> Não sai dos dados.</li>
+      <li><b>C</b> Esqueceu de dividir por 2.</li>
+      <li><b>D</b> Não sai dos dados.</li>
+    </ul>
+  </aside>
+  <aside class="notas">
+    <p>Clique 1 tira o aviso de pausa. Clique 2: gabarito E.</p>
+    <p>Questão oficial do IF Sudeste MG 2017-1-extra, q23, MAT-0387 (sobra do capítulo). Conferido: 8,2 · 5,4 = 44,28; ÷ 2 = 22,14.</p>
+  </aside>
+</section>
+
+<!-- 12. Questão 3 -->
+<section class="slide questao" data-nome="Questão 3">
+  <div class="conteudo">
+    <div class="area-resolucao"></div>
+    <span class="pilula pilula-pausa" data-em="1:some">Pause o vídeo e tente</span>
+    <div class="painel-questao">
+      <p class="olho">Questão 3 · IF Sudeste MG 2016</p>
+      <p class="enunciado">A área de um triângulo equilátero de lado medindo 6 cm é:</p>
+      <ol class="alternativas curtas">
+        <li data-em="2:apaga"><b>A</b><span>\(18\sqrt{3}\) cm²</span></li>
+        <li data-em="2:certo"><b>B</b><span>\(9\sqrt{3}\) cm²</span></li>
+        <li data-em="2:apaga"><b>C</b><span>\(6\sqrt{3}\) cm²</span></li>
+        <li data-em="2:apaga"><b>D</b><span>\(3\sqrt{3}\) cm²</span></li>
+        <li data-em="2:apaga"><b>E</b><span>\(12\sqrt{3}\) cm²</span></li>
+      </ol>
+      <p class="fonte">IF Sudeste MG 2016 (prova 2016-2), questão 15.</p>
+    </div>
+  </div>
+  <aside class="resolucao">
+    <p class="dados"><b>Dados:</b> equilátero, \(\ell = 6\ \text{cm}\).</p>
+    <ol class="passos">
+      <li>\(A = \dfrac{\ell^2\sqrt{3}}{4}\)</li>
+      <li>\(A = \dfrac{36\sqrt{3}}{4}\)</li>
+      <li>\(A = 9\sqrt{3}\ \text{cm}^2\)</li>
+    </ol>
+    <p class="resposta"><b>Resposta:</b> \(9\sqrt{3}\) cm². <b>Gabarito B.</b></p>
+    <p class="atencao"><b>Destaque no quadro:</b> Altura \(\dfrac{\ell\sqrt{3}}{2}\) (aqui \(3\sqrt{3}\)) não é área.</p>
+    <ul class="erros">
+      <li><b>A</b> Base vezes altura sem dividir por 2.</li>
+      <li><b>C</b> Dividiu por 6 em vez de 4.</li>
+      <li><b>D</b> É a altura, não a área.</li>
+      <li><b>E</b> Dividiu por 3 em vez de 4.</li>
+    </ul>
+  </aside>
+  <aside class="notas">
+    <p>Clique 1 tira o aviso de pausa. Clique 2: gabarito B.</p>
+    <p>Questão oficial do IF Sudeste MG 2016-2, q15, MAT-0481 (sobra do capítulo). Conferido: 6² = 36; 36√3 ÷ 4 = 9√3.</p>
+  </aside>
+</section>
+
+<!-- 13. Resumo -->
+<section class="slide" data-nome="Resumo">
+  <div class="conteudo">
+    <p class="olho">Resumo</p>
+    <h2 class="titulo">O essencial</h2>
+    <div class="resumo" style="position:absolute;left:0;right:0;top:150px;grid-template-columns:repeat(3,1fr)">
+      <div><b>Perímetro</b> é contorno (m); <b>área</b> é superfície (m²).</div>
+      <div><b>Retângulo e paralelogramo:</b> \(b \cdot h\). <b>Quadrado:</b> \(\ell^2\).</div>
+      <div><b>Trapézio:</b> \(\dfrac{(B + b) \cdot h}{2}\). <b>Losango:</b> \(\dfrac{D \cdot d}{2}\).</div>
+      <div><b>Triângulo:</b> \(\dfrac{b \cdot h}{2}\).</div>
+      <div><b>Equilátero:</b> \(\dfrac{\ell^2\sqrt{3}}{4}\).</div>
+      <div><b>Altura</b> é perpendicular, nunca o lado inclinado.</div>
+    </div>
+  </div>
+  <aside class="notas"><p>Resumo da apostila (parte dos quadriláteros e triângulos). Peça para tirarem um print desta tela.</p></aside>
+</section>
+
+<!-- 14. A seguir -->
+<section class="slide capa" data-nome="A seguir">
+  <div class="estrelas"></div>
+  <div class="texto-capa" style="top:190px">
+    <span class="selo">Matemática · IF</span>
+    <p class="aula" style="font-size:28px">A seguir · Perímetros e áreas · Parte 2 de 2</p>
+    <h1 style="font-size:104px">Polígonos regulares, círculo e planificações</h1>
+    <p class="sub">A pizza que vira retângulo</p>
+  </div>
+  <svg class="emblema" viewBox="0 0 640 640" aria-hidden="true">
+    <circle cx="320" cy="320" r="220" fill="#FFD10C" fill-opacity=".9"/>
+    <g stroke="#fff" stroke-width="5"><line x1="320" y1="100" x2="320" y2="540"/><line x1="100" y1="320" x2="540" y2="320"/><line x1="164.4" y1="164.4" x2="475.6" y2="475.6"/><line x1="164.4" y1="475.6" x2="475.6" y2="164.4"/></g>
+  </svg>
+  <img class="logo-capa" src="{{LOGO_BRANCO}}" alt="Quarks">
+  <aside class="notas"><p>Na Parte 2: área dos polígonos regulares, do círculo e de suas partes, figuras compostas, sólidos e planificações.</p></aside>
+</section>

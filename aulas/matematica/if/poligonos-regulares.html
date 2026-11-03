@@ -1,0 +1,606 @@
+<!--aula
+{"disciplina": "matematica", "curso": "IF", "assunto": "Geometria plana", "parte": "Parte única", "titulo": "Polígonos regulares", "scripts": ["animacoes-geometria-b.js"]}
+-->
+<!-- Fonte: apostila IF, Matemática, cap. 5 (5.5 Polígonos regulares: Polígonos e soma dos ângulos; Polígonos regulares; Lado e apótema dos polígonos inscritos; Polígonos circunscritos; resumo). Questões: Modelo IF, lote if-matematica-poligonos (m005 MAT-3397, m006 MAT-3398, m007 MAT-3399). A oficial 2020-1 q23 (MAT-0533) está reservada para o bloco do fim do capítulo; a sobra oficial 2013-1 q18 (MAT-0369, área do hexágono) ficou para Perímetros e áreas, Parte 2, onde entra a área do polígono regular. -->
+<style>
+  .caixa, .cartao { box-sizing: border-box; }
+  .rot { font-family: Figtree, "Segoe UI", sans-serif; font-weight: 800; fill: #3F2FA0; }
+  .rot-c { font-family: Figtree, "Segoe UI", sans-serif; font-weight: 700; fill: #5E5A70; }
+  .cartao { background: var(--branco); border: 2px solid var(--lilas-2); border-radius: 26px; padding: 10px 12px 14px; text-align: center; font-size: 26px; line-height: 1.2; }
+  .cartao b { display: block; font: 800 30px var(--fonte-titulo); color: var(--roxo-titulo); letter-spacing: -.01em; }
+  .cartao svg { display: block; margin: 0 auto; }
+  .tabela.estreita th, .tabela.estreita td { padding: 10px 30px; }
+  .pequeno { font-size: 30px; line-height: 1.35; }
+  /* o polígono se desenha quando aparece */
+  .desenha { stroke-dasharray: 1; stroke-dashoffset: 1; }
+  .slide.ativo .mostra .desenha, .slide.ativo .desenha.mostra { animation: desenha 2.6s ease-in-out forwards; }
+  .slide.ativo .mostra .desenha.d2 { animation-delay: .5s; }
+  .slide.ativo .mostra .desenha.d3 { animation-delay: 1s; }
+  @keyframes desenha { to { stroke-dashoffset: 0; } }
+  /* os 6 triângulos do hexágono acendem um de cada vez, devagar */
+  .tri6 path { fill: #E8F0FF; }
+  .slide.ativo .mostra .tri6 path { animation: acende 7.2s ease-in-out infinite; }
+  .tri6 path:nth-child(2) { animation-delay: 1.2s !important; } .tri6 path:nth-child(3) { animation-delay: 2.4s !important; }
+  .tri6 path:nth-child(4) { animation-delay: 3.6s !important; } .tri6 path:nth-child(5) { animation-delay: 4.8s !important; } .tri6 path:nth-child(6) { animation-delay: 6s !important; }
+  @keyframes acende { 0%, 30%, 100% { fill: #E8F0FF; } 12%, 18% { fill: #FFE58A; } }
+  /* o prato encosta na caixa: a circunferência cresce devagar até tocar os lados */
+  .slide.ativo .mostra .cresce { animation: cresce 3s ease-out both; transform-box: fill-box; transform-origin: center; }
+  @keyframes cresce { from { transform: scale(.55); } to { transform: none; } }
+  /* o raio gira devagar no hexágono */
+  .slide.ativo .mostra .gira-raio { animation: gira-raio 24s linear infinite; transform-origin: 180px 180px; }
+  @keyframes gira-raio { to { transform: rotate(360deg); } }
+</style>
+
+<!-- 1. Capa -->
+<section class="slide capa" data-nome="Capa">
+  <div class="estrelas"></div>
+  <div class="texto-capa" style="top:170px">
+    <span class="selo">Matemática · IF</span>
+    <p class="aula">Geometria plana</p>
+    <h1 style="font-size:132px">Polígonos regulares</h1>
+    <p class="sub">Lados iguais e ângulos iguais</p>
+  </div>
+  <svg class="emblema" viewBox="0 0 640 640" aria-hidden="true">
+    <g class="gira-lento"><ellipse cx="320" cy="320" rx="300" ry="128" fill="none" stroke="#fff" stroke-opacity=".38" stroke-width="2" transform="rotate(-10 320 320)"/></g>
+    <circle cx="320" cy="320" r="236" fill="none" stroke="#fff" stroke-opacity=".7" stroke-width="3"/>
+    <g class="gira"><polygon points="556,320 438,524.4 202,524.4 84,320 202,115.6 438,115.6" fill="none" stroke="#FFD10C" stroke-width="6" stroke-linejoin="round"/>
+      <circle cx="556" cy="320" r="13" fill="#FFD10C" stroke="#fff" stroke-width="3"/></g>
+    <circle cx="320" cy="320" r="132" fill="#FFD10C"/>
+    <image href="{{SYM_ROXO}}" x="238" y="238" width="164" height="164"/>
+  </svg>
+  <img class="logo-capa" src="{{LOGO_BRANCO}}" alt="Quarks">
+  <aside class="notas"><p>Polígonos: a soma dos ângulos, o polígono regular, o raio e o apótema, e os polígonos inscritos e circunscritos numa circunferência. Usa o Teorema de Pitágoras, a diagonal do quadrado (ℓ√2) e a altura do triângulo equilátero (ℓ√3/2), que vieram no subcapítulo anterior.</p></aside>
+</section>
+
+<!-- 2. Polígonos e nomes -->
+<section class="slide" data-nome="O que é polígono">
+  <div class="conteudo">
+    <p class="olho">Polígonos</p>
+    <h2 class="titulo">Figura fechada feita só de segmentos</h2>
+    <div class="caixa caixa-fundamental" style="position:absolute;left:0;right:0;top:150px;padding:20px 34px">
+      <div class="texto" style="font-size:34px">Os segmentos são os <b>lados</b> e não se cruzam. O nome vem do <b>número de lados</b>.</div>
+    </div>
+    <div style="position:absolute;left:0;right:0;top:300px;display:grid;grid-template-columns:repeat(8,1fr);gap:14px">
+      <div class="cartao" data-passo="1"><svg viewBox="0 0 180 185" width="150" height="154"><polygon points="90.0,20.0 25.0,132.5 155.0,132.5" fill="#E8F0FF" stroke="var(--d)" stroke-width="5" stroke-linejoin="round"/></svg><b>3</b>triângulo</div>
+      <div class="cartao" data-passo="1"><svg viewBox="0 0 180 185" width="150" height="154"><polygon points="37.0,42.0 37.0,148.0 143.0,148.0 143.0,42.0" fill="#E8F0FF" stroke="var(--d)" stroke-width="5" stroke-linejoin="round"/></svg><b>4</b>quadrilátero</div>
+      <div class="cartao" data-passo="2"><svg viewBox="0 0 180 185" width="150" height="154"><polygon points="90.0,20.0 18.7,71.8 45.9,155.7 134.1,155.7 161.3,71.8" fill="#E8F0FF" stroke="var(--d)" stroke-width="5" stroke-linejoin="round"/></svg><b>5</b>pentágono</div>
+      <div class="cartao" data-passo="2"><svg viewBox="0 0 180 185" width="150" height="154"><polygon points="52.5,30.0 15.0,95.0 52.5,160.0 127.5,160.0 165.0,95.0 127.5,30.0" fill="#E8F0FF" stroke="var(--d)" stroke-width="5" stroke-linejoin="round"/></svg><b>6</b>hexágono</div>
+      <div class="cartao" data-passo="3"><svg viewBox="0 0 180 185" width="150" height="154"><polygon points="90.0,20.0 31.4,48.2 16.9,111.7 57.5,162.6 122.5,162.6 163.1,111.7 148.6,48.2" fill="#E8F0FF" stroke="var(--d)" stroke-width="5" stroke-linejoin="round"/></svg><b>7</b>heptágono</div>
+      <div class="cartao" data-passo="3"><svg viewBox="0 0 180 185" width="150" height="154"><polygon points="61.3,25.7 20.7,66.3 20.7,123.7 61.3,164.3 118.7,164.3 159.3,123.7 159.3,66.3 118.7,25.7" fill="#E8F0FF" stroke="var(--d)" stroke-width="5" stroke-linejoin="round"/></svg><b>8</b>octógono</div>
+      <div class="cartao" data-passo="3"><svg viewBox="0 0 180 185" width="150" height="154"><polygon points="90.0,20.0 41.8,37.5 16.1,82.0 25.0,132.5 64.3,165.5 115.7,165.5 155.0,132.5 163.9,82.0 138.2,37.5" fill="#E8F0FF" stroke="var(--d)" stroke-width="5" stroke-linejoin="round"/></svg><b>9</b>eneágono</div>
+      <div class="cartao" data-passo="3"><svg viewBox="0 0 180 185" width="150" height="154"><polygon points="66.8,23.7 29.3,50.9 15.0,95.0 29.3,139.1 66.8,166.3 113.2,166.3 150.7,139.1 165.0,95.0 150.7,50.9 113.2,23.7" fill="#E8F0FF" stroke="var(--d)" stroke-width="5" stroke-linejoin="round"/></svg><b>10</b>decágono</div>
+    </div>
+  </div>
+  <aside class="notas">
+    <p>Definição da apostila: figura plana fechada formada só por segmentos de reta (os lados), que não se cruzam. Cliques 1 a 3: os nomes de 3 a 10 lados.</p>
+    <p>Pergunte: "um círculo é polígono?" Não: não é feito de segmentos.</p>
+  </aside>
+</section>
+
+<!-- 3. Soma dos ângulos internos -->
+<section class="slide" data-nome="Soma dos ângulos internos">
+  <div class="conteudo">
+    <p class="olho">Soma dos ângulos internos</p>
+    <h2 class="titulo">De um vértice, corte em triângulos</h2>
+    <div data-anima="geob-diagonais" data-anima-passo="0" style="position:absolute;left:0;top:130px;width:520px;height:560px;transform:scale(.82);transform-origin:0 0"></div>
+    <div style="position:absolute;left:560px;right:0;top:160px">
+      <table class="tabela estreita" style="font-size:36px">
+        <tr><th>polígono</th><th>lados</th><th>triângulos</th><th>soma</th></tr>
+        <tr data-passo="1"><td>pentágono</td><td>5</td><td>3</td><td>\(3 \cdot 180° = 540°\)</td></tr>
+        <tr data-passo="2"><td>hexágono</td><td>6</td><td>4</td><td>\(4 \cdot 180° = 720°\)</td></tr>
+        <tr data-passo="3"><td>\(n\) lados</td><td>\(n\)</td><td>\(n - 2\)</td><td>\((n - 2) \cdot 180°\)</td></tr>
+      </table>
+    </div>
+    <div class="caixa caixa-fundamental" data-passo="4" style="position:absolute;left:560px;right:0;top:560px;padding:20px 34px;display:grid;grid-template-columns:1fr 1fr;gap:30px;align-items:center">
+      <div><span class="rotulo">Internos</span><div style="font-size:52px">\(S = (n - 2) \cdot 180°\)</div></div>
+      <div data-passo="5"><span class="rotulo">Externos</span><div class="texto" style="font-size:32px">somam sempre <b>360°</b>, qualquer que seja \(n\)</div></div>
+    </div>
+  </div>
+  <aside class="notas">
+    <p>A animação já roda: de 3 a 8 lados, as diagonais saem do vértice amarelo e cortam o polígono em triângulos: sempre dois a menos que o número de lados. Cada triângulo tem 180°.</p>
+    <p>Cliques 1 a 3: a tabela até a regra geral. Clique 4: a fórmula. Clique 5: os externos somam 360° sempre (dá uma volta completa). Vale para polígono convexo, como diz a apostila.</p>
+    <p>A fórmula do número total de diagonais não está na apostila do IF (lacuna registrada no plano), por isso não entra aqui.</p>
+  </aside>
+</section>
+
+<!-- 4. Exemplo: ida e volta -->
+<section class="slide" data-nome="Exemplo: ida e volta">
+  <div class="conteudo">
+    <p class="olho">Exemplo</p>
+    <h2 class="titulo">Ida e volta</h2>
+    <div style="position:absolute;left:0;width:800px;top:150px">
+      <p class="texto" style="margin:0 0 20px"><b>a)</b> Soma dos internos do <b>hexágono</b>?</p>
+      <div class="contas">
+        <div class="eq" data-passo="1"><span>\(S\)</span><span>\(=\)</span><span>\((n - 2) \cdot 180°\)</span></div>
+        <div class="eq" data-passo="2"><span>\(S\)</span><span>\(=\)</span><span>\((6 - 2) \cdot 180°\)</span></div>
+        <div class="eq final" data-passo="3"><span>\(S\)</span><span>\(=\)</span><span>\(720°\)</span></div>
+      </div>
+    </div>
+    <div style="position:absolute;left:900px;right:0;top:150px">
+      <p class="texto" style="margin:0 0 20px"><b>b)</b> \(S = 1440°\). Quantos lados?</p>
+      <div class="contas">
+        <div class="eq" data-passo="4"><span>\((n - 2) \cdot 180\)</span><span>\(=\)</span><span>\(1440\)</span></div>
+        <div class="eq" data-passo="5"><span>\(n - 2\)</span><span>\(=\)</span><span>\(8\)</span></div>
+        <div class="eq final" data-passo="6"><span>\(n\)</span><span>\(=\)</span><span>\(10\)</span></div>
+      </div>
+      <span class="pilula pilula-resposta" data-passo="7" style="margin-top:34px">decágono</span>
+    </div>
+  </div>
+  <aside class="notas">
+    <p>Exemplo "Ida e volta" da apostila. a) 4 · 180 = 720°. b) 1440 ÷ 180 = 8, então n = 10: decágono.</p>
+  </aside>
+</section>
+
+<!-- 5. Polígono regular -->
+<section class="slide" data-nome="Polígono regular">
+  <div class="conteudo">
+    <p class="olho">Polígono regular</p>
+    <h2 class="titulo">Lados iguais e ângulos iguais</h2>
+    <div style="position:absolute;left:0;right:0;top:140px;display:grid;grid-template-columns:repeat(3,1fr);gap:26px">
+      <div class="cartao" data-passo="1"><svg viewBox="0 0 180 185" width="200" height="205"><polygon points="52.5,30.0 15.0,95.0 52.5,160.0 127.5,160.0 165.0,95.0 127.5,30.0" fill="#FFE58A" stroke="#E8A33A" stroke-width="6" stroke-linejoin="round"/></svg><b>favo de mel</b>hexágono</div>
+      <div class="cartao" data-passo="1"><svg viewBox="0 0 180 185" width="200" height="205"><polygon points="61.3,25.7 20.7,66.3 20.7,123.7 61.3,164.3 118.7,164.3 159.3,123.7 159.3,66.3 118.7,25.7" fill="#E5484D" stroke="#fff" stroke-width="5" stroke-linejoin="round"/><text x="90" y="106" text-anchor="middle" font-family="Figtree,sans-serif" font-weight="800" font-size="36" fill="#fff">PARE</text></svg><b>placa "Pare"</b>octógono</div>
+      <div class="cartao" data-passo="1"><svg viewBox="0 0 180 185" width="200" height="205"><polygon points="37.0,42.0 37.0,148.0 143.0,148.0 143.0,42.0" fill="#E4DEFB" stroke="var(--roxo)" stroke-width="6" stroke-linejoin="round"/><path d="M37 95 H143 M90 42 V148" stroke="#fff" stroke-width="3"/></svg><b>lajota</b>quadrado</div>
+    </div>
+    <div class="caixa caixa-fundamental" data-passo="2" style="position:absolute;left:0;right:0;top:470px;padding:20px 34px">
+      <div class="texto" style="font-size:34px">Regular: <b>todos os lados iguais</b> e <b>todos os ângulos internos iguais</b>.</div>
+    </div>
+    <div class="caixa caixa-atencao" data-passo="3" style="position:absolute;left:580px;right:0;top:600px;padding:16px 30px;display:grid;grid-template-columns:auto auto 1fr;gap:24px;align-items:center">
+      <svg viewBox="0 0 160 120" width="150" height="112" aria-hidden="true"><polygon points="80,8 150,60 80,112 10,60" fill="#fff" stroke="#8A6A00" stroke-width="5"/></svg>
+      <svg viewBox="0 0 200 120" width="170" height="102" aria-hidden="true"><rect x="10" y="20" width="180" height="80" fill="#fff" stroke="#8A6A00" stroke-width="5"/></svg>
+      <div class="texto" style="font-size:28px"><b>Losango:</b> lados iguais, ângulos não. <b>Retângulo:</b> ângulos iguais, lados não. <b>Nenhum é regular.</b></div>
+    </div>
+  </div>
+  <aside class="notas">
+    <p>Exemplos da apostila: favos de mel, placa de "Pare", lajotas. Clique 2: a definição (as duas condições juntas). Clique 3: a atenção "Lados iguais não bastam".</p>
+  </aside>
+</section>
+
+<!-- 6. Ângulos do polígono regular -->
+<section class="slide" data-nome="Ângulos do regular">
+  <div class="conteudo">
+    <p class="olho">Fórmula</p>
+    <h2 class="titulo">Cada ângulo do polígono regular</h2>
+    <div class="caixa caixa-fundamental" style="position:absolute;left:0;right:0;top:150px;padding:18px 34px;display:grid;grid-template-columns:1fr 1fr;align-items:center">
+      <div style="font-size:60px;text-align:center">\(a_i = \dfrac{(n - 2) \cdot 180°}{n}\)</div>
+      <div style="font-size:60px;text-align:center">\(a_e = \dfrac{360°}{n}\)</div>
+    </div>
+    <p class="texto" style="position:absolute;left:0;right:0;top:340px;margin:0;font-size:32px;color:var(--cinza)">Ângulos todos iguais: divida a soma pelo número de lados.</p>
+    <div style="position:absolute;left:580px;width:560px;top:410px">
+      <p class="texto" style="margin:0 0 14px;font-size:34px"><b>a)</b> Interno do octógono regular</p>
+      <div class="contas" style="font-size:44px">
+        <div class="eq" data-passo="1"><span>\(a_i\)</span><span>\(=\)</span><span>\(\dfrac{6 \cdot 180}{8}\)</span></div>
+        <div class="eq final" data-passo="2"><span>\(a_i\)</span><span>\(=\)</span><span>\(135°\)</span></div>
+      </div>
+    </div>
+    <div style="position:absolute;left:1200px;right:0;top:410px">
+      <p class="texto" style="margin:0 0 14px;font-size:34px"><b>b)</b> Externo de 40°: quantos lados?</p>
+      <div class="contas" style="font-size:44px">
+        <div class="eq" data-passo="3"><span>\(40\)</span><span>\(=\)</span><span>\(\dfrac{360}{n}\)</span></div>
+        <div class="eq final" data-passo="4"><span>\(n\)</span><span>\(=\)</span><span>\(9\)</span></div>
+      </div>
+    </div>
+  </div>
+  <aside class="notas">
+    <p>Exemplo "Octógono e ângulo externo" da apostila. a) (8 − 2) · 180 = 1080; 1080 ÷ 8 = 135°. b) 360 ÷ 40 = 9 lados (eneágono).</p>
+    <p>Atalho útil: interno + externo = 180° em cada vértice.</p>
+  </aside>
+</section>
+
+<!-- 7. Centro, raio e apótema -->
+<section class="slide" data-nome="Raio e apótema">
+  <div class="conteudo">
+    <p class="olho">Elementos</p>
+    <h2 class="titulo">Centro, raio e apótema</h2>
+    <svg viewBox="0 0 360 360" style="position:absolute;left:0;top:130px;width:470px;height:470px" aria-hidden="true">
+      <circle cx="180" cy="180" r="150" fill="none" stroke="#DCD6F3" stroke-width="3" stroke-dasharray="8 8"/>
+      <g class="tri6" data-passo="4">
+        <path d="M180 180 L330 180 L255 50.1 Z"/><path d="M180 180 L255 50.1 L105 50.1 Z"/><path d="M180 180 L105 50.1 L30 180 Z"/>
+        <path d="M180 180 L30 180 L105 309.9 Z"/><path d="M180 180 L105 309.9 L255 309.9 Z"/><path d="M180 180 L255 309.9 L330 180 Z"/>
+      </g>
+      <polygon points="330,180 255,50.1 105,50.1 30,180 105,309.9 255,309.9" fill="none" stroke="var(--d)" stroke-width="6" stroke-linejoin="round"/>
+      <g data-passo="1"><line x1="180" y1="180" x2="330" y2="180" stroke="#6551D1" stroke-width="5"/><text x="255" y="170" text-anchor="middle" class="rot" font-size="30">R</text></g>
+      <g data-passo="2"><line x1="180" y1="180" x2="180" y2="309.9" stroke="#E8A33A" stroke-width="5"/><path d="M180 291 h18 v18.9" fill="none" stroke="#5E5A70" stroke-width="3"/><text x="166" y="256" text-anchor="end" class="rot" font-size="30" fill="#B5731A">a</text></g>
+      <g data-passo="3"><text x="180" y="345" text-anchor="middle" class="rot" font-size="30">ℓ</text></g>
+      <circle cx="180" cy="180" r="8" fill="#292B2C"/><text x="166" y="170" text-anchor="end" class="rot" font-size="28">O</text>
+    </svg>
+    <div style="position:absolute;left:560px;right:0;top:160px;display:flex;flex-direction:column;gap:20px">
+      <div class="caixa" style="padding:18px 30px"><span class="rotulo">Centro O</span><div class="texto pequeno">à mesma distância de todos os vértices</div></div>
+      <div class="caixa" data-passo="1" style="padding:18px 30px"><span class="rotulo">Raio R</span><div class="texto pequeno">do centro até um <b>vértice</b></div></div>
+      <div class="caixa" data-passo="2" style="padding:18px 30px"><span class="rotulo">Apótema a</span><div class="texto pequeno">do centro até o <b>meio de um lado</b>, na perpendicular</div></div>
+      <div class="caixa caixa-fundamental" data-passo="4" style="padding:18px 30px"><div class="texto pequeno">No hexágono, os raios formam <b>6 triângulos equiláteros</b>.</div></div>
+    </div>
+  </div>
+  <aside class="notas">
+    <p>Figura da apostila (hexágono com O, R, a e ℓ). Clique 1: o raio. Clique 2: o apótema (perpendicular ao lado, no meio dele). Clique 3: o lado ℓ. Clique 4: os 6 triângulos acendem um por vez; eles serão a chave do hexágono.</p>
+  </aside>
+</section>
+
+<!-- 8. Inscritos -->
+<section class="slide" data-nome="Polígonos inscritos">
+  <div class="conteudo">
+    <p class="olho">Polígono inscrito</p>
+    <h2 class="titulo">Todos os vértices na circunferência</h2>
+    <div style="position:absolute;left:0;right:0;top:150px;display:grid;grid-template-columns:repeat(3,1fr);gap:30px">
+      <div class="cartao" data-passo="1" style="font-size:30px"><svg viewBox="0 0 360 360" width="300" height="300"><circle cx="180" cy="180" r="150" fill="#fff" stroke="#BFB6E6" stroke-width="4"/><polygon class="desenha" pathLength="1" points="286.1,73.9 73.9,73.9 73.9,286.1 286.1,286.1" fill="none" stroke="var(--d)" stroke-width="7" stroke-linejoin="round"/><line x1="180" y1="180" x2="286.1" y2="73.9" stroke="#6551D1" stroke-width="4"/><circle cx="180" cy="180" r="6" fill="#292B2C"/><text x="246" y="148" class="rot" font-size="28">R</text></svg><b>quadrado</b></div>
+      <div class="cartao" data-passo="2" style="font-size:30px"><svg viewBox="0 0 360 360" width="300" height="300"><circle cx="180" cy="180" r="150" fill="#fff" stroke="#BFB6E6" stroke-width="4"/><polygon class="desenha" pathLength="1" points="330,180 255,50.1 105,50.1 30,180 105,309.9 255,309.9" fill="none" stroke="var(--d)" stroke-width="7" stroke-linejoin="round"/><line x1="180" y1="180" x2="330" y2="180" stroke="#6551D1" stroke-width="4"/><circle cx="180" cy="180" r="6" fill="#292B2C"/><text x="255" y="170" class="rot" font-size="28">R</text></svg><b>hexágono</b></div>
+      <div class="cartao" data-passo="3" style="font-size:30px"><svg viewBox="0 0 360 360" width="300" height="300"><circle cx="180" cy="180" r="150" fill="#fff" stroke="#BFB6E6" stroke-width="4"/><polygon class="desenha" pathLength="1" points="180,30 50.1,255 309.9,255" fill="none" stroke="var(--d)" stroke-width="7" stroke-linejoin="round"/><line x1="180" y1="180" x2="180" y2="30" stroke="#6551D1" stroke-width="4"/><circle cx="180" cy="180" r="6" fill="#292B2C"/><text x="192" y="110" class="rot" font-size="28">R</text></svg><b>triângulo equilátero</b></div>
+    </div>
+    <div class="caixa caixa-fundamental" data-passo="4" style="position:absolute;left:580px;right:0;top:640px;padding:18px 30px">
+      <div class="texto" style="font-size:30px">O raio da circunferência é o <b>raio R do polígono</b>. Tudo vai sair de R.</div>
+    </div>
+  </div>
+  <aside class="notas">
+    <p>Os três casos que mais aparecem (apostila). Cada clique desenha um polígono com os vértices sobre a circunferência. Nos próximos slides: o lado e o apótema de cada um em função de R.</p>
+  </aside>
+</section>
+
+<!-- 9. Quadrado inscrito -->
+<section class="slide" data-nome="Quadrado inscrito">
+  <div class="conteudo">
+    <p class="olho">Lado e apótema</p>
+    <h2 class="titulo">Quadrado inscrito</h2>
+    <svg viewBox="0 0 360 360" style="position:absolute;left:0;top:140px;width:440px;height:440px" aria-hidden="true">
+      <circle cx="180" cy="180" r="150" fill="#fff" stroke="#BFB6E6" stroke-width="4"/>
+      <polygon points="286.1,73.9 73.9,73.9 73.9,286.1 286.1,286.1" fill="#E8F0FF" stroke="var(--d)" stroke-width="6" stroke-linejoin="round"/>
+      <line data-passo="1" x1="73.9" y1="286.1" x2="286.1" y2="73.9" stroke="#6551D1" stroke-width="6"/>
+      <text data-passo="1" x="244" y="112" class="rot" font-size="28" fill="#6551D1">2R</text>
+      <g data-passo="5"><line x1="180" y1="180" x2="180" y2="286.1" stroke="#E8A33A" stroke-width="5"/><text x="190" y="246" class="rot" font-size="28" fill="#B5731A">a</text></g>
+      <text x="180" y="318" text-anchor="middle" class="rot" font-size="28">ℓ</text>
+      <circle cx="180" cy="180" r="6" fill="#292B2C"/>
+    </svg>
+    <div style="position:absolute;left:560px;right:0;top:160px">
+      <p class="texto" data-passo="1" style="margin:0 0 18px;font-size:32px">A diagonal é um <b>diâmetro</b> (2R) e também vale \(\ell\sqrt{2}\).</p>
+      <div class="contas">
+        <div class="eq" data-passo="2"><span>\(\ell\sqrt{2}\)</span><span>\(=\)</span><span>\(2R\)</span></div>
+        <div class="eq" data-passo="3"><span>\(\ell\)</span><span>\(=\)</span><span>\(\dfrac{2R}{\sqrt{2}}\)</span></div>
+        <div class="eq final" data-passo="4"><span>\(\ell\)</span><span>\(=\)</span><span>\(R\sqrt{2}\)</span></div>
+      </div>
+      <div class="caixa caixa-fundamental" data-passo="5" style="margin-top:30px;padding:16px 30px;display:flex;gap:30px;align-items:center">
+        <span class="texto" style="font-size:32px">Apótema: metade do lado</span><span style="font-size:48px">\(a = \dfrac{R\sqrt{2}}{2}\)</span>
+      </div>
+    </div>
+  </div>
+  <aside class="notas">
+    <p>Da apostila: a diagonal do quadrado inscrito é um diâmetro, 2R, e a diagonal de um quadrado de lado ℓ é ℓ√2 (Pitágoras). Igualando, ℓ = 2R/√2 = R√2 (racionalize se a turma perguntar: 2R√2/2).</p>
+    <p>Clique 5: o apótema do quadrado é metade do lado.</p>
+  </aside>
+</section>
+
+<!-- 10. Hexágono e triângulo inscritos -->
+<section class="slide" data-nome="Hexágono e triângulo inscritos">
+  <div class="conteudo">
+    <p class="olho">Lado e apótema</p>
+    <h2 class="titulo">Hexágono e triângulo inscritos</h2>
+    <div style="position:absolute;left:0;width:820px;top:150px">
+      <svg viewBox="0 0 360 330" width="330" height="302" style="display:block;float:left;margin-right:24px" aria-hidden="true">
+        <circle cx="180" cy="165" r="150" fill="#fff" stroke="#BFB6E6" stroke-width="4"/>
+        <polygon points="330,165 255,35.1 105,35.1 30,165 105,294.9 255,294.9" fill="#E8F0FF" stroke="var(--d)" stroke-width="5" stroke-linejoin="round"/>
+        <path d="M180 165 L330 165 L255 294.9 Z" fill="#FFE58A" stroke="#E8A33A" stroke-width="4"/>
+        <line x1="180" y1="165" x2="180" y2="294.9" stroke="#B5731A" stroke-width="4" stroke-dasharray="8 6" transform="rotate(-60 180 165)"/>
+        <text x="255" y="155" text-anchor="middle" class="rot" font-size="26">R</text><text x="306" y="250" class="rot" font-size="26">ℓ</text>
+        <circle cx="180" cy="165" r="6" fill="#292B2C"/>
+      </svg>
+      <p class="texto pequeno" data-passo="1" style="margin:0">6 triângulos <b>equiláteros</b>:</p>
+      <div style="font-size:50px;margin:10px 0" data-passo="2">\(\ell = R\)</div>
+      <p class="texto pequeno" data-passo="3" style="margin:0">Apótema = altura do equilátero:</p>
+      <div style="font-size:50px;margin-top:8px" data-passo="4">\(a = \dfrac{R\sqrt{3}}{2}\)</div>
+    </div>
+    <div style="position:absolute;left:900px;right:0;top:150px">
+      <svg viewBox="0 0 360 330" width="330" height="302" style="display:block;float:left;margin-right:24px" aria-hidden="true">
+        <circle cx="180" cy="165" r="150" fill="#fff" stroke="#BFB6E6" stroke-width="4"/>
+        <polygon points="180,15 50.1,240 309.9,240" fill="#E8F0FF" stroke="var(--d)" stroke-width="5" stroke-linejoin="round"/>
+        <path d="M180 165 L50.1 240 L180 240 Z" fill="#FFE58A" stroke="#E8A33A" stroke-width="4"/>
+        <path d="M180 226 h-14 v14" fill="none" stroke="#5E5A70" stroke-width="3"/>
+        <text x="104" y="190" class="rot" font-size="26">R</text><text x="188" y="212" class="rot" font-size="26" fill="#B5731A">a</text>
+        <text x="115" y="270" class="rot" font-size="24">ℓ/2</text><text x="160" y="195" class="rot-c" font-size="18" text-anchor="end">60°</text>
+        <circle cx="180" cy="165" r="6" fill="#292B2C"/>
+      </svg>
+      <p class="texto pequeno" data-passo="5" style="margin:0">Triângulo 30°, 60°, 90°: metade de um equilátero de lado R.</p>
+      <div style="font-size:50px;margin:10px 0" data-passo="6">\(a = \dfrac{R}{2}\)</div>
+      <div style="font-size:50px" data-passo="7">\(\dfrac{\ell}{2} = \dfrac{R\sqrt{3}}{2} \Rightarrow \ell = R\sqrt{3}\)</div>
+    </div>
+    <div class="caixa caixa-atencao" data-passo="8" style="position:absolute;left:580px;right:0;top:660px;padding:16px 30px">
+      <div class="texto" style="font-size:29px">Os dois saem do <b>triângulo equilátero</b> e da sua altura \(\dfrac{\ell\sqrt{3}}{2}\).</div>
+    </div>
+  </div>
+  <aside class="notas">
+    <p><b>Hexágono</b> (cliques 1 a 4): os raios dividem o hexágono em 6 triângulos equiláteros, então ℓ = R; o apótema é a altura de um deles, R√3/2.</p>
+    <p><b>Triângulo</b> (cliques 5 a 7): ligue o centro a um vértice da base. R, a e a metade do lado formam um triângulo retângulo de 30°, 60° e 90°, metade de um equilátero de lado R. Por isso a = R/2 (metade do lado desse equilátero) e ℓ/2 é a altura dele, R√3/2; o lado inteiro é R√3. Texto da apostila.</p>
+  </aside>
+</section>
+
+<!-- 11. Tabela e exemplo -->
+<section class="slide" data-nome="Tabela e exemplo">
+  <div class="conteudo">
+    <p class="olho">Para consultar</p>
+    <h2 class="titulo">Lado e apótema em função de R</h2>
+    <table class="tabela" style="position:absolute;left:0;top:150px;font-size:36px">
+      <tr><th>inscrito</th><th>lado</th><th>apótema</th></tr>
+      <tr><td>quadrado</td><td>\(R\sqrt{2}\)</td><td>\(\dfrac{R\sqrt{2}}{2}\)</td></tr>
+      <tr><td>hexágono</td><td>\(R\)</td><td>\(\dfrac{R\sqrt{3}}{2}\)</td></tr>
+      <tr><td>triângulo</td><td>\(R\sqrt{3}\)</td><td>\(\dfrac{R}{2}\)</td></tr>
+    </table>
+    <div style="position:absolute;left:960px;right:0;top:150px">
+      <p class="texto" style="margin:0 0 18px"><b>Raio de 6 cm:</b> lados do quadrado e do hexágono?</p>
+      <div class="contas" style="font-size:44px">
+        <div class="eq" data-passo="1"><span>\(\ell_4\)</span><span>\(=\)</span><span>\(R\sqrt{2} = 6\sqrt{2}\)</span></div>
+        <div class="eq final" data-passo="2"><span>\(\ell_4\)</span><span>\(\approx\)</span><span>\(8{,}4\ \text{cm}\)</span></div>
+        <div class="eq final" data-passo="3"><span>\(\ell_6\)</span><span>\(=\)</span><span>\(R = 6\ \text{cm}\)</span></div>
+      </div>
+    </div>
+  </div>
+  <aside class="notas">
+    <p>Tabela da apostila. Exemplo "Raio de 6 cm": 6√2 ≈ 6 · 1,41 = 8,46 ≈ 8,4 cm (a apostila arredonda para 8,4); o hexágono tem lado igual ao raio, 6 cm.</p>
+  </aside>
+</section>
+
+<!-- 12. Circunscritos -->
+<section class="slide" data-nome="Polígonos circunscritos">
+  <div class="conteudo">
+    <p class="olho">Polígono circunscrito</p>
+    <h2 class="titulo">O prato na caixa</h2>
+    <svg viewBox="0 0 360 360" style="position:absolute;left:0;top:140px;width:430px;height:430px" aria-hidden="true">
+      <rect x="80" y="80" width="200" height="200" fill="#E8F0FF" stroke="var(--d)" stroke-width="6"/>
+      <g data-passo="1"><circle class="cresce" cx="180" cy="180" r="100" fill="#fff" stroke="#6551D1" stroke-width="6"/></g>
+      <g data-passo="2" fill="#FFD10C" stroke="#292B2C" stroke-width="2"><circle cx="180" cy="80" r="8"/><circle cx="280" cy="180" r="8"/><circle cx="180" cy="280" r="8"/><circle cx="80" cy="180" r="8"/></g>
+      <g data-passo="3"><line x1="180" y1="180" x2="280" y2="180" stroke="#B5731A" stroke-width="5"/><text x="230" y="170" text-anchor="middle" class="rot" font-size="28" fill="#B5731A">r = a</text></g>
+      <circle cx="180" cy="180" r="6" fill="#292B2C"/>
+    </svg>
+    <div style="position:absolute;left:560px;right:0;top:150px;display:flex;flex-direction:column;gap:18px">
+      <div class="caixa caixa-fundamental" data-passo="2" style="padding:18px 30px"><span class="rotulo">Circunscrito</span><div class="texto pequeno">Todos os <b>lados tangentes</b> à circunferência: cada lado a toca num ponto só. A circunferência fica <b>inscrita</b> no polígono.</div></div>
+      <div class="caixa" data-passo="3" style="padding:18px 30px"><div class="texto pequeno">O ponto de contato é o <b>meio do lado</b>: o raio \(r\) da circunferência inscrita é o <b>apótema</b>.</div></div>
+      <div data-passo="4" style="display:grid;grid-template-columns:1fr 1fr;gap:18px">
+        <div class="caixa" style="padding:14px 24px"><span class="rotulo">Quadrado</span><div style="font-size:40px">\(a = \dfrac{\ell}{2} \Rightarrow \ell = 2r\)</div></div>
+        <div class="caixa" style="padding:14px 24px"><span class="rotulo">Triângulo</span><div style="font-size:40px">\(\dfrac{R}{2} = r \Rightarrow R = 2r\)</div></div>
+      </div>
+      <div class="caixa" data-passo="5" style="padding:14px 24px;margin-left:auto;width:50%"><div style="font-size:40px">\(\ell = R\sqrt{3} = 2r\sqrt{3}\)</div></div>
+    </div>
+  </div>
+  <aside class="notas">
+    <p>Situação da apostila: um prato redondo guardado numa caixa quadrada, encostando nos quatro lados. Clique 1: o prato cresce até tocar. Clique 2: os pontos de tangência e a definição. Clique 3: r é o apótema.</p>
+    <p>Cliques 4 e 5: a tabela dos inscritos resolve tudo trocando o apótema por r. Quadrado: o diâmetro do prato é o lado da caixa (2r). Triângulo: R = 2r e o lado, R√3, fica 2r√3.</p>
+  </aside>
+</section>
+
+<!-- 13. Hexágono circunscrito -->
+<section class="slide" data-nome="Hexágono circunscrito">
+  <div class="conteudo">
+    <p class="olho">Polígono circunscrito</p>
+    <h2 class="titulo">Hexágono em volta da circunferência</h2>
+    <svg viewBox="0 0 360 360" style="position:absolute;left:0;top:140px;width:430px;height:430px" aria-hidden="true">
+      <polygon points="295.5,180 237.7,80 122.3,80 64.5,180 122.3,280 237.7,280" fill="#E8F0FF" stroke="var(--d)" stroke-width="6" stroke-linejoin="round"/>
+      <circle cx="180" cy="180" r="100" fill="#fff" stroke="#6551D1" stroke-width="5"/>
+      <line x1="180" y1="180" x2="180" y2="280" stroke="#B5731A" stroke-width="5"/><text x="190" y="240" class="rot" font-size="28" fill="#B5731A">r</text>
+      <text x="180" y="312" text-anchor="middle" class="rot" font-size="28">ℓ</text>
+      <circle cx="180" cy="180" r="6" fill="#292B2C"/>
+    </svg>
+    <div style="position:absolute;left:560px;width:560px;top:160px">
+      <div class="contas" style="font-size:48px">
+        <div class="eq" data-passo="1"><span>\(\dfrac{\ell\sqrt{3}}{2}\)</span><span>\(=\)</span><span>\(r\)</span></div>
+        <div class="eq" data-passo="2"><span>\(\ell\)</span><span>\(=\)</span><span>\(\dfrac{2r}{\sqrt{3}}\)</span></div>
+        <div class="eq final" data-passo="3"><span>\(\ell\)</span><span>\(=\)</span><span>\(\dfrac{2r\sqrt{3}}{3}\)</span></div>
+      </div>
+    </div>
+    <table class="tabela estreita" data-passo="4" style="position:absolute;right:0;top:150px;font-size:34px">
+      <tr><th>circunscrito</th><th>lado</th></tr>
+      <tr><td>quadrado</td><td>\(2r\)</td></tr>
+      <tr><td>hexágono</td><td>\(\dfrac{2r\sqrt{3}}{3}\)</td></tr>
+      <tr><td>triângulo</td><td>\(2r\sqrt{3}\)</td></tr>
+    </table>
+  </div>
+  <aside class="notas">
+    <p>Apótema do hexágono = ℓ√3/2 (o lado é igual a R). Igualando a r e racionalizando: ℓ = 2r/√3 = 2r√3/3. Clique 4: a tabela dos circunscritos da apostila.</p>
+  </aside>
+</section>
+
+<!-- 14. Exemplo circunscrito -->
+<section class="slide" data-nome="Exemplo: triângulo circunscrito">
+  <div class="conteudo">
+    <p class="olho">Exemplo</p>
+    <h2 class="titulo">Triângulo em volta de um círculo</h2>
+    <svg viewBox="0 0 360 360" style="position:absolute;left:0;top:140px;width:420px;height:420px" aria-hidden="true">
+      <circle cx="180" cy="200" r="150" fill="none" stroke="#BFB6E6" stroke-width="3" stroke-dasharray="8 8"/>
+      <polygon points="180,50 50.1,275 309.9,275" fill="#E8F0FF" stroke="var(--d)" stroke-width="6" stroke-linejoin="round"/>
+      <circle cx="180" cy="200" r="75" fill="#fff" stroke="#6551D1" stroke-width="5"/>
+      <line x1="180" y1="200" x2="180" y2="275" stroke="#B5731A" stroke-width="5"/><text x="188" y="250" class="rot" font-size="24" fill="#B5731A">r = 2</text>
+      <line data-passo="4" x1="180" y1="200" x2="180" y2="50" stroke="#6551D1" stroke-width="4"/><text data-passo="4" x="188" y="130" class="rot" font-size="24" fill="#6551D1">R</text>
+      <circle cx="180" cy="200" r="6" fill="#292B2C"/>
+    </svg>
+    <p class="texto" style="position:absolute;left:560px;right:0;top:150px;margin:0">Equilátero circunscrito a uma circunferência de <b>raio 2 cm</b>. Lado? Raio da que passa pelos vértices?</p>
+    <div class="contas" style="position:absolute;left:560px;width:600px;top:330px;font-size:44px">
+      <div class="eq" data-passo="1"><span>\(\ell\)</span><span>\(=\)</span><span>\(2r\sqrt{3}\)</span></div>
+      <div class="eq" data-passo="2"><span>\(\ell\)</span><span>\(=\)</span><span>\(4\sqrt{3}\ \text{cm}\)</span></div>
+      <div class="eq final" data-passo="3"><span>\(\ell\)</span><span>\(\approx\)</span><span>\(6{,}9\ \text{cm}\)</span></div>
+    </div>
+    <div class="contas" style="position:absolute;left:1240px;right:0;top:330px;font-size:44px">
+      <div class="eq" data-passo="4"><span>\(R\)</span><span>\(=\)</span><span>\(2r\)</span></div>
+      <div class="eq final" data-passo="5"><span>\(R\)</span><span>\(=\)</span><span>\(4\ \text{cm}\)</span></div>
+    </div>
+    <div class="caixa caixa-fundamental" data-passo="6" style="position:absolute;left:580px;right:0;top:640px;padding:16px 30px">
+      <div class="texto" style="font-size:29px">No triângulo equilátero, a inscrita tem <b>metade do raio</b> da circunscrita.</div>
+    </div>
+  </div>
+  <aside class="notas">
+    <p>Exemplo da apostila. ℓ = 2 · 2√3 = 4√3 ≈ 4 · 1,73 = 6,92, cerca de 6,9 cm. R = 2r = 4 cm.</p>
+  </aside>
+</section>
+
+<!-- 15. Atenção -->
+<section class="slide" data-nome="Atenção: de quem é a palavra">
+  <div class="conteudo">
+    <p class="olho">Atenção</p>
+    <h2 class="titulo">A palavra fala do polígono</h2>
+    <div style="position:absolute;left:0;right:0;top:150px;display:grid;grid-template-columns:1fr 1fr;gap:40px">
+      <div class="caixa" style="display:grid;grid-template-columns:240px 1fr;gap:24px;align-items:center">
+        <svg viewBox="0 0 360 360" width="240" height="240" aria-hidden="true"><circle cx="180" cy="180" r="150" fill="#fff" stroke="#6551D1" stroke-width="6"/><polygon points="286.1,73.9 73.9,73.9 73.9,286.1 286.1,286.1" fill="#E8F0FF" stroke="var(--d)" stroke-width="7"/></svg>
+        <div><span class="rotulo">Quadrado inscrito</span><div class="texto pequeno">dentro, vértices na circunferência</div><div style="font-size:52px;margin-top:8px">\(\ell = r\sqrt{2}\)</div></div>
+      </div>
+      <div class="caixa" data-passo="1" style="display:grid;grid-template-columns:240px 1fr;gap:24px;align-items:center">
+        <svg viewBox="0 0 360 360" width="240" height="240" aria-hidden="true"><rect x="30" y="30" width="300" height="300" fill="#E8F0FF" stroke="var(--d)" stroke-width="7"/><circle cx="180" cy="180" r="150" fill="#fff" stroke="#6551D1" stroke-width="6"/></svg>
+        <div><span class="rotulo">Quadrado circunscrito</span><div class="texto pequeno">por fora, lados tocando</div><div style="font-size:52px;margin-top:8px">\(\ell = 2r\)</div></div>
+      </div>
+    </div>
+    <div class="caixa caixa-atencao" data-passo="2" style="position:absolute;left:580px;right:0;top:600px;padding:18px 30px">
+      <div class="texto" style="font-size:30px">Leia <b>de quem é cada palavra</b> antes de escolher a fórmula.</div>
+    </div>
+  </div>
+  <aside class="notas">
+    <p>Atenção da apostila. Aqui r é o raio da circunferência nos dois desenhos. Mesmo raio: o quadrado de fora é maior (2r contra r√2 ≈ 1,41r).</p>
+  </aside>
+</section>
+
+<!-- 16. Questão 1 -->
+<section class="slide questao" data-nome="Questão 1">
+  <div class="conteudo">
+    <div class="area-resolucao"></div>
+    <span class="pilula pilula-pausa" data-em="1:some">Pause o vídeo e tente</span>
+    <div class="painel-questao">
+      <p class="olho">Questão 1 · Modelo IF</p>
+      <p class="enunciado">Um artesão montou uma moldura com a forma de um polígono regular em que cada ângulo interno mede 150°. A soma de todos os ângulos internos dessa moldura é:</p>
+      <ol class="alternativas curtas">
+        <li data-em="2:apaga"><b>A</b><span>12°</span></li>
+        <li data-em="2:certo"><b>B</b><span>1800°</span></li>
+        <li data-em="2:apaga"><b>C</b><span>2160°</span></li>
+        <li data-em="2:apaga"><b>D</b><span>360°</span></li>
+        <li data-em="2:apaga"><b>E</b><span>1500°</span></li>
+      </ol>
+    </div>
+  </div>
+  <aside class="resolucao">
+    <p class="dados"><b>Dados:</b> regular, \(a_i = 150°\).</p>
+    <ol class="passos">
+      <li>\(150 = \dfrac{(n - 2) \cdot 180}{n}\)</li>
+      <li>\(150n = 180n - 360\)</li>
+      <li>\(30n = 360 \Rightarrow n = 12\)</li>
+      <li>\(S = (12 - 2) \cdot 180 = 1800°\)</li>
+    </ol>
+    <p class="resposta"><b>Resposta:</b> 1800°. <b>Gabarito B.</b></p>
+    <p class="atencao"><b>Destaque no quadro:</b> Atalho: externo = 180° − 150° = 30°, e 360° ÷ 30° = 12 lados. Confere: 12 · 150° = 1800°.</p>
+    <ul class="erros">
+      <li><b>A</b> Para no número de lados (12), que nem é ângulo.</li>
+      <li><b>C</b> Esquece o −2: 12 · 180°.</li>
+      <li><b>D</b> 360° é a soma dos externos.</li>
+      <li><b>E</b> Multiplica 150° por n − 2 = 10.</li>
+    </ul>
+  </aside>
+  <aside class="notas">
+    <p>Clique 1 tira o aviso de pausa: resolva na área (D liga a caneta; E esconde o enunciado). Clique 2: gabarito B.</p>
+    <p>Modelo IF, lote if-matematica-poligonos, m005, MAT-3397. Conferido: 150n = 180n − 360 ⇒ n = 12; (12 − 2) · 180 = 1800.</p>
+  </aside>
+</section>
+
+<!-- 17. Questão 2 -->
+<section class="slide questao" data-nome="Questão 2">
+  <div class="conteudo">
+    <div class="area-resolucao"></div>
+    <span class="pilula pilula-pausa" data-em="1:some">Pause o vídeo e tente</span>
+    <div class="painel-questao">
+      <p class="olho">Questão 2 · Modelo IF</p>
+      <p class="enunciado">Um marceneiro quer cortar, de um disco de madeira de raio 20 cm, a maior peça quadrada possível. Para isso, os quatro vértices do quadrado devem ficar na borda do disco. Usando \(\sqrt{2} \approx 1{,}41\), o lado dessa peça quadrada mede, aproximadamente:</p>
+      <ol class="alternativas curtas">
+        <li data-em="2:apaga"><b>A</b><span>20 cm</span></li>
+        <li data-em="2:apaga"><b>B</b><span>40 cm</span></li>
+        <li data-em="2:apaga"><b>C</b><span>14,1 cm</span></li>
+        <li data-em="2:apaga"><b>D</b><span>56,4 cm</span></li>
+        <li data-em="2:certo"><b>E</b><span>28,2 cm</span></li>
+      </ol>
+    </div>
+  </div>
+  <aside class="resolucao">
+    <p class="dados"><b>Dados:</b> \(R = 20\ \text{cm}\); \(\sqrt{2} \approx 1{,}41\).</p>
+    <ol class="passos">
+      <li>Vértices na borda: quadrado inscrito.</li>
+      <li>\(\ell = R\sqrt{2} = 20\sqrt{2}\)</li>
+      <li>\(\ell \approx 20 \cdot 1{,}41 = 28{,}2\ \text{cm}\)</li>
+    </ol>
+    <p class="resposta"><b>Resposta:</b> cerca de 28,2 cm. <b>Gabarito E.</b></p>
+    <p class="atencao"><b>Destaque no quadro:</b> O diâmetro (40 cm) é a diagonal do quadrado, não o lado.</p>
+    <ul class="erros">
+      <li><b>A</b> Lado = raio vale para o hexágono.</li>
+      <li><b>B</b> Lado = diâmetro: esse é a diagonal.</li>
+      <li><b>C</b> É o apótema, metade do lado.</li>
+      <li><b>D</b> Usa o diâmetro no lugar do raio.</li>
+    </ul>
+  </aside>
+  <aside class="notas">
+    <p>Clique 1 tira o aviso de pausa. Clique 2: gabarito E.</p>
+    <p>Modelo IF, lote if-matematica-poligonos, m006, MAT-3398. Conferido: 20 · 1,41 = 28,2.</p>
+  </aside>
+</section>
+
+<!-- 18. Questão 3 -->
+<section class="slide questao" data-nome="Questão 3">
+  <div class="conteudo">
+    <div class="area-resolucao"></div>
+    <span class="pilula pilula-pausa" data-em="1:some">Pause o vídeo e tente</span>
+    <div class="painel-questao">
+      <p class="olho">Questão 3 · Modelo IF</p>
+      <p class="enunciado">Um ladrilho tem a forma de um hexágono regular com perímetro de 36 cm. A distância do centro do ladrilho até o meio de um de seus lados, isto é, o apótema do hexágono, mede:</p>
+      <ol class="alternativas curtas">
+        <li data-em="2:certo"><b>A</b><span>\(3\sqrt{3}\) cm</span></li>
+        <li data-em="2:apaga"><b>B</b><span>6 cm</span></li>
+        <li data-em="2:apaga"><b>C</b><span>3 cm</span></li>
+        <li data-em="2:apaga"><b>D</b><span>\(6\sqrt{3}\) cm</span></li>
+        <li data-em="2:apaga"><b>E</b><span>\(3\sqrt{2}\) cm</span></li>
+      </ol>
+    </div>
+  </div>
+  <aside class="resolucao">
+    <p class="dados"><b>Dados:</b> hexágono regular, perímetro 36 cm.</p>
+    <ol class="passos">
+      <li>\(6\ell = 36 \Rightarrow \ell = 6\ \text{cm}\)</li>
+      <li>No hexágono, \(R = \ell = 6\ \text{cm}\)</li>
+      <li>\(a = \dfrac{R\sqrt{3}}{2} = \dfrac{6\sqrt{3}}{2}\)</li>
+      <li>\(a = 3\sqrt{3}\ \text{cm}\)</li>
+    </ol>
+    <p class="resposta"><b>Resposta:</b> \(3\sqrt{3}\) cm. <b>Gabarito A.</b></p>
+    <p class="atencao"><b>Destaque no quadro:</b> Apótema do hexágono = altura de um dos 6 triângulos equiláteros.</p>
+    <ul class="erros">
+      <li><b>B</b> É o lado, igual ao raio.</li>
+      <li><b>C</b> Metade do lado: só no quadrado.</li>
+      <li><b>D</b> É o dobro do apótema.</li>
+      <li><b>E</b> Usa o apótema do quadrado.</li>
+    </ul>
+  </aside>
+  <aside class="notas">
+    <p>Clique 1 tira o aviso de pausa. Clique 2: gabarito A.</p>
+    <p>Modelo IF, lote if-matematica-poligonos, m007, MAT-3399. Conferido: 36 ÷ 6 = 6; 6√3/2 = 3√3.</p>
+  </aside>
+</section>
+
+<!-- 19. Resumo -->
+<section class="slide" data-nome="Resumo">
+  <div class="conteudo">
+    <p class="olho">Resumo</p>
+    <h2 class="titulo">O essencial</h2>
+    <div class="resumo" style="position:absolute;left:0;right:0;top:150px;grid-template-columns:repeat(3,1fr)">
+      <div><b>Internos:</b> \(S = (n - 2) \cdot 180°\). <b>Externos:</b> somam 360°.</div>
+      <div><b>Regular:</b> lados iguais e ângulos iguais; \(a_i = \dfrac{S}{n}\), \(a_e = \dfrac{360°}{n}\).</div>
+      <div><b>Raio R:</b> centro ao vértice. <b>Apótema:</b> centro ao meio do lado.</div>
+      <div><b>Inscritos:</b> quadrado \(R\sqrt{2}\); hexágono \(R\); triângulo \(R\sqrt{3}\) (apótema \(\dfrac{R}{2}\)).</div>
+      <div><b>Circunscrito:</b> lados tocam a circunferência; o raio \(r\) é o apótema.</div>
+      <div><b>Lados em função de r:</b> quadrado \(2r\); hexágono \(\dfrac{2r\sqrt{3}}{3}\); triângulo \(2r\sqrt{3}\).</div>
+    </div>
+  </div>
+  <aside class="notas"><p>Resumo da apostila. Peça para tirarem um print desta tela.</p></aside>
+</section>
+
+<!-- 20. A seguir -->
+<section class="slide capa" data-nome="A seguir">
+  <div class="estrelas"></div>
+  <div class="texto-capa" style="top:200px">
+    <span class="selo">Matemática · IF</span>
+    <p class="aula" style="font-size:28px">A seguir · Circunferência e círculo · Parte 1 de 2</p>
+    <h1 style="font-size:120px">Raio, cordas e posições</h1>
+    <p class="sub">A linha, a região e as retas que a cortam</p>
+  </div>
+  <svg class="emblema" viewBox="0 0 640 640" aria-hidden="true">
+    <circle cx="320" cy="320" r="220" fill="none" stroke="#fff" stroke-width="6" stroke-opacity=".85"/>
+    <line x1="120" y1="230" x2="520" y2="230" stroke="#FFD10C" stroke-width="8" stroke-linecap="round" transform="rotate(0 320 320)"/>
+    <line x1="320" y1="320" x2="320" y2="230" stroke="#fff" stroke-width="4" stroke-dasharray="10 8"/>
+    <line x1="60" y1="540" x2="580" y2="540" stroke="#fff" stroke-opacity=".7" stroke-width="5" stroke-linecap="round"/>
+    <circle cx="320" cy="320" r="12" fill="#FFD10C"/>
+  </svg>
+  <img class="logo-capa" src="{{LOGO_BRANCO}}" alt="Quarks">
+  <aside class="notas"><p>Próximo subcapítulo: Circunferência e círculo. Primeiro os elementos (raio, corda, diâmetro), as propriedades das cordas e as posições de retas e circunferências.</p></aside>
+</section>
