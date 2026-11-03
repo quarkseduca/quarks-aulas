@@ -1,7 +1,7 @@
 <!--aula
 {"disciplina": "matematica", "curso": "IF", "assunto": "Ângulos e paralelismo", "parte": "Parte 1 de 2", "titulo": "Postulados e o axioma de Euclides", "scripts": ["animacoes-geometria-a.js"]}
 -->
-<!-- Fonte: apostila IF, Matemática, cap. 5 (5.1 Ângulos e paralelismo > Ponto, reta, plano e postulados; início de Ângulos: medida e classificação). Questões: lote Modelo if-matematica-angulos-e-paralelismo (m001 MAT-3603, m009 MAT-3611). A questão oficial do subcapítulo (2014-1 q15) fica reservada para o bloco do fim do capítulo. -->
+<!-- Fonte: apostila IF, Matemática, cap. 5 (5.1 Ângulos e paralelismo > Ponto, reta, plano e postulados; início de Ângulos: medida e classificação). Questões: lote Modelo if-matematica-angulos-e-paralelismo (m001 MAT-3603, m003 MAT-3605). A questão oficial do subcapítulo (2014-1 q15) fica reservada para o bloco do fim do capítulo. -->
 <style>
   .cartao { box-sizing: border-box; background: var(--branco); border: 2px solid var(--lilas-2); border-radius: 28px; padding: 18px 26px; }
   .cartao h3 { margin: 0 0 4px; font: 800 38px var(--fonte-titulo); letter-spacing: -.02em; color: var(--roxo-titulo); }
@@ -415,38 +415,47 @@
     <span class="pilula pilula-pausa" data-em="1:some">Pause o vídeo e tente</span>
     <div class="painel-questao">
       <p class="olho">Questão 2 · Modelo IF</p>
-      <p class="enunciado" style="font-size:24px">Kauã desenhou numa folha uma reta \(AC\) e, a partir de um ponto \(O\) dessa reta, uma semirreta \(OB\), de modo que \(A\hat{O}B\) mede \(64^{\circ}\). Depois, dobrou a folha passando por \(O\) até \(OA\) cair sobre \(OB\) e marcou a dobra \(OM\). Fez o mesmo com \(OC\) e \(OB\), marcando a dobra \(ON\). Assim, \(OM\) e \(ON\) são as bissetrizes de \(A\hat{O}B\) e de \(B\hat{O}C\). A medida do ângulo \(M\hat{O}N\) é:</p>
+      <p class="enunciado">Na figura, as retas \(r\) e \(s\) são paralelas e a reta \(t\) corta as duas. A medida \(x\) do ângulo indicado é:</p>
+      <svg viewBox="0 0 400 300" style="width:360px;height:270px;display:block;margin:0 auto" aria-hidden="true">
+        <g stroke="#2C2A9E" stroke-width="5" stroke-linecap="round"><line x1="20" y1="80" x2="350" y2="80"/><line x1="20" y1="220" x2="350" y2="220"/><line x1="258" y1="20" x2="136.7" y2="280"/></g>
+        <path d="M206 80 A24 24 0 0 0 219.9 101.8" fill="none" stroke="#2F6BFF" stroke-width="4"/>
+        <path d="M140.7 220 A24 24 0 0 1 174.8 198.2" fill="none" stroke="#2F6BFF" stroke-width="4"/>
+        <g font-family="Figtree,sans-serif" font-size="22" font-weight="700" fill="#292B2C">
+          <text x="166" y="122">65°</text><text x="128" y="194" font-style="italic">x</text>
+          <text x="362" y="88" font-style="italic">r</text><text x="362" y="228" font-style="italic">s</text><text x="266" y="28" font-style="italic">t</text>
+        </g>
+      </svg>
       <ol class="alternativas curtas">
-        <li data-em="2:apaga"><b>A</b><span>\(32^{\circ}\)</span></li>
-        <li data-em="2:apaga"><b>B</b><span>\(58^{\circ}\)</span></li>
-        <li data-em="2:apaga"><b>C</b><span>\(52^{\circ}\)</span></li>
-        <li data-em="2:certo"><b>D</b><span>\(90^{\circ}\)</span></li>
-        <li data-em="2:apaga"><b>E</b><span>\(180^{\circ}\)</span></li>
+        <li data-em="2:certo"><b>A</b><span>\(115^{\circ}\)</span></li>
+        <li data-em="2:apaga"><b>B</b><span>\(65^{\circ}\)</span></li>
+        <li data-em="2:apaga"><b>C</b><span>\(25^{\circ}\)</span></li>
+        <li data-em="2:apaga"><b>D</b><span>\(130^{\circ}\)</span></li>
+        <li data-em="2:apaga"><b>E</b><span>\(295^{\circ}\)</span></li>
       </ol>
-      <p class="fonte">Questão Modelo IF (lote if-matematica-angulos-e-paralelismo, m009)</p>
+      <p class="fonte">Questão Modelo IF (lote if-matematica-angulos-e-paralelismo, m003)</p>
     </div>
   </div>
   <aside class="resolucao">
-    <p class="dados"><b>Dados:</b> \(A\hat{O}B = 64^{\circ}\); \(A\), \(O\), \(C\) na mesma reta; \(OM\) e \(ON\) bissetrizes.</p>
+    <p class="dados"><b>Dados:</b> \(r \parallel s\); um ângulo de \(65^{\circ}\); o outro é \(x\).</p>
     <ol class="passos">
-      <li><b>A, O, C alinhados: ângulo raso</b> \(A\hat{O}B + B\hat{O}C = 180^{\circ}\)</li>
-      <li><b>Ache BÔC</b> \(B\hat{O}C = 180^{\circ} - 64^{\circ} = 116^{\circ}\)</li>
-      <li><b>Metade de cada um</b> \(64^{\circ} \div 2 = 32^{\circ}\) e \(116^{\circ} \div 2 = 58^{\circ}\)</li>
-      <li><b>Some as metades</b> \(M\hat{O}N = 32^{\circ} + 58^{\circ} = 90^{\circ}\)</li>
+      <li><b>Onde estão</b> entre as paralelas, do mesmo lado de \(t\)</li>
+      <li><b>Colaterais internos</b> somam \(180^{\circ}\)</li>
+      <li>\(x + 65^{\circ} = 180^{\circ}\)</li>
+      <li>\(x = 115^{\circ}\)</li>
     </ol>
-    <p class="resposta"><b>Resposta:</b> \(M\hat{O}N = 90^{\circ}\): as dobras são perpendiculares. <b>Gabarito D.</b></p>
-    <p class="atencao"><b>Destaque no quadro:</b> Metade de 180° é 90°: o resultado não depende do 64°.</p>
+    <p class="resposta"><b>Resposta:</b> \(x = 115^{\circ}\). <b>Gabarito A.</b></p>
+    <p class="atencao"><b>Destaque no quadro:</b> \(x\) é obtuso e \(65^{\circ}\) é agudo: não podem ser iguais; um agudo e um obtuso das paralelas somam \(180^{\circ}\).</p>
     <ul class="erros">
-      <li><b>A</b> Só a metade de 64°.</li>
-      <li><b>B</b> Só a metade de 116°.</li>
-      <li><b>C</b> A diferença 116° − 64°.</li>
-      <li><b>E</b> Soma os ângulos sem dividir.</li>
+      <li><b>B</b> Acha os dois iguais (alternos ou correspondentes).</li>
+      <li><b>C</b> Usa 90°: o complemento.</li>
+      <li><b>D</b> Dobra o 65°.</li>
+      <li><b>E</b> Subtrai de 360°.</li>
     </ul>
   </aside>
   <aside class="notas">
-    <p>Clique 1 tira o aviso de pausa: resolva na área (D liga a caneta; E esconde o enunciado). Clique 2: gabarito D.</p>
-    <p>Modelo IF, lote if-matematica-angulos-e-paralelismo, m009, MAT-3611 (nível 3). Gabarito conferido com o arquivo do lote. Contas: 180 − 64 = 116; 64/2 = 32; 116/2 = 58; 32 + 58 = 90.</p>
-    <p>Fecho bonito: as bissetrizes de dois ângulos lado a lado que formam um raso são sempre perpendiculares. Se der tempo, faça uma dobradura com uma folha.</p>
+    <p>Clique 1 tira o aviso de pausa: resolva na área (D liga a caneta; E esconde o enunciado). Clique 2: gabarito A.</p>
+    <p>Modelo IF, lote if-matematica-angulos-e-paralelismo, m003, MAT-3605 (nível 2). Figura refeita a partir da do lote (mesma posição dos ângulos). Conferido: 180 − 65 = 115; 90 − 65 = 25; 2 · 65 = 130; 360 − 65 = 295.</p>
+    <p>Ela antecipa a Parte 2 (paralelas cortadas por uma transversal): use para apresentar a transversal e o nome "colaterais internos"; o porquê dos 180° vem na próxima parte.</p>
   </aside>
 </section>
 

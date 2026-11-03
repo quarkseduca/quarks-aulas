@@ -1,7 +1,7 @@
 <!--aula
 {"disciplina": "matematica", "curso": "IF", "assunto": "Circunferência e círculo", "parte": "Parte 2 de 2", "titulo": "Ângulos e comprimento", "scripts": ["animacoes-geometria-b.js"]}
 -->
-<!-- Fonte: apostila IF, Matemática, cap. 5 (5.6 Circunferência e círculo: Ângulo central e ângulo inscrito; Ângulos de vértice interno e externo; Comprimento da circunferência e de um arco; resumo). Questões: Modelo IF, lote if-matematica-circunferencia-e-circulo, m008 (MAT-0938); oficiais IF Sudeste MG 2016-1 q17 (MAT-0472) e 2013-1 q22 (MAT-0373), sobras do capítulo. As oficiais 2026-1 q15 e 2025-1 q16 (ângulos) estão reservadas para o bloco do fim do capítulo. -->
+<!-- Fonte: apostila IF, Matemática, cap. 5 (5.6 Circunferência e círculo: Ângulo central e ângulo inscrito; Ângulos de vértice interno e externo; Comprimento da circunferência e de um arco; resumo). Questões: Modelo IF, lote if-matematica-circunferencia-e-circulo, m005 (MAT-0935); oficiais IF Sudeste MG 2016-1 q17 (MAT-0472) e 2013-1 q22 (MAT-0373), sobras do capítulo. As oficiais 2026-1 q15 e 2025-1 q16 (ângulos) estão reservadas para o bloco do fim do capítulo. -->
 <style>
   .caixa { box-sizing: border-box; }
   .rot { font-family: Figtree, "Segoe UI", sans-serif; font-weight: 800; fill: #3F2FA0; }
@@ -327,45 +327,48 @@
     <span class="pilula pilula-pausa" data-em="1:some">Pause o vídeo e tente</span>
     <div class="painel-questao" style="gap:12px">
       <p class="olho">Questão 1 · Modelo IF</p>
-      <p class="enunciado" style="font-size:23px">No mostrador circular de um relógio, as marcas dos números 1 a 12 dividem a circunferência em 12 arcos iguais. Foram traçados dois segmentos com uma ponta na marca do 12: um até a marca do 3 e outro até a marca do 7, como mostra a figura. A medida do ângulo \(x\), formado por esses dois segmentos, é</p>
-      <svg viewBox="0 0 300 290" style="width:255px;height:246px;display:block;margin:0 auto" aria-hidden="true">
+      <p class="enunciado">Na figura, O é o centro da circunferência, o segmento AB é um diâmetro e o ponto C pertence à circunferência.</p>
+      <svg viewBox="-10 0 320 290" style="width:342px;height:310px;display:block;margin:0 auto" aria-hidden="true">
         <circle cx="150" cy="150" r="120" fill="#fff" stroke="#2C2A9E" stroke-width="5"/>
-        <g stroke="#2C2A9E" stroke-width="3"><line x1="210" y1="46.1" x2="204" y2="56.5"/><line x1="253.9" y1="90" x2="243.5" y2="96"/><line x1="270" y1="150" x2="258" y2="150"/><line x1="253.9" y1="210" x2="243.5" y2="204"/><line x1="210" y1="253.9" x2="204" y2="243.5"/><line x1="150" y1="270" x2="150" y2="258"/><line x1="90" y1="253.9" x2="96" y2="243.5"/><line x1="46.1" y1="210" x2="56.5" y2="204"/><line x1="30" y1="150" x2="42" y2="150"/><line x1="46.1" y1="90" x2="56.5" y2="96"/><line x1="90" y1="46.1" x2="96" y2="56.5"/><line x1="150" y1="30" x2="150" y2="42"/></g>
-        <g font-family="Figtree,sans-serif" font-size="20" font-weight="700" fill="#292B2C" text-anchor="middle"><text x="197.5" y="75.7">1</text><text x="232.3" y="110.5">2</text><text x="236" y="158">3</text><text x="232.3" y="205.5">4</text><text x="197.5" y="240.3">5</text><text x="150" y="253">6</text><text x="116" y="236">7</text><text x="67.7" y="205.5">8</text><text x="55" y="158">9</text><text x="67.7" y="110.5">10</text><text x="102.5" y="75.7">11</text><text x="126" y="66">12</text></g>
-        <path d="M150 30 L270 150 M150 30 L90 253.9" fill="none" stroke="#2F6BFF" stroke-width="4"/>
-        <path d="M144.8 49.3 A20 20 0 0 0 164.1 44.1" fill="none" stroke="#2F6BFF" stroke-width="3"/>
-        <text x="160" y="76" font-family="Figtree,sans-serif" font-size="20" font-weight="700" fill="#292B2C">x</text>
-        <g fill="#2C2A9E"><circle cx="150" cy="30" r="6"/><circle cx="270" cy="150" r="6"/><circle cx="90" cy="253.9" r="6"/></g>
+        <path d="M30 150 L270 150 M30 150 L191 37.2 L270 150" fill="none" stroke="#2F6BFF" stroke-width="4" stroke-linejoin="round"/>
+        <path d="M56 150 A26 26 0 0 0 51.3 135.1" fill="none" stroke="#2F6BFF" stroke-width="3"/>
+        <path d="M246 150 A24 24 0 0 1 256.2 130.3" fill="none" stroke="#2F6BFF" stroke-width="3"/>
+        <g font-family="Figtree,sans-serif" font-size="20" font-weight="700" fill="#292B2C">
+          <text x="64" y="143">35°</text><text x="224" y="143">x</text>
+          <text x="-6" y="158">A</text><text x="280" y="158">B</text><text x="143" y="178">O</text><text x="192" y="26">C</text>
+        </g>
+        <g fill="#2C2A9E"><circle cx="30" cy="150" r="6"/><circle cx="270" cy="150" r="6"/><circle cx="191" cy="37.2" r="6"/><circle cx="150" cy="150" r="5"/></g>
       </svg>
+      <p class="enunciado">Se o ângulo \(C\hat{A}B\) mede 35°, a medida do ângulo \(x = A\hat{B}C\) é</p>
       <ol class="alternativas curtas">
-        <li data-em="2:certo"><b>A</b><span>60°</span></li>
-        <li data-em="2:apaga"><b>B</b><span>75°</span></li>
-        <li data-em="2:apaga"><b>C</b><span>90°</span></li>
-        <li data-em="2:apaga"><b>D</b><span>120°</span></li>
-        <li data-em="2:apaga"><b>E</b><span>240°</span></li>
+        <li data-em="2:apaga"><b>A</b><span>35°</span></li>
+        <li data-em="2:certo"><b>B</b><span>55°</span></li>
+        <li data-em="2:apaga"><b>C</b><span>70°</span></li>
+        <li data-em="2:apaga"><b>D</b><span>90°</span></li>
+        <li data-em="2:apaga"><b>E</b><span>145°</span></li>
       </ol>
     </div>
   </div>
   <aside class="resolucao">
-    <p class="dados"><b>Dados:</b> 12 arcos iguais; vértice no 12, lados até 3 e 7.</p>
+    <p class="dados"><b>Dados:</b> AB diâmetro; C na circunferência; \(\hat{A} = 35°\).</p>
     <ol class="passos">
-      <li>Cada arco: \(360° \div 12 = 30°\)</li>
-      <li>Do 3 ao 7: 4 arcos = \(120°\)</li>
-      <li>Vértice na circunferência: inscrito</li>
-      <li>\(x = 120° \div 2 = 60°\)</li>
+      <li>\(A\hat{C}B\) enxerga a semicircunferência</li>
+      <li>\(A\hat{C}B = 180° \div 2 = 90°\)</li>
+      <li>\(35° + x + 90° = 180°\)</li>
+      <li>\(x = 180° - 125° = 55°\)</li>
     </ol>
-    <p class="resposta"><b>Resposta:</b> 60°. <b>Gabarito A.</b></p>
-    <p class="atencao"><b>Destaque no quadro:</b> Conte os espaços entre os números (4), não os números (5). Inscrito = metade do arco.</p>
+    <p class="resposta"><b>Resposta:</b> 55°. <b>Gabarito B.</b></p>
+    <p class="atencao"><b>Destaque no quadro:</b> Lado no diâmetro e vértice na circunferência: triângulo retângulo em C.</p>
     <ul class="erros">
-      <li><b>B</b> Contou 5 arcos.</li>
-      <li><b>C</b> Arco do 12 ao 3, fora do ângulo.</li>
-      <li><b>D</b> Arco (ou central), sem dividir por 2.</li>
-      <li><b>E</b> Arco maior, que passa pelo vértice.</li>
+      <li><b>A</b> Supõe o triângulo isósceles e copia 35°.</li>
+      <li><b>C</b> Dobra 35°, como se fosse ângulo central.</li>
+      <li><b>D</b> É o ângulo em C, e não em B.</li>
+      <li><b>E</b> Faz 180° − 35° e esquece o ângulo reto.</li>
     </ul>
   </aside>
   <aside class="notas">
-    <p>Clique 1 tira o aviso de pausa. Clique 2: gabarito A.</p>
-    <p>Modelo IF, lote if-matematica-circunferencia-e-circulo, m008, MAT-0938. Figura do banco redesenhada. Conferido: 4 · 30 = 120; 120 ÷ 2 = 60.</p>
+    <p>Clique 1 tira o aviso de pausa. Clique 2: gabarito B.</p>
+    <p>Modelo IF, lote if-matematica-circunferencia-e-circulo, m005, MAT-0935. Figura do banco redesenhada em escala (C a 70° de B no centro, então o ângulo em A mede 35°). Retoma o slide "Na semicircunferência, o ângulo é reto". Conferido: 180 : 2 = 90; 35 + 90 = 125; 180 − 125 = 55; 2 · 35 = 70; 180 − 35 = 145.</p>
   </aside>
 </section>
 

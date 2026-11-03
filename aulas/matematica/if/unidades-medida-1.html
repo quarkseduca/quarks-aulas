@@ -2,7 +2,7 @@
 {"disciplina": "matematica", "curso": "IF", "assunto": "Unidades de medida", "parte": "Parte 1 de 2", "titulo": "O sistema métrico decimal", "scripts": ["animacoes-potencias.js"]}
 -->
 <!-- Fonte: apostila IF, Matemática, cap. 1 (1.5 Unidades de medida: "Sistema métrico decimal e comprimento", "Massa" e "Medidas de tempo"; a capacidade em litros e mililitros vem de "Volume e capacidade").
-     Questões (nenhuma reservada para o bloco do fim do capítulo): Modelo IF, lote if-matematica-sistemas-de-medidas, m005 (MAT-1060), m006 (MAT-1061) e m007 (MAT-1062). -->
+     Questões (nenhuma reservada para o bloco do fim do capítulo): Modelo IF, lote if-matematica-sistemas-de-medidas, m001 (MAT-1056), m002 (MAT-1057) e m007 (MAT-1062). -->
 <style>
   .caixa { box-sizing: border-box; }
   .um-lado { font-size: 34px; line-height: 1.38; margin: 0; }
@@ -33,9 +33,6 @@
   @keyframes um-hora { from { transform: rotate(0deg); } to { transform: rotate(75deg); } }
   .um-relogio .fim { opacity: 0; transition: opacity .6s 8s; }
   .um-relogio.mostra .fim { opacity: 1; }
-  .um-tabela { border-collapse: collapse; font-size: 22px; width: 100%; background: var(--branco); border-radius: 14px; overflow: hidden; }
-  .um-tabela th { background: var(--d-clara); color: var(--d-forte); font-weight: 800; padding: 6px 10px; text-align: left; }
-  .um-tabela td { padding: 5px 10px; border-top: 2px solid var(--lilas); }
 </style>
 
 <!-- 1. Capa -->
@@ -331,92 +328,83 @@
   </aside>
 </section>
 
-<!-- 13. Questão 1 (Modelo m005) -->
+<!-- 13. Questão 1 (Modelo m001) -->
 <section class="slide questao" data-nome="Questão 1 · Modelo IF">
   <div class="conteudo">
     <div class="area-resolucao"></div>
     <span class="pilula pilula-pausa" data-em="1:some">Pause o vídeo e tente</span>
     <div class="painel-questao">
       <p class="olho">Questão 1 · Modelo IF</p>
-      <p class="enunciado">Para enfeitar a sala de aula na festa junina, Joana tem uma fita de 2,4 m. Ela vai cortar a fita em pedaços de 15 cm cada um, sem sobrar nada. Quantos pedaços ela vai obter?</p>
+      <p class="enunciado">Na ficha de matrícula de Bia, a altura dela está anotada como 1,62 m. Qual é essa altura em centímetros?</p>
       <ol class="alternativas">
-        <li data-em="2:apaga"><b>A</b><span>0,16</span></li>
-        <li data-em="2:apaga"><b>B</b><span>1,6</span></li>
-        <li data-em="2:certo"><b>C</b><span>16</span></li>
-        <li data-em="2:apaga"><b>D</b><span>36</span></li>
-        <li data-em="2:apaga"><b>E</b><span>160</span></li>
+        <li data-em="2:apaga"><b>A</b><span>0,0162 cm</span></li>
+        <li data-em="2:apaga"><b>B</b><span>16,2 cm</span></li>
+        <li data-em="2:certo"><b>C</b><span>162 cm</span></li>
+        <li data-em="2:apaga"><b>D</b><span>1 620 cm</span></li>
+        <li data-em="2:apaga"><b>E</b><span>16 200 cm</span></li>
       </ol>
-      <p class="fonte">Questão Modelo IF (lote if-matematica-sistemas-de-medidas, m005)</p>
+      <p class="fonte">Questão Modelo IF (lote if-matematica-sistemas-de-medidas, m001)</p>
     </div>
   </div>
   <aside class="resolucao">
-    <p class="dados"><b>Dados:</b> fita de 2,4 m; pedaços de 15 cm.</p>
+    <p class="dados"><b>Dados:</b> altura de 1,62 m; pedida em cm.</p>
     <ol class="passos">
-      <li><b>Mesma unidade: m para cm</b> \(L = 2{,}4 \cdot 100 = 240\ \text{cm}\)</li>
-      <li><b>Divida pelo pedaço</b> \(n = \dfrac{240}{15}\)</li>
-      <li><b>Conta</b> \(n = 16\)</li>
+      <li><b>m → dm → cm: 2 degraus</b> \(1\ \text{m} = 100\ \text{cm}\)</li>
+      <li><b>Multiplique por 100</b> \(h = 1{,}62 \cdot 100\)</li>
+      <li><b>Conta</b> \(h = 162\ \text{cm}\)</li>
     </ol>
-    <p class="resposta"><b>Resposta:</b> 16 pedaços. <b>Gabarito C.</b></p>
-    <p class="atencao"><b>Destaque no quadro:</b> Antes de dividir, tudo na mesma unidade.</p>
+    <p class="resposta"><b>Resposta:</b> 162 cm. <b>Gabarito C.</b></p>
+    <p class="atencao"><b>Destaque no quadro:</b> Unidade menor, número maior.</p>
     <ul class="erros">
-      <li><b>A</b> Divide 2,4 por 15 sem converter.</li>
-      <li><b>B</b> Usa 1 m = 10 cm.</li>
-      <li><b>D</b> Multiplica 2,4 · 15.</li>
-      <li><b>E</b> Usa 1 m = 1 000 cm.</li>
+      <li><b>A</b> Divide por 100: anda para o lado errado.</li>
+      <li><b>B</b> Multiplica por 10 (um degrau só).</li>
+      <li><b>D</b> Multiplica por 1 000 (fator de m para mm).</li>
+      <li><b>E</b> Multiplica por 10 000 (fator de área).</li>
     </ul>
   </aside>
   <aside class="notas">
     <p>Clique 1 tira o aviso de pausa: resolva na área (D liga a caneta; E esconde o enunciado). Clique 2: gabarito C.</p>
-    <p>Modelo IF, lote if-matematica-sistemas-de-medidas, m005, MAT-1060. Conferido: 2,4 · 100 = 240; 240 : 15 = 16 (15 · 16 = 240).</p>
+    <p>Modelo IF, lote if-matematica-sistemas-de-medidas, m001, MAT-1056. Conferido: 1,62 · 100 = 162; 1,62 : 100 = 0,0162; 1,62 · 10 = 16,2; 1,62 · 1 000 = 1 620; 1,62 · 10 000 = 16 200.</p>
   </aside>
 </section>
 
-<!-- 14. Questão 2 (Modelo m006) -->
+<!-- 14. Questão 2 (Modelo m002) -->
 <section class="slide questao" data-nome="Questão 2 · Modelo IF">
   <div class="conteudo">
     <div class="area-resolucao"></div>
     <span class="pilula pilula-pausa" data-em="1:some">Pause o vídeo e tente</span>
-    <div class="painel-questao" style="gap:12px">
+    <div class="painel-questao">
       <p class="olho">Questão 2 · Modelo IF</p>
-      <p class="enunciado" style="font-size:25px">O elevador de carga de uma obra suporta, no máximo, 0,8 t. O mestre de obras já colocou nele o material da tabela.</p>
-      <table class="um-tabela">
-        <tr><th>Material</th><th>Qtd.</th><th>Massa de cada</th></tr>
-        <tr><td>Saco de cimento</td><td>8</td><td>50 kg</td></tr>
-        <tr><td>Caixa de piso</td><td>12</td><td>22 500 g</td></tr>
-        <tr><td>Lata de tinta</td><td>10</td><td>3 600 g</td></tr>
-      </table>
-      <p class="enunciado" style="font-size:25px">Quantos quilogramas de material ainda podem ser colocados no elevador sem passar do limite?</p>
-      <ol class="alternativas curtas">
-        <li data-em="2:certo"><b>A</b><span>94 kg</span></li>
-        <li data-em="2:apaga"><b>B</b><span>337 kg</span></li>
-        <li data-em="2:apaga"><b>C</b><span>373,9 kg</span></li>
-        <li data-em="2:apaga"><b>D</b><span>706 kg</span></li>
-        <li data-em="2:apaga"><b>E</b><span>7 294 kg</span></li>
+      <p class="enunciado">Para o lanche da turma, Davi comprou uma garrafa de 2 L de suco. Ele vai servir o suco em copos de 250 mL, todos cheios. Quantos copos ele consegue encher com a garrafa?</p>
+      <ol class="alternativas">
+        <li data-em="2:apaga"><b>A</b><span>0,8</span></li>
+        <li data-em="2:certo"><b>B</b><span>8</span></li>
+        <li data-em="2:apaga"><b>C</b><span>80</span></li>
+        <li data-em="2:apaga"><b>D</b><span>125</span></li>
+        <li data-em="2:apaga"><b>E</b><span>500</span></li>
       </ol>
-      <p class="fonte">Questão Modelo IF (lote if-matematica-sistemas-de-medidas, m006)</p>
+      <p class="fonte">Questão Modelo IF (lote if-matematica-sistemas-de-medidas, m002)</p>
     </div>
   </div>
   <aside class="resolucao">
-    <p class="dados"><b>Dados:</b> limite 0,8 t; tudo em kg (1 t = 1 000 kg; 1 kg = 1 000 g).</p>
+    <p class="dados"><b>Dados:</b> garrafa de 2 L; copos de 250 mL; 1 L = 1 000 mL.</p>
     <ol class="passos">
-      <li><b>Limite</b> \(L = 0{,}8 \cdot 1000 = 800\ \text{kg}\)</li>
-      <li><b>Caixa e lata em kg</b> \(22\,500 : 1000 = 22{,}5\); \(3600 : 1000 = 3{,}6\)</li>
-      <li><b>Carga</b> \(M = 8 \cdot 50 + 12 \cdot 22{,}5 + 10 \cdot 3{,}6\)</li>
-      <li><b>Soma</b> \(M = 400 + 270 + 36 = 706\ \text{kg}\)</li>
-      <li><b>O que ainda cabe</b> \(800 - 706 = 94\ \text{kg}\)</li>
+      <li><b>Mesma unidade: L para mL</b> \(V = 2 \cdot 1000 = 2000\ \text{mL}\)</li>
+      <li><b>Divida pelo copo</b> \(n = \dfrac{2000}{250}\)</li>
+      <li><b>Conta</b> \(n = 8\)</li>
     </ol>
-    <p class="resposta"><b>Resposta:</b> 94 kg. <b>Gabarito A.</b></p>
-    <p class="atencao"><b>Destaque no quadro:</b> Passe tudo para kg antes de somar.</p>
+    <p class="resposta"><b>Resposta:</b> 8 copos. <b>Gabarito B.</b></p>
+    <p class="atencao"><b>Destaque no quadro:</b> 1 L = 1 000 mL; antes de dividir, tudo na mesma unidade.</p>
     <ul class="erros">
-      <li><b>B</b> Divide os gramas por 10 000.</li>
-      <li><b>C</b> Esquece as quantidades dos itens em gramas.</li>
-      <li><b>D</b> É a carga que já está lá.</li>
-      <li><b>E</b> Usa 0,8 t = 8 000 kg.</li>
+      <li><b>A</b> Usa 1 L = 100 mL.</li>
+      <li><b>C</b> Usa 1 L = 10 000 mL.</li>
+      <li><b>D</b> Inverte a divisão: 250 : 2.</li>
+      <li><b>E</b> Multiplica 2 · 250.</li>
     </ul>
   </aside>
   <aside class="notas">
-    <p>Clique 1 tira o aviso de pausa. Clique 2: gabarito A.</p>
-    <p>Modelo IF, lote if-matematica-sistemas-de-medidas, m006, MAT-1061. Conferido: 8 · 50 = 400; 12 · 22,5 = 270; 10 · 3,6 = 36; 400 + 270 + 36 = 706; 800 − 706 = 94.</p>
+    <p>Clique 1 tira o aviso de pausa. Clique 2: gabarito B.</p>
+    <p>Modelo IF, lote if-matematica-sistemas-de-medidas, m002, MAT-1057. Conferido: 2 · 1 000 = 2 000; 2 000 : 250 = 8 (250 · 8 = 2 000); 200 : 250 = 0,8; 20 000 : 250 = 80; 250 : 2 = 125; 2 · 250 = 500.</p>
   </aside>
 </section>
 

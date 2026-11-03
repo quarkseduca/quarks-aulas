@@ -4,7 +4,7 @@
 <!-- Fonte: apostila IF, Matemática, cap. 7 (7.1 Estatística: blocos "Pesquisa estatística: população, amostra e variáveis" e
      "Tabelas de frequência e porcentagem").
      Questões (todas da apostila, nenhuma reservada para o bloco do fim do capítulo): Modelo IF if-matematica-graficos-e-tabelas
-     m007 (MAT-1102), m003 (MAT-1098) e m008 (MAT-1103). -->
+     m006 (MAT-1101), m004 (MAT-1099) e m008 (MAT-1103). -->
 <style>
   .caixa, .cartao { box-sizing: border-box; }
   .fig { position: absolute; overflow: visible; font-family: Figtree, 'Segoe UI', sans-serif; }
@@ -26,6 +26,7 @@
   .painel-questao .tabela { font-size: 22px; border-radius: 16px; }
   .painel-questao .tabela th { padding: 5px 18px; }
   .painel-questao .tabela td { padding: 3px 18px; }
+  .painel-questao .fig-q { width: 500px; display: block; margin: 0 auto; overflow: visible; }
   /* as pessoas da amostra acendem uma de cada vez, espalhadas pela população */
   .pessoa { fill: #C9C0F0; }
   @keyframes acende { 0%, 100% { r: 11; } 50% { r: 15; } }
@@ -285,41 +286,43 @@
     <span class="pilula pilula-pausa" data-em="1:some">Pause o vídeo e tente</span>
     <div class="painel-questao">
       <p class="olho">Questão 1 · Modelo IF</p>
-      <p class="enunciado" style="font-size:25px">A tabela mostra o número de visitantes de um museu em cada dia de uma semana. O museu fica fechado às segundas-feiras.</p>
+      <p class="enunciado" style="font-size:25px">A tabela mostra a população de Juiz de Fora (MG) nos últimos censos do IBGE.</p>
       <table class="tabela">
-        <tr><th>Dia</th><th>Visitantes</th></tr>
-        <tr><td>terça-feira</td><td>145</td></tr><tr><td>quarta-feira</td><td>200</td></tr><tr><td>quinta-feira</td><td>198</td></tr>
-        <tr><td>sexta-feira</td><td>236</td></tr><tr><td>sábado</td><td>312</td></tr><tr><td>domingo</td><td>287</td></tr>
+        <tr><th>Ano do censo</th><th>População (habitantes)</th></tr>
+        <tr><td>1991</td><td>385 996</td></tr><tr><td>2000</td><td>456 796</td></tr>
+        <tr><td>2010</td><td>516 247</td></tr><tr><td>2022</td><td>540 756</td></tr>
       </table>
-      <p class="enunciado" style="font-size:25px">Em quantos dias dessa semana o museu recebeu <b>mais de</b> 200 visitantes?</p>
+      <p style="margin:0;font-size:17px;color:var(--cinza)">Fonte: IBGE, Censos Demográficos.</p>
+      <p class="enunciado" style="font-size:25px">Em quantos habitantes a população de Juiz de Fora aumentou de 2010 para 2022?</p>
       <ol class="alternativas curtas">
-        <li data-em="2:apaga"><b>A</b><span>2</span></li>
-        <li data-em="2:certo"><b>B</b><span>3</span></li>
-        <li data-em="2:apaga"><b>C</b><span>4</span></li>
-        <li data-em="2:apaga"><b>D</b><span>5</span></li>
-        <li data-em="2:apaga"><b>E</b><span>6</span></li>
+        <li data-em="2:certo"><b>A</b><span>24 509</span></li>
+        <li data-em="2:apaga"><b>B</b><span>34 509</span></li>
+        <li data-em="2:apaga"><b>C</b><span>59 451</span></li>
+        <li data-em="2:apaga"><b>D</b><span>83 960</span></li>
+        <li data-em="2:apaga"><b>E</b><span>1 057 003</span></li>
       </ol>
-      <p class="fonte">Modelo IF · MAT-1102</p>
+      <p class="fonte">Modelo IF · MAT-1101</p>
     </div>
   </div>
   <aside class="resolucao">
-    <p class="dados"><b>Dados:</b> 6 dias abertos; "mais de 200" = 201 ou mais.</p>
+    <p class="dados"><b>Dados:</b> 2010: 516 247; 2022: 540 756.</p>
     <ol class="passos">
-      <li><b>Não passam:</b> terça 145, quarta 200, quinta 198</li>
-      <li><b>Passam:</b> sexta 236, sábado 312, domingo 287</li>
+      <li><b>Aumento</b> = mais novo − anterior</li>
+      <li>\(540\,756 - 516\,247\)</li>
+      <li>\(= 24\,509\) (empréstimos nas unidades e nos milhares)</li>
     </ol>
-    <p class="resposta"><b>Resposta:</b> 3 dias. <b>Gabarito B.</b></p>
-    <p class="atencao"><b>Destaque no quadro:</b> "Mais de 200" não inclui o próprio 200.</p>
+    <p class="resposta"><b>Resposta:</b> 24 509 habitantes. <b>Gabarito A.</b></p>
+    <p class="atencao"><b>Destaque no quadro:</b> Leia as duas linhas certas da tabela e arme a conta com cuidado.</p>
     <ul class="erros">
-      <li><b>A</b> Conta só o fim de semana.</li>
-      <li><b>C</b> Conta a quarta, com exatamente 200.</li>
-      <li><b>D</b> Conta a quarta (200) e a quinta (198).</li>
-      <li><b>E</b> Conta todos os dias abertos.</li>
+      <li><b>B</b> Esquece o empréstimo da dezena de milhar.</li>
+      <li><b>C</b> É o aumento de 2000 para 2010.</li>
+      <li><b>D</b> Usa 2000 no lugar de 2010.</li>
+      <li><b>E</b> Soma as duas populações.</li>
     </ul>
   </aside>
   <aside class="notas">
-    <p>Clique 1 tira o aviso de pausa: resolva na área (D liga a caneta; E esconde o enunciado). Clique 2: gabarito B.</p>
-    <p>Modelo IF, lote if-matematica-graficos-e-tabelas, m007, MAT-1102.</p>
+    <p>Clique 1 tira o aviso de pausa: resolva na área (D liga a caneta; E esconde o enunciado). Clique 2: gabarito A.</p>
+    <p>Modelo IF, lote if-matematica-graficos-e-tabelas, m006, MAT-1101. Conferido: 540 756 − 516 247 = 24 509; 516 247 − 456 796 = 59 451; 540 756 − 456 796 = 83 960; 540 756 + 516 247 = 1 057 003.</p>
   </aside>
 </section>
 
@@ -330,42 +333,51 @@
     <span class="pilula pilula-pausa" data-em="1:some">Pause o vídeo e tente</span>
     <div class="painel-questao">
       <p class="olho">Questão 2 · Modelo IF</p>
-      <p class="enunciado" style="font-size:25px">A tabela mostra a população de algumas cidades da Zona da Mata mineira no Censo de 2022.</p>
-      <table class="tabela">
-        <tr><th>Cidade</th><th>População (habitantes)</th></tr>
-        <tr><td>Cataguases</td><td>66 261</td></tr><tr><td>Juiz de Fora</td><td>540 756</td></tr><tr><td>Manhuaçu</td><td>91 886</td></tr>
-        <tr><td>Muriaé</td><td>104 108</td></tr><tr><td>Ubá</td><td>103 365</td></tr><tr><td>Viçosa</td><td>76 430</td></tr>
-      </table>
-      <p style="margin:0;font-size:17px;color:var(--cinza)">Fonte: IBGE, Censo Demográfico 2022.</p>
-      <p class="enunciado" style="font-size:25px">Depois de Juiz de Fora, qual cidade da tabela tinha a maior população?</p>
+      <p class="enunciado" style="font-size:25px">Numa pesquisa, 400 moradores de um bairro responderam se separam o lixo reciclável em casa. O gráfico mostra o resultado.</p>
+      <svg class="fig-q" viewBox="0 0 500 262" style="height:250px" aria-hidden="true">
+        <g stroke="#fff" stroke-width="3" stroke-linejoin="round">
+          <path d="M250 150 L250.0 45.0 A105 105 0 0 1 282.4 249.9 Z" fill="#2F6BFF"/>
+          <path d="M250 150 L282.4 249.9 A105 105 0 0 1 145.0 150.0 Z" fill="#2C2A9E"/>
+          <path d="M250 150 L145.0 150.0 A105 105 0 0 1 188.3 65.1 Z" fill="#8FB0FF"/>
+          <path d="M250 150 L188.3 65.1 A105 105 0 0 1 250.0 45.0 Z" fill="#FFD10C"/>
+        </g>
+        <g font-family="Figtree,'Segoe UI',sans-serif" font-size="18" font-weight="700" fill="#292B2C">
+          <text x="368" y="138">sempre separam</text><text x="368" y="160">45%</text>
+          <text x="176" y="236" text-anchor="end">às vezes separam</text><text x="176" y="258" text-anchor="end">30%</text>
+          <text x="140" y="92" text-anchor="end">nunca separam</text><text x="140" y="114" text-anchor="end">15%</text>
+          <text x="226" y="18" text-anchor="end">não sabem</text><text x="226" y="40" text-anchor="end">10%</text>
+        </g>
+      </svg>
+      <p class="enunciado" style="font-size:25px">Quantos moradores responderam que nunca separam o lixo reciclável?</p>
       <ol class="alternativas curtas">
-        <li data-em="2:apaga"><b>A</b><span>Ubá</span></li>
-        <li data-em="2:apaga"><b>B</b><span>Manhuaçu</span></li>
-        <li data-em="2:apaga"><b>C</b><span>Viçosa</span></li>
-        <li data-em="2:apaga"><b>D</b><span>Cataguases</span></li>
-        <li data-em="2:certo"><b>E</b><span>Muriaé</span></li>
+        <li data-em="2:apaga"><b>A</b><span>15</span></li>
+        <li data-em="2:apaga"><b>B</b><span>40</span></li>
+        <li data-em="2:certo"><b>C</b><span>60</span></li>
+        <li data-em="2:apaga"><b>D</b><span>120</span></li>
+        <li data-em="2:apaga"><b>E</b><span>340</span></li>
       </ol>
-      <p class="fonte">Modelo IF · MAT-1098</p>
+      <p class="fonte">Modelo IF · MAT-1099</p>
     </div>
   </div>
   <aside class="resolucao">
-    <p class="dados"><b>Dados:</b> tabela em ordem alfabética, não de tamanho.</p>
+    <p class="dados"><b>Dados:</b> total 400; nunca separam: 15%.</p>
     <ol class="passos">
-      <li><b>Acima de 100 mil</b> (fora JF): Muriaé e Ubá</li>
-      <li><b>Compare os milhares:</b> 104 mil &gt; 103 mil</li>
+      <li>\(n = 15\% \cdot 400\)</li>
+      <li>\(n = \dfrac{15}{100} \cdot 400 = 15 \cdot 4\)</li>
+      <li>\(n = 60\)</li>
     </ol>
-    <p class="resposta"><b>Resposta:</b> Muriaé. <b>Gabarito E.</b></p>
-    <p class="atencao"><b>Destaque no quadro:</b> Compare da classe maior para a menor (milhares antes das unidades).</p>
+    <p class="resposta"><b>Resposta:</b> 60 moradores. <b>Gabarito C.</b></p>
+    <p class="atencao"><b>Destaque no quadro:</b> Porcentagem × total = quantidade (o caminho de volta da frequência relativa).</p>
     <ul class="erros">
-      <li><b>A</b> Compara só os últimos algarismos (365 &gt; 108).</li>
-      <li><b>B</b> Pega a linha logo abaixo de Juiz de Fora.</li>
-      <li><b>C</b> É a última linha da tabela.</li>
-      <li><b>D</b> É a primeira linha, mas a menor cidade.</li>
+      <li><b>A</b> Dá a porcentagem no lugar do número.</li>
+      <li><b>B</b> Lê o setor de 10% (não sabem).</li>
+      <li><b>D</b> Lê o setor de 30% (às vezes).</li>
+      <li><b>E</b> Calcula 85%: os que não disseram "nunca".</li>
     </ul>
   </aside>
   <aside class="notas">
-    <p>Clique 1 tira o aviso de pausa. Clique 2: gabarito E.</p>
-    <p>Modelo IF, lote if-matematica-graficos-e-tabelas, m003, MAT-1098.</p>
+    <p>Clique 1 tira o aviso de pausa. Clique 2: gabarito C.</p>
+    <p>Modelo IF, lote if-matematica-graficos-e-tabelas, m004, MAT-1099. Gráfico refeito em SVG com as mesmas porcentagens (45%, 30%, 15% e 10%; somam 100%). O gráfico de setores é visto com calma na Parte 2; aqui basta ler a porcentagem e fazer o caminho de volta da frequência relativa. Conferido: 15% de 400 = 60; 10% = 40; 30% = 120; 85% = 340.</p>
   </aside>
 </section>
 

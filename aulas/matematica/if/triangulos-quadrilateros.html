@@ -1,7 +1,7 @@
 <!--aula
 {"disciplina": "matematica", "curso": "IF", "assunto": "Geometria plana", "parte": "Parte única", "titulo": "Triângulos e quadriláteros", "scripts": ["animacoes-geometria-a.js"]}
 -->
-<!-- Fonte: apostila IF, Matemática, cap. 5 (5.2 Triângulos e quadriláteros: Classificação e condição de existência; Soma dos ângulos internos e ângulo externo; Classificação dos quadriláteros; Propriedades de paralelogramos e trapézios; resumo). Questões: Modelo if-matematica-triangulos m004 (MAT-3406); oficiais IF Sudeste 2015-2 q17 (MAT-0312), 2013-1 q16 (MAT-0367) e 2015-1 q23 (MAT-0296), as sobras do subcapítulo. As oficiais 2016-1 q14 (MAT-0469) e 2016-1-extra q15 (MAT-0402) ficam reservadas para o bloco do fim do capítulo. -->
+<!-- Fonte: apostila IF, Matemática, cap. 5 (5.2 Triângulos e quadriláteros: Classificação e condição de existência; Soma dos ângulos internos e ângulo externo; Classificação dos quadriláteros; Propriedades de paralelogramos e trapézios; resumo). Questões: Modelo if-matematica-triangulos m003 (MAT-3405); oficiais IF Sudeste 2015-2 q17 (MAT-0312), 2013-1 q16 (MAT-0367) e 2015-1 q23 (MAT-0296), as sobras do subcapítulo. As oficiais 2016-1 q14 (MAT-0469) e 2016-1-extra q15 (MAT-0402) ficam reservadas para o bloco do fim do capítulo. -->
 <style>
   .cartao { box-sizing: border-box; background: var(--branco); border: 2px solid var(--lilas-2); border-radius: 28px; padding: 16px 22px; }
   .cartao h3 { margin: 0 0 2px; font: 800 34px var(--fonte-titulo); letter-spacing: -.02em; color: var(--roxo-titulo); }
@@ -259,37 +259,36 @@
     <span class="pilula pilula-pausa" data-em="1:some">Pause o vídeo e tente</span>
     <div class="painel-questao">
       <p class="olho">Questão 1 · Modelo IF</p>
-      <p class="enunciado">Júlia quer montar um triângulo com três canudos. Ela já tem dois canudos, de 6 cm e de 11 cm, e vai cortar o terceiro com uma medida que seja um número inteiro de centímetros. Quantas medidas diferentes o terceiro canudo pode ter?</p>
+      <p class="enunciado">Numa aula de Matemática, cada grupo recebeu três varetas para montar um triângulo, prendendo as pontas umas nas outras. As medidas das varetas de cada grupo, em centímetros, estão abaixo. Qual grupo consegue montar um triângulo?</p>
       <ol class="alternativas curtas">
-        <li data-em="2:certo"><b>A</b><span>11</span></li>
-        <li data-em="2:apaga"><b>B</b><span>12</span></li>
-        <li data-em="2:apaga"><b>C</b><span>13</span></li>
-        <li data-em="2:apaga"><b>D</b><span>16</span></li>
-        <li data-em="2:apaga"><b>E</b><span>5</span></li>
+        <li data-em="2:apaga"><b>A</b><span>3, 4 e 9</span></li>
+        <li data-em="2:apaga"><b>B</b><span>2, 5 e 7</span></li>
+        <li data-em="2:certo"><b>C</b><span>4, 6 e 9</span></li>
+        <li data-em="2:apaga"><b>D</b><span>1, 2 e 4</span></li>
+        <li data-em="2:apaga"><b>E</b><span>5, 5 e 13</span></li>
       </ol>
-      <p class="fonte">Questão Modelo IF (lote if-matematica-triangulos, m004)</p>
+      <p class="fonte">Questão Modelo IF (lote if-matematica-triangulos, m003)</p>
     </div>
   </div>
   <aside class="resolucao">
-    <p class="dados"><b>Dados:</b> lados 6 cm e 11 cm; terceiro lado \(x\) inteiro.</p>
+    <p class="dados"><b>Dados:</b> cinco trios; teste o maior lado de cada um.</p>
     <ol class="passos">
-      <li><b>Entre a diferença e a soma</b> \(11 - 6 &lt; x &lt; 11 + 6\)</li>
-      <li><b>Intervalo</b> \(5 &lt; x &lt; 17\)</li>
-      <li><b>Inteiros</b> 6, 7, 8, …, 16</li>
-      <li><b>Conte</b> \(16 - 6 + 1 = 11\)</li>
+      <li><b>Regra</b> maior lado &lt; soma dos outros dois</li>
+      <li><b>Grupo C</b> \(9 &lt; 4 + 6 = 10\): sim</li>
+      <li><b>Os outros</b> \(9 &gt; 7\); \(7 = 7\); \(4 &gt; 3\); \(13 &gt; 10\)</li>
     </ol>
-    <p class="resposta"><b>Resposta:</b> 11 medidas. <b>Gabarito A.</b></p>
-    <p class="atencao"><b>Destaque no quadro:</b> Os extremos 5 e 17 não valem: os canudos ficariam em linha reta.</p>
+    <p class="resposta"><b>Resposta:</b> só o grupo C (4, 6 e 9). <b>Gabarito C.</b></p>
+    <p class="atencao"><b>Destaque no quadro:</b> Soma igual ao maior lado não serve: as varetas ficam em linha reta.</p>
     <ul class="erros">
-      <li><b>B</b> Inclui um dos extremos.</li>
-      <li><b>C</b> Inclui os dois extremos.</li>
-      <li><b>D</b> Testa só a soma (de 1 a 16).</li>
-      <li><b>E</b> Responde a diferença 11 − 6.</li>
+      <li><b>A</b> \(9 &gt; 3 + 4 = 7\).</li>
+      <li><b>B</b> \(7 = 2 + 5\): aceita a igualdade.</li>
+      <li><b>D</b> \(4 &gt; 1 + 2 = 3\).</li>
+      <li><b>E</b> \(13 &gt; 5 + 5 = 10\): dois lados iguais não bastam.</li>
     </ul>
   </aside>
   <aside class="notas">
-    <p>Clique 1 tira o aviso de pausa: resolva na área (D liga a caneta; E esconde o enunciado). Clique 2: gabarito A.</p>
-    <p>Modelo IF, lote if-matematica-triangulos, m004, MAT-3406 (nível 3). Gabarito e contagem conferidos (inteiros de 6 a 16: 11 valores).</p>
+    <p>Clique 1 tira o aviso de pausa: resolva na área (D liga a caneta; E esconde o enunciado). Clique 2: gabarito C.</p>
+    <p>Modelo IF, lote if-matematica-triangulos, m003, MAT-3405 (nível 2). Conferido: 4 + 6 = 10 &gt; 9; 3 + 4 = 7 &lt; 9; 2 + 5 = 7 (igual); 1 + 2 = 3 &lt; 4; 5 + 5 = 10 &lt; 13.</p>
   </aside>
 </section>
 

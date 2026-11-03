@@ -1,7 +1,7 @@
 <!--aula
 {"disciplina": "matematica", "curso": "IF", "assunto": "Semelhança e Teorema de Tales", "parte": "Parte 2 de 2", "titulo": "Semelhança de triângulos", "scripts": ["animacoes-geometria-a.js"]}
 -->
-<!-- Fonte: apostila IF, Matemática, cap. 5 (5.3 Semelhança e Teorema de Tales > Semelhança de figuras e de triângulos; Razão de semelhança; resumo). Questões: Modelo if-matematica-semelhanca-e-teorema-de-tales m004 (MAT-1004) e m009 (MAT-1009); oficial IF Sudeste 2013-2 q24 (MAT-0398), sobra do subcapítulo. As oficiais 2026-1 q18 (MAT-0550) e 2025-1 q17 (MAT-0538) ficam reservadas para o bloco do fim do capítulo. -->
+<!-- Fonte: apostila IF, Matemática, cap. 5 (5.3 Semelhança e Teorema de Tales > Semelhança de figuras e de triângulos; Razão de semelhança; resumo). Questões: Modelo if-matematica-semelhanca-e-teorema-de-tales m004 (MAT-1004) e m005 (MAT-1005); oficial IF Sudeste 2013-2 q24 (MAT-0398), sobra do subcapítulo. As oficiais 2026-1 q18 (MAT-0550) e 2025-1 q17 (MAT-0538) ficam reservadas para o bloco do fim do capítulo. -->
 <style>
   .cartao { box-sizing: border-box; background: var(--branco); border: 2px solid var(--lilas-2); border-radius: 28px; padding: 16px 24px; }
   .cartao h3 { margin: 0 0 4px; font: 800 34px var(--fonte-titulo); letter-spacing: -.02em; color: var(--roxo-titulo); }
@@ -335,36 +335,37 @@
     <span class="pilula pilula-pausa" data-em="1:some">Pause o vídeo e tente</span>
     <div class="painel-questao">
       <p class="olho">Questão 3 · Modelo IF</p>
-      <p class="enunciado">O grêmio de uma escola vai pintar no muro o mascote da turma. O desenho do muro é uma ampliação do desenho original em que <b>cada medida</b> fica 3 vezes maior. Para pintar o desenho original, foram gastos 0,2 L de tinta. Considerando que a quantidade de tinta é proporcional à área pintada, quantos litros serão gastos no desenho do muro?</p>
+      <p class="enunciado">Um triângulo tem lados de 3 cm, 4 cm e 5 cm. Ele foi ampliado, formando um triângulo semelhante, e o menor lado passou a medir 9 cm. Qual é o perímetro do triângulo ampliado?</p>
       <ol class="alternativas curtas">
-        <li data-em="2:apaga"><b>A</b><span>0,6 L</span></li>
-        <li data-em="2:certo"><b>B</b><span>1,8 L</span></li>
-        <li data-em="2:apaga"><b>C</b><span>5,4 L</span></li>
-        <li data-em="2:apaga"><b>D</b><span>1,2 L</span></li>
-        <li data-em="2:apaga"><b>E</b><span>0,8 L</span></li>
+        <li data-em="2:apaga"><b>A</b><span>12 cm</span></li>
+        <li data-em="2:apaga"><b>B</b><span>18 cm</span></li>
+        <li data-em="2:apaga"><b>C</b><span>27 cm</span></li>
+        <li data-em="2:apaga"><b>D</b><span>30 cm</span></li>
+        <li data-em="2:certo"><b>E</b><span>36 cm</span></li>
       </ol>
-      <p class="fonte">Questão Modelo IF (lote if-matematica-semelhanca-e-teorema-de-tales, m009)</p>
+      <p class="fonte">Questão Modelo IF (lote if-matematica-semelhanca-e-teorema-de-tales, m005)</p>
     </div>
   </div>
   <aside class="resolucao">
-    <p class="dados"><b>Dados:</b> \(k = 3\); tinta do original: 0,2 L.</p>
+    <p class="dados"><b>Dados:</b> lados 3, 4 e 5 cm; o lado de 3 cm virou 9 cm.</p>
     <ol class="passos">
-      <li><b>Tinta acompanha a área</b> área × \(k^2\)</li>
-      <li><b>Fator da área</b> \(k^2 = 3^2 = 9\)</li>
-      <li><b>Tinta</b> \(9 \cdot 0{,}2 = 1{,}8\ \text{L}\)</li>
+      <li><b>Razão de semelhança</b> \(k = \dfrac{9}{3} = 3\)</li>
+      <li><b>Perímetro original</b> \(P_1 = 3 + 4 + 5 = 12\ \text{cm}\)</li>
+      <li><b>Perímetro × k</b> \(P_2 = 3 \cdot 12 = 36\ \text{cm}\)</li>
+      <li><b>(Conferindo)</b> \(9 + 12 + 15 = 36\)</li>
     </ol>
-    <p class="resposta"><b>Resposta:</b> 1,8 L. <b>Gabarito B.</b></p>
-    <p class="atencao"><b>Destaque no quadro:</b> Comprimento × k; área × k².</p>
+    <p class="resposta"><b>Resposta:</b> 36 cm. <b>Gabarito E.</b></p>
+    <p class="atencao"><b>Destaque no quadro:</b> Todos os lados (e o perímetro) × k; razão, e não diferença.</p>
     <ul class="erros">
-      <li><b>A</b> Multiplica por k = 3.</li>
-      <li><b>C</b> Multiplica por k³ = 27 (seria volume).</li>
-      <li><b>D</b> Multiplica por 3 + 3 = 6.</li>
-      <li><b>E</b> Soma 3 · 0,2 ao original.</li>
+      <li><b>A</b> É o perímetro original: não ampliou.</li>
+      <li><b>B</b> Troca só o menor lado: 9 + 4 + 5.</li>
+      <li><b>C</b> Faz 3 · 9, como se os três lados medissem 9.</li>
+      <li><b>D</b> Soma 6 a cada lado (9, 10 e 11).</li>
     </ul>
   </aside>
   <aside class="notas">
-    <p>Clique 1 tira o aviso de pausa: resolva na área (D liga a caneta; E esconde o enunciado). Clique 2: gabarito B.</p>
-    <p>Modelo IF, lote if-matematica-semelhanca-e-teorema-de-tales, m009, MAT-1009 (nível 3). Conferido: 9 · 0,2 = 1,8.</p>
+    <p>Clique 1 tira o aviso de pausa: resolva na área (D liga a caneta; E esconde o enunciado). Clique 2: gabarito E.</p>
+    <p>Modelo IF, lote if-matematica-semelhanca-e-teorema-de-tales, m005, MAT-1005 (nível 2). Conferido: 9 : 3 = 3; 3 + 4 + 5 = 12; 3 · 12 = 36; lados novos 9, 12 e 15 (soma 36); 9 + 4 + 5 = 18; 9 + 10 + 11 = 30.</p>
   </aside>
 </section>
 

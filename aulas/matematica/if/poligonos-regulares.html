@@ -1,7 +1,7 @@
 <!--aula
 {"disciplina": "matematica", "curso": "IF", "assunto": "Geometria plana", "parte": "Parte única", "titulo": "Polígonos regulares", "scripts": ["animacoes-geometria-b.js"]}
 -->
-<!-- Fonte: apostila IF, Matemática, cap. 5 (5.5 Polígonos regulares: Polígonos e soma dos ângulos; Polígonos regulares; Lado e apótema dos polígonos inscritos; Polígonos circunscritos; resumo). Questões: Modelo IF, lote if-matematica-poligonos (m005 MAT-3397, m006 MAT-3398, m007 MAT-3399). A oficial 2020-1 q23 (MAT-0533) está reservada para o bloco do fim do capítulo; a sobra oficial 2013-1 q18 (MAT-0369, área do hexágono) ficou para Perímetros e áreas, Parte 2, onde entra a área do polígono regular. -->
+<!-- Fonte: apostila IF, Matemática, cap. 5 (5.5 Polígonos regulares: Polígonos e soma dos ângulos; Polígonos regulares; Lado e apótema dos polígonos inscritos; Polígonos circunscritos; resumo). Questões: Modelo IF, lote if-matematica-poligonos (m004 MAT-3396, m003 MAT-3395, m006 MAT-3398). A oficial 2020-1 q23 (MAT-0533) está reservada para o bloco do fim do capítulo; a sobra oficial 2013-1 q18 (MAT-0369, área do hexágono) ficou para Perímetros e áreas, Parte 2, onde entra a área do polígono regular. -->
 <style>
   .caixa, .cartao { box-sizing: border-box; }
   .rot { font-family: Figtree, "Segoe UI", sans-serif; font-weight: 800; fill: #3F2FA0; }
@@ -456,36 +456,36 @@
     <span class="pilula pilula-pausa" data-em="1:some">Pause o vídeo e tente</span>
     <div class="painel-questao">
       <p class="olho">Questão 1 · Modelo IF</p>
-      <p class="enunciado">Um artesão montou uma moldura com a forma de um polígono regular em que cada ângulo interno mede 150°. A soma de todos os ângulos internos dessa moldura é:</p>
+      <p class="enunciado">Um canteiro de uma praça tem a forma de um pentágono (polígono de 5 lados) que <b>não</b> é regular. Quatro de seus ângulos internos medem \(100°\), \(120°\), \(95°\) e \(115°\). A medida do quinto ângulo interno é:</p>
       <ol class="alternativas curtas">
-        <li data-em="2:apaga"><b>A</b><span>12°</span></li>
-        <li data-em="2:certo"><b>B</b><span>1800°</span></li>
-        <li data-em="2:apaga"><b>C</b><span>2160°</span></li>
-        <li data-em="2:apaga"><b>D</b><span>360°</span></li>
-        <li data-em="2:apaga"><b>E</b><span>1500°</span></li>
+        <li data-em="2:apaga"><b>A</b><span>108°</span></li>
+        <li data-em="2:apaga"><b>B</b><span>70°</span></li>
+        <li data-em="2:apaga"><b>C</b><span>225°</span></li>
+        <li data-em="2:certo"><b>D</b><span>110°</span></li>
+        <li data-em="2:apaga"><b>E</b><span>290°</span></li>
       </ol>
     </div>
   </div>
   <aside class="resolucao">
-    <p class="dados"><b>Dados:</b> regular, \(a_i = 150°\).</p>
+    <p class="dados"><b>Dados:</b> \(n = 5\); ângulos 100°, 120°, 95° e 115°.</p>
     <ol class="passos">
-      <li>\(150 = \dfrac{(n - 2) \cdot 180}{n}\)</li>
-      <li>\(150n = 180n - 360\)</li>
-      <li>\(30n = 360 \Rightarrow n = 12\)</li>
-      <li>\(S = (12 - 2) \cdot 180 = 1800°\)</li>
+      <li>\(S = (5 - 2) \cdot 180° = 540°\)</li>
+      <li>\(100 + 120 + 95 + 115 + x = 540\)</li>
+      <li>\(430 + x = 540\)</li>
+      <li>\(x = 110°\)</li>
     </ol>
-    <p class="resposta"><b>Resposta:</b> 1800°. <b>Gabarito B.</b></p>
-    <p class="atencao"><b>Destaque no quadro:</b> Atalho: externo = 180° − 150° = 30°, e 360° ÷ 30° = 12 lados. Confere: 12 · 150° = 1800°.</p>
+    <p class="resposta"><b>Resposta:</b> 110°. <b>Gabarito D.</b></p>
+    <p class="atencao"><b>Destaque no quadro:</b> Não é regular: nada de dividir por 5. Soma total menos os conhecidos.</p>
     <ul class="erros">
-      <li><b>A</b> Para no número de lados (12), que nem é ângulo.</li>
-      <li><b>C</b> Esquece o −2: 12 · 180°.</li>
-      <li><b>D</b> 360° é a soma dos externos.</li>
-      <li><b>E</b> Multiplica 150° por n − 2 = 10.</li>
+      <li><b>A</b> Divide 540° por 5, como se fosse regular.</li>
+      <li><b>B</b> É o ângulo externo: 180° − 110°.</li>
+      <li><b>C</b> Esquece o ângulo de 115°.</li>
+      <li><b>E</b> Usa \((n - 1) \cdot 180° = 720°\).</li>
     </ul>
   </aside>
   <aside class="notas">
-    <p>Clique 1 tira o aviso de pausa: resolva na área (D liga a caneta; E esconde o enunciado). Clique 2: gabarito B.</p>
-    <p>Modelo IF, lote if-matematica-poligonos, m005, MAT-3397. Conferido: 150n = 180n − 360 ⇒ n = 12; (12 − 2) · 180 = 1800.</p>
+    <p>Clique 1 tira o aviso de pausa: resolva na área (D liga a caneta; E esconde o enunciado). Clique 2: gabarito D.</p>
+    <p>Modelo IF, lote if-matematica-poligonos, m004, MAT-3396. Conferido: (5 − 2) · 180 = 540; 100 + 120 + 95 + 115 = 430; 540 − 430 = 110; 540 : 5 = 108; 180 − 110 = 70; 540 − 315 = 225; 720 − 430 = 290.</p>
   </aside>
 </section>
 
@@ -496,6 +496,45 @@
     <span class="pilula pilula-pausa" data-em="1:some">Pause o vídeo e tente</span>
     <div class="painel-questao">
       <p class="olho">Questão 2 · Modelo IF</p>
+      <p class="enunciado">Os alvéolos dos favos de mel têm a forma de hexágonos regulares, polígonos de 6 lados iguais e 6 ângulos iguais. Cada ângulo interno de um hexágono regular mede:</p>
+      <ol class="alternativas curtas">
+        <li data-em="2:certo"><b>A</b><span>120°</span></li>
+        <li data-em="2:apaga"><b>B</b><span>60°</span></li>
+        <li data-em="2:apaga"><b>C</b><span>720°</span></li>
+        <li data-em="2:apaga"><b>D</b><span>180°</span></li>
+        <li data-em="2:apaga"><b>E</b><span>150°</span></li>
+      </ol>
+    </div>
+  </div>
+  <aside class="resolucao">
+    <p class="dados"><b>Dados:</b> hexágono regular, \(n = 6\).</p>
+    <ol class="passos">
+      <li>\(a_i = \dfrac{(n - 2) \cdot 180°}{n}\)</li>
+      <li>\(a_i = \dfrac{(6 - 2) \cdot 180°}{6} = \dfrac{720°}{6}\)</li>
+      <li>\(a_i = 120°\)</li>
+    </ol>
+    <p class="resposta"><b>Resposta:</b> 120°. <b>Gabarito A.</b></p>
+    <p class="atencao"><b>Destaque no quadro:</b> Confira pelo externo: 360° ÷ 6 = 60°, e 180° − 60° = 120°.</p>
+    <ul class="erros">
+      <li><b>B</b> É o ângulo externo: 360° ÷ 6.</li>
+      <li><b>C</b> É a soma dos internos: faltou dividir por 6.</li>
+      <li><b>D</b> Esquece o −2: 6 · 180° ÷ 6.</li>
+      <li><b>E</b> Usa n − 1: 5 · 180° ÷ 6.</li>
+    </ul>
+  </aside>
+  <aside class="notas">
+    <p>Clique 1 tira o aviso de pausa. Clique 2: gabarito A.</p>
+    <p>Modelo IF, lote if-matematica-poligonos, m003, MAT-3395. Conferido: 4 · 180 = 720; 720 : 6 = 120; 360 : 6 = 60; 5 · 180 : 6 = 150.</p>
+  </aside>
+</section>
+
+<!-- 18. Questão 3 -->
+<section class="slide questao" data-nome="Questão 3">
+  <div class="conteudo">
+    <div class="area-resolucao"></div>
+    <span class="pilula pilula-pausa" data-em="1:some">Pause o vídeo e tente</span>
+    <div class="painel-questao">
+      <p class="olho">Questão 3 · Modelo IF</p>
       <p class="enunciado">Um marceneiro quer cortar, de um disco de madeira de raio 20 cm, a maior peça quadrada possível. Para isso, os quatro vértices do quadrado devem ficar na borda do disco. Usando \(\sqrt{2} \approx 1{,}41\), o lado dessa peça quadrada mede, aproximadamente:</p>
       <ol class="alternativas curtas">
         <li data-em="2:apaga"><b>A</b><span>20 cm</span></li>
@@ -525,46 +564,6 @@
   <aside class="notas">
     <p>Clique 1 tira o aviso de pausa. Clique 2: gabarito E.</p>
     <p>Modelo IF, lote if-matematica-poligonos, m006, MAT-3398. Conferido: 20 · 1,41 = 28,2.</p>
-  </aside>
-</section>
-
-<!-- 18. Questão 3 -->
-<section class="slide questao" data-nome="Questão 3">
-  <div class="conteudo">
-    <div class="area-resolucao"></div>
-    <span class="pilula pilula-pausa" data-em="1:some">Pause o vídeo e tente</span>
-    <div class="painel-questao">
-      <p class="olho">Questão 3 · Modelo IF</p>
-      <p class="enunciado">Um ladrilho tem a forma de um hexágono regular com perímetro de 36 cm. A distância do centro do ladrilho até o meio de um de seus lados, isto é, o apótema do hexágono, mede:</p>
-      <ol class="alternativas curtas">
-        <li data-em="2:certo"><b>A</b><span>\(3\sqrt{3}\) cm</span></li>
-        <li data-em="2:apaga"><b>B</b><span>6 cm</span></li>
-        <li data-em="2:apaga"><b>C</b><span>3 cm</span></li>
-        <li data-em="2:apaga"><b>D</b><span>\(6\sqrt{3}\) cm</span></li>
-        <li data-em="2:apaga"><b>E</b><span>\(3\sqrt{2}\) cm</span></li>
-      </ol>
-    </div>
-  </div>
-  <aside class="resolucao">
-    <p class="dados"><b>Dados:</b> hexágono regular, perímetro 36 cm.</p>
-    <ol class="passos">
-      <li>\(6\ell = 36 \Rightarrow \ell = 6\ \text{cm}\)</li>
-      <li>No hexágono, \(R = \ell = 6\ \text{cm}\)</li>
-      <li>\(a = \dfrac{R\sqrt{3}}{2} = \dfrac{6\sqrt{3}}{2}\)</li>
-      <li>\(a = 3\sqrt{3}\ \text{cm}\)</li>
-    </ol>
-    <p class="resposta"><b>Resposta:</b> \(3\sqrt{3}\) cm. <b>Gabarito A.</b></p>
-    <p class="atencao"><b>Destaque no quadro:</b> Apótema do hexágono = altura de um dos 6 triângulos equiláteros.</p>
-    <ul class="erros">
-      <li><b>B</b> É o lado, igual ao raio.</li>
-      <li><b>C</b> Metade do lado: só no quadrado.</li>
-      <li><b>D</b> É o dobro do apótema.</li>
-      <li><b>E</b> Usa o apótema do quadrado.</li>
-    </ul>
-  </aside>
-  <aside class="notas">
-    <p>Clique 1 tira o aviso de pausa. Clique 2: gabarito A.</p>
-    <p>Modelo IF, lote if-matematica-poligonos, m007, MAT-3399. Conferido: 36 ÷ 6 = 6; 6√3/2 = 3√3.</p>
   </aside>
 </section>
 
