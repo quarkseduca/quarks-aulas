@@ -1,0 +1,479 @@
+<!--aula
+{"disciplina": "matematica", "curso": "IF", "assunto": "Unidades de medida", "parte": "Parte 2 de 2", "titulo": "Área, volume e velocidade", "scripts": ["animacoes-potencias.js"]}
+-->
+<!-- Fonte: apostila IF, Matemática, cap. 1 (1.5 Unidades de medida: "Unidades de área", "Volume e capacidade", "Velocidade em km/h e em m/s" e o resumo do 1.5).
+     Questões (nenhuma reservada para o bloco do fim do capítulo): Modelo IF, lote if-matematica-sistemas-de-medidas, m009 (MAT-1064);
+     IF Sudeste MG 2016-1 q23 (MAT-0478) e 2019-2 q13 (MAT-0512), sobras de Unidades de medida em planejamento/questoes-if.md. -->
+<style>
+  .caixa { box-sizing: border-box; }
+  .um-lado { font-size: 34px; line-height: 1.38; margin: 0; }
+  .um-lado b { color: var(--roxo-titulo); }
+  .um-cartao { box-sizing: border-box; background: var(--branco); border: 2px solid var(--lilas-2); border-radius: 26px; padding: 18px 26px; font-size: 31px; line-height: 1.35; }
+  .um-cartao b { color: var(--roxo-titulo); }
+  .um-cartao .grande { display: block; font: 800 44px var(--fonte-titulo); color: var(--d-forte); margin-bottom: 4px; }
+  .contas.com-nota { grid-template-columns: auto auto auto 1fr; }
+  .contas .nota-l { font-size: 26px; font-weight: 700; color: var(--cinza); padding-left: 26px; }
+  .um-resp { display: inline-block; font: 800 44px var(--fonte-titulo); padding: 6px 26px; border-radius: 22px; }
+  .um-resp.errado { background: var(--erro-claro); color: var(--erro); border: 3px solid var(--erro); text-decoration: line-through; text-decoration-thickness: 4px; }
+  .um-resp.certo { background: var(--certo-claro); color: var(--certo); border: 3px solid var(--certo); }
+  /* 1 dm² coberto por 100 quadradinhos de 1 cm², fileira por fileira */
+  .um-grade .fila { transform-box: fill-box; transform-origin: 0 50%; transform: scaleX(0); transition: transform .5s ease-out; }
+  .um-grade.mostra .fila { transform: scaleX(1); }
+  .um-grade.mostra .fila:nth-of-type(2) { transition-delay: .3s; } .um-grade.mostra .fila:nth-of-type(3) { transition-delay: .6s; }
+  .um-grade.mostra .fila:nth-of-type(4) { transition-delay: .9s; } .um-grade.mostra .fila:nth-of-type(5) { transition-delay: 1.2s; }
+  .um-grade.mostra .fila:nth-of-type(6) { transition-delay: 1.5s; } .um-grade.mostra .fila:nth-of-type(7) { transition-delay: 1.8s; }
+  .um-grade.mostra .fila:nth-of-type(8) { transition-delay: 2.1s; } .um-grade.mostra .fila:nth-of-type(9) { transition-delay: 2.4s; }
+  .um-grade.mostra .fila:nth-of-type(10) { transition-delay: 2.7s; }
+  /* água que enche o cubo de 1 dm e o aquário; depois a superfície balança de leve */
+  .um-agua { transform-box: fill-box; transform-origin: 50% 100%; transform: scaleY(0); transition: transform 3.2s ease-in-out .3s; }
+  .mostra .um-agua, .mostra.um-agua { transform: scaleY(1); }
+  @keyframes um-onda { 0%, 100% { transform: translateY(0); } 50% { transform: translateY(2px); } }
+  .um-sup { opacity: 0; transition: opacity .6s 3.4s; }
+  .mostra .um-sup { opacity: 1; }
+  .slide.ativo .mostra .um-sup { animation: um-onda 4.5s ease-in-out infinite 3.6s; }
+  .painel-questao .enunciado.menor { font-size: 25px; }
+</style>
+
+<!-- 1. Capa -->
+<section class="slide capa" data-nome="Capa">
+  <div class="estrelas"></div>
+  <div class="texto-capa">
+    <span class="selo">Matemática · IF</span>
+    <p class="aula">Unidades de medida · Parte 2 de 2</p>
+    <h1 style="font-size:124px">Área, volume e velocidade</h1>
+    <p class="sub">Degraus de 100, de 1 000 e o fator 3,6</p>
+  </div>
+  <svg class="emblema" viewBox="0 0 640 640" aria-hidden="true">
+    <g class="gira-lento"><ellipse cx="320" cy="320" rx="300" ry="128" fill="none" stroke="#fff" stroke-opacity=".38" stroke-width="2" transform="rotate(-10 320 320)"/></g>
+    <g class="gira"><ellipse cx="320" cy="320" rx="236" ry="196" fill="none" stroke="#FFD10C" stroke-opacity=".75" stroke-width="2.5" stroke-dasharray="3 14" stroke-linecap="round" transform="rotate(-8 320 320)"/>
+      <circle cx="84" cy="300" r="13" fill="var(--d)" stroke="#fff" stroke-width="3"/></g>
+    <circle cx="320" cy="320" r="150" fill="#FFD10C"/>
+    <path d="M230 290 L320 250 L410 290 L320 330 Z" fill="#fff"/>
+    <path d="M230 290 L320 330 V420 L230 380 Z" fill="#3F2FA0"/>
+    <path d="M410 290 L320 330 V420 L410 380 Z" fill="var(--d)"/>
+  </svg>
+  <img class="logo-capa" src="{{LOGO_BRANCO}}" alt="Quarks">
+  <aside class="notas">
+    <p>Segunda parte de Unidades de medida: área (degraus de 100), volume e capacidade (degraus de 1 000, 1 dm³ = 1 L) e velocidade (km/h e m/s).</p>
+  </aside>
+</section>
+
+<!-- 2. 1 dm² = 100 cm² -->
+<section class="slide" data-nome="Quantos quadradinhos">
+  <div class="conteudo">
+    <p class="olho">Unidades de área</p>
+    <h2 class="titulo">Quantos quadradinhos cabem?</h2>
+    <p class="um-lado" style="position:absolute;left:0;width:540px;top:160px">Um piso de <b>1 dm por 1 dm</b> (10 cm por 10 cm) é coberto por quantos quadradinhos de <b>1 cm por 1 cm</b>?</p>
+    <svg class="um-grade" data-passo="1" viewBox="0 0 470 470" width="470" height="470" style="position:absolute;left:660px;top:140px;overflow:visible;font-family:Figtree,'Segoe UI',sans-serif" aria-hidden="true">
+      <rect x="0" y="0" width="420" height="420" rx="8" fill="#fff" stroke="#C9D5F8" stroke-width="3"/>
+      <g fill="#E8F0FF"><rect class="fila" x="0" y="0" width="420" height="42"/><rect class="fila" x="0" y="42" width="420" height="42"/><rect class="fila" x="0" y="84" width="420" height="42"/><rect class="fila" x="0" y="126" width="420" height="42"/><rect class="fila" x="0" y="168" width="420" height="42"/><rect class="fila" x="0" y="210" width="420" height="42"/><rect class="fila" x="0" y="252" width="420" height="42"/><rect class="fila" x="0" y="294" width="420" height="42"/><rect class="fila" x="0" y="336" width="420" height="42"/><rect class="fila" x="0" y="378" width="420" height="42"/></g>
+      <g stroke="#9DB6F7" stroke-width="2"><path d="M42 0V420M84 0V420M126 0V420M168 0V420M210 0V420M252 0V420M294 0V420M336 0V420M378 0V420M0 42H420M0 84H420M0 126H420M0 168H420M0 210H420M0 252H420M0 294H420M0 336H420M0 378H420"/></g>
+      <rect x="0" y="0" width="420" height="420" rx="8" fill="none" stroke="var(--d)" stroke-width="5"/>
+      <rect x="0" y="0" width="42" height="42" fill="#FFD10C" stroke="#C9A100" stroke-width="2"/>
+      <g font-size="30" font-weight="800" fill="var(--d-forte)"><text x="210" y="458" text-anchor="middle">10 cm = 1 dm</text><text x="436" y="218">10 cm</text></g>
+    </svg>
+    <div class="contas" style="position:absolute;left:1260px;top:200px;font-size:50px;row-gap:22px">
+      <div class="eq" data-passo="2"><span>\(10 \cdot 10\)</span><span>\(=\)</span><span>\(100\)</span></div>
+    </div>
+    <div class="caixa caixa-fundamental" data-passo="3" style="position:absolute;left:1260px;right:0;top:330px;padding:20px 28px"><div style="font-size:52px;font-weight:800;color:var(--roxo-titulo)">1 dm² = 100 cm²</div></div>
+  </div>
+  <aside class="notas">
+    <p>Clique 1: 10 fileiras de 10 quadradinhos de 1 cm² (o amarelo é um deles). Clique 2: 10 · 10 = 100. Clique 3: então 1 dm² = 100 cm².</p>
+  </aside>
+</section>
+
+<!-- 3. Escada da área -->
+<section class="slide" data-nome="Escada da área">
+  <div class="conteudo">
+    <p class="olho">Unidades de área</p>
+    <h2 class="titulo">Na área, cada degrau vale 100</h2>
+    <div class="caixa caixa-fundamental" style="position:absolute;left:0;width:540px;top:160px;padding:20px 28px">
+      <span class="rotulo">Metro quadrado</span>
+      <div class="texto" style="font-size:30px">O <b>m²</b> é a área de um quadrado de 1 m de lado. A área tem <b>duas dimensões</b>: cada degrau vale <b>10 · 10 = 100</b>.</div>
+    </div>
+    <div data-anima="um-escada" data-anima-passo="1" data-unid="km|hm|dam|m|dm|cm|mm" data-exp="²" data-fator="100" data-base="3" data-de="3" data-ate="5" data-valor="1" style="position:absolute;left:640px;top:140px;width:1112px;height:472px"></div>
+    <div class="um-cartao" data-passo="2" style="position:absolute;left:640px;right:0;top:660px;font-size:31px">Em terrenos rurais: o <b>hectare</b>. <b>1 ha = 10 000 m²</b></div>
+  </div>
+  <aside class="notas">
+    <p>Clique 1: do m² até o cm² são 2 degraus, cada um × 100: 1 m² = 100 dm² = 10 000 cm².</p>
+    <p>Clique 2: o hectare (ha), usado nos sítios e fazendas da Zona da Mata. Um campo de 100 m por 100 m.</p>
+  </aside>
+</section>
+
+<!-- 4. Exemplo: piso da sala -->
+<section class="slide" data-nome="Exemplo: piso da sala">
+  <div class="conteudo">
+    <p class="olho">Exemplo</p>
+    <h2 class="titulo">O piso da sala</h2>
+    <p class="um-lado" style="position:absolute;left:0;width:540px;top:160px">Uma sala retangular mede <b>4 m por 3 m</b>. Qual é a área em m² e em cm²?</p>
+    <svg viewBox="0 0 400 300" width="340" height="255" style="position:absolute;left:40px;top:300px;overflow:visible;font-family:Figtree,'Segoe UI',sans-serif" aria-hidden="true">
+      <rect x="0" y="0" width="360" height="240" rx="10" fill="#E8F0FF" stroke="var(--d)" stroke-width="5"/>
+      <g stroke="#B9C8F5" stroke-width="2"><path d="M90 0V240M180 0V240M270 0V240M0 80H360M0 160H360"/></g>
+      <g font-size="28" font-weight="800" fill="var(--d-forte)"><text x="180" y="276" text-anchor="middle">4 m</text><text x="372" y="128">3 m</text></g>
+    </svg>
+    <div class="contas" style="position:absolute;left:640px;top:160px;font-size:52px;row-gap:20px">
+      <div class="eq" data-passo="1"><span>\(A\)</span><span>\(=\)</span><span>\(c \cdot \ell\)</span></div>
+      <div class="eq" data-passo="2"><span>\(A\)</span><span>\(=\)</span><span>\(4 \cdot 3\)</span></div>
+      <div class="eq final" data-passo="3"><span>\(A\)</span><span>\(=\)</span><span>\(12\ \text{m}^2\)</span></div>
+    </div>
+    <p class="um-lado" data-passo="4" style="position:absolute;left:1200px;right:0;top:170px;font-size:30px">De m² para cm²: <b>2 degraus</b>, cada um <b>× 100</b>.</p>
+    <div class="contas" style="position:absolute;left:1200px;top:320px;font-size:50px;row-gap:20px">
+      <div class="eq" data-passo="5"><span>\(A\)</span><span>\(=\)</span><span>\(12 \cdot 100 \cdot 100\)</span></div>
+      <div class="eq final" data-passo="6"><span>\(A\)</span><span>\(=\)</span><span>\(120\,000\ \text{cm}^2\)</span></div>
+    </div>
+  </div>
+  <aside class="notas">
+    <p>Cliques 1 a 3: área do retângulo, comprimento vezes largura: 12 m² (os 12 quadrados de 1 m² no desenho).</p>
+    <p>Cliques 4 a 6: m² → dm² → cm², × 100 em cada degrau: 12 · 10 000 = 120 000 cm².</p>
+  </aside>
+</section>
+
+<!-- 5. Atenção: área não usa o 10 -->
+<section class="slide" data-nome="Atenção: área">
+  <div class="conteudo">
+    <p class="olho">Atenção</p>
+    <h2 class="titulo">Área não usa o 10</h2>
+    <div style="position:absolute;left:0;right:0;top:170px;display:grid;grid-template-columns:1fr 1fr;gap:34px">
+      <div class="um-cartao" style="font-size:46px;padding:26px 32px"><b>1 m = 100 cm</b><div style="font-size:28px;color:var(--cinza);margin-top:6px">comprimento: degraus de 10</div></div>
+      <div class="caixa caixa-atencao" data-passo="1" style="padding:26px 32px"><div style="font-size:46px;font-weight:800;color:var(--roxo-titulo)">1 m² = 10 000 cm²</div><div style="margin-top:14px"><span class="um-resp errado">100 cm²</span></div></div>
+    </div>
+    <div class="caixa caixa-fundamental" data-passo="2" style="position:absolute;left:640px;right:0;top:500px;padding:20px 30px"><div class="texto" style="font-size:32px">Um quadrado de 1 m de lado tem 100 fileiras de 100 quadradinhos de 1 cm²: <b>100 · 100 = 10 000</b>.</div></div>
+  </div>
+  <aside class="notas">
+    <p>Clique 1: o erro mais comum de área. Clique 2: o porquê, igual ao do dm² com os 100 quadradinhos.</p>
+  </aside>
+</section>
+
+<!-- 6. Volume -->
+<section class="slide" data-nome="Volume">
+  <div class="conteudo">
+    <p class="olho">Volume e capacidade</p>
+    <h2 class="titulo">No volume, cada degrau vale 1 000</h2>
+    <div style="position:absolute;left:0;width:540px;top:160px;display:flex;flex-direction:column;gap:20px">
+      <p class="um-lado" style="font-size:30px"><b>Volume</b>: o espaço que um corpo ocupa. <b>Capacidade</b>: o quanto cabe num recipiente (em litros).</p>
+      <div class="caixa caixa-fundamental" style="padding:16px 24px"><div style="font-size:42px">\(V = c \cdot \ell \cdot h\)</div><div class="texto" style="font-size:26px">caixa retangular. Unidade: <b>m³</b>, o cubo de 1 m de aresta</div></div>
+    </div>
+    <div data-anima="um-escada" data-anima-passo="1" data-unid="km|hm|dam|m|dm|cm|mm" data-exp="³" data-fator="1000" data-base="3" data-de="3" data-ate="5" data-valor="1" style="position:absolute;left:640px;top:140px;width:1112px;height:472px"></div>
+    <div class="um-cartao" data-passo="2" style="position:absolute;left:640px;right:0;top:660px;font-size:31px">Três dimensões: cada degrau vale <b>10 · 10 · 10 = 1 000</b>.</div>
+  </div>
+  <aside class="notas">
+    <p>Clique 1: do m³ ao cm³: 1 m³ = 1 000 dm³ = 1 000 000 cm³. Clique 2: comprimento, 10; área, 100; volume, 1 000.</p>
+  </aside>
+</section>
+
+<!-- 7. 1 dm³ = 1 L -->
+<section class="slide" data-nome="Volume e litro">
+  <div class="conteudo">
+    <p class="olho">Volume e capacidade</p>
+    <h2 class="titulo">O cubo de 1 dm cabe 1 litro</h2>
+    <svg data-passo="1" viewBox="0 0 470 430" width="470" height="430" style="position:absolute;left:40px;top:150px;overflow:visible;font-family:Figtree,'Segoe UI',sans-serif" aria-hidden="true">
+      <defs><clipPath id="umFrente"><rect x="40" y="110" width="280" height="280"/></clipPath></defs>
+      <path d="M40 110 L140 30 H420 L320 110 Z" fill="#F4F7FF" stroke="var(--d)" stroke-width="4" stroke-linejoin="round"/>
+      <path d="M320 110 L420 30 V310 L320 390 Z" fill="#E8F0FF" stroke="var(--d)" stroke-width="4" stroke-linejoin="round"/>
+      <rect x="40" y="110" width="280" height="280" fill="#fff" stroke="var(--d)" stroke-width="4"/>
+      <g clip-path="url(#umFrente)"><rect class="um-agua" x="40" y="130" width="280" height="260" fill="#9CC0FF" opacity=".8"/><path class="um-sup" d="M40 130 q35 -6 70 0 t70 0 t70 0 t70 0" fill="none" stroke="#4E86FF" stroke-width="4"/></g>
+      <rect x="40" y="110" width="280" height="280" fill="none" stroke="var(--d)" stroke-width="5"/>
+      <g font-size="28" font-weight="800" fill="var(--d-forte)"><text x="180" y="424" text-anchor="middle">1 dm</text><text x="384" y="370">1 dm</text></g>
+      <text x="180" y="280" text-anchor="middle" font-size="50" font-weight="800" fill="#1E4FD8">1 L</text>
+    </svg>
+    <div class="caixa caixa-fundamental" data-passo="2" style="position:absolute;left:640px;width:560px;top:160px;padding:22px 30px;text-align:center">
+      <div style="font-size:64px">\(1\ \text{dm}^3 = 1\ \text{L}\)</div>
+    </div>
+    <div style="position:absolute;left:640px;width:560px;top:340px;display:flex;flex-direction:column;gap:16px">
+      <div class="um-cartao" data-passo="3" style="font-size:40px"><b>1 m³ = 1 000 L</b></div>
+      <div class="um-cartao" data-passo="4" style="font-size:40px"><b>1 cm³ = 1 mL</b></div>
+    </div>
+    <div style="position:absolute;left:1250px;right:0;top:160px;display:flex;flex-direction:column;gap:18px">
+      <div class="um-cartao" data-passo="5"><b>Caixa-d'água</b> de 2 m³: <b>2 000 L</b></div>
+      <div class="um-cartao" data-passo="6"><b>Colher de chá</b> de 5 cm³: <b>5 mL</b></div>
+      <div class="caixa caixa-fundamental" data-passo="7" style="padding:16px 24px"><div class="texto" style="font-size:28px">O litro fica no meio da escada, igual ao <b>dm³</b>.</div></div>
+    </div>
+  </div>
+  <aside class="notas">
+    <p>Clique 1: o cubo de 1 dm de aresta se enche: cabe exatamente 1 litro. Clique 2: a relação que liga volume e capacidade.</p>
+    <p>Cliques 3 e 4: um degrau acima (m³) e um abaixo (cm³), × 1 000. Cliques 5 a 7: os exemplos da apostila.</p>
+  </aside>
+</section>
+
+<!-- 8. Exemplo: aquário -->
+<section class="slide" data-nome="Exemplo: aquário">
+  <div class="conteudo">
+    <p class="olho">Exemplo</p>
+    <h2 class="titulo">Os litros do aquário</h2>
+    <p class="um-lado" style="position:absolute;left:0;width:540px;top:160px;font-size:31px">Um aquário tem <b>50 cm</b> de comprimento, <b>30 cm</b> de largura e <b>40 cm</b> de altura. Quantos litros cabem?</p>
+    <svg data-passo="1" viewBox="0 0 480 300" width="400" height="250" style="position:absolute;left:60px;top:330px;overflow:visible;font-family:Figtree,'Segoe UI',sans-serif" aria-hidden="true">
+      <defs><clipPath id="umAqua"><rect x="20" y="70" width="330" height="190"/></clipPath></defs>
+      <path d="M20 70 L110 20 H440 L350 70 Z" fill="#F4F7FF" stroke="var(--d)" stroke-width="4" stroke-linejoin="round"/>
+      <path d="M350 70 L440 20 V210 L350 260 Z" fill="#E8F0FF" stroke="var(--d)" stroke-width="4" stroke-linejoin="round"/>
+      <rect x="20" y="70" width="330" height="190" fill="#fff"/>
+      <g clip-path="url(#umAqua)"><rect class="um-agua" x="20" y="84" width="330" height="176" fill="#9CC0FF" opacity=".8"/><path class="um-sup" d="M20 84 q41 -6 82 0 t82 0 t82 0 t82 0" fill="none" stroke="#4E86FF" stroke-width="4"/></g>
+      <rect x="20" y="70" width="330" height="190" fill="none" stroke="var(--d)" stroke-width="5"/>
+      <g font-size="26" font-weight="800" fill="var(--d-forte)"><text x="185" y="292" text-anchor="middle">50 cm</text><text x="408" y="258">30 cm</text><text x="8" y="170" text-anchor="end">40 cm</text></g>
+    </svg>
+    <div class="contas com-nota" style="position:absolute;left:640px;top:160px;font-size:50px;row-gap:18px">
+      <div class="eq" data-passo="2"><span>\(V\)</span><span>\(=\)</span><span>\(c \cdot \ell \cdot h\)</span><span class="nota-l"></span></div>
+      <div class="eq" data-passo="3"><span>\(V\)</span><span>\(=\)</span><span>\(50 \cdot 30 \cdot 40\)</span><span class="nota-l"></span></div>
+      <div class="eq" data-passo="4"><span>\(V\)</span><span>\(=\)</span><span>\(60\,000\ \text{cm}^3\)</span><span class="nota-l"></span></div>
+      <div class="eq" data-passo="5"><span>\(V\)</span><span>\(=\)</span><span>\(60\,000 : 1000\)</span><span class="nota-l">cm³ para dm³: um degrau subindo</span></div>
+      <div class="eq" data-passo="6"><span>\(V\)</span><span>\(=\)</span><span>\(60\ \text{dm}^3\)</span><span class="nota-l"></span></div>
+      <div class="eq final" data-passo="7"><span>\(V\)</span><span>\(=\)</span><span>\(60\ \text{L}\)</span><span class="nota-l">1 dm³ = 1 L</span></div>
+    </div>
+  </div>
+  <aside class="notas">
+    <p>Clique 1: o aquário se enche. Cliques 2 a 4: 50 · 30 = 1 500 e 1 500 · 40 = 60 000 cm³.</p>
+    <p>Cliques 5 a 7: de cm³ para dm³ é um degrau para cima, ÷ 1 000: 60 dm³, que são 60 litros. Resposta: cabem 60 litros.</p>
+  </aside>
+</section>
+
+<!-- 9. km/h e m/s -->
+<section class="slide" data-nome="km/h e m/s">
+  <div class="conteudo">
+    <p class="olho">Velocidade</p>
+    <h2 class="titulo">De km/h para m/s</h2>
+    <p class="um-lado" style="position:absolute;left:0;width:540px;top:160px;font-size:31px">A placa diz <b>72 km/h</b>, mas o problema pede a distância em alguns <b>segundos</b>. A velocidade precisa estar em <b>m/s</b>.</p>
+    <div class="caixa" style="position:absolute;left:0;width:540px;top:400px;padding:18px 24px;font-size:29px;line-height:1.35">Em 72 km/h, o carro anda <b style="color:var(--roxo-titulo)">72 000 m</b> em <b style="color:var(--roxo-titulo)">3 600 s</b>. Em 1 s, anda:</div>
+    <div class="contas com-nota" style="position:absolute;left:640px;top:160px;font-size:52px;row-gap:22px">
+      <div class="eq" data-passo="1"><span>\(v\)</span><span>\(=\)</span><span>\(\dfrac{72\,000\ \text{m}}{3600\ \text{s}}\)</span><span class="nota-l"></span></div>
+      <div class="eq final" data-passo="2"><span>\(v\)</span><span>\(=\)</span><span>\(20\ \text{m/s}\)</span><span class="nota-l"></span></div>
+    </div>
+    <div class="um-cartao" data-passo="3" style="position:absolute;left:640px;right:0;top:470px">
+      <div style="font-size:44px">\(\dfrac{1000}{3600} = \dfrac{1}{3{,}6}\)</div>
+      <div style="margin-top:8px">Passar de km/h para m/s é sempre <b>dividir por 3,6</b>.</div>
+    </div>
+  </div>
+  <aside class="notas">
+    <p>A conversão mistura duas escadas: a do comprimento (km para m, × 1 000) e a do tempo (h para s, × 3 600).</p>
+    <p>Cliques 1 e 2: 72 000 : 3 600 = 20 m/s. Clique 3: dividir por 3 600 e multiplicar por 1 000 é o mesmo que dividir por 3,6 (72 : 3,6 = 20).</p>
+  </aside>
+</section>
+
+<!-- 10. O fator 3,6 -->
+<section class="slide" data-nome="O fator 3,6">
+  <div class="conteudo">
+    <p class="olho">Velocidade</p>
+    <h2 class="titulo">O fator 3,6</h2>
+    <div class="caixa caixa-fundamental" style="position:absolute;left:0;width:1040px;top:160px;padding:22px 32px">
+      <div style="font-size:60px;text-align:center">\(1\ \text{m/s} = 3{,}6\ \text{km/h}\)</div>
+      <svg viewBox="0 0 980 120" width="980" height="120" style="display:block;margin-top:10px;font-family:Figtree,'Segoe UI',sans-serif" aria-hidden="true">
+        <rect x="0" y="30" width="220" height="70" rx="20" fill="#fff" stroke="var(--d)" stroke-width="3"/><text x="110" y="78" text-anchor="middle" font-size="36" font-weight="800" fill="#3F2FA0">km/h</text>
+        <rect x="760" y="30" width="220" height="70" rx="20" fill="#fff" stroke="var(--d)" stroke-width="3"/><text x="870" y="78" text-anchor="middle" font-size="36" font-weight="800" fill="#3F2FA0">m/s</text>
+        <path d="M240 50 H730" stroke="var(--d)" stroke-width="5"/><path d="M716 38 L736 50 L716 62" fill="none" stroke="var(--d)" stroke-width="5" stroke-linecap="round" stroke-linejoin="round"/>
+        <text x="490" y="36" text-anchor="middle" font-size="30" font-weight="800" fill="var(--d-forte)">÷ 3,6</text>
+        <path d="M740 82 H250" stroke="#C99400" stroke-width="5"/><path d="M264 70 L244 82 L264 94" fill="none" stroke="#C99400" stroke-width="5" stroke-linecap="round" stroke-linejoin="round"/>
+        <text x="490" y="118" text-anchor="middle" font-size="30" font-weight="800" fill="#8A6A00">× 3,6</text>
+      </svg>
+    </div>
+    <p class="um-lado" data-passo="1" style="position:absolute;left:1100px;right:0;top:170px;font-size:30px">O caminho contrário: um atleta corre <b>100 m em 10 s</b>.</p>
+    <div class="contas com-nota" style="position:absolute;left:1100px;top:290px;font-size:46px;row-gap:14px">
+      <div class="eq" data-passo="2"><span>\(v\)</span><span>\(=\)</span><span>\(\dfrac{d}{t} = \dfrac{100}{10}\)</span><span class="nota-l"></span></div>
+      <div class="eq" data-passo="3"><span>\(v\)</span><span>\(=\)</span><span>\(10\ \text{m/s}\)</span><span class="nota-l"></span></div>
+      <div class="eq" data-passo="4"><span>\(v\)</span><span>\(=\)</span><span>\(10 \cdot 3{,}6\ \text{km/h}\)</span><span class="nota-l"></span></div>
+      <div class="eq final" data-passo="5"><span>\(v\)</span><span>\(=\)</span><span>\(36\ \text{km/h}\)</span><span class="nota-l"></span></div>
+    </div>
+  </div>
+  <aside class="notas">
+    <p>De km/h para m/s, divida por 3,6; de m/s para km/h, multiplique por 3,6. Cliques 1 a 5: o atleta, 10 m/s, são 36 km/h.</p>
+  </aside>
+</section>
+
+<!-- 11. Exemplo: sem olhar a estrada -->
+<section class="slide" data-nome="Exemplo: sem olhar a estrada">
+  <div class="conteudo">
+    <p class="olho">Exemplo</p>
+    <h2 class="titulo">4 segundos sem olhar a estrada</h2>
+    <p class="um-lado" style="position:absolute;left:0;width:540px;top:160px;font-size:31px">Um carro a <b>90 km/h</b> fica <b>4 s</b> sem o motorista olhar a estrada. Quantos metros ele percorre?</p>
+    <div class="caixa caixa-fundamental" style="position:absolute;left:0;width:540px;top:400px;padding:16px 24px"><div class="texto" style="font-size:28px">O tempo está em <b>segundos</b>: a velocidade vai para <b>m/s</b> antes da conta.</div></div>
+    <div class="contas" style="position:absolute;left:640px;top:160px;font-size:48px;row-gap:16px">
+      <div class="eq" data-passo="1"><span>\(v\)</span><span>\(=\)</span><span>\(\dfrac{90}{3{,}6}\)</span></div>
+      <div class="eq final" data-passo="2"><span>\(v\)</span><span>\(=\)</span><span>\(25\ \text{m/s}\)</span></div>
+    </div>
+    <div class="contas" style="position:absolute;left:1160px;top:160px;font-size:48px;row-gap:16px">
+      <div class="eq" data-passo="3"><span>\(d\)</span><span>\(=\)</span><span>\(v \cdot t\)</span></div>
+      <div class="eq" data-passo="4"><span>\(d\)</span><span>\(=\)</span><span>\(25 \cdot 4\)</span></div>
+      <div class="eq final" data-passo="5"><span>\(d\)</span><span>\(=\)</span><span>\(100\ \text{m}\)</span></div>
+    </div>
+    <div data-anima="um-carro" data-anima-passo="6" style="position:absolute;left:640px;top:440px;width:1120px;height:250px"></div>
+  </div>
+  <aside class="notas">
+    <p>Cliques 1 e 2: 90 : 3,6 = 25 m/s. Cliques 3 a 5: em 4 s, 25 · 4 = 100 m.</p>
+    <p>Clique 6: o carro anda 25 m a cada segundo; em 4 s, 100 m: um campo de futebol inteiro sem olhar a estrada.</p>
+  </aside>
+</section>
+
+<!-- 12. Atenção: dividir ou multiplicar -->
+<section class="slide" data-nome="Atenção: 3,6">
+  <div class="conteudo">
+    <p class="olho">Atenção</p>
+    <h2 class="titulo">Dividir ou multiplicar?</h2>
+    <div class="caixa caixa-atencao" style="position:absolute;left:0;right:0;top:170px;padding:24px 34px">
+      <div class="texto" style="font-size:34px">O número em <b>km/h</b> é sempre o <b>maior</b> dos dois, porque 1 m/s vale 3,6 km/h.</div>
+      <div style="display:flex;gap:26px;align-items:center;margin-top:20px;font-size:40px">\(72\ \text{km/h} =\) <span class="um-resp certo">20 m/s</span><span class="um-resp errado" data-passo="1">259,2 m/s</span></div>
+    </div>
+    <div class="caixa caixa-fundamental" data-passo="2" style="position:absolute;left:640px;right:0;top:520px;padding:20px 30px"><div class="texto" style="font-size:31px">Se 72 km/h viraram 259,2 m/s, você <b>multiplicou</b> quando devia <b>dividir</b>.</div></div>
+  </div>
+  <aside class="notas">
+    <p>Clique 1: o erro (72 · 3,6 = 259,2). Clique 2: a conferência rápida: em m/s o número fica menor.</p>
+  </aside>
+</section>
+
+<!-- 13. Questão 1 (Modelo m009) -->
+<section class="slide questao" data-nome="Questão 1 · Modelo IF">
+  <div class="conteudo">
+    <div class="area-resolucao"></div>
+    <span class="pilula pilula-pausa" data-em="1:some">Pause o vídeo e tente</span>
+    <div class="painel-questao">
+      <p class="olho">Questão 1 · Modelo IF</p>
+      <p class="enunciado">Rafael vai cobrir o chão de uma sala retangular de 4 m por 3,5 m com peças de piso quadradas de 50 cm de lado, sem cortar nenhuma peça e sem deixar espaço entre elas. Quantas peças ele vai usar?</p>
+      <ol class="alternativas">
+        <li data-em="2:apaga"><b>A</b><span>0,56</span></li>
+        <li data-em="2:apaga"><b>B</b><span>28</span></li>
+        <li data-em="2:apaga"><b>C</b><span>30</span></li>
+        <li data-em="2:certo"><b>D</b><span>56</span></li>
+        <li data-em="2:apaga"><b>E</b><span>2 800</span></li>
+      </ol>
+      <p class="fonte">Questão Modelo IF (lote if-matematica-sistemas-de-medidas, m009)</p>
+    </div>
+  </div>
+  <aside class="resolucao">
+    <p class="dados"><b>Dados:</b> sala 4 m × 3,5 m; peça 50 cm × 50 cm.</p>
+    <ol class="passos">
+      <li><b>Área da sala</b> \(4 \cdot 3{,}5 = 14\ \text{m}^2\)</li>
+      <li><b>Em cm² (× 10 000)</b> \(14 \cdot 10\,000 = 140\,000\ \text{cm}^2\)</li>
+      <li><b>Área da peça</b> \(50 \cdot 50 = 2500\ \text{cm}^2\)</li>
+      <li><b>Número de peças</b> \(140\,000 : 2500 = 56\)</li>
+      <li><b>(Conferindo) peças por lado</b> \(8 \cdot 7 = 56\)</li>
+    </ol>
+    <p class="resposta"><b>Resposta:</b> 56 peças. <b>Gabarito D.</b></p>
+    <p class="atencao"><b>Destaque no quadro:</b> 1 m² = 10 000 cm², e não 100.</p>
+    <ul class="erros">
+      <li><b>A</b> Usa 1 m² = 100 cm².</li>
+      <li><b>B</b> Divide 14 m² pelo lado 0,5 m.</li>
+      <li><b>C</b> Divide o perímetro pelo lado.</li>
+      <li><b>E</b> Divide 140 000 cm² pelo lado 50 cm.</li>
+    </ul>
+  </aside>
+  <aside class="notas">
+    <p>Clique 1 tira o aviso de pausa: resolva na área (D liga a caneta; E esconde o enunciado). Clique 2: gabarito D.</p>
+    <p>Modelo IF, lote if-matematica-sistemas-de-medidas, m009, MAT-1064. Conferido: 140 000 : 2 500 = 56; 4 : 0,5 = 8 e 3,5 : 0,5 = 7.</p>
+  </aside>
+</section>
+
+<!-- 14. Questão 2 (IF 2016-1 q23) -->
+<section class="slide questao" data-nome="Questão 2 · IF 2016">
+  <div class="conteudo">
+    <div class="area-resolucao"></div>
+    <span class="pilula pilula-pausa" data-em="1:some">Pause o vídeo e tente</span>
+    <div class="painel-questao">
+      <p class="olho">Questão 2 · IF Sudeste MG 2016</p>
+      <p class="enunciado">O tanque de combustível de um carro popular comporta 50 litros. Se o dono do veículo abasteceu com gasolina e sabendo-se que a porcentagem de etanol presente na gasolina é 27%, quantos \(\text{cm}^3\) de etanol tem no tanque de combustível quando esse está cheio?</p>
+      <ol class="alternativas">
+        <li data-em="2:apaga"><b>A</b><span>0,135</span></li>
+        <li data-em="2:apaga"><b>B</b><span>1,35</span></li>
+        <li data-em="2:apaga"><b>C</b><span>135</span></li>
+        <li data-em="2:apaga"><b>D</b><span>1.350</span></li>
+        <li data-em="2:certo"><b>E</b><span>13.500</span></li>
+      </ol>
+      <p class="fonte">IF Sudeste MG, prova de 2016 (1º semestre), questão 23</p>
+    </div>
+  </div>
+  <aside class="resolucao">
+    <p class="dados"><b>Dados:</b> tanque de 50 L; 27% de etanol; \(1\ \text{L} = 1\,000\ \text{cm}^3\).</p>
+    <ol class="passos">
+      <li><b>Etanol em litros</b> \(0{,}27 \cdot 50 = 13{,}5\ \text{L}\)</li>
+      <li><b>Em cm³ (× 1 000)</b> \(13{,}5 \cdot 1000 = 13\,500\ \text{cm}^3\)</li>
+    </ol>
+    <p class="resposta"><b>Resposta:</b> 13 500 cm³. <b>Gabarito E.</b></p>
+    <p class="atencao"><b>Destaque no quadro:</b> 1 L = 1 dm³ = 1 000 cm³; o cm³ é menor, o número aumenta.</p>
+    <ul class="erros">
+      <li><b>A</b> Divide por 100 em vez de multiplicar por 1 000.</li>
+      <li><b>B</b> Divide por 10.</li>
+      <li><b>C</b> Multiplica por 10.</li>
+      <li><b>D</b> Usa 1 L = 100 cm³.</li>
+    </ul>
+  </aside>
+  <aside class="notas">
+    <p>Clique 1 tira o aviso de pausa. Clique 2: gabarito E.</p>
+    <p>Questão oficial do IF Sudeste MG 2016-1, q23, MAT-0478 (sobra de Unidades de medida). Conferido: 27% de 50 = 13,5; 13,5 · 1 000 = 13 500. A porcentagem é só "27 de cada 100" (o capítulo 2 aprofunda); as alternativas estão com ponto de milhar, como na prova.</p>
+  </aside>
+</section>
+
+<!-- 15. Questão 3 (IF 2019-2 q13) -->
+<section class="slide questao" data-nome="Questão 3 · IF 2019">
+  <div class="conteudo">
+    <div class="area-resolucao"></div>
+    <span class="pilula pilula-pausa" data-em="1:some">Pause o vídeo e tente</span>
+    <div class="painel-questao">
+      <p class="olho">Questão 3 · IF Sudeste MG 2019</p>
+      <p class="enunciado">Um motorista trafegava em uma rodovia a uma velocidade constante de 20 m/s (metros por segundo), quando avistou uma placa sinalizando que a velocidade máxima permitida era de 60 km/h (quilômetros por hora). Em quantos km/h ele excedia a velocidade máxima permitida?</p>
+      <ol class="alternativas">
+        <li data-em="2:certo"><b>A</b><span>12 km/h</span></li>
+        <li data-em="2:apaga"><b>B</b><span>16 km/h</span></li>
+        <li data-em="2:apaga"><b>C</b><span>20 km/h</span></li>
+        <li data-em="2:apaga"><b>D</b><span>36 km/h</span></li>
+        <li data-em="2:apaga"><b>E</b><span>40 km/h</span></li>
+      </ol>
+      <p class="fonte">IF Sudeste MG, prova de 2019 (2º semestre), questão 13</p>
+    </div>
+  </div>
+  <aside class="resolucao">
+    <p class="dados"><b>Dados:</b> \(v = 20\ \text{m/s}\); limite \(60\ \text{km/h}\).</p>
+    <ol class="passos">
+      <li><b>m/s para km/h: × 3,6</b> \(20 \cdot 3{,}6 = 72\ \text{km/h}\)</li>
+      <li><b>Excesso</b> \(72 - 60 = 12\ \text{km/h}\)</li>
+    </ol>
+    <p class="resposta"><b>Resposta:</b> 12 km/h acima do limite. <b>Gabarito A.</b></p>
+    <p class="atencao"><b>Destaque no quadro:</b> Só se subtraem velocidades na mesma unidade.</p>
+    <ul class="erros">
+      <li><b>B</b> Passa o limite para m/s (≈ 16,7).</li>
+      <li><b>C</b> Repete os 20 sem converter.</li>
+      <li><b>D</b> Usa o fator 1,8.</li>
+      <li><b>E</b> Faz 60 − 20 sem converter.</li>
+    </ul>
+  </aside>
+  <aside class="notas">
+    <p>Clique 1 tira o aviso de pausa. Clique 2: gabarito A.</p>
+    <p>Questão oficial do IF Sudeste MG 2019-2, q13, MAT-0512 (sobra de Unidades de medida). Conferido: 20 · 3,6 = 72; 72 − 60 = 12.</p>
+  </aside>
+</section>
+
+<!-- 16. Resumo -->
+<section class="slide" data-nome="Resumo">
+  <div class="conteudo">
+    <p class="olho">Resumo · Unidades de medida</p>
+    <h2 class="titulo">O essencial</h2>
+    <div class="resumo" style="position:absolute;left:0;right:0;top:150px;gap:16px 24px">
+      <div><b>Comprimento:</b> cada degrau vale 10 (km, hm, dam, m, dm, cm, mm).</div>
+      <div><b>Área:</b> cada degrau vale 100; 1 m² = 10 000 cm²; 1 ha = 10 000 m².</div>
+      <div><b>Volume:</b> cada degrau vale 1 000; 1 dm³ = 1 L, 1 m³ = 1 000 L, 1 cm³ = 1 mL.</div>
+      <div><b>Massa:</b> 1 kg = 1 000 g, 1 g = 1 000 mg, 1 t = 1 000 kg.</div>
+      <div><b>Tempo:</b> 1 h = 60 min, 1 min = 60 s; a parte decimal da hora vezes 60 dá os minutos.</div>
+      <div><b>Velocidade:</b> 1 m/s = 3,6 km/h; de km/h para m/s, divida por 3,6.</div>
+      <div style="grid-column:2"><b>Indo para uma unidade menor, o número aumenta.</b></div>
+    </div>
+  </div>
+  <aside class="notas">
+    <p>"O essencial" da apostila para o subcapítulo inteiro (as duas partes). Peça para tirarem um print desta tela.</p>
+  </aside>
+</section>
+
+<!-- 17. A seguir -->
+<section class="slide capa" data-nome="A seguir">
+  <div class="estrelas"></div>
+  <div class="texto-capa" style="top:200px">
+    <span class="selo">Matemática · IF</span>
+    <p class="aula" style="font-size:28px">A seguir · Números e operações</p>
+    <h1 style="font-size:124px">Questões do IF Sudeste</h1>
+    <p class="sub">Parte 1 de 2: conjuntos, conjuntos numéricos, múltiplos e divisores</p>
+  </div>
+  <svg class="emblema" viewBox="0 0 640 640" aria-hidden="true">
+    <rect x="150" y="110" width="340" height="430" rx="34" fill="#fff" fill-opacity=".12" stroke="#fff" stroke-opacity=".6" stroke-width="4"/>
+    <g fill="#fff" fill-opacity=".7"><rect x="200" y="170" width="240" height="18" rx="9"/><rect x="200" y="210" width="200" height="18" rx="9"/><rect x="200" y="250" width="220" height="18" rx="9"/></g>
+    <g fill="none" stroke="#fff" stroke-opacity=".75" stroke-width="4"><circle cx="216" cy="330" r="16"/><circle cx="216" cy="390" r="16"/><circle cx="216" cy="450" r="16"/></g>
+    <circle cx="216" cy="390" r="16" fill="#FFD10C"/>
+    <g fill="#fff" fill-opacity=".55"><rect x="250" y="321" width="150" height="16" rx="8"/><rect x="250" y="381" width="170" height="16" rx="8"/><rect x="250" y="441" width="130" height="16" rx="8"/></g>
+    <circle cx="470" cy="130" r="54" fill="#FFD10C"/>
+    <path d="M446 132 L464 150 L496 112" fill="none" stroke="#292B2C" stroke-width="10" stroke-linecap="round" stroke-linejoin="round"/>
+  </svg>
+  <img class="logo-capa" src="{{LOGO_BRANCO}}" alt="Quarks">
+  <aside class="notas"><p>Fim de Unidades de medida e das partes do capítulo Números e operações. A seguir, os dois blocos com as questões oficiais do IF Sudeste do capítulo.</p></aside>
+</section>
