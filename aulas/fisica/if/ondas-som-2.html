@@ -1,0 +1,723 @@
+<!--aula
+{"disciplina": "fisica", "curso": "IF", "assunto": "Ondas e som", "parte": "Parte 2 de 2", "titulo": "O som", "scripts": ["animacoes-ondas.js"]}
+-->
+<!-- Fonte: apostila IF, Física, cap. 5 Ondas (5.1 Ondas e som: "Como o som é produzido", "Altura, intensidade e timbre", "Reflexão das ondas e o eco", "Saúde auditiva e poluição sonora" e o resumo de 5.1). O eco entrou aqui, junto com a propagação do som (o cronograma não lista o eco, mas ele está na apostila de 5.1). Questões da apostila: oficiais IF Sudeste MG 2017-1 extra q29 (FIS-0545) e 2016-1 extra q30 (FIS-0557), sobras do bloco do fim do capítulo, e Modelo IF if-fisica-acustica m005 (FIS-1641). -->
+<style>
+  .caixa, .painel, .linha-ex { box-sizing: border-box; }
+  .linha-ex { background: var(--branco); border: 2px solid var(--lilas-2); border-radius: 24px; padding: 14px 26px; font-size: 30px; line-height: 1.3; }
+  .linha-ex b { color: var(--roxo-titulo); }
+  .linha-tag { display: grid; grid-template-columns: 1fr auto; align-items: center; gap: 18px; }
+  .tag { display: inline-block; padding: 5px 20px; border-radius: 999px; font-weight: 800; font-size: 25px; white-space: nowrap; }
+  .tag-m { background: var(--d-clara); color: var(--d-forte); }
+  .tag-a { background: #FFF1C2; color: #8A6A00; }
+  .tag-r { background: var(--lilas); color: var(--roxo-titulo); }
+  .painel { background: var(--branco); border: 2px solid var(--lilas-2); border-radius: 30px; padding: 18px 26px; }
+  .painel h3 { margin: 0 0 4px; font: 800 38px var(--fonte-titulo); letter-spacing: -.02em; color: var(--roxo-titulo); }
+  .painel p { margin: 6px 0 0; font-size: 26px; line-height: 1.32; }
+  .painel b { color: var(--roxo-titulo); }
+  .resumo.cinco > div { font-size: 28px; padding: 16px 24px; }
+  .rot { font-family: Figtree, 'Segoe UI', sans-serif; font-weight: 800; }
+  /* corda do violão que vibra (devagar, em câmera lenta) */
+  @keyframes vibra-corda { 0%, 100% { transform: scaleY(1); } 50% { transform: scaleY(-1); } }
+  .corda-v { transform-box: fill-box; transform-origin: center; }
+  .slide.ativo .corda-v { animation: vibra-corda 1.4s ease-in-out infinite; }
+  /* relâmpago e trovão: a luz chega na hora, o som demora */
+  @keyframes clarao-r { 0%, 4% { opacity: 0; } 6%, 14% { opacity: 1; } 20%, 100% { opacity: 0; } }
+  .slide.ativo .mostra .raio-r, .slide.ativo .mostra .luz-chega { animation: clarao-r 7s linear infinite; }
+  .raio-r, .luz-chega { opacity: 0; }
+  @keyframes trovao { 0%, 5% { transform: translateX(0); opacity: 0; } 8% { opacity: 1; } 88% { opacity: 1; } 92%, 100% { transform: translateX(980px); opacity: 0; } }
+  .trovao { opacity: 0; }
+  .slide.ativo .mostra .trovao { animation: trovao 7s linear infinite; }
+  @keyframes ouve { 0%, 86% { opacity: 0; } 89%, 97% { opacity: 1; } 100% { opacity: 0; } }
+  .ouve { opacity: 0; }
+  .slide.ativo .mostra .ouve { animation: ouve 7s linear infinite; }
+  /* reflexão: as frentes de onda batem no paredão e voltam */
+  @keyframes vai-frente { 0% { transform: translateX(0); opacity: 0; } 8% { opacity: 1; } 50% { transform: translateX(560px); opacity: 1; } 51%, 100% { opacity: 0; transform: translateX(560px); } }
+  @keyframes volta-frente { 0%, 49% { opacity: 0; transform: translateX(0); } 50% { opacity: 1; transform: translateX(0); } 92% { opacity: 1; } 100% { transform: translateX(-560px); opacity: 0; } }
+  .frente-vai, .frente-volta { opacity: 0; }
+  .slide.ativo .mostra .frente-vai { animation: vai-frente 6s linear infinite; }
+  .slide.ativo .mostra .frente-volta { animation: volta-frente 6s linear infinite; }
+  /* sonar: o pulso desce até o fundo e volta */
+  @keyframes pulso-desce { 0% { transform: translateY(0); opacity: 0; } 5% { opacity: 1; } 48% { transform: translateY(210px); opacity: 1; } 50%, 100% { transform: translateY(210px); opacity: 0; } }
+  @keyframes pulso-sobe { 0%, 49% { transform: translateY(210px); opacity: 0; } 51% { opacity: 1; } 95% { transform: translateY(0); opacity: 1; } 100% { opacity: 0; } }
+  .pulso-d, .pulso-s { opacity: 0; }
+  .slide.ativo .pulso-d { animation: pulso-desce 5s linear infinite; }
+  .slide.ativo .pulso-s { animation: pulso-sobe 5s linear infinite; }
+  /* barras do medidor de decibéis */
+  @keyframes enche { from { transform: scaleX(0); } to { transform: scaleX(1); } }
+  .barra-db { transform-box: fill-box; transform-origin: 0 50%; }
+  .slide.ativo .mostra .barra-db { animation: enche 1.6s ease-out both; }
+</style>
+
+<!-- 1. Capa -->
+<section class="slide capa" data-nome="Capa">
+  <div class="estrelas"></div>
+  <div class="texto-capa">
+    <span class="selo">Física · IF</span>
+    <p class="aula">Ondas e som · Parte 2 de 2</p>
+    <h1>O som</h1>
+    <p class="sub">Vibração, qualidades, eco e saúde</p>
+  </div>
+  <svg class="emblema" viewBox="0 0 640 640" aria-hidden="true">
+    <g class="gira-lento"><ellipse cx="320" cy="320" rx="300" ry="128" fill="none" stroke="#fff" stroke-opacity=".38" stroke-width="2" transform="rotate(-10 320 320)"/></g>
+    <circle cx="320" cy="320" r="132" fill="#FFD10C"/>
+    <image href="{{SYM_ROXO}}" x="238" y="238" width="164" height="164"/>
+    <g fill="none" stroke="#fff" stroke-width="8" stroke-linecap="round"><path d="M480 250 q36 70 0 140" opacity=".9"/><path d="M530 210 q60 110 0 220" opacity=".6"/><path d="M160 250 q-36 70 0 140" opacity=".9"/><path d="M110 210 q-60 110 0 220" opacity=".6"/></g>
+  </svg>
+  <img class="logo-capa" src="{{LOGO_BRANCO}}" alt="Quarks">
+  <aside class="notas">
+    <p>Segunda parte de Ondas e som: como o som nasce e se propaga, as três qualidades (altura, intensidade e timbre), o eco e a saúde auditiva.</p>
+  </aside>
+</section>
+
+<!-- 2. Todo som nasce de uma vibração -->
+<section class="slide" data-nome="Algo que vibra">
+  <div class="conteudo">
+    <p class="olho">Como o som é produzido</p>
+    <h2 class="titulo">Todo som nasce de algo que vibra</h2>
+    <svg viewBox="0 0 860 400" width="860" height="400" style="position:absolute;left:0;top:150px;overflow:visible" aria-hidden="true">
+      <rect x="0" y="0" width="860" height="400" rx="34" fill="#fff" stroke="#E4DEFB" stroke-width="2"/>
+      <ellipse cx="300" cy="200" rx="230" ry="150" fill="#E9C99A" stroke="#B88B54" stroke-width="4"/>
+      <circle cx="300" cy="200" r="62" fill="#5C3B1E"/>
+      <rect x="520" y="178" width="320" height="44" rx="8" fill="#8A5A2E"/>
+      <g stroke="#B9B0C9" stroke-width="2"><line x1="580" y1="178" x2="580" y2="222"/><line x1="640" y1="178" x2="640" y2="222"/><line x1="700" y1="178" x2="700" y2="222"/><line x1="760" y1="178" x2="760" y2="222"/></g>
+      <rect x="110" y="170" width="20" height="60" rx="5" fill="#5C3B1E"/>
+      <line x1="120" y1="186" x2="836" y2="186" stroke="#8E8AA0" stroke-width="2"/>
+      <line x1="120" y1="214" x2="836" y2="214" stroke="#8E8AA0" stroke-width="2"/>
+      <path class="corda-v" d="M120 200 Q478 176 836 200" fill="none" stroke="var(--d)" stroke-width="5"/>
+      <text x="600" y="385" text-anchor="middle" class="rot" font-size="28" fill="#0B6B6D">a corda treme (câmera lenta)</text>
+    </svg>
+    <div style="position:absolute;left:920px;right:0;top:150px;display:flex;flex-direction:column;gap:20px">
+      <div class="linha-ex" data-passo="1">Encoste os dedos na garganta e fale: você sente uma <b>vibração</b>.</div>
+      <div class="linha-ex" data-passo="2">Toque a corda de um violão e olhe de perto: ela <b>treme</b>.</div>
+      <div class="caixa caixa-fundamental" data-passo="3" style="padding:20px 30px">
+        <div class="texto" style="font-size:32px">Todo som nasce de algo que <b>vibra</b>.</div>
+      </div>
+    </div>
+  </div>
+  <aside class="notas">
+    <p>Peça para a turma fazer o teste dos dedos na garganta agora. A corda está em câmera lenta: na realidade ela vibra centenas de vezes por segundo.</p>
+  </aside>
+</section>
+
+<!-- 3. Como o som se propaga -->
+<section class="slide" data-nome="O som no ar">
+  <div class="conteudo">
+    <p class="olho">Do objeto ao ouvido</p>
+    <h2 class="titulo">O som empurra e puxa o ar</h2>
+    <div data-anima="ondas-ar" data-w="1760" data-h="290" data-t0="3" style="position:absolute;left:0;top:140px;width:1760px;height:290px"></div>
+    <div class="linha-ex" data-passo="1" style="position:absolute;left:0;width:1220px;top:450px;font-size:28px">O objeto que vibra <b>empurra e puxa o ar</b> em volta: formam-se regiões de ar <b>mais apertado</b> e <b>menos apertado</b>, que se espalham em todas as direções.</div>
+    <div class="linha-ex" data-passo="2" style="position:absolute;left:1260px;right:0;top:450px;font-size:28px">No ouvido, o <b>tímpano</b> vibra, e o cérebro interpreta como som.</div>
+    <div class="caixa caixa-fundamental" data-passo="3" style="position:absolute;left:580px;right:0;top:640px;padding:18px 30px">
+      <span class="rotulo">O som</span>
+      <div class="texto" style="font-size:29px">Onda <b>mecânica</b> produzida pela <b>vibração</b> de um objeto. Precisa de um material (ar, água, sólidos) e <b>não se propaga no vácuo</b>.</div>
+    </div>
+  </div>
+  <aside class="notas">
+    <p>Na animação, cada bolinha é um pedaço do ar. Repare nas faixas mais escuras (ar apertado) andando para a direita, enquanto a bolinha amarela só vai e volta no lugar: de novo, energia sem levar matéria.</p>
+  </aside>
+</section>
+
+<!-- 4. Velocidade do som -->
+<section class="slide" data-nome="Relâmpago e trovão">
+  <div class="conteudo">
+    <p class="olho">A velocidade do som</p>
+    <h2 class="titulo">Primeiro o clarão, depois o trovão</h2>
+    <svg viewBox="0 0 1760 300" width="1760" height="300" style="position:absolute;left:0;top:140px;overflow:visible" aria-hidden="true">
+      <g data-passo="1">
+        <path d="M80 90 q0 -60 70 -60 q30 -40 90 -20 q60 -10 70 40 q50 10 40 60 h-260 q-40 -10 -10 -20 z" fill="#8E8AA0"/>
+        <path class="raio-r" d="M190 120 l-30 70 h34 l-28 80 l70 -100 h-36 l26 -50 z" fill="#FFD10C" stroke="#E0A800" stroke-width="3"/>
+        <line x1="40" y1="290" x2="1720" y2="290" stroke="#DCD6F3" stroke-width="8" stroke-linecap="round"/>
+        <g transform="translate(1600 290)"><circle cx="0" cy="-130" r="24" fill="#6551D1"/><path d="M0 -104 v54 M0 -50 l-20 50 M0 -50 l20 50 M0 -90 l-26 22" stroke="#6551D1" stroke-width="11" stroke-linecap="round" fill="none"/></g>
+        <g class="luz-chega"><circle cx="1600" cy="-0" r="0"/><path d="M1580 140 l-18 -14 M1620 140 l18 -14 M1600 132 v-24" stroke="#FFD10C" stroke-width="6" stroke-linecap="round"/><text x="1600" y="96" text-anchor="middle" class="rot" font-size="26" fill="#8A6A00">vê</text></g>
+        <g class="trovao"><path d="M300 150 q40 60 0 120 M330 140 q50 70 0 140" fill="none" stroke="#0F8B8D" stroke-width="7" stroke-linecap="round"/></g>
+        <g class="ouve"><text x="1600" y="96" text-anchor="middle" class="rot" font-size="26" fill="#0B6B6D">ouve</text></g>
+      </g>
+    </svg>
+    <div class="linha-ex" data-passo="2" style="position:absolute;left:0;width:1300px;top:470px">A luz chega <b>quase na hora</b>; o som, a cerca de <b>340 m/s</b> no ar, <b>demora</b>.</div>
+    <div class="caixa" data-passo="3" style="position:absolute;left:580px;right:0;top:600px;padding:20px 30px">
+      <span class="rotulo">O som é mais rápido nos sólidos e nos líquidos</span>
+      <div style="display:flex;gap:26px;margin-top:6px;font-size:28px;line-height:1.3">
+        <span class="tag tag-r" style="font-size:27px">ar: cerca de 340 m/s</span>
+        <span class="tag tag-m" style="font-size:27px">água do mar: cerca de 1500 m/s</span>
+        <span class="tag tag-a" style="font-size:27px">sólidos: ainda mais</span>
+      </div>
+    </div>
+  </div>
+  <aside class="notas">
+    <p>Clique 1: o raio cai; o clarão chega na hora ao observador ("vê") e o trovão vai andando até ele ("ouve"). Clique 2: por quê. Clique 3: o som é mais rápido nos sólidos e nos líquidos que no ar.</p>
+    <p>Os 1500 m/s da água do mar estão no exemplo do sonar da apostila. Para os sólidos, a apostila não dá número.</p>
+  </aside>
+</section>
+
+<!-- 5. A corda do violão -->
+<section class="slide" data-nome="Agudo na corda">
+  <div class="conteudo">
+    <p class="olho">Depende de como vibra</p>
+    <h2 class="titulo">Quando a corda dá um som mais agudo?</h2>
+    <div style="position:absolute;left:0;right:0;top:160px;display:grid;grid-template-columns:repeat(3,1fr);gap:30px">
+      <div class="painel" data-passo="1">
+        <h3>Mais curta</h3>
+        <svg viewBox="0 0 500 120" width="500" height="120" aria-hidden="true">
+          <line x1="20" y1="40" x2="480" y2="40" stroke="#BFB6E6" stroke-width="5"/><text x="30" y="26" class="rot" font-size="20" fill="#5E5A70">longa: grave</text>
+          <line x1="20" y1="95" x2="260" y2="95" stroke="var(--d)" stroke-width="5"/><circle cx="260" cy="95" r="12" fill="#FFD10C" stroke="#292B2C" stroke-width="3"/><text x="280" y="102" class="rot" font-size="20" fill="#0B6B6D">dedo: curta, aguda</text>
+        </svg>
+        <p>O dedo aperta a corda num ponto <b>mais perto do corpo</b> do violão.</p>
+      </div>
+      <div class="painel" data-passo="2">
+        <h3>Mais fina</h3>
+        <svg viewBox="0 0 500 120" width="500" height="120" aria-hidden="true">
+          <line x1="20" y1="40" x2="480" y2="40" stroke="#BFB6E6" stroke-width="12"/><text x="30" y="18" class="rot" font-size="20" fill="#5E5A70">grossa: grave</text>
+          <line x1="20" y1="95" x2="480" y2="95" stroke="var(--d)" stroke-width="3"/><text x="30" y="78" class="rot" font-size="20" fill="#0B6B6D">fina: aguda</text>
+        </svg>
+        <p>A corda fina vibra mais depressa que a grossa.</p>
+      </div>
+      <div class="painel" data-passo="3">
+        <h3>Mais esticada</h3>
+        <svg viewBox="0 0 500 120" width="500" height="120" aria-hidden="true">
+          <path d="M20 40 Q250 62 480 40" fill="none" stroke="#BFB6E6" stroke-width="5"/><text x="30" y="26" class="rot" font-size="20" fill="#5E5A70">frouxa: grave</text>
+          <line x1="20" y1="95" x2="480" y2="95" stroke="var(--d)" stroke-width="5"/><path d="M440 80 l30 15 l-30 15" fill="none" stroke="#0B6B6D" stroke-width="4"/><text x="30" y="82" class="rot" font-size="20" fill="#0B6B6D">esticada: aguda</text>
+        </svg>
+        <p>É isso que se faz ao <b>afinar</b> o violão.</p>
+      </div>
+    </div>
+    <div class="caixa caixa-fundamental" data-passo="4" style="position:absolute;left:580px;right:0;top:640px;padding:20px 30px">
+      <div class="texto" style="font-size:30px">Curta, fina ou esticada: a corda vibra <b>mais vezes por segundo</b> e o som fica <b>mais agudo</b>.</div>
+    </div>
+  </div>
+  <aside class="notas">
+    <p>As três regras da apostila. Mais vezes por segundo = frequência maior = mais agudo (a ligação entre frequência e agudo vem daqui a pouco, em Altura).</p>
+  </aside>
+</section>
+
+<!-- 6. O que o ouvido percebe -->
+<section class="slide" data-nome="20 Hz a 20 000 Hz">
+  <div class="conteudo">
+    <p class="olho">Os limites do ouvido</p>
+    <h2 class="titulo">De 20 Hz a 20 000 Hz</h2>
+    <svg viewBox="0 0 1760 300" width="1760" height="300" style="position:absolute;left:0;top:170px;overflow:visible" aria-hidden="true">
+      <rect x="0" y="90" width="300" height="110" rx="26" fill="#E4DEFB"/>
+      <rect x="320" y="90" width="1100" height="110" rx="26" fill="var(--d-clara)" stroke="var(--d)" stroke-width="3"/>
+      <rect x="1440" y="90" width="320" height="110" rx="26" fill="#FFF1C2"/>
+      <text x="150" y="156" text-anchor="middle" class="rot" font-size="34" fill="#3F2FA0">infrassom</text>
+      <text x="870" y="156" text-anchor="middle" class="rot" font-size="36" fill="#0B6B6D">o ouvido humano percebe</text>
+      <text x="1600" y="156" text-anchor="middle" class="rot" font-size="34" fill="#8A6A00">ultrassom</text>
+      <text x="320" y="246" text-anchor="middle" class="rot" font-size="32" fill="#292B2C">20 Hz</text>
+      <text x="1430" y="246" text-anchor="middle" class="rot" font-size="32" fill="#292B2C">20 000 Hz</text>
+      <path d="M40 40 H1720 M1700 26 L1722 40 L1700 54" fill="none" stroke="#8E8AA0" stroke-width="4" stroke-linecap="round"/>
+      <text x="40" y="26" class="rot" font-size="24" fill="#5E5A70">frequência aumenta (mais agudo) →</text>
+      <g data-passo="1" transform="translate(1600 268)">
+        <text x="0" y="22" text-anchor="middle" class="rot" font-size="26" fill="#8A6A00">cães e morcegos ouvem</text>
+      </g>
+    </svg>
+    <div class="caixa" data-passo="2" style="position:absolute;left:580px;right:0;top:560px;padding:20px 30px">
+      <div class="texto" style="font-size:30px">Abaixo de 20 Hz: <b>infrassom</b>. Acima de 20 000 Hz: <b>ultrassom</b>, que cães e morcegos conseguem ouvir (e que a medicina usa nos exames).</div>
+    </div>
+  </div>
+  <aside class="notas">
+    <p>Da apostila: o ouvido humano percebe cerca de 20 Hz a 20 000 Hz. O ultrassom volta no eco (morcegos, golfinhos) e em Radiações e saúde (exame de ultrassonografia).</p>
+  </aside>
+</section>
+
+<!-- 7. Exemplo: garrafas musicais -->
+<section class="slide" data-nome="Exemplo: garrafas musicais">
+  <div class="conteudo">
+    <p class="olho">Exemplo</p>
+    <h2 class="titulo">Garrafas musicais</h2>
+    <p class="texto" style="position:absolute;left:0;right:0;top:140px;margin:0;font-size:32px">Bia sopra em três garrafas iguais: uma vazia, uma com água até a metade e uma quase cheia. Qual dá o som <b>mais agudo</b>?</p>
+    <svg viewBox="0 -40 1000 480" width="800" height="384" style="position:absolute;left:40px;top:220px;overflow:visible" aria-hidden="true">
+      <defs><clipPath id="gfa"><path d="M60 140 q0 -30 40 -50 v-70 h60 v70 q40 20 40 50 v220 q0 20 -20 20 h-100 q-20 0 -20 -20 z"/></clipPath></defs>
+      <g id="garrafa-1">
+        <path d="M60 140 q0 -30 40 -50 v-70 h60 v70 q40 20 40 50 v220 q0 20 -20 20 h-100 q-20 0 -20 -20 z" fill="#F7F5FE"/>
+        <rect data-passo="1" x="60" y="20" width="140" height="360" fill="var(--d)" opacity=".18" clip-path="url(#gfa)"/>
+        <path d="M60 140 q0 -30 40 -50 v-70 h60 v70 q40 20 40 50 v220 q0 20 -20 20 h-100 q-20 0 -20 -20 z" fill="none" stroke="#7F7A99" stroke-width="5"/>
+        <text x="130" y="420" text-anchor="middle" class="rot" font-size="34" fill="#5E5A70">vazia</text>
+      </g>
+      <g transform="translate(340 0)">
+        <rect x="60" y="230" width="140" height="160" fill="#9CCBF2" clip-path="url(#gfa)"/>
+        <rect data-passo="1" x="60" y="20" width="140" height="210" fill="var(--d)" opacity=".18" clip-path="url(#gfa)"/>
+        <path d="M60 140 q0 -30 40 -50 v-70 h60 v70 q40 20 40 50 v220 q0 20 -20 20 h-100 q-20 0 -20 -20 z" fill="none" stroke="#7F7A99" stroke-width="5"/>
+        <text x="130" y="420" text-anchor="middle" class="rot" font-size="34" fill="#5E5A70">metade</text>
+      </g>
+      <g transform="translate(680 0)">
+        <rect x="60" y="90" width="140" height="300" fill="#9CCBF2" clip-path="url(#gfa)"/>
+        <rect data-passo="1" x="60" y="20" width="140" height="70" fill="var(--d)" opacity=".18" clip-path="url(#gfa)"/>
+        <path d="M60 140 q0 -30 40 -50 v-70 h60 v70 q40 20 40 50 v220 q0 20 -20 20 h-100 q-20 0 -20 -20 z" fill="none" stroke="#7F7A99" stroke-width="5"/>
+        <text x="130" y="420" text-anchor="middle" class="rot" font-size="34" fill="#5E5A70">quase cheia</text>
+        <circle data-passo="3" cx="130" cy="-10" r="22" fill="#FFD10C" stroke="#292B2C" stroke-width="3"/>
+      </g>
+    </svg>
+    <div style="position:absolute;left:1060px;right:0;top:260px;display:flex;flex-direction:column;gap:20px">
+      <div class="linha-ex" data-passo="1" style="font-size:28px">Ao soprar, quem vibra é o <b>ar dentro da garrafa</b> (a parte colorida).</div>
+      <div class="linha-ex" data-passo="2" style="font-size:28px">Quanto <b>mais curta</b> a coluna de ar, <b>mais agudo</b> o som, como acontece com a corda.</div>
+      <span class="pilula pilula-resposta" data-passo="3" style="align-self:flex-start">Resposta: a quase cheia</span>
+    </div>
+  </div>
+  <aside class="notas">
+    <p>Exemplo da apostila. Clique 1: pinta a coluna de ar de cada garrafa. Clique 2: a regra. Clique 3: a resposta (a de coluna mais curta).</p>
+  </aside>
+</section>
+
+<!-- 8. As três qualidades -->
+<section class="slide" data-nome="Altura, intensidade e timbre">
+  <div class="conteudo">
+    <p class="olho">As três qualidades do som</p>
+    <h2 class="titulo">Altura, intensidade e timbre</h2>
+    <p class="texto" style="position:absolute;left:0;right:0;top:132px;margin:0;font-size:29px">Uma flauta e um violão tocam a mesma nota, com o mesmo volume. De olhos fechados, você sabe qual é qual.</p>
+    <div style="position:absolute;left:0;right:0;top:200px;display:grid;grid-template-columns:repeat(3,1fr);gap:26px">
+      <div class="painel" data-passo="1">
+        <h3>Altura</h3>
+        <div data-anima="ondas-traco" data-anima-passo="1" data-w="510" data-h="190" data-v="40" data-curvas='[{"y":62,"a":26,"l":240,"w":5,"rot":"grave","corRot":"#0B6B6D"},{"y":150,"a":26,"l":80,"w":5,"cor":"#C2384F","rot":"agudo","corRot":"#C2384F"}]' style="width:510px;height:190px;margin-top:4px"></div>
+        <p><b>Grave</b> (frequência baixa) ou <b>agudo</b> (frequência alta).</p>
+      </div>
+      <div class="painel" data-passo="2">
+        <h3>Intensidade</h3>
+        <div data-anima="ondas-traco" data-anima-passo="2" data-w="510" data-h="190" data-v="40" data-curvas='[{"y":72,"a":36,"l":160,"w":5,"rot":"forte","corRot":"#0B6B6D"},{"y":160,"a":12,"l":160,"w":5,"cor":"#C2384F","rot":"fraco","corRot":"#C2384F"}]' style="width:510px;height:190px;margin-top:4px"></div>
+        <p><b>Forte</b> (amplitude grande) ou <b>fraco</b> (amplitude pequena). É o <b>volume</b>.</p>
+      </div>
+      <div class="painel" data-passo="3">
+        <h3>Timbre</h3>
+        <div data-anima="ondas-traco" data-anima-passo="3" data-w="510" data-h="190" data-v="40" data-curvas='[{"y":62,"a":26,"l":160,"w":5,"forma":"flauta","rot":"flauta","corRot":"#0B6B6D"},{"y":150,"a":26,"l":160,"w":5,"forma":"violao","cor":"#C2384F","rot":"violão","corRot":"#C2384F"}]' style="width:510px;height:190px;margin-top:4px"></div>
+        <p>A mesma nota em instrumentos ou vozes diferentes: muda a <b>forma da onda</b>.</p>
+      </div>
+    </div>
+    <div class="caixa caixa-fundamental" data-passo="4" style="position:absolute;left:580px;right:0;top:680px;padding:18px 30px">
+      <div class="texto" style="font-size:30px">Altura ↔ <b>frequência</b> · Intensidade ↔ <b>amplitude</b> · Timbre ↔ <b>forma da onda</b></div>
+    </div>
+  </div>
+  <aside class="notas">
+    <p>Definição da apostila, com a figura de grave × agudo e forte × fraco animada. Altura: as duas ondas têm a mesma amplitude, a vermelha tem frequência maior. Intensidade: mesma frequência, amplitudes diferentes. Timbre: mesma frequência e mesma amplitude, formas diferentes (a "assinatura" de cada instrumento).</p>
+  </aside>
+</section>
+
+<!-- 9. No dia a dia + Atenção -->
+<section class="slide" data-nome="Alto não é forte">
+  <div class="conteudo">
+    <p class="olho">No dia a dia</p>
+    <h2 class="titulo">Cuidado: alto não é forte</h2>
+    <div style="position:absolute;left:0;right:0;top:160px;display:flex;flex-direction:column;gap:18px">
+      <div class="linha-ex linha-tag"><span>A voz de um homem adulto costuma ser <b>mais grave</b> que a de uma criança: tem <b>frequência menor</b>.</span><span class="tag tag-m">altura</span></div>
+      <div class="linha-ex linha-tag" data-passo="1"><span>Aumentar o volume do celular aumenta a <b>intensidade</b>, não a altura.</span><span class="tag tag-m">intensidade</span></div>
+      <div class="linha-ex linha-tag" data-passo="2"><span>É o <b>timbre</b> que permite reconhecer a voz de um amigo ao telefone.</span><span class="tag tag-m">timbre</span></div>
+    </div>
+    <div class="caixa caixa-atencao" data-passo="3" style="position:absolute;left:580px;right:0;top:530px">
+      <span class="rotulo">Atenção · Alto não é forte</span>
+      <div class="texto" style="font-size:31px">No dia a dia, "fala mais alto" quer dizer "fala mais forte". Na Física, <b>alto</b> quer dizer <b>agudo</b>. Um som pode ser alto (agudo) e fraco, como um <b>apito baixinho</b>.</div>
+    </div>
+  </div>
+  <aside class="notas">
+    <p>Exemplos e atenção da apostila. Pegadinha clássica: "som alto" na Física é agudo, não forte.</p>
+  </aside>
+</section>
+
+<!-- 10. Exemplo: qual qualidade mudou -->
+<section class="slide" data-nome="Exemplo: qual qualidade mudou?">
+  <div class="conteudo">
+    <p class="olho">Exemplo</p>
+    <h2 class="titulo">Qual qualidade mudou?</h2>
+    <div style="position:absolute;left:0;right:0;top:170px;display:flex;flex-direction:column;gap:22px">
+      <div class="linha-ex linha-tag"><span><b>(a)</b> Rafael aumenta o volume do rádio. <span data-passo="1" style="color:var(--cinza)">A amplitude aumenta.</span></span><span data-passo="1"><span class="tag tag-m">intensidade</span></span></div>
+      <div class="linha-ex linha-tag"><span><b>(b)</b> O violonista troca a corda grossa pela fina. <span data-passo="2" style="color:var(--cinza)">O som fica mais agudo.</span></span><span data-passo="2"><span class="tag tag-m">altura</span></span></div>
+      <div class="linha-ex linha-tag"><span><b>(c)</b> Um piano e um violino tocam a mesma nota. <span data-passo="3" style="color:var(--cinza)">A nota é a mesma, mas a forma da onda muda.</span></span><span data-passo="3"><span class="tag tag-m">timbre</span></span></div>
+    </div>
+  </div>
+  <aside class="notas">
+    <p>Exemplo da apostila. Peça a resposta antes de cada clique.</p>
+  </aside>
+</section>
+
+<!-- 11. Reflexão e eco -->
+<section class="slide" data-nome="Reflexão e eco">
+  <div class="conteudo">
+    <p class="olho">Reflexão das ondas</p>
+    <h2 class="titulo">O som bate e volta: o eco</h2>
+    <svg viewBox="0 0 860 330" width="860" height="330" style="position:absolute;left:0;top:150px;overflow:visible" aria-hidden="true">
+      <rect x="0" y="0" width="860" height="330" rx="30" fill="#fff" stroke="#E4DEFB" stroke-width="2"/>
+      <rect x="740" y="30" width="70" height="270" rx="10" fill="#B6AFC9" stroke="#5E5A70" stroke-width="3"/>
+      <text x="775" y="322" text-anchor="middle" class="rot" font-size="22" fill="#5E5A70">paredão</text>
+      <g transform="translate(90 280)"><circle cx="0" cy="-150" r="24" fill="#6551D1"/><path d="M0 -124 v62 M0 -62 l-22 56 M0 -62 l22 56 M0 -104 l28 -10" stroke="#6551D1" stroke-width="11" stroke-linecap="round" fill="none"/></g>
+      <g data-passo="1">
+        <g class="frente-vai"><path d="M150 110 q26 50 0 100 M134 100 q36 60 0 120" fill="none" stroke="#0F8B8D" stroke-width="7" stroke-linecap="round"/></g>
+        <g class="frente-volta"><path d="M714 110 q-26 50 0 100 M730 100 q-36 60 0 120" fill="none" stroke="#C2384F" stroke-width="7" stroke-linecap="round"/></g>
+      </g>
+    </svg>
+    <div style="position:absolute;left:920px;right:0;top:150px;display:flex;flex-direction:column;gap:16px">
+      <div class="linha-ex" data-passo="1" style="font-size:27px">Toda onda que encontra um obstáculo pode <b>voltar</b> para o meio de onde veio: é a <b>reflexão</b>.</div>
+      <div class="linha-ex" data-passo="2" style="font-size:27px">A luz reflete no espelho (<b>Espelhos planos</b>); as ondas do mar, no cais; o som, em paredes, montanhas e prédios.</div>
+    </div>
+    <div class="caixa caixa-fundamental" data-passo="3" style="position:absolute;left:580px;right:0;top:530px">
+      <span class="rotulo">Eco</span>
+      <div class="texto" style="font-size:30px">Som refletido num obstáculo que chega de volta ao ouvido <b>separado</b> do som original. O ouvido só distingue dois sons que chegam com pelo menos <b>0,1 s</b> de diferença.</div>
+    </div>
+  </div>
+  <aside class="notas">
+    <p>Abertura da apostila: grite de frente para um paredão, longe dele, e a voz volta um instante depois; bata palmas num banheiro vazio e o som parece "encorpado". Nos dois casos o som bateu num obstáculo e voltou.</p>
+    <p>Clique 1: a frente de onda vai (verde) e volta (vermelha).</p>
+  </aside>
+</section>
+
+<!-- 12. 17 m -->
+<section class="slide" data-nome="Por que 17 m">
+  <div class="conteudo">
+    <p class="olho">Quanto o som anda em 0,1 s?</p>
+    <h2 class="titulo">Eco só a partir de 17 m</h2>
+    <div style="position:absolute;left:0;width:760px;top:160px">
+      <p class="texto" style="margin:0;font-size:32px">Em 0,1 s o som vai até o obstáculo <b>e volta</b>: o caminho é <b>\(2d\)</b>.</p>
+      <svg viewBox="0 0 760 170" width="760" height="170" style="display:block;margin-top:14px" aria-hidden="true">
+        <path d="M60 50 H660 M640 36 L662 50 L640 64" fill="none" stroke="#0F8B8D" stroke-width="5" stroke-linecap="round"/>
+        <path d="M660 100 H60 M80 86 L58 100 L80 114" fill="none" stroke="#C2384F" stroke-width="5" stroke-linecap="round"/>
+        <rect x="680" y="10" width="50" height="130" rx="8" fill="#B6AFC9"/>
+        <path d="M60 150 H680" stroke="#292B2C" stroke-width="3"/><path d="M60 140 v20 M680 140 v20" stroke="#292B2C" stroke-width="3"/>
+        <text x="370" y="40" text-anchor="middle" class="rot" font-size="24" fill="#0B6B6D">ida: d</text><text x="370" y="135" text-anchor="middle" class="rot" font-size="24" fill="#C2384F">volta: d</text>
+      </svg>
+    </div>
+    <div class="contas" style="position:absolute;left:900px;top:160px">
+      <div class="eq" data-passo="1"><span>\(\Delta s\)</span><span>\(=\)</span><span>\(v \cdot \Delta t\)</span></div>
+      <div class="eq" data-passo="2"><span>\(2d\)</span><span>\(=\)</span><span>\(340 \cdot 0{,}1\)</span></div>
+      <div class="eq" data-passo="3"><span>\(2d\)</span><span>\(=\)</span><span>\(34\)</span></div>
+      <div class="eq final" data-passo="4"><span>\(d\)</span><span>\(=\)</span><span>\(17\ \text{m}\)</span></div>
+    </div>
+    <div class="caixa" data-passo="5" style="position:absolute;left:580px;right:0;top:600px;padding:20px 30px">
+      <div class="texto" style="font-size:30px">O obstáculo precisa estar a pelo menos <b>17 m</b>. Mais perto, o som refletido se mistura com o original e só o prolonga: é a <b>reverberação</b> (banheiros, ginásios e igrejas).</div>
+    </div>
+  </div>
+  <aside class="notas">
+    <p>Conta da apostila, uma linha por clique. Essa é exatamente a ideia de uma questão do IF (Questão 2 desta parte).</p>
+  </aside>
+</section>
+
+<!-- 13. Exemplo: montanha -->
+<section class="slide" data-nome="Exemplo: a montanha">
+  <div class="conteudo">
+    <p class="olho">Exemplo</p>
+    <h2 class="titulo">A que distância está a montanha?</h2>
+    <p class="texto" style="position:absolute;left:0;width:860px;top:140px;margin:0;font-size:30px">Kauã grita de frente para uma montanha e ouve o eco <b>2 s</b> depois. Use 340 m/s para o som no ar.</p>
+    <div data-anima="ondas-eco" data-tempo="2" data-w="860" data-h="330" style="position:absolute;left:0;top:250px;width:860px;height:330px"></div>
+    <div style="position:absolute;left:960px;top:150px">
+      <p class="texto" data-passo="1" style="margin:0 0 14px;font-size:28px">Em 2 s, o som foi e voltou: andou <b>\(2d\)</b>.</p>
+      <div class="contas" style="font-size:40px;row-gap:22px">
+        <div class="eq" data-passo="2"><span>\(v\)</span><span>\(=\)</span><span>\(\dfrac{2d}{\Delta t}\)</span></div>
+        <div class="eq" data-passo="3"><span>\(340\)</span><span>\(=\)</span><span>\(\dfrac{2d}{2}\)</span></div>
+        <div class="eq" data-passo="4"><span>\(2d\)</span><span>\(=\)</span><span>\(340 \cdot 2\)</span></div>
+        <div class="eq" data-passo="5"><span>\(2d\)</span><span>\(=\)</span><span>\(680\)</span></div>
+        <div class="eq final" data-passo="6"><span>\(d\)</span><span>\(=\)</span><span>\(340\ \text{m}\)</span></div>
+      </div>
+    </div>
+    <span class="pilula pilula-resposta" data-passo="7" style="position:absolute;right:0;top:780px">Resposta: 340 m</span>
+  </div>
+  <aside class="notas">
+    <p>Exemplo da apostila. A animação mostra a ida (verde) e a volta (vermelha) com o relógio em câmera lenta: o eco chega em t = 2 s.</p>
+    <p>Usa a velocidade média de Conceitos básicos (Mecânica): \(v = \Delta s / \Delta t\), com \(\Delta s = 2d\).</p>
+  </aside>
+</section>
+
+<!-- 14. Usos do eco + sonar -->
+<section class="slide" data-nome="Sonar">
+  <div class="conteudo">
+    <p class="olho">Usos do eco</p>
+    <h2 class="titulo">Sonar, morcegos e ultrassom</h2>
+    <svg viewBox="0 0 700 380" width="700" height="380" style="position:absolute;left:0;top:140px;overflow:visible" aria-hidden="true">
+      <rect x="0" y="80" width="700" height="300" rx="20" fill="#9CCBF2" opacity=".55"/>
+      <path d="M0 380 q120 -40 240 -10 t240 -16 t220 6 v20 h-700 z" fill="#C8B48A"/>
+      <path d="M250 80 h200 l-30 40 h-140 z" fill="#4B39B3"/><rect x="320" y="40" width="60" height="40" rx="6" fill="#6551D1"/>
+      <g class="pulso-d"><path d="M320 130 q30 14 60 0" fill="none" stroke="#0F8B8D" stroke-width="7" stroke-linecap="round"/></g>
+      <g class="pulso-s"><path d="M320 136 q30 -14 60 0" fill="none" stroke="#C2384F" stroke-width="7" stroke-linecap="round"/></g>
+      <text x="560" y="230" text-anchor="middle" class="rot" font-size="26" fill="#3F2FA0">fundo do mar</text>
+    </svg>
+    <div style="position:absolute;left:760px;right:0;top:150px;display:flex;flex-direction:column;gap:16px">
+      <div class="linha-ex" style="font-size:27px">O <b>sonar</b> dos navios emite um som na água e mede o tempo até o eco voltar do fundo ou de um cardume.</div>
+      <div class="linha-ex" data-passo="1" style="font-size:27px"><b>Morcegos</b> e <b>golfinhos</b> emitem sons muito agudos e se orientam pelos ecos.</div>
+      <div class="linha-ex" data-passo="2" style="font-size:27px">O aparelho de <b>ultrassom</b> monta a imagem dos órgãos com os ecos de um som agudo demais para ouvirmos.</div>
+    </div>
+    <div class="caixa" data-passo="3" style="position:absolute;left:580px;right:0;top:600px;padding:18px 30px;display:grid;grid-template-columns:1fr auto;gap:30px;align-items:center">
+      <div class="texto" style="font-size:28px">O eco volta do fundo <b>4 s</b> depois. Na água do mar, o som anda cerca de <b>1500 m/s</b>.</div>
+      <div class="contas" style="font-size:36px;row-gap:6px;grid-template-columns:auto auto auto">
+        <div class="eq"><span>\(2d\)</span><span>\(=\)</span><span>\(1500 \cdot 4 = 6000\)</span></div>
+        <div class="eq final" data-passo="4"><span>\(d\)</span><span>\(=\)</span><span>\(3000\ \text{m}\)</span></div>
+      </div>
+    </div>
+  </div>
+  <aside class="notas">
+    <p>O pulso desce (verde) e volta (vermelho). Clique 3 e 4: a conta do sonar da apostila: \(v = 2d/\Delta t \Rightarrow 1500 = 2d/4 \Rightarrow 2d = 6000 \Rightarrow d = 3000\) m, ou 3 km. Repare que o som é mais rápido na água que no ar.</p>
+  </aside>
+</section>
+
+<!-- 15. Atenção: ida e volta -->
+<section class="slide" data-nome="Atenção: ida e volta">
+  <div class="conteudo">
+    <p class="olho">Atenção</p>
+    <h2 class="titulo">Ida e volta</h2>
+    <div class="caixa caixa-atencao" style="position:absolute;left:0;right:0;top:160px">
+      <div class="texto">O tempo do eco é o da <b>ida e volta</b>. Esquecer de dividir por dois é o erro mais comum: dá o <b>dobro</b> da distância verdadeira.</div>
+    </div>
+    <div data-passo="1" style="position:absolute;left:0;right:0;top:390px;display:grid;grid-template-columns:1fr 1fr;gap:40px">
+      <div class="caixa" style="padding:20px 30px"><span class="rotulo" style="color:var(--erro)">Errado</span><div class="texto" style="font-size:34px">\(340 \cdot 2 = 680\ \text{m}\) <span class="riscado">até a montanha</span></div></div>
+      <div class="caixa caixa-fundamental" style="padding:20px 30px"><span class="rotulo">Certo</span><div class="texto" style="font-size:34px">\(680 \div 2 = 340\ \text{m}\) até a montanha</div></div>
+    </div>
+    <div class="caixa caixa-atencao" data-passo="2" style="position:absolute;left:580px;right:0;top:620px;padding:20px 30px">
+      <div class="texto" style="font-size:31px">E o eco é <b>reflexão</b>, não refração.</div>
+    </div>
+  </div>
+  <aside class="notas">
+    <p>Atenção da apostila. A refração aparece em Reflexão e refração (Óptica): é a onda passando para outro meio. No eco, o som volta para o mesmo meio.</p>
+  </aside>
+</section>
+
+<!-- 16. Decibéis -->
+<section class="slide" data-nome="Decibéis">
+  <div class="conteudo">
+    <p class="olho">Saúde auditiva</p>
+    <h2 class="titulo">Quanto barulho é demais?</h2>
+    <svg viewBox="0 0 1760 380" width="1760" height="380" style="position:absolute;left:0;top:140px;overflow:visible" aria-hidden="true">
+      <defs><linearGradient id="gdb" x1="0" y1="0" x2="1" y2="0"><stop offset="0" stop-color="#6CC79A"/><stop offset=".55" stop-color="#FFD10C"/><stop offset="1" stop-color="#E5484D"/></linearGradient></defs>
+      <rect x="0" y="40" width="1690" height="40" rx="20" fill="#EEEAFB"/>
+      <rect class="barra-db" data-passo="1" x="0" y="40" width="1690" height="40" rx="20" fill="url(#gdb)"/>
+      <g class="rot" font-size="22" fill="#5E5A70" text-anchor="middle">
+        <text x="0" y="24">0</text><text x="260" y="24">20</text><text x="520" y="24">40</text><text x="780" y="24">60</text><text x="1040" y="24">80</text><text x="1300" y="24">100</text><text x="1560" y="24">120</text><text x="1720" y="24">dB</text>
+      </g>
+      <g data-passo="1" class="rot" font-size="24" fill="#292B2C">
+        <line x1="390" y1="80" x2="390" y2="130" stroke="#8E8AA0" stroke-width="3"/><text x="390" y="160" text-anchor="middle">sussurro</text><text x="390" y="188" text-anchor="middle" fill="#5E5A70">30</text>
+        <line x1="780" y1="80" x2="780" y2="130" stroke="#8E8AA0" stroke-width="3"/><text x="780" y="160" text-anchor="middle">conversa normal</text><text x="780" y="188" text-anchor="middle" fill="#5E5A70">60</text>
+        <line x1="1105" y1="80" x2="1105" y2="220" stroke="#8E8AA0" stroke-width="3"/><text x="1105" y="250" text-anchor="middle">trânsito pesado</text><text x="1105" y="278" text-anchor="middle" fill="#5E5A70">85</text>
+        <line x1="1300" y1="80" x2="1300" y2="130" stroke="#8E8AA0" stroke-width="3"/><text x="1300" y="160" text-anchor="middle">fone no máximo</text><text x="1300" y="188" text-anchor="middle" fill="#5E5A70">100</text>
+        <line x1="1430" y1="80" x2="1430" y2="300" stroke="#8E8AA0" stroke-width="3"/><text x="1430" y="330" text-anchor="middle">show de música alta</text><text x="1430" y="358" text-anchor="middle" fill="#5E5A70">110</text>
+        <line x1="1690" y1="80" x2="1690" y2="130" stroke="#8E8AA0" stroke-width="3"/><text x="1690" y="160" text-anchor="end">avião decolando,</text><text x="1690" y="188" text-anchor="end">de perto: 130</text>
+      </g>
+      <g data-passo="2"><line x1="1105" y1="26" x2="1105" y2="94" stroke="#C2384F" stroke-width="7" stroke-linecap="round"/><text x="1095" y="122" text-anchor="end" class="rot" font-size="22" fill="#C2384F">85 dB</text></g>
+    </svg>
+    <div class="caixa" data-passo="1" style="position:absolute;left:0;width:860px;top:400px;padding:16px 26px">
+      <div class="texto" style="font-size:27px">Intensidade em <b>decibéis (dB)</b>. Cada <b>10 dB a mais</b> = som cerca de <b>10 vezes</b> mais intenso.</div>
+    </div>
+    <div class="caixa caixa-fundamental" data-passo="2" style="position:absolute;left:580px;right:0;top:640px;padding:18px 30px">
+      <span class="rotulo">Som forte cansa e lesa</span>
+      <div class="texto" style="font-size:28px">Exposição longa acima de cerca de <b>85 dB</b> pode lesar as células do ouvido interno, que <b>não se regeneram</b>. Quanto mais forte o som, menor o tempo seguro.</div>
+    </div>
+  </div>
+  <aside class="notas">
+    <p>Abertura da apostila: depois de um show, o apito no ouvido que dura horas é sinal de que a audição foi agredida; repetido, vira perda permanente.</p>
+    <p>Valores aproximados da figura da apostila (escala de decibéis). A escala não é como uma régua comum: de 60 dB para 70 dB o som fica cerca de 10 vezes mais intenso.</p>
+  </aside>
+</section>
+
+<!-- 17. Poluição sonora e cuidados -->
+<section class="slide" data-nome="Poluição sonora">
+  <div class="conteudo">
+    <p class="olho">Saúde auditiva</p>
+    <h2 class="titulo">Poluição sonora e cuidados</h2>
+    <div class="painel" style="position:absolute;left:0;width:820px;top:160px">
+      <h3>Poluição sonora</h3>
+      <p>É o <b>excesso de ruído</b> no ambiente: trânsito, obras, festas, fábricas.</p>
+      <p>Além de prejudicar a audição, causa <b>estresse</b>, irritação, dor de cabeça e dificulta o <b>sono</b> e a <b>concentração</b>.</p>
+      <p>Por isso as cidades têm regras sobre o barulho, como os <b>horários de silêncio</b>.</p>
+    </div>
+    <div style="position:absolute;left:880px;right:0;top:160px;display:flex;flex-direction:column;gap:14px">
+      <div class="linha-ex" data-passo="1" style="font-size:27px">Fone com <b>volume moderado</b> e pausas: não passar de <b>60%</b> do volume.</div>
+      <div class="linha-ex" data-passo="2" style="font-size:27px">Protetor auricular em ambientes muito barulhentos (obras, shows).</div>
+      <div class="linha-ex" data-passo="3" style="font-size:27px">Ficar longe das caixas de som em festas.</div>
+      <div class="linha-ex" data-passo="4" style="font-size:27px">Zumbido que não passa: procurar um <b>médico</b>.</div>
+    </div>
+  </div>
+  <aside class="notas">
+    <p>Da apostila. A recomendação dos 60% do volume é a "recomendação comum" citada lá.</p>
+  </aside>
+</section>
+
+<!-- 18. Exemplo: fone ou conversa -->
+<section class="slide" data-nome="Exemplo: fone ou conversa?">
+  <div class="conteudo">
+    <p class="olho">Exemplo</p>
+    <h2 class="titulo">Fone ou conversa?</h2>
+    <div style="position:absolute;left:0;width:800px;top:160px">
+      <p class="texto" style="margin:0">Quantas vezes o som de um fone a <b>100 dB</b> é mais intenso que o de uma conversa a <b>60 dB</b>?</p>
+      <p class="texto" data-passo="1" style="margin:22px 0 0;font-size:31px">Cada salto de 10 dB multiplica por 10. Primeiro, contamos os saltos \(n\):</p>
+      <svg data-passo="5" viewBox="0 0 800 110" width="800" height="110" style="display:block;margin-top:18px" aria-hidden="true">
+        <g class="rot" font-size="26" text-anchor="middle">
+          <circle cx="60" cy="40" r="30" fill="var(--d-clara)" stroke="var(--d)" stroke-width="3"/><text x="60" y="49" fill="#0B6B6D">60</text>
+          <circle cx="230" cy="40" r="30" fill="var(--d-clara)" stroke="var(--d)" stroke-width="3"/><text x="230" y="49" fill="#0B6B6D">70</text>
+          <circle cx="400" cy="40" r="30" fill="var(--d-clara)" stroke="var(--d)" stroke-width="3"/><text x="400" y="49" fill="#0B6B6D">80</text>
+          <circle cx="570" cy="40" r="30" fill="var(--d-clara)" stroke="var(--d)" stroke-width="3"/><text x="570" y="49" fill="#0B6B6D">90</text>
+          <circle cx="740" cy="40" r="34" fill="#FFF1C2" stroke="#E0A800" stroke-width="3"/><text x="740" y="49" fill="#8A6A00">100</text>
+          <g fill="#C2384F" font-size="24"><text x="145" y="100">×10</text><text x="315" y="100">×10</text><text x="485" y="100">×10</text><text x="655" y="100">×10</text></g>
+        </g>
+      </svg>
+    </div>
+    <div style="position:absolute;left:900px;top:160px">
+      <div class="contas" style="font-size:40px;row-gap:10px">
+        <div class="eq" data-passo="2"><span>\(n\)</span><span>\(=\)</span><span>\(\dfrac{L_2 - L_1}{10}\)</span></div>
+        <div class="eq" data-passo="3"><span>\(n\)</span><span>\(=\)</span><span>\(\dfrac{100 - 60}{10}\)</span></div>
+        <div class="eq" data-passo="4"><span>\(n\)</span><span>\(=\)</span><span>\(4\)</span></div>
+        <div class="eq" data-passo="6"><span>\(\text{razão}\)</span><span>\(=\)</span><span>\(10^n = 10^4\)</span></div>
+        <div class="eq final" data-passo="7"><span>\(\text{razão}\)</span><span>\(=\)</span><span>\(10\,000\)</span></div>
+      </div>
+    </div>
+    <span class="pilula pilula-resposta" data-passo="8" style="position:absolute;right:0;top:800px">Cerca de 10 000 vezes mais intenso</span>
+  </div>
+  <aside class="notas">
+    <p>Exemplo da apostila (\(L_1 = 60\) dB, \(L_2 = 100\) dB). Clique 5: os quatro saltos de 10 dB, cada um multiplicando por 10. 10 × 10 × 10 × 10 = 10 000.</p>
+  </aside>
+</section>
+
+<!-- 19. Questão 1 -->
+<section class="slide questao" data-nome="Questão 1">
+  <div class="conteudo">
+    <div class="area-resolucao"></div>
+    <span class="pilula pilula-pausa" data-em="1:some">Pause o vídeo e tente</span>
+    <div class="painel-questao">
+      <p class="olho">Questão 1 · IF Sudeste MG 2017</p>
+      <p class="enunciado" style="font-size:24px">Breno é um estudante do 9° ano do Ensino Fundamental e está estudando alguns conteúdos de Física pela primeira vez. Em um certo dia, ele acordou, no início do alvorecer, ouvindo diversos sons (cantos) de aves, levantou e abriu a janela do quarto para que pudesse ouvir melhor. Breno observou, atentamente, os cantos de galos que estavam à mesma distância dele por alguns minutos e concluiu que, apesar de eles serem da mesma raça, o canto emitido por eles era diferente. A característica fisiológica do som que permitiu Breno distinguir a diferença é:</p>
+      <ol class="alternativas">
+        <li data-em="2:apaga"><b>A</b><span>a velocidade.</span></li>
+        <li data-em="2:certo"><b>B</b><span>o timbre.</span></li>
+        <li data-em="2:apaga"><b>C</b><span>a intensidade.</span></li>
+        <li data-em="2:apaga"><b>D</b><span>a altura.</span></li>
+        <li data-em="2:apaga"><b>E</b><span>o comprimento de onda.</span></li>
+      </ol>
+    </div>
+  </div>
+  <aside class="resolucao">
+    <p class="dados"><b>Dados:</b> dois galos, mesma distância, cantos diferentes.</p>
+    <ol class="passos">
+      <li>Qualidades do som: altura, intensidade, timbre.</li>
+      <li>Mesma distância: não é a intensidade.</li>
+      <li>Reconhecer cada fonte: timbre.</li>
+    </ol>
+    <p class="resposta"><b>Resposta:</b> o timbre. <b>Gabarito B.</b></p>
+    <p class="atencao"><b>Destaque no quadro:</b> Timbre = a "assinatura" de cada voz ou instrumento (forma da onda).</p>
+    <ul class="erros">
+      <li><b>A</b> A velocidade depende do meio (o ar), igual para os dois.</li>
+      <li><b>C</b> Intensidade é forte ou fraco; os galos estavam à mesma distância.</li>
+      <li><b>D</b> Altura é grave ou agudo; não identifica a fonte.</li>
+      <li><b>E</b> Comprimento de onda não é qualidade fisiológica.</li>
+    </ul>
+  </aside>
+  <aside class="notas">
+    <p>Clique 1 tira o aviso de pausa: resolva na área (D liga a caneta; E esconde o enunciado). Clique 2: gabarito B.</p>
+    <p>Questão oficial do IF Sudeste MG 2017-1 (prova extra), q29, FIS-0545 (sobra do bloco do fim do capítulo).</p>
+  </aside>
+</section>
+
+<!-- 20. Questão 2 -->
+<section class="slide questao" data-nome="Questão 2">
+  <div class="conteudo">
+    <div class="area-resolucao"></div>
+    <span class="pilula pilula-pausa" data-em="1:some">Pause o vídeo e tente</span>
+    <div class="painel-questao">
+      <p class="olho">Questão 2 · IF Sudeste MG 2016</p>
+      <p class="enunciado" style="font-size:20px;color:var(--cinza)">[Texto de abertura sobre o Tiro esportivo nos Jogos Olímpicos Rio 2016: para auxiliar a concentração e a segurança, os atletas usam tampão nos ouvidos.]</p>
+      <p class="enunciado" style="font-size:20px">Em um treino para a competição de Tiro esportivo, intencionalmente, um atleta não colocou os tampões nos ouvidos e disparou sua arma contra um alvo fixo, que era também um obstáculo refletor de som. O objetivo do atleta era estudar o eco do som produzido quando a arma era disparada, pois o ouvido humano só distingue sons com intervalo mínimo de 0,1 s. Sabendo-se que o som se propaga no ar com velocidade de 340 m/s, assinale a alternativa <b>CORRETA</b> sobre os fenômenos sonoros relacionados ao Eco.</p>
+      <ol class="alternativas" style="gap:6px">
+        <li data-em="2:apaga" style="font-size:18.5px;padding:3px 12px"><b>A</b><span>Nunca será possível ouvir o eco do tiro disparado de uma arma de fogo.</span></li>
+        <li data-em="2:apaga" style="font-size:18.5px;padding:3px 12px"><b>B</b><span>Para o atleta ouvir o eco do disparo da arma, ele deve ficar a qualquer distância do obstáculo refletor.</span></li>
+        <li data-em="2:certo" style="font-size:18.5px;padding:3px 12px"><b>C</b><span>Para o atleta ouvir o eco do disparo da arma, ele deve ficar a uma distância mínima de 17 m do obstáculo refletor.</span></li>
+        <li data-em="2:apaga" style="font-size:18.5px;padding:3px 12px"><b>D</b><span>Para o atleta ouvir o eco do disparo da arma, ele deve ficar a uma distância mínima de 34 m do obstáculo refletor.</span></li>
+        <li data-em="2:apaga" style="font-size:18.5px;padding:3px 12px"><b>E</b><span>Para o atleta ouvir o eco do disparo da arma, ele deve ficar a uma distância mínima de 340 m do obstáculo refletor.</span></li>
+      </ol>
+    </div>
+  </div>
+  <aside class="resolucao">
+    <p class="dados"><b>Dados:</b> \(v = 340\ \text{m/s}\); \(\Delta t = 0{,}1\ \text{s}\); caminho \(= 2d\).</p>
+    <ol class="passos">
+      <li>\(v = \dfrac{2d}{\Delta t}\)</li>
+      <li>\(340 = \dfrac{2d}{0{,}1}\)</li>
+      <li>\(2d = 340 \cdot 0{,}1 = 34\)</li>
+      <li>\(d = 17\ \text{m}\)</li>
+    </ol>
+    <p class="resposta"><b>Resposta:</b> distância mínima de 17 m. <b>Gabarito C.</b></p>
+    <p class="atencao"><b>Destaque no quadro:</b> No tempo do eco, o som vai e volta: divida por 2.</p>
+    <ul class="erros">
+      <li><b>A</b> Dá para ouvir, longe o bastante (17 m ou mais).</li>
+      <li><b>B</b> Perto demais, o eco se mistura ao disparo.</li>
+      <li><b>D</b> 34 m é ida + volta; a distância é a metade.</li>
+      <li><b>E</b> 340 m é o que o som anda em 1 s.</li>
+    </ul>
+  </aside>
+  <aside class="notas">
+    <p>Clique 1 tira o aviso de pausa: resolva na área (D liga a caneta; E esconde o enunciado). Clique 2: gabarito C.</p>
+    <p>Questão oficial do IF Sudeste MG 2016-1 (prova extra), q30, FIS-0557 (sobra do bloco do fim do capítulo). O texto de abertura (Tiro esportivo nos Jogos Rio 2016, fonte rio2016.com, acesso em 13 out. 2015) foi resumido na tela; o comando e as alternativas estão completos.</p>
+  </aside>
+</section>
+
+<!-- 21. Questão 3 -->
+<section class="slide questao" data-nome="Questão 3">
+  <div class="conteudo">
+    <div class="area-resolucao"></div>
+    <span class="pilula pilula-pausa" data-em="1:some">Pause o vídeo e tente</span>
+    <div class="painel-questao">
+      <p class="olho">Questão 3 · Modelo IF</p>
+      <p class="enunciado" style="font-size:21px">Para uma campanha sobre saúde auditiva na escola, os alunos montaram a tabela abaixo, com valores aproximados da intensidade do som em algumas situações.</p>
+      <table class="tabela" style="font-size:19px;border-radius:16px;flex:none">
+        <tr><th style="padding:5px 16px">Situação</th><th style="padding:5px 16px">dB</th></tr>
+        <tr><td style="padding:3px 16px;text-align:left">Sussurro</td><td style="padding:3px 16px">30</td></tr>
+        <tr><td style="padding:3px 16px;text-align:left">Conversa normal</td><td style="padding:3px 16px">60</td></tr>
+        <tr><td style="padding:3px 16px;text-align:left">Fone de ouvido no volume máximo</td><td style="padding:3px 16px">100</td></tr>
+        <tr><td style="padding:3px 16px;text-align:left">Show de música alta</td><td style="padding:3px 16px">110</td></tr>
+        <tr><td style="padding:3px 16px;text-align:left">Avião decolando, visto de perto</td><td style="padding:3px 16px">130</td></tr>
+      </table>
+      <p class="enunciado" style="font-size:21px">Sabe-se que a exposição por muito tempo a sons acima de cerca de 85 dB pode lesar as células do ouvido interno, que não se regeneram. De acordo com a tabela, a exposição prolongada pode prejudicar a audição</p>
+      <ol class="alternativas" style="gap:6px">
+        <li data-em="2:apaga" style="font-size:19px;padding:4px 12px"><b>A</b><span>apenas no avião decolando, visto de perto.</span></li>
+        <li data-em="2:certo" style="font-size:19px;padding:4px 12px"><b>B</b><span>no fone de ouvido no volume máximo, no show de música alta e no avião decolando.</span></li>
+        <li data-em="2:apaga" style="font-size:19px;padding:4px 12px"><b>C</b><span>em todas as situações da tabela, porque qualquer som ouvido por muito tempo lesa a audição.</span></li>
+        <li data-em="2:apaga" style="font-size:19px;padding:4px 12px"><b>D</b><span>apenas no show de música alta e no avião decolando.</span></li>
+        <li data-em="2:apaga" style="font-size:19px;padding:4px 12px"><b>E</b><span>na conversa normal, no fone de ouvido no volume máximo, no show de música alta e no avião decolando.</span></li>
+      </ol>
+    </div>
+  </div>
+  <aside class="resolucao">
+    <p class="dados"><b>Dados:</b> risco acima de cerca de 85 dB, por muito tempo.</p>
+    <ol class="passos">
+      <li>Acima de 85 dB: 100, 110 e 130.</li>
+      <li>Fone no máximo, show e avião.</li>
+      <li>Sussurro (30) e conversa (60): abaixo.</li>
+    </ol>
+    <p class="resposta"><b>Resposta:</b> fone no máximo, show e avião. <b>Gabarito B.</b></p>
+    <p class="atencao"><b>Destaque no quadro:</b> O que lesa é som forte (acima de ~85 dB) por muito tempo.</p>
+    <ul class="erros">
+      <li><b>A</b> Esquece o fone (100 dB) e o show (110 dB).</li>
+      <li><b>C</b> Sons fracos não lesam, mesmo por muito tempo.</li>
+      <li><b>D</b> Esquece o fone no máximo (100 dB).</li>
+      <li><b>E</b> A conversa (60 dB) está abaixo de 85 dB.</li>
+    </ul>
+  </aside>
+  <aside class="notas">
+    <p>Clique 1 tira o aviso de pausa: resolva na área (D liga a caneta; E esconde o enunciado). Clique 2: gabarito B.</p>
+    <p>Modelo IF, lote if-fisica-acustica, m005, FIS-1641 (questão da apostila, 5.1).</p>
+  </aside>
+</section>
+
+<!-- 22. Resumo -->
+<section class="slide" data-nome="Resumo">
+  <div class="conteudo">
+    <p class="olho">Resumo</p>
+    <h2 class="titulo">O essencial de Ondas e som</h2>
+    <div class="resumo cinco" style="position:absolute;left:0;right:0;top:140px;gap:16px 26px">
+      <div><b>Onda</b> leva energia sem levar matéria. Mecânicas precisam de um meio (som); eletromagnéticas vão até no vácuo (luz).</div>
+      <div><b>\(\lambda\)</b>, amplitude e <b>\(f\)</b> (Hz); \(v = \lambda \cdot f\); som no ar a cerca de 340 m/s.</div>
+      <div><b>Som:</b> onda mecânica produzida por vibração; ouvimos de 20 Hz a 20 000 Hz.</div>
+      <div><b>Altura</b> (grave ou agudo): frequência. <b>Intensidade</b> (forte ou fraco): amplitude. <b>Timbre</b>: forma da onda.</div>
+      <div><b>Eco:</b> som refletido que volta 0,1 s ou mais depois; no tempo do eco, o som vai e volta (\(2d\)).</div>
+      <div><b>Acima de cerca de 85 dB</b> por muito tempo lesa a audição; volume moderado e protetor auricular protegem.</div>
+    </div>
+  </div>
+  <aside class="notas"><p>Resumo da apostila de 5.1 (as duas partes). Peça para tirarem um print desta tela.</p></aside>
+</section>
+
+<!-- 23. A seguir -->
+<section class="slide capa" data-nome="A seguir">
+  <div class="estrelas"></div>
+  <div class="texto-capa" style="top:220px">
+    <span class="selo">Física · IF</span>
+    <p class="aula" style="font-size:28px">A seguir · Ondas eletromagnéticas · Parte 1 de 2</p>
+    <h1 style="font-size:120px">O espectro eletromagnético</h1>
+    <p class="sub">Do rádio aos raios gama</p>
+  </div>
+  <svg class="emblema" viewBox="0 0 640 640" aria-hidden="true">
+    <g transform="translate(40 200)">
+      <rect x="0" y="0" width="80" height="240" rx="20" fill="#d9d2f5"/><rect x="82" y="0" width="80" height="240" fill="#c9c0f0"/><rect x="164" y="0" width="80" height="240" fill="#f6c4b5"/>
+      <rect x="246" y="0" width="80" height="240" fill="#FFD10C"/><rect x="328" y="0" width="80" height="240" fill="#c7b3f2"/><rect x="410" y="0" width="80" height="240" fill="#a99be6"/><rect x="492" y="0" width="80" height="240" rx="20" fill="#8b7bd8"/>
+      <path d="M0 120 q40 -70 80 0 t80 0 q20 -50 40 0 t40 0 q12 -40 24 0 t24 0 t24 0 q8 -30 16 0 t16 0 t16 0 t16 0 q5 -24 10 0 t10 0 t10 0 t10 0 t10 0 t10 0 q3 -18 6 0 t6 0 t6 0 t6 0 t6 0 t6 0 t6 0 t6 0 t6 0" fill="none" stroke="#292B2C" stroke-width="5"/>
+    </g>
+  </svg>
+  <img class="logo-capa" src="{{LOGO_BRANCO}}" alt="Quarks">
+  <aside class="notas"><p>Próxima parte: as ondas eletromagnéticas e o espectro, com os usos de cada faixa.</p></aside>
+</section>

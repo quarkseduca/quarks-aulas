@@ -1,0 +1,438 @@
+<!--aula
+{"disciplina": "fisica", "curso": "IF", "assunto": "Ondas eletromagnéticas", "parte": "Parte 1 de 2", "titulo": "O espectro eletromagnético", "scripts": ["animacoes-ondas.js"]}
+-->
+<!-- Fonte: apostila IF, Física, cap. 5 Ondas (5.2 Ondas eletromagnéticas: "O espectro eletromagnético e seus usos", com a figura do espectro; a diferença entre mecânicas e eletromagnéticas vem de 5.1). Questões da apostila: oficial IF Sudeste MG 2014-1 q38 (FIS-0531), sobra do bloco do fim do capítulo, e Modelo IF if-fisica-ondas m005 (FIS-0806) e m026 (FIS-0827). -->
+<style>
+  .caixa, .painel, .linha-ex, .uso { box-sizing: border-box; }
+  .linha-ex { background: var(--branco); border: 2px solid var(--lilas-2); border-radius: 24px; padding: 14px 26px; font-size: 30px; line-height: 1.3; }
+  .linha-ex b { color: var(--roxo-titulo); }
+  .linha-tag { display: grid; grid-template-columns: 1fr auto; align-items: center; gap: 18px; }
+  .tag { display: inline-block; padding: 5px 20px; border-radius: 999px; font-weight: 800; font-size: 25px; white-space: nowrap; }
+  .tag-m { background: var(--d-clara); color: var(--d-forte); }
+  .tag-e { background: #FFF1C2; color: #8A6A00; }
+  .rot { font-family: Figtree, 'Segoe UI', sans-serif; font-weight: 800; }
+  .comp { border-collapse: separate; border-spacing: 0; font-size: 30px; background: var(--branco); border: 2px solid var(--lilas-2); border-radius: 26px; overflow: hidden; width: 100%; }
+  .comp th { background: var(--d-clara); color: var(--d-forte); font-weight: 800; padding: 14px 24px; text-align: left; }
+  .comp td { padding: 12px 24px; border-top: 2px solid var(--lilas); line-height: 1.3; }
+  .comp td:first-child { font-weight: 800; color: var(--roxo-titulo); width: 300px; }
+  .uso { display: grid; grid-template-columns: 150px 1fr; gap: 20px; align-items: center; background: var(--branco); border: 2px solid var(--lilas-2); border-radius: 26px; padding: 14px 22px; }
+  .uso svg { width: 130px; height: 100px; display: block; }
+  .uso h3 { margin: 0; font: 800 42px var(--fonte-titulo); letter-spacing: -.02em; color: var(--roxo-titulo); }
+  .uso p { margin: 2px 0 0; font-size: 30px; line-height: 1.3; }
+  .faixa { font-family: Figtree, 'Segoe UI', sans-serif; font-weight: 800; }
+  /* moléculas de água que o micro-ondas agita: giram de um lado para o outro */
+  @keyframes agita { 0%, 100% { transform: rotate(-22deg); } 50% { transform: rotate(22deg); } }
+  .h2o { transform-box: fill-box; transform-origin: 50% 40%; }
+  .slide.ativo .mostra .h2o { animation: agita 1.6s ease-in-out infinite; }
+  g:nth-of-type(2n) > .h2o { animation-delay: -.5s !important; } g:nth-of-type(3n) > .h2o { animation-delay: -1.1s !important; }
+  /* luz do Sol que atravessa o vácuo */
+  @keyframes viaja { from { transform: translateX(0); } to { transform: translateX(80px); } }
+  .slide.ativo .mostra .viaja { animation: viaja 4s linear infinite; }
+  /* sinal infravermelho do controle remoto: pulsos que saem */
+  @keyframes pisca-ir { 0%, 100% { opacity: 0; } 20%, 50% { opacity: 1; } }
+  .ir { opacity: 0; }
+  .slide.ativo .ir { animation: pisca-ir 4s ease-in-out infinite; }
+  .ir:nth-of-type(2) { animation-delay: .4s !important; } .ir:nth-of-type(3) { animation-delay: .8s !important; }
+</style>
+
+<svg width="0" height="0" style="position:absolute" aria-hidden="true">
+  <defs>
+    <linearGradient id="gVis" x1="0" y1="0" x2="1" y2="0"><stop offset="0" stop-color="#E5484D"/><stop offset=".2" stop-color="#FF8A3D"/><stop offset=".4" stop-color="#FFD10C"/><stop offset=".6" stop-color="#3FBF7F"/><stop offset=".8" stop-color="#2F6BFF"/><stop offset="1" stop-color="#7B4FE0"/></linearGradient>
+    <symbol id="h2o-s" viewBox="-40 -30 80 60"><circle cx="0" cy="0" r="18" fill="#E5484D"/><circle cx="-20" cy="16" r="11" fill="#fff" stroke="#C9C4DC" stroke-width="2"/><circle cx="20" cy="16" r="11" fill="#fff" stroke="#C9C4DC" stroke-width="2"/></symbol>
+  </defs>
+</svg>
+
+<!-- 1. Capa -->
+<section class="slide capa" data-nome="Capa">
+  <div class="estrelas"></div>
+  <div class="texto-capa" style="top:170px">
+    <span class="selo">Física · IF</span>
+    <p class="aula">Ondas eletromagnéticas · Parte 1 de 2</p>
+    <h1 style="font-size:124px">O espectro eletromagnético</h1>
+    <p class="sub">Mesma onda, frequências diferentes</p>
+  </div>
+  <svg class="emblema" viewBox="0 0 640 640" aria-hidden="true">
+    <g class="gira-lento"><ellipse cx="320" cy="320" rx="300" ry="128" fill="none" stroke="#fff" stroke-opacity=".38" stroke-width="2" transform="rotate(-10 320 320)"/></g>
+    <circle cx="320" cy="320" r="132" fill="#FFD10C"/>
+    <image href="{{SYM_ROXO}}" x="238" y="238" width="164" height="164"/>
+    <rect x="40" y="520" width="560" height="26" rx="13" fill="url(#gVis)" opacity=".95"/>
+  </svg>
+  <img class="logo-capa" src="{{LOGO_BRANCO}}" alt="Quarks">
+  <aside class="notas">
+    <p>Começo de Ondas eletromagnéticas. Nesta parte: relembrar mecânicas × eletromagnéticas e conhecer o espectro com os usos de cada faixa. Na Parte 2: telecomunicações.</p>
+  </aside>
+</section>
+
+<!-- 2. Gancho: o mesmo tipo de onda -->
+<section class="slide" data-nome="O mesmo tipo de onda">
+  <div class="conteudo">
+    <p class="olho">Para começar</p>
+    <h2 class="titulo">O que eles têm em comum?</h2>
+    <div style="position:absolute;left:0;right:0;top:170px;display:grid;grid-template-columns:repeat(5,1fr);gap:24px">
+      <div class="uso" style="grid-template-columns:1fr;text-align:center;justify-items:center">
+        <svg viewBox="0 0 130 100" aria-hidden="true"><rect x="40" y="10" width="40" height="84" rx="12" fill="#4B39B3"/><circle cx="60" cy="30" r="8" fill="#E5484D"/><g fill="#C9C0F0"><rect x="50" y="48" width="8" height="8" rx="2"/><rect x="62" y="48" width="8" height="8" rx="2"/><rect x="50" y="62" width="8" height="8" rx="2"/><rect x="62" y="62" width="8" height="8" rx="2"/></g><g stroke="#E5484D" stroke-width="4" stroke-linecap="round" fill="none"><path class="ir" d="M48 4 q12 -8 24 0"/><path class="ir" d="M42 -4 q18 -12 36 0"/></g></svg>
+        <h3 style="font-size:28px">Controle remoto</h3>
+      </div>
+      <div class="uso" style="grid-template-columns:1fr;text-align:center;justify-items:center">
+        <svg viewBox="0 0 130 100" aria-hidden="true"><rect x="8" y="16" width="114" height="74" rx="10" fill="#fff" stroke="#4B39B3" stroke-width="5"/><rect x="18" y="26" width="70" height="54" rx="6" fill="#E4DEFB"/><g fill="#4B39B3"><circle cx="105" cy="36" r="5"/><circle cx="105" cy="54" r="5"/></g></svg>
+        <h3 style="font-size:28px">Micro-ondas</h3>
+      </div>
+      <div class="uso" style="grid-template-columns:1fr;text-align:center;justify-items:center">
+        <svg viewBox="0 0 130 100" aria-hidden="true"><rect x="40" y="6" width="50" height="90" rx="10" fill="#292B2C"/><rect x="45" y="14" width="40" height="66" rx="4" fill="#8C7BEA"/><g fill="none" stroke="#0F8B8D" stroke-width="4" stroke-linecap="round"><path d="M98 30 q8 10 0 20"/><path d="M106 24 q14 16 0 32"/></g></svg>
+        <h3 style="font-size:28px">Celular</h3>
+      </div>
+      <div class="uso" style="grid-template-columns:1fr;text-align:center;justify-items:center">
+        <svg viewBox="0 0 130 100" aria-hidden="true"><circle cx="65" cy="40" r="30" fill="#FFD10C"/><rect x="52" y="70" width="26" height="20" rx="4" fill="#8E8AA0"/><g stroke="#FFD10C" stroke-width="4" stroke-linecap="round"><path d="M20 40 h-12 M122 40 h-12 M30 10 l-8 -8 M100 10 l8 -8"/></g></svg>
+        <h3 style="font-size:28px">Lâmpada</h3>
+      </div>
+      <div class="uso" style="grid-template-columns:1fr;text-align:center;justify-items:center">
+        <svg viewBox="0 0 130 100" aria-hidden="true"><rect x="10" y="6" width="110" height="88" rx="10" fill="#1C1433"/><path d="M40 20 q-10 30 4 60 M60 18 v64 M80 20 q10 30 -4 60" stroke="#fff" stroke-width="8" stroke-linecap="round" fill="none" opacity=".9"/></svg>
+        <h3 style="font-size:28px">Raio X</h3>
+      </div>
+    </div>
+    <div class="caixa caixa-fundamental" data-passo="1" style="position:absolute;left:0;right:0;top:420px">
+      <div class="texto">Todos usam o mesmo tipo de onda: a <b>eletromagnética</b>. O que muda de um para outro é a <b>frequência</b>.</div>
+    </div>
+  </div>
+  <aside class="notas">
+    <p>Pergunte antes do clique: o que um controle remoto, um forno de micro-ondas, um celular, uma lâmpada e um aparelho de raio X têm em comum? Abertura da apostila de 5.2.</p>
+  </aside>
+</section>
+
+<!-- 3. Relembrando: mecânicas e eletromagnéticas -->
+<section class="slide" data-nome="Mecânicas e eletromagnéticas">
+  <div class="conteudo">
+    <p class="olho">Relembrando</p>
+    <h2 class="titulo">Mecânicas e eletromagnéticas</h2>
+    <table class="comp" style="position:absolute;left:0;top:160px;width:1760px">
+      <tr><th></th><th>Ondas mecânicas</th><th>Ondas eletromagnéticas</th></tr>
+      <tr data-passo="1"><td>Precisam de material?</td><td><b>Sim</b>: ar, água, corda, chão</td><td><b>Não</b>: vão até no <b>vácuo</b></td></tr>
+      <tr data-passo="2"><td>Exemplos</td><td>som, ondas do mar, onda na corda</td><td>luz, rádio, micro-ondas, raios X</td></tr>
+      <tr data-passo="3"><td>Velocidade</td><td>som no ar: cerca de 340 m/s</td><td>no vácuo: <b>300 000 km/s</b> (todas)</td></tr>
+    </table>
+    <div data-passo="4" style="position:absolute;left:580px;right:0;top:560px">
+      <svg viewBox="0 0 1180 150" width="1180" height="150" style="display:block;overflow:visible" aria-hidden="true">
+        <defs><clipPath id="em-vacuo"><rect x="170" y="20" width="860" height="110"/></clipPath></defs>
+        <circle cx="90" cy="75" r="62" fill="#FFD10C"/><text x="90" y="84" text-anchor="middle" class="rot" font-size="26" fill="#292B2C">Sol</text>
+        <g clip-path="url(#em-vacuo)"><path class="viaja" d="M90 75 q20 -26 40 0 t40 0 t40 0 t40 0 t40 0 t40 0 t40 0 t40 0 t40 0 t40 0 t40 0 t40 0 t40 0 t40 0 t40 0 t40 0 t40 0 t40 0 t40 0 t40 0 t40 0 t40 0 t40 0 t40 0 t40 0 t40 0" fill="none" stroke="#E0A800" stroke-width="5" stroke-linecap="round"/></g>
+        <text x="600" y="16" text-anchor="middle" class="rot" font-size="24" fill="#5E5A70">vácuo: a luz passa, o som não</text>
+        <circle cx="1090" cy="75" r="52" fill="#5AA9E6"/><path d="M1060 52 q20 -6 28 12 q-8 16 10 28 q-22 10 -38 -6 z" fill="#3FA34D"/>
+      </svg>
+    </div>
+  </div>
+  <aside class="notas">
+    <p>Revisão de 5.1 (O que é uma onda). Uma linha por clique. Clique 4: a luz do Sol atravessa o espaço vazio até a Terra.</p>
+  </aside>
+</section>
+
+<!-- 4. O espectro -->
+<section class="slide" data-nome="O espectro">
+  <div class="conteudo">
+    <p class="olho">Todas as ondas eletromagnéticas, pela frequência</p>
+    <h2 class="titulo">O espectro eletromagnético</h2>
+    <svg viewBox="0 0 1760 420" width="1760" height="420" style="position:absolute;left:0;top:140px;overflow:visible" aria-hidden="true">
+      <path d="M0 22 H1740 M1718 8 L1742 22 L1718 36" fill="none" stroke="#3F2FA0" stroke-width="5" stroke-linecap="round" stroke-linejoin="round"/>
+      <text x="870" y="62" text-anchor="middle" class="rot" font-size="28" fill="#3F2FA0">frequência e energia aumentam</text>
+      <g transform="translate(0 84)">
+        <rect x="0" y="0" width="244" height="150" rx="22" fill="#D9D2F5"/>
+        <rect x="252" y="0" width="244" height="150" fill="#C9C0F0"/>
+        <rect x="504" y="0" width="244" height="150" fill="#F6C4B5"/>
+        <rect x="756" y="0" width="244" height="150" fill="url(#gVis)" stroke="#292B2C" stroke-width="3"/>
+        <rect x="1008" y="0" width="244" height="150" fill="#C7B3F2"/>
+        <rect x="1260" y="0" width="244" height="150" fill="#A99BE6"/>
+        <rect x="1512" y="0" width="244" height="150" rx="22" fill="#8B7BD8"/>
+      </g>
+      <g class="faixa" font-size="27" fill="#292B2C" text-anchor="middle">
+        <text x="122" y="276">ondas de rádio</text><text x="374" y="276">micro-ondas</text><text x="626" y="276">infravermelho</text><text x="878" y="276">luz visível</text><text x="1130" y="276">ultravioleta</text><text x="1382" y="276">raios X</text><text x="1634" y="276">raios gama</text>
+      </g>
+      <g data-passo="2">
+        <path d="M0 312 H996" stroke="#0F8B8D" stroke-width="6" stroke-linecap="round"/>
+        <text x="498" y="350" text-anchor="middle" class="rot" font-size="26" fill="#0B6B6D">não ionizantes</text>
+        <path d="M1090 312 H1756" stroke="#C2384F" stroke-width="6" stroke-linecap="round"/>
+        <text x="1423" y="350" text-anchor="middle" class="rot" font-size="26" fill="#C2384F">ionizantes (parte do ultravioleta, X e gama)</text>
+      </g>
+    </svg>
+    <div data-anima="ondas-espectro" data-n="7" data-gap="8" data-w="1756" data-h="150" data-cor="#292B2C" style="position:absolute;left:0;top:224px;width:1756px;height:150px"></div>
+    <div class="linha-ex" data-passo="1" style="position:absolute;left:580px;right:0;top:530px;font-size:28px">Os nossos olhos só percebem uma faixa pequena: a <b>luz visível</b>. Todas andam a 300 000 km/s no vácuo; por isso, quanto <b>maior a frequência</b>, <b>menor o comprimento de onda</b> (\(v = \lambda \cdot f\)).</div>
+    <div class="caixa caixa-fundamental" data-passo="3" style="position:absolute;left:580px;right:0;top:700px;padding:16px 28px">
+      <div class="texto" style="font-size:28px">Quanto <b>maior a frequência</b>, <b>maior a energia</b> da onda eletromagnética.</div>
+    </div>
+  </div>
+  <aside class="notas">
+    <p>Figura da apostila (esquema fora de escala). Em cada faixa, a onda anda com a mesma velocidade: da esquerda para a direita as cristas ficam mais juntas (comprimento de onda menor) e a onda sobe e desce mais vezes por segundo (frequência maior).</p>
+    <p>"Menor comprimento de onda" é \(v = \lambda \cdot f\) com a mesma velocidade; a apostila não escreve essa frase, mas ela sai da fórmula da Parte 1 de Ondas e som e aparece em questões Modelo. Clique 2: o limite das ionizantes (parte do ultravioleta, raios X e gama).</p>
+  </aside>
+</section>
+
+<!-- 5. Usos: rádio, micro-ondas, infravermelho -->
+<section class="slide" data-nome="Usos: rádio a infravermelho">
+  <div class="conteudo">
+    <p class="olho">Cada faixa, um uso · as de menor frequência</p>
+    <h2 class="titulo">Rádio, micro-ondas e infravermelho</h2>
+    <div style="position:absolute;left:0;right:0;top:160px;display:flex;flex-direction:column;gap:18px">
+      <div class="uso" data-passo="1">
+        <svg viewBox="0 0 130 100" aria-hidden="true"><path d="M65 30 L40 96 M65 30 L90 96 M50 70 h30" stroke="#4B39B3" stroke-width="6" stroke-linecap="round" fill="none"/><g fill="none" stroke="#8C7BEA" stroke-width="4" stroke-linecap="round"><path d="M50 18 q15 -14 30 0"/><path d="M40 8 q25 -22 50 0"/></g></svg>
+        <div><h3>Ondas de rádio</h3><p>rádio e televisão.</p></div>
+      </div>
+      <div class="uso" data-passo="2">
+        <svg viewBox="0 0 130 100" aria-hidden="true"><rect x="8" y="16" width="114" height="74" rx="10" fill="#fff" stroke="#4B39B3" stroke-width="5"/><rect x="18" y="26" width="70" height="54" rx="6" fill="#E4DEFB"/><g fill="#4B39B3"><circle cx="105" cy="36" r="5"/><circle cx="105" cy="54" r="5"/></g></svg>
+        <div><h3>Micro-ondas</h3><p>forno de micro-ondas, celular, wi-fi, radar.</p></div>
+      </div>
+      <div class="uso" data-passo="3">
+        <svg viewBox="0 0 130 100" aria-hidden="true"><rect x="45" y="20" width="40" height="76" rx="12" fill="#4B39B3"/><circle cx="65" cy="38" r="8" fill="#E5484D"/><g stroke="#E5484D" stroke-width="4" stroke-linecap="round" fill="none"><path class="ir" d="M53 14 q12 -8 24 0"/><path class="ir" d="M47 6 q18 -12 36 0"/></g></svg>
+        <div><h3>Infravermelho</h3><p>controle remoto, câmeras térmicas, o calor que sentimos do Sol e de uma brasa.</p></div>
+      </div>
+    </div>
+  </div>
+  <aside class="notas">
+    <p>Da apostila, faixa por faixa, da menor para a maior frequência. O forno de micro-ondas tem um slide só para ele daqui a pouco.</p>
+  </aside>
+</section>
+
+<!-- 6. Usos: visível a gama -->
+<section class="slide" data-nome="Usos: visível a gama">
+  <div class="conteudo">
+    <p class="olho">Cada faixa, um uso · as de maior frequência</p>
+    <h2 class="titulo">Luz visível, ultravioleta, X e gama</h2>
+    <div style="position:absolute;left:0;right:0;top:160px;display:flex;flex-direction:column;gap:18px">
+      <div class="uso" data-passo="1">
+        <svg viewBox="0 0 130 100" aria-hidden="true"><rect x="10" y="40" width="110" height="20" rx="10" fill="url(#gVis)"/><ellipse cx="65" cy="50" rx="34" ry="22" fill="none" stroke="#292B2C" stroke-width="4"/><circle cx="65" cy="50" r="10" fill="#292B2C"/></svg>
+        <div><h3>Luz visível</h3><p>a visão; as <b>fotocélulas</b>, sensores que reagem à luz, acendem a iluminação da rua ao anoitecer e abrem portas automáticas.</p></div>
+      </div>
+      <div class="uso" data-passo="2">
+        <svg viewBox="0 0 130 100" aria-hidden="true"><circle cx="65" cy="50" r="24" fill="#FFD10C"/><g stroke="#7B4FE0" stroke-width="5" stroke-linecap="round"><path d="M65 8 v10 M65 82 v10 M23 50 h10 M97 50 h10 M35 20 l7 7 M88 73 l7 7 M95 20 l-7 7 M42 73 l-7 7"/></g></svg>
+        <div><h3>Ultravioleta</h3><p>bronzeia e <b>queima a pele</b>; esteriliza objetos.</p></div>
+      </div>
+      <div class="uso" data-passo="3">
+        <svg viewBox="0 0 130 100" aria-hidden="true"><rect x="10" y="6" width="110" height="88" rx="10" fill="#1C1433"/><path d="M40 20 q-10 30 4 60 M60 18 v64 M80 20 q10 30 -4 60" stroke="#fff" stroke-width="8" stroke-linecap="round" fill="none" opacity=".9"/></svg>
+        <div><h3>Raios X e raios gama</h3><p>exames de imagem, tratamento de câncer, esterilização de materiais.</p></div>
+      </div>
+    </div>
+  </div>
+  <aside class="notas">
+    <p>Da apostila. Os usos na medicina (radiografia, radioterapia) e os cuidados voltam em Radiações e saúde.</p>
+  </aside>
+</section>
+
+<!-- 7. O forno de micro-ondas -->
+<section class="slide" data-nome="O forno de micro-ondas">
+  <div class="conteudo">
+    <p class="olho">Micro-ondas na cozinha</p>
+    <h2 class="titulo">O forno agita a água do alimento</h2>
+    <svg viewBox="0 0 820 400" width="820" height="400" style="position:absolute;left:0;top:150px;overflow:visible" aria-hidden="true">
+      <rect x="0" y="0" width="820" height="400" rx="34" fill="#fff" stroke="#4B39B3" stroke-width="6"/>
+      <rect x="30" y="30" width="600" height="340" rx="20" fill="#F1EEFD"/>
+      <g fill="#4B39B3"><circle cx="725" cy="80" r="16"/><circle cx="725" cy="140" r="16"/><rect x="680" y="200" width="90" height="16" rx="8"/></g>
+      <ellipse cx="330" cy="320" rx="250" ry="30" fill="#E4DEFB"/>
+      <path d="M110 310 Q330 10 550 310 z" fill="#E9C99A" stroke="#B88B54" stroke-width="3"/>
+      <g data-passo="1">
+        <g transform="translate(240 245)"><g class="h2o"><use href="#h2o-s" x="-40" y="-30" width="80" height="60"/></g></g>
+        <g transform="translate(340 210)"><g class="h2o"><use href="#h2o-s" x="-40" y="-30" width="80" height="60"/></g></g>
+        <g transform="translate(440 245)"><g class="h2o"><use href="#h2o-s" x="-40" y="-30" width="80" height="60"/></g></g>
+        <g transform="translate(290 280)"><g class="h2o"><use href="#h2o-s" x="-40" y="-30" width="80" height="60"/></g></g>
+        <g transform="translate(390 280)"><g class="h2o"><use href="#h2o-s" x="-40" y="-30" width="80" height="60"/></g></g>
+      </g>
+    </svg>
+    <div style="position:absolute;left:880px;right:0;top:150px;display:flex;flex-direction:column;gap:20px">
+      <div class="linha-ex" data-passo="1" style="font-size:28px">No forno, as micro-ondas <b>agitam as moléculas de água</b> do alimento, que esquenta.</div>
+      <div class="caixa caixa-atencao" data-passo="2" style="padding:20px 28px">
+        <span class="rotulo">Atenção · A comida não fica radioativa</span>
+        <div class="texto" style="font-size:28px">O forno só agita as moléculas de água e aquece o alimento. Quando ele <b>desliga</b>, as ondas <b>acabam</b>, e o alimento não guarda radiação nenhuma.</div>
+      </div>
+    </div>
+  </div>
+  <aside class="notas">
+    <p>Clique 1: as moléculas de água (O vermelho, H brancos) giram de um lado para o outro: é essa agitação que aquece. Clique 2: a atenção da apostila.</p>
+  </aside>
+</section>
+
+<!-- 8. Frequência e energia -->
+<section class="slide" data-nome="Frequência e energia">
+  <div class="conteudo">
+    <p class="olho">Fundamental</p>
+    <h2 class="titulo">Mais frequência, mais energia</h2>
+    <div class="caixa caixa-fundamental" style="position:absolute;left:0;right:0;top:160px">
+      <div class="texto">Quanto <b>maior a frequência</b>, <b>maior a energia</b> da onda eletromagnética. Parte do <b>ultravioleta</b>, os <b>raios X</b> e os <b>raios gama</b> são <b>radiações ionizantes</b>: têm energia para <b>danificar as células</b>. Por isso o uso delas exige <b>cuidado e controle</b>.</div>
+    </div>
+    <svg data-passo="1" viewBox="0 0 1180 160" width="1180" height="160" style="position:absolute;left:580px;top:470px;overflow:visible" aria-hidden="true">
+      <rect x="0" y="40" width="1180" height="60" rx="30" fill="#EEEAFB"/>
+      <rect x="0" y="40" width="1180" height="60" rx="30" fill="url(#gEn)"/>
+      <defs><linearGradient id="gEn" x1="0" y1="0" x2="1" y2="0"><stop offset="0" stop-color="#C9C0F0"/><stop offset=".6" stop-color="#8C7BEA"/><stop offset="1" stop-color="#C2384F"/></linearGradient></defs>
+      <text x="20" y="28" class="rot" font-size="24" fill="#5E5A70">rádio</text><text x="1160" y="28" text-anchor="end" class="rot" font-size="24" fill="#C2384F">gama</text>
+      <text x="590" y="138" text-anchor="middle" class="rot" font-size="28" fill="#3F2FA0">energia de cada onda →</text>
+    </svg>
+  </div>
+  <aside class="notas">
+    <p>Fundamental da apostila. O que é uma radiação ionizante (arrancar elétrons dos átomos) e os cuidados (dose, chumbo, protetor solar) ficam para Radiações e saúde.</p>
+  </aside>
+</section>
+
+<!-- 9. Exemplo: qual faixa -->
+<section class="slide" data-nome="Exemplo: qual faixa?">
+  <div class="conteudo">
+    <p class="olho">Exemplo</p>
+    <h2 class="titulo">Qual faixa?</h2>
+    <div style="position:absolute;left:0;right:0;top:170px;display:flex;flex-direction:column;gap:22px">
+      <div class="linha-ex linha-tag"><span><b>(a)</b> O controle remoto da TV.</span><span data-passo="1"><span class="tag tag-e">infravermelho</span></span></div>
+      <div class="linha-ex linha-tag"><span><b>(b)</b> A radiografia de um braço quebrado.</span><span data-passo="2"><span class="tag tag-e">raios X</span></span></div>
+      <div class="linha-ex linha-tag"><span><b>(c)</b> A ligação de celular.</span><span data-passo="3"><span class="tag tag-e">micro-ondas</span></span></div>
+    </div>
+  </div>
+  <aside class="notas"><p>Exemplo da apostila. Peça a resposta antes de cada clique.</p></aside>
+</section>
+
+<!-- 10. Questão 1 -->
+<section class="slide questao" data-nome="Questão 1">
+  <div class="conteudo">
+    <div class="area-resolucao"></div>
+    <span class="pilula pilula-pausa" data-em="1:some">Pause o vídeo e tente</span>
+    <div class="painel-questao">
+      <p class="olho">Questão 1 · IF Sudeste MG 2014</p>
+      <p class="enunciado" style="font-size:19px;color:var(--cinza)">[Texto de abertura: vivemos imersos num emaranhado de ondas, eletromagnéticas (TV, rádio, infravermelho, luz visível, ultravioleta) e mecânicas (voz, barulho das máquinas, ondas do vento em plantações, rios, lagos e mares).]</p>
+      <p class="enunciado" style="font-size:19px">Algumas ondas podem se propagar sem a necessidade de um meio material, enquanto outras só se propagam caso haja um meio para a sua propagação.</p>
+      <p class="enunciado" style="font-size:19px">Marque a alternativa que apresenta uma situação <b>CORRETA</b> em relação à necessidade ou não de um meio material para a propagação dessas ondas.</p>
+      <ol class="alternativas" style="gap:6px">
+        <li data-em="2:apaga" style="font-size:18px;padding:3px 12px"><b>A</b><span>As ondas de rádio necessitam de um meio material para a sua propagação, enquanto as ondas em um lago não necessitam dele.</span></li>
+        <li data-em="2:apaga" style="font-size:18px;padding:3px 12px"><b>B</b><span>As ondas da radiação infravermelha não necessitam de um meio para a sua propagação, enquanto as ondas entre a antena transmissora e o seu celular necessitam de um meio material.</span></li>
+        <li data-em="2:apaga" style="font-size:18px;padding:3px 12px"><b>C</b><span>As ondas na superfície de uma represa necessitam de um meio material para a sua propagação, enquanto as ondas sonoras não necessitam dele.</span></li>
+        <li data-em="2:certo" style="font-size:18px;padding:3px 12px"><b>D</b><span>As ondas produzidas pelo eco necessitam de um meio material para a sua propagação, enquanto a luz visível não necessita dele.</span></li>
+        <li data-em="2:apaga" style="font-size:18px;padding:3px 12px"><b>E</b><span>As ondas produzidas por uma máquina que corta o asfalto necessitam de um meio material para a sua propagação, enquanto as ondas produzidas pela voz não necessitam dele.</span></li>
+      </ol>
+    </div>
+  </div>
+  <aside class="resolucao">
+    <p class="dados"><b>Dados:</b> mecânicas precisam de meio; eletromagnéticas, não.</p>
+    <ol class="passos">
+      <li>Eco = som refletido: mecânica, precisa de meio.</li>
+      <li>Luz visível: eletromagnética, não precisa.</li>
+      <li>Nas outras, uma das metades está errada.</li>
+    </ol>
+    <p class="resposta"><b>Resposta:</b> eco precisa de meio; luz não. <b>Gabarito D.</b></p>
+    <p class="atencao"><b>Destaque no quadro:</b> Som (voz, eco, máquinas) é mecânico; rádio, celular, luz são eletromagnéticos.</p>
+    <ul class="erros">
+      <li><b>A</b> Inverte: rádio não precisa; o lago precisa da água.</li>
+      <li><b>B</b> O sinal do celular também é eletromagnético.</li>
+      <li><b>C</b> O som precisa de meio.</li>
+      <li><b>E</b> A voz é som: precisa de meio.</li>
+    </ul>
+  </aside>
+  <aside class="notas">
+    <p>Clique 1 tira o aviso de pausa: resolva na área (D liga a caneta; E esconde o enunciado). Clique 2: gabarito D.</p>
+    <p>Questão oficial do IF Sudeste MG 2014-1, q38, FIS-0531 (sobra do bloco do fim do capítulo). O primeiro parágrafo (o "emaranhado de ondas") foi resumido na tela; a frase final dele, o comando e as alternativas estão completos.</p>
+  </aside>
+</section>
+
+<!-- 11. Questão 2 -->
+<section class="slide questao" data-nome="Questão 2">
+  <div class="conteudo">
+    <div class="area-resolucao"></div>
+    <span class="pilula pilula-pausa" data-em="1:some">Pause o vídeo e tente</span>
+    <div class="painel-questao">
+      <p class="olho">Questão 2 · Modelo IF</p>
+      <p class="enunciado" style="font-size:23px">Numa feira de ciências, um grupo colocou um celular tocando música, com a tela acesa, dentro de um pote de vidro bem fechado. Com uma bomba de vácuo, o grupo foi retirando o ar de dentro do pote. O público percebeu que o som da música ficava cada vez mais fraco, até quase não ser ouvido, enquanto a tela do celular continuava sendo vista normalmente.</p>
+      <p class="enunciado" style="font-size:23px">A explicação <b>CORRETA</b> para o que o público observou é:</p>
+      <ol class="alternativas" style="gap:6px">
+        <li data-em="2:apaga" style="font-size:21px;padding:5px 14px"><b>A</b><span>a luz precisa de ar para se propagar, mas a tela é forte o bastante para ser vista mesmo assim.</span></li>
+        <li data-em="2:apaga" style="font-size:21px;padding:5px 14px"><b>B</b><span>o som é uma onda eletromagnética e perde energia quando o ar é retirado.</span></li>
+        <li data-em="2:apaga" style="font-size:21px;padding:5px 14px"><b>C</b><span>o celular passou a tocar mais baixo por falta de ar, e o som continuaria igual se ele tocasse mais alto.</span></li>
+        <li data-em="2:certo" style="font-size:21px;padding:5px 14px"><b>D</b><span>o som é uma onda mecânica e precisa de ar para se propagar, enquanto a luz é eletromagnética e se propaga também no vácuo.</span></li>
+        <li data-em="2:apaga" style="font-size:21px;padding:5px 14px"><b>E</b><span>o vidro do pote bloqueia o som, mas deixa passar a luz.</span></li>
+      </ol>
+    </div>
+  </div>
+  <aside class="resolucao">
+    <p class="dados"><b>Dados:</b> tira o ar do pote; o som some, a tela continua visível.</p>
+    <ol class="passos">
+      <li>Som: onda mecânica, precisa do ar.</li>
+      <li>Sem ar, o som quase não sai do pote.</li>
+      <li>Luz: eletromagnética, passa no vácuo.</li>
+    </ol>
+    <p class="resposta"><b>Resposta:</b> som mecânico precisa de ar; luz eletromagnética, não. <b>Gabarito D.</b></p>
+    <p class="atencao"><b>Destaque no quadro:</b> O que mudou foi o ar: só a onda que precisa de meio foi afetada.</p>
+    <ul class="erros">
+      <li><b>A</b> A luz não precisa de ar.</li>
+      <li><b>B</b> O som é mecânico, não eletromagnético.</li>
+      <li><b>C</b> O celular não mudou; o que falta é o meio.</li>
+      <li><b>E</b> Com ar, o som atravessava o vidro; ele sumiu ao tirar o ar.</li>
+    </ul>
+  </aside>
+  <aside class="notas">
+    <p>Clique 1 tira o aviso de pausa: resolva na área (D liga a caneta; E esconde o enunciado). Clique 2: gabarito D.</p>
+    <p>Modelo IF, lote if-fisica-ondas, m005, FIS-0806 (questão da apostila, 5.2).</p>
+  </aside>
+</section>
+
+<!-- 12. Questão 3 -->
+<section class="slide questao" data-nome="Questão 3">
+  <div class="conteudo">
+    <div class="area-resolucao"></div>
+    <span class="pilula pilula-pausa" data-em="1:some">Pause o vídeo e tente</span>
+    <div class="painel-questao">
+      <p class="olho">Questão 3 · Modelo IF</p>
+      <p class="enunciado" style="font-size:24px">O espectro eletromagnético organiza as ondas eletromagnéticas pela frequência. Assinale a alternativa que apresenta faixas do espectro em ordem <b>CRESCENTE</b> de frequência, isto é, da menor para a maior.</p>
+      <ol class="alternativas" style="gap:8px">
+        <li data-em="2:apaga" style="font-size:22px;padding:6px 14px"><b>A</b><span>raios X, ultravioleta, luz visível, infravermelho, micro-ondas.</span></li>
+        <li data-em="2:apaga" style="font-size:22px;padding:6px 14px"><b>B</b><span>micro-ondas, luz visível, infravermelho, ultravioleta, raios X.</span></li>
+        <li data-em="2:apaga" style="font-size:22px;padding:6px 14px"><b>C</b><span>ondas de rádio, infravermelho, luz visível, raios X, ultravioleta.</span></li>
+        <li data-em="2:apaga" style="font-size:22px;padding:6px 14px"><b>D</b><span>micro-ondas, ondas de rádio, infravermelho, luz visível, raios X.</span></li>
+        <li data-em="2:certo" style="font-size:22px;padding:6px 14px"><b>E</b><span>ondas de rádio, micro-ondas, infravermelho, luz visível, ultravioleta.</span></li>
+      </ol>
+    </div>
+  </div>
+  <aside class="resolucao">
+    <p class="dados"><b>Dados:</b> ordem crescente de frequência.</p>
+    <ol class="passos">
+      <li>Rádio → micro-ondas → infravermelho</li>
+      <li>→ visível → ultravioleta → X → gama</li>
+      <li>Procure essa ordem, sem trocas.</li>
+    </ol>
+    <p class="resposta"><b>Resposta:</b> rádio, micro-ondas, infravermelho, visível, ultravioleta. <b>Gabarito E.</b></p>
+    <p class="atencao"><b>Destaque no quadro:</b> "Rádio, micro, infra, luz, ultra, X, gama".</p>
+    <ul class="erros">
+      <li><b>A</b> Está em ordem decrescente.</li>
+      <li><b>B</b> Troca visível e infravermelho.</li>
+      <li><b>C</b> Põe raios X antes do ultravioleta.</li>
+      <li><b>D</b> Põe micro-ondas antes do rádio.</li>
+    </ul>
+  </aside>
+  <aside class="notas">
+    <p>Clique 1 tira o aviso de pausa: resolva na área (D liga a caneta; E esconde o enunciado). Clique 2: gabarito E.</p>
+    <p>Modelo IF, lote if-fisica-ondas, m026, FIS-0827 (questão da apostila, 5.2).</p>
+  </aside>
+</section>
+
+<!-- 13. Resumo -->
+<section class="slide" data-nome="Resumo">
+  <div class="conteudo">
+    <p class="olho">Resumo</p>
+    <h2 class="titulo">O essencial</h2>
+    <div class="resumo" style="position:absolute;left:0;right:0;top:150px">
+      <div><b>Eletromagnéticas</b> não precisam de meio: todas se propagam no vácuo, à velocidade da luz (300 000 km/s).</div>
+      <div><b>Espectro</b>, da menor para a maior frequência: rádio, micro-ondas, infravermelho, visível, ultravioleta, raios X e gama.</div>
+      <div><b>Usos:</b> rádio e TV; forno, celular e wi-fi; controle remoto e calor; visão e fotocélulas; bronzeado e esterilização; exames e câncer.</div>
+      <div><b>Mais frequência, mais energia.</b> Ultravioleta forte, raios X e gama são <b>ionizantes</b>: pedem cuidado.</div>
+    </div>
+    <div class="caixa caixa-atencao" style="position:absolute;left:580px;right:0;top:600px">
+      <div class="texto" style="font-size:30px">O micro-ondas só agita a água: a comida <b>não fica radioativa</b>.</div>
+    </div>
+  </div>
+  <aside class="notas"><p>Peça para tirarem um print desta tela.</p></aside>
+</section>
+
+<!-- 14. A seguir -->
+<section class="slide capa" data-nome="A seguir">
+  <div class="estrelas"></div>
+  <div class="texto-capa" style="top:240px">
+    <span class="selo">Física · IF</span>
+    <p class="aula" style="font-size:28px">A seguir · Ondas eletromagnéticas · Parte 2 de 2</p>
+    <h1>Telecomunicações</h1>
+    <p class="sub">Rádio, TV, celular e fibra óptica</p>
+  </div>
+  <svg class="emblema" viewBox="0 0 640 640" aria-hidden="true">
+    <path d="M320 200 L250 520 M320 200 L390 520 M275 410 h90 M290 340 h60" stroke="#fff" stroke-width="12" stroke-linecap="round" fill="none"/>
+    <circle cx="320" cy="190" r="22" fill="#FFD10C"/>
+    <g fill="none" stroke="#FFD10C" stroke-width="9" stroke-linecap="round"><path d="M260 150 q60 -60 120 0" opacity=".95"/><path d="M220 110 q100 -100 200 0" opacity=".7"/><path d="M180 70 q140 -140 280 0" opacity=".45"/></g>
+  </svg>
+  <img class="logo-capa" src="{{LOGO_BRANCO}}" alt="Quarks">
+  <aside class="notas"><p>Próxima parte: como o som e a imagem viram ondas eletromagnéticas e voltam a ser som e imagem (rádio, TV, celular, fibra óptica e satélites).</p></aside>
+</section>
