@@ -1,0 +1,768 @@
+<!--aula
+{"disciplina": "fisica", "curso": "IF", "assunto": "Óptica", "parte": "Parte única", "titulo": "Reflexão e refração", "scripts": ["animacoes-optica.js"]}
+-->
+<!-- Fonte: apostila IF, Física, cap. 4 Óptica (4.2 Reflexão e refração, todos os blocos: "Reflexão da luz e espelhos planos", "Espelhos côncavos e convexos", "Imagens no espelho côncavo", "Imagens no espelho convexo", "Refração no dia a dia", "Luz branca e dispersão", exemplos, atenções e o resumo). Questões: Modelo IF if-fisica-reflexao-e-refracao m001 (FIS-8755) e m003 (FIS-8757), Modelo IF if-fisica-cor m005 (FIS-1301) e a oficial que sobrou para as partes, IF Sudeste MG 2014-1 q35 (FIS-0528). A oficial 2017-1 q30 (FIS-0524) fica reservada para o bloco do fim do capítulo. Esquemas fora de escala; as figuras de espelhos curvos foram traçadas com a geometria certa (foco no meio entre C e V). -->
+<style>
+  .caixa, .painel, .linha-ex { box-sizing: border-box; }
+  .linha-ex { background: var(--branco); border: 2px solid var(--lilas-2); border-radius: 24px; padding: 14px 26px; font-size: 30px; line-height: 1.3; }
+  .linha-ex b { color: var(--roxo-titulo); }
+  .painel { background: var(--branco); border: 2px solid var(--lilas-2); border-radius: 30px; padding: 16px 24px; }
+  .painel h3 { margin: 0 0 4px; font: 800 34px var(--fonte-titulo); letter-spacing: -.02em; color: var(--roxo-titulo); }
+  .painel p { margin: 6px 0 0; font-size: 25px; line-height: 1.3; }
+  .painel svg { display: block; }
+  .rot { font-family: Figtree, 'Segoe UI', sans-serif; font-weight: 700; font-size: 24px; fill: #5E5A70; }
+  .rotF { font-weight: 800; font-size: 28px; fill: #3F2FA0; }
+  .raio { fill: none; stroke: #E0A800; stroke-width: 5; stroke-linecap: round; stroke-linejoin: round; }
+  .raio.r2 { stroke: #0F8B8D; }
+  .prolonga { fill: none; stroke: #B08600; stroke-width: 3.5; stroke-dasharray: 9 8; }
+  .espelho { fill: none; stroke: #0B6B6D; stroke-width: 8; stroke-linecap: round; }
+  .hach path { stroke: #9C93C4; stroke-width: 3; fill: none; }
+  .eixo { stroke: #9C93C4; stroke-width: 3; stroke-dasharray: 12 8; }
+  .ponto { fill: #3F2FA0; }
+  .objeto { stroke: #3F2FA0; stroke-width: 7; stroke-linecap: round; fill: none; }
+  .objeto-p { fill: #3F2FA0; }
+  .objeto.img { stroke: #D6336C; } .objeto-p.img { fill: #D6336C; }
+  .objeto.virt { stroke-dasharray: 10 7; }
+  .chip { display: inline-block; padding: 3px 16px; border-radius: 999px; font-weight: 800; font-size: 23px; background: var(--branco); border: 2px solid color-mix(in srgb, var(--d) 30%, transparent); color: var(--d-forte); margin: 4px 6px 0 0; }
+  .tabela.op { font-size: 28px; }
+  .tabela.op th, .tabela.op td { padding: 9px 26px; text-align: left; }
+  .tabela.op td:first-child { font-weight: 800; color: var(--roxo-titulo); }
+  .painel-questao .figura { display: block; margin: 0 auto; }
+  .letra-r { font: 800 120px var(--fonte-titulo); }
+  /* desenho que se traça quando aparece */
+  .traca { stroke-dasharray: 1; stroke-dashoffset: 1; }
+  .mostra .traca, .mostra.traca { animation: traca 2.2s ease-in-out forwards; }
+  .mostra .traca.t2 { animation-delay: .5s; } .mostra .traca.t3 { animation-delay: 1s; }
+  @keyframes traca { to { stroke-dashoffset: 0; } }
+  @media (prefers-reduced-motion: reduce) { .traca { stroke-dasharray: none; stroke-dashoffset: 0; } }
+  /* espelho plano: o objeto se afasta e se aproxima, e a imagem acompanha do outro lado */
+  @keyframes vaiE { 0%, 100% { transform: translateX(0); } 50% { transform: translateX(-50px); } }
+  @keyframes vaiD { 0%, 100% { transform: translateX(0); } 50% { transform: translateX(50px); } }
+  @keyframes meioE { 0%, 100% { transform: translateX(0); } 50% { transform: translateX(-25px); } }
+  @keyframes meioD { 0%, 100% { transform: translateX(0); } 50% { transform: translateX(25px); } }
+  @keyframes estica { 0%, 100% { transform: scaleX(1); } 50% { transform: scaleX(1.2778); } }
+  .estE { transform-box: fill-box; transform-origin: 100% 50%; }
+  .estD { transform-box: fill-box; transform-origin: 0% 50%; }
+  .slide.ativo .mostra .anda-e, .slide.ativo .mostra.anda-e { animation: vaiE 8s ease-in-out infinite; }
+  .slide.ativo .mostra .anda-d, .slide.ativo .mostra.anda-d { animation: vaiD 8s ease-in-out infinite; }
+  .slide.ativo .mostra .meio-e { animation: meioE 8s ease-in-out infinite; }
+  .slide.ativo .mostra .meio-d { animation: meioD 8s ease-in-out infinite; }
+  .slide.ativo .mostra .estE, .slide.ativo .mostra .estD { animation: estica 8s ease-in-out infinite; }
+  .espelhado { display: inline-block; transform: scaleX(-1); }
+  /* chama da vela */
+  @keyframes chama { 0%, 100% { transform: scaleY(1); } 50% { transform: scaleY(.9) scaleX(1.04); } }
+  .chama { transform-box: fill-box; transform-origin: 50% 100%; }
+  .slide.ativo .chama { animation: chama 1.6s ease-in-out infinite; }
+  .chama-inv { transform-box: fill-box; transform-origin: 50% 0%; }
+  .slide.ativo .mostra .chama-inv { animation: chama 1.6s ease-in-out infinite; }
+  /* leque de cores do prisma: brilho suave depois de aparecer */
+  @keyframes brilho { 0%, 100% { opacity: .85; } 50% { opacity: 1; } }
+  .slide.ativo .mostra .leque { animation: brilho 5s ease-in-out infinite; }
+  /* água que ondula de leve */
+  @keyframes onda { 0%, 100% { transform: translateX(0); } 50% { transform: translateX(-14px); } }
+  .slide.ativo .ondula { animation: onda 6s ease-in-out infinite; }
+</style>
+
+<svg width="0" height="0" style="position:absolute" aria-hidden="true">
+  <defs>
+    <marker id="opSetaA" viewBox="0 0 10 10" refX="7" refY="5" markerWidth="5" markerHeight="5" orient="auto"><path d="M0 0 L10 5 L0 10 Z" fill="#E0A800"/></marker>
+    <marker id="opSetaV" viewBox="0 0 10 10" refX="7" refY="5" markerWidth="5" markerHeight="5" orient="auto"><path d="M0 0 L10 5 L0 10 Z" fill="#0F8B8D"/></marker>
+    <marker id="opSetaC" viewBox="0 0 10 10" refX="5" refY="5" markerWidth="4" markerHeight="4" orient="auto-start-reverse"><path d="M0 0 L10 5 L0 10 Z" fill="#5E5A70"/></marker>
+    <linearGradient id="opAgua" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#CFE6FA"/><stop offset="1" stop-color="#9CCBF2"/></linearGradient>
+    <linearGradient id="opVidro" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#E0F4F4"/><stop offset="1" stop-color="#B9E3E4"/></linearGradient>
+    <linearGradient id="opArco" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#E53935"/><stop offset=".17" stop-color="#FB8C00"/><stop offset=".34" stop-color="#FDD835"/><stop offset=".5" stop-color="#43A047"/><stop offset=".67" stop-color="#1E88E5"/><stop offset=".84" stop-color="#3949AB"/><stop offset="1" stop-color="#8E24AA"/></linearGradient>
+  </defs>
+</svg>
+
+<!-- 1. Capa -->
+<section class="slide capa" data-nome="Capa">
+  <div class="estrelas"></div>
+  <div class="texto-capa">
+    <span class="selo">Física · IF</span>
+    <p class="aula">Óptica</p>
+    <h1>Reflexão e refração</h1>
+    <p class="sub">Espelhos, o lápis "quebrado" e o arco-íris</p>
+  </div>
+  <svg class="emblema" viewBox="0 0 640 640" aria-hidden="true">
+    <g class="gira-lento"><ellipse cx="320" cy="320" rx="300" ry="128" fill="none" stroke="#fff" stroke-opacity=".38" stroke-width="2" transform="rotate(-10 320 320)"/></g>
+    <path d="M200 120 L300 420 L520 420 Z" fill="#fff" opacity=".9"/>
+    <path d="M40 330 L245 290" stroke="#fff" stroke-width="12" stroke-linecap="round"/>
+    <path d="M245 290 L420 330" stroke="#fff" stroke-opacity=".7" stroke-width="10"/>
+    <g stroke-width="11" stroke-linecap="round"><path d="M420 330 L620 360" stroke="#E53935"/><path d="M420 335 L620 395" stroke="#FDD835"/><path d="M420 340 L620 430" stroke="#43A047"/><path d="M420 345 L620 465" stroke="#1E88E5"/><path d="M420 350 L620 500" stroke="#8E24AA"/></g>
+  </svg>
+  <img class="logo-capa" src="{{LOGO_BRANCO}}" alt="Quarks">
+  <aside class="notas">
+    <p>Parte única do subcapítulo Reflexão e refração. Três blocos: reflexão (espelho plano, espelhos curvos), refração (lápis, piscina) e dispersão (prisma, arco-íris). É a parte mais longa do capítulo (cerca de 30 minutos), porque a apostila tem os espelhos côncavos e convexos dentro deste subcapítulo e o cronograma prevê uma parte só. Se precisar, pare depois do slide do espelho convexo e retome na refração.</p>
+    <p>Tudo da apostila IF, cap. 4, 4.2. Sem lei de Snell e sem equação de Gauss (fora da matriz do IF).</p>
+  </aside>
+</section>
+
+<!-- 2. A luz volta -->
+<section class="slide" data-nome="Reflexão regular e difusa">
+  <div class="conteudo">
+    <p class="olho">Reflexão da luz</p>
+    <h2 class="titulo">A luz bate e volta</h2>
+    <div data-anima="opt-fotons" style="position:absolute;left:0;right:0;top:150px;display:grid;grid-template-columns:1fr 1fr;gap:30px">
+      <div class="painel" data-passo="1">
+        <svg viewBox="0 0 760 280" width="100%" height="250" aria-hidden="true">
+          <rect x="30" y="230" width="700" height="14" rx="4" fill="#CFE9EA" stroke="#0B6B6D" stroke-width="3"/>
+          <path class="raio" d="M60 40 L250 230 L440 40"/><path class="raio" d="M150 40 L340 230 L530 40"/><path class="raio" d="M240 40 L430 230 L620 40"/>
+        </svg>
+        <h3>Superfície lisa e polida</h3>
+        <p>Os raios refletidos saem <b>organizados</b>: vemos uma imagem nítida. É o espelho.</p>
+      </div>
+      <div class="painel" data-passo="2">
+        <svg viewBox="0 0 760 280" width="100%" height="250" aria-hidden="true">
+          <path d="M30 236 l30 -12 l26 14 l30 -16 l24 12 l34 -14 l26 16 l28 -12 l30 14 l26 -16 l32 12 l26 -10 l30 16 l28 -14 l30 12 l26 -12 l30 14 l28 -14 l30 12 l26 -10 l30 14 l28 -12 l24 10 v20 h-700 z" fill="#F1EEFD" stroke="#9C93C4" stroke-width="3"/>
+          <path class="raio" d="M60 40 L250 230 L120 60"/><path class="raio" d="M150 40 L340 230 L470 30"/><path class="raio" d="M240 40 L430 230 L720 120"/>
+        </svg>
+        <h3>Superfície áspera</h3>
+        <p>Os raios saem <b>espalhados</b> para todos os lados: vemos o papel de qualquer posição, mas não nos vemos nele.</p>
+      </div>
+    </div>
+    <p class="texto" data-passo="3" style="position:absolute;left:580px;right:0;top:640px;margin:0;font-size:29px">Como uma bola jogada contra a parede, a luz volta ao bater numa superfície: ela <b>reflete</b>.</p>
+  </div>
+  <aside class="notas">
+    <p>Clique 1: espelho; os três raios chegam paralelos e saem paralelos (reflexão organizada). Clique 2: papel; os raios chegam paralelos e cada um sai para um lado (a superfície é cheia de pequenas inclinações). Clique 3: a comparação da bola, que abre o bloco da apostila.</p>
+    <p>É a reflexão espalhada que nos deixa ver os objetos que não têm luz própria (fonte secundária, Parte 1 de Luz e cores).</p>
+  </aside>
+</section>
+
+<!-- 3. Lei da reflexão -->
+<section class="slide" data-nome="Lei da reflexão">
+  <div class="conteudo">
+    <p class="olho">Reflexão da luz</p>
+    <h2 class="titulo">Lei da reflexão</h2>
+    <div data-anima="opt-reflexao" style="position:absolute;left:0;top:120px;width:760px;height:470px"></div>
+    <div style="position:absolute;left:880px;right:0;top:150px;display:flex;flex-direction:column;gap:18px">
+      <div class="linha-ex" data-passo="1" style="font-size:28px"><b>Normal:</b> a reta <b>perpendicular</b> ao espelho no ponto onde a luz bate.</div>
+      <div class="linha-ex" data-passo="2" style="font-size:28px"><b>Raio incidente</b> é o que chega; <b>raio refletido</b> é o que volta.</div>
+      <div class="caixa caixa-fundamental" data-passo="3" style="padding:18px 28px">
+        <span class="rotulo">Lei da reflexão</span>
+        <div class="texto" style="font-size:29px">O ângulo de incidência é <b>igual</b> ao de reflexão, os dois medidos <b>a partir da normal</b>:</div>
+        <div style="font-size:52px;text-align:center;margin-top:6px">\(i = r\)</div>
+      </div>
+    </div>
+  </div>
+  <aside class="notas">
+    <p>O raio incidente muda de inclinação devagar (de 22° a 58°) e o refletido acompanha: os dois ângulos, medidos a partir da linha tracejada (a normal), são sempre iguais.</p>
+    <p>Cliques 1 a 3: normal, os dois raios e a lei. Pegadinha comum: medir o ângulo a partir do espelho, e não da normal.</p>
+  </aside>
+</section>
+
+<!-- 4. Espelho plano -->
+<section class="slide" data-nome="Espelho plano">
+  <div class="conteudo">
+    <p class="olho">Espelho plano</p>
+    <h2 class="titulo">A imagem no espelho plano</h2>
+    <svg viewBox="0 0 800 440" width="800" height="440" style="position:absolute;left:0;top:150px;overflow:visible" aria-hidden="true">
+      <rect x="392" y="20" width="16" height="400" rx="4" fill="#CFE9EA" stroke="#0B6B6D" stroke-width="3"/>
+      <g class="hach"><path d="M410 40 l16 -12"/><path d="M410 90 l16 -12"/><path d="M410 140 l16 -12"/><path d="M410 190 l16 -12"/><path d="M410 240 l16 -12"/><path d="M410 290 l16 -12"/><path d="M410 340 l16 -12"/><path d="M410 390 l16 -12"/></g>
+      <text x="400" y="440" text-anchor="middle" class="rot">espelho</text>
+      <g data-passo="1">
+        <g class="anda-e"><rect x="120" y="120" width="140" height="180" rx="18" fill="#fff" stroke="#3F2FA0" stroke-width="4"/><text x="190" y="252" text-anchor="middle" class="letra-r" fill="#3F2FA0">R</text></g>
+        <text x="190" y="340" text-anchor="middle" class="rot">objeto</text>
+      </g>
+      <g data-passo="1">
+        <g class="anda-d" opacity=".75"><rect x="540" y="120" width="140" height="180" rx="18" fill="#fff" stroke="#D6336C" stroke-width="4" stroke-dasharray="12 8"/><text x="-610" y="252" text-anchor="middle" class="letra-r" fill="#D6336C" transform="scale(-1 1)">R</text></g>
+        <text x="610" y="340" text-anchor="middle" class="rot" style="fill:#D6336C">imagem</text>
+      </g>
+      <g data-passo="2">
+        <g class="estE"><path d="M262 380 L388 380" stroke="#5E5A70" stroke-width="3" marker-start="url(#opSetaC)" marker-end="url(#opSetaC)"/></g>
+        <g class="estD"><path d="M412 380 L538 380" stroke="#5E5A70" stroke-width="3" marker-start="url(#opSetaC)" marker-end="url(#opSetaC)"/></g>
+        <text class="meio-e" x="325" y="368" text-anchor="middle" style="font-weight:800;font-size:30px;fill:#3F2FA0;font-family:Figtree,sans-serif">d</text>
+        <text class="meio-d" x="475" y="368" text-anchor="middle" style="font-weight:800;font-size:30px;fill:#D6336C;font-family:Figtree,sans-serif">d</text>
+      </g>
+    </svg>
+    <div style="position:absolute;left:880px;right:0;top:150px;display:flex;flex-direction:column;gap:16px">
+      <div class="linha-ex" data-passo="1" style="font-size:28px">Tem o <b>mesmo tamanho</b> do objeto.</div>
+      <div class="linha-ex" data-passo="2" style="font-size:28px">Fica <b>atrás do espelho</b>, à <b>mesma distância</b> que o objeto está na frente.</div>
+      <div class="linha-ex" data-passo="3" style="font-size:28px">Troca a <b>direita pela esquerda</b>: levante a mão direita, e a sua imagem levanta a mão que fica do lado esquerdo dela.</div>
+    </div>
+  </div>
+  <aside class="notas">
+    <p>Clique 1: um cartão com a letra R e a imagem dele, do mesmo tamanho, com a letra virada. Clique 2: as distâncias; o cartão se afasta e se aproxima devagar, e a imagem faz o mesmo do outro lado, sempre à mesma distância do espelho. Clique 3: a troca de direita e esquerda (peça para alguém levantar a mão direita diante de um espelho).</p>
+  </aside>
+</section>
+
+<!-- 5. Ambulância e periscópio -->
+<section class="slide" data-nome="Ambulância e periscópio">
+  <div class="conteudo">
+    <p class="olho">O espelho plano no dia a dia</p>
+    <h2 class="titulo">AMBULÂNCIA e periscópio</h2>
+    <div class="painel" data-passo="1" style="position:absolute;left:0;top:150px;width:820px">
+      <h3>A palavra ao contrário</h3>
+      <div style="display:flex;align-items:center;gap:24px;margin-top:8px">
+        <div style="flex:1;background:#fff;border:3px solid #C2384F;border-radius:18px;padding:14px 10px;text-align:center"><span class="espelhado" style="font:800 46px var(--fonte-titulo);color:#C2384F;letter-spacing:.04em">AMBULÂNCIA</span><div style="font-size:20px;color:var(--cinza);margin-top:4px">na frente da ambulância</div></div>
+        <svg viewBox="0 0 80 40" width="80" height="40" aria-hidden="true" style="flex:none"><path d="M6 20 H66" stroke="#5E5A70" stroke-width="5" marker-end="url(#opSetaC)"/></svg>
+        <div style="flex:1;background:#E0F4F4;border:8px solid #5E5A70;border-radius:40px;padding:12px 10px;text-align:center"><span style="font:800 46px var(--fonte-titulo);color:#C2384F;letter-spacing:.04em">AMBULÂNCIA</span><div style="font-size:20px;color:var(--cinza);margin-top:4px">no retrovisor</div></div>
+      </div>
+      <p style="font-size:26px">O espelho troca direita e esquerda: pelo retrovisor, o motorista da frente lê a palavra <b>do jeito certo</b>.</p>
+    </div>
+    <div class="painel" data-passo="2" style="position:absolute;left:880px;right:0;top:150px;display:grid;grid-template-columns:380px 1fr;gap:18px;align-items:center">
+      <svg viewBox="0 0 400 460" width="380" height="437" aria-hidden="true" data-anima="opt-fotons" data-anima-passo="2">
+        <rect x="20" y="300" width="70" height="150" fill="#C9C4DC" stroke="#9C93C4" stroke-width="3"/>
+        <text x="55" y="390" text-anchor="middle" class="rot" style="font-size:20px">muro</text>
+        <path d="M150 56 V30 H260 V350 M260 430 V440 H150 V124" fill="none" stroke="#292B2C" stroke-width="7" stroke-linejoin="round" stroke-linecap="round"/>
+        <line x1="168" y1="52" x2="244" y2="128" stroke="#0B6B6D" stroke-width="9" stroke-linecap="round"/>
+        <line x1="168" y1="352" x2="244" y2="428" stroke="#0B6B6D" stroke-width="9" stroke-linecap="round"/>
+        <path class="raio" d="M10 90 L206 90 L206 390 L370 390" marker-end="url(#opSetaA)"/>
+        <g transform="translate(372 390)"><path d="M-16 0 q16 -14 32 0 q-16 14 -32 0 z" fill="#fff" stroke="#292B2C" stroke-width="3"/><circle r="6" fill="#3F2FA0"/></g>
+      </svg>
+      <div>
+        <h3>Periscópio</h3>
+        <p>Dois espelhos planos inclinados a <b>45°</b> desviam a luz duas vezes.</p>
+        <p>Usado em submarinos e em brinquedos para ver <b>por cima de um muro</b>.</p>
+      </div>
+    </div>
+  </div>
+  <aside class="notas">
+    <p>Clique 1: a palavra escrita ao contrário na frente da ambulância e como ela aparece no retrovisor do carro da frente. Clique 2: o periscópio; os pontinhos mostram a luz vinda de cima do muro, refletida para baixo no primeiro espelho e para o olho no segundo.</p>
+    <p>O periscópio volta em Lentes e instrumentos ópticos (Parte 2), na tabela dos instrumentos.</p>
+  </aside>
+</section>
+
+<!-- 6. Exemplo: distância da imagem -->
+<section class="slide" data-nome="Exemplo: distância da imagem">
+  <div class="conteudo">
+    <p class="olho">Exemplo</p>
+    <h2 class="titulo">Distância da imagem</h2>
+    <div style="position:absolute;left:0;width:800px;top:150px">
+      <p class="texto" style="margin:0;font-size:30px">Lúcia está a <b>2 m</b> de um espelho plano. A que distância ela está da própria imagem?</p>
+      <svg viewBox="0 0 800 260" width="800" height="260" style="display:block;margin-top:14px;overflow:visible" aria-hidden="true">
+        <rect x="392" y="10" width="16" height="200" rx="4" fill="#CFE9EA" stroke="#0B6B6D" stroke-width="3"/>
+        <g transform="translate(180 60)"><circle cx="0" cy="14" r="22" fill="#F3C9A6"/><path d="M-22 6 q0 -30 22 -30 q24 0 24 30 q-10 -12 -24 -12 q-14 0 -22 12 z" fill="#4B258D"/><path d="M-24 40 h48 l8 90 h-64 z" fill="var(--d)"/></g>
+        <g transform="translate(620 60)" opacity=".55"><circle cx="0" cy="14" r="22" fill="#F3C9A6"/><path d="M22 6 q0 -30 -22 -30 q-24 0 -24 30 q10 -12 24 -12 q14 0 22 12 z" fill="#4B258D"/><path d="M-24 40 h48 l8 90 h-64 z" fill="#D6336C"/></g>
+        <g data-passo="1"><path d="M186 226 L388 226" stroke="#5E5A70" stroke-width="3" marker-start="url(#opSetaC)" marker-end="url(#opSetaC)"/><text x="290" y="256" text-anchor="middle" class="rot" style="font-weight:800;fill:#3F2FA0">d = 2 m</text></g>
+        <g data-passo="2"><path d="M412 226 L614 226" stroke="#5E5A70" stroke-width="3" marker-start="url(#opSetaC)" marker-end="url(#opSetaC)"/><text x="510" y="256" text-anchor="middle" class="rot" style="font-weight:800;fill:#D6336C">d = 2 m</text></g>
+      </svg>
+    </div>
+    <div style="position:absolute;left:900px;right:0;top:150px">
+      <p class="texto" data-passo="2" style="margin:0 0 18px;font-size:28px">A imagem fica <b>atrás do espelho</b>, à mesma distância que Lúcia está na frente. A distância entre as duas é a <b>soma</b>.</p>
+      <div class="contas" style="font-size:46px">
+        <div class="eq" data-passo="3"><span>\(D\)</span><span>\(=\)</span><span>\(d + d\)</span></div>
+        <div class="eq" data-passo="4"><span>\(D\)</span><span>\(=\)</span><span>\(2 + 2\)</span></div>
+        <div class="eq final" data-passo="5"><span>\(D\)</span><span>\(=\)</span><span>\(4\ \text{m}\)</span></div>
+      </div>
+    </div>
+    <div class="caixa caixa-atencao" data-passo="6" style="position:absolute;left:580px;right:0;top:640px;padding:16px 28px">
+      <span class="rotulo">Até o espelho ou até a imagem?</span>
+      <div class="texto" style="font-size:28px">Leia o que a questão pede: a imagem está a <b>2 m do espelho</b>, mas a <b>4 m da pessoa</b>.</div>
+    </div>
+  </div>
+  <aside class="notas">
+    <p>Exemplo "Distância da imagem" da apostila. Clique 1: Lúcia até o espelho. Clique 2: o espelho até a imagem, com a mesma distância. Cliques 3 a 5: a soma. Clique 6: a atenção da apostila, que é o erro mais comum (a questão 1 cobra isso).</p>
+  </aside>
+</section>
+
+<!-- 7. Espelhos curvos -->
+<section class="slide" data-nome="Espelhos côncavos e convexos">
+  <div class="conteudo">
+    <p class="olho">Espelhos esféricos</p>
+    <h2 class="titulo">A colher é um espelho curvo</h2>
+    <svg viewBox="0 0 760 420" width="760" height="420" style="position:absolute;left:0;top:150px;overflow:visible" aria-hidden="true">
+      <g data-passo="3"><line class="eixo" x1="40" y1="210" x2="720" y2="210"/><path class="espelho" d="M628 50 Q692 210 628 370"/><g class="hach"><path d="M637.7 65 l18 -14"/><path d="M645.7 89 l18 -14"/><path d="M652.2 113 l18 -14"/><path d="M657.3 137 l18 -14"/><path d="M661 161 l18 -14"/><path d="M663.2 185 l18 -14"/><path d="M664 209 l18 -14"/><path d="M663.3 233 l18 -14"/><path d="M661.2 257 l18 -14"/><path d="M657.7 281 l18 -14"/><path d="M652.7 305 l18 -14"/><path d="M646.3 329 l18 -14"/><path d="M638.4 353 l18 -14"/></g><circle cx="360" cy="210" r="9" class="ponto"/><text x="360" y="256" class="rot rotF" text-anchor="middle">C</text><circle cx="510" cy="210" r="9" class="ponto"/><text x="510" y="256" class="rot rotF" text-anchor="middle">F</text><circle cx="660" cy="210" r="9" class="ponto"/><text x="620" y="256" class="rot rotF" text-anchor="middle">V</text><text x="60" y="194" class="rot">eixo principal</text></g>
+    </svg>
+    <div style="position:absolute;left:840px;right:0;top:150px;display:flex;flex-direction:column;gap:14px">
+      <p class="texto" style="margin:0;font-size:27px">Pela parte de dentro de uma colher polida, de longe, você aparece <b>de cabeça para baixo</b>; pelas costas, aparece <b>de pé e pequenininho</b>.</p>
+      <div class="linha-ex" data-passo="1" style="font-size:27px;display:flex;gap:18px;align-items:center"><svg viewBox="0 0 70 90" width="56" height="72" style="flex:none" aria-hidden="true"><path d="M50 6 Q10 45 50 84" fill="none" stroke="#0B6B6D" stroke-width="8" stroke-linecap="round"/><path d="M58 14 l8 -6 M58 34 l8 -6 M56 54 l8 -6 M58 74 l8 -6" stroke="#9C93C4" stroke-width="3"/></svg><span><b>Côncavo:</b> reflete pela face de <b>dentro</b> da curva, como o interior da colher.</span></div>
+      <div class="linha-ex" data-passo="2" style="font-size:27px;display:flex;gap:18px;align-items:center"><svg viewBox="0 0 70 90" width="56" height="72" style="flex:none" aria-hidden="true"><path d="M30 6 Q70 45 30 84" fill="none" stroke="#0B6B6D" stroke-width="8" stroke-linecap="round"/><path d="M58 30 l8 -6 M60 50 l8 -6 M56 70 l8 -6" stroke="#9C93C4" stroke-width="3"/></svg><span><b>Convexo:</b> reflete pela face de <b>fora</b>, como as costas da colher.</span></div>
+      <div class="linha-ex" data-passo="3" style="font-size:26px">No <b>eixo principal</b>: o <b>vértice V</b> (meio do espelho), o <b>centro de curvatura C</b> (centro da esfera) e o <b>foco F</b>, no meio do caminho entre C e V.</div>
+    </div>
+  </div>
+  <aside class="notas">
+    <p>Um espelho esférico é um pedaço de uma esfera polido de um lado. As hachuras marcam a face de trás (a que não reflete). Cliques 1 e 2: côncavo e convexo. Clique 3: os pontos do eixo principal, no côncavo; F fica exatamente no meio entre C e V.</p>
+  </aside>
+</section>
+
+<!-- 8. Côncavo junta, convexo espalha -->
+<section class="slide" data-nome="Côncavo junta, convexo espalha">
+  <div class="conteudo">
+    <p class="olho">Raios paralelos ao eixo</p>
+    <h2 class="titulo">Côncavo junta, convexo espalha</h2>
+    <div data-anima="opt-fotons" style="position:absolute;left:0;right:0;top:140px;display:grid;grid-template-columns:1fr 1fr;gap:30px">
+      <div class="painel" data-passo="1">
+        <svg viewBox="0 0 680 400" width="100%" height="330" aria-hidden="true"><path class="espelho" d="M572 40 Q628 200 572 360"/><g class="hach"><path d="M581 55 l18 -14"/><path d="M588 79 l18 -14"/><path d="M593.7 103 l18 -14"/><path d="M598.2 127 l18 -14"/><path d="M601.4 151 l18 -14"/><path d="M603.3 175 l18 -14"/><path d="M604 199 l18 -14"/><path d="M603.4 223 l18 -14"/><path d="M601.6 247 l18 -14"/><path d="M598.5 271 l18 -14"/><path d="M594.1 295 l18 -14"/><path d="M588.5 319 l18 -14"/><path d="M581.6 343 l18 -14"/></g><line class="eixo" x1="40" y1="200" x2="660" y2="200"/><path class="raio" d="M40 90 L586.8 90 L328.2 260.6"/><path class="raio" d="M40 150 L597.3 150 L314.1 229.9"/><path class="raio" d="M40 250 L597.3 250 L314.1 170.1"/><path class="raio" d="M40 310 L586.8 310 L328.2 139.4"/><circle cx="420" cy="200" r="9" class="ponto"/><text x="420" y="244" class="rot rotF" text-anchor="middle">F</text></svg>
+        <p>No <b>côncavo</b>, os raios se <b>juntam no foco</b>, na frente do espelho.</p>
+      </div>
+      <div class="painel" data-passo="2">
+        <svg viewBox="0 0 680 400" width="100%" height="330" aria-hidden="true"><path class="espelho" d="M328 40 Q272 200 328 360"/><g class="hach"><path d="M327 55 l18 -14"/><path d="M320 79 l18 -14"/><path d="M314.3 103 l18 -14"/><path d="M309.8 127 l18 -14"/><path d="M306.6 151 l18 -14"/><path d="M304.7 175 l18 -14"/><path d="M304 199 l18 -14"/><path d="M304.6 223 l18 -14"/><path d="M306.4 247 l18 -14"/><path d="M309.5 271 l18 -14"/><path d="M313.9 295 l18 -14"/><path d="M319.5 319 l18 -14"/><path d="M326.4 343 l18 -14"/></g><line class="eixo" x1="20" y1="200" x2="640" y2="200"/><path class="raio" d="M20 90 L313.2 90 L204.7 18.4"/><path class="prolonga" d="M313.2 90 L480 200"/><path class="raio" d="M20 150 L302.7 150 L110.2 95.7"/><path class="prolonga" d="M302.7 150 L480 200"/><path class="raio" d="M20 250 L302.7 250 L110.2 304.3"/><path class="prolonga" d="M302.7 250 L480 200"/><path class="raio" d="M20 310 L313.2 310 L204.7 381.6"/><path class="prolonga" d="M313.2 310 L480 200"/><circle cx="480" cy="200" r="9" class="ponto"/><text x="480" y="244" class="rot rotF" text-anchor="middle">F</text></svg>
+        <p>No <b>convexo</b>, eles se <b>espalham</b>, como se viessem de um foco <b>atrás</b> do espelho.</p>
+      </div>
+    </div>
+    <div class="caixa caixa-fundamental" data-passo="3" style="position:absolute;left:580px;right:0;top:640px;padding:14px 26px">
+      <span class="rotulo">Por juntar a luz, o côncavo está em</span>
+      <div><span class="chip">antena parabólica</span><span class="chip">forno solar</span><span class="chip">farol do carro e lanterna (lâmpada no foco)</span><span class="chip">telescópios</span></div>
+    </div>
+  </div>
+  <aside class="notas">
+    <p>Os pontinhos de luz mostram o caminho. Clique 1: no côncavo, os raios refletidos passam todos pelo foco. Clique 2: no convexo, os raios refletidos se afastam; as linhas tracejadas (prolongamentos) mostram que parecem sair de F, atrás do espelho.</p>
+    <p>Clique 3: os usos da apostila. No farol e na lanterna o caminho é o contrário: a lâmpada fica no foco e a luz sai do espelho num feixe paralelo. A antena parabólica junta ondas (de rádio), não luz visível, mas pelo mesmo princípio.</p>
+  </aside>
+</section>
+
+<!-- 9. Raios notáveis e imagem real -->
+<section class="slide" data-nome="Raios notáveis">
+  <div class="conteudo">
+    <p class="olho">Para desenhar as imagens</p>
+    <h2 class="titulo">Raios notáveis: real ou virtual?</h2>
+    <svg viewBox="300 100 660 400" width="760" height="460" style="position:absolute;left:0;top:140px;overflow:visible" aria-hidden="true">
+      <line class="eixo" x1="300" y1="300" x2="940" y2="300"/><path class="espelho" d="M880 120 Q920 300 880 480"/><g class="hach"><path d="M887.2 135 l18 -14"/><path d="M891.7 159 l18 -14"/><path d="M895.5 183 l18 -14"/><path d="M898.7 207 l18 -14"/><path d="M901.1 231 l18 -14"/><path d="M902.8 255 l18 -14"/><path d="M903.7 279 l18 -14"/><path d="M904 303 l18 -14"/><path d="M903.5 327 l18 -14"/><path d="M902.4 351 l18 -14"/><path d="M900.5 375 l18 -14"/><path d="M898 399 l18 -14"/><path d="M894.7 423 l18 -14"/><path d="M890.7 447 l18 -14"/><path d="M886 471 l18 -14"/></g><circle cx="600" cy="300" r="7" class="ponto"/><text x="600" y="338" class="rot" style="font-weight:800" text-anchor="middle">C</text><circle cx="750" cy="300" r="7" class="ponto"/><text x="750" y="282" class="rot" style="font-weight:800" text-anchor="middle">F</text><circle cx="900" cy="300" r="7" class="ponto"/><text x="864" y="282" class="rot" style="font-weight:800" text-anchor="middle">V</text><path class="objeto" d="M380 300 L380 224"/><path class="objeto-p" d="M380 210 l-12 18 h24 z"/><path class="raio r1" d="M380 210 L895 210 L664.3 353.2"/><path class="raio r2" d="M380 210 L899.2 336.3 L629.2 336.3"/><g class="imagem"><path class="objeto img" d="M689.2 300 L689.2 324.5"/><path class="objeto-p img" d="M689.2 336.5 l-10 -15 h20 z"/></g>
+      <text x="380" y="190" text-anchor="middle" class="rot" style="font-weight:800;fill:#3F2FA0">objeto</text>
+      <text x="689" y="372" text-anchor="middle" class="rot" style="font-weight:800;fill:#D6336C">imagem</text>
+    </svg>
+    <div style="position:absolute;left:840px;right:0;top:140px;display:flex;flex-direction:column;gap:12px">
+      <div class="linha-ex" data-passo="1" style="font-size:25px;padding:10px 22px"><b style="color:#B08600">1.</b> Chega <b>paralelo</b> ao eixo → volta <b>passando pelo foco</b>.</div>
+      <div class="linha-ex" data-passo="2" style="font-size:25px;padding:10px 22px"><b style="color:#0B6B6D">2.</b> Chega <b>passando pelo foco</b> → volta <b>paralelo</b> ao eixo.</div>
+      <div class="linha-ex" data-passo="3" style="font-size:25px;padding:10px 22px"><b>3.</b> Passa pelo <b>centro de curvatura</b> → volta sobre ele mesmo.</div>
+      <div class="caixa caixa-fundamental" data-passo="4" style="padding:12px 24px"><span class="rotulo">Imagem real</span><div class="texto" style="font-size:25px">Os <b>raios refletidos se cruzam</b> na frente do espelho: pode ser <b>projetada</b> numa tela. É sempre <b>invertida</b>.</div></div>
+      <div class="caixa caixa-fundamental" data-passo="5" style="padding:12px 24px"><span class="rotulo">Imagem virtual</span><div class="texto" style="font-size:25px">Só os <b>prolongamentos</b> se cruzam, atrás do espelho: não pode ser projetada. É <b>direita</b>.</div></div>
+    </div>
+    <p class="texto" data-passo="6" style="position:absolute;left:580px;width:250px;top:640px;margin:0;font-size:22px;color:var(--cinza)">No convexo, nos raios 1 e 2, quem passa pelo foco é o prolongamento.</p>
+  </div>
+  <aside class="notas">
+    <p>O objeto (seta roxa) está além de C. Os dois raios que saem da ponta dele (o paralelo, amarelo, e o que passa pelo foco, verde) se cruzam de verdade na frente do espelho: aí está a ponta da imagem, real, invertida e menor. Cliques 1 a 3: os três raios notáveis da apostila (o terceiro não está desenhado). Cliques 4 e 5: real e virtual.</p>
+    <p>Na prova do IF não se pede desenho de raios; pedem as características. O desenho serve para entender a tabela do próximo slide.</p>
+  </aside>
+</section>
+
+<!-- 10. Tabela do côncavo -->
+<section class="slide" data-nome="Imagens no espelho côncavo">
+  <div class="conteudo">
+    <p class="olho">Espelho côncavo</p>
+    <h2 class="titulo">Depende de onde está o objeto</h2>
+    <table class="tabela op" style="position:absolute;left:0;top:150px;width:1300px">
+      <tr><th>Objeto</th><th>Imagem</th><th>Exemplo</th></tr>
+      <tr data-passo="1"><td>além de C</td><td>real, invertida, menor</td><td>telescópio, câmera</td></tr>
+      <tr data-passo="2"><td>sobre C</td><td>real, invertida, igual</td><td></td></tr>
+      <tr data-passo="3"><td>entre C e F</td><td>real, invertida, maior</td><td>projetor</td></tr>
+      <tr data-passo="4"><td>sobre F</td><td>não se forma</td><td>farol (lâmpada no foco)</td></tr>
+      <tr data-passo="5"><td>entre F e V</td><td>virtual, direita, maior</td><td>espelho de maquiagem</td></tr>
+    </table>
+    <div class="caixa caixa-atencao" data-passo="6" style="position:absolute;left:580px;right:0;top:600px;padding:16px 28px">
+      <span class="rotulo">Côncavo nem sempre aumenta</span>
+      <div class="texto" style="font-size:27px">Maior e direita só com o objeto <b>perto</b> (entre F e V). Longe, depois de C, é menor e invertida. Imagem <b>real</b> é sempre invertida; <b>virtual</b>, sempre direita.</div>
+    </div>
+  </div>
+  <aside class="notas">
+    <p>A tabela da apostila, uma linha por clique, do objeto mais longe para o mais perto. Puxe a experiência da colher: de longe, de cabeça para baixo; o espelho de maquiagem, bem perto, aumenta.</p>
+    <p>Clique 6: a atenção da apostila.</p>
+  </aside>
+</section>
+
+<!-- 11. Exemplo: objeto em C -->
+<section class="slide" data-nome="Exemplo: vela no centro de curvatura">
+  <div class="conteudo">
+    <p class="olho">Exemplo</p>
+    <h2 class="titulo">A vela sobre o centro de curvatura</h2>
+    <svg viewBox="300 100 660 400" width="760" height="460" style="position:absolute;left:0;top:140px;overflow:visible" aria-hidden="true" data-anima="opt-fotons">
+      <line class="eixo" x1="300" y1="300" x2="940" y2="300"/><path class="espelho" d="M880 120 Q920 300 880 480"/><g class="hach"><path d="M887.2 135 l18 -14"/><path d="M891.7 159 l18 -14"/><path d="M895.5 183 l18 -14"/><path d="M898.7 207 l18 -14"/><path d="M901.1 231 l18 -14"/><path d="M902.8 255 l18 -14"/><path d="M903.7 279 l18 -14"/><path d="M904 303 l18 -14"/><path d="M903.5 327 l18 -14"/><path d="M902.4 351 l18 -14"/><path d="M900.5 375 l18 -14"/><path d="M898 399 l18 -14"/><path d="M894.7 423 l18 -14"/><path d="M890.7 447 l18 -14"/><path d="M886 471 l18 -14"/></g><circle cx="600" cy="300" r="7" class="ponto"/><text x="568" y="338" class="rot" style="font-weight:800" text-anchor="middle">C</text><circle cx="750" cy="300" r="7" class="ponto"/><text x="750" y="282" class="rot" style="font-weight:800" text-anchor="middle">F</text><circle cx="900" cy="300" r="7" class="ponto"/><text x="864" y="282" class="rot" style="font-weight:800" text-anchor="middle">V</text><g data-passo="1"><path class="raio r1" d="M600 220 L896 220 L565.8 400.9"/></g><g data-passo="2"><path class="raio r2" d="M600 220 L896 377.9 L530 377.9"/></g>
+      <g transform="translate(600 300)">
+        <rect x="-12" y="-62" width="24" height="62" rx="4" fill="#F1EEFD" stroke="#9C93C4" stroke-width="3"/>
+        <path class="chama" d="M0 -64 q-14 -16 0 -40 q14 24 0 40 z" fill="#FFB300"/>
+      </g>
+      <g data-passo="3" transform="translate(600 300)">
+        <rect x="-12" y="0" width="24" height="62" rx="4" fill="#FCE8EC" stroke="#D6336C" stroke-width="3" stroke-dasharray="6 4"/>
+        <path class="chama-inv" d="M0 64 q-14 16 0 40 q14 -24 0 -40 z" fill="#D6336C" opacity=".8"/>
+        <text x="-24" y="76" text-anchor="end" class="rot" style="font-weight:800;fill:#D6336C">imagem</text>
+      </g>
+    </svg>
+    <div style="position:absolute;left:840px;right:0;top:150px;display:flex;flex-direction:column;gap:14px">
+      <p class="texto" style="margin:0;font-size:28px">Uma vela acesa é posta <b>sobre o centro de curvatura</b> de um espelho côncavo. Como é a imagem?</p>
+      <div class="linha-ex" data-passo="1" style="font-size:26px">O raio que sai da chama <b>paralelo</b> ao eixo volta passando pelo foco.</div>
+      <div class="linha-ex" data-passo="2" style="font-size:26px">O que passa pelo <b>foco</b> volta paralelo. Os raios refletidos se cruzam na frente do espelho, também <b>sobre C</b>, abaixo do eixo.</div>
+    </div>
+    <span class="pilula pilula-resposta" data-passo="4" style="position:absolute;right:0;top:720px">Real, invertida e do mesmo tamanho</span>
+  </div>
+  <aside class="notas">
+    <p>Exemplo "Objeto no centro de curvatura" da apostila. A apostila usa o raio paralelo e o raio que passa por C; aqui o segundo raio desenhado é o que passa pelo foco, que dá o mesmo ponto e se enxerga melhor. Clique 3: a imagem invertida, à mesma distância do espelho. Clique 4: a resposta (é a 2.ª linha da tabela).</p>
+  </aside>
+</section>
+
+<!-- 12. Espelho convexo -->
+<section class="slide" data-nome="Imagem no espelho convexo">
+  <div class="conteudo">
+    <p class="olho">Espelho convexo</p>
+    <h2 class="titulo">Sempre a mesma imagem</h2>
+    <svg viewBox="250 60 800 420" width="800" height="420" style="position:absolute;left:0;top:140px;overflow:visible" aria-hidden="true">
+      <line class="eixo" x1="250" y1="260" x2="1040" y2="260"/><path class="espelho" d="M728 80 Q672 260 728 440"/><g class="hach"><path d="M727.5 95 l18 -14"/><path d="M721.2 119 l18 -14"/><path d="M715.8 143 l18 -14"/><path d="M711.5 167 l18 -14"/><path d="M708.1 191 l18 -14"/><path d="M705.8 215 l18 -14"/><path d="M704.4 239 l18 -14"/><path d="M704 263 l18 -14"/><path d="M704.6 287 l18 -14"/><path d="M706.2 311 l18 -14"/><path d="M708.9 335 l18 -14"/><path d="M712.5 359 l18 -14"/><path d="M717.1 383 l18 -14"/><path d="M722.7 407 l18 -14"/><path d="M729.3 431 l18 -14"/></g><circle cx="850" cy="260" r="7" class="ponto"/><text x="850" y="298" class="rot" style="font-weight:800" text-anchor="middle">F</text><circle cx="1000" cy="260" r="7" class="ponto"/><text x="1000" y="298" class="rot" style="font-weight:800" text-anchor="middle">C</text><circle cx="700" cy="260" r="7" class="ponto"/><text x="668" y="298" class="rot" style="font-weight:800" text-anchor="middle">V</text><path class="objeto" d="M350 260 L350 174"/><path class="objeto-p" d="M350 160 l-12 18 h24 z"/><path class="raio r1" d="M350 160 L708.6 160 L569.9 61.8"/><path class="prolonga" d="M708.6 160 L850 260"/><path class="raio r2" d="M350 160 L700.8 230.2 L410 230.2"/><path class="prolonga" d="M700.8 230.2 L805 230.2"/><path class="prolonga" style="opacity:.5" d="M700.8 230.2 L850 260"/><g class="imagem"><path class="objeto img virt" d="M805 260 L805 240"/><path class="objeto-p img" d="M805 230 l-9 13 h18 z"/></g>
+      <text x="350" y="138" text-anchor="middle" class="rot" style="font-weight:800;fill:#3F2FA0">objeto</text>
+      <text x="790" y="336" text-anchor="middle" class="rot" style="font-weight:800;fill:#D6336C">imagem</text>
+    </svg>
+    <div style="position:absolute;left:880px;right:0;top:150px;display:flex;flex-direction:column;gap:14px">
+      <p class="texto" style="margin:0;font-size:27px">Os raios refletidos <b>sempre se espalham</b>. Só os prolongamentos se cruzam, atrás do espelho, entre V e F.</p>
+      <div class="caixa caixa-fundamental" data-passo="1" style="padding:14px 26px">
+        <span class="rotulo">Imagem no convexo</span>
+        <div class="texto" style="font-size:27px">Sempre <b>virtual, direita e menor</b>, com <b>campo visual maior</b> que um espelho plano do mesmo tamanho.</div>
+      </div>
+      <div class="linha-ex" data-passo="2" style="font-size:26px">É o espelho da segurança: <b>saídas de garagem</b>, <b>esquinas</b> sem visão, <b>cantos das lojas</b>.</div>
+      <div class="linha-ex" data-passo="3" style="font-size:26px">Retrovisor do passageiro: os objetos estão <b>mais perto do que parecem</b>; a imagem menor engana a noção de distância.</div>
+    </div>
+  </div>
+  <aside class="notas">
+    <p>O objeto pode estar em qualquer lugar: a imagem do convexo é sempre virtual (cruzamento dos prolongamentos tracejados), direita e menor. Cliques 1 a 3: a definição e os usos da apostila.</p>
+    <p>A oficial do IF 2017 sobre o espelho da esquina está guardada para o bloco de questões do fim do capítulo.</p>
+  </aside>
+</section>
+
+<!-- 13. Exemplo: qual espelho? -->
+<section class="slide" data-nome="Exemplo: qual espelho?">
+  <div class="conteudo">
+    <p class="olho">Exemplo</p>
+    <h2 class="titulo">Plano, côncavo ou convexo?</h2>
+    <div style="position:absolute;left:0;right:0;top:160px;display:flex;flex-direction:column;gap:18px">
+      <div class="linha-ex" style="display:grid;grid-template-columns:1fr 520px;gap:20px;align-items:center"><span><b>(a)</b> O vigia quer ver a loja inteira, sem imagem invertida.</span><span data-passo="1"><b style="color:var(--d-forte)">Convexo:</b> direita e campo visual grande.</span></div>
+      <div class="linha-ex" style="display:grid;grid-template-columns:1fr 520px;gap:20px;align-items:center"><span><b>(b)</b> A dentista quer ver o dente maior, de perto.</span><span data-passo="2"><b style="color:var(--d-forte)">Côncavo</b>, com o dente entre F e V: virtual, direita e maior.</span></div>
+      <div class="linha-ex" style="display:grid;grid-template-columns:1fr 520px;gap:20px;align-items:center"><span><b>(c)</b> O telescópio precisa juntar a luz das estrelas.</span><span data-passo="3"><b style="color:var(--d-forte)">Côncavo:</b> junta no foco a luz que chega paralela de muito longe.</span></div>
+    </div>
+  </div>
+  <aside class="notas"><p>Exemplo "Qual espelho?" da apostila. Peça a resposta antes de cada clique.</p></aside>
+</section>
+
+<!-- 14. Refração: o lápis -->
+<section class="slide" data-nome="Refração: o lápis quebrado">
+  <div class="conteudo">
+    <p class="olho">Refração</p>
+    <h2 class="titulo">Quem mudou de caminho foi a luz</h2>
+    <svg viewBox="0 0 800 520" width="720" height="468" style="position:absolute;left:0;top:140px;overflow:visible" aria-hidden="true">
+      <rect x="120" y="300" width="360" height="200" fill="url(#opAgua)" opacity=".85"/>
+      <g class="ondula"><path d="M100 300 q20 -6 40 0 t40 0 t40 0 t40 0 t40 0 t40 0 t40 0 t40 0 t40 0 t40 0" fill="none" stroke="#5E9FD6" stroke-width="3"/></g>
+      <path d="M120 60 V500 H480 V60" fill="none" stroke="#7F7A99" stroke-width="6" stroke-linejoin="round"/>
+      <!-- lápis fora da água -->
+      <path d="M140 84 L230 300" stroke="#FFB300" stroke-width="18" stroke-linecap="round"/>
+      <path d="M140 84 L150 108" stroke="#F48FB1" stroke-width="18" stroke-linecap="round"/>
+      <!-- posição real (tracejada) e aparente -->
+      <g data-passo="2"><path d="M230 300 L300 468" stroke="#7F7A99" stroke-width="4" stroke-dasharray="8 7"/><text x="310" y="490" class="rot" style="font-size:20px">posição real</text></g>
+      <path d="M230 300 L300 400" stroke="#FFB300" stroke-width="18" stroke-linecap="round"/>
+      <path d="M292 388 L300 400" stroke="#5E4B35" stroke-width="10" stroke-linecap="round"/>
+      <g data-passo="1">
+        <path class="raio" d="M300 468 L420 300 L755 20" marker-end="url(#opSetaA)"/>
+        <path class="prolonga" d="M420 300 L300 400"/>
+        <line x1="420" y1="230" x2="420" y2="380" stroke="#5E5A70" stroke-width="2.5" stroke-dasharray="6 6"/>
+        <g transform="translate(762 14)"><path d="M-30 0 q30 -26 60 0 q-30 26 -60 0 z" fill="#fff" stroke="#292B2C" stroke-width="3"/><circle r="11" fill="#3F2FA0"/></g>
+      </g>
+      <text x="136" y="336" text-anchor="start" class="rot" style="fill:#3F6E99">água</text>
+    </svg>
+    <div style="position:absolute;left:820px;right:0;top:150px;display:flex;flex-direction:column;gap:16px">
+      <p class="texto" style="margin:0;font-size:27px">Um lápis num copo com água, visto de lado, parece <b>quebrado</b> na superfície.</p>
+      <div class="linha-ex" style="font-size:26px">A luz é mais rápida no <b>ar</b>, mais lenta na <b>água</b> e mais ainda no <b>vidro</b>.</div>
+      <div class="caixa caixa-fundamental" data-passo="1" style="padding:14px 26px">
+        <span class="rotulo">Refração</span>
+        <div class="texto" style="font-size:27px">Passagem da luz de um meio para outro, <b>com mudança de velocidade</b>. Se a luz chega <b>inclinada</b>, também <b>muda de direção</b>.</div>
+      </div>
+      <div class="linha-ex" data-passo="2" style="font-size:26px">O cérebro supõe que a luz veio em <b>linha reta</b> e "vê" a ponta do lápis <b>mais alta</b> do que ela está.</div>
+    </div>
+  </div>
+  <aside class="notas">
+    <p>Clique 1: a luz que sai da ponta do lápis desvia ao passar da água para o ar (afasta-se da linha tracejada vertical, a normal) e chega ao olho. O prolongamento em linha reta (tracejado amarelo) chega a um ponto mais alto: é onde vemos a ponta. Clique 2: a posição real, mais funda.</p>
+    <p>Esquema fora de escala, com o desvio calculado para a água. Na apostila não há índice de refração nem lei de Snell (fora do IF).</p>
+  </aside>
+</section>
+
+<!-- 15. Refração no dia a dia -->
+<section class="slide" data-nome="Refração no dia a dia">
+  <div class="conteudo">
+    <p class="olho">Refração no dia a dia</p>
+    <h2 class="titulo">Onde a refração aparece</h2>
+    <div style="position:absolute;left:0;width:860px;top:150px;display:flex;flex-direction:column;gap:14px">
+      <div class="linha-ex" data-passo="1" style="font-size:27px">A <b>piscina</b> parece mais rasa: o fundo parece mais perto da superfície.</div>
+      <div class="linha-ex" data-passo="2" style="font-size:27px">O <b>peixe</b> visto de fora do aquário parece estar num lugar diferente do real.</div>
+      <div class="linha-ex" data-passo="3" style="font-size:27px">As <b>lentes</b> dos óculos e da lupa desviam a luz por refração.</div>
+      <div class="linha-ex" data-passo="4" style="font-size:27px">O <b>arco-íris</b> e o <b>prisma</b> separam as cores por refração (a dispersão, daqui a pouco).</div>
+    </div>
+    <div class="painel" data-passo="5" style="position:absolute;left:920px;right:0;top:150px">
+      <h3>Luz perpendicular não desvia</h3>
+      <svg viewBox="0 0 560 320" width="100%" height="300" aria-hidden="true" data-anima="opt-fotons" data-anima-passo="5">
+        <rect x="0" y="150" width="560" height="170" fill="url(#opAgua)" opacity=".85"/>
+        <text x="540" y="40" text-anchor="end" class="rot">ar</text><text x="540" y="300" text-anchor="end" class="rot">água</text>
+        <path class="raio" d="M120 10 L120 300" style="stroke:#C2384F" data-cor="#C2384F"/>
+        <line x1="380" y1="40" x2="380" y2="300" stroke="#5E5A70" stroke-width="2.5" stroke-dasharray="6 6"/>
+        <path class="raio" d="M260 10 L380 150 L458.6 290" style="stroke:#C2384F" data-cor="#C2384F"/>
+      </svg>
+      <p>Perpendicular: muda de <b>velocidade</b>, mas <b>não de direção</b>. O desvio só aparece quando a luz chega <b>inclinada</b>.</p>
+    </div>
+  </div>
+  <aside class="notas">
+    <p>Cliques 1 a 4: a lista da apostila. Clique 5: a atenção da apostila com dois lasers: o da esquerda entra perpendicular e segue reto; o da direita entra inclinado e se aproxima da normal (tracejada). Nos dois houve refração, porque a velocidade mudou (é a questão 3 desta parte).</p>
+  </aside>
+</section>
+
+<!-- 16. Exemplo: a piscina engana -->
+<section class="slide" data-nome="Exemplo: a piscina engana">
+  <div class="conteudo">
+    <p class="olho">Exemplo</p>
+    <h2 class="titulo">A piscina engana</h2>
+    <svg viewBox="0 0 760 420" width="760" height="420" style="position:absolute;left:0;top:150px;overflow:visible" aria-hidden="true">
+      <path d="M40 150 H720 V350 H40 Z" fill="url(#opAgua)" opacity=".9"/>
+      <g class="ondula"><path d="M20 150 q20 -6 40 0 t40 0 t40 0 t40 0 t40 0 t40 0 t40 0 t40 0 t40 0 t40 0 t40 0 t40 0 t40 0 t40 0 t40 0 t40 0 t40 0 t40 0" fill="none" stroke="#5E9FD6" stroke-width="3"/></g>
+      <path d="M40 120 V350 H720 V120" fill="none" stroke="#7F7A99" stroke-width="6"/>
+      <path d="M44 330 H716" stroke="#3F2FA0" stroke-width="6"/>
+      <text x="700" y="378" text-anchor="end" class="rot" style="fill:#3F2FA0;font-weight:800">fundo real</text>
+      <g data-passo="1">
+        <path class="raio" d="M420 330 L320 150 L210 20" marker-end="url(#opSetaA)"/>
+        <g transform="translate(200 12)"><path d="M-30 0 q30 -26 60 0 q-30 26 -60 0 z" fill="#fff" stroke="#292B2C" stroke-width="3"/><circle r="11" fill="#3F2FA0"/></g>
+      </g>
+      <g data-passo="2">
+        <path class="prolonga" d="M320 150 L420 268"/>
+        <path d="M44 268 H716" stroke="#D6336C" stroke-width="4" stroke-dasharray="12 8"/>
+        <text x="700" y="304" text-anchor="end" class="rot" style="fill:#D6336C;font-weight:800">onde o fundo parece estar</text>
+      </g>
+    </svg>
+    <div style="position:absolute;left:840px;right:0;top:150px;display:flex;flex-direction:column;gap:16px">
+      <p class="texto" style="margin:0;font-size:28px">Davi vê o fundo de uma piscina e acha que ela tem só <b>1 m</b> de profundidade. Na verdade, ela tem mais ou menos que isso? Por quê?</p>
+      <div class="linha-ex" data-passo="1" style="font-size:27px">A luz que vem do fundo <b>desvia ao sair da água para o ar</b>...</div>
+      <div class="linha-ex" data-passo="2" style="font-size:27px">... e o fundo parece <b>mais perto</b> da superfície.</div>
+    </div>
+    <div class="caixa caixa-atencao" data-passo="3" style="position:absolute;left:580px;right:0;top:640px;padding:16px 28px">
+      <div class="texto" style="font-size:28px">A piscina é <b>mais funda</b> do que parece. Nunca pule numa piscina ou num rio <b>sem saber a profundidade real</b>.</div>
+    </div>
+  </div>
+  <aside class="notas">
+    <p>Exemplo "A piscina engana" da apostila. Clique 1: o caminho da luz do fundo até o olho de Davi. Clique 2: o prolongamento em linha reta, que leva a um fundo mais alto (a ilusão). Clique 3: a resposta e o alerta de segurança (o Corpo de Bombeiros faz essa campanha nas cachoeiras da Zona da Mata).</p>
+  </aside>
+</section>
+
+<!-- 17. Dispersão -->
+<section class="slide" data-nome="Luz branca e dispersão">
+  <div class="conteudo">
+    <p class="olho">Luz branca e dispersão</p>
+    <h2 class="titulo">A luz branca é uma mistura</h2>
+    <svg viewBox="0 0 760 460" width="760" height="460" style="position:absolute;left:0;top:130px;overflow:visible" aria-hidden="true">
+      <rect x="0" y="0" width="760" height="460" rx="34" fill="#1C1433"/>
+      <path d="M300 60 L440 330 L160 330 Z" fill="url(#opVidro)" opacity=".55" stroke="#E0F4F4" stroke-width="3"/>
+      <path d="M20 270 L216 222" stroke="#FFFFFF" stroke-width="10" stroke-linecap="round"/>
+      <path d="M216 222 L370 195" stroke="#FFFFFF" stroke-width="8" opacity=".85"/>
+      <text x="40" y="310" class="rot" style="fill:#E4DEFB">luz branca</text>
+      <g data-passo="1" class="leque" stroke-width="9" stroke-linecap="round" fill="none">
+        <path class="traca" pathLength="1" d="M370 195 L730 240" stroke="#E53935"/>
+        <path class="traca" pathLength="1" d="M370 195 L730 268" stroke="#FB8C00"/>
+        <path class="traca" pathLength="1" d="M370 195 L730 296" stroke="#FDD835"/>
+        <path class="traca" pathLength="1" d="M370 195 L730 324" stroke="#43A047"/>
+        <path class="traca" pathLength="1" d="M370 195 L730 352" stroke="#1E88E5"/>
+        <path class="traca" pathLength="1" d="M370 195 L730 380" stroke="#3949AB"/>
+        <path class="traca" pathLength="1" d="M370 195 L730 408" stroke="#8E24AA"/>
+      </g>
+      <text x="300" y="380" text-anchor="middle" class="rot" style="fill:#E4DEFB">prisma</text>
+    </svg>
+    <div style="position:absolute;left:820px;right:0;top:140px;display:flex;flex-direction:column;gap:14px">
+      <p class="texto" style="margin:0;font-size:27px">No século XVII, <b>Isaac Newton</b> fez a luz do Sol atravessar um <b>prisma</b>. Ela saiu separada em <b>vermelho, laranja, amarelo, verde, azul, anil e violeta</b>.</p>
+      <div class="caixa caixa-fundamental" data-passo="2" style="padding:14px 26px">
+        <span class="rotulo">Dispersão da luz</span>
+        <div class="texto" style="font-size:27px">A luz branca é a <b>mistura de várias cores</b>. Ao passar do ar para o vidro ou para a água, cada cor desvia um pouco diferente, e as cores se separam.</div>
+      </div>
+      <div class="linha-ex" data-passo="3" style="font-size:26px;display:grid;grid-template-columns:150px 1fr;gap:16px;align-items:center">
+        <svg viewBox="0 0 150 90" width="150" height="90" aria-hidden="true"><path d="M10 86 A65 65 0 0 1 140 86" fill="none" stroke="url(#opArco)" stroke-width="22"/><circle cx="20" cy="22" r="12" fill="#FFD10C"/></svg>
+        <span><b>Arco-íris:</b> cada gota de chuva é um pequeno prisma. Só aparece com gotas no ar e o <b>Sol às nossas costas</b> (como no jato da mangueira).</span>
+      </div>
+    </div>
+    <div class="caixa caixa-atencao" data-passo="4" style="position:absolute;left:580px;right:0;top:680px;padding:14px 28px">
+      <div class="texto" style="font-size:27px"><b>O prisma não pinta a luz:</b> as cores já estavam na luz branca; ele só as separa.</div>
+    </div>
+  </div>
+  <aside class="notas">
+    <p>Clique 1: o leque de cores se abre do outro lado do prisma (o vermelho desvia menos e o violeta mais; a apostila não cobra essa ordem dos desvios). Clique 2: a definição. Clique 3: o arco-íris (de manhã, com o Sol no leste, o arco aparece a oeste: é a questão 4). Clique 4: a atenção da apostila.</p>
+    <p>Liga com Luz e cores: lá somamos luzes para formar o branco; aqui o branco se separa em cores.</p>
+  </aside>
+</section>
+
+<!-- Questão 1 -->
+<section class="slide questao" data-nome="Questão 1">
+  <div class="conteudo">
+    <div class="area-resolucao"></div>
+    <span class="pilula pilula-pausa" data-em="1:some">Pause o vídeo e tente</span>
+    <div class="painel-questao">
+      <p class="olho">Questão 1 · Modelo IF</p>
+      <p class="enunciado" style="font-size:25px">Numa academia de Juiz de Fora, uma das paredes é coberta por um grande espelho plano, para que os alunos observem a postura durante os exercícios. Beatriz, que tem 1,60 m de altura, está parada de pé a 1,5 m desse espelho, de frente para ele.</p>
+      <p class="enunciado" style="font-size:25px">Sobre a imagem que Beatriz vê de si mesma no espelho, é <b>CORRETO</b> afirmar que ela tem</p>
+      <ol class="alternativas">
+        <li data-em="2:certo" style="font-size:22px"><b>A</b><span>o mesmo tamanho de Beatriz e está a 3,0 m dela.</span></li>
+        <li data-em="2:apaga" style="font-size:22px"><b>B</b><span>o mesmo tamanho de Beatriz e está a 1,5 m dela.</span></li>
+        <li data-em="2:apaga" style="font-size:22px"><b>C</b><span>tamanho menor que o de Beatriz e está a 3,0 m dela.</span></li>
+        <li data-em="2:apaga" style="font-size:22px"><b>D</b><span>tamanho maior que o de Beatriz e está a 0,75 m dela.</span></li>
+        <li data-em="2:apaga" style="font-size:22px"><b>E</b><span>o mesmo tamanho de Beatriz e está a 3,0 m do espelho.</span></li>
+      </ol>
+    </div>
+  </div>
+  <aside class="resolucao">
+    <p class="dados"><b>Dados:</b> \(d = 1{,}5\ \text{m}\) até o espelho; altura 1,60 m.</p>
+    <ol class="passos">
+      <li>Espelho plano: mesmo tamanho (1,60 m).</li>
+      <li>Imagem 1,5 m atrás do espelho.</li>
+      <li>\(D = d + d\)</li>
+      <li>\(D = 1{,}5 + 1{,}5 = 3{,}0\ \text{m}\)</li>
+    </ol>
+    <p class="resposta"><b>Resposta:</b> mesmo tamanho, a 3,0 m de Beatriz. <b>Gabarito A.</b></p>
+    <p class="atencao"><b>Destaque no quadro:</b> Até o espelho: d. Até a imagem: 2d.</p>
+    <ul class="erros">
+      <li><b>B</b> 1,5 m é a distância até o espelho.</li>
+      <li><b>C</b> No espelho plano a imagem não diminui.</li>
+      <li><b>D</b> A imagem não é maior nem fica entre Beatriz e o espelho.</li>
+      <li><b>E</b> 3,0 m é até Beatriz; do espelho, 1,5 m.</li>
+    </ul>
+  </aside>
+  <aside class="notas">
+    <p>Clique 1 tira o aviso de pausa: resolva na área (D liga a caneta; E esconde o enunciado). Clique 2: gabarito A.</p>
+    <p>Modelo IF, lote if-fisica-reflexao-e-refracao, m001, FIS-8755 (está na apostila, 4.2). Conta: 1,5 + 1,5 = 3,0.</p>
+  </aside>
+</section>
+
+<!-- Questão 2 -->
+<section class="slide questao" data-nome="Questão 2">
+  <div class="conteudo">
+    <div class="area-resolucao"></div>
+    <span class="pilula pilula-pausa" data-em="1:some">Pause o vídeo e tente</span>
+    <div class="painel-questao" style="gap:12px">
+      <p class="olho">Questão 2 · IF Sudeste MG 2014</p>
+      <p class="enunciado" style="font-size:21px;line-height:1.32">Um aluno do 9º ano, ao estudar os espelhos plano, côncavo e convexo, faz as seguintes conclusões:</p>
+      <p class="enunciado" style="font-size:21px;line-height:1.32">I - Para aumentar o campo de visão e não inverter a imagem do ambiente, um vigia de um comércio deve instalar um espelho convexo.<br>II - Quando um feixe de luz, emitido por uma vela, é refletido por um espelho côncavo e converge para um determinado ponto à frente do espelho, temos, nesse ponto, a formação de uma imagem virtual.<br>III - Todos os espelhos planos formam imagens reais cuja distância do objeto ao espelho é a mesma distância da imagem ao espelho.<br>IV - Tanto o espelho côncavo quanto o convexo são capazes de reduzir a imagem dos objetos.<br>V - Os telescópios utilizam espelhos côncavos, porque eles captam a luz recebida por um objeto muito distante e a convertem para o seu foco.</p>
+      <p class="enunciado" style="font-size:21px;line-height:1.32">A sequência <b>CORRETA</b> que classifica cada afirmativa, na ordem em que aparecem acima, como verdadeira (V) ou falsa (F) é:</p>
+      <ol class="alternativas curtas">
+        <li data-em="2:apaga" style="font-size:20px"><b>A</b><span>V, V, V, F, V</span></li>
+        <li data-em="2:certo" style="font-size:20px"><b>B</b><span>V, F, F, V, V</span></li>
+        <li data-em="2:apaga" style="font-size:20px"><b>C</b><span>F, V, F, V, F</span></li>
+        <li data-em="2:apaga" style="font-size:20px"><b>D</b><span>F, V, V, F, F</span></li>
+        <li data-em="2:apaga" style="font-size:20px"><b>E</b><span>V, F, V, V, F</span></li>
+      </ol>
+    </div>
+  </div>
+  <aside class="resolucao">
+    <p class="dados"><b>Dados:</b> cinco conclusões sobre espelhos plano, côncavo e convexo.</p>
+    <ol class="passos">
+      <li><b>I</b> Convexo: direita e campo maior: V.</li>
+      <li><b>II</b> Raios que se cruzam: imagem real: F.</li>
+      <li><b>III</b> Espelho plano: imagem virtual: F.</li>
+      <li><b>IV</b> Convexo sempre reduz; côncavo, de longe: V.</li>
+      <li><b>V</b> Côncavo junta no foco a luz distante: V.</li>
+    </ol>
+    <p class="resposta"><b>Resposta:</b> V, F, F, V, V. <b>Gabarito B.</b></p>
+    <p class="atencao"><b>Destaque no quadro:</b> Raios se cruzam: real. Só prolongamentos: virtual.</p>
+    <ul class="erros">
+      <li><b>A</b> Aceita II e III e nega a IV.</li>
+      <li><b>C</b> Nega I e V e aceita a II.</li>
+      <li><b>D</b> Troca real e virtual.</li>
+      <li><b>E</b> Aceita a III e nega a V.</li>
+    </ul>
+  </aside>
+  <aside class="notas">
+    <p>Clique 1 tira o aviso de pausa: resolva na área (D liga a caneta; E esconde o enunciado). Clique 2: gabarito B.</p>
+    <p>Questão oficial do IF Sudeste MG 2014-1, q35, FIS-0528 (sobra de Reflexão e refração para as partes). A III junta uma verdade (mesma distância) com um erro (imagem real): basta um erro para ser falsa.</p>
+  </aside>
+</section>
+
+<!-- Questão 3 -->
+<section class="slide questao" data-nome="Questão 3">
+  <div class="conteudo">
+    <div class="area-resolucao"></div>
+    <span class="pilula pilula-pausa" data-em="1:some">Pause o vídeo e tente</span>
+    <div class="painel-questao" style="gap:12px">
+      <p class="olho">Questão 3 · Modelo IF</p>
+      <p class="enunciado" style="font-size:22px;line-height:1.33">Numa sala escura, a professora apontou uma caneta laser para a superfície da água de um aquário, de cima para baixo. Primeiro, o feixe chegou <b>perpendicular</b> à superfície; depois, chegou <b>inclinado</b>. Um pouco de leite misturado à água deixava ver o caminho da luz.</p>
+      <p class="enunciado" style="font-size:22px;line-height:1.33">Depois, os alunos fizeram quatro afirmações:</p>
+      <p class="enunciado" style="font-size:22px;line-height:1.33">I. Com o feixe perpendicular, a luz mudou de velocidade ao entrar na água, mas seguiu na mesma direção.<br>II. Com o feixe inclinado, a luz mudou de direção ao entrar na água.<br>III. Com o feixe perpendicular, a luz não sofreu refração, pois nem a velocidade dela mudou.<br>IV. O lápis que parece quebrado num copo com água é explicado pela reflexão da luz na superfície da água.</p>
+      <p class="enunciado" style="font-size:22px;line-height:1.33">Estão <b>CORRETAS</b> apenas as afirmações</p>
+      <ol class="alternativas curtas">
+        <li data-em="2:apaga"><b>A</b><span>I</span></li>
+        <li data-em="2:apaga"><b>B</b><span>II</span></li>
+        <li data-em="2:apaga"><b>C</b><span>II e III</span></li>
+        <li data-em="2:apaga"><b>D</b><span>II e IV</span></li>
+        <li data-em="2:certo"><b>E</b><span>I e II</span></li>
+      </ol>
+    </div>
+  </div>
+  <aside class="resolucao">
+    <p class="dados"><b>Dados:</b> laser perpendicular e inclinado entrando na água.</p>
+    <ol class="passos">
+      <li><b>I</b> Perpendicular: muda a velocidade, não desvia: V.</li>
+      <li><b>II</b> Inclinado: muda de direção: V.</li>
+      <li><b>III</b> Mudou a velocidade: houve refração: F.</li>
+      <li><b>IV</b> Lápis "quebrado" é refração: F.</li>
+    </ol>
+    <p class="resposta"><b>Resposta:</b> I e II. <b>Gabarito E.</b></p>
+    <p class="atencao"><b>Destaque no quadro:</b> Refração = mudança de velocidade; desvio só se chegar inclinada.</p>
+    <ul class="erros">
+      <li><b>A</b> Falta a II.</li>
+      <li><b>B</b> Falta a I.</li>
+      <li><b>C</b> Aceita a III e deixa a I de fora.</li>
+      <li><b>D</b> Aceita a IV e deixa a I de fora.</li>
+    </ul>
+  </aside>
+  <aside class="notas">
+    <p>Clique 1 tira o aviso de pausa: resolva na área (D liga a caneta; E esconde o enunciado). Clique 2: gabarito E.</p>
+    <p>Modelo IF, lote if-fisica-reflexao-e-refracao, m003, FIS-8757 (está na apostila, 4.2). É a atenção "Luz perpendicular não desvia".</p>
+  </aside>
+</section>
+
+<!-- Questão 4 -->
+<section class="slide questao" data-nome="Questão 4">
+  <div class="conteudo">
+    <div class="area-resolucao"></div>
+    <span class="pilula pilula-pausa" data-em="1:some">Pause o vídeo e tente</span>
+    <div class="painel-questao">
+      <p class="olho">Questão 4 · Modelo IF</p>
+      <p class="enunciado" style="font-size:25px">Numa manhã em Juiz de Fora, logo depois de uma chuva rápida, o Sol acabou de nascer no lado <b>leste</b> do céu e ainda há muitas gotas de água no ar. Júlia quer ver um arco-íris.</p>
+      <p class="enunciado" style="font-size:25px">Para ter mais chance de ver o arco-íris, Júlia deve olhar para o lado</p>
+      <ol class="alternativas">
+        <li data-em="2:certo" style="font-size:22px"><b>A</b><span>oeste, de costas para o Sol, onde ainda há gotas de chuva no ar.</span></li>
+        <li data-em="2:apaga" style="font-size:22px"><b>B</b><span>leste, na direção do Sol, porque é de lá que vem a luz.</span></li>
+        <li data-em="2:apaga" style="font-size:22px"><b>C</b><span>de cima, esperando o meio-dia, quando o Sol estiver mais alto.</span></li>
+        <li data-em="2:apaga" style="font-size:22px"><b>D</b><span>que quiser, porque o arco-íris aparece em todas as direções.</span></li>
+        <li data-em="2:apaga" style="font-size:22px"><b>E</b><span>onde o céu já estiver limpo e sem nenhuma gota de água.</span></li>
+      </ol>
+    </div>
+  </div>
+  <aside class="resolucao">
+    <p class="dados"><b>Dados:</b> manhã, Sol no leste, gotas no ar.</p>
+    <ol class="passos">
+      <li>Cada gota é um pequeno prisma.</li>
+      <li>A luz volta das gotas para quem está de costas para o Sol.</li>
+      <li>Sol no leste: olhar para o oeste.</li>
+    </ol>
+    <p class="resposta"><b>Resposta:</b> oeste, de costas para o Sol. <b>Gabarito A.</b></p>
+    <p class="atencao"><b>Destaque no quadro:</b> Arco-íris: gotas no ar e Sol às costas.</p>
+    <ul class="erros">
+      <li><b>B</b> Olhando para o Sol, a luz das gotas não chega ao olho.</li>
+      <li><b>C</b> O que importa é o Sol às costas, não o meio-dia.</li>
+      <li><b>D</b> Depende da posição do Sol e das gotas.</li>
+      <li><b>E</b> Sem gotas não há dispersão.</li>
+    </ul>
+  </aside>
+  <aside class="notas">
+    <p>Clique 1 tira o aviso de pausa: resolva na área (D liga a caneta; E esconde o enunciado). Clique 2: gabarito A.</p>
+    <p>Modelo IF, lote if-fisica-cor, m005, FIS-1301 (classificada em Reflexão e refração, Dispersão da luz; está na apostila, 4.2).</p>
+  </aside>
+</section>
+
+<!-- Resumo -->
+<section class="slide" data-nome="Resumo">
+  <div class="conteudo">
+    <p class="olho">Resumo</p>
+    <h2 class="titulo">O essencial</h2>
+    <div class="resumo" style="position:absolute;left:0;right:0;top:150px;gap:16px 26px">
+      <div><b>Reflexão:</b> a luz volta; \(i = r\), medidos a partir da <b>normal</b>.</div>
+      <div><b>Espelho plano:</b> mesmo tamanho, mesma distância atrás do espelho, direita e esquerda trocadas; periscópio: dois espelhos a 45°.</div>
+      <div><b>Côncavo</b> junta os raios paralelos no foco (antena, farol, forno solar, telescópio).</div>
+      <div><b>Convexo</b> espalha: imagem sempre virtual, direita e menor, campo visual maior (esquinas, garagens, lojas).</div>
+      <div><b>Refração:</b> a luz muda de meio e de velocidade; chegando inclinada, muda de direção (lápis "quebrado", piscina mais rasa).</div>
+      <div><b>Dispersão:</b> a luz branca é mistura de cores; o prisma e as gotas de chuva as separam.</div>
+    </div>
+  </div>
+  <aside class="notas"><p>O resumo do 4.2 da apostila. Peça para tirarem um print desta tela.</p></aside>
+</section>
+
+<!-- A seguir -->
+<section class="slide capa" data-nome="A seguir">
+  <div class="estrelas"></div>
+  <div class="texto-capa" style="top:170px">
+    <span class="selo">Física · IF</span>
+    <p class="aula" style="font-size:26px">A seguir · Lentes e instrumentos ópticos · Parte 1 de 2</p>
+    <h1 style="font-size:104px">Lentes convergentes e divergentes</h1>
+    <p class="sub">A lupa que aumenta e a que queima</p>
+  </div>
+  <svg class="emblema" viewBox="0 0 640 640" aria-hidden="true">
+    <path d="M320 120 Q400 320 320 520 Q240 320 320 120 Z" fill="#fff" opacity=".9"/>
+    <g stroke="#FFD10C" stroke-width="9" stroke-linecap="round" fill="none"><path d="M40 220 H300 L540 320"/><path d="M40 320 H560"/><path d="M40 420 H300 L540 320"/></g>
+    <circle cx="540" cy="320" r="16" fill="#FFD10C"/>
+  </svg>
+  <img class="logo-capa" src="{{LOGO_BRANCO}}" alt="Quarks">
+  <aside class="notas"><p>A seguir, Lentes e instrumentos ópticos, Parte 1: lentes convergentes e divergentes e as imagens que elas formam.</p></aside>
+</section>

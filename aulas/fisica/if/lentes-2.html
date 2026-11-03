@@ -1,0 +1,404 @@
+<!--aula
+{"disciplina": "fisica", "curso": "IF", "assunto": "Lentes e instrumentos ópticos", "parte": "Parte 2 de 2", "titulo": "Instrumentos ópticos", "scripts": ["animacoes-optica.js"]}
+-->
+<!-- Fonte: apostila IF, Física, cap. 4 Óptica (4.3 Lentes e instrumentos ópticos: "Instrumentos ópticos", a tabela dos instrumentos, a comparação câmera e olho, os usos sociais, exemplo "Qual instrumento?" e o último item do resumo). Questões: Modelo IF if-fisica-lentes-e-instrumentos-opticos m007 (FIS-8764), m008 (FIS-8765) e m009 (FIS-8766). A m001 (FIS-8758) fica reservada para o bloco do fim do capítulo. -->
+<style>
+  .caixa, .painel, .linha-ex { box-sizing: border-box; }
+  .linha-ex { background: var(--branco); border: 2px solid var(--lilas-2); border-radius: 24px; padding: 14px 26px; font-size: 30px; line-height: 1.3; }
+  .linha-ex b { color: var(--roxo-titulo); }
+  .painel { background: var(--branco); border: 2px solid var(--lilas-2); border-radius: 30px; padding: 16px 24px; }
+  .painel h3 { margin: 0 0 4px; font: 800 32px var(--fonte-titulo); letter-spacing: -.02em; color: var(--roxo-titulo); }
+  .painel p { margin: 6px 0 0; font-size: 25px; line-height: 1.3; }
+  .rot { font-family: Figtree, 'Segoe UI', sans-serif; font-weight: 700; font-size: 24px; fill: #5E5A70; }
+  .raio { fill: none; stroke: #E0A800; stroke-width: 5; stroke-linecap: round; stroke-linejoin: round; }
+  .lente { fill: rgba(15,139,141,.18); stroke: #0B6B6D; stroke-width: 4; }
+  .tabela.op { font-size: 27px; }
+  .tabela.op th, .tabela.op td { padding: 10px 26px; text-align: left; }
+  .tabela.op td:first-child { font-weight: 800; color: var(--roxo-titulo); }
+  .liga2 { display: grid; grid-template-columns: 1fr 60px 1fr; align-items: center; gap: 10px; background: var(--branco); border: 2px solid var(--lilas-2); border-radius: 22px; padding: 10px 22px; font-size: 28px; }
+  .liga2 b { color: var(--roxo-titulo); }
+  .liga2 span:last-child { text-align: right; }
+  .cartoes3 { display: grid; grid-template-columns: repeat(3, 1fr); gap: 24px; }
+  .cartoes3 > div { background: var(--branco); border: 2px solid var(--lilas-2); border-radius: 28px; padding: 18px 24px; font-size: 26px; line-height: 1.32; }
+  .cartoes3 h3 { margin: 6px 0 6px; font: 800 32px var(--fonte-titulo); color: var(--roxo-titulo); letter-spacing: -.02em; }
+  .cartoes3 svg { display: block; width: 100%; height: 150px; }
+  .painel-questao .figura { display: block; margin: 0 auto; }
+  /* luas de Júpiter vistas da Terra: vão e voltam numa linha, cada uma no seu ritmo */
+  @keyframes oscila { 0%, 100% { transform: translateX(calc(var(--a) * -1)); } 50% { transform: translateX(var(--a)); } }
+  .lua-j { transform: translateX(calc(var(--a) * -1)); }
+  .slide.ativo .mostra .lua-j { animation: oscila var(--t) ease-in-out infinite; }
+  /* diafragma que abre e fecha */
+  @keyframes abre { 0%, 100% { r: 14px; } 50% { r: 40px; } }
+  .furo { r: 26px; }
+  .slide.ativo .mostra .furo { animation: abre 6s ease-in-out infinite; }
+</style>
+
+<svg width="0" height="0" style="position:absolute" aria-hidden="true">
+  <defs>
+    <marker id="opSetaL2" viewBox="0 0 10 10" refX="7" refY="5" markerWidth="5" markerHeight="5" orient="auto"><path d="M0 0 L10 5 L0 10 Z" fill="#E0A800"/></marker>
+    <radialGradient id="opJup" cx=".4" cy=".35" r=".8"><stop offset="0" stop-color="#F6DDB8"/><stop offset="1" stop-color="#C98B4E"/></radialGradient>
+    <radialGradient id="opLua2" cx=".35" cy=".35" r=".8"><stop offset="0" stop-color="#FFFFFF"/><stop offset="1" stop-color="#B8B2CF"/></radialGradient>
+  </defs>
+</svg>
+
+<!-- 1. Capa -->
+<section class="slide capa" data-nome="Capa">
+  <div class="estrelas"></div>
+  <div class="texto-capa" style="top:150px">
+    <span class="selo">Física · IF</span>
+    <p class="aula">Lentes e instrumentos ópticos · Parte 2 de 2</p>
+    <h1>Instrumentos ópticos</h1>
+    <p class="sub">Lupa, luneta, câmera e mais</p>
+  </div>
+  <svg class="emblema" viewBox="0 0 640 640" aria-hidden="true">
+    <g class="gira-lento"><ellipse cx="320" cy="320" rx="300" ry="128" fill="none" stroke="#fff" stroke-opacity=".38" stroke-width="2" transform="rotate(-10 320 320)"/></g>
+    <g transform="rotate(-24 320 320)"><rect x="120" y="270" width="380" height="100" rx="24" fill="#fff" opacity=".92"/><rect x="480" y="250" width="70" height="140" rx="20" fill="#FFD10C"/><rect x="80" y="290" width="50" height="60" rx="14" fill="#FFD10C"/></g>
+    <path d="M270 420 L230 560 M370 420 L410 560" stroke="#fff" stroke-width="12" stroke-linecap="round" opacity=".8"/>
+  </svg>
+  <img class="logo-capa" src="{{LOGO_BRANCO}}" alt="Quarks">
+  <aside class="notas">
+    <p>Segunda parte de Lentes e instrumentos ópticos: lupa, microscópio, luneta e telescópio, periscópio e câmera fotográfica, e como esses instrumentos mudaram a sociedade. Da apostila IF, cap. 4, 4.3.</p>
+  </aside>
+</section>
+
+<!-- 2. Tabela dos instrumentos -->
+<section class="slide" data-nome="Os instrumentos ópticos">
+  <div class="conteudo">
+    <p class="olho">Além dos limites do olho</p>
+    <h2 class="titulo">Instrumentos ópticos</h2>
+    <p class="texto" style="position:absolute;left:0;right:0;top:140px;margin:0;font-size:28px">O olho não vê detalhes muito pequenos nem objetos muito distantes. Para ir além, criamos instrumentos feitos com <b>lentes e espelhos</b>.</p>
+    <table class="tabela op" style="position:absolute;left:0;top:240px;width:1500px">
+      <tr><th>Instrumento</th><th>Para que serve</th><th>Como funciona</th></tr>
+      <tr data-passo="1"><td>Lupa</td><td>ampliar objetos próximos</td><td>uma lente convergente</td></tr>
+      <tr data-passo="2"><td>Microscópio</td><td>ver células e microrganismos</td><td>duas lentes convergentes</td></tr>
+      <tr data-passo="3"><td>Luneta e telescópio</td><td>observar objetos distantes</td><td>lentes, ou lentes e espelhos</td></tr>
+      <tr data-passo="4"><td>Periscópio</td><td>ver por cima de obstáculos</td><td>dois espelhos planos a 45°</td></tr>
+      <tr data-passo="5"><td>Câmera fotográfica</td><td>registrar imagens</td><td>lente que forma a imagem num sensor</td></tr>
+    </table>
+  </div>
+  <aside class="notas">
+    <p>A tabela da apostila, uma linha por clique. Peça para guardarem a coluna "como funciona": a prova costuma trocar as peças de um instrumento pelas de outro (periscópio com lentes, microscópio com espelhos).</p>
+  </aside>
+</section>
+
+<!-- 3. Lupa e microscópio -->
+<section class="slide" data-nome="Lupa e microscópio">
+  <div class="conteudo">
+    <p class="olho">Para ver o muito pequeno</p>
+    <h2 class="titulo">Lupa e microscópio</h2>
+    <svg viewBox="0 0 520 470" width="520" height="470" style="position:absolute;left:0;top:130px;overflow:visible" aria-hidden="true" data-anima="opt-fotons" data-anima-passo="1">
+      <g data-passo="1">
+        <rect x="200" y="70" width="90" height="300" rx="10" fill="#EFEBFF" stroke="#5E5A70" stroke-width="5"/>
+        <path class="raio" d="M245 430 L245 20" data-vel="90"/>
+        <ellipse class="lente" cx="245" cy="330" rx="40" ry="12"/>
+        <ellipse class="lente" cx="245" cy="88" rx="40" ry="12"/>
+        <rect x="150" y="410" width="190" height="14" rx="4" fill="#C9C0F0"/>
+        <ellipse cx="245" cy="404" rx="20" ry="6" fill="#8BC34A"/>
+        <g transform="translate(245 22)"><path d="M-34 0 q34 -26 68 0 q-34 26 -68 0 z" fill="#fff" stroke="#292B2C" stroke-width="3"/><circle r="11" fill="#3F2FA0"/></g>
+        <path d="M296 88 H360" stroke="#9C93C4" stroke-width="2"/><text x="366" y="96" class="rot">ocular</text>
+        <path d="M296 330 H360" stroke="#9C93C4" stroke-width="2"/><text x="366" y="338" class="rot">objetiva</text>
+        <path d="M270 404 H360" stroke="#9C93C4" stroke-width="2"/><text x="366" y="412" class="rot">gota de água</text>
+      </g>
+    </svg>
+    <div style="position:absolute;left:640px;right:0;top:150px;display:flex;flex-direction:column;gap:18px">
+      <div class="linha-ex" style="font-size:28px"><b>Lupa:</b> uma lente convergente, usada perto do objeto.</div>
+      <div class="linha-ex" data-passo="1" style="font-size:28px"><b>Microscópio:</b> <b>duas lentes convergentes</b>, uma perto do objeto (objetiva) e outra perto do olho (ocular). Mostra células e microrganismos.</div>
+      <div class="caixa caixa-fundamental" data-passo="2" style="padding:16px 28px">
+        <span class="rotulo">Mudou a sociedade</span>
+        <div class="texto" style="font-size:28px">O microscópio revelou <b>células e micróbios</b> e <b>transformou a medicina</b>.</div>
+      </div>
+    </div>
+  </div>
+  <aside class="notas">
+    <p>Clique 1: o microscópio; a luz sobe da gota de água, passa pelas duas lentes convergentes e chega ao olho. Esquema fora de escala. Clique 2: o impacto na medicina.</p>
+    <p>Os nomes objetiva e ocular não estão na apostila; são só para orientar o desenho.</p>
+  </aside>
+</section>
+
+<!-- 4. Luneta e telescópio -->
+<section class="slide" data-nome="Luneta e telescópio">
+  <div class="conteudo">
+    <p class="olho">Para ver o muito distante</p>
+    <h2 class="titulo">Luneta e telescópio</h2>
+    <svg viewBox="0 0 800 460" width="800" height="460" style="position:absolute;left:0;top:130px;overflow:visible" aria-hidden="true">
+      <rect x="0" y="0" width="800" height="460" rx="34" fill="#1C1433"/>
+      <g fill="#fff" opacity=".6"><circle cx="60" cy="40" r="2"/><circle cx="740" cy="60" r="2.5"/><circle cx="700" cy="400" r="2"/><circle cx="90" cy="420" r="2"/><circle cx="420" cy="30" r="2"/></g>
+      <g data-passo="1">
+        <circle cx="400" cy="140" r="56" fill="url(#opJup)"/>
+        <path d="M348 124 H452 M346 148 H454" stroke="#B5703A" stroke-width="6" opacity=".6"/>
+        <circle class="lua-j" cx="400" cy="140" r="7" fill="#fff" style="--a:90px;--t:5s"/>
+        <circle class="lua-j" cx="400" cy="140" r="7" fill="#fff" style="--a:140px;--t:8s"/>
+        <circle class="lua-j" cx="400" cy="140" r="8" fill="#fff" style="--a:220px;--t:12s"/>
+        <circle class="lua-j" cx="400" cy="140" r="7" fill="#fff" style="--a:320px;--t:19s"/>
+        <text x="400" y="250" text-anchor="middle" class="rot" style="fill:#E4DEFB">Júpiter e as suas luas</text>
+      </g>
+      <g data-passo="2">
+        <circle cx="400" cy="350" r="70" fill="url(#opLua2)"/>
+        <path d="M352 362 l14 -26 l14 26 z M384 372 l18 -34 l18 34 z" fill="#9C93C4"/>
+        <circle cx="430" cy="320" r="10" fill="#C9C4DC"/>
+        <text x="500" y="360" class="rot" style="fill:#E4DEFB">montanhas na Lua</text>
+      </g>
+    </svg>
+    <div style="position:absolute;left:880px;right:0;top:150px;display:flex;flex-direction:column;gap:18px">
+      <div class="linha-ex" style="font-size:28px"><b>Luneta e telescópio:</b> observam objetos distantes, com <b>lentes</b>, ou <b>lentes e espelhos</b>. Os grandes telescópios usam espelhos côncavos.</div>
+      <div class="caixa caixa-fundamental" data-passo="1" style="padding:16px 28px">
+        <span class="rotulo">Galileu, por volta de 1610</span>
+        <div class="texto" style="font-size:28px">Apontou uma luneta para o céu e viu <b>luas girando em torno de Júpiter</b>...</div>
+      </div>
+      <div class="linha-ex" data-passo="2" style="font-size:28px">... e <b>montanhas na Lua</b>: ela não é lisa e perfeita.</div>
+    </div>
+  </div>
+  <aside class="notas">
+    <p>Clique 1: o que Galileu viu: quatro pontinhos em linha ao lado de Júpiter, que mudavam de lugar de uma noite para a outra; eram luas girando em volta do planeta (vistas de lado, parecem ir e voltar numa linha). Clique 2: montanhas na Lua.</p>
+    <p>O telescópio com espelho côncavo liga com Reflexão e refração (o côncavo junta no foco a luz que chega de muito longe).</p>
+  </aside>
+</section>
+
+<!-- 5. Câmera -->
+<section class="slide" data-nome="Câmera fotográfica">
+  <div class="conteudo">
+    <p class="olho">Câmera fotográfica</p>
+    <h2 class="titulo">A câmera funciona como o olho</h2>
+    <svg viewBox="0 0 800 440" width="800" height="440" style="position:absolute;left:0;top:140px;overflow:visible" aria-hidden="true" data-anima="opt-fotons">
+      <!-- árvore (objeto) -->
+      <rect x="66" y="180" width="18" height="110" fill="#8A5A33"/><circle cx="75" cy="150" r="48" fill="#43A047"/>
+      <line x1="20" y1="290" x2="160" y2="290" stroke="#C9C0F0" stroke-width="4"/>
+      <!-- corpo da câmera -->
+      <rect x="400" y="110" width="250" height="250" rx="26" fill="#EFEBFF" stroke="#5E5A70" stroke-width="5"/>
+      <rect x="386" y="170" width="24" height="130" rx="8" fill="#5E5A70"/>
+      <ellipse class="lente" cx="420" cy="235" rx="12" ry="56"/>
+      <rect x="592" y="140" width="14" height="190" rx="4" fill="#3F2FA0" opacity=".25"/>
+      <text x="599" y="392" text-anchor="middle" class="rot">sensor</text>
+      <text x="410" y="392" text-anchor="middle" class="rot">lente</text>
+      <g data-passo="1">
+        <path class="raio" d="M75 106 L420 235 L597 301" style="stroke-width:4"/>
+        <path class="raio" d="M75 290 L420 235 L597 207" style="stroke-width:4"/>
+        <rect x="595" y="207" width="8" height="56" fill="#8A5A33"/>
+        <circle cx="599" cy="279" r="25" fill="#43A047"/>
+        <text x="660" y="250" class="rot" style="fill:#D6336C;font-weight:800">imagem</text>
+        <text x="660" y="278" class="rot" style="fill:#D6336C;font-size:20px">invertida</text>
+      </g>
+      <!-- diafragma visto de frente -->
+      <g data-passo="2" transform="translate(500 50)">
+        <circle r="48" fill="#292B2C"/><circle class="furo" r="26" fill="#E0F4F4"/>
+        <text x="62" y="8" class="rot">diafragma</text>
+      </g>
+    </svg>
+    <div style="position:absolute;left:880px;right:0;top:150px;display:flex;flex-direction:column;gap:14px">
+      <p class="texto" style="margin:0;font-size:27px" data-passo="1">A <b>lente</b> forma a imagem no <b>sensor</b>, de cabeça para baixo; o <b>diafragma</b> abre ou fecha para controlar a luz.</p>
+      <div class="liga2" data-passo="3"><span><b>lente</b></span><span>↔</span><span><b>cristalino</b></span></div>
+      <div class="liga2" data-passo="4"><span><b>diafragma</b></span><span>↔</span><span><b>íris</b></span></div>
+      <div class="liga2" data-passo="5"><span><b>sensor</b></span><span>↔</span><span><b>retina</b></span></div>
+    </div>
+  </div>
+  <aside class="notas">
+    <p>Clique 1: os raios que saem do alto e do pé da árvore cruzam a lente e chegam ao sensor trocados: a imagem fica de cabeça para baixo (a câmera a desvira para mostrar no visor). Clique 2: o diafragma abrindo e fechando. Cliques 3 a 5: a comparação da apostila com o olho (câmera à esquerda, olho à direita). O olho é o próximo subcapítulo.</p>
+  </aside>
+</section>
+
+<!-- 6. Usos sociais -->
+<section class="slide" data-nome="Usos sociais">
+  <div class="conteudo">
+    <p class="olho">Instrumentos e sociedade</p>
+    <h2 class="titulo">Eles mudaram a sociedade</h2>
+    <div class="cartoes3" style="position:absolute;left:0;right:0;top:150px">
+      <div data-passo="1">
+        <svg viewBox="0 0 300 150" aria-hidden="true"><circle cx="150" cy="75" r="66" fill="#E0F4F4" stroke="#0B6B6D" stroke-width="5"/><ellipse cx="120" cy="60" rx="22" ry="16" fill="#8BC34A" opacity=".8"/><circle cx="120" cy="60" r="5" fill="#3F6B1F"/><ellipse cx="172" cy="96" rx="18" ry="12" fill="#8BC34A" opacity=".8"/><circle cx="172" cy="96" r="4" fill="#3F6B1F"/><path d="M168 46 q10 -6 20 2 q-8 8 -20 -2 z" fill="#C2384F" opacity=".7"/></svg>
+        <h3>Microscópio</h3>Revelou células e micróbios e transformou a medicina.
+      </div>
+      <div data-passo="2">
+        <svg viewBox="0 0 300 150" aria-hidden="true"><rect x="0" y="0" width="300" height="150" rx="20" fill="#1C1433"/><circle cx="150" cy="75" r="30" fill="url(#opJup)"/><circle cx="80" cy="75" r="5" fill="#fff"/><circle cx="110" cy="75" r="5" fill="#fff"/><circle cx="200" cy="75" r="5" fill="#fff"/><circle cx="250" cy="75" r="5" fill="#fff"/></svg>
+        <h3>Luneta de Galileu</h3>Por volta de 1610: montanhas na Lua e luas em torno de Júpiter.
+      </div>
+      <div data-passo="3">
+        <svg viewBox="0 0 300 150" aria-hidden="true"><rect x="110" y="8" width="80" height="136" rx="14" fill="#292B2C"/><rect x="118" y="22" width="64" height="104" rx="6" fill="#E0F4F4"/><circle cx="168" cy="16" r="4" fill="#5E5A70"/><path d="M130 110 l18 -30 l14 18 l10 -12 l12 24 z" fill="#43A047"/></svg>
+        <h3>Câmeras</h3>Registram a história e hoje estão em todo celular, o que também traz debates sobre <b>privacidade</b>.
+      </div>
+    </div>
+  </div>
+  <aside class="notas">
+    <p>Os usos sociais da apostila, um por clique. Bom momento para uma pergunta à turma: você pode fotografar alguém e publicar sem pedir? (Privacidade.)</p>
+    <p>A questão 3 cita Carlos Chagas, que em 1909, em Lassance (MG), identificou ao microscópio o parasita da doença de Chagas: um exemplo mineiro do microscópio na medicina.</p>
+  </aside>
+</section>
+
+<!-- 7. Periscópio e exemplo -->
+<section class="slide" data-nome="Exemplo: qual instrumento?">
+  <div class="conteudo">
+    <p class="olho">Exemplo</p>
+    <h2 class="titulo">Qual instrumento?</h2>
+    <div style="position:absolute;left:0;right:0;top:160px;display:flex;flex-direction:column;gap:18px">
+      <div class="linha-ex" style="display:grid;grid-template-columns:1fr 600px;gap:20px;align-items:center"><span><b>(a)</b> Ver os anéis de Saturno.</span><span data-passo="1"><b style="color:var(--d-forte)">Telescópio</b> ou luneta: objetos distantes.</span></div>
+      <div class="linha-ex" style="display:grid;grid-template-columns:1fr 600px;gap:20px;align-items:center"><span><b>(b)</b> Observar uma gota de água do rio em busca de microrganismos.</span><span data-passo="2"><b style="color:var(--d-forte)">Microscópio:</b> coisas muito pequenas.</span></div>
+      <div class="linha-ex" style="display:grid;grid-template-columns:1fr 600px;gap:20px;align-items:center"><span><b>(c)</b> Ver um desfile por cima da multidão.</span><span data-passo="3"><b style="color:var(--d-forte)">Periscópio:</b> ver por cima de obstáculos (dois espelhos planos a 45°).</span></div>
+    </div>
+  </div>
+  <aside class="notas"><p>Exemplo "Qual instrumento?" da apostila. Peça a resposta antes de cada clique. O periscópio já apareceu em Reflexão e refração; a questão 2 pede o que vai dentro dele.</p></aside>
+</section>
+
+<!-- Questão 1 -->
+<section class="slide questao" data-nome="Questão 1">
+  <div class="conteudo">
+    <div class="area-resolucao"></div>
+    <span class="pilula pilula-pausa" data-em="1:some">Pause o vídeo e tente</span>
+    <div class="painel-questao">
+      <p class="olho">Questão 1 · Modelo IF</p>
+      <p class="enunciado" style="font-size:25px">A câmera de um celular funciona de modo parecido com o olho humano. Na câmera, uma <b>lente</b> forma a imagem sobre um <b>sensor</b>, que registra a luz recebida, e um <b>diafragma</b> abre ou fecha para controlar quanta luz entra.</p>
+      <p class="enunciado" style="font-size:25px">No olho, as partes que fazem o mesmo papel da lente, do diafragma e do sensor da câmera são, respectivamente,</p>
+      <ol class="alternativas">
+        <li data-em="2:certo"><b>A</b><span>o cristalino, a íris e a retina.</span></li>
+        <li data-em="2:apaga"><b>B</b><span>a íris, o cristalino e a retina.</span></li>
+        <li data-em="2:apaga"><b>C</b><span>a retina, a íris e o cristalino.</span></li>
+        <li data-em="2:apaga"><b>D</b><span>o cristalino, a retina e a íris.</span></li>
+        <li data-em="2:apaga"><b>E</b><span>o cristalino, a íris e o cérebro.</span></li>
+      </ol>
+    </div>
+  </div>
+  <aside class="resolucao">
+    <p class="dados"><b>Dados:</b> lente, diafragma e sensor da câmera.</p>
+    <ol class="passos">
+      <li>Lente forma a imagem: cristalino.</li>
+      <li>Diafragma controla a luz: íris.</li>
+      <li>Sensor recebe a imagem: retina.</li>
+    </ol>
+    <p class="resposta"><b>Resposta:</b> cristalino, íris e retina. <b>Gabarito A.</b></p>
+    <p class="atencao"><b>Destaque no quadro:</b> O cérebro interpreta, mas a imagem se forma na retina.</p>
+    <ul class="erros">
+      <li><b>B</b> Troca lente e diafragma.</li>
+      <li><b>C</b> Troca onde a imagem se forma.</li>
+      <li><b>D</b> Troca diafragma e sensor.</li>
+      <li><b>E</b> O cérebro não é o sensor.</li>
+    </ul>
+  </aside>
+  <aside class="notas">
+    <p>Clique 1 tira o aviso de pausa: resolva na área (D liga a caneta; E esconde o enunciado). Clique 2: gabarito A.</p>
+    <p>Modelo IF, lote if-fisica-lentes-e-instrumentos-opticos, m007, FIS-8764 (está na apostila, 4.3).</p>
+  </aside>
+</section>
+
+<!-- Questão 2 -->
+<section class="slide questao" data-nome="Questão 2">
+  <div class="conteudo">
+    <div class="area-resolucao"></div>
+    <span class="pilula pilula-pausa" data-em="1:some">Pause o vídeo e tente</span>
+    <div class="painel-questao" style="gap:10px">
+      <p class="olho">Questão 2 · Modelo IF</p>
+      <p class="enunciado" style="font-size:20px;line-height:1.32">Para a feira de Ciências, um grupo montou um periscópio com uma caixa longa de papelão, com uma abertura no alto, de um lado, e outra embaixo, do lado oposto. Com ele, uma pessoa olha pela abertura de baixo e vê o que está do outro lado de um muro, como na figura.</p>
+      <svg viewBox="0 0 300 330" width="200" height="220" class="figura" aria-hidden="true">
+        <rect x="10" y="130" width="70" height="190" fill="#C4C3CC" stroke="#8E8AA0" stroke-width="2"/>
+        <text x="45" y="230" text-anchor="middle" font-family="Figtree,sans-serif" font-size="20" fill="#292B2C">muro</text>
+        <path d="M110 40 V20 H180 V250 M180 285 V310 H110 V90" fill="none" stroke="#292B2C" stroke-width="5"/>
+        <circle cx="145" cy="62" r="24" fill="none" stroke="#0F8B8D" stroke-width="3" stroke-dasharray="6 5"/><text x="145" y="70" text-anchor="middle" font-family="Figtree,sans-serif" font-weight="800" font-size="22" fill="#292B2C">P</text>
+        <circle cx="145" cy="268" r="24" fill="none" stroke="#0F8B8D" stroke-width="3" stroke-dasharray="6 5"/><text x="145" y="276" text-anchor="middle" font-family="Figtree,sans-serif" font-weight="800" font-size="22" fill="#292B2C">Q</text>
+        <path d="M206 268 l26 -12 v24 z" fill="none" stroke="#292B2C" stroke-width="3"/><circle cx="216" cy="268" r="6" fill="#292B2C"/>
+        <text x="230" y="240" font-family="Figtree,sans-serif" font-size="18" fill="#292B2C">olho</text>
+      </svg>
+      <p class="enunciado" style="font-size:20px;line-height:1.32">Para o periscópio funcionar, nas posições P e Q o grupo deve colocar</p>
+      <ol class="alternativas" style="gap:7px">
+        <li data-em="2:apaga" style="font-size:18px;padding:5px 12px"><b>A</b><span>duas lentes convergentes, que aumentam a imagem do que está do outro lado do muro.</span></li>
+        <li data-em="2:apaga" style="font-size:18px;padding:5px 12px"><b>B</b><span>uma lente divergente em P e um espelho plano em Q.</span></li>
+        <li data-em="2:apaga" style="font-size:18px;padding:5px 12px"><b>C</b><span>dois espelhos planos em pé, encostados nas paredes da caixa.</span></li>
+        <li data-em="2:apaga" style="font-size:18px;padding:5px 12px"><b>D</b><span>um espelho plano apenas em P, porque um espelho só já leva a luz até o olho.</span></li>
+        <li data-em="2:certo" style="font-size:18px;padding:5px 12px"><b>E</b><span>dois espelhos planos paralelos entre si, inclinados a 45°, que desviam a luz para baixo e depois para o olho.</span></li>
+      </ol>
+    </div>
+  </div>
+  <aside class="resolucao">
+    <p class="dados"><b>Dados:</b> abertura no alto (lado do muro) e embaixo (lado do olho).</p>
+    <ol class="passos">
+      <li>Em P, espelho a 45°: a luz desce.</li>
+      <li>Em Q, espelho a 45°, paralelo: a luz vai ao olho.</li>
+      <li>Duas mudanças de direção, uma em cada espelho.</li>
+    </ol>
+    <p class="resposta"><b>Resposta:</b> dois espelhos planos paralelos a 45°. <b>Gabarito E.</b></p>
+    <p class="atencao"><b>Destaque no quadro:</b> Periscópio: espelhos; luneta: lentes.</p>
+    <ul class="erros">
+      <li><b>A</b> Confunde com a luneta.</li>
+      <li><b>B</b> A lente não manda a luz para baixo.</li>
+      <li><b>C</b> Espelhos em pé ficam fora do caminho da luz.</li>
+      <li><b>D</b> Falta a segunda curva até o olho.</li>
+    </ul>
+  </aside>
+  <aside class="notas">
+    <p>Clique 1 tira o aviso de pausa: resolva na área (D liga a caneta; E esconde o enunciado). Clique 2: gabarito E.</p>
+    <p>Modelo IF, lote if-fisica-lentes-e-instrumentos-opticos, m008, FIS-8765 (está na apostila, 4.3). Figura redesenhada a partir da do banco (mesmas posições de P, Q, muro e olho).</p>
+  </aside>
+</section>
+
+<!-- Questão 3 -->
+<section class="slide questao" data-nome="Questão 3">
+  <div class="conteudo">
+    <div class="area-resolucao"></div>
+    <span class="pilula pilula-pausa" data-em="1:some">Pause o vídeo e tente</span>
+    <div class="painel-questao" style="gap:12px">
+      <p class="olho">Questão 3 · Modelo IF</p>
+      <p class="enunciado" style="font-size:21px;line-height:1.33">Os instrumentos ópticos mudaram a ciência e a vida em sociedade. Num trabalho de Ciências, uma estudante escreveu:</p>
+      <p class="enunciado" style="font-size:21px;line-height:1.33">I. Por volta de 1610, Galileu Galilei apontou uma luneta para o céu e viu montanhas na Lua e luas girando em torno de Júpiter.<br>II. Em 1909, em Lassance, no interior de Minas Gerais, o médico Carlos Chagas usou o microscópio para identificar o parasita causador da doença que hoje leva o seu nome.<br>III. O microscópio é formado por dois espelhos planos a 45° e serve para observar objetos muito distantes.<br>IV. As câmeras dos celulares, em que uma lente forma a imagem num sensor, ajudam a registrar fatos do dia a dia, mas também trazem debates sobre a privacidade das pessoas.<br>V. As observações feitas com a luneta de Galileu mostraram que a superfície da Lua é lisa e perfeita.</p>
+      <p class="enunciado" style="font-size:21px;line-height:1.33">A sequência <b>CORRETA</b> que classifica cada afirmativa, na ordem em que aparecem acima, como verdadeira (V) ou falsa (F) é:</p>
+      <ol class="alternativas curtas">
+        <li data-em="2:apaga" style="font-size:20px"><b>A</b><span>V, V, V, V, F</span></li>
+        <li data-em="2:certo" style="font-size:20px"><b>B</b><span>V, V, F, V, F</span></li>
+        <li data-em="2:apaga" style="font-size:20px"><b>C</b><span>V, F, F, V, F</span></li>
+        <li data-em="2:apaga" style="font-size:20px"><b>D</b><span>F, V, F, V, V</span></li>
+        <li data-em="2:apaga" style="font-size:20px"><b>E</b><span>V, V, F, F, F</span></li>
+      </ol>
+    </div>
+  </div>
+  <aside class="resolucao">
+    <p class="dados"><b>Dados:</b> cinco frases sobre instrumentos e sociedade.</p>
+    <ol class="passos">
+      <li><b>I</b> Galileu, 1610: V.</li>
+      <li><b>II</b> Carlos Chagas ao microscópio: V.</li>
+      <li><b>III</b> Microscópio: duas lentes, coisas pequenas: F.</li>
+      <li><b>IV</b> Câmera do celular e privacidade: V.</li>
+      <li><b>V</b> A Lua tem montanhas: F.</li>
+    </ol>
+    <p class="resposta"><b>Resposta:</b> V, V, F, V, F. <b>Gabarito B.</b></p>
+    <p class="atencao"><b>Destaque no quadro:</b> Dois espelhos a 45° é o periscópio.</p>
+    <ul class="erros">
+      <li><b>A</b> Aceita a III.</li>
+      <li><b>C</b> Nega a II.</li>
+      <li><b>D</b> Nega a I e aceita a V.</li>
+      <li><b>E</b> Nega a IV.</li>
+    </ul>
+  </aside>
+  <aside class="notas">
+    <p>Clique 1 tira o aviso de pausa: resolva na área (D liga a caneta; E esconde o enunciado). Clique 2: gabarito B.</p>
+    <p>Modelo IF, lote if-fisica-lentes-e-instrumentos-opticos, m009, FIS-8766 (está na apostila, 4.3). Carlos Chagas não está na teoria da apostila; a frase II vem da própria questão.</p>
+  </aside>
+</section>
+
+<!-- Resumo -->
+<section class="slide" data-nome="Resumo">
+  <div class="conteudo">
+    <p class="olho">Resumo de Lentes e instrumentos ópticos</p>
+    <h2 class="titulo">O essencial</h2>
+    <div class="resumo" style="position:absolute;left:0;right:0;top:150px;gap:16px 26px">
+      <div><b>Lente:</b> transparente, com face curva; desvia a luz por refração.</div>
+      <div><b>Convergente</b> (grossa no meio) junta a luz e aumenta; <b>divergente</b> (fina no meio) espalha e diminui.</div>
+      <div><b>Lupa:</b> uma convergente. <b>Microscópio:</b> duas convergentes. <b>Luneta e telescópio:</b> lentes, ou lentes e espelhos.</div>
+      <div><b>Periscópio:</b> dois espelhos planos a 45°. <b>Câmera:</b> lente que forma a imagem num sensor.</div>
+    </div>
+    <div class="caixa caixa-fundamental" style="position:absolute;left:580px;right:0;top:530px;padding:18px 30px">
+      <div class="texto" style="font-size:29px">Câmera e olho: <b>lente ↔ cristalino</b>, <b>diafragma ↔ íris</b>, <b>sensor ↔ retina</b>.</div>
+    </div>
+  </div>
+  <aside class="notas"><p>Resumo do 4.3 inteiro (Partes 1 e 2). Peça para tirarem um print desta tela.</p></aside>
+</section>
+
+<!-- A seguir -->
+<section class="slide capa" data-nome="A seguir">
+  <div class="estrelas"></div>
+  <div class="texto-capa" style="top:170px">
+    <span class="selo">Física · IF</span>
+    <p class="aula" style="font-size:26px">A seguir · Óptica · Parte única</p>
+    <h1>O olho humano</h1>
+    <p class="sub">Como enxergamos e como cuidar</p>
+  </div>
+  <svg class="emblema" viewBox="0 0 640 640" aria-hidden="true">
+    <path d="M60 320 Q320 90 580 320 Q320 550 60 320 Z" fill="#fff" opacity=".95"/>
+    <circle cx="320" cy="320" r="120" fill="#FFD10C"/><circle cx="320" cy="320" r="56" fill="#2A1B5E"/><circle cx="292" cy="292" r="16" fill="#fff"/>
+  </svg>
+  <img class="logo-capa" src="{{LOGO_BRANCO}}" alt="Quarks">
+  <aside class="notas"><p>A seguir, a parte única de O olho humano: como o olho forma a imagem, os defeitos da visão, as lentes que corrigem e os cuidados com a visão.</p></aside>
+</section>

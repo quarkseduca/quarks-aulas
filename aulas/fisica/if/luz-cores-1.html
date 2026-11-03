@@ -1,0 +1,427 @@
+<!--aula
+{"disciplina": "fisica", "curso": "IF", "assunto": "Luz e cores", "parte": "Parte 1 de 2", "titulo": "Fontes de luz e sombras", "scripts": ["animacoes-optica.js"]}
+-->
+<!-- Fonte: apostila IF, Física, cap. 4 Óptica (4.1 Luz e cores: "Fontes de luz e meios transparentes, translúcidos e opacos", "Propagação retilínea, sombra e penumbra", exemplo "Sombra no pátio" e o resumo). Questões: lote Modelo if-fisica-cor (m011 FIS-8752, m012 FIS-8753, m013 FIS-8754), que estão na apostila. As oficiais de Luz e cores (2024-1 q31, 2015-2 q30) ficam reservadas para o bloco do fim do capítulo; a sobra 2013-1 q34 vai na Parte 2. -->
+<style>
+  .caixa, .painel, .linha-ex { box-sizing: border-box; }
+  .linha-ex { background: var(--branco); border: 2px solid var(--lilas-2); border-radius: 24px; padding: 14px 26px; font-size: 30px; line-height: 1.3; }
+  .linha-ex b { color: var(--roxo-titulo); }
+  .painel { background: var(--branco); border: 2px solid var(--lilas-2); border-radius: 30px; padding: 16px 24px; }
+  .painel h3 { margin: 0 0 4px; font: 800 34px var(--fonte-titulo); letter-spacing: -.02em; color: var(--roxo-titulo); }
+  .painel p { margin: 6px 0 0; font-size: 25px; line-height: 1.3; }
+  .painel svg { display: block; }
+  .rot { font-family: Figtree, 'Segoe UI', sans-serif; font-weight: 700; font-size: 24px; fill: #5E5A70; }
+  .raio { fill: none; stroke: #E0A800; stroke-width: 5; stroke-linecap: round; stroke-linejoin: round; }
+  .chip { display: inline-block; padding: 3px 16px; border-radius: 999px; font-weight: 800; font-size: 23px; background: var(--branco); border: 2px solid color-mix(in srgb, var(--d) 30%, transparent); color: var(--d-forte); margin: 4px 6px 0 0; }
+  .chip-am { background: #FFF4C2; color: #8A6A00; }
+  .painel-questao .figura { display: block; margin: 0 auto; }
+  /* poeira que brilha no feixe de sol */
+  @keyframes cintila { 0%, 100% { opacity: .15; } 50% { opacity: 1; } }
+  .poeira circle { opacity: .15; }
+  .slide.ativo .mostra .poeira circle, .slide.ativo .poeira.sempre circle { animation: cintila 4.5s ease-in-out infinite; }
+  .poeira circle:nth-child(3n) { animation-delay: -1.5s !important; } .poeira circle:nth-child(3n+1) { animation-delay: -3s !important; }
+  @keyframes deriva { 0%, 100% { transform: translate(0, 0); } 50% { transform: translate(3px, -2px); } }
+  .slide.ativo .mostra .poeira { animation: deriva 6s ease-in-out infinite; }
+  /* chama da vela */
+  @keyframes chama { 0%, 100% { transform: scaleY(1); } 50% { transform: scaleY(.9) scaleX(1.04); } }
+  .chama { transform-box: fill-box; transform-origin: 50% 100%; }
+  .slide.ativo .chama { animation: chama 1.6s ease-in-out infinite; }
+  /* sol que gira devagar */
+  .raios-sol { transform-box: fill-box; transform-origin: center; }
+  .slide.ativo .raios-sol { animation: gira 30s linear infinite; }
+</style>
+
+<svg width="0" height="0" style="position:absolute" aria-hidden="true">
+  <defs>
+    <radialGradient id="opSol" cx=".4" cy=".4" r=".7"><stop offset="0" stop-color="#FFF4C2"/><stop offset=".55" stop-color="#FFD10C"/><stop offset="1" stop-color="#F5A800"/></radialGradient>
+    <radialGradient id="opLua" cx=".35" cy=".35" r=".8"><stop offset="0" stop-color="#FFFFFF"/><stop offset="1" stop-color="#C9C4DC"/></radialGradient>
+    <linearGradient id="opChama" x1="0" y1="1" x2="0" y2="0"><stop offset="0" stop-color="#FF8A3D"/><stop offset=".6" stop-color="#FFD10C"/><stop offset="1" stop-color="#FFF4C2"/></linearGradient>
+    <linearGradient id="opFeixe" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#FFE680" stop-opacity=".95"/><stop offset="1" stop-color="#FFE680" stop-opacity=".35"/></linearGradient>
+    <marker id="opSeta" viewBox="0 0 10 10" refX="7" refY="5" markerWidth="5" markerHeight="5" orient="auto-start-reverse"><path d="M0 0 L10 5 L0 10 Z" fill="#E0A800"/></marker>
+  </defs>
+</svg>
+
+<!-- 1. Capa -->
+<section class="slide capa" data-nome="Capa">
+  <div class="estrelas"></div>
+  <div class="texto-capa">
+    <span class="selo">Física · IF</span>
+    <p class="aula">Luz e cores · Parte 1 de 2</p>
+    <h1>Fontes de luz e sombras</h1>
+    <p class="sub">Luz, meios e sombras</p>
+  </div>
+  <svg class="emblema" viewBox="0 0 640 640" aria-hidden="true">
+    <g class="gira-lento"><ellipse cx="320" cy="320" rx="300" ry="128" fill="none" stroke="#fff" stroke-opacity=".38" stroke-width="2" transform="rotate(-10 320 320)"/></g>
+    <path d="M150 300 L560 150 L560 520 Z" fill="#FFF4C2" opacity=".22"/>
+    <path d="M330 260 L560 210 L560 450 L330 380 Z" fill="#2A1B5E" opacity=".55"/>
+    <circle cx="150" cy="320" r="62" fill="#FFD10C"/>
+    <circle cx="150" cy="320" r="84" fill="#FFD10C" opacity=".25"/>
+    <circle cx="330" cy="320" r="60" fill="#fff"/>
+    <image href="{{SYM_ROXO}}" x="290" y="280" width="80" height="80"/>
+    <rect x="556" y="130" width="16" height="410" rx="8" fill="#fff" opacity=".9"/>
+  </svg>
+  <img class="logo-capa" src="{{LOGO_BRANCO}}" alt="Quarks">
+  <aside class="notas">
+    <p>Começa o capítulo Óptica. Nesta parte: fontes de luz (primárias e secundárias), meios transparentes, translúcidos e opacos, a propagação retilínea da luz e a sombra e a penumbra. Na Parte 2: as cores.</p>
+    <p>Tudo da apostila IF, cap. 4, 4.1 Luz e cores.</p>
+  </aside>
+</section>
+
+<!-- 2. Fontes de luz -->
+<section class="slide" data-nome="Fontes de luz">
+  <div class="conteudo">
+    <p class="olho">Para enxergar</p>
+    <h2 class="titulo">A luz tem de chegar aos seus olhos</h2>
+    <svg viewBox="0 0 760 440" width="760" height="440" style="position:absolute;left:0;top:150px;overflow:visible" aria-hidden="true" data-anima="opt-fotons" data-anima-passo="1">
+      <rect x="0" y="0" width="760" height="440" rx="34" fill="#2B2350"/>
+      <g fill="#fff" opacity=".7"><circle cx="420" cy="40" r="2.5"/><circle cx="520" cy="90" r="2"/><circle cx="640" cy="50" r="2.5"/><circle cx="700" cy="150" r="2"/><circle cx="330" cy="120" r="2"/></g>
+      <!-- Sol -->
+      <g class="raios-sol"><g stroke="#FFD10C" stroke-width="6" stroke-linecap="round"><path d="M90 30 v-14 M90 150 v14 M30 90 h-14 M150 90 h14 M48 48 l-10 -10 M132 132 l10 10 M48 132 l-10 10 M132 48 l10 -10"/></g></g>
+      <circle cx="90" cy="90" r="46" fill="url(#opSol)"/>
+      <text x="90" y="200" text-anchor="middle" class="rot" style="fill:#FFE680">Sol</text>
+      <!-- Lua -->
+      <circle cx="560" cy="120" r="44" fill="url(#opLua)"/>
+      <circle cx="546" cy="106" r="7" fill="#B8B2CF"/><circle cx="574" cy="134" r="5" fill="#B8B2CF"/>
+      <text x="560" y="200" text-anchor="middle" class="rot" style="fill:#E4DEFB">Lua</text>
+      <!-- menina olhando -->
+      <g transform="translate(250 300)">
+        <circle cx="0" cy="0" r="34" fill="#F3C9A6"/>
+        <path d="M-34 -6 q0 -40 34 -40 q36 0 36 40 q-14 -18 -36 -18 q-22 0 -34 18 z" fill="#4B258D"/>
+        <circle cx="14" cy="-6" r="5" fill="#292B2C"/>
+        <path d="M-38 40 q38 -24 76 0 v70 h-76 z" fill="var(--d)"/>
+      </g>
+      <text x="250" y="430" text-anchor="middle" class="rot" style="fill:#E4DEFB">você</text>
+      <!-- caminho da luz: Sol → Lua → olho -->
+      <g data-passo="1">
+        <path class="raio" d="M140 88 L512 116" marker-end="url(#opSeta)"/>
+        <path class="raio" d="M532 156 L278 288" marker-end="url(#opSeta)"/>
+      </g>
+      <!-- vela -->
+      <g data-passo="2" transform="translate(640 300)">
+        <path class="chama" d="M0 -6 q-22 -26 0 -66 q22 40 0 66 z" fill="url(#opChama)"/>
+        <rect x="-16" y="0" width="32" height="90" rx="6" fill="#F7F5FE"/>
+        <path class="raio" d="M-30 -30 L-330 -6" marker-end="url(#opSeta)"/>
+      </g>
+    </svg>
+    <div style="position:absolute;left:820px;right:0;top:150px;display:flex;flex-direction:column;gap:18px">
+      <div class="caixa caixa-fundamental" data-passo="2" style="padding:18px 28px">
+        <span class="rotulo">Fonte primária</span>
+        <div class="texto" style="font-size:29px">Produz a <b>própria luz</b>.</div>
+        <div><span class="chip chip-am">Sol</span><span class="chip chip-am">estrelas</span><span class="chip chip-am">chama da vela</span><span class="chip chip-am">lâmpada acesa</span></div>
+      </div>
+      <div class="caixa caixa-fundamental" data-passo="3" style="padding:18px 28px">
+        <span class="rotulo">Fonte secundária (corpo iluminado)</span>
+        <div class="texto" style="font-size:29px">Só <b>devolve</b> a luz que recebe.</div>
+        <div><span class="chip">Lua</span><span class="chip">caderno</span><span class="chip">a sua mão</span></div>
+      </div>
+    </div>
+    <div class="caixa caixa-atencao" data-passo="4" style="position:absolute;left:820px;right:0;top:640px;padding:16px 28px">
+      <span class="rotulo">A Lua não é fonte primária</span>
+      <div class="texto" style="font-size:28px">Ela brilha muito, mas só <b>reflete a luz do Sol</b>.</div>
+    </div>
+  </div>
+  <aside class="notas">
+    <p>Abra com a pergunta da apostila: num quarto totalmente escuro, você vê a própria mão? Não: para enxergar, a luz tem de sair do objeto e chegar aos olhos.</p>
+    <p>Clique 1: a luz do Sol vai até a Lua e volta para os olhos (os pontinhos mostram o sentido). Clique 2: a vela produz luz (fonte primária). Clique 3: a Lua, o caderno e a mão só devolvem luz. Clique 4: a atenção da apostila.</p>
+  </aside>
+</section>
+
+<!-- 3. Meios -->
+<section class="slide" data-nome="Transparente, translúcido e opaco">
+  <div class="conteudo">
+    <p class="olho">Quando a luz encontra um material</p>
+    <h2 class="titulo">Transparente, translúcido ou opaco</h2>
+    <div data-anima="opt-fotons" style="position:absolute;left:0;right:0;top:150px;display:grid;grid-template-columns:repeat(3,1fr);gap:26px">
+      <div class="painel" data-passo="1">
+        <svg viewBox="0 0 520 220" width="100%" height="220" aria-hidden="true">
+          <rect x="230" y="20" width="44" height="180" rx="10" fill="#E0F4F4" stroke="#0F8B8D" stroke-width="3"/>
+          <path class="raio" d="M20 70 L500 70"/><path class="raio" d="M20 110 L500 110"/><path class="raio" d="M20 150 L500 150"/>
+        </svg>
+        <h3>Transparente</h3>
+        <p>A luz passa <b>organizada</b>: vemos nitidamente através dele.</p>
+        <p><span class="chip">ar</span><span class="chip">água limpa</span><span class="chip">vidro comum</span></p>
+      </div>
+      <div class="painel" data-passo="2">
+        <svg viewBox="0 0 520 220" width="100%" height="220" aria-hidden="true">
+          <rect x="230" y="20" width="44" height="180" rx="10" fill="#F1EEFD" stroke="#9C93C4" stroke-width="3"/>
+          <g fill="#C9C0F0"><circle cx="242" cy="50" r="5"/><circle cx="262" cy="90" r="6"/><circle cx="244" cy="130" r="5"/><circle cx="260" cy="170" r="6"/></g>
+          <path class="raio" d="M20 110 L252 110 L500 30"/><path class="raio" d="M20 70 L252 70 L500 150"/><path class="raio" d="M20 150 L252 150 L500 190"/><path class="raio" d="M20 150 L252 150 L500 80"/>
+        </svg>
+        <h3>Translúcido</h3>
+        <p>A luz passa, mas <b>espalhada</b>: só vemos vultos.</p>
+        <p><span class="chip">vidro fosco</span><span class="chip">papel vegetal</span><span class="chip">box do banheiro</span></p>
+      </div>
+      <div class="painel" data-passo="3">
+        <svg viewBox="0 0 520 220" width="100%" height="220" aria-hidden="true">
+          <rect x="230" y="20" width="44" height="180" rx="10" fill="#C9A27A" stroke="#8A5A33" stroke-width="3"/>
+          <path d="M240 50 q12 30 0 60 q-10 30 4 60" fill="none" stroke="#8A5A33" stroke-width="3"/>
+          <path class="raio" d="M20 70 L228 70"/><path class="raio" d="M20 110 L228 110"/><path class="raio" d="M20 150 L228 150"/>
+          <rect x="276" y="20" width="230" height="180" fill="#5E5A70" opacity=".12"/>
+        </svg>
+        <h3>Opaco</h3>
+        <p>A luz <b>não passa</b>.</p>
+        <p><span class="chip">madeira</span><span class="chip">parede</span><span class="chip">metal</span><span class="chip">o nosso corpo</span></p>
+      </div>
+    </div>
+    <div class="caixa caixa-fundamental" data-passo="4" style="position:absolute;left:580px;right:0;top:660px;padding:16px 28px">
+      <div class="texto" style="font-size:28px">No dia a dia: a <b>janela</b> é transparente (ver a rua), o <b>vidro do banheiro</b> é translúcido (luz com privacidade) e a <b>cortina blecaute</b> é opaca (escurece o quarto).</div>
+    </div>
+  </div>
+  <aside class="notas">
+    <p>Clique 1: no transparente, os raios atravessam alinhados. Clique 2: no translúcido, saem espalhados para vários lados. Clique 3: no opaco, param. Clique 4: os usos da apostila.</p>
+    <p>Pergunte antes de cada clique: dá para ler um cartaz através dele? Dá para ver a claridade?</p>
+  </aside>
+</section>
+
+<!-- 4. Propagação retilínea -->
+<section class="slide" data-nome="A luz anda em linha reta">
+  <div class="conteudo">
+    <p class="olho">Propagação retilínea</p>
+    <h2 class="titulo">A luz não faz curvas</h2>
+    <svg viewBox="0 0 760 450" width="760" height="450" style="position:absolute;left:0;top:140px;overflow:visible" aria-hidden="true">
+      <rect x="0" y="0" width="760" height="450" rx="34" fill="#2B2350"/>
+      <rect x="40" y="0" width="120" height="16" fill="#5B37AE"/>
+      <rect x="64" y="0" width="34" height="16" fill="#FFE680"/>
+      <g data-passo="1">
+        <path d="M64 16 L98 16 L700 430 L560 430 Z" fill="url(#opFeixe)" opacity=".75"/>
+        <ellipse cx="630" cy="432" rx="78" ry="12" fill="#FFE680" opacity=".6"/>
+        <g class="poeira" fill="#FFFFFF"><circle cx="160" cy="90" r="3"/><circle cx="210" cy="120" r="2.5"/><circle cx="260" cy="170" r="3"/><circle cx="300" cy="190" r="2"/><circle cx="350" cy="240" r="3"/><circle cx="390" cy="250" r="2.5"/><circle cx="440" cy="300" r="3"/><circle cx="480" cy="320" r="2"/><circle cx="530" cy="370" r="3"/><circle cx="580" cy="390" r="2.5"/><circle cx="235" cy="160" r="2"/><circle cx="420" cy="275" r="2"/></g>
+      </g>
+      <text x="100" y="56" text-anchor="start" class="rot" style="fill:#E4DEFB">fresta da janela</text>
+    </svg>
+    <div style="position:absolute;left:820px;right:0;top:150px;display:flex;flex-direction:column;gap:18px">
+      <p class="texto" data-passo="1" style="margin:0;font-size:30px">Num quarto escuro com poeira no ar, um raio de sol que entra pela fresta forma uma <b>faixa reta</b> e brilhante.</p>
+      <div class="caixa caixa-fundamental" data-passo="2" style="padding:18px 28px">
+        <span class="rotulo">Propagação retilínea</span>
+        <div class="texto" style="font-size:29px">Num meio <b>transparente e uniforme</b>, como o ar de uma sala, a luz se propaga em <b>linha reta</b>.</div>
+      </div>
+      <div class="linha-ex" data-passo="3" style="display:flex;align-items:center;gap:22px">
+        <svg viewBox="0 0 220 40" width="220" height="40" aria-hidden="true" style="flex:none"><path class="raio" d="M8 20 L200 20" marker-end="url(#opSeta)" style="stroke-width:6"/></svg>
+        <span><b>Raio de luz:</b> linha reta com uma seta no sentido da propagação.</span>
+      </div>
+    </div>
+  </div>
+  <aside class="notas">
+    <p>Clique 1: o feixe de sol pela fresta; a poeira brilha só dentro da faixa reta (é ela que espalha um pouco de luz para os nossos olhos e mostra o caminho). Clique 2: a definição. Clique 3: como desenhamos a luz daqui em diante.</p>
+  </aside>
+</section>
+
+<!-- 5. Sombra e penumbra -->
+<section class="slide" data-nome="Sombra e penumbra">
+  <div class="conteudo">
+    <p class="olho">Uma prova da linha reta</p>
+    <h2 class="titulo">Sombra e penumbra</h2>
+    <div data-anima="opt-sombra" style="position:absolute;left:0;top:140px;width:1000px;height:460px"></div>
+    <div style="position:absolute;left:1180px;right:0;top:150px;display:flex;flex-direction:column;gap:16px">
+      <div class="linha-ex" data-passo="1" style="font-size:27px">Os raios que batem no objeto opaco <b>não chegam</b> atrás dele. Como a luz anda em linha reta, a sombra tem o <b>contorno do objeto</b>.</div>
+      <div class="linha-ex" data-passo="2" style="font-size:27px"><b>Fonte pequena:</b> sombra de borda nítida.</div>
+      <div class="linha-ex" data-passo="3" style="font-size:27px"><b>Fonte grande:</b> em volta da sombra aparece a <b>penumbra</b>, onde chega luz de <b>só uma parte</b> da fonte.</div>
+    </div>
+    <div class="caixa caixa-atencao" data-passo="4" style="position:absolute;left:580px;right:0;top:680px;padding:16px 28px">
+      <div class="texto" style="font-size:28px">Por isso a sombra sob uma luminária de teto larga tem bordas borradas. Os <b>eclipses</b> são essas sombras em tamanho gigante: a da Lua sobre a Terra ou a da Terra sobre a Lua.</div>
+    </div>
+  </div>
+  <aside class="notas">
+    <p>A fonte de luz cresce e encolhe devagar. Pequena: quase só sombra, com borda nítida. Grande: a sombra (escura) diminui e aparece a penumbra (meio iluminada) em volta. As linhas amarelas são os raios que passam rente à bola, saindo das bordas da fonte: eles marcam onde começa a sombra e onde termina a penumbra.</p>
+    <p>Pergunte: num ponto da penumbra, você veria a fonte inteira, parte dela ou nada? (Parte dela.) Eclipses ficaram no capítulo Astronomia; aqui só a ideia.</p>
+  </aside>
+</section>
+
+<!-- 6. Exemplo: sombra no pátio -->
+<section class="slide" data-nome="Exemplo: sombra no pátio">
+  <div class="conteudo">
+    <p class="olho">Exemplo</p>
+    <h2 class="titulo">Sombra no pátio</h2>
+    <div style="position:absolute;left:0;width:760px;top:150px">
+      <p class="texto" style="margin:0;font-size:29px">Ao meio-dia, um poste de <b>6 m</b> faz uma sombra de <b>2 m</b>. No mesmo instante, um menino de <b>1,5 m</b> está ao lado. Qual é o tamanho da sombra dele?</p>
+      <svg viewBox="0 0 760 300" width="760" height="300" style="display:block;margin-top:8px;overflow:visible" aria-hidden="true">
+        <g data-passo="1" stroke="#E0A800" stroke-width="3.5" stroke-dasharray="10 8" fill="none"><path d="M209 -20 L302 260"/><path d="M427 -20 L520 260"/></g>
+        <line x1="0" y1="260" x2="740" y2="260" stroke="#C9C0F0" stroke-width="5" stroke-linecap="round"/>
+        <rect x="216" y="20" width="12" height="240" rx="4" fill="#5E5A70"/><rect x="204" y="14" width="36" height="12" rx="5" fill="#5E5A70"/>
+        <path d="M228 260 L302 260" stroke="#3B3550" stroke-width="12" stroke-linecap="round" opacity=".7"/>
+        <text x="196" y="150" text-anchor="end" class="rot" style="fill:#3F2FA0;font-weight:800">H = 6 m</text>
+        <text x="262" y="295" text-anchor="middle" class="rot">S = 2 m</text>
+        <g transform="translate(500 200)"><circle cx="0" cy="9" r="9" fill="#F3C9A6"/><path d="M-8 19 h16 v22 h-16 z" fill="var(--d)"/><path d="M-4 41 v19 M4 41 v19" stroke="#292B2C" stroke-width="4"/></g>
+        <path d="M506 260 L520 260" stroke="#3B3550" stroke-width="12" stroke-linecap="round" opacity=".7"/>
+        <text x="482" y="236" text-anchor="end" class="rot" style="fill:#3F2FA0;font-weight:800">h = 1,5 m</text>
+        <text x="540" y="295" text-anchor="start" class="rot">s = ?</text>
+      </svg>
+    </div>
+    <div style="position:absolute;left:880px;right:0;top:150px">
+      <p class="texto" data-passo="1" style="margin:0 0 16px;font-size:28px">Os raios do Sol chegam <b>paralelos</b>: altura e sombra formam triângulos de mesma forma, com a <b>mesma razão</b>.</p>
+      <div class="contas" style="font-size:40px;row-gap:8px">
+        <div class="eq" data-passo="2"><span>\(\dfrac{H}{S}\)</span><span>\(=\)</span><span>\(\dfrac{h}{s}\)</span></div>
+        <div class="eq" data-passo="3"><span>\(\dfrac{6}{2}\)</span><span>\(=\)</span><span>\(\dfrac{1{,}5}{s}\)</span></div>
+        <div class="eq" data-passo="4"><span>\(3\)</span><span>\(=\)</span><span>\(\dfrac{1{,}5}{s}\)</span></div>
+        <div class="eq" data-passo="5"><span>\(s\)</span><span>\(=\)</span><span>\(\dfrac{1{,}5}{3}\)</span></div>
+        <div class="eq final" data-passo="6"><span>\(s\)</span><span>\(=\)</span><span>\(0{,}5\ \text{m}\)</span></div>
+      </div>
+    </div>
+    <span class="pilula pilula-resposta" data-passo="7" style="position:absolute;right:0;top:770px">A sombra do menino mede 0,5 m</span>
+  </div>
+  <aside class="notas">
+    <p>Exemplo "Sombra no pátio" da apostila. Clique 1: os raios paralelos do Sol e a ideia da mesma razão. Cliques 2 a 6: a conta, uma linha por clique. Clique 7: a resposta.</p>
+    <p>Para conferir: o poste é 3 vezes maior que a sua sombra; o menino também (1,5 = 3 · 0,5). É a única conta desta parte e cai do mesmo jeito na questão 3.</p>
+  </aside>
+</section>
+
+<!-- Questão 1 -->
+<section class="slide questao" data-nome="Questão 1">
+  <div class="conteudo">
+    <div class="area-resolucao"></div>
+    <span class="pilula pilula-pausa" data-em="1:some">Pause o vídeo e tente</span>
+    <div class="painel-questao">
+      <p class="olho">Questão 1 · Modelo IF</p>
+      <p class="enunciado" style="font-size:25px">Numa noite de lua cheia em Juiz de Fora, Clara está no quintal de casa. Ela vê no céu a Lua e algumas estrelas. Em volta, vê a lâmpada acesa da varanda, o muro branco do vizinho e a chama de uma vela sobre a mesa. Para enxergar qualquer um desses corpos, é preciso que a luz saia dele e chegue aos olhos de Clara.</p>
+      <p class="enunciado" style="font-size:25px">Entre os corpos que Clara vê, são <b>fontes primárias</b> de luz apenas</p>
+      <ol class="alternativas">
+        <li data-em="2:apaga"><b>A</b><span>a Lua, as estrelas e a lâmpada acesa.</span></li>
+        <li data-em="2:certo"><b>B</b><span>as estrelas, a lâmpada acesa e a chama da vela.</span></li>
+        <li data-em="2:apaga"><b>C</b><span>a Lua, o muro branco e a chama da vela.</span></li>
+        <li data-em="2:apaga"><b>D</b><span>a lâmpada acesa e a chama da vela.</span></li>
+        <li data-em="2:apaga"><b>E</b><span>a Lua e o muro branco.</span></li>
+      </ol>
+    </div>
+  </div>
+  <aside class="resolucao">
+    <p class="dados"><b>Dados:</b> Lua, estrelas, lâmpada acesa, muro branco, chama da vela.</p>
+    <ol class="passos">
+      <li>Primária: produz a própria luz.</li>
+      <li>Estrelas, lâmpada acesa e vela: primárias.</li>
+      <li>Lua e muro só refletem: secundárias.</li>
+    </ol>
+    <p class="resposta"><b>Resposta:</b> estrelas, lâmpada e vela. <b>Gabarito B.</b></p>
+    <p class="atencao"><b>Destaque no quadro:</b> A Lua brilha, mas não tem luz própria.</p>
+    <ul class="erros">
+      <li><b>A</b> Põe a Lua, que só reflete a luz do Sol.</li>
+      <li><b>C</b> A Lua e o muro só devolvem a luz que recebem.</li>
+      <li><b>D</b> Esquece as estrelas, que são como o Sol.</li>
+      <li><b>E</b> Lista justamente as fontes secundárias.</li>
+    </ul>
+  </aside>
+  <aside class="notas">
+    <p>Clique 1 tira o aviso de pausa: resolva na área (D liga a caneta; E esconde o enunciado). Clique 2: gabarito B.</p>
+    <p>Modelo IF, lote if-fisica-cor, m011, FIS-8752 (está na apostila, 4.1).</p>
+  </aside>
+</section>
+
+<!-- Questão 2 -->
+<section class="slide questao" data-nome="Questão 2">
+  <div class="conteudo">
+    <div class="area-resolucao"></div>
+    <span class="pilula pilula-pausa" data-em="1:some">Pause o vídeo e tente</span>
+    <div class="painel-questao">
+      <p class="olho">Questão 2 · Modelo IF</p>
+      <p class="enunciado" style="font-size:24px">Numa aula de Ciências, a professora colocou um desenho colorido atrás de três objetos, um de cada vez, e apontou uma lanterna para cada um. Os alunos observaram:</p>
+      <p class="enunciado" style="font-size:24px">I. Através da parede de um aquário com água limpa, viram o desenho com nitidez.<br>II. Através de uma folha de papel vegetal, viram a claridade da lanterna e só um vulto do desenho.<br>III. Através de uma tábua de madeira, não viram a luz nem o desenho.</p>
+      <p class="enunciado" style="font-size:24px">Os materiais I, II e III se comportaram, respectivamente, como meios</p>
+      <ol class="alternativas">
+        <li data-em="2:apaga" style="font-size:23px;padding:6px 14px"><b>A</b><span>opaco, translúcido e transparente.</span></li>
+        <li data-em="2:apaga" style="font-size:23px;padding:6px 14px"><b>B</b><span>transparente, opaco e translúcido.</span></li>
+        <li data-em="2:apaga" style="font-size:23px;padding:6px 14px"><b>C</b><span>translúcido, translúcido e opaco.</span></li>
+        <li data-em="2:certo" style="font-size:23px;padding:6px 14px"><b>D</b><span>transparente, translúcido e opaco.</span></li>
+        <li data-em="2:apaga" style="font-size:23px;padding:6px 14px"><b>E</b><span>transparente, transparente e opaco.</span></li>
+      </ol>
+    </div>
+  </div>
+  <aside class="resolucao">
+    <p class="dados"><b>Dados:</b> aquário (nítido), papel vegetal (vulto), madeira (nada).</p>
+    <ol class="passos">
+      <li>I: vê com nitidez → transparente.</li>
+      <li>II: luz passa espalhada → translúcido.</li>
+      <li>III: luz não passa → opaco.</li>
+    </ol>
+    <p class="resposta"><b>Resposta:</b> transparente, translúcido e opaco. <b>Gabarito D.</b></p>
+    <p class="atencao"><b>Destaque no quadro:</b> Translúcido deixa passar luz, mas só se veem vultos.</p>
+    <ul class="erros">
+      <li><b>A</b> Inverte a ordem.</li>
+      <li><b>B</b> Troca translúcido e opaco.</li>
+      <li><b>C</b> O aquário com água limpa mostra o desenho nítido: é transparente.</li>
+      <li><b>E</b> Basta a luz passar? Não: no papel vegetal ela passa espalhada.</li>
+    </ul>
+  </aside>
+  <aside class="notas">
+    <p>Clique 1 tira o aviso de pausa: resolva na área (D liga a caneta; E esconde o enunciado). Clique 2: gabarito D.</p>
+    <p>Modelo IF, lote if-fisica-cor, m012, FIS-8753 (está na apostila, 4.1).</p>
+  </aside>
+</section>
+
+<!-- Questão 3 -->
+<section class="slide questao" data-nome="Questão 3">
+  <div class="conteudo">
+    <div class="area-resolucao"></div>
+    <span class="pilula pilula-pausa" data-em="1:some">Pause o vídeo e tente</span>
+    <div class="painel-questao">
+      <p class="olho">Questão 3 · Modelo IF</p>
+      <p class="enunciado" style="font-size:24px">Num fim de tarde de sol, alunos de uma escola de Juiz de Fora quiseram descobrir a altura de uma árvore do pátio sem subir nela. Eles fincaram no chão uma vara vertical de 1,2 m e mediram a sombra dela: 0,8 m. No mesmo instante, a sombra da árvore media 6,0 m.</p>
+      <p class="enunciado" style="font-size:24px">Considere que os raios de sol chegam paralelos e que a luz se propaga em linha reta. A altura da árvore é de</p>
+      <ol class="alternativas curtas">
+        <li data-em="2:apaga"><b>A</b><span>4,0 m</span></li>
+        <li data-em="2:apaga"><b>B</b><span>6,0 m</span></li>
+        <li data-em="2:apaga"><b>C</b><span>6,4 m</span></li>
+        <li data-em="2:apaga"><b>D</b><span>7,2 m</span></li>
+        <li data-em="2:certo"><b>E</b><span>9,0 m</span></li>
+      </ol>
+    </div>
+  </div>
+  <aside class="resolucao">
+    <p class="dados"><b>Dados:</b> \(h = 1{,}2\ \text{m}\), \(s = 0{,}8\ \text{m}\), \(S = 6{,}0\ \text{m}\).</p>
+    <ol class="passos">
+      <li>\(\dfrac{H}{S} = \dfrac{h}{s}\)</li>
+      <li>\(\dfrac{H}{6{,}0} = \dfrac{1{,}2}{0{,}8}\)</li>
+      <li>\(\dfrac{H}{6{,}0} = 1{,}5\)</li>
+      <li>\(H = 1{,}5 \cdot 6{,}0\)</li>
+      <li>\(H = 9{,}0\ \text{m}\)</li>
+    </ol>
+    <p class="resposta"><b>Resposta:</b> a árvore mede 9,0 m. <b>Gabarito E.</b></p>
+    <p class="atencao"><b>Destaque no quadro:</b> Mesma razão altura/sombra: a vara e a árvore são 1,5 vez a sombra.</p>
+    <ul class="erros">
+      <li><b>A</b> Inverte a razão (0,8/1,2).</li>
+      <li><b>B</b> Supõe altura igual à sombra.</li>
+      <li><b>C</b> Soma a diferença (6,0 + 0,4).</li>
+      <li><b>D</b> Faz 1,2 · 6,0 e esquece de dividir por 0,8.</li>
+    </ul>
+  </aside>
+  <aside class="notas">
+    <p>Clique 1 tira o aviso de pausa: resolva na área (D liga a caneta; E esconde o enunciado). Clique 2: gabarito E.</p>
+    <p>Modelo IF, lote if-fisica-cor, m013, FIS-8754 (está na apostila, 4.1). Mesma ideia do exemplo da sombra no pátio. Conta conferida: 1,2 ÷ 0,8 = 1,5; 1,5 · 6,0 = 9,0.</p>
+  </aside>
+</section>
+
+<!-- Resumo -->
+<section class="slide" data-nome="Resumo">
+  <div class="conteudo">
+    <p class="olho">Resumo</p>
+    <h2 class="titulo">O essencial</h2>
+    <div class="resumo" style="position:absolute;left:0;right:0;top:150px">
+      <div><b>Fonte primária</b> produz luz (Sol, estrelas, vela, lâmpada); <b>secundária</b> só reflete (Lua, objetos).</div>
+      <div><b>Transparente:</b> vemos nitidamente. <b>Translúcido:</b> a luz passa espalhada. <b>Opaco:</b> a luz não passa.</div>
+      <div>Num meio uniforme, a luz anda em <b>linha reta</b>: é isso que explica a sombra.</div>
+      <div><b>Fonte grande</b> produz sombra e <b>penumbra</b>; fonte pequena, sombra nítida.</div>
+    </div>
+    <div class="caixa caixa-atencao" style="position:absolute;left:580px;right:0;top:560px">
+      <div class="texto" style="font-size:30px">Sombras com o Sol: <b>mesma razão</b> entre altura e sombra, \(\dfrac{H}{S} = \dfrac{h}{s}\).</div>
+    </div>
+  </div>
+  <aside class="notas"><p>Peça para tirarem um print desta tela. Os dois últimos itens do resumo da apostila (cores) ficam na Parte 2.</p></aside>
+</section>
+
+<!-- A seguir -->
+<section class="slide capa" data-nome="A seguir">
+  <div class="estrelas"></div>
+  <div class="texto-capa" style="top:170px">
+    <span class="selo">Física · IF</span>
+    <p class="aula" style="font-size:26px">A seguir · Luz e cores · Parte 2 de 2</p>
+    <h1>A cor dos objetos</h1>
+    <p class="sub">Somar luzes e ver cores</p>
+  </div>
+  <svg class="emblema" viewBox="0 0 640 640" aria-hidden="true">
+    <g style="isolation:isolate">
+      <circle cx="320" cy="250" r="150" fill="#FF2E2E" style="mix-blend-mode:screen"/>
+      <circle cx="235" cy="395" r="150" fill="#2EE05A" style="mix-blend-mode:screen"/>
+      <circle cx="405" cy="395" r="150" fill="#3A5BFF" style="mix-blend-mode:screen"/>
+    </g>
+  </svg>
+  <img class="logo-capa" src="{{LOGO_BRANCO}}" alt="Quarks">
+  <aside class="notas"><p>Na Parte 2: as cores primárias da luz e por que a cor de um objeto depende da luz que o ilumina.</p></aside>
+</section>

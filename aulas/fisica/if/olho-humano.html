@@ -1,0 +1,448 @@
+<!--aula
+{"disciplina": "fisica", "curso": "IF", "assunto": "Óptica", "parte": "Parte única", "titulo": "O olho humano", "scripts": ["animacoes-optica.js"]}
+-->
+<!-- Fonte: apostila IF, Física, cap. 4 Óptica (4.4 O olho humano: "O olho humano", "Defeitos da visão e lentes corretivas", "Cuidados com a visão", exemplo "Que óculos usar?", atenções e o resumo). Questões: Modelo IF if-fisica-o-olho-humano m003 (FIS-8770), m005 (FIS-8772) e m007 (FIS-8774). A m004 (FIS-8771, presbiopia) fica reservada para o bloco do fim do capítulo. Esquemas em corte, fora de escala. -->
+<style>
+  .caixa, .painel, .linha-ex { box-sizing: border-box; }
+  .linha-ex { background: var(--branco); border: 2px solid var(--lilas-2); border-radius: 24px; padding: 14px 26px; font-size: 30px; line-height: 1.3; }
+  .linha-ex b { color: var(--roxo-titulo); }
+  .painel { background: var(--branco); border: 2px solid var(--lilas-2); border-radius: 30px; padding: 14px 22px; }
+  .painel h3 { margin: 0 0 2px; font: 800 32px var(--fonte-titulo); letter-spacing: -.02em; color: var(--roxo-titulo); }
+  .painel p { margin: 4px 0 0; font-size: 24px; line-height: 1.3; }
+  .painel svg { display: block; }
+  .rot { font-family: Figtree, 'Segoe UI', sans-serif; font-weight: 700; font-size: 24px; fill: #5E5A70; }
+  .rot-p { font-family: Figtree, 'Segoe UI', sans-serif; font-weight: 800; font-size: 25px; fill: #3F2FA0; }
+  .guia { stroke: #9C93C4; stroke-width: 2.5; fill: none; }
+  .raio { fill: none; stroke: #E0A800; stroke-width: 4.5; stroke-linecap: round; stroke-linejoin: round; }
+  .prolonga { fill: none; stroke: #B08600; stroke-width: 3; stroke-dasharray: 8 7; }
+  .globo { fill: #FFF8F2; stroke: #5E5A70; stroke-width: 5; }
+  .cornea { fill: #E0F4F4; stroke: #5E5A70; stroke-width: 4; }
+  .cristal { fill: rgba(15,139,141,.22); stroke: #0B6B6D; stroke-width: 3.5; }
+  .retina { fill: none; stroke: #E5737A; stroke-width: 9; stroke-linecap: round; }
+  .oculos { fill: rgba(63,47,160,.12); stroke: #3F2FA0; stroke-width: 4; }
+  .tabela.op { font-size: 27px; }
+  .tabela.op th, .tabela.op td { padding: 10px 24px; text-align: left; }
+  .tabela.op td:first-child { font-weight: 800; color: var(--roxo-titulo); }
+  .cuidados { display: grid; grid-template-columns: 1fr 1fr; gap: 14px 24px; }
+  .cuidados > div { display: grid; grid-template-columns: 64px 1fr; gap: 14px; align-items: center; background: var(--branco); border: 2px solid var(--lilas-2); border-radius: 22px; padding: 10px 18px; font-size: 25px; line-height: 1.28; }
+  .cuidados svg { width: 64px; height: 52px; }
+  .cuidados b { color: var(--roxo-titulo); }
+  .painel-questao .figura { display: block; margin: 0 auto; }
+  /* correção: os raios sem óculos somem e entram os com óculos */
+  .com, .lente-oc { opacity: 0; transition: opacity 1.2s ease; }
+  .sem { transition: opacity 1.2s ease; }
+  .corrige .sem { opacity: 0; } .corrige .com, .corrige .lente-oc { opacity: 1; }
+  /* pupila: com muita luz fecha, no escuro abre (8 s por volta) */
+  @keyframes pupila { 0%, 38% { r: 20px; } 50%, 88% { r: 46px; } 100% { r: 20px; } }
+  @keyframes ambiente { 0%, 38% { fill: #FFF4C2; } 50%, 88% { fill: #2B2350; } 100% { fill: #FFF4C2; } }
+  @keyframes rotClaro { 0%, 38% { opacity: 1; } 44%, 94% { opacity: 0; } 100% { opacity: 1; } }
+  @keyframes rotEscuro { 0%, 44% { opacity: 0; } 50%, 88% { opacity: 1; } 94%, 100% { opacity: 0; } }
+  .pupila { r: 20px; }
+  .ambiente { fill: #FFF4C2; }
+  .r-escuro { opacity: 0; }
+  .slide.ativo .mostra .pupila { animation: pupila 8s ease-in-out infinite; }
+  .slide.ativo .mostra .ambiente { animation: ambiente 8s ease-in-out infinite; }
+  .slide.ativo .mostra .r-claro { animation: rotClaro 8s ease-in-out infinite; }
+  .slide.ativo .mostra .r-escuro { animation: rotEscuro 8s ease-in-out infinite; }
+</style>
+
+<!-- 1. Capa -->
+<section class="slide capa" data-nome="Capa">
+  <div class="estrelas"></div>
+  <div class="texto-capa">
+    <span class="selo">Física · IF</span>
+    <p class="aula">Óptica</p>
+    <h1>O olho humano</h1>
+    <p class="sub">Como enxergamos e como cuidar</p>
+  </div>
+  <svg class="emblema" viewBox="0 0 640 640" aria-hidden="true">
+    <g class="gira-lento"><ellipse cx="320" cy="320" rx="300" ry="128" fill="none" stroke="#fff" stroke-opacity=".38" stroke-width="2" transform="rotate(-10 320 320)"/></g>
+    <path d="M60 320 Q320 90 580 320 Q320 550 60 320 Z" fill="#fff" opacity=".95"/>
+    <circle cx="320" cy="320" r="120" fill="#FFD10C"/><circle cx="320" cy="320" r="56" fill="#2A1B5E"/><circle cx="292" cy="292" r="16" fill="#fff"/>
+  </svg>
+  <img class="logo-capa" src="{{LOGO_BRANCO}}" alt="Quarks">
+  <aside class="notas">
+    <p>Parte única de O olho humano, último subcapítulo de Óptica: como o olho forma a imagem, o papel do cérebro, os defeitos da visão e as lentes que corrigem, e os cuidados com a visão. Da apostila IF, cap. 4, 4.4. Depois vem o bloco de questões do IF do capítulo.</p>
+  </aside>
+</section>
+
+<!-- 2. O caminho da luz no olho -->
+<section class="slide" data-nome="Partes do olho">
+  <div class="conteudo">
+    <p class="olho">Como o olho forma a imagem</p>
+    <h2 class="titulo">O caminho da luz no olho</h2>
+    <svg viewBox="0 0 830 470" width="830" height="470" style="position:absolute;left:0;top:130px;overflow:visible" aria-hidden="true" data-anima="opt-fotons">
+      <path d="M726 250 L820 300" stroke="#F2C6A0" stroke-width="30" stroke-linecap="round"/>
+      <ellipse class="globo" cx="480" cy="230" rx="250" ry="200"/>
+      <path class="cornea" d="M252 120 Q190 230 252 340 Z"/>
+      <path d="M262 108 V182 M262 278 V352" stroke="#3F7F6E" stroke-width="12" stroke-linecap="round"/>
+      <ellipse class="cristal" cx="290" cy="230" rx="20" ry="62"/>
+      <path class="retina" d="M700 90 Q745 230 700 370"/>
+      <!-- objeto e imagem -->
+      <path d="M20 230 V188" stroke="#3F2FA0" stroke-width="7" stroke-linecap="round"/><path d="M20 178 l-11 18 h22 z" fill="#3F2FA0"/>
+      <g data-passo="3">
+        <path class="raio" d="M20 180 L290 230 L716 309"/>
+        <path class="raio" d="M20 180 L290 190 L716 309"/>
+        <path class="raio" d="M20 180 L290 266 L716 309"/>
+        <path d="M716 230 V300" stroke="#D6336C" stroke-width="6" stroke-linecap="round"/><path d="M716 312 l-9 -15 h18 z" fill="#D6336C"/>
+      </g>
+      <g data-passo="1"><path class="guia" d="M215 170 L150 70"/><text x="150" y="58" text-anchor="middle" class="rot-p">córnea</text></g>
+      <g data-passo="2"><path class="guia" d="M264 104 L330 22"/><text x="336" y="22" class="rot-p">íris e pupila</text></g>
+      <g data-passo="3"><path class="guia" d="M300 290 L252 432"/><text x="240" y="454" text-anchor="end" class="rot-p">cristalino</text></g>
+      <g data-passo="4"><path class="guia" d="M716 120 L760 60"/><text x="760" y="48" text-anchor="middle" class="rot-p">retina</text></g>
+      <g data-passo="5"><text x="800" y="356" text-anchor="middle" class="rot-p">nervo óptico</text></g>
+    </svg>
+    <div style="position:absolute;left:900px;right:0;top:140px;display:flex;flex-direction:column;gap:11px">
+      <div class="linha-ex" data-passo="1" style="font-size:24px;padding:10px 22px"><b>Córnea:</b> a "janela" transparente da frente; já começa a desviar a luz.</div>
+      <div class="linha-ex" data-passo="2" style="font-size:24px;padding:10px 22px"><b>Íris:</b> a parte colorida. No centro, a <b>pupila</b>, a abertura por onde a luz entra.</div>
+      <div class="linha-ex" data-passo="3" style="font-size:24px;padding:10px 22px"><b>Cristalino:</b> lente convergente natural; <b>muda de forma</b> para focalizar perto ou longe.</div>
+      <div class="linha-ex" data-passo="4" style="font-size:24px;padding:10px 22px"><b>Retina:</b> o fundo do olho, com células sensíveis à luz; a imagem se forma ali, <b>de cabeça para baixo</b>.</div>
+      <div class="linha-ex" data-passo="5" style="font-size:24px;padding:10px 22px"><b>Nervo óptico:</b> leva os sinais da retina até o cérebro.</div>
+    </div>
+  </div>
+  <aside class="notas">
+    <p>Esquema em corte, fora de escala. Uma parte por clique, na ordem do caminho da luz. Clique 3: os raios que saem da ponta da seta (o objeto) atravessam o cristalino e se juntam na retina, abaixo do eixo: a imagem (rosa) fica invertida e menor.</p>
+    <p>Liga com a Parte 2 de Lentes: o cristalino faz o papel da lente da câmera, a íris o do diafragma e a retina o do sensor.</p>
+  </aside>
+</section>
+
+<!-- 3. Pupila e cérebro -->
+<section class="slide" data-nome="Pupila e cérebro">
+  <div class="conteudo">
+    <p class="olho">Quem vê é o cérebro</p>
+    <h2 class="titulo">Olho e cérebro trabalham juntos</h2>
+    <svg viewBox="0 0 640 400" width="640" height="400" style="position:absolute;left:0;top:150px;overflow:visible" aria-hidden="true">
+      <g data-passo="1">
+        <rect class="ambiente" x="0" y="0" width="640" height="400" rx="34"/>
+        <path d="M70 200 Q320 30 570 200 Q320 370 70 200 Z" fill="#fff" stroke="#5E5A70" stroke-width="5"/>
+        <circle cx="320" cy="200" r="96" fill="#3F7F6E"/>
+        <circle cx="320" cy="200" r="96" fill="none" stroke="#2C5E51" stroke-width="6" stroke-dasharray="3 9"/>
+        <circle class="pupila" cx="320" cy="200" fill="#0E0B16"/>
+        <circle cx="294" cy="172" r="12" fill="#fff" opacity=".9"/>
+        <text class="r-claro" x="320" y="370" text-anchor="middle" style="font-family:Figtree,sans-serif;font-weight:800;font-size:28px;fill:#8A6A00">muita luz: a pupila se fecha</text>
+        <text class="r-escuro" x="320" y="370" text-anchor="middle" style="font-family:Figtree,sans-serif;font-weight:800;font-size:28px;fill:#FFE680">no escuro: a pupila se abre</text>
+      </g>
+    </svg>
+    <div style="position:absolute;left:720px;right:0;top:150px;display:flex;flex-direction:column;gap:16px">
+      <div class="caixa caixa-fundamental" data-passo="2" style="padding:16px 26px">
+        <span class="rotulo">Quem vê é o cérebro</span>
+        <div class="texto" style="font-size:27px">O olho forma a imagem na retina, e o cérebro a <b>interpreta</b>: desvira, junta as informações dos dois olhos, reconhece formas, cores e distâncias.</div>
+      </div>
+      <div class="caixa caixa-atencao" data-passo="3" style="padding:16px 26px">
+        <span class="rotulo">Imagem invertida</span>
+        <div class="texto" style="font-size:27px">A imagem na retina é invertida, mas não vemos o mundo de cabeça para baixo: o <b>cérebro corrige</b> isso sozinho.</div>
+      </div>
+      <div class="linha-ex" data-passo="4" style="font-size:26px">A visão é um dos principais jeitos de interagir com o ambiente: perceber um <b>perigo</b>, reconhecer pessoas, ler, praticar esporte, atravessar a rua.</div>
+    </div>
+  </div>
+  <aside class="notas">
+    <p>Clique 1: a pupila diante da claridade e do escuro (ela se fecha com muita luz e se abre no escuro, devagar). Peça para a turma reparar no colega: ao sair do sol para a sala, a pupila se abre. Cliques 2 a 4: o papel do cérebro, a atenção da imagem invertida e a importância da visão (palavras da apostila).</p>
+  </aside>
+</section>
+
+<!-- 4. Imagem antes ou depois da retina -->
+<section class="slide" data-nome="Miopia e hipermetropia">
+  <div class="conteudo">
+    <p class="olho">Defeitos da visão</p>
+    <h2 class="titulo">A imagem tem de cair sobre a retina</h2>
+    <div data-anima="opt-fotons" style="position:absolute;left:0;right:0;top:150px;display:grid;grid-template-columns:repeat(3,1fr);gap:22px">
+      <div class="painel">
+        <svg viewBox="0 0 700 300" width="100%" height="230" aria-hidden="true">
+          <ellipse class="globo" cx="430" cy="150" rx="225" ry="120"/><path class="cornea" d="M215 90 Q178 150 215 210 Z"/><ellipse class="cristal" cx="245" cy="150" rx="16" ry="50"/><path class="retina" d="M640 62 Q660 150 640 238"/>
+          <path class="raio" d="M10 110 L245 110 L650 150"/><path class="raio" d="M10 190 L245 190 L650 150"/>
+        </svg>
+        <h3>Normal</h3><p>Imagem <b>sobre</b> a retina: nítida.</p>
+      </div>
+      <div class="painel" data-passo="1">
+        <svg viewBox="0 0 700 300" width="100%" height="230" aria-hidden="true">
+          <ellipse class="globo" cx="430" cy="150" rx="225" ry="120"/><path class="cornea" d="M215 90 Q178 150 215 210 Z"/><ellipse class="cristal" cx="245" cy="150" rx="16" ry="50"/><path class="retina" d="M640 62 Q660 150 640 238"/>
+          <path class="raio" d="M10 110 L245 110 L650 161.3"/><path class="raio" d="M10 190 L245 190 L650 138.7"/>
+          <circle cx="560" cy="150" r="8" fill="#D6336C"/>
+        </svg>
+        <h3>Miopia</h3><p>Imagem <b>antes</b> da retina: vê mal <b>de longe</b>.</p>
+      </div>
+      <div class="painel" data-passo="2">
+        <svg viewBox="0 0 700 300" width="100%" height="230" aria-hidden="true">
+          <ellipse class="globo" cx="430" cy="150" rx="225" ry="120"/><path class="cornea" d="M215 90 Q178 150 215 210 Z"/><ellipse class="cristal" cx="245" cy="150" rx="16" ry="50"/><path class="retina" d="M640 62 Q660 150 640 238"/>
+          <path class="raio" d="M10 110 L245 110 L650 142.8"/><path class="raio" d="M10 190 L245 190 L650 157.2"/>
+          <path class="prolonga" d="M650 142.8 L690 146 M650 157.2 L690 154"/><circle cx="690" cy="150" r="8" fill="#D6336C"/>
+        </svg>
+        <h3>Hipermetropia</h3><p>Imagem <b>depois</b> da retina: vê mal <b>de perto</b>.</p>
+      </div>
+    </div>
+    <div class="caixa caixa-fundamental" data-passo="3" style="position:absolute;left:580px;right:0;top:620px;padding:14px 26px">
+      <div class="texto" style="font-size:27px">Quando a imagem se forma <b>antes</b> ou <b>depois</b> da retina, chega nela uma mancha: a visão fica <b>embaçada</b>.</div>
+    </div>
+  </div>
+  <aside class="notas">
+    <p>Os três olhos recebem luz de um objeto distante (raios paralelos). Normal: os raios se juntam na retina. Clique 1: na miopia, se juntam antes (ponto rosa) e chegam à retina já separados. Clique 2: na hipermetropia, chegariam a se juntar depois da retina (tracejado). Clique 3: a regra da apostila.</p>
+    <p>A hipermetropia aparece aqui com a luz de longe, como na figura da apostila; o efeito maior é na visão de perto (é o que a tabela do próximo slide diz).</p>
+  </aside>
+</section>
+
+<!-- 5. Tabela dos defeitos -->
+<section class="slide" data-nome="Defeitos e lentes">
+  <div class="conteudo">
+    <p class="olho">Defeitos da visão</p>
+    <h2 class="titulo">Cada defeito tem a sua lente</h2>
+    <table class="tabela op" style="position:absolute;left:0;top:150px;width:1760px">
+      <tr><th>Defeito</th><th>O que acontece</th><th>Lente que corrige</th></tr>
+      <tr data-passo="1"><td>Miopia</td><td>vê mal de longe; imagem antes da retina</td><td>divergente</td></tr>
+      <tr data-passo="2"><td>Hipermetropia</td><td>vê mal de perto; imagem depois da retina</td><td>convergente</td></tr>
+      <tr data-passo="3"><td>Presbiopia (vista cansada)</td><td>com a idade, o cristalino endurece; difícil focalizar de perto</td><td>convergente</td></tr>
+      <tr data-passo="4"><td>Astigmatismo</td><td>córnea irregular; imagem distorcida, perto e longe</td><td>cilíndrica</td></tr>
+    </table>
+    <div class="caixa caixa-atencao" data-passo="5" style="position:absolute;left:580px;right:0;top:600px;padding:14px 26px">
+      <div class="texto" style="font-size:27px">Presbiopia vem <b>com a idade</b> (o cristalino endurece); em adolescente, quem vê mal de perto provavelmente tem <b>hipermetropia</b>.</div>
+    </div>
+  </div>
+  <aside class="notas">
+    <p>A tabela da apostila, uma linha por clique. Para guardar: miopia, imagem antes, lente divergente; hipermetropia e presbiopia, lente convergente; astigmatismo, cilíndrica.</p>
+    <p>Clique 5: a ideia que separa presbiopia de hipermetropia (cai em questão com a idade da pessoa). Só o oftalmologista confirma o diagnóstico.</p>
+  </aside>
+</section>
+
+<!-- 6. Lentes corretivas -->
+<section class="slide" data-nome="Lentes corretivas">
+  <div class="conteudo">
+    <p class="olho">Lentes corretivas</p>
+    <h2 class="titulo">Os óculos levam a imagem até a retina</h2>
+    <div style="position:absolute;left:0;right:0;top:150px;display:grid;grid-template-columns:1fr 1fr;gap:28px">
+      <div class="painel" data-em="1:corrige">
+        <svg viewBox="0 0 700 300" width="100%" height="260" aria-hidden="true">
+          <ellipse class="globo" cx="430" cy="150" rx="225" ry="120"/><path class="cornea" d="M215 90 Q178 150 215 210 Z"/><ellipse class="cristal" cx="245" cy="150" rx="16" ry="50"/><path class="retina" d="M640 62 Q660 150 640 238"/>
+          <g class="sem"><path class="raio" d="M10 110 L245 110 L650 161.3"/><path class="raio" d="M10 190 L245 190 L650 138.7"/><circle cx="560" cy="150" r="8" fill="#D6336C"/></g>
+          <path class="oculos lente-oc" d="M96 60 H126 Q112 150 126 240 H96 Q110 150 96 60 Z"/>
+          <g class="com"><path class="raio" d="M10 110 L111 110 L245 98 L650 150"/><path class="raio" d="M10 190 L111 190 L245 202 L650 150"/><circle cx="650" cy="150" r="8" fill="#1F9D62"/></g>
+        </svg>
+        <h3>Miopia: lente divergente</h3>
+        <p>O olho junta a luz <b>cedo demais</b>. A divergente espalha um pouco os raios, e a imagem passa a se formar <b>sobre a retina</b>.</p>
+      </div>
+      <div class="painel" data-em="2:corrige">
+        <svg viewBox="0 0 700 300" width="100%" height="260" aria-hidden="true">
+          <ellipse class="globo" cx="430" cy="150" rx="225" ry="120"/><path class="cornea" d="M215 90 Q178 150 215 210 Z"/><ellipse class="cristal" cx="245" cy="150" rx="16" ry="50"/><path class="retina" d="M640 62 Q660 150 640 238"/>
+          <g class="sem"><path class="raio" d="M10 110 L245 110 L650 142.8"/><path class="raio" d="M10 190 L245 190 L650 157.2"/><path class="prolonga" d="M650 142.8 L690 146 M650 157.2 L690 154"/><circle cx="690" cy="150" r="8" fill="#D6336C"/></g>
+          <path class="oculos lente-oc" d="M111 60 Q140 150 111 240 Q82 150 111 60 Z"/>
+          <g class="com"><path class="raio" d="M10 110 L111 110 L245 118 L650 150"/><path class="raio" d="M10 190 L111 190 L245 182 L650 150"/><circle cx="650" cy="150" r="8" fill="#1F9D62"/></g>
+        </svg>
+        <h3>Hipermetropia: lente convergente</h3>
+        <p>O olho junta a luz <b>tarde demais</b>. A convergente ajuda a juntá-la <b>antes</b>, e a imagem cai na retina.</p>
+      </div>
+    </div>
+  </div>
+  <aside class="notas">
+    <p>Clique 1: os óculos de lente divergente aparecem na frente do olho míope; os raios saem um pouco abertos e o ponto de encontro vai para a retina (verde). Clique 2: a lente convergente na hipermetropia; os raios saem um pouco fechados e o encontro vem para a retina. Esquemas fora de escala.</p>
+  </aside>
+</section>
+
+<!-- 7. Exemplo: que óculos usar? -->
+<section class="slide" data-nome="Exemplo: que óculos usar?">
+  <div class="conteudo">
+    <p class="olho">Exemplo</p>
+    <h2 class="titulo">Que óculos usar?</h2>
+    <p class="texto" style="position:absolute;left:0;right:0;top:150px;margin:0;font-size:30px">Joana enxerga bem o livro, mas não consegue ler o quadro do fundo da sala. Qual defeito ela pode ter e que lente corrige?</p>
+    <div style="position:absolute;left:0;width:1100px;top:290px;display:flex;flex-direction:column;gap:18px">
+      <div class="linha-ex" data-passo="1" style="font-size:28px"><b>Raciocínio:</b> quem vê bem de perto e mal de longe tem a imagem dos objetos distantes formada <b>antes da retina</b>.</div>
+      <div class="linha-ex" data-passo="2" style="font-size:28px">Isso é <b>miopia</b>, corrigida com lente <b>divergente</b>.</div>
+    </div>
+    <span class="pilula pilula-resposta" data-passo="3" style="position:absolute;right:0;top:560px">Miopia; lente divergente</span>
+    <p class="texto" data-passo="3" style="position:absolute;right:0;top:650px;margin:0;font-size:24px;color:var(--cinza)">Só o oftalmologista confirma o diagnóstico.</p>
+  </div>
+  <aside class="notas"><p>Exemplo "Que óculos usar?" da apostila. Peça a resposta antes do clique 1.</p></aside>
+</section>
+
+<!-- 8. Cuidados com a visão -->
+<section class="slide" data-nome="Cuidados com a visão">
+  <div class="conteudo">
+    <p class="olho">Saúde visual</p>
+    <h2 class="titulo">Cuidados com a visão</h2>
+    <div class="cuidados" style="position:absolute;left:0;right:0;top:150px">
+      <div data-passo="1"><svg viewBox="0 0 64 52" aria-hidden="true"><circle cx="32" cy="26" r="16" fill="#FFD10C"/><path d="M8 46 L56 6" stroke="#C2384F" stroke-width="6" stroke-linecap="round"/></svg><span><b>Nunca olhe direto para o Sol</b>, nem no eclipse, nem com binóculo, luneta ou óculos escuros comuns: a luz concentrada queima a retina.</span></div>
+      <div data-passo="2"><svg viewBox="0 0 64 52" aria-hidden="true"><circle cx="18" cy="28" r="13" fill="#3F2FA0"/><circle cx="46" cy="28" r="13" fill="#3F2FA0"/><path d="M31 26 q1 -4 2 0" stroke="#3F2FA0" stroke-width="4" fill="none"/><text x="32" y="12" text-anchor="middle" font-family="Figtree,sans-serif" font-weight="800" font-size="12" fill="#1F9D62">UV</text></svg><span>Use óculos de sol com <b>proteção contra radiação ultravioleta</b>.</span></div>
+      <div data-passo="3"><svg viewBox="0 0 64 52" aria-hidden="true"><path d="M20 6 h24 l-6 16 h-12 z" fill="#FFD10C"/><path d="M14 46 h36 v-8 h-36 z" fill="#C9C0F0"/><path d="M22 24 L14 38 M42 24 L50 38" stroke="#FFE680" stroke-width="3"/></svg><span>Leia e estude com <b>boa iluminação</b>.</span></div>
+      <div data-passo="4"><svg viewBox="0 0 64 52" aria-hidden="true"><rect x="4" y="8" width="34" height="24" rx="4" fill="#5E5A70"/><path d="M42 20 H60" stroke="#0F8B8D" stroke-width="4" stroke-dasharray="4 4"/><path d="M54 14 L60 20 L54 26" stroke="#0F8B8D" stroke-width="4" fill="none"/></svg><span>Nas telas, faça <b>pausas</b> e olhe para longe de vez em quando, para o cristalino relaxar.</span></div>
+      <div data-passo="5"><svg viewBox="0 0 64 52" aria-hidden="true"><rect x="4" y="20" width="26" height="10" rx="4" fill="#5E5A70"/><path d="M30 25 L56 25" stroke="#C2384F" stroke-width="3"/><path d="M8 46 L56 6" stroke="#C2384F" stroke-width="5" stroke-linecap="round"/></svg><span><b>Não aponte lasers</b> para os olhos de ninguém.</span></div>
+      <div data-passo="6"><svg viewBox="0 0 64 52" aria-hidden="true"><rect x="6" y="4" width="52" height="44" rx="6" fill="#fff" stroke="#5E5A70" stroke-width="3"/><text x="32" y="22" text-anchor="middle" font-family="Figtree,sans-serif" font-weight="800" font-size="14" fill="#292B2C">E</text><text x="32" y="38" text-anchor="middle" font-family="Figtree,sans-serif" font-weight="800" font-size="9" fill="#292B2C">F P</text></svg><span>Consulte um <b>oftalmologista</b> se a visão embaçar, se tiver dor de cabeça ao ler ou dificuldade para ver o quadro.</span></div>
+    </div>
+    <div class="caixa caixa-atencao" data-passo="7" style="position:absolute;left:580px;right:0;top:640px;padding:14px 26px">
+      <span class="rotulo">Óculos escuros sem proteção</span>
+      <div class="texto" style="font-size:26px">Escurecem a vista, a <b>pupila se abre</b> e entra <b>mais</b> radiação prejudicial no olho.</div>
+    </div>
+  </div>
+  <aside class="notas">
+    <p>Os hábitos da apostila, um por clique. Os olhos são sensíveis e, em muitos casos, um dano não tem volta. Clique 7: a atenção da apostila, que liga com a pupila (no escuro ela se abre).</p>
+  </aside>
+</section>
+
+<!-- Questão 1 -->
+<section class="slide questao" data-nome="Questão 1">
+  <div class="conteudo">
+    <div class="area-resolucao"></div>
+    <span class="pilula pilula-pausa" data-em="1:some">Pause o vídeo e tente</span>
+    <div class="painel-questao">
+      <p class="olho">Questão 1 · Modelo IF</p>
+      <p class="enunciado" style="font-size:23px">A visão nos ajuda a atravessar a rua, ler, reconhecer pessoas e perceber perigos. Depois de uma aula sobre o olho humano, três estudantes resumiram o que aprenderam:</p>
+      <p class="enunciado" style="font-size:23px">I. A imagem que se forma no fundo do olho é invertida, mas não vemos o mundo de cabeça para baixo, porque o cérebro interpreta a imagem.<br>II. O cristalino é uma lente convergente natural que muda de forma para focalizar objetos perto ou longe.<br>III. A imagem se forma no nervo óptico, e a retina apenas leva os sinais até o cérebro.</p>
+      <p class="enunciado" style="font-size:23px">Está <b>CORRETO</b> o que se afirma em</p>
+      <ol class="alternativas curtas">
+        <li data-em="2:apaga"><b>A</b><span>I, apenas</span></li>
+        <li data-em="2:apaga"><b>B</b><span>III, apenas</span></li>
+        <li data-em="2:apaga"><b>C</b><span>I e III, apenas</span></li>
+        <li data-em="2:certo"><b>D</b><span>I e II, apenas</span></li>
+        <li data-em="2:apaga"><b>E</b><span>I, II e III</span></li>
+      </ol>
+    </div>
+  </div>
+  <aside class="resolucao">
+    <p class="dados"><b>Dados:</b> três frases sobre o olho.</p>
+    <ol class="passos">
+      <li><b>I</b> Imagem invertida, o cérebro interpreta: V.</li>
+      <li><b>II</b> Cristalino: convergente que muda de forma: V.</li>
+      <li><b>III</b> A imagem se forma na retina: F.</li>
+    </ol>
+    <p class="resposta"><b>Resposta:</b> I e II. <b>Gabarito D.</b></p>
+    <p class="atencao"><b>Destaque no quadro:</b> Retina forma a imagem; nervo óptico leva o sinal.</p>
+    <ul class="erros">
+      <li><b>A</b> Esquece a II.</li>
+      <li><b>B</b> A III é justamente a falsa.</li>
+      <li><b>C</b> Aceita a III e esquece a II.</li>
+      <li><b>E</b> Aceita a III.</li>
+    </ul>
+  </aside>
+  <aside class="notas">
+    <p>Clique 1 tira o aviso de pausa: resolva na área (D liga a caneta; E esconde o enunciado). Clique 2: gabarito D.</p>
+    <p>Modelo IF, lote if-fisica-o-olho-humano, m003, FIS-8770 (está na apostila, 4.4).</p>
+  </aside>
+</section>
+
+<!-- Questão 2 -->
+<section class="slide questao" data-nome="Questão 2">
+  <div class="conteudo">
+    <div class="area-resolucao"></div>
+    <span class="pilula pilula-pausa" data-em="1:some">Pause o vídeo e tente</span>
+    <div class="painel-questao" style="gap:10px">
+      <p class="olho">Questão 2 · Modelo IF</p>
+      <p class="enunciado" style="font-size:21px;line-height:1.32">Durante uma consulta, a oftalmologista mostrou a Bia um esquema de como a luz se comporta dentro do olho dela. Para um objeto bem distante, os raios de luz que atravessam o cristalino se juntam no ponto P, indicado na figura.</p>
+      <svg viewBox="0 0 640 370" width="440" height="254" class="figura" aria-hidden="true">
+        <ellipse cx="390" cy="185" rx="250" ry="155" fill="#FAF6EF" stroke="#292B2C" stroke-width="5"/>
+        <ellipse cx="155" cy="185" rx="18" ry="58" fill="#D3E4F3" stroke="#292B2C" stroke-width="4"/>
+        <path d="M628 130 V245" stroke="#E04E1A" stroke-width="9"/>
+        <path d="M10 135 L155 135 L470 185 L628 210 M10 235 L155 235 L470 185 L628 160" fill="none" stroke="#E0A800" stroke-width="5"/>
+        <circle cx="470" cy="185" r="9" fill="#292B2C"/>
+        <g font-family="Figtree,sans-serif" font-size="22" fill="#292B2C"><text x="470" y="160" text-anchor="middle" font-weight="800" font-size="26">P</text><text x="10" y="60">luz de um objeto</text><text x="10" y="84">bem distante</text><text x="120" y="290" text-anchor="middle">cristalino</text><text x="636" y="278" text-anchor="end">retina</text></g>
+      </svg>
+      <p class="enunciado" style="font-size:21px;line-height:1.32">Com base no esquema, é <b>CORRETO</b> afirmar que Bia</p>
+      <ol class="alternativas" style="gap:7px">
+        <li data-em="2:apaga" style="font-size:19px;padding:5px 12px"><b>A</b><span>tem hipermetropia e precisa de óculos com lente convergente.</span></li>
+        <li data-em="2:apaga" style="font-size:19px;padding:5px 12px"><b>B</b><span>tem miopia, enxerga mal de perto e precisa de óculos com lente convergente.</span></li>
+        <li data-em="2:apaga" style="font-size:19px;padding:5px 12px"><b>C</b><span>tem hipermetropia, porque a imagem se forma depois da retina, e precisa de lente divergente.</span></li>
+        <li data-em="2:apaga" style="font-size:19px;padding:5px 12px"><b>D</b><span>enxerga bem, porque a imagem formada em P já está dentro do olho.</span></li>
+        <li data-em="2:certo" style="font-size:19px;padding:5px 12px"><b>E</b><span>tem miopia, enxerga mal de longe e precisa de óculos com lente divergente.</span></li>
+      </ol>
+    </div>
+  </div>
+  <aside class="resolucao">
+    <p class="dados"><b>Dados:</b> luz de objeto distante se junta em P, antes da retina.</p>
+    <ol class="passos">
+      <li>Visão nítida: imagem sobre a retina.</li>
+      <li>P antes da retina: miopia (vê mal de longe).</li>
+      <li>Correção: lente divergente.</li>
+    </ol>
+    <p class="resposta"><b>Resposta:</b> miopia, mal de longe, divergente. <b>Gabarito E.</b></p>
+    <p class="atencao"><b>Destaque no quadro:</b> Antes da retina: miopia, divergente.</p>
+    <ul class="erros">
+      <li><b>A</b> Na hipermetropia a imagem ficaria depois.</li>
+      <li><b>B</b> Míope vê mal de longe; convergente pioraria.</li>
+      <li><b>C</b> Lê o esquema ao contrário.</li>
+      <li><b>D</b> Tem de ser sobre a retina.</li>
+    </ul>
+  </aside>
+  <aside class="notas">
+    <p>Clique 1 tira o aviso de pausa: resolva na área (D liga a caneta; E esconde o enunciado). Clique 2: gabarito E.</p>
+    <p>Modelo IF, lote if-fisica-o-olho-humano, m005, FIS-8772 (está na apostila, 4.4). Figura redesenhada a partir da do banco (mesmo ponto P antes da retina).</p>
+  </aside>
+</section>
+
+<!-- Questão 3 -->
+<section class="slide questao" data-nome="Questão 3">
+  <div class="conteudo">
+    <div class="area-resolucao"></div>
+    <span class="pilula pilula-pausa" data-em="1:some">Pause o vídeo e tente</span>
+    <div class="painel-questao">
+      <p class="olho">Questão 3 · Modelo IF</p>
+      <p class="enunciado" style="font-size:23px">Em 14 de outubro de 2023, houve um eclipse solar que pôde ser visto como eclipse parcial em grande parte do Brasil, inclusive em Minas Gerais: a Lua cobriu só uma parte do Sol. Muitas escolas orientaram os alunos sobre como cuidar dos olhos naquele dia. Considere as afirmações:</p>
+      <p class="enunciado" style="font-size:23px">I. Com óculos escuros comuns, é seguro olhar diretamente para o Sol durante o eclipse.<br>II. Olhar o Sol com binóculo ou luneta é ainda mais perigoso, porque esses instrumentos concentram a luz, que pode queimar a retina.<br>III. Um dano na retina causado pela luz do Sol pode não ter volta.</p>
+      <p class="enunciado" style="font-size:23px">Está <b>CORRETO</b> o que se afirma em</p>
+      <ol class="alternativas curtas">
+        <li data-em="2:apaga"><b>A</b><span>I, apenas</span></li>
+        <li data-em="2:apaga"><b>B</b><span>I e II, apenas</span></li>
+        <li data-em="2:certo"><b>C</b><span>II e III, apenas</span></li>
+        <li data-em="2:apaga"><b>D</b><span>III, apenas</span></li>
+        <li data-em="2:apaga"><b>E</b><span>I, II e III</span></li>
+      </ol>
+    </div>
+  </div>
+  <aside class="resolucao">
+    <p class="dados"><b>Dados:</b> eclipse parcial; três frases sobre olhar o Sol.</p>
+    <ol class="passos">
+      <li><b>I</b> Óculos escuros comuns não protegem: F.</li>
+      <li><b>II</b> Binóculo e luneta concentram a luz: V.</li>
+      <li><b>III</b> Dano na retina pode não ter volta: V.</li>
+    </ol>
+    <p class="resposta"><b>Resposta:</b> II e III. <b>Gabarito C.</b></p>
+    <p class="atencao"><b>Destaque no quadro:</b> Nunca olhe direto para o Sol, nem no eclipse.</p>
+    <ul class="erros">
+      <li><b>A</b> A I é a única falsa.</li>
+      <li><b>B</b> Aceita a I e esquece a III.</li>
+      <li><b>D</b> Esquece a II.</li>
+      <li><b>E</b> Aceita a I.</li>
+    </ul>
+  </aside>
+  <aside class="notas">
+    <p>Clique 1 tira o aviso de pausa: resolva na área (D liga a caneta; E esconde o enunciado). Clique 2: gabarito C.</p>
+    <p>Modelo IF, lote if-fisica-o-olho-humano, m007, FIS-8774 (está na apostila, 4.4). Liga com a lupa ao Sol (Lentes, Parte 1).</p>
+  </aside>
+</section>
+
+<!-- Resumo -->
+<section class="slide" data-nome="Resumo">
+  <div class="conteudo">
+    <p class="olho">Resumo</p>
+    <h2 class="titulo">O essencial</h2>
+    <div class="resumo" style="position:absolute;left:0;right:0;top:150px;gap:16px 26px">
+      <div><b>Partes do olho:</b> córnea, íris e pupila, cristalino (lente convergente que ajusta o foco), retina e nervo óptico.</div>
+      <div>A imagem na retina é <b>invertida</b>; o <b>cérebro</b> interpreta e desvira.</div>
+      <div><b>Miopia</b> (vê mal de longe): lente <b>divergente</b>. <b>Hipermetropia</b> e <b>presbiopia</b> (veem mal de perto): lente <b>convergente</b>.</div>
+      <div><b>Astigmatismo:</b> lente cilíndrica.</div>
+    </div>
+    <div class="caixa caixa-atencao" style="position:absolute;left:580px;right:0;top:560px;padding:18px 30px">
+      <div class="texto" style="font-size:29px">Nunca olhe para o Sol; use proteção <b>ultravioleta</b>; consulte o <b>oftalmologista</b>.</div>
+    </div>
+  </div>
+  <aside class="notas"><p>O resumo do 4.4 da apostila. Peça para tirarem um print desta tela.</p></aside>
+</section>
+
+<!-- A seguir -->
+<section class="slide capa" data-nome="A seguir">
+  <div class="estrelas"></div>
+  <div class="texto-capa" style="top:170px">
+    <span class="selo">Física · IF</span>
+    <p class="aula" style="font-size:26px">A seguir · Óptica · Questões do IF Sudeste</p>
+    <h1>Questões do IF Sudeste</h1>
+    <p class="sub">Óptica</p>
+  </div>
+  <svg class="emblema" viewBox="0 0 640 640" aria-hidden="true">
+    <rect x="150" y="80" width="340" height="460" rx="36" fill="#fff" opacity=".95"/>
+    <rect x="200" y="140" width="240" height="18" rx="9" fill="#C9C0F0"/><rect x="200" y="180" width="200" height="18" rx="9" fill="#C9C0F0"/>
+    <g font-family="Figtree,'Segoe UI',sans-serif" font-size="30" font-weight="800" text-anchor="middle">
+      <circle cx="225" cy="260" r="24" fill="#F1EEFD"/><text x="225" y="271" fill="#3F2FA0">A</text><rect x="265" y="252" width="160" height="16" rx="8" fill="#E4DEFB"/>
+      <circle cx="225" cy="320" r="24" fill="#F1EEFD"/><text x="225" y="331" fill="#3F2FA0">B</text><rect x="265" y="312" width="130" height="16" rx="8" fill="#E4DEFB"/>
+      <circle cx="225" cy="380" r="24" fill="#FFD10C"/><text x="225" y="391" fill="#292B2C">C</text><rect x="265" y="372" width="150" height="16" rx="8" fill="#E4DEFB"/>
+      <circle cx="225" cy="440" r="24" fill="#F1EEFD"/><text x="225" y="451" fill="#3F2FA0">D</text><rect x="265" y="432" width="110" height="16" rx="8" fill="#E4DEFB"/>
+    </g>
+    <circle cx="470" cy="470" r="86" fill="var(--d)" stroke="#fff" stroke-width="6"/>
+    <text x="470" y="490" text-anchor="middle" font-family="'Bricolage Grotesque',Figtree,sans-serif" font-size="58" font-weight="800" fill="#fff">IF</text>
+  </svg>
+  <img class="logo-capa" src="{{LOGO_BRANCO}}" alt="Quarks">
+  <aside class="notas"><p>Fim do capítulo Óptica. A seguir, o bloco só com as questões do IF Sudeste deste capítulo (três oficiais e duas Modelo).</p></aside>
+</section>

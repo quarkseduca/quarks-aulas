@@ -1,0 +1,409 @@
+<!--aula
+{"disciplina": "fisica", "curso": "IF", "assunto": "Luz e cores", "parte": "Parte 2 de 2", "titulo": "A cor dos objetos", "scripts": ["animacoes-optica.js"]}
+-->
+<!-- Fonte: apostila IF, Física, cap. 4 Óptica (4.1 Luz e cores: "Cores primárias da luz e a cor dos objetos", exemplo "A maçã no palco" e o resumo do 4.1). Questões: lote Modelo if-fisica-cor (m007 FIS-1303, m003 FIS-1299) e a oficial que sobrou para as partes, IF Sudeste MG 2013-1 q34 (FIS-0538). As oficiais 2024-1 q31 e 2015-2 q30 ficam reservadas para o bloco do fim do capítulo. -->
+<style>
+  .caixa, .painel, .linha-ex { box-sizing: border-box; }
+  .linha-ex { background: var(--branco); border: 2px solid var(--lilas-2); border-radius: 24px; padding: 14px 26px; font-size: 30px; line-height: 1.3; }
+  .linha-ex b { color: var(--roxo-titulo); }
+  .rot { font-family: Figtree, 'Segoe UI', sans-serif; font-weight: 700; font-size: 24px; fill: #5E5A70; }
+  .raio { fill: none; stroke: #E0A800; stroke-width: 5; stroke-linecap: round; stroke-linejoin: round; }
+  .soma { display: grid; grid-template-columns: auto auto auto auto 1fr; align-items: center; gap: 10px 14px; font-size: 30px; font-weight: 700; }
+  .bola { width: 34px; height: 34px; border-radius: 50%; display: inline-block; border: 2px solid rgba(0,0,0,.12); }
+  .b-r { background: #FF2E2E; } .b-g { background: #2EC95A; } .b-b { background: #3A5BFF; } .b-y { background: #FFE600; } .b-c { background: #00E0E0; } .b-m { background: #FF2EE0; } .b-w { background: #FFFFFF; border-color: #C9C0F0; }
+  .soma .eq-s { display: contents; }
+  .soma .eq-s > * { transition: opacity .45s; }
+  .soma .eq-s[data-passo]:not(.mostra) > * { opacity: 0; }
+  .soma .eq-s[data-passo] { opacity: 1 !important; transform: none !important; }
+  .painel-questao .figura { display: block; margin: 0 auto; }
+  /* pontinhos da tela: as cores se formam pela soma (amarelo, ciano, magenta, branco), 2,5 s cada */
+  @keyframes pxR { 0%, 22% { opacity: 1; } 27%, 47% { opacity: .1; } 52%, 100% { opacity: 1; } }
+  @keyframes pxG { 0%, 47% { opacity: 1; } 52%, 72% { opacity: .1; } 77%, 100% { opacity: 1; } }
+  @keyframes pxB { 0%, 22% { opacity: .1; } 27%, 97% { opacity: 1; } 100% { opacity: .1; } }
+  @keyframes amostra { 0%, 22% { fill: #FFE600; } 27%, 47% { fill: #00E0E0; } 52%, 72% { fill: #FF2EE0; } 77%, 97% { fill: #FFFFFF; } 100% { fill: #FFE600; } }
+  @keyframes nome1 { 0%, 22% { opacity: 1; } 25%, 97% { opacity: 0; } 100% { opacity: 1; } }
+  @keyframes nome2 { 0%, 24% { opacity: 0; } 27%, 47% { opacity: 1; } 50%, 100% { opacity: 0; } }
+  @keyframes nome3 { 0%, 49% { opacity: 0; } 52%, 72% { opacity: 1; } 75%, 100% { opacity: 0; } }
+  @keyframes nome4 { 0%, 74% { opacity: 0; } 77%, 97% { opacity: 1; } 100% { opacity: 0; } }
+  .px-r, .px-g, .px-b { opacity: 1; }
+  .slide.ativo .mostra .px-r { animation: pxR 10s linear infinite; }
+  .slide.ativo .mostra .px-g { animation: pxG 10s linear infinite; }
+  .slide.ativo .mostra .px-b { animation: pxB 10s linear infinite; }
+  .amostra { fill: #FFFFFF; }
+  .slide.ativo .mostra.amostra { animation: amostra 10s linear infinite; }
+  .nome-cor { opacity: 0; }
+  .nome-cor.n4 { opacity: 1; }
+  .slide.ativo .mostra .nome-cor.n1 { animation: nome1 10s linear infinite; }
+  .slide.ativo .mostra .nome-cor.n2 { animation: nome2 10s linear infinite; }
+  .slide.ativo .mostra .nome-cor.n3 { animation: nome3 10s linear infinite; }
+  .slide.ativo .mostra .nome-cor.n4 { animation: nome4 10s linear infinite; }
+  /* três refletores que se juntam */
+  .refl { mix-blend-mode: screen; transition: transform 2.8s cubic-bezier(.4,0,.2,1); }
+  .r-r { transform: translate(0px, -95px); } .r-g { transform: translate(-95px, 55px); } .r-b { transform: translate(95px, 55px); }
+  .junta .refl { transform: none; }
+  @keyframes respira { 0%, 100% { transform: scale(1); } 50% { transform: scale(1.02); } }
+  /* palco: a luz muda de branca para azul */
+  .feixe, .maca, .camiseta, .cab { transition: fill 1.6s ease; }
+  .feixe { fill: #FFF8E0; }
+  .maca { fill: #E0242E; } .cab { fill: #8A1A1F; }
+  .camiseta { fill: #FFFFFF; }
+  .azul .feixe { fill: #C9D3FF; }
+  .azul .maca { fill: #2A2030; } .azul .cab { fill: #1C1522; }
+  .azul .camiseta { fill: #4E6BFF; }
+  .lamp { transition: fill 1.6s ease; fill: #FFF4C2; } .azul .lamp { fill: #6E86FF; }
+</style>
+
+<svg width="0" height="0" style="position:absolute" aria-hidden="true">
+  <defs>
+    <clipPath id="opLupa"><circle cx="0" cy="0" r="150"/></clipPath>
+    <radialGradient id="opMaca" cx=".35" cy=".3" r=".8"><stop offset="0" stop-color="#FF7A7A"/><stop offset="1" stop-color="#B5121B"/></radialGradient>
+    <marker id="opSetaR" viewBox="0 0 10 10" refX="7" refY="5" markerWidth="5" markerHeight="5" orient="auto"><path d="M0 0 L10 5 L0 10 Z" fill="#E0242E"/></marker>
+  </defs>
+</svg>
+
+<!-- 1. Capa -->
+<section class="slide capa" data-nome="Capa">
+  <div class="estrelas"></div>
+  <div class="texto-capa">
+    <span class="selo">Física · IF</span>
+    <p class="aula">Luz e cores · Parte 2 de 2</p>
+    <h1>A cor dos objetos</h1>
+    <p class="sub">Somar luzes e ver cores</p>
+  </div>
+  <svg class="emblema" viewBox="0 0 640 640" aria-hidden="true">
+    <g class="gira-lento"><ellipse cx="320" cy="320" rx="300" ry="128" fill="none" stroke="#fff" stroke-opacity=".38" stroke-width="2" transform="rotate(-10 320 320)"/></g>
+    <g style="isolation:isolate">
+      <circle cx="320" cy="250" r="150" fill="#FF2E2E" style="mix-blend-mode:screen"/>
+      <circle cx="235" cy="395" r="150" fill="#2EE05A" style="mix-blend-mode:screen"/>
+      <circle cx="405" cy="395" r="150" fill="#3A5BFF" style="mix-blend-mode:screen"/>
+    </g>
+  </svg>
+  <img class="logo-capa" src="{{LOGO_BRANCO}}" alt="Quarks">
+  <aside class="notas">
+    <p>Segunda parte de Luz e cores: as cores primárias da luz, a soma de luzes coloridas e por que a cor de um objeto depende da luz que o ilumina. Da apostila IF, cap. 4, 4.1.</p>
+  </aside>
+</section>
+
+<!-- 2. A tela do celular -->
+<section class="slide" data-nome="A tela do celular">
+  <div class="conteudo">
+    <p class="olho">Chegue perto da tela com uma lupa</p>
+    <h2 class="titulo">Três cores fazem todas</h2>
+    <svg viewBox="0 0 760 440" width="760" height="440" style="position:absolute;left:0;top:150px;overflow:visible" aria-hidden="true">
+      <!-- celular -->
+      <rect x="20" y="40" width="200" height="380" rx="30" fill="#292B2C"/>
+      <rect x="34" y="70" width="172" height="320" rx="10" class="amostra" data-passo="1"/>
+      <path d="M170 180 L330 90 M170 260 L330 370" stroke="#9C93C4" stroke-width="3" stroke-dasharray="8 8"/>
+      <circle cx="170" cy="220" r="40" fill="none" stroke="#9C93C4" stroke-width="4"/>
+      <!-- lupa: os pontinhos -->
+      <g transform="translate(480 230)">
+        <circle r="156" fill="#0E0B16"/>
+        <g clip-path="url(#opLupa)" data-passo="1">
+          <g id="opPixels">
+            <g class="px-r" fill="#FF2E2E"><rect x="-150" y="-150" width="22" height="64" rx="5"/><rect x="-60" y="-150" width="22" height="64" rx="5"/><rect x="30" y="-150" width="22" height="64" rx="5"/><rect x="120" y="-150" width="22" height="64" rx="5"/><rect x="-150" y="-70" width="22" height="64" rx="5"/><rect x="-60" y="-70" width="22" height="64" rx="5"/><rect x="30" y="-70" width="22" height="64" rx="5"/><rect x="120" y="-70" width="22" height="64" rx="5"/><rect x="-150" y="10" width="22" height="64" rx="5"/><rect x="-60" y="10" width="22" height="64" rx="5"/><rect x="30" y="10" width="22" height="64" rx="5"/><rect x="120" y="10" width="22" height="64" rx="5"/><rect x="-150" y="90" width="22" height="64" rx="5"/><rect x="-60" y="90" width="22" height="64" rx="5"/><rect x="30" y="90" width="22" height="64" rx="5"/><rect x="120" y="90" width="22" height="64" rx="5"/></g>
+            <g class="px-g" fill="#2EE05A"><rect x="-120" y="-150" width="22" height="64" rx="5"/><rect x="-30" y="-150" width="22" height="64" rx="5"/><rect x="60" y="-150" width="22" height="64" rx="5"/><rect x="-120" y="-70" width="22" height="64" rx="5"/><rect x="-30" y="-70" width="22" height="64" rx="5"/><rect x="60" y="-70" width="22" height="64" rx="5"/><rect x="-120" y="10" width="22" height="64" rx="5"/><rect x="-30" y="10" width="22" height="64" rx="5"/><rect x="60" y="10" width="22" height="64" rx="5"/><rect x="-120" y="90" width="22" height="64" rx="5"/><rect x="-30" y="90" width="22" height="64" rx="5"/><rect x="60" y="90" width="22" height="64" rx="5"/></g>
+            <g class="px-b" fill="#3A5BFF"><rect x="-90" y="-150" width="22" height="64" rx="5"/><rect x="0" y="-150" width="22" height="64" rx="5"/><rect x="90" y="-150" width="22" height="64" rx="5"/><rect x="-90" y="-70" width="22" height="64" rx="5"/><rect x="0" y="-70" width="22" height="64" rx="5"/><rect x="90" y="-70" width="22" height="64" rx="5"/><rect x="-90" y="10" width="22" height="64" rx="5"/><rect x="0" y="10" width="22" height="64" rx="5"/><rect x="90" y="10" width="22" height="64" rx="5"/><rect x="-90" y="90" width="22" height="64" rx="5"/><rect x="0" y="90" width="22" height="64" rx="5"/><rect x="90" y="90" width="22" height="64" rx="5"/></g>
+          </g>
+        </g>
+        <circle r="156" fill="none" stroke="#5E5A70" stroke-width="12"/>
+        <path d="M110 110 L170 170" stroke="#5E5A70" stroke-width="22" stroke-linecap="round"/>
+      </g>
+      <g data-passo="1" font-family="Figtree,'Segoe UI',sans-serif" font-weight="800" font-size="30" text-anchor="middle">
+        <text class="nome-cor n1" x="120" y="30" fill="#8A6A00">amarelo</text>
+        <text class="nome-cor n2" x="120" y="30" fill="#007F86">ciano</text>
+        <text class="nome-cor n3" x="120" y="30" fill="#B0179A">magenta</text>
+        <text class="nome-cor n4" x="120" y="30" fill="#3F2FA0">branco</text>
+      </g>
+    </svg>
+    <div style="position:absolute;left:840px;right:0;top:160px;display:flex;flex-direction:column;gap:20px">
+      <p class="texto" style="margin:0;font-size:30px">Cada ponto da imagem é formado por <b>três pontinhos</b> de luz: <b>vermelho</b>, <b>verde</b> e <b>azul</b>. Com só essas três, a tela mostra todas as outras.</p>
+      <div class="caixa caixa-fundamental" data-passo="2" style="padding:18px 28px">
+        <span class="rotulo">Cores primárias da luz</span>
+        <div class="texto" style="font-size:29px"><b>Vermelho, verde e azul.</b> Somando luzes dessas três cores em quantidades diferentes, formamos as demais. As três juntas, na mesma intensidade, dão <b>branco</b>.</div>
+      </div>
+    </div>
+  </div>
+  <aside class="notas">
+    <p>Clique 1: na lupa, os pontinhos acendem e apagam devagar, e a tela do celular mostra a cor que se forma: amarelo (vermelho e verde acesos), ciano (verde e azul), magenta (vermelho e azul) e branco (os três). Não existe pontinho amarelo: o amarelo é soma de luzes.</p>
+    <p>Clique 2: a definição da apostila. Se possível, peça para olharem a própria tela com uma lupa (ou com uma gota de água sobre a tela).</p>
+  </aside>
+</section>
+
+<!-- 3. Somando luzes -->
+<section class="slide" data-nome="Somando luzes">
+  <div class="conteudo">
+    <p class="olho">Adição das cores primárias da luz</p>
+    <h2 class="titulo">Somando luzes coloridas</h2>
+    <svg viewBox="0 0 640 450" width="640" height="450" style="position:absolute;left:0;top:140px;overflow:visible" aria-hidden="true">
+      <rect x="0" y="0" width="640" height="450" rx="34" fill="#0E0B16"/>
+      <g style="isolation:isolate" data-em="1:junta">
+        <circle class="refl r-r" cx="320" cy="180" r="128" fill="#FF2E2E"/>
+        <circle class="refl r-g" cx="248" cy="300" r="128" fill="#2EE05A"/>
+        <circle class="refl r-b" cx="392" cy="300" r="128" fill="#3A5BFF"/>
+      </g>
+      <g font-family="Figtree,'Segoe UI',sans-serif" font-weight="800" font-size="24" text-anchor="middle" fill="#292B2C">
+        <text x="248" y="216" data-passo="2">amarelo</text>
+        <text x="320" y="352" data-passo="3">ciano</text>
+        <text x="392" y="216" data-passo="4">magenta</text>
+        <text x="320" y="268" data-passo="5">branco</text>
+      </g>
+    </svg>
+    <div style="position:absolute;left:720px;right:0;top:160px">
+      <div class="soma">
+        <div class="eq-s" data-passo="2"><span class="bola b-r"></span><span>+</span><span class="bola b-g"></span><span>=</span><span><span class="bola b-y" style="vertical-align:middle"></span> amarelo</span></div>
+        <div class="eq-s" data-passo="3"><span class="bola b-g"></span><span>+</span><span class="bola b-b"></span><span>=</span><span><span class="bola b-c" style="vertical-align:middle"></span> ciano</span></div>
+        <div class="eq-s" data-passo="4"><span class="bola b-r"></span><span>+</span><span class="bola b-b"></span><span>=</span><span><span class="bola b-m" style="vertical-align:middle"></span> magenta</span></div>
+        <div class="eq-s" data-passo="5"><span class="bola b-r"></span><span>+</span><span><span class="bola b-g" style="vertical-align:middle"></span> + <span class="bola b-b" style="vertical-align:middle"></span></span><span>=</span><span><span class="bola b-w" style="vertical-align:middle"></span> branco</span></div>
+      </div>
+      <div class="caixa caixa-atencao" data-passo="6" style="margin-top:30px;padding:18px 28px">
+        <span class="rotulo">Isso vale para luzes</span>
+        <div class="texto" style="font-size:29px">Com <b>tintas</b> a regra é outra: misturar tintas de muitas cores dá uma cor <b>escura</b>, não branca.</div>
+      </div>
+    </div>
+  </div>
+  <aside class="notas">
+    <p>Três refletores (vermelho, verde e azul) numa parede branca, num palco escuro. Clique 1: eles se aproximam e as luzes se somam onde se cruzam. Cliques 2 a 5: as quatro somas da apostila. Clique 6: luz não é tinta.</p>
+    <p>Pergunta rápida: quais pontinhos da tela ficam acesos num fundo branco? (Os três.) Num fundo preto? (Nenhum.)</p>
+  </aside>
+</section>
+
+<!-- 4. A cor de um objeto -->
+<section class="slide" data-nome="A cor de um objeto">
+  <div class="conteudo">
+    <p class="olho">E a cor de um objeto?</p>
+    <h2 class="titulo">Por que a maçã é vermelha</h2>
+    <svg viewBox="0 0 760 450" width="760" height="450" style="position:absolute;left:0;top:140px;overflow:visible" aria-hidden="true" data-anima="opt-fotons" data-anima-passo="1">
+      <rect x="0" y="0" width="760" height="450" rx="34" fill="#FFFFFF" stroke="#E4DEFB" stroke-width="2"/>
+      <!-- lâmpada de luz branca -->
+      <circle cx="110" cy="100" r="46" fill="#FFF4C2" stroke="#E0A800" stroke-width="4"/>
+      <rect x="92" y="40" width="36" height="20" rx="4" fill="#9C93C4"/>
+      <text x="110" y="182" text-anchor="middle" class="rot">luz branca</text>
+      <g data-passo="1">
+        <path class="raio" d="M150 120 L326 278" style="stroke:#E0242E;stroke-width:4" data-cor="#E0242E"/>
+        <path class="raio" d="M156 108 L336 262" style="stroke:#1FA24A;stroke-width:4" data-cor="#1FA24A"/>
+        <path class="raio" d="M162 96 L346 248" style="stroke:#3A5BFF;stroke-width:4" data-cor="#3A5BFF"/>
+      </g>
+      <!-- maçã -->
+      <path d="M370 250 q-8 -22 6 -40" stroke="#6B4A2B" stroke-width="7" fill="none" stroke-linecap="round"/>
+      <path d="M380 214 q34 -26 56 -4 q-26 14 -56 4 z" fill="#3FA34D"/>
+      <circle cx="372" cy="300" r="70" fill="url(#opMaca)"/>
+      <text x="372" y="410" text-anchor="middle" class="rot">maçã</text>
+      <!-- olho -->
+      <g transform="translate(660 120)"><path d="M-46 0 q46 -40 92 0 q-46 40 -92 0 z" fill="#fff" stroke="#292B2C" stroke-width="4"/><circle r="17" fill="#3F2FA0"/><circle r="7" fill="#0E0B16"/></g>
+      <text x="660" y="186" text-anchor="middle" class="rot">olho</text>
+      <g data-passo="2">
+        <path class="raio" d="M420 262 L610 140" style="stroke:#E0242E;stroke-width:5" data-cor="#E0242E" marker-end="url(#opSetaR)"/>
+        <text x="610" y="275" text-anchor="middle" class="rot" style="fill:#B5121B;font-weight:800">reflete o vermelho</text>
+        <text x="190" y="385" text-anchor="middle" class="rot" style="fill:#5E5A70">absorve as outras</text>
+      </g>
+    </svg>
+    <div style="position:absolute;left:820px;right:0;top:150px;display:flex;flex-direction:column;gap:16px">
+      <div class="linha-ex" data-passo="1" style="font-size:28px">Na luz branca chegam todas as cores. A maçã <b>absorve</b> quase todas...</div>
+      <div class="linha-ex" data-passo="2" style="font-size:28px">... e <b>reflete</b> principalmente o vermelho. É essa luz que chega aos seus olhos.</div>
+      <div class="linha-ex" data-passo="3" style="font-size:28px;display:flex;gap:16px;align-items:center"><span class="bola b-w" style="flex:none;width:40px;height:40px"></span><span>Objeto <b>branco</b>: reflete todas as cores.</span></div>
+      <div class="linha-ex" data-passo="3" style="font-size:28px;display:flex;gap:16px;align-items:center"><span class="bola" style="flex:none;width:40px;height:40px;background:#1C1522"></span><span>Objeto <b>preto</b>: absorve quase todas.</span></div>
+    </div>
+    <div class="caixa caixa-fundamental" data-passo="4" style="position:absolute;left:580px;right:0;top:640px;padding:16px 28px">
+      <span class="rotulo">A cor depende da luz</span>
+      <div class="texto" style="font-size:28px">A cor que vemos é a da <b>luz que o objeto reflete</b>. Se a luz que o ilumina <b>não tem</b> essa cor, ele parece <b>escuro</b>.</div>
+    </div>
+  </div>
+  <aside class="notas">
+    <p>A luz branca é representada por três raios (vermelho, verde e azul). Clique 1: os três chegam à maçã. Clique 2: só o vermelho volta e chega ao olho; o verde e o azul são absorvidos. Clique 3: branco e preto. Clique 4: a regra que decide as questões.</p>
+    <p>A ideia de que a luz branca é mistura de várias cores (prisma e arco-íris) vem na próxima parte, Reflexão e refração.</p>
+  </aside>
+</section>
+
+<!-- 5. Exemplo: a maçã no palco -->
+<section class="slide" data-nome="Exemplo: a maçã no palco">
+  <div class="conteudo">
+    <p class="olho">Exemplo</p>
+    <h2 class="titulo">A maçã no palco</h2>
+    <svg viewBox="0 0 760 450" width="760" height="450" style="position:absolute;left:0;top:140px;overflow:visible" aria-hidden="true">
+      <g data-em="1:azul">
+        <rect x="0" y="0" width="760" height="450" rx="34" fill="#2B2350"/>
+        <path class="feixe" d="M330 40 L430 40 L720 430 L40 430 Z" opacity=".55"/>
+        <rect x="340" y="10" width="80" height="40" rx="10" fill="#5E5A70"/>
+        <ellipse class="lamp" cx="380" cy="50" rx="34" ry="10"/>
+        <rect x="40" y="398" width="680" height="34" rx="8" fill="#4B39B3"/>
+        <!-- maçã -->
+        <path d="M230 286 q-8 -22 6 -40" stroke="#6B4A2B" stroke-width="7" fill="none" stroke-linecap="round"/>
+        <path class="maca" d="M230 260 c-60 -30 -110 20 -94 74 c14 50 60 70 94 54 c34 16 80 -4 94 -54 c16 -54 -34 -104 -94 -74 z"/>
+        <path class="cab" d="M236 252 q30 -26 52 -4 q-24 12 -52 4 z"/>
+        <!-- camiseta -->
+        <path class="camiseta" d="M470 230 l50 -26 q20 18 50 0 l50 26 l-22 46 l-24 -10 v124 h-108 v-124 l-24 10 z" stroke="#9C93C4" stroke-width="3"/>
+      </g>
+      <text x="230" y="423" text-anchor="middle" class="rot" style="fill:#FFFFFF;font-size:22px">maçã vermelha</text>
+      <text x="545" y="423" text-anchor="middle" class="rot" style="fill:#FFFFFF;font-size:22px">camiseta branca</text>
+    </svg>
+    <div style="position:absolute;left:820px;right:0;top:150px;display:flex;flex-direction:column;gap:16px">
+      <p class="texto" style="margin:0;font-size:29px">Uma maçã vermelha e uma camiseta branca são iluminadas <b>só por uma luz azul</b>. Que cor cada uma parece ter?</p>
+      <div class="linha-ex" data-passo="2" style="font-size:27px"><b>Maçã:</b> só reflete vermelho, e não há vermelho na luz azul. Ela absorve o azul e parece <b>preta</b>.</div>
+      <div class="linha-ex" data-passo="3" style="font-size:27px"><b>Camiseta:</b> o branco reflete todas as cores que recebe. Como recebe só azul, parece <b>azul</b>.</div>
+    </div>
+    <span class="pilula pilula-resposta" data-passo="4" style="position:absolute;right:0;top:700px">Maçã preta e camiseta azul</span>
+  </div>
+  <aside class="notas">
+    <p>Exemplo "A maçã no palco" da apostila. Antes de clicar, peça o palpite. Clique 1: a luz do refletor muda de branca para azul (a maçã escurece e a camiseta fica azul). Cliques 2 e 3: o porquê. Clique 4: a resposta.</p>
+    <p>A regra prática: objeto colorido sob luz de outra cor fica escuro; objeto branco fica da cor da luz.</p>
+  </aside>
+</section>
+
+<!-- Questão 1 -->
+<section class="slide questao" data-nome="Questão 1">
+  <div class="conteudo">
+    <div class="area-resolucao"></div>
+    <span class="pilula pilula-pausa" data-em="1:some">Pause o vídeo e tente</span>
+    <div class="painel-questao">
+      <p class="olho">Questão 1 · Modelo IF</p>
+      <p class="enunciado" style="font-size:25px">Olhando a tela de um celular com uma lupa, Rafael percebeu que cada ponto da imagem é formado por três pontinhos de luz: um vermelho, um verde e um azul. Cada pontinho pode ficar aceso ou apagado. Num aplicativo, a tela mostrava um fundo <b>amarelo</b>.</p>
+      <p class="enunciado" style="font-size:25px">Nos pontos desse fundo amarelo, estavam acesos os pontinhos</p>
+      <ol class="alternativas">
+        <li data-em="2:apaga"><b>A</b><span>amarelos, apenas.</span></li>
+        <li data-em="2:apaga"><b>B</b><span>vermelho e azul.</span></li>
+        <li data-em="2:apaga"><b>C</b><span>verde, apenas.</span></li>
+        <li data-em="2:apaga"><b>D</b><span>vermelho, verde e azul.</span></li>
+        <li data-em="2:certo"><b>E</b><span>vermelho e verde.</span></li>
+      </ol>
+    </div>
+  </div>
+  <aside class="resolucao">
+    <p class="dados"><b>Dados:</b> pontinhos vermelho, verde e azul; fundo amarelo.</p>
+    <ol class="passos">
+      <li>Vermelho + verde = amarelo.</li>
+      <li>Vermelho + azul = magenta; verde + azul = ciano.</li>
+      <li>Os três = branco.</li>
+    </ol>
+    <p class="resposta"><b>Resposta:</b> vermelho e verde acesos, azul apagado. <b>Gabarito E.</b></p>
+    <p class="atencao"><b>Destaque no quadro:</b> Não existe pontinho amarelo: amarelo é soma de luzes.</p>
+    <ul class="erros">
+      <li><b>A</b> A tela só tem vermelho, verde e azul.</li>
+      <li><b>B</b> Vermelho com azul dá magenta.</li>
+      <li><b>C</b> Só o verde mostra verde.</li>
+      <li><b>D</b> Os três juntos dão branco.</li>
+    </ul>
+  </aside>
+  <aside class="notas">
+    <p>Clique 1 tira o aviso de pausa: resolva na área (D liga a caneta; E esconde o enunciado). Clique 2: gabarito E.</p>
+    <p>Modelo IF, lote if-fisica-cor, m007, FIS-1303 (está na apostila, 4.1).</p>
+  </aside>
+</section>
+
+<!-- Questão 2 -->
+<section class="slide questao" data-nome="Questão 2">
+  <div class="conteudo">
+    <div class="area-resolucao"></div>
+    <span class="pilula pilula-pausa" data-em="1:some">Pause o vídeo e tente</span>
+    <div class="painel-questao">
+      <p class="olho">Questão 2 · Modelo IF</p>
+      <p class="enunciado" style="font-size:25px">Numa apresentação de dança no Cine-Theatro Central, em Juiz de Fora, uma bailarina usa blusa branca e saia azul. Sob a luz branca do palco, as roupas aparecem com essas cores. Num momento da coreografia, todas as luzes se apagam e ela fica iluminada apenas por um refletor de luz <b>vermelha</b>.</p>
+      <p class="enunciado" style="font-size:25px">Para a plateia, nesse momento, a blusa e a saia parecem, respectivamente,</p>
+      <ol class="alternativas">
+        <li data-em="2:apaga"><b>A</b><span>branca e azul.</span></li>
+        <li data-em="2:certo"><b>B</b><span>vermelha e preta.</span></li>
+        <li data-em="2:apaga"><b>C</b><span>vermelha e vermelha.</span></li>
+        <li data-em="2:apaga"><b>D</b><span>vermelha e roxa.</span></li>
+        <li data-em="2:apaga"><b>E</b><span>preta e azul.</span></li>
+      </ol>
+    </div>
+  </div>
+  <aside class="resolucao">
+    <p class="dados"><b>Dados:</b> blusa branca, saia azul; luz só vermelha.</p>
+    <ol class="passos">
+      <li>Branco reflete o que recebe: vermelho.</li>
+      <li>Azul só reflete azul: não há azul na luz.</li>
+      <li>A saia absorve o vermelho: preta.</li>
+    </ol>
+    <p class="resposta"><b>Resposta:</b> blusa vermelha e saia preta. <b>Gabarito B.</b></p>
+    <p class="atencao"><b>Destaque no quadro:</b> Branco fica da cor da luz; colorido sem a sua cor na luz fica preto.</p>
+    <ul class="erros">
+      <li><b>A</b> Acha que a cor não depende da luz.</li>
+      <li><b>C</b> Acha que tudo fica da cor da luz.</li>
+      <li><b>D</b> Soma a cor da luz com a da saia.</li>
+      <li><b>E</b> Inverte as partes.</li>
+    </ul>
+  </aside>
+  <aside class="notas">
+    <p>Clique 1 tira o aviso de pausa: resolva na área (D liga a caneta; E esconde o enunciado). Clique 2: gabarito B.</p>
+    <p>Modelo IF, lote if-fisica-cor, m003, FIS-1299 (está na apostila, 4.1). É o exemplo da maçã no palco com outras cores.</p>
+  </aside>
+</section>
+
+<!-- Questão 3 -->
+<section class="slide questao" data-nome="Questão 3">
+  <div class="conteudo">
+    <div class="area-resolucao"></div>
+    <span class="pilula pilula-pausa" data-em="1:some">Pause o vídeo e tente</span>
+    <div class="painel-questao" style="gap:10px">
+      <p class="olho">Questão 3 · IF Sudeste MG 2013</p>
+      <p class="enunciado" style="font-size:18.5px;line-height:1.3">Ana precisou estudar composição das cores para um curso de fotografia. No decorrer de seus estudos, fez algumas anotações de suas conclusões, escritas abaixo:</p>
+      <p class="enunciado" style="font-size:18.5px;line-height:1.3">I. O olho humano vê um objeto por causa da luz que provém desse objeto por reflexão difusa da luz ambiente. Nesse processo, as cores dos objetos são vistas pela reflexão seletiva das cores.<br>II. Se o objeto é verde e recebe iluminação de luz branca (luz policromática), seletivamente o objeto irá refletir apenas a luz verde monocromática.<br>III. Um objeto é levado para uma câmara escura. Nesse ambiente, o objeto é iluminado por uma luz monocromática amarela e aparece negro. Em seguida, ele é iluminado por luz branca, e o objeto aparece verde. Conclui-se que, para uma pessoa de visão normal, a cor do objeto é amarela.<br>IV. Nas câmeras fotográficas digitais, as imagens são formadas invertidas no sensor de registro, tal qual se verifica em toda câmara escura. Para que as imagens apareçam direitas no visor, precisam de um processo de inversão.<br>V. A luz de cor branca pode ser obtida pela mistura de luzes monocromáticas. Fazendo-se incidir em um mesmo anteparo luz monocromática azul e verde, obtém-se a cor branca.</p>
+      <p class="enunciado" style="font-size:18.5px;line-height:1.3">A sequência <b>CORRETA</b> que classifica cada afirmativa, na ordem em que aparecem acima, como verdadeira <b>(V)</b> ou falsa <b>(F)</b> é:</p>
+      <ol class="alternativas curtas">
+        <li data-em="2:apaga" style="font-size:19px"><b>A</b><span>V, V, V, V, V</span></li>
+        <li data-em="2:apaga" style="font-size:19px"><b>B</b><span>V, F, V, F, F</span></li>
+        <li data-em="2:apaga" style="font-size:19px"><b>C</b><span>F, F, F, V, F</span></li>
+        <li data-em="2:certo" style="font-size:19px"><b>D</b><span>V, V, F, V, F</span></li>
+        <li data-em="2:apaga" style="font-size:19px"><b>E</b><span>V, V, V, V, F</span></li>
+      </ol>
+    </div>
+  </div>
+  <aside class="resolucao">
+    <p class="dados"><b>Dados:</b> cinco anotações de Ana sobre cores.</p>
+    <ol class="passos">
+      <li><b>I</b> Reflexão difusa e seletiva: V.</li>
+      <li><b>II</b> Verde sob luz branca reflete o verde: V.</li>
+      <li><b>III</b> Verde sob luz branca: o objeto é verde: F.</li>
+      <li><b>IV</b> Imagem invertida no sensor: V.</li>
+      <li><b>V</b> Azul + verde = ciano, não branco: F.</li>
+    </ol>
+    <p class="resposta"><b>Resposta:</b> V, V, F, V, F. <b>Gabarito D.</b></p>
+    <p class="atencao"><b>Destaque no quadro:</b> Branco precisa das três primárias: vermelho, verde e azul.</p>
+    <ul class="erros">
+      <li><b>A</b> Aceita a III e a V.</li>
+      <li><b>B</b> Marca II e IV como falsas e a III como verdadeira.</li>
+      <li><b>C</b> Marca I e II como falsas.</li>
+      <li><b>E</b> Aceita a III.</li>
+    </ul>
+  </aside>
+  <aside class="notas">
+    <p>Clique 1 tira o aviso de pausa: resolva na área (D liga a caneta; E esconde o enunciado). Clique 2: gabarito D.</p>
+    <p>Questão oficial do IF Sudeste MG 2013-1, q34, FIS-0538 (sobra de Luz e cores para as partes). Na III, sob luz amarela o objeto fica negro porque não reflete o amarelo: ele é verde. A IV fala da câmera (Lentes e instrumentos ópticos): a lente forma no sensor uma imagem invertida, como na câmara escura; no olho acontece o mesmo na retina (O olho humano).</p>
+  </aside>
+</section>
+
+<!-- Resumo -->
+<section class="slide" data-nome="Resumo">
+  <div class="conteudo">
+    <p class="olho">Resumo de Luz e cores</p>
+    <h2 class="titulo">O essencial</h2>
+    <div class="resumo" style="position:absolute;left:0;right:0;top:150px;gap:16px 26px">
+      <div>Fonte <b>primária</b> produz luz (Sol, lâmpada); <b>secundária</b> só reflete (Lua, objetos).</div>
+      <div><b>Transparente:</b> vemos nitidamente; <b>translúcido:</b> a luz passa espalhada; <b>opaco:</b> não passa.</div>
+      <div>Num meio uniforme, a luz anda em <b>linha reta</b>; fonte grande produz <b>sombra e penumbra</b>.</div>
+      <div><b>Cores primárias da luz:</b> vermelho, verde e azul; as três juntas dão <b>branco</b>.</div>
+    </div>
+    <div class="caixa caixa-fundamental" style="position:absolute;left:580px;right:0;top:500px;padding:20px 30px">
+      <div class="texto" style="font-size:30px">Um objeto mostra a <b>cor da luz que reflete</b>: branco reflete todas, preto absorve quase todas. A cor aparente <b>muda com a luz</b> que o ilumina.</div>
+    </div>
+  </div>
+  <aside class="notas"><p>Resumo do 4.1 inteiro (Partes 1 e 2), como na apostila. Peça para tirarem um print desta tela.</p></aside>
+</section>
+
+<!-- A seguir -->
+<section class="slide capa" data-nome="A seguir">
+  <div class="estrelas"></div>
+  <div class="texto-capa" style="top:170px">
+    <span class="selo">Física · IF</span>
+    <p class="aula" style="font-size:26px">A seguir · Óptica · Parte única</p>
+    <h1>Reflexão e refração</h1>
+    <p class="sub">Espelhos, o lápis "quebrado" e o arco-íris</p>
+  </div>
+  <svg class="emblema" viewBox="0 0 640 640" aria-hidden="true">
+    <rect x="90" y="430" width="460" height="18" rx="9" fill="#fff"/>
+    <path d="M320 430 L320 120" stroke="#fff" stroke-opacity=".6" stroke-width="4" stroke-dasharray="12 10"/>
+    <path d="M130 170 L320 430 L510 170" fill="none" stroke="#FFD10C" stroke-width="14" stroke-linecap="round" stroke-linejoin="round"/>
+  </svg>
+  <img class="logo-capa" src="{{LOGO_BRANCO}}" alt="Quarks">
+  <aside class="notas"><p>A seguir, a parte única de Reflexão e refração: espelhos planos e curvos, a refração e a dispersão da luz branca no prisma.</p></aside>
+</section>
