@@ -1,0 +1,614 @@
+<!--aula
+{"disciplina": "matematica", "curso": "IF", "assunto": "Conceito de função", "parte": "Parte 1 de 2", "titulo": "Plano, lei e sequências", "scripts": ["animacoes-funcoes.js"]}
+-->
+<!-- Fonte: apostila IF, Matemática, cap. 4 (4.1 Conceito de função: Plano cartesiano; Função: lei e variáveis; Padrões numéricos e lei de formação; Padrões em figuras). Questões da apostila: Modelo IF if-matematica-conceito-de-funcao m004 e m005; oficiais 2013-1-extra q19 e 2013-2 q18 (sobras do capítulo em planejamento/questoes-if.md). -->
+<style>
+  .caixa { box-sizing: border-box; }
+  .seq { display: flex; gap: 18px; align-items: center; }
+  .seq .t { min-width: 96px; height: 96px; display: grid; place-items: center; border-radius: 28px; background: var(--branco); border: 2px solid var(--lilas-2); font: 800 50px var(--fonte-titulo); color: var(--roxo-titulo); }
+  .seq .t.vazio { background: var(--d-clara); border: 3px dashed var(--d); color: var(--d-forte); }
+  .seq .t small { display: block; font: 700 20px var(--fonte-texto); color: var(--cinza); margin-top: -8px; }
+  .seq .t.com-pos { height: 120px; grid-template-rows: 1fr auto; padding-bottom: 8px; }
+  .seq .mais { font: 800 30px var(--fonte-texto); color: var(--d-forte); }
+  .grande { font-size: 84px; }
+  .lado { display: grid; grid-template-columns: 1fr 1fr; column-gap: 60px; }
+  .poltronas rect { fill: #fff; stroke: #C9C0F0; stroke-width: 2; }
+  @keyframes acende { 0%, 100% { fill: var(--amarelo); } 50% { fill: #FFE680; } }
+  .slide.ativo .mostra .poltrona-f12 { animation: acende 3s ease-in-out infinite; }
+</style>
+
+<!-- 1. Capa -->
+<section class="slide capa" data-nome="Capa">
+  <div class="estrelas"></div>
+  <div class="texto-capa">
+    <span class="selo">Matemática · IF</span>
+    <p class="aula">Conceito de função · Parte 1 de 2</p>
+    <h1>Plano, lei e sequências</h1>
+    <p class="sub">Cada x com o seu único y</p>
+  </div>
+  <svg class="emblema" viewBox="0 0 640 640" aria-hidden="true">
+    <path d="M90 560 V80 M90 560 H590" stroke="#fff" stroke-opacity=".8" stroke-width="5" stroke-linecap="round" fill="none"/>
+    <path d="M78 100 L90 76 L102 100 M570 548 L594 560 L570 572" stroke="#fff" stroke-opacity=".8" stroke-width="5" stroke-linecap="round" stroke-linejoin="round" fill="none"/>
+    <g fill="none" stroke="#FFD10C" stroke-width="4" stroke-dasharray="10 10"><path d="M330 560 V300 H90"/></g>
+    <circle cx="330" cy="300" r="22" fill="#FFD10C" stroke="#fff" stroke-width="5"/>
+    <text x="356" y="282" fill="#fff" font-size="44" font-weight="800" font-family="Figtree,'Segoe UI',sans-serif">(x; y)</text>
+    <g fill="#fff" fill-opacity=".85"><circle cx="170" cy="470" r="10"/><circle cx="250" cy="400" r="10"/><circle cx="410" cy="220" r="10"/><circle cx="490" cy="140" r="10"/></g>
+  </svg>
+  <img class="logo-capa" src="{{LOGO_BRANCO}}" alt="Quarks">
+  <aside class="notas">
+    <p>Começa o capítulo Funções. Nesta parte: o plano cartesiano, o que é uma função (lei, f(x)) e as sequências com lei de formação (números e figuras).</p>
+  </aside>
+</section>
+
+<!-- 2. Gancho: o cinema -->
+<section class="slide" data-nome="Fileira F, poltrona 12">
+  <div class="conteudo">
+    <p class="olho">Para começar</p>
+    <h2 class="titulo">Fileira F, poltrona 12</h2>
+    <svg viewBox="0 0 1000 440" width="1000" height="440" style="position:absolute;left:0;top:150px;font-family:Figtree,'Segoe UI',sans-serif" aria-hidden="true">
+      <rect x="200" y="0" width="660" height="26" rx="13" fill="#E4DEFB"/>
+      <text x="530" y="20" text-anchor="middle" font-size="20" font-weight="800" fill="#5E5A70" letter-spacing="4">TELA</text>
+      <g class="poltronas" id="poltronas-cinema"></g>
+      <g font-size="24" font-weight="800" fill="#5E5A70" text-anchor="middle">
+        <text x="70" y="94">A</text><text x="70" y="146">B</text><text x="70" y="198">C</text><text x="70" y="250">D</text><text x="70" y="302">E</text><text x="70" y="354">F</text><text x="70" y="406">G</text>
+      </g>
+      <g data-passo="1">
+        <rect x="100" y="333" width="860" height="34" rx="17" fill="none" stroke="var(--d)" stroke-width="4"/>
+      </g>
+      <g data-passo="2">
+        <rect x="690" y="56" width="46" height="364" rx="17" fill="none" stroke="var(--d)" stroke-width="4"/>
+        <text x="713" y="440" text-anchor="middle" font-size="24" font-weight="800" fill="var(--d-forte)">12</text>
+      </g>
+      <g data-passo="3"><rect class="poltrona-f12" x="697" y="335" width="32" height="30" rx="8" fill="#FFD10C" stroke="#fff" stroke-width="3"/></g>
+    </svg>
+    <div style="position:absolute;left:1060px;right:0;top:170px;display:flex;flex-direction:column;gap:26px">
+      <p class="texto" style="margin:0" data-passo="1">Uma informação: a <b>fileira</b>.</p>
+      <p class="texto" style="margin:0" data-passo="2">Outra: a <b>poltrona</b>.</p>
+      <div class="caixa caixa-fundamental" data-passo="3"><div class="texto">Dois números, <b>um lugar só</b>.</div></div>
+      <span class="pilula pilula-resposta" data-passo="4" style="align-self:flex-start">O plano faz o mesmo com os pontos</span>
+    </div>
+  </div>
+  <script>
+    (function () {
+      var g = document.getElementById("poltronas-cinema"), ns = "http://www.w3.org/2000/svg";
+      for (var f = 0; f < 7; f++) for (var p = 0; p < 14; p++) {
+        var r = document.createElementNS(ns, "rect");
+        r.setAttribute("x", 120 + p * 59); r.setAttribute("y", 72 + f * 52); r.setAttribute("width", 32); r.setAttribute("height", 30); r.setAttribute("rx", 8);
+        g.appendChild(r);
+      }
+    })();
+  </script>
+  <aside class="notas">
+    <p>Cliques 1 e 2: a fileira F e a coluna da poltrona 12. Clique 3: só uma poltrona está nas duas ao mesmo tempo. Clique 4: o plano cartesiano dá a cada ponto um "endereço" de dois números.</p>
+  </aside>
+</section>
+
+<!-- 3. O plano cartesiano -->
+<section class="slide" data-nome="O plano cartesiano">
+  <div class="conteudo">
+    <p class="olho">O plano cartesiano</p>
+    <h2 class="titulo">Cada ponto tem um endereço</h2>
+    <div style="position:absolute;left:0;width:760px;top:160px;display:flex;flex-direction:column;gap:18px">
+      <p class="texto" style="margin:0" data-passo="1">Horizontal: <b>eixo x</b> (abscissas).</p>
+      <p class="texto" style="margin:0" data-passo="2">Vertical: <b>eixo y</b> (ordenadas).</p>
+      <p class="texto" style="margin:0" data-passo="3">Cruzamento: a <b>origem</b>, \((0;\ 0)\).</p>
+      <div class="caixa caixa-fundamental" data-passo="4" style="padding:22px 30px">
+        <span class="rotulo">Par ordenado \((x;\ y)\)</span>
+        <div class="texto" style="font-size:32px">1º número: anda na <b>horizontal</b> (+ direita, − esquerda).<br>2º número: anda na <b>vertical</b> (+ cima, − baixo).</div>
+      </div>
+    </div>
+    <div data-anima="fn-plano" data-anima-passo="5" style="position:absolute;left:820px;top:110px;width:940px;height:740px"></div>
+  </div>
+  <aside class="notas">
+    <p>Cliques 1 a 3: eixos e origem. Clique 4: a regra do par ordenado. Clique 5: cada ponto sai da origem, anda o x na horizontal e depois o y na vertical: A(3; 2), B(−2; 1), C(−1; −3), D(2; −2) e E(0; 3). No fim aparecem os quatro quadrantes.</p>
+  </aside>
+</section>
+
+<!-- 4. Quadrantes -->
+<section class="slide" data-nome="Os quadrantes">
+  <div class="conteudo">
+    <p class="olho">Exemplo</p>
+    <h2 class="titulo">Em que quadrante está?</h2>
+    <div data-anima="fn-figura" style="position:absolute;left:900px;top:110px;width:860px;height:570px"
+      data-fig='{"xmin":-5,"xmax":5,"ymin":-4,"ymax":4,"pl":30,"pr":40,"pt":40,"pb":20,"pontos":[{"x":3,"y":2,"t":"A"},{"x":-2,"y":1,"t":"B"},{"x":-1,"y":-3,"t":"C"},{"x":2,"y":-2,"t":"D"},{"x":0,"y":3,"t":"E","cor":"#FFD10C"}],"textos":[{"x":3.4,"y":3.3,"t":"1º","fs":34,"cor":"#8C7BEA"},{"x":-3.4,"y":3.3,"t":"2º","fs":34,"cor":"#8C7BEA"},{"x":-3.4,"y":-3.5,"t":"3º","fs":34,"cor":"#8C7BEA"},{"x":3.4,"y":-3.5,"t":"4º","fs":34,"cor":"#8C7BEA"}]}'></div>
+    <p class="texto" style="position:absolute;left:0;width:800px;top:150px;margin:0">Olhe os <b>sinais</b> de \(x\) e de \(y\).</p>
+    <table class="tabela" style="position:absolute;left:0;top:240px;font-size:36px">
+      <tr><th>ponto</th><th>sinais</th><th>quadrante</th></tr>
+      <tr data-passo="1"><td>\(A(3;\ 2)\)</td><td>\(+\ +\)</td><td><b>1º</b></td></tr>
+      <tr data-passo="2"><td>\(B(-2;\ 1)\)</td><td>\(-\ +\)</td><td><b>2º</b></td></tr>
+      <tr data-passo="3"><td>\(C(-1;\ {-3})\)</td><td>\(-\ -\)</td><td><b>3º</b></td></tr>
+      <tr data-passo="4"><td>\(D(2;\ {-2})\)</td><td>\(+\ -\)</td><td><b>4º</b></td></tr>
+    </table>
+    <div class="caixa caixa-atencao" data-passo="5" style="position:absolute;left:560px;right:0;top:710px;padding:18px 28px">
+      <div class="texto" style="font-size:30px">\(E(0;\ 3)\) está <b>sobre o eixo y</b>: não é de nenhum quadrante.</div>
+    </div>
+  </div>
+  <aside class="notas">
+    <p>Quadrantes numerados no sentido anti-horário, a partir de cima à direita. Uma linha por clique.</p>
+    <p>Clique 5: ponto sobre um eixo não pertence a quadrante nenhum.</p>
+  </aside>
+</section>
+
+<!-- 5. Atenção: a ordem -->
+<section class="slide" data-nome="Atenção: a ordem do par">
+  <div class="conteudo">
+    <p class="olho">Atenção</p>
+    <h2 class="titulo">A ordem do par importa</h2>
+    <div style="position:absolute;left:0;width:780px;top:170px">
+      <p style="margin:0;font-size:80px">\((2;\ 3) \neq (3;\ 2)\)</p>
+      <div class="caixa caixa-atencao" data-passo="1" style="margin-top:40px">
+        <div class="texto">O <b>primeiro</b> número é sempre o do <b>eixo x</b>.</div>
+      </div>
+    </div>
+    <div data-anima="fn-plano" data-anima-passo="0" data-pontos="P:2:3;Q:3:2" data-quadrantes="nao" style="position:absolute;left:900px;top:110px;width:860px;height:700px"></div>
+  </div>
+  <aside class="notas">
+    <p>Os dois pontos saem da origem: P anda 2 e sobe 3; Q anda 3 e sobe 2. São lugares diferentes.</p>
+  </aside>
+</section>
+
+<!-- 6. Questão 1 -->
+<section class="slide questao" data-nome="Questão 1">
+  <div class="conteudo">
+    <div class="area-resolucao"></div>
+    <span class="pilula pilula-pausa" data-em="1:some">Pause o vídeo e tente</span>
+    <div class="painel-questao">
+      <p class="olho">Questão 1 · Modelo IF</p>
+      <p class="enunciado">Observe os pontos marcados no plano cartesiano.</p>
+      <div data-anima="fn-figura" style="width:430px;height:400px;margin:0 auto"
+        data-fig='{"xmin":-4,"xmax":4,"ymin":-4,"ymax":4,"pl":20,"pr":30,"pt":30,"pb":10,"fs":18,"pontos":[{"x":-3,"y":2,"t":"Q","fs":24},{"x":3,"y":2,"t":"P","fs":24},{"x":-3,"y":-2,"t":"R","fs":24},{"x":-2,"y":-3,"t":"M","fs":24},{"x":3,"y":-2,"t":"N","fs":24}]}'></div>
+      <p class="enunciado">O ponto de coordenadas \((-3;\ {-2})\) é o ponto:</p>
+      <ol class="alternativas curtas">
+        <li data-em="2:apaga"><b>A</b><span>M</span></li>
+        <li data-em="2:apaga"><b>B</b><span>N</span></li>
+        <li data-em="2:apaga"><b>C</b><span>P</span></li>
+        <li data-em="2:certo"><b>D</b><span>R</span></li>
+        <li data-em="2:apaga"><b>E</b><span>Q</span></li>
+      </ol>
+      <p class="fonte">Questão Modelo IF (lote if-matematica-conceito-de-funcao, m004)</p>
+    </div>
+  </div>
+  <aside class="resolucao">
+    <p class="dados"><b>Dados:</b> ponto \((-3;\ {-2})\).</p>
+    <ol class="passos">
+      <li>1º número: \(x = -3\), 3 para a esquerda</li>
+      <li>2º número: \(y = -2\), 2 para baixo</li>
+      <li>O ponto ali é o R (3º quadrante)</li>
+    </ol>
+    <p class="resposta"><b>Resposta:</b> ponto R. <b>Gabarito D.</b></p>
+    <p class="atencao"><b>Destaque no quadro:</b> Primeiro anda o x, depois o y.</p>
+    <ul class="erros">
+      <li><b>A</b> M é \((-2;\ {-3})\): ordem trocada.</li>
+      <li><b>B</b> N é \((3;\ {-2})\): errou o sinal do x.</li>
+      <li><b>C</b> P é \((3;\ 2)\): errou os dois sinais.</li>
+      <li><b>E</b> Q é \((-3;\ 2)\): errou o sinal do y.</li>
+    </ul>
+  </aside>
+  <aside class="notas">
+    <p>Clique 1 tira o aviso de pausa: resolva na área (D liga a caneta; E esconde o enunciado). Clique 2: gabarito D.</p>
+    <p>Modelo IF, lote if-matematica-conceito-de-funcao, m004, MAT-1219. Figura refeita em SVG com os mesmos pontos.</p>
+  </aside>
+</section>
+
+<!-- 7. Gancho: o posto -->
+<section class="slide" data-nome="O preço da gasolina">
+  <div class="conteudo">
+    <p class="olho">O que é função</p>
+    <h2 class="titulo">R$ 6,00 por litro</h2>
+    <table class="tabela" style="position:absolute;left:0;top:170px">
+      <tr><th>litros</th><th>preço (R$)</th></tr>
+      <tr data-passo="1"><td>10</td><td>60</td></tr>
+      <tr data-passo="2"><td>20</td><td>120</td></tr>
+      <tr data-passo="3"><td>\(x\)</td><td>\(6x\)</td></tr>
+    </table>
+    <div style="position:absolute;left:640px;right:0;top:170px;display:flex;flex-direction:column;gap:26px">
+      <p class="texto" style="margin:0" data-passo="4">O preço <b>depende</b> dos litros.</p>
+      <p class="texto" style="margin:0" data-passo="5">Para cada quantidade, <b>um único</b> preço.</p>
+      <div class="caixa caixa-fundamental" data-passo="6">
+        <span class="rotulo">Função</span>
+        <div class="texto">Regra que associa a <b>cada</b> \(x\) <b>um único</b> \(y\).</div>
+      </div>
+    </div>
+  </div>
+  <aside class="notas">
+    <p>Cliques 1 a 3: a tabela vira a regra y = 6x. Cliques 4 e 5: dependência e unicidade. Clique 6: a definição.</p>
+  </aside>
+</section>
+
+<!-- 8. Variáveis e lei -->
+<section class="slide" data-nome="Lei e variáveis">
+  <div class="conteudo">
+    <p class="olho">Definição</p>
+    <h2 class="titulo">Lei, entrada e saída</h2>
+    <div class="caixa caixa-fundamental" style="position:absolute;left:400px;right:400px;top:150px;text-align:center;font-size:96px;padding:14px">\(f(x) = 6x\)</div>
+    <div class="letras" style="position:absolute;left:0;right:0;top:380px;grid-template-columns:repeat(3,1fr)">
+      <div data-passo="1"><span class="simbolo">\(x\)</span><b>variável independente</b>: a entrada (litros)</div>
+      <div data-passo="2"><span class="simbolo">\(y\) ou \(f(x)\)</span><b>variável dependente</b>: a saída (reais)</div>
+      <div data-passo="3"><span class="simbolo">\(6x\)</span><b>lei da função</b>: a fórmula que dá \(y\)</div>
+    </div>
+    <div class="caixa" data-passo="4" style="position:absolute;left:560px;right:0;top:640px;display:flex;align-items:center;gap:30px">
+      <span class="rotulo" style="margin:0">Lê-se "f de 10"</span>
+      <span class="texto" style="font-size:44px">\(f(10) = 6 \cdot 10 = 60\)</span>
+    </div>
+  </div>
+  <aside class="notas">
+    <p>Também se escreve y = 6x. f(x) é o valor da função quando a entrada é x. Clique 4: f(10) é o preço de 10 litros.</p>
+  </aside>
+</section>
+
+<!-- 9. A máquina -->
+<section class="slide" data-nome="A máquina f(x)">
+  <div class="conteudo">
+    <p class="olho">Lei da função</p>
+    <h2 class="titulo">Entra \(x\), sai \(f(x)\)</h2>
+    <div data-anima="fn-maquina" data-anima-passo="0" style="position:absolute;left:0;right:0;top:150px;height:400px"></div>
+    <div class="caixa caixa-atencao" data-passo="1" style="position:absolute;left:560px;right:0;top:600px">
+      <span class="rotulo">Atenção: não é multiplicação</span>
+      <div class="texto">\(f(x)\) é um <b>nome</b>: "o valor de \(f\) em \(x\)". Não há conta entre \(f\) e \(x\).</div>
+    </div>
+  </div>
+  <aside class="notas">
+    <p>A máquina da lei f(x) = 2x + 3 recebe 4, −1, 0 e 6 e devolve 11, 1, 3 e 15. Deixe a turma prever a saída antes de aparecer.</p>
+    <p>Clique 1: f(x) não é "f vezes x".</p>
+  </aside>
+</section>
+
+<!-- 10. Exemplo: calcular valores -->
+<section class="slide" data-nome="Exemplo: f(4) e f(−1)">
+  <div class="conteudo">
+    <p class="olho">Exemplo</p>
+    <h2 class="titulo">Dada \(f(x) = 2x + 3\)</h2>
+    <div class="lado" style="position:absolute;left:0;right:0;top:170px">
+      <div class="contas" style="font-size:52px">
+        <div class="eq"><span>\(f(x)\)</span><span>\(=\)</span><span>\(2x + 3\)</span></div>
+        <div class="eq" data-passo="1"><span>\(f(4)\)</span><span>\(=\)</span><span>\(2 \cdot \color{#1E4FD8}{4} + 3\)</span></div>
+        <div class="eq" data-passo="2"><span>\(f(4)\)</span><span>\(=\)</span><span>\(8 + 3\)</span></div>
+        <div class="eq final" data-passo="3"><span>\(f(4)\)</span><span>\(=\)</span><span>\(11\)</span></div>
+      </div>
+      <div class="contas" style="font-size:52px">
+        <div class="eq" data-passo="4"><span>\(f(x)\)</span><span>\(=\)</span><span>\(2x + 3\)</span></div>
+        <div class="eq" data-passo="5"><span>\(f(-1)\)</span><span>\(=\)</span><span>\(2 \cdot \color{#1E4FD8}{(-1)} + 3\)</span></div>
+        <div class="eq" data-passo="6"><span>\(f(-1)\)</span><span>\(=\)</span><span>\(-2 + 3\)</span></div>
+        <div class="eq final" data-passo="7"><span>\(f(-1)\)</span><span>\(=\)</span><span>\(1\)</span></div>
+      </div>
+    </div>
+    <span class="pilula pilula-resposta" data-passo="8" style="position:absolute;right:0;top:640px">Troque \(x\) pelo número; negativo vai entre parênteses</span>
+  </div>
+  <aside class="notas">
+    <p>Uma linha por clique. No f(−1), o parêntese evita o erro de sinal.</p>
+  </aside>
+</section>
+
+<!-- 11. O caminho contrário -->
+<section class="slide" data-nome="O caminho contrário">
+  <div class="conteudo">
+    <p class="olho">O caminho contrário</p>
+    <h2 class="titulo">Para qual \(x\) a função vale 15?</h2>
+    <p class="texto" style="position:absolute;left:0;width:760px;top:170px;margin:0">Agora o \(y\) é conhecido.<br>O \(x\) vira <b>incógnita</b> de uma equação.</p>
+    <div class="contas" style="position:absolute;left:900px;top:170px;font-size:56px">
+      <div class="eq" data-passo="1"><span>\(f(x)\)</span><span>\(=\)</span><span>\(15\)</span></div>
+      <div class="eq" data-passo="2"><span>\(2x + 3\)</span><span>\(=\)</span><span>\(15\)</span></div>
+      <div class="eq" data-passo="3"><span>\(2x\)</span><span>\(=\)</span><span>\(12\)</span></div>
+      <div class="eq final" data-passo="4"><span>\(x\)</span><span>\(=\)</span><span>\(6\)</span></div>
+    </div>
+    <div class="caixa" data-passo="5" style="position:absolute;left:900px;right:0;top:640px;padding:18px 30px">
+      <div class="texto">Confira: \(f(6) = 2 \cdot 6 + 3 = 15\) ✓</div>
+    </div>
+  </div>
+  <aside class="notas">
+    <p>Mesma lei, pergunta invertida: dado o y, achar o x. Clique 5: a conferência.</p>
+  </aside>
+</section>
+
+<!-- 12. Questão 2 -->
+<section class="slide questao" data-nome="Questão 2">
+  <div class="conteudo">
+    <div class="area-resolucao"></div>
+    <span class="pilula pilula-pausa" data-em="1:some">Pause o vídeo e tente</span>
+    <div class="painel-questao">
+      <p class="olho">Questão 2 · Modelo IF</p>
+      <p class="enunciado">Na lista de exercícios de Matemática, Lívia precisa calcular \(f(-3)\) para a função \(f(x) = x^2 - 2x\).</p>
+      <p class="enunciado">O valor correto de \(f(-3)\) é:</p>
+      <ol class="alternativas curtas">
+        <li data-em="2:apaga"><b>A</b><span>\(-15\)</span></li>
+        <li data-em="2:certo"><b>B</b><span>\(15\)</span></li>
+        <li data-em="2:apaga"><b>C</b><span>\(3\)</span></li>
+        <li data-em="2:apaga"><b>D</b><span>\(-3\)</span></li>
+        <li data-em="2:apaga"><b>E</b><span>\(0\)</span></li>
+      </ol>
+      <p class="fonte">Questão Modelo IF (lote if-matematica-conceito-de-funcao, m005)</p>
+    </div>
+  </div>
+  <aside class="resolucao">
+    <p class="dados"><b>Dados:</b> \(f(x) = x^2 - 2x\); \(x = -3\).</p>
+    <ol class="passos">
+      <li>\(f(-3) = (-3)^2 - 2 \cdot (-3)\)</li>
+      <li>\(f(-3) = 9 + 6\)</li>
+      <li>\(f(-3) = 15\)</li>
+    </ol>
+    <p class="resposta"><b>Resposta:</b> \(f(-3) = 15\). <b>Gabarito B.</b></p>
+    <p class="atencao"><b>Destaque no quadro:</b> \((-3)^2 = 9\), com parênteses.</p>
+    <ul class="erros">
+      <li><b>A</b> Trocou os dois sinais: \(-9 - 6\).</li>
+      <li><b>C</b> Fez \(-2 \cdot (-3)\) negativo: \(9 - 6\).</li>
+      <li><b>D</b> Usou \(-3^2 = -9\): \(-9 + 6\).</li>
+      <li><b>E</b> Trocou \(x^2\) por \(2x\): \(-6 + 6\).</li>
+    </ul>
+  </aside>
+  <aside class="notas">
+    <p>Clique 1 tira o aviso de pausa: resolva na área (D liga a caneta; E esconde o enunciado). Clique 2: gabarito B.</p>
+    <p>Modelo IF, lote if-matematica-conceito-de-funcao, m005, MAT-1220.</p>
+  </aside>
+</section>
+
+<!-- 13. Questão 3 -->
+<section class="slide questao" data-nome="Questão 3">
+  <div class="conteudo">
+    <div class="area-resolucao"></div>
+    <span class="pilula pilula-pausa" data-em="1:some">Pause o vídeo e tente</span>
+    <div class="painel-questao">
+      <p class="olho">Questão 3 · IF Sudeste MG 2013</p>
+      <p class="enunciado">Sendo \(f(x-1) = x^2 + 2x\), o valor de \(f(-1)\) é:</p>
+      <ol class="alternativas curtas">
+        <li data-em="2:apaga"><b>A</b><span>\(-1\)</span></li>
+        <li data-em="2:certo"><b>B</b><span>\(0\)</span></li>
+        <li data-em="2:apaga"><b>C</b><span>\(1\)</span></li>
+        <li data-em="2:apaga"><b>D</b><span>\(2\)</span></li>
+        <li data-em="2:apaga"><b>E</b><span>\(3\)</span></li>
+      </ol>
+      <p class="fonte">IF Sudeste MG, prova de 2013 (1º semestre, edição extra), questão 19</p>
+    </div>
+  </div>
+  <aside class="resolucao">
+    <p class="dados"><b>Dados:</b> \(f(x-1) = x^2 + 2x\); quer \(f(-1)\).</p>
+    <ol class="passos">
+      <li>O que entra na \(f\) é \(x - 1\)</li>
+      <li>\(x - 1 = -1 \Rightarrow x = 0\)</li>
+      <li>\(f(-1) = 0^2 + 2 \cdot 0\)</li>
+      <li>\(f(-1) = 0\)</li>
+    </ol>
+    <p class="resposta"><b>Resposta:</b> \(f(-1) = 0\). <b>Gabarito B.</b></p>
+    <p class="atencao"><b>Destaque no quadro:</b> Ache o \(x\) que faz a entrada valer \(-1\).</p>
+    <ul class="erros">
+      <li><b>A</b> Trocou \(x\) por \(-1\) direto: \(1 - 2 = -1\), que é \(f(-2)\).</li>
+      <li><b>C</b> Não sai de substituição correta (esquece o \(2x\) e faz \((-1)^2\)).</li>
+      <li><b>D</b> Não sai de nenhuma substituição correta.</li>
+      <li><b>E</b> Usou \(x = 1\) (entrada 0): \(1 + 2 = 3\) é \(f(0)\).</li>
+    </ul>
+  </aside>
+  <aside class="notas">
+    <p>Clique 1 tira o aviso de pausa: resolva na área (D liga a caneta; E esconde o enunciado). Clique 2: gabarito B.</p>
+    <p>Questão oficial do IF Sudeste MG 2013-1 (edição extra), q19, MAT-0461. O erro mais comum: trocar x por −1 direto (dá −1, alternativa A).</p>
+  </aside>
+</section>
+
+<!-- 14. Sequências -->
+<section class="slide" data-nome="Sequências">
+  <div class="conteudo">
+    <p class="olho">Padrões numéricos</p>
+    <h2 class="titulo">Qual é o próximo?</h2>
+    <div class="seq" style="position:absolute;left:0;top:180px">
+      <div class="t">5</div><div class="t">8</div><div class="t">11</div><div class="t">14</div>
+      <div class="t vazio" data-em="2:some" style="position:relative">?</div>
+      <div class="t" data-passo="2" style="margin-left:-114px;background:var(--d);color:#fff;border-color:var(--d)">17</div>
+    </div>
+    <div class="seq" data-passo="1" style="position:absolute;left:50px;top:290px">
+      <span class="mais" style="width:96px;text-align:center">+3</span><span class="mais" style="width:96px;text-align:center">+3</span><span class="mais" style="width:96px;text-align:center">+3</span><span class="mais" style="width:96px;text-align:center">+3</span>
+    </div>
+    <div style="position:absolute;left:900px;right:0;top:170px;display:flex;flex-direction:column;gap:22px">
+      <p class="texto" style="margin:0" data-passo="3">Lista em ordem, com regra: <b>sequência</b>.</p>
+      <p class="texto" style="margin:0" data-passo="4">\(a_1 = 5\), \(a_2 = 8\), \(a_4 = 14\)<br>\(a_n\): termo da posição \(n\).</p>
+      <div class="caixa caixa-fundamental" data-passo="5">
+        <span class="rotulo">Lei de formação</span>
+        <div class="texto" style="font-size:32px">A regra que dá cada termo. Se dá \(a_n\) direto pela posição \(n\): <b>termo geral</b>.</div>
+      </div>
+    </div>
+  </div>
+  <aside class="notas">
+    <p>Clique 1: o padrão +3. Clique 2: o próximo é 17. Cliques 3 a 5: termo, notação a_n e lei de formação. Com o termo geral, calcula-se qualquer termo sem escrever os anteriores.</p>
+  </aside>
+</section>
+
+<!-- 15. Achar o termo geral -->
+<section class="slide" data-nome="Achar o termo geral">
+  <div class="conteudo">
+    <p class="olho">Lei de formação</p>
+    <h2 class="titulo">De 3 em 3: tabuada do 3</h2>
+    <table class="tabela" style="position:absolute;left:0;top:170px;font-size:38px">
+      <tr><th>\(n\)</th><th>1</th><th>2</th><th>3</th><th>4</th></tr>
+      <tr data-passo="1"><td><b>\(3n\)</b></td><td>3</td><td>6</td><td>9</td><td>12</td></tr>
+      <tr data-passo="2"><td><b>\(a_n\)</b></td><td>5</td><td>8</td><td>11</td><td>14</td></tr>
+    </table>
+    <p class="texto" data-passo="3" style="position:absolute;left:0;top:450px;margin:0">Cada termo é <b>2 a mais</b> que o \(3n\).</p>
+    <div class="caixa caixa-fundamental" data-passo="4" style="position:absolute;left:1020px;right:0;top:170px;text-align:center;font-size:80px;padding:18px">\(a_n = 3n + 2\)</div>
+    <div class="caixa" data-passo="5" style="position:absolute;left:1020px;right:0;top:380px">
+      <span class="rotulo">Confira</span>
+      <div class="texto">\(n = 1\): \(3 \cdot 1 + 2 = 5\) ✓</div>
+    </div>
+  </div>
+  <aside class="notas">
+    <p>Os termos sobem de 3 em 3, como a tabuada do 3. Comparando linha a linha, sobra sempre 2. Clique 5: confira na posição 1.</p>
+  </aside>
+</section>
+
+<!-- 16. Exemplo: 20º termo -->
+<section class="slide" data-nome="Exemplo: o 20º termo">
+  <div class="conteudo">
+    <p class="olho">Exemplo</p>
+    <h2 class="titulo">O 20º termo de 5, 8, 11, 14, …</h2>
+    <div class="contas" style="position:absolute;left:0;top:190px;font-size:58px">
+      <div class="eq" data-passo="1"><span>\(a_n\)</span><span>\(=\)</span><span>\(3n + 2\)</span></div>
+      <div class="eq" data-passo="2"><span>\(a_{20}\)</span><span>\(=\)</span><span>\(3 \cdot \color{#1E4FD8}{20} + 2\)</span></div>
+      <div class="eq" data-passo="3"><span>\(a_{20}\)</span><span>\(=\)</span><span>\(60 + 2\)</span></div>
+      <div class="eq final" data-passo="4"><span>\(a_{20}\)</span><span>\(=\)</span><span>\(62\)</span></div>
+    </div>
+    <span class="pilula pilula-resposta" data-passo="5" style="position:absolute;right:0;top:420px">Sem escrever os 19 anteriores</span>
+  </div>
+  <aside class="notas">
+    <p>Uma linha por clique. A lei de formação é uma função da posição n.</p>
+  </aside>
+</section>
+
+<!-- 17. Outras leis -->
+<section class="slide" data-nome="Outras leis">
+  <div class="conteudo">
+    <p class="olho">Nem toda lei soma sempre o mesmo</p>
+    <h2 class="titulo">Quadrados e dobros</h2>
+    <div class="caixa" data-passo="1" style="position:absolute;left:0;width:820px;top:160px">
+      <span class="rotulo">Quadrados das posições</span>
+      <div class="seq" style="margin:8px 0 12px"><div class="t">1</div><div class="t">4</div><div class="t">9</div><div class="t">16</div><div class="t">25</div></div>
+      <div class="texto" style="font-size:44px">\(a_n = n^2\)</div>
+    </div>
+    <div class="caixa" data-passo="2" style="position:absolute;left:900px;right:0;top:160px">
+      <span class="rotulo">Lei recursiva</span>
+      <div class="seq" style="margin:8px 0 12px"><div class="t">2</div><div class="t">4</div><div class="t">8</div><div class="t">16</div></div>
+      <div class="texto" style="font-size:32px">Cada termo é o <b>dobro do anterior</b>. Precisa do 1º termo para começar.</div>
+    </div>
+    <div class="caixa caixa-atencao" data-passo="3" style="position:absolute;left:560px;right:0;top:560px">
+      <span class="rotulo">Confira a lei em dois termos</span>
+      <div class="texto" style="font-size:32px">Para 5, 8, 11: \(a_n = n + 4\) dá 5 em \(n = 1\), mas dá <span class="riscado">6</span> em \(n = 2\), e não 8.</div>
+    </div>
+  </div>
+  <aside class="notas">
+    <p>Clique 1: termo geral n². Clique 2: lei recursiva (diz como obter um termo a partir do anterior). Clique 3: a lei errada que só funciona no primeiro termo.</p>
+  </aside>
+</section>
+
+<!-- 18. Padrões em figuras -->
+<section class="slide" data-nome="Padrões em figuras">
+  <div class="conteudo">
+    <p class="olho">Padrões em figuras</p>
+    <h2 class="titulo">Quadrados de palitos</h2>
+    <div data-anima="fn-palitos" data-anima-passo="0" style="position:absolute;left:0;top:160px;width:1000px;height:240px"></div>
+    <div class="caixa" data-passo="1" style="position:absolute;left:1100px;right:0;top:150px;padding:22px 30px">
+      <span class="rotulo">Lei de figuras em sequência</span>
+      <ol class="texto" style="font-size:28px;margin:0;padding-left:1.2em;line-height:1.35">
+        <li>Conte e monte a tabela com \(n\).</li>
+        <li>Veja quanto aumenta.</li>
+        <li>Aumenta sempre \(k\)? Lei: \(k \cdot n + \text{ajuste}\).</li>
+        <li>Confira em outra figura.</li>
+      </ol>
+    </div>
+    <div style="position:absolute;left:0;width:1040px;top:420px;display:flex;flex-direction:column;gap:16px">
+      <p class="texto" style="margin:0" data-passo="2">Cada quadrado novo: <b>+3 palitos</b>.</p>
+      <p class="texto" style="margin:0" data-passo="3">Figura 1: 4 = \(3 \cdot 1\) <b>+ 1</b>.</p>
+    </div>
+    <div class="caixa caixa-fundamental" data-passo="4" style="position:absolute;left:1100px;right:0;top:420px;text-align:center;font-size:76px;padding:16px">\(P = 3n + 1\)</div>
+    <p class="texto" data-passo="5" style="position:absolute;left:1100px;right:0;top:580px;margin:0;font-size:30px">3 por quadrado + o 1º palito da esquerda.</p>
+  </div>
+  <aside class="notas">
+    <p>Os palitos aparecem um a um: em cada figura nova, os 3 últimos são os que o quadrado novo acrescenta (ele aproveita um palito do anterior). 4, 7, 10, 13.</p>
+    <p>Cliques 1 a 5: o passo a passo e a lei P = 3n + 1.</p>
+  </aside>
+</section>
+
+<!-- 19. Exemplo: muitos quadrados -->
+<section class="slide" data-nome="Exemplo: muitos quadrados">
+  <div class="conteudo">
+    <p class="olho">Exemplo · \(P = 3n + 1\)</p>
+    <h2 class="titulo">10 quadrados? E 100 palitos?</h2>
+    <div class="lado" style="position:absolute;left:0;right:0;top:170px">
+      <div>
+        <p class="texto" style="margin:0 0 16px"><b>a) Palitos para 10 quadrados</b></p>
+        <div class="contas" style="font-size:52px">
+          <div class="eq" data-passo="1"><span>\(P\)</span><span>\(=\)</span><span>\(3n + 1\)</span></div>
+          <div class="eq" data-passo="2"><span>\(P\)</span><span>\(=\)</span><span>\(3 \cdot \color{#1E4FD8}{10} + 1\)</span></div>
+          <div class="eq final" data-passo="3"><span>\(P\)</span><span>\(=\)</span><span>\(31\)</span></div>
+        </div>
+      </div>
+      <div>
+        <p class="texto" style="margin:0 0 16px" data-passo="4"><b>b) Quadrados com 100 palitos</b></p>
+        <div class="contas" style="font-size:52px">
+          <div class="eq" data-passo="4"><span>\(3n + 1\)</span><span>\(=\)</span><span>\(\color{#1E4FD8}{100}\)</span></div>
+          <div class="eq" data-passo="5"><span>\(3n\)</span><span>\(=\)</span><span>\(99\)</span></div>
+          <div class="eq final" data-passo="6"><span>\(n\)</span><span>\(=\)</span><span>\(33\)</span></div>
+        </div>
+      </div>
+    </div>
+    <div class="caixa" data-passo="7" style="position:absolute;left:560px;right:0;top:600px;padding:20px 30px">
+      <span class="rotulo">Como cai no IF</span>
+      <div class="texto" style="font-size:30px">3 ou 4 figuras e a pergunta numa figura distante (a 50ª, a 100ª). Ache a lei: desenhar até lá não é caminho.</div>
+    </div>
+  </div>
+  <aside class="notas">
+    <p>a) n conhecido: troca e calcula (31 palitos). b) P conhecido: n vira incógnita (33 quadrados, sem sobra).</p>
+  </aside>
+</section>
+
+<!-- 20. Questão 4 -->
+<section class="slide questao" data-nome="Questão 4">
+  <div class="conteudo">
+    <div class="area-resolucao"></div>
+    <span class="pilula pilula-pausa" data-em="1:some">Pause o vídeo e tente</span>
+    <div class="painel-questao">
+      <p class="olho">Questão 4 · IF Sudeste MG 2013</p>
+      <p class="enunciado">Uma função real satisfaz à lei \(f(x + 2) = f(x + 1) + 2 \cdot f(x)\). Se \(f(1) = 2\) e \(f(2) = 3\), o valor de \(f(5)\) é:</p>
+      <ol class="alternativas curtas">
+        <li data-em="2:apaga"><b>A</b><span>23</span></li>
+        <li data-em="2:apaga"><b>B</b><span>24</span></li>
+        <li data-em="2:apaga"><b>C</b><span>25</span></li>
+        <li data-em="2:apaga"><b>D</b><span>26</span></li>
+        <li data-em="2:certo"><b>E</b><span>27</span></li>
+      </ol>
+      <p class="fonte">IF Sudeste MG, prova de 2013 (2º semestre), questão 18</p>
+    </div>
+  </div>
+  <aside class="resolucao">
+    <p class="dados"><b>Dados:</b> \(f(1) = 2\); \(f(2) = 3\); cada valor = anterior + 2 · o de antes.</p>
+    <ol class="passos">
+      <li>\(f(3) = f(2) + 2 \cdot f(1) = 3 + 4 = 7\)</li>
+      <li>\(f(4) = f(3) + 2 \cdot f(2) = 7 + 6 = 13\)</li>
+      <li>\(f(5) = f(4) + 2 \cdot f(3) = 13 + 14 = 27\)</li>
+    </ol>
+    <p class="resposta"><b>Resposta:</b> \(f(5) = 27\). <b>Gabarito E.</b></p>
+    <p class="atencao"><b>Destaque no quadro:</b> Lei recursiva: um termo por vez, a partir dos primeiros.</p>
+    <ul class="erros">
+      <li><b>A</b> \(13 + 2 \cdot 5\): usou 5 no lugar de \(f(3) = 7\).</li>
+      <li><b>B</b> Não segue a lei: 2, 3, 7, 13, 27.</li>
+      <li><b>C</b> Não segue a lei: 2, 3, 7, 13, 27.</li>
+      <li><b>D</b> \(2 \cdot 13\): dobrou \(f(4)\) em vez de somar \(f(4)\) com o dobro de \(f(3)\).</li>
+    </ul>
+  </aside>
+  <aside class="notas">
+    <p>Clique 1 tira o aviso de pausa: resolva na área (D liga a caneta; E esconde o enunciado). Clique 2: gabarito E.</p>
+    <p>Questão oficial do IF Sudeste MG 2013-2, q18, MAT-0392 (sequência recursiva). Na prova o produto aparece como "2.f(x)"; aqui foi escrito com ponto de multiplicação.</p>
+  </aside>
+</section>
+
+<!-- 21. Resumo -->
+<section class="slide" data-nome="Resumo">
+  <div class="conteudo">
+    <p class="olho">Resumo</p>
+    <h2 class="titulo">O essencial</h2>
+    <div class="resumo" style="position:absolute;left:0;right:0;top:150px">
+      <div><b>Ponto:</b> par ordenado \((x;\ y)\), primeiro o eixo horizontal.</div>
+      <div><b>Quadrantes:</b> pelos sinais; anti-horário a partir de cima à direita.</div>
+      <div><b>Função:</b> a cada \(x\), <b>um único</b> \(y\). \(f(x)\) é o valor em \(x\).</div>
+      <div><b>Caminho contrário:</b> \(f(x) = k\) vira equação em \(x\).</div>
+      <div><b>Sequência:</b> \(a_n\) é o termo da posição \(n\). Aumenta sempre \(k\)? \(a_n = k \cdot n + \text{ajuste}\).</div>
+      <div><b>Figuras:</b> conte o que muda de uma para a próxima; confira a lei em dois termos.</div>
+    </div>
+  </div>
+  <aside class="notas">
+    <p>Peça para tirarem um print desta tela.</p>
+  </aside>
+</section>
+
+<!-- 22. A seguir -->
+<section class="slide capa" data-nome="A seguir">
+  <div class="estrelas"></div>
+  <div class="texto-capa" style="top:200px">
+    <span class="selo">Matemática · IF</span>
+    <p class="aula" style="font-size:26px">A seguir · Conceito de função · Parte 2 de 2</p>
+    <h1>O gráfico de uma função</h1>
+    <p class="sub">Construir, ler, testar e o domínio</p>
+  </div>
+  <svg class="emblema" viewBox="0 0 640 640" aria-hidden="true">
+    <path d="M90 560 V80 M90 560 H590" stroke="#fff" stroke-opacity=".8" stroke-width="5" stroke-linecap="round" fill="none"/>
+    <path d="M110 520 C220 140 330 140 400 330 S520 470 580 160" fill="none" stroke="#FFD10C" stroke-width="9" stroke-linecap="round"/>
+    <line x1="300" y1="70" x2="300" y2="580" stroke="#fff" stroke-width="4" stroke-dasharray="14 12" stroke-opacity=".8"/>
+    <circle cx="300" cy="196" r="15" fill="#fff"/>
+  </svg>
+  <img class="logo-capa" src="{{LOGO_BRANCO}}" alt="Quarks">
+  <aside class="notas"><p>Próxima parte: construir e ler o gráfico, o teste da reta vertical, domínio e imagem.</p></aside>
+</section>

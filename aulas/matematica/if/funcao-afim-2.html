@@ -1,0 +1,369 @@
+<!--aula
+{"disciplina": "matematica", "curso": "IF", "assunto": "Função afim", "parte": "Parte 2 de 2", "titulo": "Proporcionalidade e problemas", "scripts": ["animacoes-funcoes.js"]}
+-->
+<!-- Fonte: apostila IF, Matemática, cap. 4 (4.2 Função afim: Função linear, identidade e proporcionalidade; Problemas com função afim; resumo). Questões da apostila: Modelo IF if-matematica-funcao-afim m018; oficiais 2024-1 q17, 2023-1 q23 e 2017-2 q18 (sobras do capítulo em planejamento/questoes-if.md). -->
+<style>
+  .caixa { box-sizing: border-box; }
+  .modelo { display: grid; grid-template-columns: 1.5fr 1fr 1fr 1.3fr; gap: 0; background: var(--branco); border: 2px solid var(--lilas-2); border-radius: 26px; overflow: hidden; font-size: 30px; }
+  .modelo > div { padding: 14px 22px; border-top: 2px solid var(--lilas); }
+  .modelo > .cab { background: var(--d-clara); color: var(--d-forte); font-weight: 800; border-top: 0; font-size: 24px; letter-spacing: .06em; text-transform: uppercase; }
+</style>
+
+<!-- 1. Capa -->
+<section class="slide capa" data-nome="Capa">
+  <div class="estrelas"></div>
+  <div class="texto-capa">
+    <span class="selo">Matemática · IF</span>
+    <p class="aula">Função afim · Parte 2 de 2</p>
+    <h1>Proporcionalidade e problemas</h1>
+    <p class="sub">Função linear e qual plano compensa</p>
+  </div>
+  <svg class="emblema" viewBox="0 0 640 640" aria-hidden="true">
+    <path d="M90 560 V80 M90 560 H590" stroke="#fff" stroke-opacity=".8" stroke-width="5" stroke-linecap="round" fill="none"/>
+    <g class="gira-lento"><ellipse cx="330" cy="320" rx="280" ry="120" fill="none" stroke="#fff" stroke-opacity=".3" stroke-width="2" transform="rotate(-12 330 320)"/></g>
+    <line x1="90" y1="460" x2="560" y2="180" stroke="#fff" stroke-width="8" stroke-linecap="round"/>
+    <line x1="90" y1="560" x2="560" y2="110" stroke="#FFD10C" stroke-width="8" stroke-linecap="round"/>
+    <circle cx="378" cy="288" r="16" fill="#FFD10C" stroke="#fff" stroke-width="4"/>
+  </svg>
+  <img class="logo-capa" src="{{LOGO_BRANCO}}" alt="Quarks">
+  <aside class="notas">
+    <p>Nesta parte: função linear e identidade, a ligação com grandezas diretamente proporcionais e os problemas de comparar dois planos.</p>
+  </aside>
+</section>
+
+<!-- 2. Gancho: a padaria -->
+<section class="slide" data-nome="O pão de 80 centavos">
+  <div class="conteudo">
+    <p class="olho">Para começar</p>
+    <h2 class="titulo">Cada pão: R$ 0,80</h2>
+    <table class="tabela" style="position:absolute;left:0;top:170px">
+      <tr><th>pães</th><th>preço (R$)</th></tr>
+      <tr data-passo="1"><td>0</td><td>0</td></tr>
+      <tr data-passo="2"><td>1</td><td>0,80</td></tr>
+      <tr data-passo="3"><td>2</td><td>1,60</td></tr>
+      <tr data-passo="3"><td>4</td><td>3,20</td></tr>
+    </table>
+    <div style="position:absolute;left:640px;right:0;top:170px;display:flex;flex-direction:column;gap:26px">
+      <p class="texto" style="margin:0" data-passo="1">Sem pão, o preço é <b>zero</b>.</p>
+      <p class="texto" style="margin:0" data-passo="3">A quantidade <b>dobra</b>, o preço <b>dobra</b>.</p>
+      <div class="caixa caixa-fundamental" data-passo="4" style="text-align:center;font-size:84px;padding:16px">\(y = 0{,}8x\)</div>
+      <p class="texto" style="margin:0" data-passo="5">Sem o termo fixo: \(b = 0\).</p>
+    </div>
+  </div>
+  <aside class="notas">
+    <p>Compare com o táxi da parte anterior, que tinha bandeirada. Aqui não há valor fixo.</p>
+  </aside>
+</section>
+
+<!-- 3. Linear e identidade -->
+<section class="slide" data-nome="Função linear e identidade">
+  <div class="conteudo">
+    <p class="olho">Definição</p>
+    <h2 class="titulo">Função linear e identidade</h2>
+    <div style="position:absolute;left:0;width:800px;top:160px;display:flex;flex-direction:column;gap:24px">
+      <div class="caixa caixa-fundamental">
+        <span class="rotulo">Função linear</span>
+        <div class="texto">\(b = 0\): \(f(x) = ax\). A reta passa pela <b>origem</b>.</div>
+      </div>
+      <div class="caixa caixa-fundamental" data-passo="1">
+        <span class="rotulo">Função identidade</span>
+        <div class="texto">\(f(x) = x\): a saída é <b>igual</b> à entrada.</div>
+      </div>
+    </div>
+    <div data-anima="fn-reta-a" data-anima-passo="0" data-b="0" data-lista="2,1,0.5,-1" data-identidade="sim" style="position:absolute;left:900px;top:110px;width:860px;height:740px"></div>
+  </div>
+  <aside class="notas">
+    <p>A reta gira, mas sempre pelo ponto (0; 0): b = 0. Quando a = 1, aparece "identidade: y = x".</p>
+  </aside>
+</section>
+
+<!-- 4. Linear e proporcional -->
+<section class="slide" data-nome="Linear e proporcional">
+  <div class="conteudo">
+    <p class="olho">Linear e proporcional</p>
+    <h2 class="titulo">\(\dfrac{y}{x}\) sempre igual a \(a\)</h2>
+    <div class="contas" style="position:absolute;left:0;top:190px;font-size:46px;grid-template-columns:auto auto auto">
+      <div class="eq" data-passo="1"><span>\(\dfrac{0{,}80}{1}\)</span><span>\(=\)</span><span>\(0{,}8\)</span></div>
+      <div class="eq" data-passo="2"><span>\(\dfrac{1{,}60}{2}\)</span><span>\(=\)</span><span>\(0{,}8\)</span></div>
+      <div class="eq" data-passo="3"><span>\(\dfrac{3{,}20}{4}\)</span><span>\(=\)</span><span>\(0{,}8\)</span></div>
+    </div>
+    <div class="caixa caixa-fundamental" data-passo="4" style="position:absolute;left:640px;right:0;top:170px">
+      <span class="rotulo">Linear e proporcional</span>
+      <div class="texto">\(y\) é <b>diretamente proporcional</b> a \(x\) quando \(y = ax\). Reta pela origem; \(a\) é a <b>constante de proporcionalidade</b>.</div>
+    </div>
+    <div class="caixa caixa-atencao" data-passo="5" style="position:absolute;left:640px;right:0;top:470px">
+      <span class="rotulo">O táxi não é linear</span>
+      <div class="texto">\(y = 3x + 5\) não passa pela origem: 2 km custam R$ 11,00 e 1 km, R$ 8,00. <b>Não é o dobro.</b></div>
+    </div>
+  </div>
+  <aside class="notas">
+    <p>Na linear, y/x é sempre a (para x ≠ 0): é a definição de grandezas diretamente proporcionais (Razão e proporção). Clique 5: com valor fixo, não há proporcionalidade.</p>
+  </aside>
+</section>
+
+<!-- 5. Questão 1 -->
+<section class="slide questao" data-nome="Questão 1">
+  <div class="conteudo">
+    <div class="area-resolucao"></div>
+    <span class="pilula pilula-pausa" data-em="1:some">Pause o vídeo e tente</span>
+    <div class="painel-questao">
+      <p class="olho">Questão 1 · Modelo IF</p>
+      <p class="enunciado" style="font-size:26px">Em qual das situações abaixo o valor pago é <b>diretamente proporcional</b> à quantidade comprada ou usada?</p>
+      <ol class="alternativas" style="gap:8px">
+        <li data-em="2:apaga" style="font-size:22px"><b>A</b><span>Uma corrida de táxi com bandeirada de R$ 5,00 mais R$ 3,00 por quilômetro.</span></li>
+        <li data-em="2:apaga" style="font-size:22px"><b>B</b><span>Um estacionamento que cobra R$ 10,00 pela primeira hora e R$ 4,00 por hora a mais.</span></li>
+        <li data-em="2:certo" style="font-size:22px"><b>C</b><span>Uma padaria que vende pão francês a R$ 0,90 a unidade.</span></li>
+        <li data-em="2:apaga" style="font-size:22px"><b>D</b><span>Uma conta de luz com taxa fixa de R$ 20,00 mais R$ 0,80 por kWh consumido.</span></li>
+        <li data-em="2:apaga" style="font-size:22px"><b>E</b><span>Uma academia com matrícula de R$ 60,00 e mensalidade de R$ 80,00.</span></li>
+      </ol>
+      <p class="fonte">Questão Modelo IF (lote if-matematica-funcao-afim, m018)</p>
+    </div>
+  </div>
+  <aside class="resolucao">
+    <p class="dados"><b>Dados:</b> proporcional: \(y = ax\), sem valor fixo.</p>
+    <ol class="passos">
+      <li>A, B, D, E têm valor fixo (bandeirada, 1ª hora, taxa, matrícula)</li>
+      <li>Padaria: \(y = 0{,}90x\), sem fixo</li>
+      <li>Teste: 2 pães R$ 1,80 = o dobro de R$ 0,90</li>
+    </ol>
+    <p class="resposta"><b>Resposta:</b> a padaria. <b>Gabarito C.</b></p>
+    <p class="atencao"><b>Destaque no quadro:</b> Tem valor fixo? Então não é proporcional.</p>
+    <ul class="erros">
+      <li><b>A</b> 2 km R$ 11,00; 1 km R$ 8,00: não é o dobro.</li>
+      <li><b>B</b> 2 h custam R$ 14,00, não o dobro de R$ 10,00.</li>
+      <li><b>D</b> A taxa fixa é paga mesmo sem consumo.</li>
+      <li><b>E</b> 2 meses R$ 220,00; 1 mês R$ 140,00.</li>
+    </ul>
+  </aside>
+  <aside class="notas">
+    <p>Clique 1 tira o aviso de pausa: resolva na área (D liga a caneta; E esconde o enunciado). Clique 2: gabarito C.</p>
+    <p>Modelo IF, lote if-matematica-funcao-afim, m018, MAT-0743.</p>
+  </aside>
+</section>
+
+<!-- 6. Modelar: fixo e por unidade -->
+<section class="slide" data-nome="Montar a lei">
+  <div class="conteudo">
+    <p class="olho">Problemas com função afim</p>
+    <h2 class="titulo">Fixo é \(b\); por unidade é \(a\)</h2>
+    <div class="modelo" style="position:absolute;left:0;right:0;top:170px">
+      <div class="cab">situação</div><div class="cab">fixo (\(b\))</div><div class="cab">por unidade (\(a\))</div><div class="cab">lei</div>
+      <div data-passo="1">táxi</div><div data-passo="1">R$ 5,00</div><div data-passo="1">R$ 3,00 por km</div><div data-passo="1">\(y = 3x + 5\)</div>
+      <div data-passo="2">pão</div><div data-passo="2">—</div><div data-passo="2">R$ 0,80 por pão</div><div data-passo="2">\(y = 0{,}8x\)</div>
+      <div data-passo="3">academia A</div><div data-passo="3">R$ 60,00</div><div data-passo="3">R$ 80,00 por mês</div><div data-passo="3">\(A = 60 + 80x\)</div>
+      <div data-passo="4">academia B</div><div data-passo="4">—</div><div data-passo="4">R$ 95,00 por mês</div><div data-passo="4">\(B = 95x\)</div>
+    </div>
+  </div>
+  <aside class="notas">
+    <p>O primeiro passo de todo problema: achar o valor fixo e o valor por unidade. As duas academias são o próximo exemplo.</p>
+  </aside>
+</section>
+
+<!-- 7. As duas academias -->
+<section class="slide" data-nome="Exemplo: as duas academias">
+  <div class="conteudo">
+    <p class="olho">Exemplo · comparar dois planos</p>
+    <h2 class="titulo">Qual academia compensa?</h2>
+    <div class="caixa" style="position:absolute;left:0;width:800px;top:160px;padding:20px 30px">
+      <div class="texto" style="font-size:32px"><b>A:</b> R$ 60,00 de matrícula + R$ 80,00 por mês.<br><b>B:</b> sem matrícula, R$ 95,00 por mês.</div>
+    </div>
+    <div style="position:absolute;left:0;width:800px;top:320px">
+      <p class="texto" style="margin:0 0 8px" data-passo="1"><b>Empate:</b> iguale as leis.</p>
+      <div class="contas" style="font-size:44px;row-gap:8px">
+        <div class="eq" data-passo="1"><span>\(60 + 80x\)</span><span>\(=\)</span><span>\(95x\)</span></div>
+        <div class="eq" data-passo="2"><span>\(60\)</span><span>\(=\)</span><span>\(15x\)</span></div>
+        <div class="eq final" data-passo="3"><span>\(x\)</span><span>\(=\)</span><span>\(4\)</span></div>
+      </div>
+    </div>
+    <div style="position:absolute;left:900px;right:0;top:160px;display:flex;flex-direction:column;gap:22px">
+      <div class="caixa" data-passo="4">
+        <span class="rotulo">Teste: 5 meses</span>
+        <div class="contas" style="font-size:40px;grid-template-columns:auto auto auto">
+          <div class="eq"><span>\(A\)</span><span>\(=\)</span><span>\(60 + 80 \cdot 5 = 460\)</span></div>
+          <div class="eq"><span>\(B\)</span><span>\(=\)</span><span>\(95 \cdot 5 = 475\)</span></div>
+        </div>
+      </div>
+      <div class="caixa caixa-fundamental" data-passo="5">
+        <div class="texto">Até 4 meses: <b>B</b> é mais barata (ou igual).<br>A partir de 5 meses: <b>A compensa</b>.</div>
+      </div>
+    </div>
+  </div>
+  <aside class="notas">
+    <p>Passo a passo: leis (fixo = b, por mês = a); iguale para achar o empate; teste um valor depois do empate. Em 4 meses, as duas custam R$ 380,00.</p>
+  </aside>
+</section>
+
+<!-- 8. O gráfico das academias -->
+<section class="slide" data-nome="As retas se cruzam">
+  <div class="conteudo">
+    <p class="olho">No gráfico</p>
+    <h2 class="titulo">As retas se cruzam em 4 meses</h2>
+    <div data-anima="fn-academias" data-anima-passo="0" style="position:absolute;left:700px;top:120px;width:1060px;height:720px"></div>
+    <div style="position:absolute;left:0;width:620px;top:170px;display:flex;flex-direction:column;gap:22px">
+      <p class="texto" style="margin:0" data-passo="1">Antes de 4: a reta de <b>B</b> está embaixo.</p>
+      <p class="texto" style="margin:0" data-passo="2">Depois de 4: a de <b>A</b> fica embaixo.</p>
+      <p class="texto" style="margin:0" data-passo="3">B é mais inclinada: mensalidade maior.</p>
+    </div>
+  </div>
+  <aside class="notas">
+    <p>Embaixo = mais barato. A reta de A começa em 60 (matrícula); a de B começa na origem (linear). Cruzam em (4; 380).</p>
+  </aside>
+</section>
+
+<!-- 9. Questão 2 -->
+<section class="slide questao" data-nome="Questão 2">
+  <div class="conteudo">
+    <div class="area-resolucao"></div>
+    <span class="pilula pilula-pausa" data-em="1:some">Pause o vídeo e tente</span>
+    <div class="painel-questao">
+      <p class="olho">Questão 2 · IF Sudeste MG 2024</p>
+      <p class="enunciado" style="font-size:26px">Considerando que a cada 10 metros de profundidade no mar a pressão que a água exerce sobre o corpo é de 1 atm e que a pressão atmosférica, no nível do mar, é de 1 atm, qual é a lei de formação da função \(P(x)\), onde \(P\) é a pressão total (atmosférica e da água do mar) sobre o corpo e \(x\) é a profundidade, em metros, no mar?</p>
+      <ol class="alternativas curtas">
+        <li data-em="2:apaga"><b>A</b><span>\(P(x) = \dfrac{x}{10} - 1\)</span></li>
+        <li data-em="2:certo"><b>B</b><span>\(P(x) = \dfrac{x}{10} + 1\)</span></li>
+        <li data-em="2:apaga"><b>C</b><span>\(P(x) = 10x\)</span></li>
+        <li data-em="2:apaga"><b>D</b><span>\(P(x) = 10x - 1\)</span></li>
+        <li data-em="2:apaga"><b>E</b><span>\(P(x) = 10x + 1\)</span></li>
+      </ol>
+      <p class="fonte">IF Sudeste MG, prova de 2024 (1º semestre), questão 17</p>
+    </div>
+  </div>
+  <aside class="resolucao">
+    <p class="dados"><b>Dados:</b> 1 atm a cada 10 m; 1 atm do ar.</p>
+    <ol class="passos">
+      <li>Fixo (ar): \(b = 1\)</li>
+      <li>Por metro: \(a = \dfrac{1}{10}\)</li>
+      <li>\(P(x) = \dfrac{x}{10} + 1\)</li>
+      <li>Confira: a 10 m, \(P = 1 + 1 = 2\) atm</li>
+    </ol>
+    <p class="resposta"><b>Resposta:</b> \(P(x) = \dfrac{x}{10} + 1\). <b>Gabarito B.</b></p>
+    <p class="atencao"><b>Destaque no quadro:</b> 1 a cada 10 é dividir por 10, não multiplicar.</p>
+    <ul class="erros">
+      <li><b>A</b> Subtrai o ar: \(P(0) = -1\) atm.</li>
+      <li><b>C</b> Multiplica por 10 e esquece o ar.</li>
+      <li><b>D</b> Multiplica por 10 e subtrai o ar.</li>
+      <li><b>E</b> A 10 m daria 101 atm.</li>
+    </ul>
+  </aside>
+  <aside class="notas">
+    <p>Clique 1 tira o aviso de pausa: resolva na área (D liga a caneta; E esconde o enunciado). Clique 2: gabarito B.</p>
+    <p>Questão oficial do IF Sudeste MG 2024-1, q17, MAT-0301.</p>
+  </aside>
+</section>
+
+<!-- 10. Questão 3 -->
+<section class="slide questao" data-nome="Questão 3">
+  <div class="conteudo">
+    <div class="area-resolucao"></div>
+    <span class="pilula pilula-pausa" data-em="1:some">Pause o vídeo e tente</span>
+    <div class="painel-questao">
+      <p class="olho">Questão 3 · IF Sudeste MG 2023</p>
+      <p class="enunciado">Um ateliê produz e vende acessórios, em cetim, para cabelos. O custo para produzir uma touca para dormir é de R$ 5,00 reais. Sabendo que o ateliê vende a touca por R$ 20,00 reais, qual é a expressão que fornece o lucro \(L\), em reais, em função da quantidade vendida \(x\) de touca?</p>
+      <ol class="alternativas curtas">
+        <li data-em="2:apaga"><b>A</b><span>\(L = 20 - 5x\)</span></li>
+        <li data-em="2:apaga"><b>B</b><span>\(L = -5 + 20x\)</span></li>
+        <li data-em="2:apaga"><b>C</b><span>\(L = 5 + 20x\)</span></li>
+        <li data-em="2:certo"><b>D</b><span>\(L = 15x\)</span></li>
+        <li data-em="2:apaga"><b>E</b><span>\(L = 25x\)</span></li>
+      </ol>
+      <p class="fonte">IF Sudeste MG, prova de 2023 (1º semestre), questão 23</p>
+    </div>
+  </div>
+  <aside class="resolucao">
+    <p class="dados"><b>Dados:</b> custo R$ 5,00 por touca; venda R$ 20,00 por touca.</p>
+    <ol class="passos">
+      <li>Lucro = venda − custo</li>
+      <li>\(L = 20x - 5x\)</li>
+      <li>\(L = 15x\) (linear: sem valor fixo)</li>
+    </ol>
+    <p class="resposta"><b>Resposta:</b> \(L = 15x\). <b>Gabarito D.</b></p>
+    <p class="atencao"><b>Destaque no quadro:</b> Os dois valores são por touca: os dois multiplicam \(x\).</p>
+    <ul class="erros">
+      <li><b>A</b> Deixa a venda fixa em R$ 20,00.</li>
+      <li><b>B</b> Trata o custo como fixo; ele é por touca.</li>
+      <li><b>C</b> Soma o custo e ainda o trata como fixo.</li>
+      <li><b>E</b> Soma custo e venda.</li>
+    </ul>
+  </aside>
+  <aside class="notas">
+    <p>Clique 1 tira o aviso de pausa: resolva na área (D liga a caneta; E esconde o enunciado). Clique 2: gabarito D.</p>
+    <p>Questão oficial do IF Sudeste MG 2023-1, q23, MAT-0455. O "R$ 5,00 reais" repetido é do texto original da prova.</p>
+  </aside>
+</section>
+
+<!-- 11. Questão 4 -->
+<section class="slide questao" data-nome="Questão 4">
+  <div class="conteudo">
+    <div class="area-resolucao"></div>
+    <span class="pilula pilula-pausa" data-em="1:some">Pause o vídeo e tente</span>
+    <div class="painel-questao">
+      <p class="olho">Questão 4 · IF Sudeste MG 2017</p>
+      <p class="enunciado">Um investimento rende, segundo comportamento linear, R$7,00 mensais fixo. Se um investidor aplica inicialmente R$1000,00, em 10 meses, quanto será o montante aplicado?</p>
+      <ol class="alternativas">
+        <li data-em="2:apaga"><b>A</b><span>R$ 1007,00</span></li>
+        <li data-em="2:certo"><b>B</b><span>R$ 1070,00</span></li>
+        <li data-em="2:apaga"><b>C</b><span>R$ 1077,00</span></li>
+        <li data-em="2:apaga"><b>D</b><span>R$ 1700,00</span></li>
+        <li data-em="2:apaga"><b>E</b><span>R$ 1770,00</span></li>
+      </ol>
+      <p class="fonte">IF Sudeste MG, prova de 2017 (2º semestre), questão 18</p>
+    </div>
+  </div>
+  <aside class="resolucao">
+    <p class="dados"><b>Dados:</b> início R$ 1000,00; +R$ 7,00 por mês; 10 meses.</p>
+    <ol class="passos">
+      <li>Lei: \(M = 1000 + 7x\)</li>
+      <li>\(M = 1000 + 7 \cdot 10\)</li>
+      <li>\(M = 1070\)</li>
+    </ol>
+    <p class="resposta"><b>Resposta:</b> R$ 1070,00. <b>Gabarito B.</b></p>
+    <p class="atencao"><b>Destaque no quadro:</b> Valor inicial = \(b\); rendimento por mês = \(a\).</p>
+    <ul class="erros">
+      <li><b>A</b> Só um mês: \(1000 + 7\).</li>
+      <li><b>C</b> 11 meses: \(1000 + 77\).</li>
+      <li><b>D</b> \(7 \cdot 100 = 700\): dez vezes o certo.</li>
+      <li><b>E</b> Soma \(700 + 70\) ao valor inicial.</li>
+    </ul>
+  </aside>
+  <aside class="notas">
+    <p>Clique 1 tira o aviso de pausa: resolva na área (D liga a caneta; E esconde o enunciado). Clique 2: gabarito B.</p>
+    <p>Questão oficial do IF Sudeste MG 2017-2, q18, MAT-0495.</p>
+  </aside>
+</section>
+
+<!-- 12. Resumo -->
+<section class="slide" data-nome="Resumo">
+  <div class="conteudo">
+    <p class="olho">Resumo · Função afim</p>
+    <h2 class="titulo">O essencial</h2>
+    <div class="resumo" style="position:absolute;left:0;right:0;top:150px">
+      <div><b>Função afim:</b> \(f(x) = ax + b\); \(a\) é a taxa de variação, \(b\) o valor inicial.</div>
+      <div><b>Gráfico:</b> reta; \(a > 0\) sobe, \(a < 0\) desce; corta o eixo y em \((0;\ b)\).</div>
+      <div><b>Zero:</b> o \(x\) que faz \(f(x) = 0\); corte no eixo x.</div>
+      <div><b>Linear (\(b = 0\)):</b> passa pela origem; proporcionalidade direta. Identidade: \(f(x) = x\).</div>
+      <div><b>Comparar planos:</b> iguale as leis e teste antes e depois do empate.</div>
+      <div><b>Modelar:</b> fixo é o \(b\); por unidade é o \(a\).</div>
+    </div>
+  </div>
+  <aside class="notas">
+    <p>Resumo do subcapítulo inteiro (as duas partes). Peça para tirarem um print desta tela.</p>
+  </aside>
+</section>
+
+<!-- 13. A seguir -->
+<section class="slide capa" data-nome="A seguir">
+  <div class="estrelas"></div>
+  <div class="texto-capa" style="top:200px">
+    <span class="selo">Matemática · IF</span>
+    <p class="aula" style="font-size:26px">A seguir · Função quadrática · Parte 1 de 2</p>
+    <h1>A parábola e os coeficientes</h1>
+    <p class="sub">O que \(a\), \(b\) e \(c\) fazem com a curva</p>
+  </div>
+  <svg class="emblema" viewBox="0 0 640 640" aria-hidden="true">
+    <path d="M90 560 V80 M90 560 H590" stroke="#fff" stroke-opacity=".8" stroke-width="5" stroke-linecap="round" fill="none"/>
+    <path d="M150 120 Q330 860 510 120" fill="none" stroke="#FFD10C" stroke-width="9" stroke-linecap="round"/>
+    <circle cx="330" cy="490" r="16" fill="#fff"/>
+  </svg>
+  <img class="logo-capa" src="{{LOGO_BRANCO}}" alt="Quarks">
+  <aside class="notas"><p>Próximo subcapítulo: Função quadrática. Primeiro a definição, a parábola e o papel de a, b e c.</p></aside>
+</section>
