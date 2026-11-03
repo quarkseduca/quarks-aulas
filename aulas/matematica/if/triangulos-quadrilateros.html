@@ -1,0 +1,627 @@
+<!--aula
+{"disciplina": "matematica", "curso": "IF", "assunto": "Geometria plana", "parte": "Parte única", "titulo": "Triângulos e quadriláteros", "scripts": ["animacoes-geometria-a.js"]}
+-->
+<!-- Fonte: apostila IF, Matemática, cap. 5 (5.2 Triângulos e quadriláteros: Classificação e condição de existência; Soma dos ângulos internos e ângulo externo; Classificação dos quadriláteros; Propriedades de paralelogramos e trapézios; resumo). Questões: Modelo if-matematica-triangulos m004 (MAT-3406); oficiais IF Sudeste 2015-2 q17 (MAT-0312), 2013-1 q16 (MAT-0367) e 2015-1 q23 (MAT-0296), as sobras do subcapítulo. As oficiais 2016-1 q14 (MAT-0469) e 2016-1-extra q15 (MAT-0402) ficam reservadas para o bloco do fim do capítulo. -->
+<style>
+  .cartao { box-sizing: border-box; background: var(--branco); border: 2px solid var(--lilas-2); border-radius: 28px; padding: 16px 22px; }
+  .cartao h3 { margin: 0 0 2px; font: 800 34px var(--fonte-titulo); letter-spacing: -.02em; color: var(--roxo-titulo); }
+  .cartao p { margin: 0; font-size: 26px; line-height: 1.3; }
+  .cartao > svg { display: block; margin: 0 auto 6px; }
+  .grade3 { display: grid; grid-template-columns: repeat(3, 1fr); gap: 22px; }
+  .grade5 { display: grid; grid-template-columns: repeat(5, 1fr); gap: 18px; }
+  .fig { overflow: visible; font-family: Figtree, "Segoe UI", sans-serif; }
+  .fig text { font-weight: 800; }
+  .rot { font-size: 32px; fill: var(--roxo-titulo); }
+  .rot-i { font-size: 36px; font-style: italic; fill: var(--carvao); }
+  .tri { fill: rgba(47,107,255,.08); stroke: var(--carvao); stroke-width: 5; stroke-linejoin: round; }
+  .marca { stroke: var(--d); stroke-width: 4; stroke-linecap: round; }
+  .ang-a { fill: rgba(47,107,255,.2); stroke: var(--d); stroke-width: 4; }
+  .ang-b { fill: rgba(140,123,234,.22); stroke: #8C7BEA; stroke-width: 4; }
+  .ang-e { fill: rgba(255,209,12,.45); stroke: #C99A00; stroke-width: 4; }
+  .traca { stroke-dasharray: 100; stroke-dashoffset: 100; transition: stroke-dashoffset 1.4s ease; }
+  .mostra .traca, .traca.mostra { stroke-dashoffset: 0; }
+  .classe { display: grid; grid-template-columns: 230px 1fr; align-items: center; gap: 18px; background: var(--branco); border: 2px solid var(--lilas-2); border-radius: 22px; padding: 12px 24px; font-size: 30px; }
+  .classe b { font: 800 34px var(--fonte-titulo); color: var(--roxo-titulo); }
+  /* as varetas tentam se fechar e não alcançam: as pontas sobem juntas e voltam, sem nunca se tocar */
+  @keyframes sobe-esq { 0%, 100% { transform: rotate(0deg); } 50% { transform: rotate(-24deg); } }
+  @keyframes sobe-dir { 0%, 100% { transform: rotate(0deg); } 50% { transform: rotate(24deg); } }
+  .vara-e { transform-box: view-box; transform-origin: 60px 300px; }
+  .vara-d { transform-box: view-box; transform-origin: 700px 300px; }
+  .slide.ativo .mostra .vara-e { animation: sobe-esq 6s ease-in-out infinite; }
+  .slide.ativo .mostra .vara-d { animation: sobe-dir 6s ease-in-out infinite; }
+  /* as diagonais se desenham e o ponto médio aparece depois */
+  .meio { opacity: 0; transition: opacity .6s 1.3s; }
+  .mostra .meio, .meio.mostra { opacity: 1; }
+</style>
+
+<!-- 1. Capa -->
+<section class="slide capa" data-nome="Capa">
+  <div class="estrelas"></div>
+  <div class="texto-capa" style="top:170px">
+    <span class="selo">Matemática · IF</span>
+    <p class="aula">Geometria plana</p>
+    <h1 style="font-size:120px">Triângulos e quadriláteros</h1>
+    <p class="sub">Existência, 180°, 360° e as propriedades</p>
+  </div>
+  <svg class="emblema" viewBox="0 0 640 640" aria-hidden="true">
+    <g class="gira-lento"><ellipse cx="320" cy="320" rx="300" ry="128" fill="none" stroke="#fff" stroke-opacity=".38" stroke-width="2" transform="rotate(-10 320 320)"/></g>
+    <g class="gira"><ellipse cx="320" cy="320" rx="236" ry="196" fill="none" stroke="#FFD10C" stroke-opacity=".75" stroke-width="2.5" stroke-dasharray="3 14" stroke-linecap="round" transform="rotate(-8 320 320)"/>
+      <circle cx="84" cy="300" r="13" fill="var(--d)" stroke="#fff" stroke-width="3"/></g>
+    <circle cx="320" cy="320" r="132" fill="#FFD10C"/>
+    <image href="{{SYM_ROXO}}" x="238" y="238" width="164" height="164"/>
+  </svg>
+  <img class="logo-capa" src="{{LOGO_BRANCO}}" alt="Quarks">
+  <aside class="notas">
+    <p>Parte única do subcapítulo. Primeiro os triângulos (quando existem, nomes, soma de 180° e ângulo externo); depois os quadriláteros (soma de 360°, os notáveis e suas propriedades). São 4 questões; se faltar tempo, a Questão 3 pode ficar para casa.</p>
+  </aside>
+</section>
+
+<!-- 2. As varetas -->
+<section class="slide" data-nome="As varetas">
+  <div class="conteudo">
+    <p class="olho">Para começar</p>
+    <h2 class="titulo">Varetas de 3, 4 e 8 cm</h2>
+    <svg class="fig" viewBox="0 0 780 380" width="780" height="380" style="position:absolute;left:0;top:150px" aria-hidden="true">
+      <line x1="60" y1="300" x2="700" y2="300" stroke="var(--carvao)" stroke-width="12" stroke-linecap="round"/>
+      <text x="380" y="356" text-anchor="middle" font-size="32" fill="var(--carvao)">8 cm</text>
+      <g data-passo="1">
+        <g class="vara-e"><line x1="60" y1="284" x2="300" y2="284" stroke="var(--d)" stroke-width="12" stroke-linecap="round"/><text x="180" y="262" text-anchor="middle" font-size="32" fill="var(--d-forte)">3 cm</text></g>
+        <g class="vara-d"><line x1="700" y1="284" x2="380" y2="284" stroke="#8C7BEA" stroke-width="12" stroke-linecap="round"/><text x="540" y="262" text-anchor="middle" font-size="32" fill="#6551D1">4 cm</text></g>
+      </g>
+      <g data-passo="2"><path d="M300 236 V196 M380 236 V196" stroke="#C2384F" stroke-width="4"/><text x="340" y="180" text-anchor="middle" font-size="30" fill="#C2384F">falta 1 cm</text></g>
+    </svg>
+    <div style="position:absolute;left:900px;right:0;top:170px;display:flex;flex-direction:column;gap:24px">
+      <div class="contas" data-passo="2" style="font-size:52px">
+        <div class="eq"><span>\(3 + 4\)</span><span>\(=\)</span><span>\(7\)</span></div>
+      </div>
+      <p class="texto" data-passo="2" style="margin:0">As duas menores juntas <b>não alcançam</b> as pontas da maior.</p>
+      <span class="pilula pilula-resposta" data-passo="3" style="align-self:flex-start">Nem todo trio de medidas forma triângulo</span>
+    </div>
+  </div>
+  <aside class="notas">
+    <p>Clique 1: as varetas de 3 cm e 4 cm, presas nas pontas da de 8 cm, tentam subir e se encontrar. Não se encontram nunca: deitadas, ainda falta 1 cm.</p>
+    <p>Clique 3: a pergunta do próximo slide é "quando dá?".</p>
+  </aside>
+</section>
+
+<!-- 3. Condição de existência -->
+<section class="slide" data-nome="Condição de existência">
+  <div class="conteudo">
+    <p class="olho">Quando dá triângulo</p>
+    <h2 class="titulo">Condição de existência</h2>
+    <div class="caixa caixa-fundamental" style="position:absolute;left:0;width:820px;top:170px">
+      <span class="rotulo">Condição de existência</span>
+      <div class="texto">Cada lado é <b>menor</b> que a soma dos outros dois.</div>
+    </div>
+    <p class="texto" data-passo="1" style="position:absolute;left:0;width:820px;top:400px;margin:0">Na prática: teste só o <b>maior lado</b>.</p>
+    <div style="position:absolute;left:940px;right:0;top:170px;display:flex;flex-direction:column;gap:20px">
+      <div class="classe" data-passo="2"><b>3, 4, 8</b><span>\(8 &lt; 3 + 4\)? \(8 &lt; 7\): <b style="color:var(--erro);font:inherit;font-weight:800">não</b></span></div>
+      <div class="classe" data-passo="3"><b>3, 4, 5</b><span>\(5 &lt; 3 + 4\)? \(5 &lt; 7\): <b style="color:var(--certo);font:inherit;font-weight:800">sim</b></span></div>
+      <div class="classe" data-passo="4"><b>3, 4, 7</b><span>\(7 &lt; 7\)? <b style="color:var(--erro);font:inherit;font-weight:800">não</b>: fica em linha reta</span></div>
+    </div>
+  </div>
+  <aside class="notas">
+    <p>Clique 1: basta testar o maior lado (os outros testes passam sozinhos). Cliques 2 a 4: três trios.</p>
+    <p>O trio 3, 4, 7 é exemplo do professor (não está na apostila): a igualdade não serve, as varetas ficam deitadas sobre a maior.</p>
+  </aside>
+</section>
+
+<!-- 4. O terceiro lado -->
+<section class="slide" data-nome="O terceiro lado">
+  <div class="conteudo">
+    <p class="olho">Cai muito</p>
+    <h2 class="titulo">Lados de 4 cm e 9 cm: e o terceiro?</h2>
+    <div class="contas" style="position:absolute;left:0;top:180px;font-size:50px;row-gap:22px">
+      <div class="eq" data-passo="1"><span>\(x\)</span><span>\(&lt;\)</span><span>\(4 + 9 = 13\)</span></div>
+      <div class="eq" data-passo="2"><span>\(9\)</span><span>\(&lt;\)</span><span>\(4 + x\ \Rightarrow\ x &gt; 5\)</span></div>
+      <div class="eq final" data-passo="3"><span>\(5\)</span><span>\(&lt;\)</span><span>\(x &lt; 13\)</span></div>
+    </div>
+    <svg class="fig" viewBox="0 0 880 170" width="880" height="170" style="position:absolute;left:880px;top:220px" aria-hidden="true" data-passo="3">
+      <line x1="20" y1="90" x2="860" y2="90" stroke="var(--cinza)" stroke-width="4"/>
+      <line x1="300" y1="90" x2="700" y2="90" stroke="var(--d)" stroke-width="14" stroke-linecap="butt"/>
+      <g stroke="var(--cinza)" stroke-width="3"><line x1="60" y1="78" x2="60" y2="102"/><line x1="300" y1="78" x2="300" y2="102"/><line x1="700" y1="78" x2="700" y2="102"/></g>
+      <circle cx="300" cy="90" r="14" fill="#fff" stroke="var(--d)" stroke-width="5"/><circle cx="700" cy="90" r="14" fill="#fff" stroke="var(--d)" stroke-width="5"/>
+      <g text-anchor="middle" font-size="30" fill="var(--carvao)"><text x="60" y="146">0</text><text x="300" y="146">5</text><text x="700" y="146">13</text></g>
+      <text x="300" y="44" text-anchor="middle" font-size="26" fill="var(--d-forte)">9 − 4</text><text x="700" y="44" text-anchor="middle" font-size="26" fill="var(--d-forte)">9 + 4</text>
+    </svg>
+    <div class="caixa caixa-fundamental" data-passo="4" style="position:absolute;left:880px;right:0;top:470px">
+      <div class="texto">O terceiro lado fica entre a <b>diferença</b> e a <b>soma</b> dos outros dois.</div>
+    </div>
+  </div>
+  <aside class="notas">
+    <p>Da apostila. Clique 1: menor que a soma. Clique 2: o lado de 9 cm também precisa ser menor que 4 + x, então x passa de 5. Clique 3: entre 5 cm e 13 cm (bolinhas abertas: os extremos não valem).</p>
+  </aside>
+</section>
+
+<!-- 5. Classificação -->
+<section class="slide" data-nome="Classificação dos triângulos">
+  <div class="conteudo">
+    <p class="olho">Nomes</p>
+    <h2 class="titulo">Pelos lados e pelos ângulos</h2>
+    <div class="grade3" style="position:absolute;left:0;right:0;top:150px">
+      <div class="cartao" data-passo="1"><svg class="fig" viewBox="0 0 240 160" width="240" height="160" aria-hidden="true"><polygon class="tri" points="40,150 200,150 120,11.4"/><g class="marca"><line x1="120" y1="140" x2="120" y2="160"/><line x1="71" y1="72" x2="89" y2="86"/><line x1="169" y1="72" x2="151" y2="86"/></g></svg><h3>Equilátero</h3><p>3 lados iguais; 3 ângulos iguais</p></div>
+      <div class="cartao" data-passo="2"><svg class="fig" viewBox="0 0 240 160" width="240" height="160" aria-hidden="true"><polygon class="tri" points="60,150 180,150 120,10"/><g class="marca"><line x1="81" y1="76" x2="99" y2="84"/><line x1="159" y1="76" x2="141" y2="84"/></g></svg><h3>Isósceles</h3><p>pelo menos 2 lados iguais; os <b>ângulos da base</b> são iguais</p></div>
+      <div class="cartao" data-passo="3"><svg class="fig" viewBox="0 0 240 160" width="240" height="160" aria-hidden="true"><polygon class="tri" points="20,150 220,150 70,40"/></svg><h3>Escaleno</h3><p>3 lados diferentes</p></div>
+    </div>
+    <div class="grade3" style="position:absolute;left:600px;right:0;top:530px;grid-template-columns:repeat(3,1fr);gap:18px">
+      <div class="cartao" data-passo="4" style="padding:12px 18px"><svg class="fig" viewBox="0 0 240 150" width="200" height="125" aria-hidden="true"><polygon class="tri" points="30,140 210,140 130,20"/></svg><h3 style="font-size:30px">Acutângulo</h3><p style="font-size:23px">3 ângulos agudos</p></div>
+      <div class="cartao" data-passo="5" style="padding:12px 18px"><svg class="fig" viewBox="0 0 240 150" width="200" height="125" aria-hidden="true"><polygon class="tri" points="40,140 200,140 40,20"/><path d="M40 114 H66 V140" fill="none" stroke="var(--carvao)" stroke-width="3"/></svg><h3 style="font-size:30px">Retângulo</h3><p style="font-size:23px">1 ângulo reto</p></div>
+      <div class="cartao" data-passo="6" style="padding:12px 18px"><svg class="fig" viewBox="0 0 240 150" width="200" height="125" aria-hidden="true"><polygon class="tri" points="20,140 220,140 60,80"/></svg><h3 style="font-size:30px">Obtusângulo</h3><p style="font-size:23px">1 ângulo obtuso</p></div>
+    </div>
+  </div>
+  <aside class="notas">
+    <p>Cliques 1 a 3: pelos lados (os tracinhos marcam lados iguais). Cliques 4 a 6: pelos ângulos. Os ângulos da base do isósceles (opostos aos lados iguais) são iguais: caem muito nas questões.</p>
+  </aside>
+</section>
+
+<!-- 6. Soma 180° -->
+<section class="slide" data-nome="Soma dos ângulos: 180°">
+  <div class="conteudo">
+    <p class="olho">Rasgue as três pontas</p>
+    <h2 class="titulo">Os ângulos somam 180°</h2>
+    <div data-anima="triangulo-180" data-anima-passo="1" style="position:absolute;left:0;top:130px;width:820px;height:470px"></div>
+    <div style="position:absolute;left:940px;right:0;top:170px;display:flex;flex-direction:column;gap:24px">
+      <div class="caixa caixa-fundamental">
+        <span class="rotulo">Soma dos ângulos internos</span>
+        <div class="texto">Em todo triângulo: \(\hat{A} + \hat{B} + \hat{C} = 180^{\circ}\)</div>
+      </div>
+      <p class="texto" data-passo="2" style="margin:0;font-size:32px">Por \(C\), trace a <b>paralela</b> à base (única, pelo axioma de Euclides).</p>
+      <p class="texto" data-passo="3" style="margin:0;font-size:32px">\(\hat{A}\) e \(\hat{B}\) reaparecem lá em cima como <b>alternos internos</b>. Os três juntos: um <b>raso</b>.</p>
+    </div>
+  </div>
+  <aside class="notas">
+    <p>Clique 1: as pontas A (azul) e B (lilás) viajam até C e se encaixam ao lado do ângulo C (amarelo), sobre a reta tracejada paralela à base. Juntas formam um ângulo raso. A animação vai e volta.</p>
+    <p>Cliques 2 e 3: a explicação da apostila com paralelas. É o recorte de papel da introdução, só que demonstrado.</p>
+  </aside>
+</section>
+
+<!-- 7. Ângulo externo -->
+<section class="slide" data-nome="Ângulo externo">
+  <div class="conteudo">
+    <p class="olho">Prolongando um lado</p>
+    <h2 class="titulo">O ângulo externo</h2>
+    <svg class="fig" viewBox="0 0 780 440" width="780" height="440" style="position:absolute;left:0;top:140px" aria-hidden="true">
+      <path class="ang-a" d="M100 380 L160 380 A60 60 0 0 0 139.7 335.1 Z"/>
+      <path class="ang-b" d="M330 120 L296.9 157.4 A50 50 0 0 0 359.5 160.4 Z"/>
+      <path class="ang-e" data-passo="1" d="M520 380 L590 380 A70 70 0 0 0 478.7 323.5 Z"/>
+      <polygon class="tri" points="100,380 520,380 330,120"/>
+      <line class="traca" data-passo="1" pathLength="100" x1="520" y1="380" x2="740" y2="380" stroke="var(--carvao)" stroke-width="5" stroke-dasharray="100" stroke-linecap="round"/>
+      <text x="168" y="368" font-size="32" fill="var(--d-forte)">a</text><text x="322" y="196" font-size="32" fill="#6551D1">b</text>
+      <text x="470" y="368" font-size="32" fill="var(--cinza)">c</text>
+      <text data-passo="1" x="590" y="340" font-size="34" fill="#8A6A00">e</text>
+    </svg>
+    <div style="position:absolute;left:900px;right:0;top:160px">
+      <div class="contas" style="font-size:48px;row-gap:18px">
+        <div class="eq" data-passo="2"><span>\(e + c\)</span><span>\(=\)</span><span>\(180^{\circ}\)</span></div>
+        <div class="eq" data-passo="3"><span>\(a + b + c\)</span><span>\(=\)</span><span>\(180^{\circ}\)</span></div>
+        <div class="eq final" data-passo="4"><span>\(e\)</span><span>\(=\)</span><span>\(a + b\)</span></div>
+      </div>
+      <div class="caixa caixa-fundamental" data-passo="5" style="margin-top:30px">
+        <div class="texto">O externo é a soma dos dois internos que <b>não</b> são vizinhos dele.</div>
+      </div>
+    </div>
+  </div>
+  <aside class="notas">
+    <p>Clique 1: prolonga-se a base e aparece o externo e (amarelo). Clique 2: e é suplementar ao interno vizinho c. Clique 3: os internos somam 180°. Clique 4: e e a + b completam o mesmo c, então e = a + b.</p>
+  </aside>
+</section>
+
+<!-- 8. Exemplo: x, 2x, 3x -->
+<section class="slide" data-nome="Exemplo: ângulos proporcionais">
+  <div class="conteudo">
+    <p class="olho">Exemplo</p>
+    <h2 class="titulo">Ângulos \(x\), \(2x\) e \(3x\)</h2>
+    <p class="texto" style="position:absolute;left:0;width:760px;top:170px;margin:0">Os ângulos de um triângulo medem \(x\), \(2x\) e \(3x\). Quanto mede cada um?</p>
+    <div class="contas" style="position:absolute;left:900px;top:170px;font-size:52px;row-gap:20px">
+      <div class="eq" data-passo="1"><span>\(x + 2x + 3x\)</span><span>\(=\)</span><span>\(180\)</span></div>
+      <div class="eq" data-passo="2"><span>\(6x\)</span><span>\(=\)</span><span>\(180\)</span></div>
+      <div class="eq final" data-passo="3"><span>\(x\)</span><span>\(=\)</span><span>\(30\)</span></div>
+    </div>
+    <span class="pilula pilula-resposta" data-passo="4" style="position:absolute;left:900px;top:520px">30°, 60° e 90°</span>
+    <p class="texto" data-passo="5" style="position:absolute;left:900px;top:640px;margin:0">Tem um ângulo reto: é um triângulo <b>retângulo</b>.</p>
+  </div>
+  <aside class="notas">
+    <p>Exemplo da apostila. Clique 4: 2 · 30 = 60 e 3 · 30 = 90. Conferido: 30 + 60 + 90 = 180.</p>
+  </aside>
+</section>
+
+<!-- 9. Exemplo: isósceles e externo -->
+<section class="slide" data-nome="Exemplo: isósceles e externo">
+  <div class="conteudo">
+    <p class="olho">Exemplo</p>
+    <h2 class="titulo">Isósceles e externo</h2>
+    <div style="position:absolute;left:0;width:800px;top:160px">
+      <p class="texto" style="margin:0 0 18px;font-size:32px"><b>a)</b> Isósceles: o ângulo entre os lados iguais mede 40°. E cada ângulo da base?</p>
+      <div class="contas" style="font-size:48px">
+        <div class="eq" data-passo="1"><span>\(40 + 2x\)</span><span>\(=\)</span><span>\(180\)</span></div>
+        <div class="eq" data-passo="2"><span>\(2x\)</span><span>\(=\)</span><span>\(140\)</span></div>
+        <div class="eq final" data-passo="3"><span>\(x\)</span><span>\(=\)</span><span>\(70^{\circ}\)</span></div>
+      </div>
+    </div>
+    <div style="position:absolute;left:940px;right:0;top:160px">
+      <p class="texto" style="margin:0 0 18px;font-size:32px"><b>b)</b> Dois internos medem 50° e 60°. E o externo do terceiro vértice?</p>
+      <div class="contas" style="font-size:48px">
+        <div class="eq" data-passo="4"><span>\(e\)</span><span>\(=\)</span><span>\(50 + 60\)</span></div>
+        <div class="eq final" data-passo="5"><span>\(e\)</span><span>\(=\)</span><span>\(110^{\circ}\)</span></div>
+      </div>
+      <p class="texto" data-passo="5" style="margin:20px 0 0;font-size:30px;color:var(--cinza)">Os dois internos <b>não</b> vizinhos do externo.</p>
+    </div>
+  </div>
+  <aside class="notas">
+    <p>Exemplos da apostila. a) os ângulos da base são iguais (x e x): 70°. Conferido: 40 + 70 + 70 = 180. b) externo = 50 + 60 = 110° (o terceiro interno é 70°, e 70 + 110 = 180).</p>
+  </aside>
+</section>
+
+<!-- 10. Questão 1 -->
+<section class="slide questao" data-nome="Questão 1">
+  <div class="conteudo">
+    <div class="area-resolucao"></div>
+    <span class="pilula pilula-pausa" data-em="1:some">Pause o vídeo e tente</span>
+    <div class="painel-questao">
+      <p class="olho">Questão 1 · Modelo IF</p>
+      <p class="enunciado">Júlia quer montar um triângulo com três canudos. Ela já tem dois canudos, de 6 cm e de 11 cm, e vai cortar o terceiro com uma medida que seja um número inteiro de centímetros. Quantas medidas diferentes o terceiro canudo pode ter?</p>
+      <ol class="alternativas curtas">
+        <li data-em="2:certo"><b>A</b><span>11</span></li>
+        <li data-em="2:apaga"><b>B</b><span>12</span></li>
+        <li data-em="2:apaga"><b>C</b><span>13</span></li>
+        <li data-em="2:apaga"><b>D</b><span>16</span></li>
+        <li data-em="2:apaga"><b>E</b><span>5</span></li>
+      </ol>
+      <p class="fonte">Questão Modelo IF (lote if-matematica-triangulos, m004)</p>
+    </div>
+  </div>
+  <aside class="resolucao">
+    <p class="dados"><b>Dados:</b> lados 6 cm e 11 cm; terceiro lado \(x\) inteiro.</p>
+    <ol class="passos">
+      <li><b>Entre a diferença e a soma</b> \(11 - 6 &lt; x &lt; 11 + 6\)</li>
+      <li><b>Intervalo</b> \(5 &lt; x &lt; 17\)</li>
+      <li><b>Inteiros</b> 6, 7, 8, …, 16</li>
+      <li><b>Conte</b> \(16 - 6 + 1 = 11\)</li>
+    </ol>
+    <p class="resposta"><b>Resposta:</b> 11 medidas. <b>Gabarito A.</b></p>
+    <p class="atencao"><b>Destaque no quadro:</b> Os extremos 5 e 17 não valem: os canudos ficariam em linha reta.</p>
+    <ul class="erros">
+      <li><b>B</b> Inclui um dos extremos.</li>
+      <li><b>C</b> Inclui os dois extremos.</li>
+      <li><b>D</b> Testa só a soma (de 1 a 16).</li>
+      <li><b>E</b> Responde a diferença 11 − 6.</li>
+    </ul>
+  </aside>
+  <aside class="notas">
+    <p>Clique 1 tira o aviso de pausa: resolva na área (D liga a caneta; E esconde o enunciado). Clique 2: gabarito A.</p>
+    <p>Modelo IF, lote if-matematica-triangulos, m004, MAT-3406 (nível 3). Gabarito e contagem conferidos (inteiros de 6 a 16: 11 valores).</p>
+  </aside>
+</section>
+
+<!-- 11. Questão 2 -->
+<section class="slide questao" data-nome="Questão 2">
+  <div class="conteudo">
+    <div class="area-resolucao"></div>
+    <span class="pilula pilula-pausa" data-em="1:some">Pause o vídeo e tente</span>
+    <div class="painel-questao">
+      <p class="olho">Questão 2 · IF Sudeste MG 2015</p>
+      <p class="enunciado">Em um triângulo ABC, o ângulo interno em B é o triplo do ângulo interno em A. O ângulo interno em C é o dobro do ângulo interno em B. O maior ângulo interno desse triângulo é:</p>
+      <ol class="alternativas curtas">
+        <li data-em="2:apaga"><b>A</b><span>72º</span></li>
+        <li data-em="2:apaga"><b>B</b><span>96º</span></li>
+        <li data-em="2:certo"><b>C</b><span>108º</span></li>
+        <li data-em="2:apaga"><b>D</b><span>120º</span></li>
+        <li data-em="2:apaga"><b>E</b><span>132º</span></li>
+      </ol>
+      <p class="fonte">IF Sudeste MG, prova de 2015 (2º semestre), questão 17</p>
+    </div>
+  </div>
+  <aside class="resolucao">
+    <p class="dados"><b>Dados:</b> \(\hat{B} = 3\hat{A}\); \(\hat{C} = 2\hat{B}\).</p>
+    <ol class="passos">
+      <li><b>Tudo em função de A</b> \(\hat{A} = x,\ \hat{B} = 3x,\ \hat{C} = 6x\)</li>
+      <li><b>Soma 180°</b> \(x + 3x + 6x = 180\)</li>
+      <li><b>Resolva</b> \(10x = 180 \Rightarrow x = 18\)</li>
+      <li><b>O maior é C</b> \(\hat{C} = 6 \cdot 18 = 108^{\circ}\)</li>
+    </ol>
+    <p class="resposta"><b>Resposta:</b> 18°, 54° e 108°; o maior mede 108°. <b>Gabarito C.</b></p>
+    <p class="atencao"><b>Destaque no quadro:</b> "Dobro de B" é 2 · 3x = 6x, não 2x.</p>
+    <ul class="erros">
+      <li><b>A</b> Com C = 72°, a soma daria só 120°.</li>
+      <li><b>B</b> Com C = 96°, a soma daria 160°.</li>
+      <li><b>D</b> Com C = 120°, não vale C = 2B.</li>
+      <li><b>E</b> Com C = 132°, não vale C = 2B.</li>
+    </ul>
+  </aside>
+  <aside class="notas">
+    <p>Clique 1 tira o aviso de pausa: resolva na área (D liga a caneta; E esconde o enunciado). Clique 2: gabarito C.</p>
+    <p>Questão oficial do IF Sudeste MG 2015-2, q17, MAT-0312 (sobra do subcapítulo). Conferido: 18 + 54 + 108 = 180.</p>
+  </aside>
+</section>
+
+<!-- 12. Questão 3 -->
+<section class="slide questao" data-nome="Questão 3">
+  <div class="conteudo">
+    <div class="area-resolucao"></div>
+    <span class="pilula pilula-pausa" data-em="1:some">Pause o vídeo e tente</span>
+    <div class="painel-questao">
+      <p class="olho">Questão 3 · IF Sudeste MG 2013</p>
+      <p class="enunciado" style="font-size:25px">Na figura abaixo, BP e CQ são bissetrizes internas relativas ao vértices B e C, respectivamente. Sabendo-se que a medida do ângulo \(\hat{A}\) é 48º, o valor de \(\boldsymbol{\alpha}\) é:</p>
+      <svg class="fig" viewBox="0 0 400 370" width="360" height="333" style="align-self:center" aria-hidden="true">
+        <polygon points="95.2,26.7 40,340 340,340" fill="none" stroke="var(--carvao)" stroke-width="4" stroke-linejoin="round"/>
+        <line x1="40" y1="340" x2="221.2" y2="188" stroke="var(--carvao)" stroke-width="4"/>
+        <line x1="340" y1="340" x2="63.7" y2="205.3" stroke="var(--carvao)" stroke-width="4"/>
+        <path d="M124.3 269.4 A34 34 0 0 0 180.9 262.4" fill="none" stroke="var(--d)" stroke-width="4"/>
+        <text x="142" y="306" font-size="28" fill="var(--d-forte)">α</text>
+        <g font-size="26" fill="var(--carvao)"><text x="88" y="18">A</text><text x="14" y="360">B</text><text x="346" y="360">C</text><text x="228" y="180">P</text><text x="34" y="206">Q</text></g>
+      </svg>
+      <ol class="alternativas curtas">
+        <li data-em="2:apaga"><b>A</b><span>66º</span></li>
+        <li data-em="2:apaga"><b>B</b><span>80º</span></li>
+        <li data-em="2:apaga"><b>C</b><span>100º</span></li>
+        <li data-em="2:apaga"><b>D</b><span>110º</span></li>
+        <li data-em="2:certo"><b>E</b><span>114º</span></li>
+      </ol>
+      <p class="fonte">IF Sudeste MG, prova de 2013 (1º semestre), questão 16</p>
+    </div>
+  </div>
+  <aside class="resolucao">
+    <p class="dados"><b>Dados:</b> \(\hat{A} = 48^{\circ}\); BP e CQ bissetrizes; \(\alpha = B\hat{I}C\).</p>
+    <ol class="passos">
+      <li><b>No triângulo ABC</b> \(\hat{B} + \hat{C} = 180 - 48 = 132^{\circ}\)</li>
+      <li><b>As bissetrizes cortam ao meio</b> \(\dfrac{\hat{B}}{2} + \dfrac{\hat{C}}{2} = \dfrac{132}{2} = 66^{\circ}\)</li>
+      <li><b>No triângulo BIC</b> \(\alpha + 66 = 180\)</li>
+      <li><b>Resolva</b> \(\alpha = 114^{\circ}\)</li>
+    </ol>
+    <p class="resposta"><b>Resposta:</b> \(\alpha = 114^{\circ}\). <b>Gabarito E.</b></p>
+    <p class="atencao"><b>Destaque no quadro:</b> Não precisa de B e C separados: só da soma deles.</p>
+    <ul class="erros">
+      <li><b>A</b> 66° é a soma das metades: faltou tirar de 180°.</li>
+      <li><b>B</b> Não sai de nenhuma etapa certa.</li>
+      <li><b>C</b> Não sai de nenhuma etapa certa.</li>
+      <li><b>D</b> Não sai de nenhuma etapa certa.</li>
+    </ul>
+  </aside>
+  <aside class="notas">
+    <p>Clique 1 tira o aviso de pausa: resolva na área (D liga a caneta; E esconde o enunciado). Clique 2: gabarito E.</p>
+    <p>Questão oficial do IF Sudeste MG 2013-1, q16, MAT-0367 (sobra do subcapítulo). Figura refeita em escala (com B = 80° e C = 52°, que dão A = 48°); I é o encontro das bissetrizes. Conferido: 180 − 48 = 132; 132/2 = 66; 180 − 66 = 114.</p>
+    <p>O "relativas ao vértices" é do enunciado original.</p>
+  </aside>
+</section>
+
+<!-- 13. Quadriláteros: 360° -->
+<section class="slide" data-nome="Quadriláteros: 360°">
+  <div class="conteudo">
+    <p class="olho">Polígonos de quatro lados</p>
+    <h2 class="titulo">Quadriláteros somam 360°</h2>
+    <svg class="fig" viewBox="0 0 760 420" width="760" height="420" style="position:absolute;left:0;top:150px" aria-hidden="true">
+      <polygon points="60,360 560,390 700,110 230,40" fill="rgba(47,107,255,.08)" stroke="var(--carvao)" stroke-width="5" stroke-linejoin="round"/>
+      <polygon data-passo="2" points="60,360 560,390 700,110" fill="rgba(47,107,255,.2)"/>
+      <polygon data-passo="2" points="60,360 700,110 230,40" fill="rgba(140,123,234,.24)"/>
+      <line class="traca" data-passo="1" pathLength="100" x1="60" y1="360" x2="700" y2="110" stroke="#C99A00" stroke-width="6" stroke-linecap="round"/>
+      <text data-passo="2" x="440" y="320" font-size="38" fill="var(--d-forte)">180°</text>
+      <text data-passo="2" x="300" y="150" font-size="38" fill="#6551D1">180°</text>
+    </svg>
+    <div style="position:absolute;left:900px;right:0;top:170px;display:flex;flex-direction:column;gap:26px">
+      <p class="texto" style="margin:0">Folha de caderno, pipa, caixa de pizza: <b>quadriláteros</b>.</p>
+      <p class="texto" data-passo="1" style="margin:0">Uma <b>diagonal</b> divide qualquer quadrilátero em <b>dois triângulos</b>.</p>
+      <div class="contas" data-passo="3" style="font-size:54px">
+        <div class="eq final"><span>\(180^{\circ} + 180^{\circ}\)</span><span>\(=\)</span><span>\(360^{\circ}\)</span></div>
+      </div>
+    </div>
+  </div>
+  <aside class="notas">
+    <p>Clique 1: a diagonal se desenha. Clique 2: dois triângulos, 180° cada. Clique 3: a soma dos ângulos internos de qualquer quadrilátero é 360°.</p>
+  </aside>
+</section>
+
+<!-- 14. Os notáveis -->
+<section class="slide" data-nome="Quadriláteros notáveis">
+  <div class="conteudo">
+    <p class="olho">Lados paralelos ganham nome</p>
+    <h2 class="titulo">Os quadriláteros notáveis</h2>
+    <div class="grade5" style="position:absolute;left:0;right:0;top:160px">
+      <div class="cartao" data-passo="1"><svg class="fig" viewBox="0 0 300 170" width="270" height="153" aria-hidden="true"><polygon class="tri" points="20,150 280,150 210,30 80,30"/><g fill="var(--d)"><path d="M140 22 l14 8 l-14 8 z"/><path d="M140 142 l14 8 l-14 8 z"/></g></svg><h3>Trapézio</h3><p>exatamente <b>um</b> par de lados paralelos (as bases)</p></div>
+      <div class="cartao" data-passo="2"><svg class="fig" viewBox="0 0 300 170" width="270" height="153" aria-hidden="true"><polygon class="tri" points="20,150 220,150 280,30 80,30"/><g fill="var(--d)"><path d="M114 22 l14 8 l-14 8 z"/><path d="M114 142 l14 8 l-14 8 z"/></g><g fill="#8C7BEA"><path d="M44 96 l14 -8 l-2 16 z"/><path d="M244 96 l14 -8 l-2 16 z"/></g></svg><h3>Paralelogramo</h3><p><b>dois</b> pares de lados paralelos</p></div>
+      <div class="cartao" data-passo="3"><svg class="fig" viewBox="0 0 300 170" width="270" height="153" aria-hidden="true"><polygon class="tri" points="40,150 260,150 260,30 40,30"/><g fill="none" stroke="var(--carvao)" stroke-width="3"><path d="M40 128 H62 V150"/><path d="M260 128 H238 V150"/><path d="M40 52 H62 V30"/><path d="M260 52 H238 V30"/></g></svg><h3>Retângulo</h3><p>paralelogramo com 4 ângulos <b>retos</b></p></div>
+      <div class="cartao" data-passo="4"><svg class="fig" viewBox="0 0 300 170" width="270" height="153" aria-hidden="true"><polygon class="tri" points="30,85 150,8 270,85 150,162"/><g class="marca"><line x1="84" y1="38" x2="96" y2="56"/><line x1="216" y1="38" x2="204" y2="56"/><line x1="84" y1="132" x2="96" y2="114"/><line x1="216" y1="132" x2="204" y2="114"/></g></svg><h3>Losango</h3><p>paralelogramo com 4 lados <b>iguais</b></p></div>
+      <div class="cartao" data-passo="5"><svg class="fig" viewBox="0 0 300 170" width="270" height="153" aria-hidden="true"><polygon class="tri" points="85,20 215,20 215,150 85,150"/><g fill="none" stroke="var(--carvao)" stroke-width="3"><path d="M85 128 H107 V150"/><path d="M215 128 H193 V150"/></g><g class="marca"><line x1="150" y1="10" x2="150" y2="30"/><line x1="150" y1="140" x2="150" y2="160"/><line x1="75" y1="85" x2="95" y2="85"/><line x1="205" y1="85" x2="225" y2="85"/></g></svg><h3>Quadrado</h3><p>4 ângulos retos <b>e</b> 4 lados iguais</p></div>
+    </div>
+    <div class="caixa caixa-fundamental" data-passo="6" style="position:absolute;left:600px;right:0;top:600px;padding:18px 30px">
+      <div class="texto" style="font-size:32px">O quadrado é, ao mesmo tempo, <b>retângulo e losango</b>. Todo retângulo é paralelogramo; nem todo paralelogramo é retângulo.</div>
+    </div>
+  </div>
+  <aside class="notas">
+    <p>Um por clique. As setinhas iguais marcam lados paralelos; os tracinhos, lados iguais. Clique 6: as inclusões, que viram pegadinha ("todo retângulo é quadrado" é falso).</p>
+  </aside>
+</section>
+
+<!-- 15. Exemplo: 360° -->
+<section class="slide" data-nome="Exemplo: ângulos do quadrilátero">
+  <div class="conteudo">
+    <p class="olho">Exemplo</p>
+    <h2 class="titulo">Ângulos de um quadrilátero</h2>
+    <p class="texto" style="position:absolute;left:0;width:760px;top:170px;margin:0">Os ângulos medem \(x\), \(x + 20^{\circ}\), \(2x\) e \(2x - 20^{\circ}\). Quanto mede cada um?</p>
+    <div class="contas" style="position:absolute;left:840px;top:170px;font-size:46px;row-gap:20px">
+      <div class="eq" data-passo="1"><span>\(x + (x + 20) + 2x + (2x - 20)\)</span><span>\(=\)</span><span>\(360\)</span></div>
+      <div class="eq" data-passo="2"><span>\(6x\)</span><span>\(=\)</span><span>\(360\)</span></div>
+      <div class="eq final" data-passo="3"><span>\(x\)</span><span>\(=\)</span><span>\(60\)</span></div>
+    </div>
+    <span class="pilula pilula-resposta" data-passo="4" style="position:absolute;left:840px;top:500px">60°, 80°, 120° e 100°</span>
+  </div>
+  <aside class="notas">
+    <p>Exemplo da apostila. O +20 e o −20 se cancelam. Clique 4: 60 + 20 = 80; 2 · 60 = 120; 120 − 20 = 100. Conferido: 60 + 80 + 120 + 100 = 360.</p>
+  </aside>
+</section>
+
+<!-- 16. Propriedades do paralelogramo -->
+<section class="slide" data-nome="Propriedades do paralelogramo">
+  <div class="conteudo">
+    <p class="olho">Lados opostos paralelos</p>
+    <h2 class="titulo">Propriedades do paralelogramo</h2>
+    <svg class="fig" viewBox="0 0 700 400" width="700" height="400" style="position:absolute;left:0;top:150px" aria-hidden="true">
+      <polygon points="40,360 480,360 640,80 200,80" fill="rgba(47,107,255,.08)" stroke="var(--carvao)" stroke-width="5" stroke-linejoin="round"/>
+      <g data-passo="1" class="marca"><line x1="260" y1="348" x2="260" y2="372"/><line x1="420" y1="68" x2="420" y2="92"/><g stroke="#8C7BEA"><line x1="108" y1="214" x2="132" y2="226"/><line x1="548" y1="214" x2="572" y2="226"/></g></g>
+      <g data-passo="2"><path class="ang-a" d="M40 360 L100 360 A60 60 0 0 0 69.8 308 Z"/><path class="ang-a" d="M640 80 L580 80 A60 60 0 0 0 610.2 132 Z"/><path class="ang-b" d="M480 360 L509.8 308 A60 60 0 0 0 420 360 Z"/><path class="ang-b" d="M200 80 L170.2 132 A60 60 0 0 0 260 80 Z"/></g>
+      <g data-passo="3"><line class="traca" pathLength="100" x1="40" y1="360" x2="640" y2="80" stroke="#C99A00" stroke-width="4"/><line class="traca" pathLength="100" x1="480" y1="360" x2="200" y2="80" stroke="#C99A00" stroke-width="4"/><circle class="meio" cx="340" cy="220" r="10" fill="#FFD10C" stroke="var(--carvao)" stroke-width="3"/></g>
+    </svg>
+    <div style="position:absolute;left:820px;right:0;top:160px;display:flex;flex-direction:column;gap:16px">
+      <div class="classe" data-passo="1"><b>Lados</b><span>opostos são iguais</span></div>
+      <div class="classe" data-passo="2"><b>Ângulos</b><span>opostos iguais; vizinhos somam 180°</span></div>
+      <div class="classe" data-passo="3"><b>Diagonais</b><span>se cortam no ponto médio de cada uma</span></div>
+      <div class="caixa" data-passo="4" style="padding:16px 24px"><div class="texto" style="font-size:28px"><b>Retângulo:</b> diagonais iguais. <b>Losango:</b> diagonais perpendiculares, que dividem os ângulos ao meio. <b>Quadrado:</b> vale tudo.</div></div>
+    </div>
+  </div>
+  <aside class="notas">
+    <p>Clique 1: lados opostos iguais (tracinhos). Clique 2: ângulos opostos iguais (azul com azul, lilás com lilás); um azul e um lilás vizinhos somam 180°, porque são colaterais internos nas paralelas. Clique 3: as diagonais se desenham e se cortam no meio (ponto amarelo).</p>
+    <p>Clique 4: os casos especiais da apostila.</p>
+  </aside>
+</section>
+
+<!-- 17. Trapézio -->
+<section class="slide" data-nome="Trapézio e base média">
+  <div class="conteudo">
+    <p class="olho">Trapézio</p>
+    <h2 class="titulo">Isósceles e a base média</h2>
+    <svg class="fig" viewBox="0 0 700 420" width="700" height="420" style="position:absolute;left:0;top:150px" aria-hidden="true">
+      <polygon points="40,380 600,380 480,140 160,140" fill="rgba(47,107,255,.08)" stroke="var(--carvao)" stroke-width="5" stroke-linejoin="round"/>
+      <line class="traca" data-passo="2" pathLength="100" x1="100" y1="260" x2="540" y2="260" stroke="#C99A00" stroke-width="6" stroke-linecap="round"/>
+      <g data-passo="2" fill="#FFD10C" stroke="var(--carvao)" stroke-width="3"><circle cx="100" cy="260" r="9"/><circle cx="540" cy="260" r="9"/></g>
+      <text x="320" y="128" text-anchor="middle" font-size="32" fill="var(--carvao)">b</text>
+      <text x="320" y="416" text-anchor="middle" font-size="32" fill="var(--carvao)">B</text>
+      <text data-passo="2" x="330" y="248" text-anchor="middle" font-size="30" fill="#8A6A00">base média</text>
+    </svg>
+    <div style="position:absolute;left:820px;right:0;top:170px;display:flex;flex-direction:column;gap:22px">
+      <div class="caixa" data-passo="1"><div class="texto" style="font-size:32px"><b>Isósceles:</b> lados não paralelos iguais; os ângulos de cada base também.</div></div>
+      <div class="caixa caixa-fundamental" data-passo="2">
+        <span class="rotulo">Base média (qualquer trapézio)</span>
+        <div class="texto">Liga os pontos médios dos lados não paralelos: é paralela às bases e mede</div>
+        <div style="font-size:64px;text-align:center;margin-top:6px">\(m = \dfrac{B + b}{2}\)</div>
+      </div>
+    </div>
+  </div>
+  <aside class="notas">
+    <p>O trapézio desenhado é isósceles. Clique 2: a base média se desenha entre os pontos médios dos lados (amarelos). Ela é a média das bases.</p>
+  </aside>
+</section>
+
+<!-- 18. Exemplo: paralelogramo e trapézio -->
+<section class="slide" data-nome="Exemplo: paralelogramo e trapézio">
+  <div class="conteudo">
+    <p class="olho">Exemplo</p>
+    <h2 class="titulo">Paralelogramo e trapézio</h2>
+    <div style="position:absolute;left:0;width:820px;top:160px">
+      <p class="texto" style="margin:0 0 18px;font-size:31px"><b>a)</b> Ângulos vizinhos de um paralelogramo: \(3x + 10^{\circ}\) e \(2x - 30^{\circ}\).</p>
+      <div class="contas" style="font-size:44px;row-gap:12px">
+        <div class="eq" data-passo="1"><span>\((3x + 10) + (2x - 30)\)</span><span>\(=\)</span><span>\(180\)</span></div>
+        <div class="eq" data-passo="2"><span>\(5x - 20\)</span><span>\(=\)</span><span>\(180\)</span></div>
+        <div class="eq" data-passo="3"><span>\(5x\)</span><span>\(=\)</span><span>\(200\)</span></div>
+        <div class="eq final" data-passo="4"><span>\(x\)</span><span>\(=\)</span><span>\(40\)</span></div>
+      </div>
+      <p class="texto" data-passo="5" style="margin:16px 0 0;font-size:32px">Os ângulos: <b>130°</b> e <b>50°</b>.</p>
+    </div>
+    <div style="position:absolute;left:960px;right:0;top:160px">
+      <p class="texto" style="margin:0 0 18px;font-size:31px"><b>b)</b> Trapézio com bases de 14 cm e 8 cm. E a base média?</p>
+      <div class="contas" style="font-size:46px;row-gap:34px">
+        <div class="eq" data-passo="6"><span>\(m\)</span><span>\(=\)</span><span>\(\dfrac{B + b}{2}\)</span></div>
+        <div class="eq" data-passo="7"><span>\(m\)</span><span>\(=\)</span><span>\(\dfrac{14 + 8}{2}\)</span></div>
+        <div class="eq final" data-passo="8"><span>\(m\)</span><span>\(=\)</span><span>\(11\ \text{cm}\)</span></div>
+      </div>
+    </div>
+  </div>
+  <aside class="notas">
+    <p>Exemplos da apostila. a) vizinhos somam 180°: x = 40; 3 · 40 + 10 = 130 e 2 · 40 − 30 = 50 (130 + 50 = 180, confere). b) (14 + 8)/2 = 11 cm.</p>
+  </aside>
+</section>
+
+<!-- 19. Atenção -->
+<section class="slide" data-nome="Atenção: losango">
+  <div class="conteudo">
+    <p class="olho">Atenção</p>
+    <h2 class="titulo">Losango não é quadrado</h2>
+    <svg class="fig" viewBox="0 0 700 360" width="700" height="360" style="position:absolute;left:0;top:170px" aria-hidden="true">
+      <polygon class="tri" points="20,180 170,40 320,180 170,320"/>
+      <polygon class="tri" data-passo="1" points="400,40 640,40 640,280 400,280" style="fill:rgba(31,157,98,.1)"/>
+      <path data-passo="1" d="M400 256 H424 V280" fill="none" stroke="var(--carvao)" stroke-width="3"/>
+      <text x="170" y="196" text-anchor="middle" font-size="30" fill="var(--carvao)">losango</text>
+      <text data-passo="1" x="520" y="170" text-anchor="middle" font-size="30" fill="var(--certo)">quadrado</text>
+    </svg>
+    <div class="caixa caixa-atencao" style="position:absolute;left:820px;right:0;top:180px">
+      <div class="texto">O losango tem os quatro lados iguais, mas os ângulos podem <b>não</b> ser retos. Só é quadrado se os ângulos forem de 90°.</div>
+    </div>
+  </div>
+  <aside class="notas">
+    <p>O losango da esquerda tem lados iguais e ângulos de cerca de 86° e 94°: não é quadrado. Clique 1: com 90°, vira quadrado.</p>
+  </aside>
+</section>
+
+<!-- 20. Questão 4 -->
+<section class="slide questao" data-nome="Questão 4">
+  <div class="conteudo">
+    <div class="area-resolucao"></div>
+    <span class="pilula pilula-pausa" data-em="1:some">Pause o vídeo e tente</span>
+    <div class="painel-questao">
+      <p class="olho">Questão 4 · IF Sudeste MG 2015</p>
+      <p class="enunciado">Assinale a alternativa <b>VERDADEIRA</b>.</p>
+      <ol class="alternativas">
+        <li data-em="2:apaga"><b>A</b><span>As diagonais do trapézio são congruentes.</span></li>
+        <li data-em="2:apaga"><b>B</b><span>As diagonais do paralelogramo são congruentes.</span></li>
+        <li data-em="2:apaga"><b>C</b><span>As diagonais do paralelogramo são perpendiculares.</span></li>
+        <li data-em="2:certo"><b>D</b><span>As diagonais do retângulo são congruentes.</span></li>
+        <li data-em="2:apaga"><b>E</b><span>As diagonais do retângulo são perpendiculares.</span></li>
+      </ol>
+      <p class="fonte">IF Sudeste MG, prova de 2015 (1º semestre), questão 23</p>
+    </div>
+  </div>
+  <aside class="resolucao">
+    <p class="dados"><b>Dados:</b> propriedades das diagonais.</p>
+    <ol class="passos">
+      <li><b>Paralelogramo</b> diagonais se cortam ao meio</li>
+      <li><b>Retângulo</b> e ainda são iguais (congruentes)</li>
+      <li><b>Losango</b> e ainda são perpendiculares</li>
+      <li><b>Quadrado</b> tem as duas</li>
+    </ol>
+    <p class="resposta"><b>Resposta:</b> as diagonais do retângulo são congruentes. <b>Gabarito D.</b></p>
+    <p class="atencao"><b>Destaque no quadro:</b> Iguais: retângulo. Perpendiculares: losango. Os dois: quadrado.</p>
+    <ul class="erros">
+      <li><b>A</b> Só no trapézio isósceles.</li>
+      <li><b>B</b> Num paralelogramo qualquer, uma é maior.</li>
+      <li><b>C</b> Perpendiculares é do losango.</li>
+      <li><b>E</b> Só quando o retângulo é quadrado.</li>
+    </ul>
+  </aside>
+  <aside class="notas">
+    <p>Clique 1 tira o aviso de pausa: resolva na área (D liga a caneta; E esconde o enunciado). Clique 2: gabarito D.</p>
+    <p>Questão oficial do IF Sudeste MG 2015-1, q23, MAT-0296 (sobra do subcapítulo). Congruentes = de mesma medida.</p>
+  </aside>
+</section>
+
+<!-- 21. Resumo -->
+<section class="slide" data-nome="Resumo">
+  <div class="conteudo">
+    <p class="olho">Resumo</p>
+    <h2 class="titulo">O essencial</h2>
+    <div class="resumo" style="position:absolute;left:0;right:0;top:150px">
+      <div><b>Existe triângulo</b> se cada lado é menor que a soma dos outros dois (teste o maior).</div>
+      <div><b>Lados:</b> equilátero, isósceles, escaleno. <b>Ângulos:</b> acutângulo, retângulo, obtusângulo.</div>
+      <div><b>Soma dos internos:</b> 180° no triângulo e 360° no quadrilátero. <b>Externo</b> = soma dos dois internos não vizinhos.</div>
+      <div><b>Trapézio:</b> um par de lados paralelos. <b>Paralelogramo:</b> dois. Retângulo, losango e quadrado são paralelogramos especiais.</div>
+      <div><b>Paralelogramo:</b> lados e ângulos opostos iguais; vizinhos somam 180°; diagonais se cortam ao meio.</div>
+      <div><b>Base média do trapézio:</b> \(\dfrac{B + b}{2}\).</div>
+    </div>
+  </div>
+  <aside class="notas"><p>Peça para tirarem um print desta tela.</p></aside>
+</section>
+
+<!-- 22. A seguir -->
+<section class="slide capa" data-nome="A seguir">
+  <div class="estrelas"></div>
+  <div class="texto-capa" style="top:200px">
+    <span class="selo">Matemática · IF</span>
+    <p class="aula" style="font-size:26px">A seguir · Semelhança e Teorema de Tales · Parte 1 de 2</p>
+    <h1 style="font-size:130px">Teorema de Tales</h1>
+    <p class="sub">As paralelas transportam a proporção</p>
+  </div>
+  <svg class="emblema" viewBox="0 0 640 640" aria-hidden="true">
+    <g stroke="#fff" stroke-opacity=".85" stroke-width="9" stroke-linecap="round"><line x1="40" y1="160" x2="600" y2="160"/><line x1="40" y1="320" x2="600" y2="320"/><line x1="40" y1="560" x2="600" y2="560"/></g>
+    <line x1="150" y1="90" x2="250" y2="620" stroke="#FFD10C" stroke-width="9" stroke-linecap="round"/>
+    <line x1="360" y1="90" x2="580" y2="620" stroke="#FFD10C" stroke-width="9" stroke-linecap="round"/>
+  </svg>
+  <img class="logo-capa" src="{{LOGO_BRANCO}}" alt="Quarks">
+  <aside class="notas"><p>Próximo subcapítulo: Semelhança e Teorema de Tales, começando pelo feixe de paralelas.</p></aside>
+</section>

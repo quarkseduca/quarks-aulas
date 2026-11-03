@@ -1,0 +1,538 @@
+<!--aula
+{"disciplina": "matematica", "curso": "IF", "assunto": "Ângulos e paralelismo", "parte": "Parte 2 de 2", "titulo": "Ângulos nas paralelas", "scripts": ["animacoes-geometria-a.js"]}
+-->
+<!-- Fonte: apostila IF, Matemática, cap. 5 (5.1 Ângulos e paralelismo > Ângulos: medida, classificação e operações; Complementares, suplementares e opostos pelo vértice; Paralelas cortadas por uma transversal; resumo). Questões: lote Modelo if-matematica-angulos-e-paralelismo (m002 MAT-3604, m005 MAT-3607, m007 MAT-3609). A oficial 2014-1 q15 (MAT-0343) fica reservada para o bloco do fim do capítulo. -->
+<style>
+  .cartao { box-sizing: border-box; background: var(--branco); border: 2px solid var(--lilas-2); border-radius: 28px; padding: 18px 26px; }
+  .cartao h3 { margin: 0 0 4px; font: 800 38px var(--fonte-titulo); letter-spacing: -.02em; color: var(--roxo-titulo); }
+  .cartao p { margin: 0; font-size: 28px; line-height: 1.3; }
+  .cartao > svg { display: block; }
+  .grade3 { display: grid; grid-template-columns: repeat(3, 1fr); gap: 26px; }
+  .fig { overflow: visible; font-family: Figtree, "Segoe UI", sans-serif; }
+  .fig text { font-weight: 800; }
+  .rot { font-size: 32px; fill: var(--roxo-titulo); }
+  .rot-i { font-size: 36px; font-style: italic; fill: var(--carvao); }
+  .tag { display: inline-block; padding: 4px 18px; border-radius: 999px; font-weight: 800; font-size: 26px; background: var(--d-clara); color: var(--d-forte); }
+  .traca { stroke-dasharray: 100; stroke-dashoffset: 100; transition: stroke-dashoffset 1.4s ease; }
+  .mostra .traca, .traca.mostra { stroke-dashoffset: 0; }
+  .par-ang path.a { fill: rgba(47,107,255,.18); stroke: var(--d); stroke-width: 4; }
+  .par-ang path.b { fill: rgba(140,123,234,.2); stroke: #8C7BEA; stroke-width: 4; }
+  .destaca { transition: fill .4s, stroke .4s; }
+  .grupo { opacity: 0; transition: opacity .4s; }
+  .grupo.on { opacity: 1; }
+  .grupo.off { opacity: 0; }
+  .destaca.liga { fill: rgba(255,209,12,.55) !important; stroke: #C99A00 !important; }
+  /* o relógio do "vai um": o ponteiro dos minutos dá a volta e o das horas anda um passo */
+  @keyframes ponteiro-min { from { transform: rotate(0deg); } to { transform: rotate(360deg); } }
+  @keyframes ponteiro-hora { from { transform: rotate(0deg); } to { transform: rotate(30deg); } }
+  .p-min, .p-hora { transform-box: view-box; transform-origin: 120px 120px; }
+  .slide.ativo .mostra .p-min { animation: ponteiro-min 6s linear infinite; }
+  .slide.ativo .mostra .p-hora { animation: ponteiro-hora 6s linear infinite; }
+</style>
+
+<!-- 1. Capa -->
+<section class="slide capa" data-nome="Capa">
+  <div class="estrelas"></div>
+  <div class="texto-capa" style="top:200px">
+    <span class="selo">Matemática · IF</span>
+    <p class="aula">Ângulos e paralelismo · Parte 2 de 2</p>
+    <h1 style="font-size:130px">Ângulos nas paralelas</h1>
+    <p class="sub">Graus e minutos, pares de ângulos e a transversal</p>
+  </div>
+  <svg class="emblema" viewBox="0 0 640 640" aria-hidden="true">
+    <g class="gira-lento"><ellipse cx="320" cy="320" rx="300" ry="128" fill="none" stroke="#fff" stroke-opacity=".38" stroke-width="2" transform="rotate(-10 320 320)"/></g>
+    <g class="gira"><ellipse cx="320" cy="320" rx="236" ry="196" fill="none" stroke="#FFD10C" stroke-opacity=".75" stroke-width="2.5" stroke-dasharray="3 14" stroke-linecap="round" transform="rotate(-8 320 320)"/>
+      <circle cx="84" cy="300" r="13" fill="var(--d)" stroke="#fff" stroke-width="3"/></g>
+    <circle cx="320" cy="320" r="132" fill="#FFD10C"/>
+    <image href="{{SYM_ROXO}}" x="238" y="238" width="164" height="164"/>
+  </svg>
+  <img class="logo-capa" src="{{LOGO_BRANCO}}" alt="Quarks">
+  <aside class="notas">
+    <p>Segunda parte de Ângulos e paralelismo: contas com graus e minutos, bissetriz, complementares, suplementares, opostos pelo vértice e os ângulos de duas paralelas cortadas por uma transversal.</p>
+  </aside>
+</section>
+
+<!-- 2. Graus e minutos -->
+<section class="slide" data-nome="Graus e minutos">
+  <div class="conteudo">
+    <p class="olho">Medidas mais finas</p>
+    <h2 class="titulo">Graus e minutos</h2>
+    <div style="position:absolute;left:0;top:190px;display:flex;flex-direction:column;gap:30px">
+      <div class="caixa caixa-fundamental" style="font-size:72px;padding:20px 50px">\(1^{\circ} = 60'\)</div>
+      <div class="caixa" data-passo="1" style="font-size:60px;padding:16px 50px">\(1' = 60''\)</div>
+    </div>
+    <div data-passo="2" style="position:absolute;left:720px;right:0;top:170px;display:grid;grid-template-columns:240px 1fr;gap:40px;align-items:center">
+      <svg class="fig" viewBox="0 0 240 240" width="240" height="240" aria-hidden="true">
+        <circle cx="120" cy="120" r="108" fill="#fff" stroke="var(--lilas-2)" stroke-width="6"/>
+        <g stroke="var(--cinza)" stroke-width="5" stroke-linecap="round"><line x1="120" y1="22" x2="120" y2="38"/><line x1="218" y1="120" x2="202" y2="120"/><line x1="120" y1="218" x2="120" y2="202"/><line x1="22" y1="120" x2="38" y2="120"/></g>
+        <line class="p-hora" x1="120" y1="120" x2="120" y2="64" stroke="var(--roxo-titulo)" stroke-width="10" stroke-linecap="round"/>
+        <line class="p-min" x1="120" y1="120" x2="120" y2="36" stroke="var(--d)" stroke-width="6" stroke-linecap="round"/>
+        <circle cx="120" cy="120" r="9" fill="var(--carvao)"/>
+      </svg>
+      <p class="texto" style="margin:0">Somar ou subtrair ângulos é como somar <b>horas e minutos</b>: passou de 60 minutos, vira <b>mais 1</b>.</p>
+    </div>
+    <div class="contas" data-passo="3" style="position:absolute;left:720px;top:520px;font-size:54px">
+      <div class="eq final"><span>\(75'\)</span><span>\(=\)</span><span>\(1^{\circ}15'\)</span></div>
+    </div>
+  </div>
+  <aside class="notas">
+    <p>Cada grau se divide em 60 minutos e cada minuto em 60 segundos (o segundo quase não aparece em prova). Clique 2: o relógio, em que o ponteiro dos minutos dá a volta e o das horas anda um passo.</p>
+    <p>Clique 3: 75' são 60' + 15', ou seja, 1°15'. É o "vai um" da próxima conta.</p>
+  </aside>
+</section>
+
+<!-- 3. Exemplo: soma e subtração -->
+<section class="slide" data-nome="Exemplo: graus e minutos">
+  <div class="conteudo">
+    <p class="olho">Exemplo</p>
+    <h2 class="titulo">Somar e subtrair</h2>
+    <div style="position:absolute;left:0;width:800px;top:160px">
+      <p class="texto" style="margin:0 0 20px"><b>Soma</b></p>
+      <div class="contas" style="font-size:50px">
+        <div class="eq" data-passo="1"><span>\(S\)</span><span>\(=\)</span><span>\(35^{\circ}40' + 20^{\circ}35'\)</span></div>
+        <div class="eq" data-passo="2"><span>\(S\)</span><span>\(=\)</span><span>\(55^{\circ}75'\)</span></div>
+        <div class="eq final" data-passo="3"><span>\(S\)</span><span>\(=\)</span><span>\(56^{\circ}15'\)</span></div>
+      </div>
+      <p class="texto" data-passo="3" style="margin:22px 0 0;font-size:32px;color:var(--cinza)">75' viram 1° e 15'.</p>
+    </div>
+    <div style="position:absolute;left:920px;right:0;top:160px">
+      <p class="texto" style="margin:0 0 20px"><b>Subtração</b></p>
+      <div class="contas" style="font-size:50px">
+        <div class="eq" data-passo="4"><span>\(D\)</span><span>\(=\)</span><span>\(90^{\circ} - 32^{\circ}25'\)</span></div>
+        <div class="eq" data-passo="5"><span>\(D\)</span><span>\(=\)</span><span>\(89^{\circ}60' - 32^{\circ}25'\)</span></div>
+        <div class="eq final" data-passo="6"><span>\(D\)</span><span>\(=\)</span><span>\(57^{\circ}35'\)</span></div>
+      </div>
+      <p class="texto" data-passo="5" style="margin:22px 0 0;font-size:32px;color:var(--cinza)">90° vira 89°60' para haver minutos para tirar.</p>
+    </div>
+  </div>
+  <aside class="notas">
+    <p>Exemplo da apostila. Soma: 40' + 35' = 75' e 35° + 20° = 55°; depois 75' = 1°15', total 56°15'.</p>
+    <p>Subtração: empreste 1° = 60' de 90°: 89°60' − 32°25' = 57°35'. Conferido: 57°35' + 32°25' = 89°60' = 90°.</p>
+  </aside>
+</section>
+
+<!-- 4. Bissetriz de 75° -->
+<section class="slide" data-nome="Bissetriz de 75°">
+  <div class="conteudo">
+    <p class="olho">Bissetriz com minutos</p>
+    <h2 class="titulo">Metade de 75°</h2>
+    <svg class="fig" viewBox="0 0 700 470" width="700" height="470" style="position:absolute;left:0;top:130px" aria-hidden="true">
+      <line x1="60" y1="420" x2="680" y2="420" stroke="var(--carvao)" stroke-width="6" stroke-linecap="round"/>
+      <line x1="60" y1="420" x2="176" y2="-15" stroke="var(--carvao)" stroke-width="6" stroke-linecap="round"/>
+      <path d="M200 420 A140 140 0 0 0 96 285" fill="rgba(47,107,255,.14)" stroke="var(--d)" stroke-width="4"/>
+      <line class="traca" data-passo="1" pathLength="100" x1="60" y1="420" x2="525" y2="63" stroke="#FFD10C" stroke-width="7" stroke-linecap="round"/>
+      <text x="200" y="300" font-size="36" fill="var(--carvao)" data-em="1:some">75°</text>
+      <g data-passo="4" font-size="30" fill="var(--d-forte)"><text x="232" y="392">37°30'</text><text x="150" y="250">37°30'</text></g>
+    </svg>
+    <div style="position:absolute;left:820px;right:0;top:170px">
+      <div class="contas" style="font-size:54px;row-gap:34px">
+        <div class="eq" data-passo="2"><span>\(\dfrac{75^{\circ}}{2}\)</span><span>\(=\)</span><span>\(37^{\circ}\ \text{e meio}\)</span></div>
+        <div class="eq" data-passo="3"><span>\(\dfrac{1^{\circ}}{2}\)</span><span>\(=\)</span><span>\(\dfrac{60'}{2} = 30'\)</span></div>
+        <div class="eq final" data-passo="4"><span>\(\dfrac{75^{\circ}}{2}\)</span><span>\(=\)</span><span>\(37^{\circ}30'\)</span></div>
+      </div>
+      <p class="texto" data-passo="4" style="margin:30px 0 0;font-size:34px"><span class="riscado">\(37{,}5^{\circ} = 37^{\circ}50'\)</span>: meio grau é <b>30'</b>, não 50'.</p>
+    </div>
+  </div>
+  <aside class="notas">
+    <p>Exemplo da apostila: a bissetriz de 75° forma dois ângulos de 37°30', porque metade de 1° são 30'.</p>
+    <p>Clique 4: o erro de ler 0,5° como 50' (aparece como alternativa em questões de bissetriz).</p>
+  </aside>
+</section>
+
+<!-- 5. Pares de ângulos -->
+<section class="slide" data-nome="Pares de ângulos">
+  <div class="conteudo">
+    <p class="olho">Pares com nome</p>
+    <h2 class="titulo">Complementares, suplementares, opostos</h2>
+    <div class="grade3" style="position:absolute;left:0;right:0;top:170px">
+      <div class="cartao" data-passo="1">
+        <svg class="fig par-ang" viewBox="0 0 500 260" width="100%" height="260" aria-hidden="true">
+          <path class="a" d="M150 230 L270 230 A120 120 0 0 0 254 170 Z"/>
+          <path class="b" d="M150 230 L254 170 A120 120 0 0 0 150 110 Z"/>
+          <g stroke="var(--carvao)" stroke-width="5" stroke-linecap="round"><line x1="150" y1="230" x2="450" y2="230"/><line x1="150" y1="230" x2="150" y2="10"/><line x1="150" y1="230" x2="400" y2="86"/></g>
+          <path d="M150 200 H180 V230" fill="none" stroke="var(--cinza)" stroke-width="3"/>
+          <text x="300" y="214" font-size="30" fill="var(--d-forte)">a</text><text x="200" y="120" font-size="30" fill="#8C7BEA">b</text>
+        </svg>
+        <h3>Complementares</h3>
+        <p>somam <b>90°</b>: \(a + b = 90^{\circ}\)</p>
+      </div>
+      <div class="cartao" data-passo="2">
+        <svg class="fig par-ang" viewBox="0 0 500 260" width="100%" height="260" aria-hidden="true">
+          <path class="a" d="M250 220 L370 220 A120 120 0 0 0 319 122 Z"/>
+          <path class="b" d="M250 220 L319 122 A120 120 0 0 0 130 220 Z"/>
+          <g stroke="var(--carvao)" stroke-width="5" stroke-linecap="round"><line x1="30" y1="220" x2="470" y2="220"/><line x1="250" y1="220" x2="380" y2="36"/></g>
+          <text x="380" y="190" font-size="30" fill="var(--d-forte)">a</text><text x="190" y="140" font-size="30" fill="#8C7BEA">b</text>
+        </svg>
+        <h3>Suplementares</h3>
+        <p>somam <b>180°</b>: \(a + b = 180^{\circ}\)</p>
+      </div>
+      <div class="cartao" data-passo="3">
+        <svg class="fig par-ang" viewBox="0 0 500 260" width="100%" height="260" aria-hidden="true">
+          <path class="a" d="M250 130 L340 130 A90 90 0 0 0 325.9 81.6 Z"/>
+          <path class="a" d="M250 130 L160 130 A90 90 0 0 0 174.1 178.4 Z"/>
+          <g stroke="var(--carvao)" stroke-width="5" stroke-linecap="round"><line x1="30" y1="130" x2="470" y2="130"/><line x1="90" y1="232" x2="410" y2="28"/></g>
+          <text x="352" y="104" font-size="30" fill="var(--d-forte)">a</text><text x="128" y="180" font-size="30" fill="var(--d-forte)">a</text>
+        </svg>
+        <h3>Opostos pelo vértice</h3>
+        <p>são sempre <b>iguais</b></p>
+      </div>
+    </div>
+    <div class="caixa caixa-fundamental" data-passo="4" style="position:absolute;left:600px;right:0;top:680px;padding:18px 30px">
+      <div class="texto">Complemento de \(x\): \(\;90^{\circ} - x\) &nbsp;&nbsp;·&nbsp;&nbsp; Suplemento de \(x\): \(\;180^{\circ} - x\)</div>
+    </div>
+  </div>
+  <aside class="notas">
+    <p>Um par por clique. Opostos pelo vértice: os lados de um são o prolongamento dos lados do outro.</p>
+    <p>Clique 4: as expressões do complemento e do suplemento, que viram equações nos problemas.</p>
+  </aside>
+</section>
+
+<!-- 6. Por que os opostos são iguais -->
+<section class="slide" data-nome="Por que OPV são iguais">
+  <div class="conteudo">
+    <p class="olho">Por quê?</p>
+    <h2 class="titulo">Opostos pelo vértice são iguais</h2>
+    <svg class="fig par-ang" viewBox="0 0 760 440" width="760" height="440" style="position:absolute;left:0;top:150px" aria-hidden="true">
+      <path class="a destaca" data-em="1:liga" d="M380 220 L500 220 A120 120 0 0 0 476 148 Z"/>
+      <path class="b destaca" data-em="1:liga 2:liga" d="M380 220 L476 148 A120 120 0 0 0 260 220 Z"/>
+      <path class="a destaca" data-em="2:liga" d="M380 220 L260 220 A120 120 0 0 0 284 292 Z"/>
+      <g stroke="var(--carvao)" stroke-width="6" stroke-linecap="round"><line x1="20" y1="220" x2="740" y2="220"/><line x1="140" y1="400" x2="620" y2="40"/></g>
+      <text x="520" y="190" font-size="38" fill="var(--d-forte)">a</text><text x="350" y="140" font-size="38" fill="#6551D1">b</text><text x="214" y="282" font-size="38" fill="var(--d-forte)">a'</text>
+    </svg>
+    <div style="position:absolute;left:900px;right:0;top:170px">
+      <div class="contas" style="font-size:52px">
+        <div class="eq" data-passo="1"><span>\(a + b\)</span><span>\(=\)</span><span>\(180^{\circ}\)</span></div>
+        <div class="eq" data-passo="2"><span>\(a' + b\)</span><span>\(=\)</span><span>\(180^{\circ}\)</span></div>
+        <div class="eq final" data-passo="3"><span>\(a'\)</span><span>\(=\)</span><span>\(a\)</span></div>
+      </div>
+      <p class="texto" data-passo="3" style="margin:30px 0 0">Os dois completam o <b>mesmo</b> \(b\) até o raso.</p>
+    </div>
+  </div>
+  <aside class="notas">
+    <p>Clique 1: a e b juntos formam um ângulo raso (180°). Clique 2: a' e o mesmo b também formam um raso. Clique 3: então a' tem de ser igual a a.</p>
+  </aside>
+</section>
+
+<!-- 7. Exemplo: suplemento e complemento -->
+<section class="slide" data-nome="Exemplo: suplemento e complemento">
+  <div class="conteudo">
+    <p class="olho">Exemplo</p>
+    <h2 class="titulo">O suplemento é o triplo do complemento</h2>
+    <p class="texto" style="position:absolute;left:0;width:760px;top:170px;margin:0">Quanto mede o ângulo?</p>
+    <div class="caixa" style="position:absolute;left:0;width:700px;top:260px;padding:20px 30px">
+      <div class="texto" style="font-size:34px">suplemento: \(180 - x\)<br>complemento: \(90 - x\)</div>
+    </div>
+    <div class="contas" style="position:absolute;left:900px;top:160px;font-size:50px;row-gap:16px">
+      <div class="eq" data-passo="1"><span>\(180 - x\)</span><span>\(=\)</span><span>\(3(90 - x)\)</span></div>
+      <div class="eq" data-passo="2"><span>\(180 - x\)</span><span>\(=\)</span><span>\(270 - 3x\)</span></div>
+      <div class="eq" data-passo="3"><span>\(3x - x\)</span><span>\(=\)</span><span>\(270 - 180\)</span></div>
+      <div class="eq" data-passo="4"><span>\(2x\)</span><span>\(=\)</span><span>\(90\)</span></div>
+      <div class="eq final" data-passo="5"><span>\(x\)</span><span>\(=\)</span><span>\(45^{\circ}\)</span></div>
+    </div>
+    <p class="texto" data-passo="6" style="position:absolute;left:900px;top:680px;margin:0;font-size:32px;color:var(--cinza)">Confira: \(180 - 45 = 135\) e \(3 \cdot (90 - 45) = 135\).</p>
+  </div>
+  <aside class="notas">
+    <p>Exemplo da apostila. "Triplo do complemento" = 3(90 − x): o parêntese é obrigatório. Uma linha por clique.</p>
+    <p>Clique 6: conferência (feita aqui, não está na apostila): suplemento 135°, complemento 45°, e 135 = 3 · 45.</p>
+  </aside>
+</section>
+
+<!-- 8. Exemplo: opostos pelo vértice -->
+<section class="slide" data-nome="Exemplo: opostos pelo vértice">
+  <div class="conteudo">
+    <p class="olho">Exemplo</p>
+    <h2 class="titulo">Opostos pelo vértice</h2>
+    <svg class="fig par-ang" viewBox="0 0 700 420" width="700" height="420" style="position:absolute;left:0;top:150px" aria-hidden="true">
+      <path class="a" d="M350 200 L470 200 A120 120 0 0 0 446 128 Z"/>
+      <path class="a" d="M350 200 L230 200 A120 120 0 0 0 254 272 Z"/>
+      <g stroke="var(--carvao)" stroke-width="6" stroke-linecap="round"><line x1="20" y1="200" x2="680" y2="200"/><line x1="110" y1="380" x2="590" y2="20"/></g>
+      <text x="480" y="160" font-size="34" fill="var(--d-forte)">3x + 10°</text>
+      <text x="40" y="270" font-size="34" fill="var(--d-forte)">5x − 30°</text>
+    </svg>
+    <div class="contas" style="position:absolute;left:900px;top:160px;font-size:50px;row-gap:16px">
+      <div class="eq" data-passo="1"><span>\(3x + 10\)</span><span>\(=\)</span><span>\(5x - 30\)</span></div>
+      <div class="eq" data-passo="2"><span>\(10 + 30\)</span><span>\(=\)</span><span>\(5x - 3x\)</span></div>
+      <div class="eq" data-passo="3"><span>\(40\)</span><span>\(=\)</span><span>\(2x\)</span></div>
+      <div class="eq" data-passo="4"><span>\(x\)</span><span>\(=\)</span><span>\(20\)</span></div>
+      <div class="eq final" data-passo="5"><span>\(3 \cdot 20 + 10\)</span><span>\(=\)</span><span>\(70^{\circ}\)</span></div>
+    </div>
+    <span class="pilula pilula-resposta" data-passo="6" style="position:absolute;left:900px;top:700px">Cada um mede 70°</span>
+  </div>
+  <aside class="notas">
+    <p>Exemplo da apostila. Opostos pelo vértice são iguais: iguale as expressões. Clique 5: x = 20 não é a resposta; substitua: 3 · 20 + 10 = 70° (e 5 · 20 − 30 = 70°, confere).</p>
+  </aside>
+</section>
+
+<!-- 9. Paralelas e transversal -->
+<section class="slide" data-nome="Paralelas e transversal">
+  <div class="conteudo">
+    <p class="olho">Duas paralelas e uma transversal</p>
+    <h2 class="titulo">Oito ângulos, só duas medidas</h2>
+    <div data-anima="transversal" data-anima-passo="1" style="position:absolute;left:0;top:115px;width:900px;height:480px"></div>
+    <div style="position:absolute;left:1040px;right:0;top:180px;display:flex;flex-direction:column;gap:22px">
+      <p class="texto" style="margin:0">Duas ruas paralelas cortadas por uma avenida inclinada.</p>
+      <div class="caixa caixa-fundamental" data-passo="2">
+        <div class="texto">Todo ângulo <b>agudo</b> é igual a \(a\).<br>Todo <b>obtuso</b> é igual a \(b\).</div>
+      </div>
+      <span class="pilula pilula-resposta" data-passo="3" style="align-self:flex-start;font-size:40px">\(a + b = 180^{\circ}\)</span>
+    </div>
+  </div>
+  <aside class="notas">
+    <p>Clique 1: a transversal balança devagar. Os oito ângulos mudam juntos, mas só há duas medidas: os azuis (a) e os lilás (b). O placar embaixo mostra a + b = 180° o tempo todo.</p>
+    <p>Cliques 2 e 3: a regra prática da apostila.</p>
+  </aside>
+</section>
+
+<!-- 10. Os nomes dos pares -->
+<section class="slide" data-nome="Correspondentes, alternos, colaterais">
+  <div class="conteudo">
+    <p class="olho">Os nomes dos pares</p>
+    <h2 class="titulo">Correspondentes, alternos e colaterais</h2>
+    <svg class="fig par-ang" viewBox="0 0 780 500" width="780" height="500" style="position:absolute;left:0;top:140px" aria-hidden="true">
+      <!-- r em y=130, s em y=370; t com cerca de 60°: corta r em (420,130) e s em (281,370) -->
+      <g class="grupo" data-em="1:on 2:off">
+        <path class="a" d="M420 130 L490 130 A70 70 0 0 0 455 69.4 Z"/><path class="a" d="M281 370 L351 370 A70 70 0 0 0 316 309.4 Z"/>
+      </g>
+      <g class="grupo" data-em="2:on 3:off">
+        <path class="a" d="M420 130 L350 130 A70 70 0 0 0 385 190.6 Z"/><path class="a" d="M281 370 L351 370 A70 70 0 0 0 316 309.4 Z"/>
+      </g>
+      <g class="grupo" data-em="3:on">
+        <path class="b" d="M420 130 L385 190.6 A70 70 0 0 0 490 130 Z"/><path class="a" d="M281 370 L351 370 A70 70 0 0 0 316 309.4 Z"/>
+      </g>
+      <g stroke="var(--carvao)" stroke-width="6" stroke-linecap="round"><line x1="20" y1="130" x2="740" y2="130"/><line x1="20" y1="370" x2="740" y2="370"/><line x1="496" y1="-2" x2="240.5" y2="440"/></g>
+      <text x="750" y="142" class="rot-i">r</text><text x="750" y="382" class="rot-i">s</text><text x="508" y="24" class="rot-i" style="fill:#6551D1">t</text>
+    </svg>
+    <div style="position:absolute;left:880px;right:0;top:160px;display:flex;flex-direction:column;gap:20px">
+      <div class="cartao" data-passo="1"><h3>Correspondentes</h3><p>mesma posição nos dois cruzamentos: <b>iguais</b></p></div>
+      <div class="cartao" data-passo="2"><h3>Alternos internos</h3><p>entre as paralelas, lados opostos de \(t\): <b>iguais</b></p></div>
+      <div class="cartao" data-passo="3"><h3>Colaterais internos</h3><p>entre as paralelas, mesmo lado de \(t\): <b>somam 180°</b></p></div>
+    </div>
+  </div>
+  <aside class="notas">
+    <p>Clique 1: um par de correspondentes acende (os dois acima da paralela e à direita de t). Clique 2: alternos internos (entre r e s, um de cada lado de t). Clique 3: colaterais internos (entre r e s, do mesmo lado de t), um agudo e um obtuso.</p>
+  </aside>
+</section>
+
+<!-- 11. Exemplo: correspondentes -->
+<section class="slide" data-nome="Exemplo: correspondentes">
+  <div class="conteudo">
+    <p class="olho">Exemplo</p>
+    <h2 class="titulo">Correspondentes e o colateral</h2>
+    <p class="texto" style="position:absolute;left:0;width:780px;top:160px;margin:0">Dois ângulos <b>correspondentes</b> medem \(3x - 20^{\circ}\) e \(2x + 10^{\circ}\). Quanto mede cada um? E o <b>colateral interno</b> de um deles?</p>
+    <div class="contas" style="position:absolute;left:900px;top:160px;font-size:50px;row-gap:16px">
+      <div class="eq" data-passo="1"><span>\(3x - 20\)</span><span>\(=\)</span><span>\(2x + 10\)</span></div>
+      <div class="eq" data-passo="2"><span>\(3x - 2x\)</span><span>\(=\)</span><span>\(10 + 20\)</span></div>
+      <div class="eq" data-passo="3"><span>\(x\)</span><span>\(=\)</span><span>\(30\)</span></div>
+      <div class="eq final" data-passo="4"><span>\(3 \cdot 30 - 20\)</span><span>\(=\)</span><span>\(70^{\circ}\)</span></div>
+      <div class="eq final" data-passo="5"><span>\(180 - 70\)</span><span>\(=\)</span><span>\(110^{\circ}\)</span></div>
+    </div>
+    <div class="caixa" data-passo="5" style="position:absolute;left:0;width:760px;top:400px;padding:20px 30px">
+      <div class="texto" style="font-size:34px">Colateral interno: o <b>suplemento</b>.</div>
+    </div>
+  </div>
+  <aside class="notas">
+    <p>Exemplo da apostila. Correspondentes são iguais: x = 30, cada um 70° (2 · 30 + 10 = 70, confere). O colateral é suplementar: 110°.</p>
+  </aside>
+</section>
+
+<!-- 12. Atenção -->
+<section class="slide" data-nome="Atenção: só com paralelas">
+  <div class="conteudo">
+    <p class="olho">Atenção</p>
+    <h2 class="titulo">Só vale com paralelas</h2>
+    <svg class="fig par-ang" viewBox="0 0 760 440" width="760" height="440" style="position:absolute;left:0;top:150px" aria-hidden="true">
+      <g stroke="var(--carvao)" stroke-width="6" stroke-linecap="round"><line x1="20" y1="120" x2="740" y2="120"/><line x1="20" y1="300" x2="740" y2="400"/><line x1="470" y1="10" x2="250" y2="430"/></g>
+      <path class="a" d="M412.4 120 L482.4 120 A70 70 0 0 0 444.8 58 Z"/>
+      <path class="b" d="M297.9 338.6 L367.2 348.2 A70 70 0 0 0 330.3 276.6 Z" style="fill:rgba(194,56,79,.15);stroke:#C2384F"/>
+      <text x="496" y="92" font-size="30" fill="var(--d-forte)">62°</text><text x="384" y="300" font-size="30" fill="#C2384F">70°</text>
+      <text x="750" y="132" class="rot-i">r</text><text x="750" y="412" class="rot-i">s</text>
+    </svg>
+    <div class="caixa caixa-atencao" style="position:absolute;left:880px;right:0;top:180px">
+      <div class="texto">Correspondentes e alternos só são iguais se as retas cortadas forem <b>paralelas</b>.</div>
+    </div>
+    <p class="texto" data-passo="1" style="position:absolute;left:880px;right:0;top:470px;margin:0">O enunciado não garante \(r \parallel s\)? Essas igualdades <b>não</b> podem ser usadas.</p>
+  </div>
+  <aside class="notas">
+    <p>Na figura, r e s não são paralelas: na mesma posição, um ângulo mede cerca de 62° e o outro cerca de 70° (medidas da própria figura, só para mostrar a diferença). Procure no enunciado o "r ∥ s" antes de igualar ângulos.</p>
+  </aside>
+</section>
+
+<!-- 13. Questão 1 -->
+<section class="slide questao" data-nome="Questão 1">
+  <div class="conteudo">
+    <div class="area-resolucao"></div>
+    <span class="pilula pilula-pausa" data-em="1:some">Pause o vídeo e tente</span>
+    <div class="painel-questao">
+      <p class="olho">Questão 1 · Modelo IF</p>
+      <p class="enunciado">Um marceneiro divide o canto reto (\(90^{\circ}\)) de uma moldura em dois ângulos com um corte. Um deles mede \(37^{\circ}25'\). O outro ângulo, que completa o canto, mede:</p>
+      <ol class="alternativas curtas">
+        <li data-em="2:apaga"><b>A</b><span>\(53^{\circ}35'\)</span></li>
+        <li data-em="2:apaga"><b>B</b><span>\(142^{\circ}35'\)</span></li>
+        <li data-em="2:certo"><b>C</b><span>\(52^{\circ}35'\)</span></li>
+        <li data-em="2:apaga"><b>D</b><span>\(127^{\circ}25'\)</span></li>
+        <li data-em="2:apaga"><b>E</b><span>\(52^{\circ}75'\)</span></li>
+      </ol>
+      <p class="fonte">Questão Modelo IF (lote if-matematica-angulos-e-paralelismo, m002)</p>
+    </div>
+  </div>
+  <aside class="resolucao">
+    <p class="dados"><b>Dados:</b> canto de \(90^{\circ}\); um ângulo de \(37^{\circ}25'\).</p>
+    <ol class="passos">
+      <li><b>Complementares</b> \(C = 90^{\circ} - 37^{\circ}25'\)</li>
+      <li><b>Empreste 1° = 60'</b> \(C = 89^{\circ}60' - 37^{\circ}25'\)</li>
+      <li><b>Subtraia</b> \(C = 52^{\circ}35'\)</li>
+    </ol>
+    <p class="resposta"><b>Resposta:</b> \(52^{\circ}35'\). <b>Gabarito C.</b></p>
+    <p class="atencao"><b>Destaque no quadro:</b> 90° não tem minutos: transforme em 89°60' antes de subtrair.</p>
+    <ul class="erros">
+      <li><b>A</b> Não tira o 1° emprestado (fica 53°).</li>
+      <li><b>B</b> É o suplemento (180° − 37°25').</li>
+      <li><b>D</b> Soma com 90°.</li>
+      <li><b>E</b> Trata o minuto como decimal (100').</li>
+    </ul>
+  </aside>
+  <aside class="notas">
+    <p>Clique 1 tira o aviso de pausa: resolva na área (D liga a caneta; E esconde o enunciado). Clique 2: gabarito C.</p>
+    <p>Modelo IF, lote if-matematica-angulos-e-paralelismo, m002, MAT-3604 (nível 2). Conferido: 52°35' + 37°25' = 89°60' = 90°.</p>
+  </aside>
+</section>
+
+<!-- 14. Questão 2 -->
+<section class="slide questao" data-nome="Questão 2">
+  <div class="conteudo">
+    <div class="area-resolucao"></div>
+    <span class="pilula pilula-pausa" data-em="1:some">Pause o vídeo e tente</span>
+    <div class="painel-questao">
+      <p class="olho">Questão 2 · Modelo IF</p>
+      <p class="enunciado">Na figura, as retas \(r\) e \(s\) são paralelas, cortadas pela transversal \(t\). A medida do ângulo <b>agudo</b> formado pelas retas \(t\) e \(r\) é:</p>
+      <svg class="fig" viewBox="0 0 520 330" width="520" height="330" aria-hidden="true">
+        <!-- t com 75° de inclinação: corta r em (300,70) e s em (241,290) -->
+        <g stroke="var(--carvao)" stroke-width="5" stroke-linecap="round"><line x1="20" y1="70" x2="480" y2="70"/><line x1="20" y1="290" x2="480" y2="290"/><line x1="318.8" y1="0" x2="225" y2="350"/></g>
+        <path d="M340 70 A40 40 0 0 1 289.6 108.6" fill="none" stroke="var(--d)" stroke-width="4"/>
+        <path d="M251.4 251.4 A40 40 0 0 0 201 290" fill="none" stroke="var(--d)" stroke-width="4"/>
+        <text x="312" y="140" font-size="28" fill="var(--carvao)">3x − 15°</text>
+        <text x="70" y="250" font-size="28" fill="var(--carvao)">2x + 25°</text>
+        <text x="492" y="80" class="rot-i" style="font-size:30px">r</text><text x="492" y="300" class="rot-i" style="font-size:30px">s</text><text x="326" y="22" class="rot-i" style="font-size:30px">t</text>
+      </svg>
+      <ol class="alternativas curtas">
+        <li data-em="2:apaga"><b>A</b><span>\(40^{\circ}\)</span></li>
+        <li data-em="2:apaga"><b>B</b><span>\(105^{\circ}\)</span></li>
+        <li data-em="2:apaga"><b>C</b><span>\(87^{\circ}\)</span></li>
+        <li data-em="2:apaga"><b>D</b><span>\(15^{\circ}\)</span></li>
+        <li data-em="2:certo"><b>E</b><span>\(75^{\circ}\)</span></li>
+      </ol>
+      <p class="fonte">Questão Modelo IF (lote if-matematica-angulos-e-paralelismo, m005)</p>
+    </div>
+  </div>
+  <aside class="resolucao">
+    <p class="dados"><b>Dados:</b> \(r \parallel s\); ângulos \(3x - 15^{\circ}\) e \(2x + 25^{\circ}\).</p>
+    <ol class="passos">
+      <li><b>Entre as paralelas, lados opostos de t: alternos internos</b> \(3x - 15 = 2x + 25\)</li>
+      <li><b>Isole x</b> \(x = 40\)</li>
+      <li><b>Cada ângulo marcado</b> \(3 \cdot 40 - 15 = 105^{\circ}\) (obtuso)</li>
+      <li><b>O agudo é o suplemento</b> \(180^{\circ} - 105^{\circ} = 75^{\circ}\)</li>
+    </ol>
+    <p class="resposta"><b>Resposta:</b> o ângulo agudo mede \(75^{\circ}\). <b>Gabarito E.</b></p>
+    <p class="atencao"><b>Destaque no quadro:</b> Leia o que se pede: o agudo, não o ângulo marcado.</p>
+    <ul class="erros">
+      <li><b>A</b> Responde só x.</li>
+      <li><b>B</b> É o ângulo obtuso marcado.</li>
+      <li><b>C</b> Trata os ângulos como suplementares.</li>
+      <li><b>D</b> Não sai de nenhuma etapa certa.</li>
+    </ul>
+  </aside>
+  <aside class="notas">
+    <p>Clique 1 tira o aviso de pausa: resolva na área (D liga a caneta; E esconde o enunciado). Clique 2: gabarito E.</p>
+    <p>Modelo IF, lote if-matematica-angulos-e-paralelismo, m005, MAT-3607 (nível 3). Figura refeita a partir da do lote (mesma posição dos ângulos). Conferido: 2 · 40 + 25 = 105; 105 + 75 = 180.</p>
+    <p>O lote diz que D (15°) vem de "complemento"; nenhuma conta direta dá 15°, por isso no quadro ficou "não sai de nenhuma etapa certa".</p>
+  </aside>
+</section>
+
+<!-- 15. Questão 3 -->
+<section class="slide questao" data-nome="Questão 3">
+  <div class="conteudo">
+    <div class="area-resolucao"></div>
+    <span class="pilula pilula-pausa" data-em="1:some">Pause o vídeo e tente</span>
+    <div class="painel-questao">
+      <p class="olho">Questão 3 · Modelo IF</p>
+      <p class="enunciado" style="font-size:25px">Na figura, as retas \(r\) e \(s\) são paralelas. O ponto \(A\) está em \(r\), o ponto \(B\) está em \(s\), e os segmentos \(AP\) e \(PB\) formam um "bico" entre as duas retas. A medida \(x\) do ângulo \(A\hat{P}B\) é:</p>
+      <svg class="fig" viewBox="0 0 520 320" width="520" height="320" aria-hidden="true">
+        <g stroke="var(--carvao)" stroke-width="5" stroke-linecap="round"><line x1="20" y1="40" x2="480" y2="40"/><line x1="20" y1="290" x2="480" y2="290"/></g>
+        <polyline points="110,40 288.8,190 218.8,290" fill="none" stroke="var(--d)" stroke-width="5" stroke-linejoin="round"/>
+        <path d="M160 40 A50 50 0 0 1 148.3 72.1" fill="none" stroke="var(--d)" stroke-width="4"/>
+        <path d="M268.8 290 A50 50 0 0 0 247.5 249" fill="none" stroke="var(--d)" stroke-width="4"/>
+        <path d="M257.4 163.6 A41 41 0 0 0 265.3 223.6" fill="none" stroke="var(--d)" stroke-width="4"/>
+        <g fill="var(--carvao)"><circle cx="110" cy="40" r="7"/><circle cx="288.8" cy="190" r="7"/><circle cx="218.8" cy="290" r="7"/></g>
+        <text x="96" y="26" font-size="28">A</text><text x="304" y="200" font-size="28">P</text><text x="200" y="324" font-size="28">B</text>
+        <text x="172" y="80" font-size="26" fill="var(--d-forte)">40°</text><text x="278" y="272" font-size="26" fill="var(--d-forte)">55°</text>
+        <text x="222" y="204" font-size="28" font-style="italic" fill="var(--carvao)">x</text>
+        <text x="490" y="50" class="rot-i" style="font-size:30px">r</text><text x="490" y="300" class="rot-i" style="font-size:30px">s</text>
+      </svg>
+      <ol class="alternativas curtas">
+        <li data-em="2:apaga"><b>A</b><span>\(15^{\circ}\)</span></li>
+        <li data-em="2:apaga"><b>B</b><span>\(85^{\circ}\)</span></li>
+        <li data-em="2:certo"><b>C</b><span>\(95^{\circ}\)</span></li>
+        <li data-em="2:apaga"><b>D</b><span>\(140^{\circ}\)</span></li>
+        <li data-em="2:apaga"><b>E</b><span>\(47^{\circ}30'\)</span></li>
+      </ol>
+      <p class="fonte">Questão Modelo IF (lote if-matematica-angulos-e-paralelismo, m007)</p>
+    </div>
+  </div>
+  <aside class="resolucao">
+    <p class="dados"><b>Dados:</b> \(r \parallel s\); \(40^{\circ}\) em \(A\); \(55^{\circ}\) em \(B\).</p>
+    <ol class="passos">
+      <li><b>Trace por P a reta u paralela a r e s</b> ela divide x em duas partes</li>
+      <li><b>Parte de cima: alterno interno com A</b> \(40^{\circ}\)</li>
+      <li><b>Parte de baixo: alterno interno com B</b> \(55^{\circ}\)</li>
+      <li><b>Some</b> \(x = 40^{\circ} + 55^{\circ} = 95^{\circ}\)</li>
+    </ol>
+    <p class="resposta"><b>Resposta:</b> \(x = 95^{\circ}\). <b>Gabarito C.</b></p>
+    <p class="atencao"><b>Destaque no quadro:</b> No "bico" entre paralelas, o ângulo do bico é a soma dos ângulos das pontas.</p>
+    <ul class="erros">
+      <li><b>A</b> Faz a diferença 55° − 40°.</li>
+      <li><b>B</b> Trata como triângulo: 180° − 95°.</li>
+      <li><b>D</b> Usa o suplemento de 40°.</li>
+      <li><b>E</b> Tira a média de 40° e 55°.</li>
+    </ul>
+  </aside>
+  <aside class="notas">
+    <p>Clique 1 tira o aviso de pausa: resolva na área (D liga a caneta; E esconde o enunciado). Clique 2: gabarito C.</p>
+    <p>Modelo IF, lote if-matematica-angulos-e-paralelismo, m007, MAT-3609 (nível 4). Figura refeita com as mesmas medidas (A com 40°, B com 55°). A reta auxiliar u não aparece na figura de propósito: desenhe-a com a caneta.</p>
+  </aside>
+</section>
+
+<!-- 16. Resumo -->
+<section class="slide" data-nome="Resumo">
+  <div class="conteudo">
+    <p class="olho">Resumo</p>
+    <h2 class="titulo">O essencial</h2>
+    <div class="resumo" style="position:absolute;left:0;right:0;top:150px">
+      <div><b>1° = 60'</b>: passou de 60', vira mais 1°; para subtrair de 90°, use 89°60'.</div>
+      <div><b>Bissetriz:</b> divide ao meio. Meio grau = 30'.</div>
+      <div><b>Complementares</b> somam 90°; <b>suplementares</b> somam 180°.</div>
+      <div><b>Opostos pelo vértice</b> são iguais. Complemento: \(90^{\circ} - x\); suplemento: \(180^{\circ} - x\).</div>
+      <div><b>Paralelas e transversal:</b> correspondentes e alternos iguais; colaterais somam 180°.</div>
+      <div><b>Só com paralelas:</b> sem \(r \parallel s\) no enunciado, nada de igualar.</div>
+    </div>
+  </div>
+  <aside class="notas"><p>Peça para tirarem um print desta tela.</p></aside>
+</section>
+
+<!-- 17. A seguir -->
+<section class="slide capa" data-nome="A seguir">
+  <div class="estrelas"></div>
+  <div class="texto-capa" style="top:200px">
+    <span class="selo">Matemática · IF</span>
+    <p class="aula" style="font-size:26px">A seguir · Geometria plana</p>
+    <h1 style="font-size:120px">Triângulos e quadriláteros</h1>
+    <p class="sub">Por que os ângulos do triângulo somam 180°</p>
+  </div>
+  <svg class="emblema" viewBox="0 0 640 640" aria-hidden="true">
+    <polygon points="90,520 560,520 380,140" fill="none" stroke="#fff" stroke-opacity=".9" stroke-width="10" stroke-linejoin="round"/>
+    <line x1="120" y1="140" x2="620" y2="140" stroke="#FFD10C" stroke-width="6" stroke-dasharray="16 14"/>
+    <path d="M170 520 A80 80 0 0 0 145 469" fill="none" stroke="#FFD10C" stroke-width="7"/>
+    <path d="M480 520 A80 80 0 0 1 525 446" fill="none" stroke="#FFD10C" stroke-width="7"/>
+  </svg>
+  <img class="logo-capa" src="{{LOGO_BRANCO}}" alt="Quarks">
+  <aside class="notas"><p>Próximo subcapítulo: triângulos (existência, classificação, soma 180° e ângulo externo) e quadriláteros. A soma de 180° usa justamente o axioma de Euclides e os alternos internos.</p></aside>
+</section>
