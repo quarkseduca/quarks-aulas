@@ -1,7 +1,7 @@
 <!--aula
 {"disciplina": "fisica", "curso": "IF", "assunto": "Eletricidade", "parte": "Questões do IF Sudeste", "titulo": "Questões do IF Sudeste"}
 -->
-<!-- Fonte: questões do capítulo Eletricidade reservadas em planejamento/questoes-if.md e no cronograma (IF Sudeste MG 2014-1 q37 FIS-0530, 2016-2 q29 FIS-0590, 2019-2 q30 FIS-0603, 2018-2 q28 FIS-0597) e a Modelo IF if-fisica-energia-e-sociedade m001 (FIS-8796) para Usinas. Nenhuma repetida das partes. -->
+<!-- Fonte: questões do capítulo Eletricidade reservadas em planejamento/questoes-if.md e no cronograma (IF Sudeste MG 2014-1 q37 FIS-0530, 2016-2 q29 FIS-0590, 2019-2 q30 FIS-0603), a Modelo IF if-fisica-potencia-e-energia-eletrica m006 (FIS-1622) para Consumo de energia elétrica, no lugar da 2018-2 q28 FIS-0597 (erro "kW/h" no enunciado; troca pedida pelo dono em 03/11/2026), e a Modelo IF if-fisica-energia-e-sociedade m001 (FIS-8796) para Usinas. Nenhuma repetida das partes. -->
 <style>
   .caixa, .el-card, .el-linha { box-sizing: border-box; }
   .el-cards { display: grid; gap: 22px; }
@@ -83,7 +83,11 @@
   /* traço que se desenha */
   .el-traca { stroke-dasharray: 1; stroke-dashoffset: 1; transition: stroke-dashoffset 1.6s ease-in-out; }
   .mostra .el-traca, .mostra.el-traca { stroke-dashoffset: 0; }
-  @media (prefers-reduced-motion: reduce) { .el-barra, .el-barra-v { transform: none; } .el-traca { stroke-dashoffset: 0; } .el-alavanca { transition: none; } }
+  /* barras do gráfico de consumo crescem ao abrir a tela */
+  .el-cresce { transform-box: fill-box; transform-origin: center bottom; }
+  .slide.ativo .el-cresce { animation: el-cresce-v 2.2s ease-out both; }
+  @keyframes el-cresce-v { from { transform: scaleY(0); } to { transform: none; } }
+  @media (prefers-reduced-motion: reduce) { .slide.ativo .el-cresce { animation: none; } .el-barra, .el-barra-v { transform: none; } .el-traca { stroke-dashoffset: 0; } .el-alavanca { transition: none; } }
 </style>
 <svg width="0" height="0" style="position:absolute" aria-hidden="true">
   <defs>
@@ -111,7 +115,7 @@
     <path d="M482 92 L452 138 H472 L462 172 L494 122 H474 Z" fill="#4B258D"/>
   </svg>
   <img class="logo-capa" src="{{LOGO_BRANCO}}" alt="Quarks">
-  <aside class="notas"><p>Fechamento de Eletricidade: as questões do IF Sudeste MG do capítulo (fontes de energia, circuitos e consumo) e uma questão Modelo de usinas, subcapítulo que o IF ainda não cobrou. Em cada uma, pause, tente e depois confira a resolução.</p><p>Nenhuma delas apareceu nas partes do capítulo.</p></aside>
+  <aside class="notas"><p>Fechamento de Eletricidade: as questões do IF Sudeste MG do capítulo (fontes de energia e circuitos), uma questão Modelo de consumo (a única oficial desse subcapítulo tinha erro no enunciado) e uma questão Modelo de usinas, subcapítulo que o IF ainda não cobrou. Em cada uma, pause, tente e depois confira a resolução.</p><p>Nenhuma delas apareceu nas partes do capítulo.</p></aside>
 </section>
 
 <section class="slide questao" data-nome="IF 2014 · a manga que cai" data-largo="1" data-gap="10">
@@ -180,26 +184,26 @@
   <aside class="notas"><p>Clique 1 tira o aviso de pausa. Clique 2: gabarito C.</p><p>Questão oficial do IF Sudeste MG 2019-2, q30, FIS-0603 (Circuitos elétricos). Enunciado longo: sublinhe com a caneta as duas exigências antes de olhar as alternativas.</p></aside>
 </section>
 
-<section class="slide questao" data-nome="IF 2018 · as lâmpadas do Sr. Paulo" data-largo="1" data-gap="10">
+<section class="slide questao" data-nome="Modelo · o gráfico da conta de luz" data-largo="1" data-gap="10">
   <div class="conteudo">
     <div class="area-resolucao"></div>
     <span class="pilula pilula-pausa" data-em="1:some">Pause o vídeo e tente</span>
     <div class="painel-questao">
-      <p class="olho">IF Sudeste MG 2018 · Questão 28</p>
-      <p class="enunciado" style="font-size:22px">Com a necessidade cada vez maior de economizarmos energia elétrica, faz-se necessária a compra de eletrodomésticos cada vez mais eficientes. Por exemplo, podemos trocar nossas lâmpadas florescentes por lâmpadas de LED que apresentam uma eficiência energética maior. Pensando assim, Sr. Paulo resolveu mudar as 8 lâmpadas de sua casa pelo modelo mais econômico, cada lâmpada nova apresentava, em sua embalagem, a seguinte descrição: 120V - 10W. Em média, as 8 lâmpadas ficam ligadas durante 2 horas por dia cada uma. Considerando que um mês tem 30 dias, a alternativa <b>CORRETA</b> que representa o gasto, em reais, com a utilização dessas novas lâmpadas é:</p><p class="enunciado" style="font-size:22px">Considere o preço do kW/h, na casa do Sr. Paulo, como sendo de R$ 0,50.</p>
-      
-      
-      <ol class="alternativas curtas"><li data-em="2:apaga"><b>A</b><span>R$ 28,80</span></li><li data-em="2:apaga"><b>B</b><span>R$ 14,40</span></li><li data-em="2:apaga"><b>C</b><span>R$ 8,00</span></li><li data-em="2:certo"><b>D</b><span>R$ 2,40</span></li><li data-em="2:apaga"><b>E</b><span>R$ 1,20</span></li></ol>
+      <p class="olho">Modelo IF · Consumo de energia elétrica</p>
+      <p class="enunciado" style="font-size:22px">A conta de luz traz um gráfico com o consumo de energia dos últimos meses. O gráfico abaixo mostra o consumo de uma casa de fevereiro a julho. Com a chegada do frio, os moradores passaram a usar o chuveiro na posição "inverno" e um aquecedor à noite.</p>
+      <div class="figura"><svg viewBox="0 0 620 350" width="520" height="294" style="overflow:visible;font-family:Figtree,'Segoe UI',sans-serif;" role="img" aria-label="Gráfico de barras do consumo mensal: fevereiro 140, março 160, abril 170, maio 190, junho 220 e julho 230 kWh"><text x="66" y="309" text-anchor="end" font-size="24" fill="#292B2C">0</text><line x1="78" y1="250" x2="600" y2="250" stroke="#E4E0F5" stroke-width="2"/><text x="66" y="259" text-anchor="end" font-size="24" fill="#292B2C">50</text><line x1="78" y1="200" x2="600" y2="200" stroke="#E4E0F5" stroke-width="2"/><text x="66" y="209" text-anchor="end" font-size="24" fill="#292B2C">100</text><line x1="78" y1="150" x2="600" y2="150" stroke="#E4E0F5" stroke-width="2"/><text x="66" y="159" text-anchor="end" font-size="24" fill="#292B2C">150</text><line x1="78" y1="100" x2="600" y2="100" stroke="#E4E0F5" stroke-width="2"/><text x="66" y="109" text-anchor="end" font-size="24" fill="#292B2C">200</text><line x1="78" y1="50" x2="600" y2="50" stroke="#E4E0F5" stroke-width="2"/><text x="66" y="59" text-anchor="end" font-size="24" fill="#292B2C">250</text><rect class="el-cresce" style="animation-delay:0.00s" x="100" y="160" width="58" height="140" rx="8" fill="var(--d)"/><text x="129" y="150" text-anchor="middle" font-size="24" font-weight="800" fill="var(--d-forte)">140</text><text x="129" y="334" text-anchor="middle" font-size="25" fill="#292B2C">fev</text><rect class="el-cresce" style="animation-delay:0.25s" x="184" y="140" width="58" height="160" rx="8" fill="var(--d)"/><text x="213" y="130" text-anchor="middle" font-size="24" font-weight="800" fill="var(--d-forte)">160</text><text x="213" y="334" text-anchor="middle" font-size="25" fill="#292B2C">mar</text><rect class="el-cresce" style="animation-delay:0.50s" x="268" y="130" width="58" height="170" rx="8" fill="var(--d)"/><text x="297" y="120" text-anchor="middle" font-size="24" font-weight="800" fill="var(--d-forte)">170</text><text x="297" y="334" text-anchor="middle" font-size="25" fill="#292B2C">abr</text><rect class="el-cresce" style="animation-delay:0.75s" x="352" y="110" width="58" height="190" rx="8" fill="var(--d)"/><text x="381" y="100" text-anchor="middle" font-size="24" font-weight="800" fill="var(--d-forte)">190</text><text x="381" y="334" text-anchor="middle" font-size="25" fill="#292B2C">mai</text><rect class="el-cresce" style="animation-delay:1.00s" x="436" y="80" width="58" height="220" rx="8" fill="var(--d)"/><text x="465" y="70" text-anchor="middle" font-size="24" font-weight="800" fill="var(--d-forte)">220</text><text x="465" y="334" text-anchor="middle" font-size="25" fill="#292B2C">jun</text><rect class="el-cresce" style="animation-delay:1.25s" x="520" y="70" width="58" height="230" rx="8" fill="var(--d)"/><text x="549" y="60" text-anchor="middle" font-size="24" font-weight="800" fill="var(--d-forte)">230</text><text x="549" y="334" text-anchor="middle" font-size="25" fill="#292B2C">jul</text><path d="M78 30 V300 H604" fill="none" stroke="#292B2C" stroke-width="3"/><text transform="translate(14 175) rotate(-90)" text-anchor="middle" font-size="24" fill="#292B2C">consumo (kWh)</text></svg></div>
+      <p class="enunciado" style="font-size:22px">Considere que o kWh custa R$ 0,90 (valor fictício, sem impostos). Quanto a família pagou a mais pela energia no mês de maior consumo, em comparação com o mês de menor consumo?</p>
+      <ol class="alternativas curtas"><li data-em="2:certo"><b>A</b><span>R$ 81,00</span></li><li data-em="2:apaga"><b>B</b><span>R$ 9,00</span></li><li data-em="2:apaga"><b>C</b><span>R$ 90,00</span></li><li data-em="2:apaga"><b>D</b><span>R$ 207,00</span></li><li data-em="2:apaga"><b>E</b><span>R$ 333,00</span></li></ol>
     </div>
   </div>
   <aside class="resolucao">
-    <p class="dados"><b>Dados:</b> 8 lâmpadas de 10 W; 2 h por dia; 30 dias; R$ 0,50 por kWh.</p>
-    <ol class="passos"><li><b>1.</b> \(P = 8 \cdot 10 = 80\ \text{W} = 0{,}08\ \text{kW}\)</li><li><b>2.</b> \(\Delta t = 2 \cdot 30 = 60\ \text{h}\)</li><li><b>3.</b> \(E = 0{,}08 \cdot 60 = 4{,}8\ \text{kWh}\)</li><li><b>4.</b> gasto = \(4{,}8 \cdot 0{,}50\) = R$ 2,40</li></ol>
-    <p class="resposta"><b>Resposta:</b> R$ 2,40. <b>Gabarito D.</b></p>
-    <p class="atencao"><b>Destaque no quadro:</b> O 120 V não entra na conta; o preço é por kWh.</p>
-    <ul class="erros"><li><b>A</b> 12 vezes o gasto certo.</li><li><b>B</b> 6 vezes o gasto certo.</li><li><b>C</b> Seria o gasto de 16 kWh.</li><li><b>E</b> Metade: 1 h por dia, ou 4 lâmpadas, ou 15 dias.</li></ul>
+    <p class="dados"><b>Dados:</b> maior: julho, 230 kWh; menor: fevereiro, 140 kWh; R$ 0,90 por kWh.</p>
+    <ol class="passos"><li><b>1.</b> \(\Delta C = 230 - 140 = 90\ \text{kWh}\)</li><li><b>2.</b> valor = \(90 \cdot 0{,}90\)</li><li><b>3.</b> valor = R$ 81,00</li></ol>
+    <p class="resposta"><b>Resposta:</b> R$ 81,00 a mais em julho. <b>Gabarito A.</b></p>
+    <p class="atencao"><b>Destaque no quadro:</b> Maior menos menor; depois vezes o preço do kWh.</p>
+    <ul class="erros"><li><b>B</b> Comparou julho com junho: 10 kWh, R$ 9,00.</li><li><b>C</b> 90 é a diferença em kWh; faltou o preço.</li><li><b>D</b> Só julho: \(230 \cdot 0{,}90\), sem descontar fevereiro.</li><li><b>E</b> Somou os meses: \(370 \cdot 0{,}90\).</li></ul>
   </aside>
-  <aside class="notas"><p>Clique 1 tira o aviso de pausa. Clique 2: gabarito D.</p><p>Questão oficial do IF Sudeste MG 2018-2, q28, FIS-0597 (Consumo de energia elétrica). A prova escreve "kW/h" e "florescentes"; o certo é kWh (quilowatt vezes hora) e fluorescentes. Mantivemos o texto da prova; corrija em voz alta.</p></aside>
+  <aside class="notas"><p>Clique 1 tira o aviso de pausa. Clique 2: gabarito A.</p><p>Modelo IF, lote if-fisica-potencia-e-energia-eletrica, m006, FIS-1622 (Consumo de energia elétrica > Conta de luz), da apostila e fora das partes. Entrou no lugar da oficial 2018-2 q28 (FIS-0597), que tinha erro no enunciado ("kW/h"); troca pedida pelo dono em 03/11/2026. Gráfico refeito em SVG com os valores do arquivo da questão (fev 140, mar 160, abr 170, mai 190, jun 220, jul 230 kWh); as barras crescem devagar ao abrir a tela. Conferido: 230 − 140 = 90 kWh; 90 · 0,90 = 81 (B: 10 · 0,90 = 9; D: 230 · 0,90 = 207; E: 370 · 0,90 = 333).</p></aside>
 </section>
 
 <section class="slide questao" data-nome="Modelo · Marmelos e as usinas" data-largo="1" data-gap="10">

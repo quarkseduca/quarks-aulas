@@ -1,7 +1,7 @@
 <!--aula
 {"disciplina": "matematica", "curso": "IF", "assunto": "Álgebra", "parte": "Questões do IF Sudeste", "titulo": "Questões do IF Sudeste"}
 -->
-<!-- Fonte: questões oficiais do IF Sudeste MG do capítulo Álgebra (apostilas/questoes/oficiais/if no cérebro), exatamente as reservadas em planejamento/questoes-if.md e no campo "questoes" do cronograma: 2026-1 q22 (MAT-0554), 2024-1 q23 (MAT-0307), 2025-1 q15 (MAT-0536), 2019-2 q17 (MAT-0516), 2026-1 q16 (MAT-0548), 2024-1 q16 (MAT-0300), 2020-1 q22 (MAT-0532), 2019-2 q15 (MAT-0514). Nenhuma delas aparece nas partes do capítulo. -->
+<!-- Fonte: questões oficiais do IF Sudeste MG do capítulo Álgebra (apostilas/questoes/oficiais/if no cérebro), exatamente as reservadas em planejamento/questoes-if.md e no campo "questoes" do cronograma: 2019-1 q14 (MAT-0435, no lugar da 2026-1 q22 MAT-0554, que tinha erro de impressão; troca pedida pelo dono em 03/11/2026), 2024-1 q23 (MAT-0307), 2025-1 q15 (MAT-0536), 2019-2 q17 (MAT-0516), 2026-1 q16 (MAT-0548), 2024-1 q16 (MAT-0300), 2020-1 q22 (MAT-0532), 2019-2 q15 (MAT-0514). Nenhuma delas aparece nas partes do capítulo. -->
 <style>
   .caixa { box-sizing: border-box; }
   .ag-errata { font-size: 19px; line-height: 1.35; background: #FFF8D6; border: 2px solid #F5DD6B; border-radius: 16px; padding: 8px 14px; color: #5E4A00; }
@@ -35,45 +35,43 @@
   <aside class="notas"><p>Fechamento de Álgebra: oito questões que caíram no IF Sudeste MG, duas de cada subcapítulo, na ordem Polinômios, Equações do 1º grau, Sistemas do 1º grau e Equações do 2º grau. Em cada uma, pause, tente e depois confira a resolução.</p></aside>
 </section>
 
-<!-- IF 2026 · fração algébrica -->
-<section class="slide questao" data-nome="IF 2026 · fração algébrica">
+<!-- IF 2019 · fração algébrica -->
+<section class="slide questao" data-nome="IF 2019 · fração algébrica">
   <div class="conteudo">
     <div class="area-resolucao"></div>
     <span class="pilula pilula-pausa" data-em="1:some">Pause o vídeo e tente</span>
-    <div class="painel-questao" style="gap:12px">
-      <p class="olho">IF Sudeste MG 2026 · Questão 22</p>
-      <p class="enunciado" style="font-size:28px">Para \(x \neq -\frac{1}{2}\) e \(x \neq y\), a expressão \(\dfrac{x^2 - 2xy + x^2}{2x^2 + x - 2xy - y}\) é igual a:</p>
-      <p class="ag-errata"><b>Atenção:</b> assim saiu na prova. Pelas alternativas, o numerador pretendido é \(x^2 - 2xy + y^2\).</p>
+    <div class="painel-questao">
+      <p class="olho">IF Sudeste MG 2019 · Questão 14</p>
+      <p class="enunciado" style="font-size:28px">Ao simplificar a expressão \(\dfrac{a^3b - ab^3}{(a - b)(a + b)}\), obtém-se:</p>
       <ol class="alternativas" style="gap:8px">
-        <li data-em="2:certo"><b>A</b><span>\(\dfrac{x - y}{2x + 1}\)</span></li>
-        <li data-em="2:apaga"><b>B</b><span>\(\dfrac{1 - y}{x}\)</span></li>
-        <li data-em="2:apaga"><b>C</b><span>\(\dfrac{x^2 - y^2}{(x - y)(2x + 1)}\)</span></li>
-        <li data-em="2:apaga"><b>D</b><span>\(\dfrac{x}{y}\)</span></li>
-        <li data-em="2:apaga"><b>E</b><span>\(\dfrac{(x + y)^2}{(x - y)(2x + 1)}\)</span></li>
+        <li data-em="2:apaga"><b>A</b><span>\(a\)</span></li>
+        <li data-em="2:apaga"><b>B</b><span>\(b\)</span></li>
+        <li data-em="2:certo"><b>C</b><span>\(ab\)</span></li>
+        <li data-em="2:apaga"><b>D</b><span>\(a^2\)</span></li>
+        <li data-em="2:apaga"><b>E</b><span>\(b^2\)</span></li>
       </ol>
-      <p class="fonte">IF Sudeste MG 2026 · questão 22</p>
+      <p class="fonte">IF Sudeste MG 2019 · questão 14</p>
     </div>
   </div>
   <aside class="resolucao">
-    <p class="dados"><b>Dados:</b> numerador \(x^2 - 2xy + y^2\) (o pretendido); \(x \ne -\frac{1}{2}\), \(x \ne y\).</p>
+    <p class="dados"><b>Dados:</b> \(a \ne b\) e \(a \ne -b\) (denominador não zera).</p>
     <ol class="passos">
-      <li>Em cima: \(x^2 - 2xy + y^2 = (x - y)^2\)</li>
-      <li>Embaixo, agrupando: \(x(2x + 1) - y(2x + 1)\)</li>
-      <li>\(= (2x + 1)(x - y)\)</li>
-      <li>\(\dfrac{(x - y)^2}{(x - y)(2x + 1)} = \dfrac{x - y}{2x + 1}\)</li>
+      <li>Fator comum em cima: \(ab\,(a^2 - b^2)\)</li>
+      <li>Diferença de quadrados: \(ab\,(a - b)(a + b)\)</li>
+      <li>\(\dfrac{ab\,(a - b)(a + b)}{(a - b)(a + b)} = ab\)</li>
     </ol>
-    <p class="resposta"><b>Resposta:</b> \(\dfrac{x - y}{2x + 1}\). <b>Gabarito A.</b></p>
-    <p class="atencao"><b>Destaque no quadro:</b> Fatore em cima e embaixo; corte só o fator \((x - y)\).</p>
+    <p class="resposta"><b>Resposta:</b> \(ab\). <b>Gabarito C.</b></p>
+    <p class="atencao"><b>Destaque no quadro:</b> \(a^2 - b^2 = (a - b)(a + b)\): fatore antes de cortar.</p>
     <ul class="erros">
-      <li><b>B</b> Corta parcelas soltas, não fatores.</li>
-      <li><b>C</b> Troca (x − y)² por x² − y², e nem simplifica.</li>
-      <li><b>D</b> Corta termos de somas (x² com x², 2xy com 2xy).</li>
-      <li><b>E</b> Troca (x − y)² por (x + y)².</li>
+      <li><b>A</b> Pôs só \(a\) em evidência; esqueceu o fator \(b\).</li>
+      <li><b>B</b> Pôs só \(b\) em evidência; esqueceu o fator \(a\).</li>
+      <li><b>D</b> Simplificou só a parcela \(a^3b\); não se corta parcela de subtração.</li>
+      <li><b>E</b> Mesmo erro com a parcela \(ab^3\).</li>
     </ul>
   </aside>
   <aside class="notas">
-    <p>Clique 1 tira o aviso de pausa: resolva na área (D liga a caneta; E esconde o enunciado). Clique 2: gabarito A.</p>
-    <p>Questão oficial do IF Sudeste MG 2026-1, q22, MAT-0554 (reservada para este bloco). Erro de impressão na prova: o numerador saiu x² − 2xy + x²; ao pé da letra a fração daria 2x/(2x + 1), que não está nas alternativas. No banco: etiqueta "gabarito do Quarks"; a conta com y² confere A.</p>
+    <p>Clique 1 tira o aviso de pausa: resolva na área (D liga a caneta; E esconde o enunciado). Clique 2: gabarito C.</p>
+    <p>Questão oficial do IF Sudeste MG 2019-1, q14, MAT-0435 (Polinômios > Frações algébricas), da apostila e fora das partes. Entrou no lugar da 2026-1 q22 (MAT-0554), que saiu por erro de impressão no numerador; troca pedida pelo dono em 03/11/2026. Conferido: a³b − ab³ = ab(a² − b²) = ab(a − b)(a + b); com a = 2 e b = 1: (8 − 2)/(1 · 3) = 2 = ab (gabarito C).</p>
   </aside>
 </section>
 

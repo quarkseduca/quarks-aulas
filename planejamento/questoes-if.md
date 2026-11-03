@@ -7,9 +7,10 @@ Plano de 02/11/2026, a pedido do dono: **um ou dois blocos de questões oficiais
 - Arquivo do bloco: `aulas/<disciplina>/if/<capitulo>-questoes-if.html` (parte "Questões do IF Sudeste"; com dois blocos, "Questões do IF Sudeste · Parte 1 de 2" e "· Parte 2 de 2"). Na Química o bloco 1 de cada capítulo já existe.
 - Fonte: `apostilas/questoes/oficiais/if/` no cérebro (24 provas, 2013 a 2026). Escolha feita por agente pela classificação das questões (capítulo, subcapítulo e descritor) e pelas mais recentes primeiro: **conferir ao montar os slides**.
 - **Questões Modelo** (decisão do dono, 02/11/2026): subcapítulo sem questão oficial disponível leva uma questão Modelo do banco (Modelo IF, ou Modelo PISM no nível do IF) no mesmo bloco. As de Astronomia e Usinas foram criadas agora e ainda não estão gravadas no banco. **Depois da prova de 22/11/2026** (primeira do edital novo), trocar as Modelo pelas oficiais que couberem.
+- **Questão com erro não entra nos slides** (decisão do dono, 03/11/2026): saíram a 2019-1 q31 de Física (FIS-0573, anulada; entra a gêmea correta FIS-8832, com fonte "Questão Modelo IF" no slide), a 2018-2 q28 de Física (FIS-0597, "kW/h"; entra a Modelo FIS-1622), a 2026-1 q22 de Matemática (MAT-0554, erro de impressão; entra a oficial 2019-1 q14, MAT-0435) e a 2014-1 q15 de Matemática (MAT-0343, figura com ângulos trocados; entra a Modelo MAT-3610). Essas quatro não voltam como sobra.
 - Física: só entram questões do que a matriz pede (as de cinemática, leis de Newton, energia mecânica, hidrostática, eletrostática e magnetismo ficam fora, como os capítulos).
 
-## Física (21 oficiais + 7 Modelo)
+## Física (19 oficiais + 9 Modelo)
 
 Ordem do dono (02/11/2026), que vale também para a apostila de Física do IF: Astronomia, Mecânica, Termologia, Óptica, Ondas e Eletricidade.
 
@@ -81,13 +82,13 @@ Sobras para as partes: Luz e cores: 2013-1 q34; Reflexão e refração: 2014-1 q
 | Ondas e som | 2026-1 | 30 | FIS-0615 | Ao fazer um passeio na roça, Pedrinho, que se encontrava no alto de um morro, gritou por s… |
 | Ondas e som | 2020-1 | 30 | FIS-0607 | Alguns filmes de ficção científica retratam cenas que acontecem no espaço sideral, como, p… |
 | Ondas e som | 2018-2 | 30 | FIS-0599 | Para curtir seu final de semana, Sr. Joaquim gosta de sair para pescar. À beira de um lago… |
-| Ondas eletromagnéticas | 2019-1 | 31 | FIS-0573 | Sobre ondas mecânicas e eletromagnéticas, é INCORRETO afirmar que: |
 | Ondas eletromagnéticas | 2025-1 | 31 | FIS-0612 | Uma família que voltava para São João Nepomuceno, na Zona da Mata mineira, saiu ilesa da v… |
 
 **Questões Modelo** (no mesmo bloco; o IF ainda não cobrou o subcapítulo ou a questão oficial já está numa parte; trocar por oficial quando sair)
 
 | Subcapítulo | Fonte | Lote e questão | Código | Assunto |
 |---|---|---|---|---|
+| Ondas eletromagnéticas | Modelo IF | gemea-if-fisica-d m005 | FIS-8832 | INCORRETO: o ultrassom da gestação seria eletromagnético (no lugar da 2019-1 q31, FIS-0573, anulada) |
 | Radiações e saúde | Modelo IF | if-fisica-ondas m027 | FIS-0828 | Gestação: por que ultrassom e não raio X |
 
 Sobras para as partes: Ondas e som: 2017-1-extra q29, 2016-1-extra q30, 2015-1-extra q30; Ondas eletromagnéticas: 2014-1 q38.
@@ -100,12 +101,12 @@ Sobras para as partes: Ondas e som: 2017-1-extra q29, 2016-1-extra q30, 2015-1-e
 | Fontes e transformações de energia | 2014-1 | 37 | FIS-0530 | Ao acender uma vela, estamos presenciando a transformação de energia química em energia lu… |
 | Circuitos elétricos | 2016-2 | 29 | FIS-0590 | Sofia, uma garota muito curiosa, montou o circuito 1 abaixo, com duas pequenas lâmpadas in… |
 | Circuitos elétricos | 2019-2 | 30 | FIS-0603 | Um inventor está finalizando um projeto de instalação elétrica de iluminação em um carro d… |
-| Consumo de energia elétrica | 2018-2 | 28 | FIS-0597 | Com a necessidade cada vez maior de economizarmos energia elétrica, faz-se necessária a co… |
 
 **Questões Modelo** (no mesmo bloco; o IF ainda não cobrou o subcapítulo ou a questão oficial já está numa parte; trocar por oficial quando sair)
 
 | Subcapítulo | Fonte | Lote e questão | Código | Assunto |
 |---|---|---|---|---|
+| Consumo de energia elétrica | Modelo IF | if-fisica-potencia-e-energia-eletrica m006 | FIS-1622 | Gráfico da conta de luz: maior menos menor mês, a R$ 0,90 o kWh (no lugar da 2018-2 q28, FIS-0597, erro "kW/h") |
 | Usinas de energia elétrica | Modelo IF | if-fisica-energia-e-sociedade m001 | FIS-8796 | Usina de Marmelos e as usinas de hoje |
 
 Sobras para as partes: Circuitos elétricos: 2020-1 q31.
@@ -152,7 +153,7 @@ Sobras para as partes: Razão e proporção: 2019-1 q16, 2019-2 q18, 2018-1 q20,
 
 | Subcapítulo | Prova | Questão | Código | Assunto |
 |---|---|---|---|---|
-| Polinômios | 2026-1 | 22 | MAT-0554 | Para e , a expressão é igual a: |
+| Polinômios | 2019-1 | 14 | MAT-0435 | Ao simplificar a expressão , obtém-se: |
 | Polinômios | 2024-1 | 23 | MAT-0307 | A expressão , onde e , é igual a: |
 | Equações do 1º grau | 2025-1 | 15 | MAT-0536 | Um questionário sobre a preferência entre três marcas de um produto foi aplicado às pessoa… |
 | Equações do 1º grau | 2019-2 | 17 | MAT-0516 | Letícia compartilhou em sua rede social o seguinte enigma matemático: Vários de seus amigo… |
@@ -161,7 +162,7 @@ Sobras para as partes: Razão e proporção: 2019-1 q16, 2019-2 q18, 2018-1 q20,
 | Equações do 2º grau | 2020-1 | 22 | MAT-0532 | Para quais valores de a equação possui uma única solução real? |
 | Equações do 2º grau | 2019-2 | 15 | MAT-0514 | O produto das raízes da equação equivale a: |
 
-Sobras para as partes: Polinômios: 2023-1 q17, 2020-1 q14, 2020-1 q21, 2019-1 q14, 2019-1 q18, 2017-1 q22 …; Equações do 1º grau: 2018-1 q14, 2018-1 q17, 2018-2 q18, 2017-1 q21, 2017-1-extra q17, 2017-2 q13 …; Sistemas do 1º grau: 2020-1 q15, 2019-1 q15, 2016-1-extra q22, 2016-1-extra q23, 2016-2 q19, 2015-1 q20 …; Equações do 2º grau: 2018-1 q22, 2017-1 q23, 2017-1-extra q18, 2017-2 q16, 2016-1-extra q21, 2015-1 q14 ….
+Sobras para as partes: Polinômios: 2023-1 q17, 2020-1 q14, 2020-1 q21, 2019-1 q18, 2017-1 q22 …; Equações do 1º grau: 2018-1 q14, 2018-1 q17, 2018-2 q18, 2017-1 q21, 2017-1-extra q17, 2017-2 q13 …; Sistemas do 1º grau: 2020-1 q15, 2019-1 q15, 2016-1-extra q22, 2016-1-extra q23, 2016-2 q19, 2015-1 q20 …; Equações do 2º grau: 2018-1 q22, 2017-1 q23, 2017-1-extra q18, 2017-2 q16, 2016-1-extra q21, 2015-1 q14 ….
 
 ### 4. Funções
 **Questões do IF Sudeste**
@@ -182,7 +183,6 @@ Sobras para as partes: Conceito de função: 2014-2 q24, 2013-1-extra q19, 2013-
 
 | Subcapítulo | Prova | Questão | Código | Assunto |
 |---|---|---|---|---|
-| Ângulos e paralelismo | 2014-1 | 15 | MAT-0343 | Na figura abaixo, as retas paralelas r e s são intersectadas pela reta t. Nessas condições… |
 | Triângulos e quadriláteros | 2016-1 | 14 | MAT-0469 | O perímetro de um paralelogramo mede 42 cm, e a razão entre as medidas de dois lados conse… |
 | Triângulos e quadriláteros | 2016-1-extra | 15 | MAT-0402 | Um quadrilátero convexo é um paralelogramo se, e somente se, ele tem os pares de lados opo… |
 | Semelhança e Teorema de Tales | 2026-1 | 18 | MAT-0550 | Na figura abaixo estão representadas três retas r , s e t paralelas entre si e dois segmen… |
@@ -199,6 +199,12 @@ Sobras para as partes: Conceito de função: 2014-2 q24, 2013-1-extra q19, 2013-
 | Circunferência e círculo | 2025-1 | 16 | MAT-0537 | A figura a seguir representa uma estrela cujos cinco vértices A, B, C, D e E pertencem a u… |
 | Perímetros e áreas | 2025-1 | 18 | MAT-0539 | Sandro está jogando um jogo de construção de ambientes e na fase em que está, seu avatar é… |
 | Perímetros e áreas | 2024-1 | 18 | MAT-0302 | Para decorar uma festa julina, Yan comprou folhas de papel seda para fazer bandeirinhas. E… |
+
+**Questões Modelo** (Parte 1 de 2; a única oficial de Ângulos e paralelismo, 2014-1 q15, MAT-0343, saiu porque a figura da prova tem os ângulos trocados)
+
+| Subcapítulo | Fonte | Lote e questão | Código | Assunto |
+|---|---|---|---|---|
+| Ângulos e paralelismo | Modelo IF | if-matematica-angulos-e-paralelismo m008 | MAT-3610 | Correspondentes dão x; suplementares dão y (fora da apostila, como MAT-3607 e MAT-3609) |
 
 Sobras para as partes: Triângulos e quadriláteros: 2015-1 q23, 2015-2 q17, 2013-1 q16; Semelhança e Teorema de Tales: 2019-1 q21, 2015-1-extra q15, 2013-1 q19, 2013-2 q24; Teorema de Pitágoras e relações métricas: 2020-1 q17, 2019-1 q22, 2018-1 q16, 2017-2 q20, 2016-1-extra q14, 2014-2 q21 …; Polígonos regulares: 2013-1 q18; Circunferência e círculo: 2017-1 q14, 2017-1-extra q21, 2017-2 q22, 2016-1 q17, 2013-1 q22, 2013-1-extra q21; Perímetros e áreas: 2020-1 q20, 2018-1 q13, 2018-2 q19, 2017-1-extra q23, 2016-2 q15, 2015-1-extra q20 ….
 
