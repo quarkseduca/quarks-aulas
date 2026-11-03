@@ -1,0 +1,583 @@
+<!--aula
+{"disciplina": "matematica", "curso": "IF", "assunto": "Conjuntos numéricos", "parte": "Parte 1 de 2", "titulo": "Naturais, inteiros e racionais", "scripts": ["animacoes-conjuntos.js"]}
+-->
+<!-- Fonte: apostila IF, Matemática, cap. 1 Números e operações, 1.2 Conjuntos numéricos (teorias "Naturais e inteiros", "Racionais: frações e decimais", "Números decimais e suas ordens" e "Operações com frações", com exemplos e atenções). Questões da apostila: Modelo IF m003 MAT-1198 (lote if-matematica-conjuntos-numericos), Modelo IF m009 MAT-0604 (lote if-matematica-operacoes-e-expressoes-numericas) e oficial 2015-1-extra q23 MAT-0421. As oficiais MAT-0540 e MAT-0304 ficam reservadas para o bloco do fim do capítulo. -->
+<style>
+  .caixa, .linha-ex, .painel { box-sizing: border-box; }
+  .linha-ex { background: var(--branco); border: 2px solid var(--lilas-2); border-radius: 24px; padding: 12px 26px; font-size: 32px; line-height: 1.3; }
+  .linha-ex b { color: var(--roxo-titulo); }
+  .painel { background: var(--branco); border: 2px solid var(--lilas-2); border-radius: 30px; padding: 18px 24px; }
+  .painel h3 { margin: 0 0 4px; font: 800 36px var(--fonte-titulo); letter-spacing: -.02em; color: var(--roxo-titulo); }
+  .painel p { margin: 6px 0 0; font-size: 28px; line-height: 1.3; }
+  .rot { font: 700 26px Figtree, sans-serif; fill: #5E5A70; }
+  .rot-a { font: 800 34px "Bricolage Grotesque", Figtree, sans-serif; fill: #1E4FD8; }
+  .el-txt { font: 800 34px Figtree, sans-serif; fill: #3F2FA0; }
+  .alt-mat li { font-size: 30px !important; }
+  .resumo > div { font-size: 30px; }
+  /* termômetro */
+  .mercurio { transform-box: fill-box; transform-origin: 50% 100%; transform: scaleY(.182); transition: transform 3.2s cubic-bezier(.45,0,.3,1); }
+  .mostra .mercurio { transform: scaleY(1); }
+  /* elementos que voam para dentro de Z */
+  .voa { transform: translate(var(--x), var(--y)); opacity: 0; transition: transform 1.6s cubic-bezier(.5,0,.3,1), opacity .6s; }
+  .mostra .voa { transform: none; opacity: 1; }
+  .voa:nth-of-type(2) { transition-delay: .3s; } .voa:nth-of-type(3) { transition-delay: .6s; } .voa:nth-of-type(4) { transition-delay: .9s; }
+  /* pizzas */
+  .fat, .fat12 { stroke: #fff; stroke-width: 4; fill: #F1EEFD; transition: fill .6s; }
+  .mostra .fat.cheia { fill: #2F6BFF; }
+  .fat12.ana { fill: #2F6BFF; } .fat12.davi { fill: #FFD10C; }
+  .borda-pizza { fill: none; stroke: #C9C0F0; stroke-width: 5; }
+  /* barras de frações equivalentes */
+  .barra-cheia { transform-box: fill-box; transform-origin: 0 50%; transform: scaleX(0); transition: transform 1.6s ease-out; }
+  .mostra .barra-cheia { transform: scaleX(1); }
+  /* quadro de ordens */
+  .ordens { display: grid; grid-template-columns: repeat(4, 210px); border: 2px solid var(--lilas-2); border-radius: 26px; overflow: hidden; background: #fff; text-align: center; }
+  .ordens > div { border-left: 2px solid var(--lilas); }
+  .ordens > div:first-child { border-left: 0; }
+  .ordens .cab { background: var(--d-clara); color: var(--d-forte); font-weight: 800; font-size: 26px; padding: 12px 0 8px; }
+  .ordens .cab small { display: block; font-size: 24px; color: var(--cinza); font-weight: 700; margin-top: 2px; }
+  .ordens .dig { font: 800 96px var(--fonte-titulo); color: var(--roxo-titulo); padding: 8px 0 12px; position: relative; }
+  .ordens .dig span { display: inline-block; transition: transform 1.2s cubic-bezier(.5,0,.3,1), opacity .8s; }
+  .ordens .dig:not(.mostra) span { transform: translateY(-140px); opacity: 0; }
+  .ordens .dig.virg::after { content: ","; position: absolute; right: -12px; bottom: 14px; font-size: 96px; color: var(--erro); z-index: 1; }
+  /* grades de 100 */
+  .q { fill: #F1EEFD; transition: fill .3s; }
+  .mostra .q.on { fill: #2F6BFF; }
+  .mostra .g45 .q.on { fill: #8C7BEA; }
+  /* vírgula que anda */
+  .num-virg { position: relative; display: flex; font: 800 110px var(--fonte-titulo); color: var(--roxo-titulo); }
+  .num-virg span { width: 80px; text-align: center; }
+  .num-virg .zero { color: #B8B0DA; }
+  .virgula { position: absolute; left: 66px; bottom: 6px; color: var(--erro); transition: transform 1s cubic-bezier(.5,0,.3,1), opacity .6s; }
+  .virgula.p1 { transform: translateX(80px); } .virgula.p2 { transform: translateX(160px); } .virgula.p3 { transform: translateX(240px); opacity: 0; }
+  .pop { transform-box: fill-box; transform-origin: center; }
+  /* 6 pedaços de 1/8 em 3/4 */
+  .oitavo { fill: #FFD10C; stroke: #fff; stroke-width: 4; transform-box: fill-box; transform-origin: center; }
+  .mostra .oitavo { animation: bate 1s ease-out both; }
+  @keyframes bate { from { transform: scale(.2); opacity: 0; } to { transform: none; opacity: 1; } }
+  .oitavo:nth-of-type(2) { animation-delay: .5s !important; } .oitavo:nth-of-type(3) { animation-delay: 1s !important; } .oitavo:nth-of-type(4) { animation-delay: 1.5s !important; } .oitavo:nth-of-type(5) { animation-delay: 2s !important; } .oitavo:nth-of-type(6) { animation-delay: 2.5s !important; }
+</style>
+
+<!-- 1. Capa -->
+<section class="slide capa" data-nome="Capa">
+  <div class="estrelas"></div>
+  <div class="texto-capa" style="top:170px">
+    <span class="selo">Matemática · IF</span>
+    <p class="aula">Conjuntos numéricos · Parte 1 de 2</p>
+    <h1 style="font-size:116px">Naturais, inteiros e racionais</h1>
+    <p class="sub">Sinais, frações e casas decimais</p>
+  </div>
+  <svg class="emblema" viewBox="0 0 640 640" aria-hidden="true">
+    <g class="gira-lento"><ellipse cx="320" cy="320" rx="300" ry="128" fill="none" stroke="#fff" stroke-opacity=".38" stroke-width="2" transform="rotate(-10 320 320)"/></g>
+    <g class="gira"><ellipse cx="320" cy="320" rx="236" ry="196" fill="none" stroke="#FFD10C" stroke-opacity=".75" stroke-width="2.5" stroke-dasharray="3 14" stroke-linecap="round" transform="rotate(-8 320 320)"/>
+      <circle cx="84" cy="300" r="13" fill="var(--d)" stroke="#fff" stroke-width="3"/></g>
+    <circle cx="320" cy="320" r="132" fill="#FFD10C"/>
+    <image href="{{SYM_ROXO}}" x="238" y="238" width="164" height="164"/>
+  </svg>
+  <img class="logo-capa" src="{{LOGO_BRANCO}}" alt="Quarks">
+  <aside class="notas">
+    <p>Parte 1 de Conjuntos numéricos: naturais e inteiros (regra de sinais), racionais (frações e decimais), as ordens decimais e as operações com frações. A Parte 2 traz dízimas, irracionais, reais e módulo.</p>
+  </aside>
+</section>
+
+<!-- 2. Naturais e inteiros -->
+<section class="slide" data-nome="Naturais e inteiros">
+  <div class="conteudo">
+    <p class="olho">Contar e dever</p>
+    <h2 class="titulo">Naturais e inteiros</h2>
+    <div style="position:absolute;left:0;width:880px;top:150px;display:flex;flex-direction:column;gap:16px">
+      <div class="caixa" style="padding:22px 34px"><span class="rotulo">Naturais: para contar</span><div style="font-size:52px">\(\mathbb{N} = \{0, 1, 2, 3, \dots\}\)</div></div>
+      <div class="caixa caixa-fundamental" data-passo="1"><span class="rotulo">Inteiros: com os negativos</span><div style="font-size:48px">\(\mathbb{Z} = \{\dots, -2, -1, 0, 1, 2, \dots\}\)</div><div class="texto" style="font-size:28px">−3 °C de madrugada; saldo negativo no banco.</div></div>
+    </div>
+    <svg viewBox="0 0 820 560" data-passo="2" style="position:absolute;left:940px;top:150px;width:820px;height:560px" aria-hidden="true">
+      <ellipse cx="410" cy="290" rx="390" ry="250" fill="#fff" stroke="#8C7BEA" stroke-width="4"/>
+      <ellipse cx="470" cy="320" rx="230" ry="160" fill="#E8F0FF" stroke="#2F6BFF" stroke-width="4"/>
+      <text x="80" y="150" class="rot-a" style="font-size:52px;fill:#4B39B3">ℤ</text>
+      <text x="300" y="230" class="rot-a" style="font-size:52px">ℕ</text>
+      <g class="el-txt" text-anchor="middle"><text x="420" y="300">0</text><text x="520" y="290">1</text><text x="470" y="370">2</text><text x="580" y="380">3</text></g>
+      <g class="el-txt" text-anchor="middle" style="fill:#4B39B3">
+        <g class="voa" style="--x:-160px;--y:-160px"><text x="140" y="300">−1</text></g>
+        <g class="voa" style="--x:-120px;--y:200px"><text x="170" y="400">−2</text></g>
+        <g class="voa" style="--x:60px;--y:200px"><text x="250" y="480">−3</text></g>
+      </g>
+    </svg>
+    <span class="pilula pilula-resposta" data-passo="2" style="position:absolute;left:0;top:536px">\(\mathbb{N} \subset \mathbb{Z}\): todo natural é inteiro</span>
+  </div>
+  <aside class="notas">
+    <p>Clique 1: os inteiros juntam os naturais com os negativos (termômetro abaixo de zero, saldo negativo). Clique 2: ℕ dentro de ℤ; os negativos entram só em ℤ.</p>
+  </aside>
+</section>
+
+<!-- 3. Exemplo: variação de temperatura -->
+<section class="slide" data-nome="Exemplo: variação de temperatura">
+  <div class="conteudo">
+    <p class="olho">Exemplo</p>
+    <h2 class="titulo">Quanto a temperatura subiu?</h2>
+    <p class="texto" style="position:absolute;left:0;width:1100px;top:150px;margin:0">De madrugada: <b>−3 °C</b>. À tarde: <b>12 °C</b>.</p>
+    <div class="contas" style="position:absolute;left:0;top:250px;font-size:48px">
+      <div class="eq" data-passo="2"><span>\(\text{variação}\)</span><span>\(=\)</span><span>\(T_{\text{final}} - T_{\text{inicial}}\)</span></div>
+      <div class="eq" data-passo="3"><span>\(\text{variação}\)</span><span>\(=\)</span><span>\(12 - (-3)\)</span></div>
+      <div class="eq" data-passo="4"><span>\(\text{variação}\)</span><span>\(=\)</span><span>\(12 + 3\)</span></div>
+      <div class="eq final" data-passo="5"><span>\(\text{variação}\)</span><span>\(=\)</span><span>\(15\ ^\circ\text{C}\)</span></div>
+    </div>
+    <span class="pilula pilula-resposta" data-passo="6" style="position:absolute;left:580px;top:660px">Subtrair um negativo = somar o oposto</span>
+    <svg viewBox="0 0 420 780" style="position:absolute;left:1400px;top:120px;width:360px;height:669px" aria-hidden="true">
+      <rect x="150" y="90" width="60" height="640" rx="30" fill="#fff" stroke="#C9C0F0" stroke-width="5"/>
+      <circle cx="180" cy="730" r="50" fill="#C2384F"/>
+      <g data-passo="1"><rect class="mercurio" x="166" y="210" width="28" height="550" rx="14" fill="#C2384F"/></g>
+      <rect x="166" y="660" width="28" height="100" rx="14" fill="#C2384F" data-em="1:some"/>
+      <g stroke="#8C7BEA" stroke-width="4"><line x1="215" y1="120" x2="245" y2="120"/><line x1="215" y1="270" x2="245" y2="270"/><line x1="215" y1="420" x2="245" y2="420"/><line x1="215" y1="570" x2="255" y2="570"/><line x1="215" y1="720" x2="245" y2="720"/></g>
+      <g class="rot" style="font-size:28px"><text x="255" y="130">15</text><text x="255" y="280">10</text><text x="255" y="430">5</text><text x="265" y="580" style="font-weight:800;fill:#3F2FA0">0</text><text x="255" y="730">−5</text></g>
+      <g font-family="Figtree,sans-serif" font-weight="800" font-size="28" text-anchor="end">
+        <text x="140" y="670" fill="#5E5A70">−3 °C</text>
+        <text x="140" y="220" fill="#C2384F" data-passo="1">12 °C</text>
+      </g>
+      <path data-passo="1" d="M70 640 L70 250 M56 266 L70 246 L84 266" stroke="#1F9D62" stroke-width="5" fill="none" stroke-linecap="round"/>
+      <text data-passo="5" x="58" y="460" font-family="Figtree,sans-serif" font-weight="800" font-size="30" fill="#1F9D62" text-anchor="end" transform="rotate(-90 58 460)">+15 °C</text>
+    </svg>
+  </div>
+  <aside class="notas">
+    <p>Exemplo da apostila. Clique 1: o termômetro sobe de −3 °C a 12 °C. Cliques 2 a 5: a conta, valor final menos valor inicial. Na reta do termômetro dá para contar: 3 graus até o zero e mais 12.</p>
+  </aside>
+</section>
+
+<!-- 4. Regra de sinais -->
+<section class="slide" data-nome="Regra de sinais">
+  <div class="conteudo">
+    <p class="olho">Multiplicação e divisão de inteiros</p>
+    <h2 class="titulo">Regra de sinais</h2>
+    <div class="caixa caixa-fundamental" style="position:absolute;left:0;width:860px;top:160px">
+      <span class="rotulo">Primeiro a conta sem os sinais; depois o sinal</span>
+      <div class="texto"><b>Sinais iguais:</b> positivo.<br><b>Sinais diferentes:</b> negativo.</div>
+    </div>
+    <table class="tabela" style="position:absolute;left:0;top:360px;font-size:36px">
+      <tr><th>×  ou  :</th><th>+</th><th>−</th></tr>
+      <tr><th>+</th><td data-passo="1" style="color:var(--certo);font-weight:800">+</td><td data-passo="2" style="color:var(--erro);font-weight:800">−</td></tr>
+      <tr><th>−</th><td data-passo="2" style="color:var(--erro);font-weight:800">−</td><td data-passo="1" style="color:var(--certo);font-weight:800">+</td></tr>
+    </table>
+    <div style="position:absolute;left:960px;right:0;top:170px">
+      <div class="contas" style="font-size:50px">
+        <div class="eq" data-passo="3"><span>\(\text{produto}\)</span><span>\(=\)</span><span>\((-4) \cdot (-5)\)</span></div>
+        <div class="eq final" data-passo="4"><span>\(\text{produto}\)</span><span>\(=\)</span><span>\(+20\)</span></div>
+      </div>
+      <div class="contas" style="font-size:50px;margin-top:50px">
+        <div class="eq" data-passo="5"><span>\(\text{quociente}\)</span><span>\(=\)</span><span>\((-24) : 6\)</span></div>
+        <div class="eq final" data-passo="6"><span>\(\text{quociente}\)</span><span>\(=\)</span><span>\(-4\)</span></div>
+      </div>
+    </div>
+  </div>
+  <aside class="notas">
+    <p>Regra da apostila. Cliques 1 e 2: a tabela (iguais dão +, diferentes dão −). Cliques 3 a 6: os dois exemplos da apostila. Na conta sem sinais: 4 · 5 = 20 e 24 : 6 = 4; o sinal vem depois.</p>
+  </aside>
+</section>
+
+<!-- 5. Atenção: o parêntese -->
+<section class="slide" data-nome="Atenção: o parêntese">
+  <div class="conteudo">
+    <p class="olho">Atenção</p>
+    <h2 class="titulo">O parêntese muda tudo</h2>
+    <div class="contas" style="position:absolute;left:0;top:200px;font-size:60px">
+      <div class="eq" data-passo="1"><span>\((-3)^2\)</span><span>\(=\)</span><span>\((-3) \cdot (-3)\)</span></div>
+      <div class="eq final" data-passo="2"><span>\((-3)^2\)</span><span>\(=\)</span><span>\(9\)</span></div>
+    </div>
+    <div class="contas" style="position:absolute;left:940px;top:200px;font-size:60px">
+      <div class="eq" data-passo="3"><span>\(-3^2\)</span><span>\(=\)</span><span>\(-(3 \cdot 3)\)</span></div>
+      <div class="eq final" data-passo="4"><span>\(-3^2\)</span><span>\(=\)</span><span>\(-9\)</span></div>
+    </div>
+    <div class="caixa caixa-atencao" data-passo="5" style="position:absolute;left:580px;right:0;top:560px">
+      <div class="texto">Sem parêntese, a potência vale <b>só para o 3</b>: \(-3^2\) é o oposto de \(3^2\).</div>
+    </div>
+  </div>
+  <aside class="notas"><p>Atenção da apostila. Muitas alternativas erradas vêm desse descuido.</p></aside>
+</section>
+
+<!-- 6. Racionais -->
+<section class="slide" data-nome="Números racionais">
+  <div class="conteudo">
+    <p class="olho">Três roupas para o mesmo número</p>
+    <h2 class="titulo">Números racionais</h2>
+    <svg viewBox="0 0 340 340" data-passo="1" style="position:absolute;left:0;top:160px;width:400px;height:400px" aria-hidden="true">
+      <path class="fat cheia" style="transition-delay:0.00s" d="M170 170 L170.0 20.0 A150 150 0 0 1 320.0 170.0 Z"/><path class="fat cheia" style="transition-delay:0.35s" d="M170 170 L320.0 170.0 A150 150 0 0 1 170.0 320.0 Z"/><path class="fat cheia" style="transition-delay:0.70s" d="M170 170 L170.0 320.0 A150 150 0 0 1 20.0 170.0 Z"/><path class="fat" d="M170 170 L20.0 170.0 A150 150 0 0 1 170.0 20.0 Z"/><circle class="borda-pizza" cx="170" cy="170" r="150"/>
+    </svg>
+    <div style="position:absolute;left:470px;width:620px;top:230px;font-size:76px" data-passo="2">\(\dfrac{3}{4} = 0{,}75 = 75\%\)</div>
+    <div class="caixa caixa-fundamental" data-passo="3" style="position:absolute;left:1120px;right:0;top:160px">
+      <span class="rotulo">Racional</span>
+      <div class="texto">Pode ser escrito como \(\dfrac{a}{b}\), com \(a\) e \(b\) inteiros e \(b \neq 0\).</div>
+      <div style="font-size:60px;margin-top:8px">\(\mathbb{Q}\)</div>
+    </div>
+    <div class="caixa" data-passo="4" style="position:absolute;left:580px;right:0;top:600px;display:flex;gap:50px;align-items:center">
+      <span class="rotulo" style="margin:0">Todo inteiro é racional</span>
+      <span style="font-size:50px">\(5 = \dfrac{5}{1}\)</span><span style="font-size:50px">\(-2 = \dfrac{-4}{2}\)</span><span style="font-size:44px">\(\mathbb{Z} \subset \mathbb{Q}\)</span>
+    </div>
+  </div>
+  <aside class="notas">
+    <p>Clique 1: pizza em 4 pedaços iguais; você comeu 3. Clique 2: a mesma parte como fração, decimal e porcentagem. Clique 3: a definição. Clique 4: inteiro também é fração (exemplos da apostila).</p>
+  </aside>
+</section>
+
+<!-- 7. Frações equivalentes -->
+<section class="slide" data-nome="Frações equivalentes">
+  <div class="conteudo">
+    <p class="olho">O mesmo número, escrito de jeitos diferentes</p>
+    <h2 class="titulo">Frações equivalentes</h2>
+    <svg viewBox="0 0 1100 420" style="position:absolute;left:0;top:160px;width:1100px;height:420px" aria-hidden="true">
+      <g data-passo="1">
+        <rect x="200" y="20" width="800" height="90" rx="14" fill="#F1EEFD"/>
+        <rect class="barra-cheia" x="200" y="20" width="400" height="90" rx="14" fill="#2F6BFF"/>
+        <line x1="600" y1="20" x2="600" y2="110" stroke="#fff" stroke-width="5"/>
+        <text x="20" y="85" class="el-txt" style="font-size:44px">1/2</text>
+      </g>
+      <g data-passo="2">
+        <rect x="200" y="160" width="800" height="90" rx="14" fill="#F1EEFD"/>
+        <rect class="barra-cheia" x="200" y="160" width="400" height="90" rx="14" fill="#2F6BFF"/>
+        <g stroke="#fff" stroke-width="5"><line x1="400" y1="160" x2="400" y2="250"/><line x1="600" y1="160" x2="600" y2="250"/><line x1="800" y1="160" x2="800" y2="250"/></g>
+        <text x="20" y="225" class="el-txt" style="font-size:44px">2/4</text>
+      </g>
+      <g data-passo="3">
+        <rect x="200" y="300" width="800" height="90" rx="14" fill="#F1EEFD"/>
+        <rect class="barra-cheia" x="200" y="300" width="400" height="90" rx="14" fill="#2F6BFF"/>
+        <g stroke="#fff" stroke-width="5"><line x1="280" y1="300" x2="280" y2="390"/><line x1="360" y1="300" x2="360" y2="390"/><line x1="440" y1="300" x2="440" y2="390"/><line x1="520" y1="300" x2="520" y2="390"/><line x1="600" y1="300" x2="600" y2="390"/><line x1="680" y1="300" x2="680" y2="390"/><line x1="760" y1="300" x2="760" y2="390"/><line x1="840" y1="300" x2="840" y2="390"/><line x1="920" y1="300" x2="920" y2="390"/></g>
+        <text x="20" y="365" class="el-txt" style="font-size:44px">5/10</text>
+      </g>
+      <line data-passo="3" x1="600" y1="0" x2="600" y2="410" stroke="#C2384F" stroke-width="4" stroke-dasharray="10 10"/>
+    </svg>
+    <div style="position:absolute;left:1180px;right:0;top:170px;display:flex;flex-direction:column;gap:24px">
+      <div style="font-size:60px" data-passo="3">\(\dfrac{1}{2} = \dfrac{2}{4} = \dfrac{5}{10}\)</div>
+      <div class="caixa caixa-fundamental" data-passo="4"><span class="rotulo">Irredutível</span><div class="texto" style="font-size:32px">A forma mais simples: não dá mais para dividir em cima e embaixo pelo mesmo número. Aqui, \(\dfrac{1}{2}\).</div></div>
+    </div>
+  </div>
+  <aside class="notas"><p>Cliques 1 a 3: as três barras enchem até o mesmo ponto: frações equivalentes representam o mesmo número. Clique 4: fração irredutível.</p></aside>
+</section>
+
+<!-- 8. Ida e volta -->
+<section class="slide" data-nome="Exemplo: fração e decimal">
+  <div class="conteudo">
+    <p class="olho">Exemplo</p>
+    <h2 class="titulo">Ida e volta</h2>
+    <div style="position:absolute;left:0;width:820px;top:160px">
+      <div class="caixa"><span class="rotulo">Fração → decimal</span><div class="texto" style="font-size:32px">Divida o numerador pelo denominador.</div></div>
+      <div class="contas" style="margin-top:20px;font-size:48px;row-gap:22px">
+        <div class="eq" data-passo="1"><span>\(\dfrac{3}{5}\)</span><span>\(=\)</span><span>\(3 : 5\)</span></div>
+        <div class="eq final" data-passo="2"><span>\(\dfrac{3}{5}\)</span><span>\(=\)</span><span>\(0{,}6\)</span></div>
+      </div>
+    </div>
+    <div style="position:absolute;left:940px;right:0;top:160px">
+      <div class="caixa"><span class="rotulo">Decimal → fração</span><div class="texto" style="font-size:32px">Sobre 10, 100 ou 1000 (uma, duas ou três casas) e simplifique.</div></div>
+      <div class="contas" style="margin-top:26px;font-size:52px;row-gap:30px">
+        <div class="eq" data-passo="3"><span>\(0{,}35\)</span><span>\(=\)</span><span>\(\dfrac{35}{100}\)</span></div>
+        <div class="eq final" data-passo="4"><span>\(0{,}35\)</span><span>\(=\)</span><span>\(\dfrac{7}{20}\)</span></div>
+      </div>
+      <p class="texto" data-passo="4" style="margin:20px 0 0;font-size:30px;color:var(--cinza)">Dividimos em cima e embaixo por 5.</p>
+    </div>
+  </div>
+  <aside class="notas"><p>Exemplo da apostila. Duas casas depois da vírgula pedem o 100 no denominador; 35 e 100 divididos por 5 dão 7 e 20.</p></aside>
+</section>
+
+<!-- 9. Ordens decimais -->
+<section class="slide" data-nome="Ordens decimais">
+  <div class="conteudo">
+    <p class="olho">Cada casa vale dez vezes menos que a anterior</p>
+    <h2 class="titulo">Décimos, centésimos e milésimos</h2>
+    <div class="ordens" style="position:absolute;left:600px;top:170px">
+      <div><div class="cab">unidades<small>1</small></div><div class="dig virg" data-passo="1"><span>3</span></div></div>
+      <div><div class="cab">décimos<small>\(\frac{1}{10}\)</small></div><div class="dig" data-passo="2"><span>4</span></div></div>
+      <div><div class="cab">centésimos<small>\(\frac{1}{100}\)</small></div><div class="dig" data-passo="3"><span>7</span></div></div>
+      <div><div class="cab">milésimos<small>\(\frac{1}{1000}\)</small></div><div class="dig" data-passo="4"><span>5</span></div></div>
+    </div>
+    <div style="position:absolute;left:0;width:520px;top:180px;font-size:110px;font-family:var(--fonte-titulo);font-weight:800;color:var(--roxo-titulo)">3,475</div>
+    <div style="position:absolute;left:600px;right:0;top:500px;display:flex;flex-direction:column;gap:14px">
+      <div class="linha-ex" data-passo="5" style="font-size:36px">\(3{,}475 = 3 + \dfrac{4}{10} + \dfrac{7}{100} + \dfrac{5}{1000}\)</div>
+      <div class="linha-ex" data-passo="6" style="font-size:36px">= <b>3 inteiros e 475 milésimos</b></div>
+    </div>
+  </div>
+  <aside class="notas"><p>Figura da apostila (quadro de ordens). Cliques 1 a 4: cada algarismo cai na sua casa. Clique 5: o valor de cada casa. Clique 6: a leitura. Os decimais continuam o sistema de numeração para a direita da vírgula.</p></aside>
+</section>
+
+<!-- 10. Comparar decimais -->
+<section class="slide" data-nome="Comparar decimais">
+  <div class="conteudo">
+    <p class="olho">Qual é maior?</p>
+    <h2 class="titulo">0,5 ou 0,45?</h2>
+    <div style="position:absolute;left:0;width:540px;top:160px">
+      <p class="texto" style="margin:0">Iguale as casas com zeros:</p>
+      <div style="font-size:66px;margin-top:20px" data-passo="1">\(0{,}5 = 0{,}50\)</div>
+    </div>
+    <div style="position:absolute;left:640px;top:150px;text-align:center" data-passo="2">
+      <svg viewBox="0 0 300 300" style="width:470px;height:470px" aria-hidden="true"><rect class="q on" x="0" y="0" width="27" height="27" rx="3" style="transition-delay:0.00s"/><rect class="q on" x="30" y="0" width="27" height="27" rx="3" style="transition-delay:0.03s"/><rect class="q on" x="60" y="0" width="27" height="27" rx="3" style="transition-delay:0.06s"/><rect class="q on" x="90" y="0" width="27" height="27" rx="3" style="transition-delay:0.09s"/><rect class="q on" x="120" y="0" width="27" height="27" rx="3" style="transition-delay:0.12s"/><rect class="q on" x="150" y="0" width="27" height="27" rx="3" style="transition-delay:0.15s"/><rect class="q on" x="180" y="0" width="27" height="27" rx="3" style="transition-delay:0.18s"/><rect class="q on" x="210" y="0" width="27" height="27" rx="3" style="transition-delay:0.21s"/><rect class="q on" x="240" y="0" width="27" height="27" rx="3" style="transition-delay:0.24s"/><rect class="q on" x="270" y="0" width="27" height="27" rx="3" style="transition-delay:0.27s"/><rect class="q on" x="0" y="30" width="27" height="27" rx="3" style="transition-delay:0.30s"/><rect class="q on" x="30" y="30" width="27" height="27" rx="3" style="transition-delay:0.33s"/><rect class="q on" x="60" y="30" width="27" height="27" rx="3" style="transition-delay:0.36s"/><rect class="q on" x="90" y="30" width="27" height="27" rx="3" style="transition-delay:0.39s"/><rect class="q on" x="120" y="30" width="27" height="27" rx="3" style="transition-delay:0.42s"/><rect class="q on" x="150" y="30" width="27" height="27" rx="3" style="transition-delay:0.45s"/><rect class="q on" x="180" y="30" width="27" height="27" rx="3" style="transition-delay:0.48s"/><rect class="q on" x="210" y="30" width="27" height="27" rx="3" style="transition-delay:0.51s"/><rect class="q on" x="240" y="30" width="27" height="27" rx="3" style="transition-delay:0.54s"/><rect class="q on" x="270" y="30" width="27" height="27" rx="3" style="transition-delay:0.57s"/><rect class="q on" x="0" y="60" width="27" height="27" rx="3" style="transition-delay:0.60s"/><rect class="q on" x="30" y="60" width="27" height="27" rx="3" style="transition-delay:0.63s"/><rect class="q on" x="60" y="60" width="27" height="27" rx="3" style="transition-delay:0.66s"/><rect class="q on" x="90" y="60" width="27" height="27" rx="3" style="transition-delay:0.69s"/><rect class="q on" x="120" y="60" width="27" height="27" rx="3" style="transition-delay:0.72s"/><rect class="q on" x="150" y="60" width="27" height="27" rx="3" style="transition-delay:0.75s"/><rect class="q on" x="180" y="60" width="27" height="27" rx="3" style="transition-delay:0.78s"/><rect class="q on" x="210" y="60" width="27" height="27" rx="3" style="transition-delay:0.81s"/><rect class="q on" x="240" y="60" width="27" height="27" rx="3" style="transition-delay:0.84s"/><rect class="q on" x="270" y="60" width="27" height="27" rx="3" style="transition-delay:0.87s"/><rect class="q on" x="0" y="90" width="27" height="27" rx="3" style="transition-delay:0.90s"/><rect class="q on" x="30" y="90" width="27" height="27" rx="3" style="transition-delay:0.93s"/><rect class="q on" x="60" y="90" width="27" height="27" rx="3" style="transition-delay:0.96s"/><rect class="q on" x="90" y="90" width="27" height="27" rx="3" style="transition-delay:0.99s"/><rect class="q on" x="120" y="90" width="27" height="27" rx="3" style="transition-delay:1.02s"/><rect class="q on" x="150" y="90" width="27" height="27" rx="3" style="transition-delay:1.05s"/><rect class="q on" x="180" y="90" width="27" height="27" rx="3" style="transition-delay:1.08s"/><rect class="q on" x="210" y="90" width="27" height="27" rx="3" style="transition-delay:1.11s"/><rect class="q on" x="240" y="90" width="27" height="27" rx="3" style="transition-delay:1.14s"/><rect class="q on" x="270" y="90" width="27" height="27" rx="3" style="transition-delay:1.17s"/><rect class="q on" x="0" y="120" width="27" height="27" rx="3" style="transition-delay:1.20s"/><rect class="q on" x="30" y="120" width="27" height="27" rx="3" style="transition-delay:1.23s"/><rect class="q on" x="60" y="120" width="27" height="27" rx="3" style="transition-delay:1.26s"/><rect class="q on" x="90" y="120" width="27" height="27" rx="3" style="transition-delay:1.29s"/><rect class="q on" x="120" y="120" width="27" height="27" rx="3" style="transition-delay:1.32s"/><rect class="q on" x="150" y="120" width="27" height="27" rx="3" style="transition-delay:1.35s"/><rect class="q on" x="180" y="120" width="27" height="27" rx="3" style="transition-delay:1.38s"/><rect class="q on" x="210" y="120" width="27" height="27" rx="3" style="transition-delay:1.41s"/><rect class="q on" x="240" y="120" width="27" height="27" rx="3" style="transition-delay:1.44s"/><rect class="q on" x="270" y="120" width="27" height="27" rx="3" style="transition-delay:1.47s"/><rect class="q" x="0" y="150" width="27" height="27" rx="3"/><rect class="q" x="30" y="150" width="27" height="27" rx="3"/><rect class="q" x="60" y="150" width="27" height="27" rx="3"/><rect class="q" x="90" y="150" width="27" height="27" rx="3"/><rect class="q" x="120" y="150" width="27" height="27" rx="3"/><rect class="q" x="150" y="150" width="27" height="27" rx="3"/><rect class="q" x="180" y="150" width="27" height="27" rx="3"/><rect class="q" x="210" y="150" width="27" height="27" rx="3"/><rect class="q" x="240" y="150" width="27" height="27" rx="3"/><rect class="q" x="270" y="150" width="27" height="27" rx="3"/><rect class="q" x="0" y="180" width="27" height="27" rx="3"/><rect class="q" x="30" y="180" width="27" height="27" rx="3"/><rect class="q" x="60" y="180" width="27" height="27" rx="3"/><rect class="q" x="90" y="180" width="27" height="27" rx="3"/><rect class="q" x="120" y="180" width="27" height="27" rx="3"/><rect class="q" x="150" y="180" width="27" height="27" rx="3"/><rect class="q" x="180" y="180" width="27" height="27" rx="3"/><rect class="q" x="210" y="180" width="27" height="27" rx="3"/><rect class="q" x="240" y="180" width="27" height="27" rx="3"/><rect class="q" x="270" y="180" width="27" height="27" rx="3"/><rect class="q" x="0" y="210" width="27" height="27" rx="3"/><rect class="q" x="30" y="210" width="27" height="27" rx="3"/><rect class="q" x="60" y="210" width="27" height="27" rx="3"/><rect class="q" x="90" y="210" width="27" height="27" rx="3"/><rect class="q" x="120" y="210" width="27" height="27" rx="3"/><rect class="q" x="150" y="210" width="27" height="27" rx="3"/><rect class="q" x="180" y="210" width="27" height="27" rx="3"/><rect class="q" x="210" y="210" width="27" height="27" rx="3"/><rect class="q" x="240" y="210" width="27" height="27" rx="3"/><rect class="q" x="270" y="210" width="27" height="27" rx="3"/><rect class="q" x="0" y="240" width="27" height="27" rx="3"/><rect class="q" x="30" y="240" width="27" height="27" rx="3"/><rect class="q" x="60" y="240" width="27" height="27" rx="3"/><rect class="q" x="90" y="240" width="27" height="27" rx="3"/><rect class="q" x="120" y="240" width="27" height="27" rx="3"/><rect class="q" x="150" y="240" width="27" height="27" rx="3"/><rect class="q" x="180" y="240" width="27" height="27" rx="3"/><rect class="q" x="210" y="240" width="27" height="27" rx="3"/><rect class="q" x="240" y="240" width="27" height="27" rx="3"/><rect class="q" x="270" y="240" width="27" height="27" rx="3"/><rect class="q" x="0" y="270" width="27" height="27" rx="3"/><rect class="q" x="30" y="270" width="27" height="27" rx="3"/><rect class="q" x="60" y="270" width="27" height="27" rx="3"/><rect class="q" x="90" y="270" width="27" height="27" rx="3"/><rect class="q" x="120" y="270" width="27" height="27" rx="3"/><rect class="q" x="150" y="270" width="27" height="27" rx="3"/><rect class="q" x="180" y="270" width="27" height="27" rx="3"/><rect class="q" x="210" y="270" width="27" height="27" rx="3"/><rect class="q" x="240" y="270" width="27" height="27" rx="3"/><rect class="q" x="270" y="270" width="27" height="27" rx="3"/></svg>
+      <div class="texto"><b>0,50</b>: 50 centésimos</div>
+    </div>
+    <div style="position:absolute;left:1210px;top:150px;text-align:center" data-passo="3">
+      <svg class="g45" viewBox="0 0 300 300" style="width:470px;height:470px" aria-hidden="true"><g class="g45"><rect class="q on" x="0" y="0" width="27" height="27" rx="3" style="transition-delay:0.00s"/><rect class="q on" x="30" y="0" width="27" height="27" rx="3" style="transition-delay:0.03s"/><rect class="q on" x="60" y="0" width="27" height="27" rx="3" style="transition-delay:0.06s"/><rect class="q on" x="90" y="0" width="27" height="27" rx="3" style="transition-delay:0.09s"/><rect class="q on" x="120" y="0" width="27" height="27" rx="3" style="transition-delay:0.12s"/><rect class="q on" x="150" y="0" width="27" height="27" rx="3" style="transition-delay:0.15s"/><rect class="q on" x="180" y="0" width="27" height="27" rx="3" style="transition-delay:0.18s"/><rect class="q on" x="210" y="0" width="27" height="27" rx="3" style="transition-delay:0.21s"/><rect class="q on" x="240" y="0" width="27" height="27" rx="3" style="transition-delay:0.24s"/><rect class="q on" x="270" y="0" width="27" height="27" rx="3" style="transition-delay:0.27s"/><rect class="q on" x="0" y="30" width="27" height="27" rx="3" style="transition-delay:0.30s"/><rect class="q on" x="30" y="30" width="27" height="27" rx="3" style="transition-delay:0.33s"/><rect class="q on" x="60" y="30" width="27" height="27" rx="3" style="transition-delay:0.36s"/><rect class="q on" x="90" y="30" width="27" height="27" rx="3" style="transition-delay:0.39s"/><rect class="q on" x="120" y="30" width="27" height="27" rx="3" style="transition-delay:0.42s"/><rect class="q on" x="150" y="30" width="27" height="27" rx="3" style="transition-delay:0.45s"/><rect class="q on" x="180" y="30" width="27" height="27" rx="3" style="transition-delay:0.48s"/><rect class="q on" x="210" y="30" width="27" height="27" rx="3" style="transition-delay:0.51s"/><rect class="q on" x="240" y="30" width="27" height="27" rx="3" style="transition-delay:0.54s"/><rect class="q on" x="270" y="30" width="27" height="27" rx="3" style="transition-delay:0.57s"/><rect class="q on" x="0" y="60" width="27" height="27" rx="3" style="transition-delay:0.60s"/><rect class="q on" x="30" y="60" width="27" height="27" rx="3" style="transition-delay:0.63s"/><rect class="q on" x="60" y="60" width="27" height="27" rx="3" style="transition-delay:0.66s"/><rect class="q on" x="90" y="60" width="27" height="27" rx="3" style="transition-delay:0.69s"/><rect class="q on" x="120" y="60" width="27" height="27" rx="3" style="transition-delay:0.72s"/><rect class="q on" x="150" y="60" width="27" height="27" rx="3" style="transition-delay:0.75s"/><rect class="q on" x="180" y="60" width="27" height="27" rx="3" style="transition-delay:0.78s"/><rect class="q on" x="210" y="60" width="27" height="27" rx="3" style="transition-delay:0.81s"/><rect class="q on" x="240" y="60" width="27" height="27" rx="3" style="transition-delay:0.84s"/><rect class="q on" x="270" y="60" width="27" height="27" rx="3" style="transition-delay:0.87s"/><rect class="q on" x="0" y="90" width="27" height="27" rx="3" style="transition-delay:0.90s"/><rect class="q on" x="30" y="90" width="27" height="27" rx="3" style="transition-delay:0.93s"/><rect class="q on" x="60" y="90" width="27" height="27" rx="3" style="transition-delay:0.96s"/><rect class="q on" x="90" y="90" width="27" height="27" rx="3" style="transition-delay:0.99s"/><rect class="q on" x="120" y="90" width="27" height="27" rx="3" style="transition-delay:1.02s"/><rect class="q on" x="150" y="90" width="27" height="27" rx="3" style="transition-delay:1.05s"/><rect class="q on" x="180" y="90" width="27" height="27" rx="3" style="transition-delay:1.08s"/><rect class="q on" x="210" y="90" width="27" height="27" rx="3" style="transition-delay:1.11s"/><rect class="q on" x="240" y="90" width="27" height="27" rx="3" style="transition-delay:1.14s"/><rect class="q on" x="270" y="90" width="27" height="27" rx="3" style="transition-delay:1.17s"/><rect class="q on" x="0" y="120" width="27" height="27" rx="3" style="transition-delay:1.20s"/><rect class="q on" x="30" y="120" width="27" height="27" rx="3" style="transition-delay:1.23s"/><rect class="q on" x="60" y="120" width="27" height="27" rx="3" style="transition-delay:1.26s"/><rect class="q on" x="90" y="120" width="27" height="27" rx="3" style="transition-delay:1.29s"/><rect class="q on" x="120" y="120" width="27" height="27" rx="3" style="transition-delay:1.32s"/><rect class="q" x="150" y="120" width="27" height="27" rx="3"/><rect class="q" x="180" y="120" width="27" height="27" rx="3"/><rect class="q" x="210" y="120" width="27" height="27" rx="3"/><rect class="q" x="240" y="120" width="27" height="27" rx="3"/><rect class="q" x="270" y="120" width="27" height="27" rx="3"/><rect class="q" x="0" y="150" width="27" height="27" rx="3"/><rect class="q" x="30" y="150" width="27" height="27" rx="3"/><rect class="q" x="60" y="150" width="27" height="27" rx="3"/><rect class="q" x="90" y="150" width="27" height="27" rx="3"/><rect class="q" x="120" y="150" width="27" height="27" rx="3"/><rect class="q" x="150" y="150" width="27" height="27" rx="3"/><rect class="q" x="180" y="150" width="27" height="27" rx="3"/><rect class="q" x="210" y="150" width="27" height="27" rx="3"/><rect class="q" x="240" y="150" width="27" height="27" rx="3"/><rect class="q" x="270" y="150" width="27" height="27" rx="3"/><rect class="q" x="0" y="180" width="27" height="27" rx="3"/><rect class="q" x="30" y="180" width="27" height="27" rx="3"/><rect class="q" x="60" y="180" width="27" height="27" rx="3"/><rect class="q" x="90" y="180" width="27" height="27" rx="3"/><rect class="q" x="120" y="180" width="27" height="27" rx="3"/><rect class="q" x="150" y="180" width="27" height="27" rx="3"/><rect class="q" x="180" y="180" width="27" height="27" rx="3"/><rect class="q" x="210" y="180" width="27" height="27" rx="3"/><rect class="q" x="240" y="180" width="27" height="27" rx="3"/><rect class="q" x="270" y="180" width="27" height="27" rx="3"/><rect class="q" x="0" y="210" width="27" height="27" rx="3"/><rect class="q" x="30" y="210" width="27" height="27" rx="3"/><rect class="q" x="60" y="210" width="27" height="27" rx="3"/><rect class="q" x="90" y="210" width="27" height="27" rx="3"/><rect class="q" x="120" y="210" width="27" height="27" rx="3"/><rect class="q" x="150" y="210" width="27" height="27" rx="3"/><rect class="q" x="180" y="210" width="27" height="27" rx="3"/><rect class="q" x="210" y="210" width="27" height="27" rx="3"/><rect class="q" x="240" y="210" width="27" height="27" rx="3"/><rect class="q" x="270" y="210" width="27" height="27" rx="3"/><rect class="q" x="0" y="240" width="27" height="27" rx="3"/><rect class="q" x="30" y="240" width="27" height="27" rx="3"/><rect class="q" x="60" y="240" width="27" height="27" rx="3"/><rect class="q" x="90" y="240" width="27" height="27" rx="3"/><rect class="q" x="120" y="240" width="27" height="27" rx="3"/><rect class="q" x="150" y="240" width="27" height="27" rx="3"/><rect class="q" x="180" y="240" width="27" height="27" rx="3"/><rect class="q" x="210" y="240" width="27" height="27" rx="3"/><rect class="q" x="240" y="240" width="27" height="27" rx="3"/><rect class="q" x="270" y="240" width="27" height="27" rx="3"/><rect class="q" x="0" y="270" width="27" height="27" rx="3"/><rect class="q" x="30" y="270" width="27" height="27" rx="3"/><rect class="q" x="60" y="270" width="27" height="27" rx="3"/><rect class="q" x="90" y="270" width="27" height="27" rx="3"/><rect class="q" x="120" y="270" width="27" height="27" rx="3"/><rect class="q" x="150" y="270" width="27" height="27" rx="3"/><rect class="q" x="180" y="270" width="27" height="27" rx="3"/><rect class="q" x="210" y="270" width="27" height="27" rx="3"/><rect class="q" x="240" y="270" width="27" height="27" rx="3"/><rect class="q" x="270" y="270" width="27" height="27" rx="3"/></g></svg>
+      <div class="texto"><b>0,45</b>: 45 centésimos</div>
+    </div>
+    <div class="caixa caixa-atencao" data-passo="4" style="position:absolute;left:640px;right:0;top:700px;padding:16px 28px">
+      <span class="rotulo">Mais algarismos não é maior</span>
+      <div class="texto" style="font-size:30px">\(0{,}45 &lt; 0{,}5\). Compare casa por casa, a partir dos <b>décimos</b>: 5 décimos é mais que 4.</div>
+    </div>
+  </div>
+  <aside class="notas"><p>Comparação da apostila. Cliques 2 e 3: as grades de 100 quadradinhos enchem com 50 e com 45. Clique 4: a atenção.</p></aside>
+</section>
+
+<!-- 11. Contas com decimais -->
+<section class="slide" data-nome="Contas com decimais">
+  <div class="conteudo">
+    <p class="olho">Três regras resolvem quase tudo</p>
+    <h2 class="titulo">Contas com decimais</h2>
+    <div style="position:absolute;left:0;width:820px;top:160px;display:flex;flex-direction:column;gap:18px">
+      <div class="linha-ex"><b>Soma e subtração:</b> vírgula embaixo de vírgula.</div>
+      <div class="linha-ex" data-passo="1"><b>Multiplicação:</b> sem a vírgula; o resultado tem as casas dos dois fatores juntos.</div>
+      <div class="linha-ex" data-passo="2"><b>Por 10, 100, 1000:</b> a vírgula anda 1, 2 ou 3 casas (para a direita; na divisão, para a esquerda).</div>
+    </div>
+    <div style="position:absolute;left:940px;right:0;top:170px" data-passo="2">
+      <div class="num-virg"><span>3</span><span>4</span><span>7</span><span>5</span><b class="virgula" data-em="3:p1 4:p2 5:p3">,</b></div>
+      <div style="display:flex;flex-direction:column;gap:12px;margin-top:30px;font-size:44px">
+        <div data-passo="3">\(3{,}475 \cdot 10 = 34{,}75\)</div>
+        <div data-passo="4">\(3{,}475 \cdot 100 = 347{,}5\)</div>
+        <div data-passo="5">\(3{,}475 \cdot 1000 = 3475\)</div>
+      </div>
+    </div>
+  </div>
+  <aside class="notas"><p>As três regras da apostila. Cliques 3 a 5: a vírgula anda uma casa para a direita por zero do 10, do 100 e do 1000 (exemplo com o 3,475 do quadro de ordens).</p></aside>
+</section>
+
+<!-- 12. Exemplo: troco e queijo -->
+<section class="slide" data-nome="Exemplo: troco e preço por quilo">
+  <div class="conteudo">
+    <p class="olho">Exemplo</p>
+    <h2 class="titulo">O troco e o preço por quilo</h2>
+    <p class="texto" style="position:absolute;left:0;right:0;top:150px;margin:0;font-size:34px">Bia comprou um lanche de <b>R$ 12,35</b> e pagou com <b>R$ 20,00</b>. Depois, <b>0,3 kg</b> de queijo a <b>R$ 42,00</b> o quilo.</p>
+    <div class="contas" style="position:absolute;left:0;top:280px;font-size:48px">
+      <div class="eq" data-passo="1"><span>\(\text{troco}\)</span><span>\(=\)</span><span>\(\text{pago} - \text{preço}\)</span></div>
+      <div class="eq" data-passo="2"><span>\(\text{troco}\)</span><span>\(=\)</span><span>\(20{,}00 - 12{,}35\)</span></div>
+      <div class="eq final" data-passo="3"><span>\(\text{troco}\)</span><span>\(=\)</span><span>\(7{,}65\)</span></div>
+    </div>
+    <div class="contas" style="position:absolute;left:940px;top:280px;font-size:48px">
+      <div class="eq" data-passo="4"><span>\(\text{queijo}\)</span><span>\(=\)</span><span>\(\text{massa} \cdot \text{preço}\)</span></div>
+      <div class="eq" data-passo="5"><span>\(\text{queijo}\)</span><span>\(=\)</span><span>\(0{,}3 \cdot 42\)</span></div>
+      <div class="eq final" data-passo="6"><span>\(\text{queijo}\)</span><span>\(=\)</span><span>\(12{,}6\)</span></div>
+    </div>
+    <span class="pilula pilula-resposta" data-passo="7" style="position:absolute;right:0;top:640px">Troco de R$ 7,65 · queijo de R$ 12,60</span>
+  </div>
+  <aside class="notas"><p>Exemplo da apostila. Na subtração, vírgula embaixo de vírgula. Na multiplicação, 3 · 42 = 126, e o 0,3 tem uma casa: 12,6.</p></aside>
+</section>
+
+<!-- 13. Soma de frações -->
+<section class="slide" data-nome="Operações com frações">
+  <div class="conteudo">
+    <p class="olho">Ana comeu 1/4 da pizza e Davi, 1/3</p>
+    <h2 class="titulo">Quanto os dois comeram?</h2>
+    <svg viewBox="0 0 340 340" data-passo="1" style="position:absolute;left:0;top:160px;width:420px;height:420px" aria-hidden="true">
+      <path class="fat12 resto" d="M170 170 L170.0 20.0 A150 150 0 0 1 245.0 40.1 Z"/><path class="fat12 resto" d="M170 170 L245.0 40.1 A150 150 0 0 1 299.9 95.0 Z"/><path class="fat12 resto" d="M170 170 L299.9 95.0 A150 150 0 0 1 320.0 170.0 Z"/><path class="fat12 resto" d="M170 170 L320.0 170.0 A150 150 0 0 1 299.9 245.0 Z"/><path class="fat12 resto" d="M170 170 L299.9 245.0 A150 150 0 0 1 245.0 299.9 Z"/><path class="fat12 resto" d="M170 170 L245.0 299.9 A150 150 0 0 1 170.0 320.0 Z"/><path class="fat12 resto" d="M170 170 L170.0 320.0 A150 150 0 0 1 95.0 299.9 Z"/><path class="fat12 resto" d="M170 170 L95.0 299.9 A150 150 0 0 1 40.1 245.0 Z"/><path class="fat12 resto" d="M170 170 L40.1 245.0 A150 150 0 0 1 20.0 170.0 Z"/><path class="fat12 resto" d="M170 170 L20.0 170.0 A150 150 0 0 1 40.1 95.0 Z"/><path class="fat12 resto" d="M170 170 L40.1 95.0 A150 150 0 0 1 95.0 40.1 Z"/><path class="fat12 resto" d="M170 170 L95.0 40.1 A150 150 0 0 1 170.0 20.0 Z"/><path class="fat12 ana" data-passo="2" style="transition-delay:0.0s" d="M170 170 L170.0 20.0 A150 150 0 0 1 245.0 40.1 Z"/><path class="fat12 ana" data-passo="2" style="transition-delay:0.2s" d="M170 170 L245.0 40.1 A150 150 0 0 1 299.9 95.0 Z"/><path class="fat12 ana" data-passo="2" style="transition-delay:0.4s" d="M170 170 L299.9 95.0 A150 150 0 0 1 320.0 170.0 Z"/><path class="fat12 davi" data-passo="3" style="transition-delay:0.0s" d="M170 170 L320.0 170.0 A150 150 0 0 1 299.9 245.0 Z"/><path class="fat12 davi" data-passo="3" style="transition-delay:0.2s" d="M170 170 L299.9 245.0 A150 150 0 0 1 245.0 299.9 Z"/><path class="fat12 davi" data-passo="3" style="transition-delay:0.4s" d="M170 170 L245.0 299.9 A150 150 0 0 1 170.0 320.0 Z"/><path class="fat12 davi" data-passo="3" style="transition-delay:0.6s" d="M170 170 L170.0 320.0 A150 150 0 0 1 95.0 299.9 Z"/><circle class="borda-pizza" cx="170" cy="170" r="150"/>
+    </svg>
+    <div class="contas" style="position:absolute;left:500px;top:170px;font-size:52px">
+      <div class="eq" data-passo="1"><span>\(\text{total}\)</span><span>\(=\)</span><span>\(\dfrac{1}{4} + \dfrac{1}{3}\)</span></div>
+      <div class="eq" data-passo="3"><span>\(\text{total}\)</span><span>\(=\)</span><span>\(\dfrac{3}{12} + \dfrac{4}{12}\)</span></div>
+      <div class="eq final" data-passo="4"><span>\(\text{total}\)</span><span>\(=\)</span><span>\(\dfrac{7}{12}\)</span></div>
+    </div>
+    <div class="caixa caixa-fundamental" data-passo="5" style="position:absolute;left:1080px;right:0;top:160px">
+      <span class="rotulo">As quatro operações</span>
+      <div class="texto" style="font-size:29px;line-height:1.35"><b>+ e −:</b> iguale os denominadores; opere os numeradores.<br><b>×:</b> numerador · numerador, denominador · denominador.<br><b>:</b> conserve a primeira e multiplique pelo <b>inverso</b> da segunda.</div>
+    </div>
+    <div class="caixa" data-passo="6" style="position:absolute;left:580px;right:0;top:680px;padding:16px 28px">
+      <div class="texto" style="font-size:29px">O denominador comum mais prático é o <b>MMC</b> dos denominadores: você vai calculá-lo em Múltiplos e divisores.</div>
+    </div>
+  </div>
+  <aside class="notas">
+    <p>Não dá para somar quartos com terços direto, como não se somam metros com centímetros. Clique 2: a pizza em 12 pedaços; 1/4 são 3 pedaços (azuis). Clique 3: 1/3 são 4 pedaços (amarelos). Clique 4: 7/12.</p>
+  </aside>
+</section>
+
+<!-- 14. Multiplicar e dividir -->
+<section class="slide" data-nome="Exemplo: multiplicar e dividir">
+  <div class="conteudo">
+    <p class="olho">Exemplo</p>
+    <h2 class="titulo">Multiplicar e dividir</h2>
+    <div class="contas" style="position:absolute;left:0;top:170px;font-size:50px">
+      <div class="eq" data-passo="1"><span>\(p\)</span><span>\(=\)</span><span>\(\dfrac{2}{3} \cdot \dfrac{3}{5}\)</span></div>
+      <div class="eq" data-passo="2"><span>\(p\)</span><span>\(=\)</span><span>\(\dfrac{6}{15}\)</span></div>
+      <div class="eq final" data-passo="3"><span>\(p\)</span><span>\(=\)</span><span>\(\dfrac{2}{5}\)</span></div>
+    </div>
+    <div class="contas" style="position:absolute;left:640px;top:170px;font-size:50px">
+      <div class="eq" data-passo="4"><span>\(q\)</span><span>\(=\)</span><span>\(\dfrac{3}{4} : \dfrac{1}{8}\)</span></div>
+      <div class="eq" data-passo="5"><span>\(q\)</span><span>\(=\)</span><span>\(\dfrac{3}{4} \cdot \dfrac{8}{1}\)</span></div>
+      <div class="eq final" data-passo="6"><span>\(q\)</span><span>\(=\)</span><span>\(6\)</span></div>
+    </div>
+    <div data-passo="7" style="position:absolute;left:1180px;right:0;top:160px;text-align:center">
+      <svg viewBox="0 0 340 340" style="width:400px;height:400px" aria-hidden="true">
+        <path d="M170 170 L170 20 A150 150 0 1 1 20 170 Z" fill="#E8F0FF" stroke="#2F6BFF" stroke-width="4"/>
+        <g><path class="oitavo" d="M170 170 L170.0 20.0 A150 150 0 0 1 276.1 63.9 Z"/>
+        <path class="oitavo" d="M170 170 L276.1 63.9 A150 150 0 0 1 320.0 170.0 Z"/>
+        <path class="oitavo" d="M170 170 L320.0 170.0 A150 150 0 0 1 276.1 276.1 Z"/>
+        <path class="oitavo" d="M170 170 L276.1 276.1 A150 150 0 0 1 170.0 320.0 Z"/>
+        <path class="oitavo" d="M170 170 L170.0 320.0 A150 150 0 0 1 63.9 276.1 Z"/>
+        <path class="oitavo" d="M170 170 L63.9 276.1 A150 150 0 0 1 20.0 170.0 Z"/></g>
+      </svg>
+      <div class="texto" style="font-size:30px">Em \(\frac{3}{4}\) cabem <b>6</b> pedaços de \(\frac{1}{8}\)</div>
+    </div>
+    <div class="caixa caixa-atencao" data-passo="8" style="position:absolute;left:580px;right:0;top:640px;padding:16px 28px">
+      <span class="rotulo">Não some os denominadores</span>
+      <div class="texto" style="font-size:30px">\(\dfrac{1}{4} + \dfrac{1}{3}\) não é \(\dfrac{2}{7}\): \(\dfrac{2}{7}\) é menor que \(\dfrac{1}{3}\), e somar algo positivo não diminui.</div>
+    </div>
+  </div>
+  <aside class="notas">
+    <p>Exemplo da apostila. Em p, 6/15 simplifica por 3. Em q, a divisão vira multiplicação pelo inverso: 24/4 = 6. Clique 7: os 6 pedaços de 1/8 aparecem um a um dentro dos 3/4 de pizza. Clique 8: a atenção.</p>
+  </aside>
+</section>
+
+<!-- 15. Questão 1 -->
+<section class="slide questao" data-nome="Questão 1">
+  <div class="conteudo">
+    <div class="area-resolucao"></div>
+    <span class="pilula pilula-pausa" data-em="1:some">Pause o vídeo e tente</span>
+    <div class="painel-questao">
+      <p class="olho">Questão 1 · Modelo IF</p>
+      <p class="enunciado" style="font-size:30px">Numa gincana de perguntas da escola, cada acerto vale \(+5\) pontos e cada erro vale \(-3\) pontos. Ana respondeu 14 perguntas: acertou 8 e errou 6. Quantos pontos Ana fez no total?</p>
+      <ol class="alternativas curtas alt-mat">
+        <li data-em="2:apaga"><b>A</b><span>\(-22\)</span></li>
+        <li data-em="2:apaga"><b>B</b><span>\(10\)</span></li>
+        <li data-em="2:certo"><b>C</b><span>\(22\)</span></li>
+        <li data-em="2:apaga"><b>D</b><span>\(28\)</span></li>
+        <li data-em="2:apaga"><b>E</b><span>\(58\)</span></li>
+      </ol>
+    </div>
+  </div>
+  <aside class="resolucao">
+    <p class="dados"><b>Dados:</b> 8 acertos de \(+5\); 6 erros de \(-3\).</p>
+    <ol class="passos">
+      <li>\(8 \cdot (+5) = 40\)</li>
+      <li>\(6 \cdot (-3) = -18\) (sinais diferentes)</li>
+      <li>\(40 + (-18) = 40 - 18\)</li>
+      <li>\(\text{total} = 22\)</li>
+    </ol>
+    <p class="resposta"><b>Resposta:</b> 22 pontos. <b>Gabarito C.</b></p>
+    <p class="atencao"><b>Destaque no quadro:</b> Os erros entram com sinal negativo.</p>
+    <ul class="erros">
+      <li><b>A</b> Troca o sinal: \(18 - 40\).</li>
+      <li><b>B</b> Desconta 5 por erro: \(40 - 30\).</li>
+      <li><b>D</b> Faz \(14 \cdot (5 - 3)\).</li>
+      <li><b>E</b> Soma sem os sinais: \(40 + 18\).</li>
+    </ul>
+  </aside>
+  <aside class="notas">
+    <p>Clique 1 tira o aviso de pausa: resolva na área (D liga a caneta; E esconde o enunciado). Clique 2: gabarito C.</p>
+    <p>Questão Modelo IF da apostila: lote if-matematica-conjuntos-numericos, m003, MAT-1198.</p>
+  </aside>
+</section>
+
+<!-- 16. Questão 2 -->
+<section class="slide questao" data-nome="Questão 2">
+  <div class="conteudo">
+    <div class="area-resolucao"></div>
+    <span class="pilula pilula-pausa" data-em="1:some">Pause o vídeo e tente</span>
+    <div class="painel-questao">
+      <p class="olho">Questão 2 · Modelo IF</p>
+      <p class="enunciado" style="font-size:32px">O número decimal 2,07 é igual a:</p>
+      <ol class="alternativas alt-mat">
+        <li data-em="2:apaga"><b>A</b><span>\(2 + \dfrac{7}{10}\)</span></li>
+        <li data-em="2:apaga"><b>B</b><span>\(\dfrac{207}{10}\)</span></li>
+        <li data-em="2:apaga"><b>C</b><span>\(\dfrac{27}{100}\)</span></li>
+        <li data-em="2:certo"><b>D</b><span>\(2 + \dfrac{7}{100}\)</span></li>
+        <li data-em="2:apaga"><b>E</b><span>\(\dfrac{207}{1000}\)</span></li>
+      </ol>
+    </div>
+  </div>
+  <aside class="resolucao">
+    <p class="dados"><b>Dados:</b> \(2{,}07\).</p>
+    <ol class="passos">
+      <li>2: unidades.</li>
+      <li>0: décimos.</li>
+      <li>7: centésimos.</li>
+      <li>\(2{,}07 = 2 + \dfrac{7}{100}\)</li>
+    </ol>
+    <p class="resposta"><b>Resposta:</b> 2 inteiros e 7 centésimos. <b>Gabarito D.</b></p>
+    <p class="atencao"><b>Destaque no quadro:</b> O zero ocupa a casa dos décimos.</p>
+    <ul class="erros">
+      <li><b>A</b> Ignora o zero: vale 2,7.</li>
+      <li><b>B</b> Vale 20,7.</li>
+      <li><b>C</b> Apaga o zero e o 2 inteiro: vale 0,27.</li>
+      <li><b>E</b> Vale 0,207.</li>
+    </ul>
+  </aside>
+  <aside class="notas">
+    <p>Clique 1 tira o aviso de pausa: resolva na área. Clique 2: gabarito D. Use o quadro de ordens.</p>
+    <p>Questão Modelo IF da apostila: lote if-matematica-operacoes-e-expressoes-numericas, m009, MAT-0604 (no sistema, classificada em Conjuntos numéricos).</p>
+  </aside>
+</section>
+
+<!-- 17. Questão 3 -->
+<section class="slide questao" data-nome="Questão 3">
+  <div class="conteudo">
+    <div class="area-resolucao"></div>
+    <span class="pilula pilula-pausa" data-em="1:some">Pause o vídeo e tente</span>
+    <div class="painel-questao">
+      <p class="olho">Questão 3 · IF Sudeste MG 2015</p>
+      <p class="enunciado" style="font-size:31px">Considere os números \(\dfrac{8}{5}\), \(\dfrac{9}{5}\), \(\dfrac{20}{12}\) e \(\dfrac{5}{2}\). A diferença entre o maior deles e o menor é:</p>
+      <ol class="alternativas curtas alt-mat">
+        <li data-em="2:certo"><b>A</b><span>\(\dfrac{9}{10}\)</span></li>
+        <li data-em="2:apaga"><b>B</b><span>\(\dfrac{1}{5}\)</span></li>
+        <li data-em="2:apaga"><b>C</b><span>\(\dfrac{5}{6}\)</span></li>
+        <li data-em="2:apaga"><b>D</b><span>\(1\)</span></li>
+        <li data-em="2:apaga"><b>E</b><span>\(\dfrac{1}{3}\)</span></li>
+      </ol>
+    </div>
+  </div>
+  <aside class="resolucao">
+    <p class="dados"><b>Dados:</b> \(\frac{8}{5}\), \(\frac{9}{5}\), \(\frac{20}{12}\), \(\frac{5}{2}\).</p>
+    <ol class="passos">
+      <li>\(\frac{8}{5} = 1{,}6\) · \(\frac{9}{5} = 1{,}8\)</li>
+      <li>\(\frac{20}{12} = 1{,}666\ldots\) · \(\frac{5}{2} = 2{,}5\)</li>
+      <li>Maior \(\frac{5}{2}\); menor \(\frac{8}{5}\).</li>
+      <li>\(\frac{5}{2} - \frac{8}{5} = \frac{25}{10} - \frac{16}{10}\)</li>
+      <li>\(= \frac{9}{10}\)</li>
+    </ol>
+    <p class="resposta"><b>Resposta:</b> \(\dfrac{9}{10}\). <b>Gabarito A.</b></p>
+    <p class="atencao"><b>Destaque no quadro:</b> Para comparar, passe tudo para decimal.</p>
+    <ul class="erros">
+      <li><b>B</b> \(\frac{9}{5} - \frac{8}{5}\): esquece o \(\frac{5}{2}\).</li>
+      <li><b>C</b> \(\frac{5}{2} - \frac{20}{12}\): mas \(1{,}6 &lt; 1{,}666\ldots\)</li>
+      <li><b>D</b> Não sai de nenhuma diferença.</li>
+      <li><b>E</b> Não é maior menos menor.</li>
+    </ul>
+  </aside>
+  <aside class="notas">
+    <p>Clique 1 tira o aviso de pausa: resolva na área. Clique 2: gabarito A.</p>
+    <p>Questão oficial do IF Sudeste MG 2015-1 (prova extra), q23, MAT-0421 (da apostila; sobra do capítulo). O 20/12 vira dízima (1,666…), assunto da Parte 2; aqui basta a divisão.</p>
+  </aside>
+</section>
+
+<!-- 18. Resumo -->
+<section class="slide" data-nome="Resumo">
+  <div class="conteudo">
+    <p class="olho">Resumo</p>
+    <h2 class="titulo">O essencial</h2>
+    <div class="resumo" style="position:absolute;left:0;right:0;top:150px">
+      <div>\(\mathbb{N} \subset \mathbb{Z} \subset \mathbb{Q}\): todo natural é inteiro, todo inteiro é racional.</div>
+      <div><b>Sinais</b> (× e :): iguais dão positivo; diferentes, negativo. \((-3)^2 = 9\), \(-3^2 = -9\).</div>
+      <div><b>Racional:</b> pode ser escrito como \(\frac{a}{b}\), \(b \neq 0\). Fração → decimal: divida.</div>
+      <div><b>Decimais:</b> vírgula embaixo de vírgula; compare casa por casa, a partir dos décimos.</div>
+      <div><b>Frações:</b> iguale os denominadores para somar; na divisão, multiplique pelo inverso.</div>
+      <div><b>Ordens:</b> décimo \(\frac{1}{10}\), centésimo \(\frac{1}{100}\), milésimo \(\frac{1}{1000}\).</div>
+    </div>
+  </div>
+  <aside class="notas"><p>Resumo da apostila (a parte de naturais, inteiros, racionais e decimais). Peça para tirarem um print desta tela.</p></aside>
+</section>
+
+<!-- 19. A seguir -->
+<section class="slide capa" data-nome="A seguir">
+  <div class="estrelas"></div>
+  <div class="texto-capa" style="top:170px">
+    <span class="selo">Matemática · IF</span>
+    <p class="aula" style="font-size:26px">A seguir · Conjuntos numéricos · Parte 2 de 2</p>
+    <h1 style="font-size:116px">Dízimas, irracionais e reais</h1>
+    <p class="sub">Casas que não acabam e o módulo</p>
+  </div>
+  <svg class="emblema" viewBox="0 0 640 640" aria-hidden="true">
+    <line x1="40" y1="380" x2="600" y2="380" stroke="#fff" stroke-opacity=".8" stroke-width="6" stroke-linecap="round"/>
+    <g stroke="#fff" stroke-opacity=".8" stroke-width="5"><line x1="120" y1="364" x2="120" y2="396"/><line x1="320" y1="364" x2="320" y2="396"/><line x1="520" y1="364" x2="520" y2="396"/></g>
+    <g font-family="Figtree,sans-serif" font-weight="800" font-size="34" fill="#fff" text-anchor="middle"><text x="120" y="446">0</text><text x="320" y="446">1</text><text x="520" y="446">2</text></g>
+    <circle cx="403" cy="380" r="20" fill="#FFD10C" stroke="#fff" stroke-width="5"/>
+    <text x="403" y="320" text-anchor="middle" font-family="'Bricolage Grotesque',Figtree,sans-serif" font-weight="800" font-size="64" fill="#FFD10C">√2</text>
+    <text x="320" y="200" text-anchor="middle" font-family="'Bricolage Grotesque',Figtree,sans-serif" font-weight="800" font-size="54" fill="#fff">0,333…</text>
+  </svg>
+  <img class="logo-capa" src="{{LOGO_BRANCO}}" alt="Quarks">
+  <aside class="notas"><p>Próxima parte: dízimas periódicas e fração geratriz, irracionais, reais e a reta numérica, e o módulo.</p></aside>
+</section>

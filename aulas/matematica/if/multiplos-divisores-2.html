@@ -1,0 +1,425 @@
+<!--aula
+{"disciplina": "matematica", "curso": "IF", "assunto": "Múltiplos e divisores", "parte": "Parte 2 de 2", "titulo": "MDC e MMC", "scripts": ["animacoes-conjuntos.js"]}
+-->
+<!-- Fonte: apostila IF, Matemática, cap. 1 Números e operações, 1.3 Múltiplos e divisores (teorias "Cálculo do MMC e do MDC", "Problemas de MMC e MDC" e "Relação entre MDC e MMC", com exemplos, atenções e o resumo). Questões da apostila: Modelo IF m003 MAT-3325 e m005 MAT-3327 (lote if-matematica-mmc-e-mdc) e oficial 2015-1-extra q13 MAT-0411. As oficiais MAT-0515 e MAT-0336 ficam reservadas para o bloco do fim do capítulo. -->
+<style>
+  .caixa, .linha-ex, .painel { box-sizing: border-box; }
+  .linha-ex { background: var(--branco); border: 2px solid var(--lilas-2); border-radius: 24px; padding: 12px 26px; font-size: 32px; line-height: 1.3; }
+  .linha-ex b { color: var(--roxo-titulo); }
+  .painel { background: var(--branco); border: 2px solid var(--lilas-2); border-radius: 30px; padding: 22px 28px; }
+  .painel h3 { margin: 0 0 6px; font: 800 44px var(--fonte-titulo); letter-spacing: -.02em; color: var(--roxo-titulo); }
+  .painel p { margin: 6px 0 0; font-size: 30px; line-height: 1.3; }
+  .alt-mat li { font-size: 30px !important; }
+  .resumo > div { font-size: 30px; }
+  .contas.folga { row-gap: 20px; }
+  /* listas de múltiplos e divisores */
+  .lista { display: flex; align-items: center; gap: 12px; font-size: 34px; }
+  .lista > b { width: 250px; font-size: 28px; color: var(--cinza); }
+  .lista span { min-width: 76px; text-align: center; padding: 6px 10px; border-radius: 16px; background: #fff; border: 2px solid var(--lilas-2); font-weight: 800; color: var(--roxo-titulo); transition: background .6s, border-color .6s, transform .6s; }
+  .lista span.on { background: #FFD10C; border-color: #E0B400; transform: translateY(-4px); }
+  .lista span.com { background: var(--d-clara); border-color: var(--d); }
+  /* escada simultânea */
+  .escada { border-collapse: collapse; font: 700 46px var(--fonte-texto); font-variant-numeric: tabular-nums; }
+  .escada td { padding: 4px 26px; }
+  .escada td:first-child { text-align: right; border-right: 5px solid var(--roxo-titulo); color: var(--carvao); }
+  .escada td:last-child { color: var(--d-forte); font-weight: 800; }
+  /* fitas cortadas */
+  .fita { fill: #2F6BFF; }
+  .fita.b { fill: #8C7BEA; }
+  .corte { stroke: #fff; stroke-width: 8; stroke-dasharray: 6 6; opacity: 0; transition: opacity .6s; }
+  .mostra .corte { opacity: 1; }
+  .mostra .corte:nth-of-type(2) { transition-delay: .7s; } .mostra .corte:nth-of-type(3) { transition-delay: 1.4s; }
+  .tabela.estreita th, .tabela.estreita td { padding: 10px 26px; }
+</style>
+
+<!-- 1. Capa -->
+<section class="slide capa" data-nome="Capa">
+  <div class="estrelas"></div>
+  <div class="texto-capa" style="top:200px">
+    <span class="selo">Matemática · IF</span>
+    <p class="aula">Múltiplos e divisores · Parte 2 de 2</p>
+    <h1>MDC e MMC</h1>
+    <p class="sub">Encontrar de novo ou repartir</p>
+  </div>
+  <svg class="emblema" viewBox="0 0 640 640" aria-hidden="true">
+    <g class="gira-lento"><ellipse cx="320" cy="320" rx="300" ry="128" fill="none" stroke="#fff" stroke-opacity=".38" stroke-width="2" transform="rotate(-10 320 320)"/></g>
+    <g class="gira"><ellipse cx="320" cy="320" rx="236" ry="196" fill="none" stroke="#FFD10C" stroke-opacity=".75" stroke-width="2.5" stroke-dasharray="3 14" stroke-linecap="round" transform="rotate(-8 320 320)"/>
+      <circle cx="84" cy="300" r="13" fill="var(--d)" stroke="#fff" stroke-width="3"/></g>
+    <circle cx="320" cy="320" r="132" fill="#FFD10C"/>
+    <image href="{{SYM_ROXO}}" x="238" y="238" width="164" height="164"/>
+  </svg>
+  <img class="logo-capa" src="{{LOGO_BRANCO}}" alt="Quarks">
+  <aside class="notas">
+    <p>Parte 2 de Múltiplos e divisores: MMC e MDC (listando e pela fatoração), como reconhecer qual dos dois o problema pede e a relação MDC · MMC = a · b. Usa a fatoração da Parte 1.</p>
+  </aside>
+</section>
+
+<!-- 2. Listas -->
+<section class="slide" data-nome="Múltiplos e divisores comuns">
+  <div class="conteudo">
+    <p class="olho">12 e 18</p>
+    <h2 class="titulo">O que os dois têm em comum?</h2>
+    <div style="position:absolute;left:0;right:0;top:160px;display:flex;flex-direction:column;gap:16px">
+      <div class="lista"><b>múltiplos de 12</b><span>12</span><span>24</span><span data-em="2:on">36</span><span>48</span><span>60</span><span data-em="2:com">72</span><span>…</span></div>
+      <div class="lista" data-passo="1"><b>múltiplos de 18</b><span>18</span><span data-em="2:on">36</span><span>54</span><span data-em="2:com">72</span><span>…</span></div>
+      <div class="lista" data-passo="3" style="margin-top:22px"><b>divisores de 12</b><span data-em="4:com">1</span><span data-em="4:com">2</span><span data-em="4:com">3</span><span>4</span><span data-em="4:on">6</span><span>12</span></div>
+      <div class="lista" data-passo="3"><b>divisores de 18</b><span data-em="4:com">1</span><span data-em="4:com">2</span><span data-em="4:com">3</span><span data-em="4:on">6</span><span>9</span><span>18</span></div>
+    </div>
+    <div style="position:absolute;left:580px;right:0;top:560px;display:grid;grid-template-columns:1fr 1fr;gap:24px">
+      <div class="caixa caixa-fundamental" data-passo="2"><span class="rotulo">MMC: mínimo múltiplo comum</span><div class="texto" style="font-size:31px">O <b>menor</b> múltiplo comum, diferente de zero: <b>36</b>.</div></div>
+      <div class="caixa caixa-fundamental" data-passo="4"><span class="rotulo">MDC: máximo divisor comum</span><div class="texto" style="font-size:31px">O <b>maior</b> divisor comum: <b>6</b>.</div></div>
+    </div>
+  </div>
+  <aside class="notas"><p>Da apostila. Cliques 1 e 2: o primeiro número que aparece nas duas listas de múltiplos é o 36 (amarelo); depois vem o 72. Cliques 3 e 4: os divisores comuns são 1, 2, 3 e 6, e o maior é o 6. Listar funciona com números pequenos; para os grandes, a fatoração.</p></aside>
+</section>
+
+<!-- 3. Pela fatoração -->
+<section class="slide" data-nome="MMC e MDC pela fatoração">
+  <div class="conteudo">
+    <p class="olho">Para números grandes</p>
+    <h2 class="titulo">MMC e MDC pela fatoração</h2>
+    <div class="caixa caixa-fundamental" style="position:absolute;left:0;right:0;top:150px;display:grid;grid-template-columns:1fr 1fr;gap:40px;padding:22px 34px">
+      <div class="texto" style="font-size:31px"><b>MMC:</b> <b>todos</b> os primos que aparecem, cada um com o <b>maior</b> expoente.</div>
+      <div class="texto" style="font-size:31px"><b>MDC:</b> só os primos <b>comuns</b>, cada um com o <b>menor</b> expoente.</div>
+    </div>
+    <div style="position:absolute;left:0;right:0;top:330px;text-align:center;font-size:52px" data-passo="1">\(12 = 2^{\color{#C2384F}{2}} \cdot 3^{1} \qquad\qquad 18 = 2^{1} \cdot 3^{\color{#C2384F}{2}}\)</div>
+    <div class="contas folga" style="position:absolute;left:600px;top:450px;font-size:48px">
+      <div class="eq" data-passo="2"><span>\(\text{MMC}\)</span><span>\(=\)</span><span>\(2^2 \cdot 3^2 = 4 \cdot 9\)</span></div>
+      <div class="eq final" data-passo="3"><span>\(\text{MMC}\)</span><span>\(=\)</span><span>\(36\)</span></div>
+    </div>
+    <div class="contas folga" style="position:absolute;left:1220px;top:450px;font-size:48px">
+      <div class="eq" data-passo="4"><span>\(\text{MDC}\)</span><span>\(=\)</span><span>\(2^1 \cdot 3^1 = 2 \cdot 3\)</span></div>
+      <div class="eq final" data-passo="5"><span>\(\text{MDC}\)</span><span>\(=\)</span><span>\(6\)</span></div>
+    </div>
+  </div>
+  <aside class="notas"><p>Regra e exemplo da apostila (12 e 18). Os maiores expoentes estão em vermelho: o MMC pega 2² e 3². O MDC pega o menor de cada: 2¹ e 3¹. Os resultados batem com as listas do slide anterior.</p></aside>
+</section>
+
+<!-- 4. Fatoração simultânea -->
+<section class="slide" data-nome="Fatoração simultânea">
+  <div class="conteudo">
+    <p class="olho">Outro caminho para o MMC</p>
+    <h2 class="titulo">Fatoração simultânea</h2>
+    <table class="escada" style="position:absolute;left:40px;top:150px">
+      <tr><td>12, 18</td><td data-passo="1">2</td></tr>
+      <tr data-passo="1"><td>6, 9</td><td data-passo="2">2</td></tr>
+      <tr data-passo="2"><td>3, 9</td><td data-passo="3">3</td></tr>
+      <tr data-passo="3"><td>1, 3</td><td data-passo="4">3</td></tr>
+      <tr data-passo="4"><td>1, 1</td><td></td></tr>
+    </table>
+    <div style="position:absolute;left:640px;right:0;top:160px;display:flex;flex-direction:column;gap:26px">
+      <p class="texto" style="margin:0">Divida os números <b>juntos</b> pelos primos, até todos virarem 1. Quem não divide desce igual.</p>
+      <div class="contas" data-passo="5" style="font-size:52px">
+        <div class="eq final"><span>\(\text{MMC}\)</span><span>\(=\)</span><span>\(2 \cdot 2 \cdot 3 \cdot 3 = 36\)</span></div>
+      </div>
+    </div>
+  </div>
+  <aside class="notas"><p>Da apostila. Uma divisão por clique. No 6 e 9 dividido por 2, o 9 desce igual. O produto dos primos usados (2, 2, 3, 3) é o MMC.</p></aside>
+</section>
+
+<!-- 5. Qual dos dois -->
+<section class="slide" data-nome="MMC ou MDC?">
+  <div class="conteudo">
+    <p class="olho">O difícil na prova é perceber qual dos dois</p>
+    <h2 class="titulo">MMC ou MDC?</h2>
+    <div style="position:absolute;left:0;right:0;top:170px;display:grid;grid-template-columns:1fr 1fr;gap:40px">
+      <div class="painel" data-passo="1">
+        <h3>"Vão se encontrar de novo?"</h3>
+        <p>Ônibus, remédios, luzes que piscam juntas…</p>
+        <p style="font-size:60px;margin-top:20px;color:var(--d-forte);font-weight:800;font-family:var(--fonte-titulo)">MMC</p>
+        <p style="color:var(--cinza)">costuma ser <b>maior</b> que os números</p>
+      </div>
+      <div class="painel" data-passo="2">
+        <h3>"Partes iguais, o maior possível?"</h3>
+        <p>Fitas, tábuas, terrenos, grupos sem sobra…</p>
+        <p style="font-size:60px;margin-top:20px;color:var(--d-forte);font-weight:800;font-family:var(--fonte-titulo)">MDC</p>
+        <p style="color:var(--cinza)"><b>menor</b> ou igual aos números</p>
+      </div>
+    </div>
+  </div>
+  <aside class="notas"><p>As duas perguntas da apostila. Peça exemplos à turma antes de cada clique.</p></aside>
+</section>
+
+<!-- 6. Exemplo: ônibus -->
+<section class="slide" data-nome="Exemplo: os dois ônibus">
+  <div class="conteudo">
+    <p class="olho">Exemplo · MMC</p>
+    <h2 class="titulo">Dois ônibus saem juntos às 7h</h2>
+    <p class="texto" style="position:absolute;left:0;width:580px;top:150px;margin:0;font-size:32px">Um sai a cada <b>12 min</b>; o outro, a cada <b>18 min</b>. Quando saem juntos de novo?</p>
+    <div data-anima="nc-onibus" data-anima-passo="1" data-w="1110" data-h="380" style="position:absolute;left:650px;top:150px;width:1110px;height:380px"></div>
+    <div class="contas folga" style="position:absolute;left:0;top:330px;font-size:44px">
+      <div class="eq" data-passo="2"><span>\(\text{MMC}(12, 18)\)</span><span>\(=\)</span><span>\(36\ \text{min}\)</span></div>
+      <div class="eq final" data-passo="3"><span>\(7\text{h} + 36\ \text{min}\)</span><span>\(=\)</span><span>\(7\text{h}36\)</span></div>
+    </div>
+    <div class="caixa" data-passo="2" style="position:absolute;left:650px;right:0;top:600px;padding:18px 30px">
+      <div class="texto" style="font-size:31px">Os horários de cada ônibus são <b>múltiplos</b> do seu intervalo. O primeiro encontro é o <b>menor múltiplo comum</b>.</div>
+    </div>
+  </div>
+  <aside class="notas"><p>Exemplo da apostila. Clique 1: a linha do tempo anda; cada ônibus aparece na hora em que sai. Aos 36 minutos os dois saem juntos (faixa amarela); o próximo encontro é aos 72. Cliques 2 e 3: a conta (o MMC de 12 e 18 já foi calculado).</p></aside>
+</section>
+
+<!-- 7. Exemplo: fitas -->
+<section class="slide" data-nome="Exemplo: fitas cortadas">
+  <div class="conteudo">
+    <p class="olho">Exemplo · MDC</p>
+    <h2 class="titulo">Fitas de 24 m e 36 m</h2>
+    <p class="texto" style="position:absolute;left:0;right:0;top:145px;margin:0;font-size:32px">Cortar as duas em pedaços <b>iguais</b>, o <b>maior possível</b>, sem sobra. Tamanho e número de pedaços?</p>
+    <svg viewBox="0 0 1100 230" style="position:absolute;left:0;top:220px;width:1100px;height:230px" aria-hidden="true">
+      <text x="0" y="52" font-family="Figtree,sans-serif" font-weight="800" font-size="30" fill="#3F2FA0">24 m</text>
+      <rect class="fita" x="100" y="20" width="640" height="50" rx="12"/>
+      <text x="0" y="172" font-family="Figtree,sans-serif" font-weight="800" font-size="30" fill="#3F2FA0">36 m</text>
+      <rect class="fita b" x="100" y="140" width="960" height="50" rx="12"/>
+      <g data-passo="3">
+        <line class="corte" x1="420" y1="10" x2="420" y2="80"/>
+        <line class="corte" x1="420" y1="130" x2="420" y2="200"/>
+        <line class="corte" x1="740" y1="130" x2="740" y2="200"/>
+        <g font-family="Figtree,sans-serif" font-weight="800" font-size="26" fill="#fff" text-anchor="middle">
+          <text x="260" y="54">12 m</text><text x="580" y="54">12 m</text>
+          <text x="260" y="174">12 m</text><text x="580" y="174">12 m</text><text x="900" y="174">12 m</text>
+        </g>
+      </g>
+    </svg>
+    <div class="contas" style="position:absolute;left:1180px;top:230px;font-size:42px">
+      <div class="eq" data-passo="1"><span>\(24\)</span><span>\(=\)</span><span>\(2^3 \cdot 3\)</span></div>
+      <div class="eq" data-passo="1"><span>\(36\)</span><span>\(=\)</span><span>\(2^2 \cdot 3^2\)</span></div>
+      <div class="eq final" data-passo="2"><span>\(\text{MDC}\)</span><span>\(=\)</span><span>\(2^2 \cdot 3 = 12\ \text{m}\)</span></div>
+    </div>
+    <div class="contas" style="position:absolute;left:600px;top:500px;font-size:44px">
+      <div class="eq" data-passo="4"><span>\(\text{pedaços}\)</span><span>\(=\)</span><span>\(\dfrac{24}{12} + \dfrac{36}{12} = 2 + 3\)</span></div>
+      <div class="eq final" data-passo="5"><span>\(\text{pedaços}\)</span><span>\(=\)</span><span>\(5\)</span></div>
+    </div>
+    <div class="caixa caixa-atencao" data-passo="6" style="position:absolute;left:600px;right:0;top:720px;padding:14px 26px">
+      <div class="texto" style="font-size:28px"><b>MMC cresce, MDC diminui.</b> Se o "maior pedaço" passou do tamanho da fita, você calculou o MMC no lugar do MDC.</div>
+    </div>
+  </div>
+  <aside class="notas"><p>Exemplo da apostila. O tamanho precisa dividir 24 e 36 ao mesmo tempo e ser o maior: MDC = 12 m. Clique 3: os cortes aparecem nas fitas (2 pedaços na de 24 m e 3 na de 36 m). Resposta: 5 pedaços de 12 m. Clique 6: a atenção.</p></aside>
+</section>
+
+<!-- 8. Relação MDC · MMC -->
+<section class="slide" data-nome="MDC vezes MMC">
+  <div class="conteudo">
+    <p class="olho">Não é por acaso</p>
+    <h2 class="titulo">MDC vezes MMC</h2>
+    <div class="contas" style="position:absolute;left:0;top:170px;font-size:48px">
+      <div class="eq" data-passo="1"><span>\(\text{MDC} \cdot \text{MMC}\)</span><span>\(=\)</span><span>\(6 \cdot 36 = 216\)</span></div>
+      <div class="eq" data-passo="2"><span>\(12 \cdot 18\)</span><span>\(=\)</span><span>\(216\)</span></div>
+    </div>
+    <table class="tabela estreita" data-passo="3" style="position:absolute;left:900px;top:150px;font-size:34px">
+      <tr><th>primo</th><th>12</th><th>18</th><th>MDC</th><th>MMC</th></tr>
+      <tr><td><b>2</b></td><td>\(2^2\)</td><td>\(2^1\)</td><td>\(2^1\)</td><td>\(2^2\)</td></tr>
+      <tr><td><b>3</b></td><td>\(3^1\)</td><td>\(3^2\)</td><td>\(3^1\)</td><td>\(3^2\)</td></tr>
+    </table>
+    <p class="texto" data-passo="3" style="position:absolute;left:940px;right:0;top:420px;margin:0;font-size:30px">O MDC fica com o <b>menor</b> expoente e o MMC, com o <b>maior</b>: juntos, usam os dois, como \(12 \cdot 18\).</p>
+    <div class="caixa caixa-fundamental" data-passo="4" style="position:absolute;left:580px;right:0;top:600px;text-align:center;padding:20px">
+      <div style="font-size:64px">\(\text{MDC}(a, b) \cdot \text{MMC}(a, b) = a \cdot b\)</div>
+      <div class="texto" style="font-size:27px">Para <b>dois</b> naturais \(a\) e \(b\), diferentes de zero.</div>
+    </div>
+  </div>
+  <aside class="notas"><p>Da apostila. Cliques 1 e 2: deu igual. Clique 3: o porquê, primo a primo. Clique 4: a fórmula.</p></aside>
+</section>
+
+<!-- 9. Exemplo: o número que falta -->
+<section class="slide" data-nome="Exemplo: o número que falta">
+  <div class="conteudo">
+    <p class="olho">Exemplo</p>
+    <h2 class="titulo">MDC 4, MMC 120, um deles é 24</h2>
+    <div class="contas folga" style="position:absolute;left:600px;top:160px;font-size:48px">
+      <div class="eq" data-passo="1"><span>\(\text{MDC} \cdot \text{MMC}\)</span><span>\(=\)</span><span>\(a \cdot b\)</span></div>
+      <div class="eq" data-passo="2"><span>\(4 \cdot 120\)</span><span>\(=\)</span><span>\(24 \cdot b\)</span></div>
+      <div class="eq" data-passo="3"><span>\(480\)</span><span>\(=\)</span><span>\(24b\)</span></div>
+      <div class="eq" data-passo="4"><span>\(b\)</span><span>\(=\)</span><span>\(\dfrac{480}{24}\)</span></div>
+      <div class="eq final" data-passo="5"><span>\(b\)</span><span>\(=\)</span><span>\(20\)</span></div>
+    </div>
+    <div class="caixa" data-passo="6" style="position:absolute;left:0;width:520px;top:160px">
+      <span class="rotulo">Conferindo</span>
+      <div class="texto" style="font-size:31px">\(24 = 2^3 \cdot 3\) e \(20 = 2^2 \cdot 5\).<br>MDC \(= 2^2 = 4\)<br>MMC \(= 2^3 \cdot 3 \cdot 5 = 120\)</div>
+    </div>
+  </div>
+  <aside class="notas"><p>Exemplo da apostila. Uma linha por clique; no fim, a conferência pela fatoração.</p></aside>
+</section>
+
+<!-- 10. Primos entre si -->
+<section class="slide" data-nome="Primos entre si">
+  <div class="conteudo">
+    <p class="olho">Quando o MDC é 1</p>
+    <h2 class="titulo">Primos entre si</h2>
+    <div style="position:absolute;left:0;right:0;top:160px;display:grid;grid-template-columns:1fr 1fr;gap:40px">
+      <div class="painel" data-passo="1">
+        <h3>8 e 15</h3>
+        <p>Nenhum fator em comum: MDC = 1. São <b>primos entre si</b>.</p>
+        <p style="font-size:44px;margin-top:14px">\(\text{MMC} = 8 \cdot 15 = 120\)</p>
+      </div>
+      <div class="painel" data-passo="2">
+        <h3>4 e 6</h3>
+        <p>Têm o fator 2 em comum: MDC = 2.</p>
+        <p style="font-size:44px;margin-top:14px">\(\text{MMC} = \dfrac{24}{2} = 12\), não 24</p>
+      </div>
+    </div>
+    <div class="caixa caixa-atencao" data-passo="3" style="position:absolute;left:580px;right:0;top:560px;padding:20px 30px">
+      <span class="rotulo">Só vale para dois números</span>
+      <div class="texto" style="font-size:31px">2, 4 e 8: MDC = 2 e MMC = 8. \(2 \cdot 8 = 16\), mas \(2 \cdot 4 \cdot 8 = 64\).</div>
+    </div>
+  </div>
+  <aside class="notas"><p>Da apostila. Se o MDC é 1, o MMC é o próprio produto. Com fator comum, divida o produto pelo MDC. Clique 3: com três números a regra falha.</p></aside>
+</section>
+
+<!-- 11. Questão 1 -->
+<section class="slide questao" data-nome="Questão 1">
+  <div class="conteudo">
+    <div class="area-resolucao"></div>
+    <span class="pilula pilula-pausa" data-em="1:some">Pause o vídeo e tente</span>
+    <div class="painel-questao">
+      <p class="olho">Questão 1 · Modelo IF</p>
+      <p class="enunciado" style="font-size:30px">O professor escreveu no quadro a fatoração em primos de dois números.</p>
+      <table class="tabela" style="font-size:30px;align-self:flex-start">
+        <tr><th style="padding:8px 30px">Número</th><th style="padding:8px 30px">Fatoração</th></tr>
+        <tr><td style="padding:8px 30px">360</td><td style="padding:8px 30px">\(2^3 \cdot 3^2 \cdot 5\)</td></tr>
+        <tr><td style="padding:8px 30px">756</td><td style="padding:8px 30px">\(2^2 \cdot 3^3 \cdot 7\)</td></tr>
+      </table>
+      <p class="enunciado" style="font-size:30px">O máximo divisor comum (MDC) de 360 e 756 é:</p>
+      <ol class="alternativas curtas alt-mat">
+        <li data-em="2:certo"><b>A</b><span>36</span></li>
+        <li data-em="2:apaga"><b>B</b><span>216</span></li>
+        <li data-em="2:apaga"><b>C</b><span>1 260</span></li>
+        <li data-em="2:apaga"><b>D</b><span>7 560</span></li>
+        <li data-em="2:apaga"><b>E</b><span>272 160</span></li>
+      </ol>
+    </div>
+  </div>
+  <aside class="resolucao">
+    <p class="dados"><b>Dados:</b> \(360 = 2^3 \cdot 3^2 \cdot 5\); \(756 = 2^2 \cdot 3^3 \cdot 7\).</p>
+    <ol class="passos">
+      <li>Primos comuns: 2 e 3 (5 e 7 não).</li>
+      <li>Menores expoentes: \(2^2\) e \(3^2\).</li>
+      <li>\(\text{MDC} = 2^2 \cdot 3^2 = 4 \cdot 9 = 36\)</li>
+    </ol>
+    <p class="resposta"><b>Resposta:</b> 36. <b>Gabarito A.</b></p>
+    <p class="atencao"><b>Destaque no quadro:</b> MDC: só os comuns, com o menor expoente.</p>
+    <ul class="erros">
+      <li><b>B</b> \(2^3 \cdot 3^3\): maiores expoentes.</li>
+      <li><b>C</b> Inclui o 5 e o 7.</li>
+      <li><b>D</b> É o MMC.</li>
+      <li><b>E</b> É o produto \(360 \cdot 756\).</li>
+    </ul>
+  </aside>
+  <aside class="notas">
+    <p>Clique 1 tira o aviso de pausa: resolva na área (D liga a caneta; E esconde o enunciado). Clique 2: gabarito A.</p>
+    <p>Questão Modelo IF da apostila: lote if-matematica-mmc-e-mdc, m003, MAT-3325. Bônus: o MMC é a alternativa D, 7 560, e 36 · 7 560 = 360 · 756 = 272 160.</p>
+  </aside>
+</section>
+
+<!-- 12. Questão 2 -->
+<section class="slide questao" data-nome="Questão 2">
+  <div class="conteudo">
+    <div class="area-resolucao"></div>
+    <span class="pilula pilula-pausa" data-em="1:some">Pause o vídeo e tente</span>
+    <div class="painel-questao">
+      <p class="olho">Questão 2 · Modelo IF</p>
+      <p class="enunciado" style="font-size:30px">Por recomendação médica, seu Antônio toma um remédio de 6 em 6 horas e outro de 8 em 8 horas. Na segunda-feira, às 7h, ele tomou os dois juntos. A próxima vez em que ele vai tomar os dois remédios juntos será:</p>
+      <ol class="alternativas alt-mat" style="gap:8px">
+        <li data-em="2:apaga"><b>A</b><span>às 13h de segunda-feira.</span></li>
+        <li data-em="2:apaga"><b>B</b><span>às 15h de segunda-feira.</span></li>
+        <li data-em="2:apaga"><b>C</b><span>às 21h de segunda-feira.</span></li>
+        <li data-em="2:certo"><b>D</b><span>às 7h de terça-feira.</span></li>
+        <li data-em="2:apaga"><b>E</b><span>às 7h de quarta-feira.</span></li>
+      </ol>
+    </div>
+  </div>
+  <aside class="resolucao">
+    <p class="dados"><b>Dados:</b> intervalos de 6 h e 8 h; juntos às 7h de segunda.</p>
+    <ol class="passos">
+      <li>"Juntos de novo": MMC.</li>
+      <li>\(6 = 2 \cdot 3\); \(8 = 2^3\)</li>
+      <li>\(\text{MMC} = 2^3 \cdot 3 = 24\ \text{h}\)</li>
+      <li>7h de segunda + 24 h = 7h de terça.</li>
+    </ol>
+    <p class="resposta"><b>Resposta:</b> 7h de terça-feira. <b>Gabarito D.</b></p>
+    <p class="atencao"><b>Destaque no quadro:</b> Encontro que se repete: MMC.</p>
+    <ul class="erros">
+      <li><b>A</b> 13h: só a dose do primeiro.</li>
+      <li><b>B</b> 15h: só a dose do segundo.</li>
+      <li><b>C</b> Soma os intervalos: 14 h.</li>
+      <li><b>E</b> Multiplica: 48 h é encontro, mas não o primeiro.</li>
+    </ul>
+  </aside>
+  <aside class="notas">
+    <p>Clique 1 tira o aviso de pausa: resolva na área. Clique 2: gabarito D.</p>
+    <p>Questão Modelo IF da apostila: lote if-matematica-mmc-e-mdc, m005, MAT-3327.</p>
+  </aside>
+</section>
+
+<!-- 13. Questão 3 -->
+<section class="slide questao" data-nome="Questão 3">
+  <div class="conteudo">
+    <div class="area-resolucao"></div>
+    <span class="pilula pilula-pausa" data-em="1:some">Pause o vídeo e tente</span>
+    <div class="painel-questao">
+      <p class="olho">Questão 3 · IF Sudeste MG 2015</p>
+      <p class="enunciado" style="font-size:31px">Dividindo-se dois terrenos de áreas iguais a 6.000 m² e 7.800 m², respectivamente, em lotes iguais e com a <b>MAIOR</b> área possível, obtém-se:</p>
+      <ol class="alternativas alt-mat">
+        <li data-em="2:apaga"><b>A</b><span>600 lotes.</span></li>
+        <li data-em="2:apaga"><b>B</b><span>19 lotes.</span></li>
+        <li data-em="2:certo"><b>C</b><span>23 lotes.</span></li>
+        <li data-em="2:apaga"><b>D</b><span>13 lotes.</span></li>
+        <li data-em="2:apaga"><b>E</b><span>18 lotes.</span></li>
+      </ol>
+    </div>
+  </div>
+  <aside class="resolucao">
+    <p class="dados"><b>Dados:</b> 6 000 m² e 7 800 m²; lotes iguais, os maiores.</p>
+    <ol class="passos">
+      <li>"Partes iguais, a maior": MDC.</li>
+      <li>\(6\,000 = 2^4 \cdot 3 \cdot 5^3\)</li>
+      <li>\(7\,800 = 2^3 \cdot 3 \cdot 5^2 \cdot 13\)</li>
+      <li>\(\text{MDC} = 2^3 \cdot 3 \cdot 5^2 = 600\ \text{m}^2\)</li>
+      <li>\(\frac{6\,000}{600} + \frac{7\,800}{600} = 10 + 13 = 23\)</li>
+    </ol>
+    <p class="resposta"><b>Resposta:</b> 23 lotes. <b>Gabarito C.</b></p>
+    <p class="atencao"><b>Destaque no quadro:</b> A pergunta é o número de lotes, não a área.</p>
+    <ul class="erros">
+      <li><b>A</b> 600 m² é a área de cada lote.</li>
+      <li><b>B</b> Não sai da divisão correta.</li>
+      <li><b>D</b> Só os lotes do segundo terreno.</li>
+      <li><b>E</b> Não sai da divisão correta.</li>
+    </ul>
+  </aside>
+  <aside class="notas">
+    <p>Clique 1 tira o aviso de pausa: resolva na área. Clique 2: gabarito C.</p>
+    <p>Questão oficial do IF Sudeste MG 2015-1 (prova extra), q13, MAT-0411 (da apostila; sobra do capítulo). É o exemplo das fitas com outros números.</p>
+  </aside>
+</section>
+
+<!-- 14. Resumo -->
+<section class="slide" data-nome="Resumo">
+  <div class="conteudo">
+    <p class="olho">Resumo</p>
+    <h2 class="titulo">O essencial</h2>
+    <div class="resumo" style="position:absolute;left:0;right:0;top:150px">
+      <div><b>MMC:</b> todos os primos, <b>maiores</b> expoentes. "Encontrar de novo ao mesmo tempo."</div>
+      <div><b>MDC:</b> só os comuns, <b>menores</b> expoentes. "Partes iguais, o maior possível."</div>
+      <div><b>Fatoração simultânea:</b> divida juntos até virar 1; o produto dos primos é o MMC.</div>
+      <div><b>MMC cresce, MDC diminui:</b> confira se a resposta faz sentido.</div>
+      <div>Para dois números: \(\text{MDC} \cdot \text{MMC} = a \cdot b\).</div>
+      <div><b>Primos entre si</b> (MDC = 1): o MMC é o produto.</div>
+    </div>
+  </div>
+  <aside class="notas"><p>Resumo da apostila (a parte de MMC e MDC). Peça para tirarem um print desta tela.</p></aside>
+</section>
+
+<!-- 15. A seguir -->
+<section class="slide capa" data-nome="A seguir">
+  <div class="estrelas"></div>
+  <div class="texto-capa" style="top:170px">
+    <span class="selo">Matemática · IF</span>
+    <p class="aula" style="font-size:26px">A seguir · Potências e radicais · Parte 1 de 2</p>
+    <h1 style="font-size:118px">Potências e notação científica</h1>
+    <p class="sub">Multiplicar muitas vezes, escrever com poucos algarismos</p>
+  </div>
+  <svg class="emblema" viewBox="0 0 640 640" aria-hidden="true">
+    <circle cx="320" cy="320" r="190" fill="#FFD10C"/>
+    <text x="290" y="390" text-anchor="middle" font-family="'Bricolage Grotesque',Figtree,sans-serif" font-weight="800" font-size="200" fill="#3F2FA0">2</text>
+    <text x="395" y="270" text-anchor="middle" font-family="'Bricolage Grotesque',Figtree,sans-serif" font-weight="800" font-size="110" fill="#3F2FA0">n</text>
+  </svg>
+  <img class="logo-capa" src="{{LOGO_BRANCO}}" alt="Quarks">
+  <aside class="notas"><p>Fim de Múltiplos e divisores. A seguir, Potências e radicais (Parte 1: potências de expoente inteiro, propriedades e notação científica). O bloco de questões do IF deste capítulo vem depois de Unidades de medida.</p></aside>
+</section>

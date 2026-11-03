@@ -1,0 +1,534 @@
+<!--aula
+{"disciplina": "matematica", "curso": "IF", "assunto": "Conjuntos numéricos", "parte": "Parte 2 de 2", "titulo": "Dízimas, irracionais e reais", "scripts": ["animacoes-conjuntos.js"]}
+-->
+<!-- Fonte: apostila IF, Matemática, cap. 1 Números e operações, 1.2 Conjuntos numéricos (teorias "Dízimas periódicas e fração geratriz", "Irracionais, reais e a reta numérica" e "Módulo de um número", com exemplos, atenções e o resumo). Questões da apostila: Modelo IF m001 MAT-1196 (lote if-matematica-conjuntos-numericos), oficiais 2014-1-extra q15 MAT-0423 e 2014-1 q18 MAT-0346. As oficiais MAT-0540 e MAT-0304 ficam reservadas para o bloco do fim do capítulo. -->
+<style>
+  .caixa, .linha-ex, .painel { box-sizing: border-box; }
+  .linha-ex { background: var(--branco); border: 2px solid var(--lilas-2); border-radius: 24px; padding: 12px 26px; font-size: 32px; line-height: 1.3; }
+  .linha-ex b { color: var(--roxo-titulo); }
+  .rot { font: 700 26px Figtree, sans-serif; fill: #5E5A70; }
+  .rot-a { font: 800 40px "Bricolage Grotesque", Figtree, sans-serif; fill: #1E4FD8; }
+  .el-txt { font: 800 34px Figtree, sans-serif; fill: #3F2FA0; }
+  .alt-mat li { font-size: 30px !important; }
+  .resumo > div { font-size: 30px; }
+  .contas.folga { row-gap: 22px; }
+  /* visor da calculadora: os 3 não acabam */
+  .visor { display: inline-flex; align-items: center; background: #292B2C; color: #B9F5C9; border-radius: 22px; padding: 18px 34px; font: 700 76px "Courier New", monospace; letter-spacing: .04em; min-width: 640px; }
+  .visor i { font-style: normal; opacity: 0; }
+  .slide.ativo .mostra .visor i { animation: digita 6s steps(1) infinite; }
+  @keyframes digita { 0% { opacity: 0; } 10%, 92% { opacity: 1; } 100% { opacity: 0; } }
+  .visor i:nth-child(2) { animation-delay: .5s !important; } .visor i:nth-child(3) { animation-delay: 1s !important; } .visor i:nth-child(4) { animation-delay: 1.5s !important; }
+  .visor i:nth-child(5) { animation-delay: 2s !important; } .visor i:nth-child(6) { animation-delay: 2.5s !important; } .visor i:nth-child(7) { animation-delay: 3s !important; }
+  .periodo { display: inline-block; border-bottom: 6px solid var(--d); padding: 0 2px; margin: 0 2px; }
+  .periodo.b { border-color: #FFD10C; }
+  /* o período "anda" duas casas */
+  .fila { position: absolute; left: 0; height: 80px; }
+  .fila .lbl { position: absolute; right: calc(100% + 0px); top: 0; width: 260px; text-align: right; font: 400 60px "Times New Roman", serif; font-style: italic; color: var(--carvao); }
+  .digs { position: absolute; left: 0; top: 0; height: 80px; transition: transform 1.6s cubic-bezier(.5,0,.3,1); }
+  .digs.anda { transform: translateX(-116px); }
+  .dg { position: absolute; top: 0; width: 58px; text-align: center; font: 800 64px var(--fonte-titulo); color: var(--roxo-titulo); transition: opacity .8s, color .8s; }
+  .r2 .dg:first-child { transition: opacity .8s .8s; }
+  .r2 .lbl { right: calc(100% + 124px); }
+  .r2 .anda .dg:first-child { opacity: 0; }
+  .virg-fixa { position: absolute; left: 50px; top: 0; font: 800 64px var(--fonte-titulo); color: var(--erro); }
+  .marca-cauda .cauda { color: var(--d); }
+  .apaga .cauda { color: #C9C0F0; text-decoration: line-through; text-decoration-color: var(--erro); }
+  /* conjuntos numéricos */
+  .conj { fill: #fff; stroke-width: 4; }
+  .voa { transform: translate(var(--x), var(--y)); transition: transform 1.6s cubic-bezier(.5,0,.3,1); }
+  .mostra .voa { transform: none; }
+  .chip-num { fill: #FFD10C; stroke: #fff; stroke-width: 3; }
+  /* módulo: duas pessoas saem do ponto */
+  .anda-esq, .anda-dir { transition: transform 2.6s cubic-bezier(.45,0,.3,1); }
+  .mostra .anda-esq { transform: translateX(-570px); }
+  .mostra .anda-dir { transform: translateX(570px); }
+  .pop { transform-box: fill-box; transform-origin: center; }
+</style>
+
+<!-- 1. Capa -->
+<section class="slide capa" data-nome="Capa">
+  <div class="estrelas"></div>
+  <div class="texto-capa" style="top:170px">
+    <span class="selo">Matemática · IF</span>
+    <p class="aula">Conjuntos numéricos · Parte 2 de 2</p>
+    <h1 style="font-size:116px">Dízimas, irracionais e reais</h1>
+    <p class="sub">Casas que não acabam e o módulo</p>
+  </div>
+  <svg class="emblema" viewBox="0 0 640 640" aria-hidden="true">
+    <g class="gira-lento"><ellipse cx="320" cy="320" rx="300" ry="128" fill="none" stroke="#fff" stroke-opacity=".38" stroke-width="2" transform="rotate(-10 320 320)"/></g>
+    <g class="gira"><ellipse cx="320" cy="320" rx="236" ry="196" fill="none" stroke="#FFD10C" stroke-opacity=".75" stroke-width="2.5" stroke-dasharray="3 14" stroke-linecap="round" transform="rotate(-8 320 320)"/>
+      <circle cx="84" cy="300" r="13" fill="var(--d)" stroke="#fff" stroke-width="3"/></g>
+    <circle cx="320" cy="320" r="132" fill="#FFD10C"/>
+    <image href="{{SYM_ROXO}}" x="238" y="238" width="164" height="164"/>
+  </svg>
+  <img class="logo-capa" src="{{LOGO_BRANCO}}" alt="Quarks">
+  <aside class="notas">
+    <p>Parte 2 de Conjuntos numéricos: dízima periódica e fração geratriz, irracionais, reais e a reta numérica, e o módulo de um número (com a distância entre dois números).</p>
+  </aside>
+</section>
+
+<!-- 2. Dízima periódica -->
+<section class="slide" data-nome="Dízima periódica">
+  <div class="conteudo">
+    <p class="olho">Divida 1 por 3 na calculadora</p>
+    <h2 class="titulo">Dízima periódica</h2>
+    <div style="position:absolute;left:0;top:170px" data-passo="1"><div class="visor">0,3<i>3</i><i>3</i><i>3</i><i>3</i><i>3</i><i>3</i><i>…</i></div></div>
+    <div class="caixa caixa-fundamental" data-passo="2" style="position:absolute;left:820px;right:0;top:160px">
+      <span class="rotulo">Dízima periódica</span>
+      <div class="texto">Decimal em que um grupo de algarismos se repete <b>para sempre</b>. O grupo que se repete é o <b>período</b>.</div>
+    </div>
+    <div style="position:absolute;left:0;top:370px;font:800 80px var(--fonte-titulo);color:var(--roxo-titulo)" data-passo="3">0,<span class="periodo">27</span><span class="periodo b">27</span><span class="periodo">27</span>…</div>
+    <p class="texto" data-passo="3" style="position:absolute;left:0;top:500px;margin:0">Período: <b>27</b> (dois algarismos)</p>
+    <div class="caixa" data-passo="4" style="position:absolute;left:820px;right:0;top:430px">
+      <span class="rotulo">Toda dízima periódica é racional</span>
+      <div class="texto">Existe uma fração que dá aquela dízima: a <b>fração geratriz</b>.</div>
+    </div>
+  </div>
+  <aside class="notas">
+    <p>Clique 1: o visor vai mostrando 3 atrás de 3, sem fim. Clique 2: a definição. Clique 3: em 0,2727…, o período é 27. Clique 4: toda dízima periódica vem de uma fração (a geratriz), e vamos achá-la.</p>
+  </aside>
+</section>
+
+<!-- 3. O truque -->
+<section class="slide" data-nome="O truque da geratriz">
+  <div class="conteudo">
+    <p class="olho">Multiplicar faz o período andar</p>
+    <h2 class="titulo">O truque da fração geratriz</h2>
+    <div style="position:absolute;left:0;width:640px;top:160px;display:flex;flex-direction:column;gap:12px;font-size:30px">
+      <div class="linha-ex" style="font-size:30px"><b>1.</b> Chame a dízima de \(x\).</div>
+      <div class="linha-ex" data-passo="1" style="font-size:30px"><b>2.</b> Multiplique por 10 (período de 1 algarismo) ou por 100 (de 2).</div>
+      <div class="linha-ex" data-passo="3" style="font-size:30px"><b>3.</b> Subtraia: a parte infinita some.</div>
+      <div class="linha-ex" data-passo="4" style="font-size:30px"><b>4.</b> Isole \(x\) e simplifique.</div>
+    </div>
+    <div style="position:absolute;left:1000px;top:190px;width:760px;height:420px">
+      <div class="fila r1" style="top:0"><span class="lbl">\(x =\)</span><div class="digs" data-em="3:apaga 2:marca-cauda"><span class="dg" style="left:0px">0</span><span class="dg cauda" style="left:58px">2</span><span class="dg cauda" style="left:116px">7</span><span class="dg cauda" style="left:174px">2</span><span class="dg cauda" style="left:232px">7</span><span class="dg cauda" style="left:290px">2</span><span class="dg cauda" style="left:348px">7</span><span class="dg cauda" style="left:406px">2</span><span class="dg cauda" style="left:464px">7</span><span class="dg cauda" style="left:522px">2</span><span class="dg cauda" style="left:580px">7</span></div><span class="virg-fixa">,</span><span class="dg" style="left:640px;color:#8C83B0">…</span></div>
+      <div class="fila r2" data-passo="1" style="top:130px"><span class="lbl">\(100x =\)</span><div class="digs" data-em="2:anda 2:marca-cauda 3:apaga"><span class="dg" style="left:0px">0</span><span class="dg" style="left:58px">2</span><span class="dg" style="left:116px">7</span><span class="dg cauda" style="left:174px">2</span><span class="dg cauda" style="left:232px">7</span><span class="dg cauda" style="left:290px">2</span><span class="dg cauda" style="left:348px">7</span><span class="dg cauda" style="left:406px">2</span><span class="dg cauda" style="left:464px">7</span><span class="dg cauda" style="left:522px">2</span><span class="dg cauda" style="left:580px">7</span><span class="dg cauda" style="left:638px">2</span><span class="dg cauda" style="left:696px">7</span><span class="dg" style="left:754px;color:#8C83B0">…</span></div><span class="virg-fixa">,</span></div>
+      <div data-passo="3" style="position:absolute;left:-260px;top:250px;width:900px;border-top:5px solid var(--roxo-titulo)"></div>
+      <div class="fila" data-passo="3" style="top:280px"><span class="lbl">\(99x =\)</span><span class="dg" style="left:0">2</span><span class="dg" style="left:58px">7</span></div>
+    </div>
+    <div class="caixa caixa-fundamental" data-passo="4" style="position:absolute;left:740px;right:0;top:620px;padding:18px 30px">
+      <div style="font-size:52px">\(99x = 27 \;\Rightarrow\; x = \dfrac{27}{99}\)</div>
+    </div>
+  </div>
+  <aside class="notas">
+    <p>Clique 1: escreva 100x embaixo de x. Clique 2: multiplicar por 100 faz os algarismos andarem duas casas para a esquerda: 0,2727… vira 27,2727… Repare que as caudas (em azul) ficam iguais.</p>
+    <p>Clique 3: na subtração, as caudas iguais se cancelam e sobra 99x = 27. Clique 4: isole x. A simplificação vem no próximo slide.</p>
+  </aside>
+</section>
+
+<!-- 4. Exemplo 0,2727 -->
+<section class="slide" data-nome="Exemplo: período de dois algarismos">
+  <div class="conteudo">
+    <p class="olho">Exemplo</p>
+    <h2 class="titulo">A geratriz de 0,2727…</h2>
+    <div class="contas folga" style="position:absolute;left:600px;top:150px;font-size:46px">
+      <div class="eq" data-passo="1"><span>\(x\)</span><span>\(=\)</span><span>\(0{,}2727\dots\)</span></div>
+      <div class="eq" data-passo="2"><span>\(100x\)</span><span>\(=\)</span><span>\(27{,}2727\dots\)</span></div>
+      <div class="eq" data-passo="3"><span>\(100x - x\)</span><span>\(=\)</span><span>\(27{,}2727\dots - 0{,}2727\dots\)</span></div>
+      <div class="eq" data-passo="4"><span>\(99x\)</span><span>\(=\)</span><span>\(27\)</span></div>
+      <div class="eq" data-passo="5"><span>\(x\)</span><span>\(=\)</span><span>\(\dfrac{27}{99}\)</span></div>
+      <div class="eq final" data-passo="6"><span>\(x\)</span><span>\(=\)</span><span>\(\dfrac{3}{11}\)</span></div>
+    </div>
+    <div class="caixa" data-passo="7" style="position:absolute;left:0;width:520px;top:160px">
+      <span class="rotulo">Confira</span>
+      <div class="texto">\(3 : 11 = 0{,}2727\dots\)</div>
+    </div>
+  </div>
+  <aside class="notas"><p>Exemplo da apostila. Uma linha por clique. Na última, 27 e 99 divididos por 9 dão 3 e 11. Clique 7: confira dividindo.</p></aside>
+</section>
+
+<!-- 5. Antes do período -->
+<section class="slide" data-nome="Algarismos antes do período">
+  <div class="conteudo">
+    <p class="olho">Quando há algarismos antes do período</p>
+    <h2 class="titulo">0,1666…: o truque duas vezes</h2>
+    <div class="contas folga" style="position:absolute;left:600px;top:150px;font-size:44px">
+      <div class="eq" data-passo="1"><span>\(x\)</span><span>\(=\)</span><span>\(0{,}1666\dots\)</span></div>
+      <div class="eq" data-passo="2"><span>\(10x\)</span><span>\(=\)</span><span>\(1{,}666\dots\)</span></div>
+      <div class="eq" data-passo="3"><span>\(100x\)</span><span>\(=\)</span><span>\(16{,}666\dots\)</span></div>
+      <div class="eq" data-passo="4"><span>\(100x - 10x\)</span><span>\(=\)</span><span>\(16{,}666\dots - 1{,}666\dots\)</span></div>
+      <div class="eq" data-passo="5"><span>\(90x\)</span><span>\(=\)</span><span>\(15\)</span></div>
+      <div class="eq final" data-passo="6"><span>\(x\)</span><span>\(=\)</span><span>\(\dfrac{15}{90} = \dfrac{1}{6}\)</span></div>
+    </div>
+    <div class="caixa caixa-atencao" data-passo="7" style="position:absolute;left:0;width:520px;top:160px">
+      <span class="rotulo">Dízima não é irracional</span>
+      <div class="texto" style="font-size:31px">0,333… tem infinitas casas, mas é <b>racional</b>: vale \(\frac{1}{3}\). Toda dízima periódica vira fração.</div>
+    </div>
+  </div>
+  <aside class="notas"><p>Da apostila. 10x e 100x têm a mesma parte infinita (,666…), então a subtração apaga a cauda. 15/90 simplifica por 15. Clique 7: a atenção da apostila.</p></aside>
+</section>
+
+<!-- 6. Raiz de 2 -->
+<section class="slide" data-nome="Raiz de 2 não acaba">
+  <div class="conteudo">
+    <p class="olho">Qual número vezes ele mesmo dá 2?</p>
+    <h2 class="titulo">\(\sqrt{2}\) não acaba nem se repete</h2>
+    <div class="contas" style="position:absolute;left:0;top:170px;font-size:44px">
+      <div class="eq"><span>\(1{,}4^2\)</span><span>\(=\)</span><span>\(1{,}96\)</span></div>
+      <div class="eq" data-passo="1"><span>\(1{,}42^2\)</span><span>\(=\)</span><span>\(2{,}0164\)</span></div>
+      <div class="eq final" data-passo="2"><span>\(\sqrt{2}\)</span><span>\(=\)</span><span>\(1{,}41421356\dots\)</span></div>
+    </div>
+    <div data-anima="nc-reta" data-anima-passo="3" data-w="1080" data-h="520" style="position:absolute;left:680px;top:200px;width:1080px;height:520px"></div>
+    <p class="texto" data-passo="3" style="position:absolute;left:0;width:600px;top:450px;margin:0;font-size:32px">Com lupa: \(\sqrt{2}\) fica sempre <b>entre</b> duas marcas. As casas nunca acabam.</p>
+  </div>
+  <aside class="notas">
+    <p>Da apostila: não é 1,4 (1,4² = 1,96), também não é 1,42 (1,42² = 2,0164, já passou de 2). Clique 2: o valor com 8 casas.</p>
+    <p>Clique 3: a reta com lupa. Entre 1 e 2, entre 1,4 e 1,5, entre 1,41 e 1,42, entre 1,414 e 1,415… cada lupa mostra mais uma casa, e nenhuma repete um período.</p>
+  </aside>
+</section>
+
+<!-- 7. Irracionais e reais -->
+<section class="slide" data-nome="Irracionais e reais">
+  <div class="conteudo">
+    <p class="olho">Os conjuntos numéricos</p>
+    <h2 class="titulo">Irracionais e reais</h2>
+    <div style="position:absolute;left:0;width:800px;top:160px;display:flex;flex-direction:column;gap:20px">
+      <div class="caixa caixa-fundamental"><span class="rotulo">Irracional \(\mathbb{I}\)</span><div class="texto" style="font-size:32px">Infinitas casas <b>sem período</b>; não vira fração de inteiros. \(\sqrt{2}\), \(\sqrt{3}\), \(\sqrt{5}\), \(\pi = 3{,}14159\dots\)</div></div>
+      <div class="caixa" data-passo="4"><span class="rotulo">Real \(\mathbb{R}\)</span><div class="texto" style="font-size:32px">Os <b>racionais</b> e os <b>irracionais</b>, juntos.</div></div>
+    </div>
+    <svg viewBox="0 0 900 520" style="position:absolute;left:860px;top:150px;width:900px;height:520px" aria-hidden="true">
+      <rect class="conj" data-passo="4" x="10" y="10" width="880" height="500" rx="30" stroke="#4B39B3"/>
+      <text data-passo="4" x="40" y="62" class="rot-a" style="fill:#4B39B3">ℝ</text>
+      <ellipse class="conj" data-passo="3" cx="330" cy="270" rx="300" ry="230" stroke="#8C7BEA"/>
+      <ellipse class="conj" data-passo="2" cx="300" cy="300" rx="210" ry="170" stroke="#6551D1" style="fill:#F7F5FE"/>
+      <ellipse class="conj" data-passo="1" cx="270" cy="330" rx="120" ry="100" stroke="#2F6BFF" style="fill:#E8F0FF"/>
+      <text data-passo="3" x="300" y="80" class="rot-a" style="fill:#8C7BEA">ℚ</text>
+      <text data-passo="2" x="120" y="200" class="rot-a" style="fill:#6551D1">ℤ</text>
+      <text data-passo="1" x="250" y="300" class="rot-a">ℕ</text>
+      <rect class="conj" x="660" y="40" width="210" height="440" rx="26" stroke="#C2384F" style="fill:#FCE8EC"/>
+      <text x="745" y="100" class="rot-a" style="fill:#C2384F">𝕀</text>
+      <g class="el-txt" text-anchor="middle" style="fill:#C2384F"><text x="765" y="200">√2</text><text x="765" y="290">π</text><text x="765" y="380">√3</text></g>
+    </svg>
+    <span class="pilula pilula-resposta" data-passo="4" style="position:absolute;left:860px;top:700px">\(\mathbb{N} \subset \mathbb{Z} \subset \mathbb{Q} \subset \mathbb{R}\) · \(\mathbb{I}\) completa os reais</span>
+  </div>
+  <aside class="notas"><p>Figura da apostila. Cliques 1 a 3: ℕ dentro de ℤ, ℤ dentro de ℚ. Os irracionais ficam fora de ℚ. Clique 4: juntos formam ℝ.</p></aside>
+</section>
+
+<!-- 8. Classificar -->
+<section class="slide" data-nome="Exemplo: classificar números">
+  <div class="conteudo">
+    <p class="olho">Exemplo: o menor conjunto que contém cada um</p>
+    <h2 class="titulo">Classificar números</h2>
+    <svg viewBox="0 0 900 520" style="position:absolute;left:0;top:150px;width:780px;height:451px;overflow:visible" aria-hidden="true">
+      <rect class="conj" x="10" y="10" width="880" height="500" rx="30" stroke="#4B39B3"/>
+      <ellipse class="conj" cx="330" cy="270" rx="300" ry="230" stroke="#8C7BEA"/>
+      <ellipse class="conj" cx="300" cy="300" rx="210" ry="170" stroke="#6551D1" style="fill:#F7F5FE"/>
+      <ellipse class="conj" cx="270" cy="330" rx="120" ry="100" stroke="#2F6BFF" style="fill:#E8F0FF"/>
+      <rect class="conj" x="660" y="40" width="210" height="440" rx="26" stroke="#C2384F" style="fill:#FCE8EC"/>
+      <g class="rot-a" style="font-size:36px"><text x="36" y="60" style="fill:#4B39B3">ℝ</text><text x="300" y="80" style="fill:#8C7BEA">ℚ</text><text x="330" y="165" style="fill:#6551D1">ℤ</text><text x="180" y="300">ℕ</text><text x="745" y="100" style="fill:#C2384F">𝕀</text></g>
+      <g class="el-txt" text-anchor="middle" style="font-size:38px">
+        <g data-passo="1"><g class="voa" style="--x:1040px;--y:-20px"><text x="200" y="200">−7</text></g></g>
+        <g data-passo="2"><g class="voa" style="--x:760px;--y:30px"><text x="470" y="130">2/3</text></g></g>
+        <g data-passo="3"><g class="voa" style="--x:680px;--y:-95px"><text x="555" y="365" style="font-size:30px">0,555…</text></g></g>
+        <g data-passo="4"><g class="voa" style="--x:960px;--y:-150px"><text x="290" y="370">√9</text></g></g>
+        <g data-passo="5"><g class="voa" style="--x:470px;--y:-10px"><text x="765" y="270" style="fill:#C2384F">√5</text></g></g>
+      </g>
+    </svg>
+    <div style="position:absolute;left:840px;right:0;top:160px;display:flex;flex-direction:column;gap:12px">
+      <div class="linha-ex" data-passo="1">\(-7\): <b>inteiro</b></div>
+      <div class="linha-ex" data-passo="2">\(\frac{2}{3}\): <b>racional</b></div>
+      <div class="linha-ex" data-passo="3">\(0{,}555\ldots = \frac{5}{9}\): <b>racional</b></div>
+      <div class="linha-ex" data-passo="4">\(\sqrt{9} = 3\): <b>natural</b></div>
+      <div class="linha-ex" data-passo="5">\(\sqrt{5}\): <b>irracional</b> (5 não é quadrado)</div>
+    </div>
+    <div class="caixa caixa-atencao" data-passo="6" style="position:absolute;left:840px;right:0;top:640px;padding:16px 28px">
+      <span class="rotulo">Nem toda raiz é irracional</span>
+      <div class="texto" style="font-size:30px">\(\sqrt{9} = 3\), \(\sqrt{16} = 4\), \(\sqrt{0{,}25} = 0{,}5\): racionais. Todos os cinco do exemplo são <b>reais</b>.</div>
+    </div>
+  </div>
+  <aside class="notas">
+    <p>Exemplo da apostila. Um número por clique: ele voa até o menor conjunto que o contém. √5 é irracional porque 5 não é quadrado de nenhum inteiro nem de nenhuma fração. Clique 6: a atenção.</p>
+  </aside>
+</section>
+
+<!-- 9. Reta numérica -->
+<section class="slide" data-nome="A reta numérica">
+  <div class="conteudo">
+    <p class="olho">Cada real tem um lugar</p>
+    <h2 class="titulo">A reta numérica</h2>
+    <svg viewBox="0 0 1760 300" style="position:absolute;left:0;top:170px;width:1760px;height:300px" aria-hidden="true">
+      <line x1="60" y1="170" x2="1720" y2="170" stroke="#C9C0F0" stroke-width="6" stroke-linecap="round"/>
+      <path d="M1700 156 L1726 170 L1700 184" fill="none" stroke="#C9C0F0" stroke-width="6" stroke-linecap="round"/>
+      <g stroke="#8C7BEA" stroke-width="4"><line x1="120" y1="155" x2="120" y2="185"/><line x1="340" y1="155" x2="340" y2="185"/><line x1="560" y1="155" x2="560" y2="185"/><line x1="780" y1="155" x2="780" y2="185"/><line x1="1000" y1="155" x2="1000" y2="185"/><line x1="1220" y1="155" x2="1220" y2="185"/><line x1="1440" y1="155" x2="1440" y2="185"/><line x1="1660" y1="155" x2="1660" y2="185"/></g>
+      <g class="rot" text-anchor="middle" style="font-size:32px"><text x="120" y="230">−3</text><text x="340" y="230">−2</text><text x="560" y="230">−1</text><text x="780" y="230" style="fill:#3F2FA0;font-weight:800">0</text><text x="1000" y="230">1</text><text x="1220" y="230">2</text><text x="1440" y="230">3</text><text x="1660" y="230">4</text></g>
+      <g font-family="Figtree,sans-serif" font-weight="800" font-size="34" text-anchor="middle">
+        <g data-passo="1"><circle class="pop" cx="230" cy="170" r="16" fill="#2F6BFF" stroke="#fff" stroke-width="4"/><text x="230" y="120" fill="#1E4FD8">−2,5</text></g>
+        <g data-passo="2"><circle class="pop" cx="670" cy="170" r="16" fill="#2F6BFF" stroke="#fff" stroke-width="4"/><text x="670" y="120" fill="#1E4FD8">−1/2</text></g>
+        <g data-passo="3"><circle class="pop" cx="1091" cy="170" r="16" fill="#C2384F" stroke="#fff" stroke-width="4"/><text x="1091" y="120" fill="#C2384F">√2 ≈ 1,4</text></g>
+        <g data-passo="4"><circle class="pop" cx="1471" cy="170" r="16" fill="#C2384F" stroke="#fff" stroke-width="4"/><text x="1471" y="120" fill="#C2384F">π ≈ 3,14</text></g>
+      </g>
+      <g data-passo="5"><path d="M260 280 L1620 280" stroke="#1F9D62" stroke-width="5"/><path d="M1600 266 L1624 280 L1600 294" fill="none" stroke="#1F9D62" stroke-width="5" stroke-linecap="round"/><text x="940" y="270" text-anchor="middle" font-family="Figtree,sans-serif" font-weight="800" font-size="28" fill="#1F9D62">à direita, os maiores</text></g>
+    </svg>
+    <div class="caixa" data-passo="3" style="position:absolute;left:580px;right:0;top:520px;padding:20px 30px">
+      <div class="texto" style="font-size:31px">Para localizar um irracional, use uma aproximação: \(\sqrt{2} \approx 1{,}4\) fica entre 1 e 2, um pouco antes do meio.</div>
+    </div>
+    <div class="caixa caixa-fundamental" data-passo="5" style="position:absolute;left:580px;right:0;top:690px;padding:16px 30px">
+      <div class="texto" style="font-size:31px">Cada real é um ponto da reta, e cada ponto da reta é um real.</div>
+    </div>
+  </div>
+  <aside class="notas"><p>Figura da apostila: −2,5 e −1/2 são racionais (azul); √2 e π são irracionais (vermelho). Um ponto por clique.</p></aside>
+</section>
+
+<!-- 10. Módulo -->
+<section class="slide" data-nome="Módulo de um número">
+  <div class="conteudo">
+    <p class="olho">Distância até o zero</p>
+    <h2 class="titulo">Módulo de um número</h2>
+    <svg viewBox="0 0 1760 250" style="position:absolute;left:0;top:140px;width:1760px;height:250px" aria-hidden="true">
+      <line x1="60" y1="170" x2="1700" y2="170" stroke="#C9C0F0" stroke-width="6" stroke-linecap="round"/>
+      <g stroke="#8C7BEA" stroke-width="4"><line x1="120" y1="158" x2="120" y2="182"/><line x1="310" y1="158" x2="310" y2="182"/><line x1="500" y1="158" x2="500" y2="182"/><line x1="690" y1="158" x2="690" y2="182"/><line x1="880" y1="150" x2="880" y2="190"/><line x1="1070" y1="158" x2="1070" y2="182"/><line x1="1260" y1="158" x2="1260" y2="182"/><line x1="1450" y1="158" x2="1450" y2="182"/><line x1="1640" y1="158" x2="1640" y2="182"/></g>
+      <g class="rot" text-anchor="middle" style="font-size:30px"><text x="120" y="226">−4</text><text x="310" y="226">−3</text><text x="500" y="226">−2</text><text x="690" y="226">−1</text><text x="880" y="226" style="fill:#3F2FA0;font-weight:800">0</text><text x="1070" y="226">1</text><text x="1260" y="226">2</text><text x="1450" y="226">3</text><text x="1640" y="226">4</text></g>
+      <g data-passo="1">
+        <g class="anda-esq"><path d="M880 150 C880 120 860 100 860 80 A20 20 0 1 1 900 80 C900 100 880 120 880 150 Z" fill="#6551D1"/><circle cx="880" cy="80" r="8" fill="#fff"/></g>
+        <g class="anda-dir"><path d="M880 150 C880 120 860 100 860 80 A20 20 0 1 1 900 80 C900 100 880 120 880 150 Z" fill="#2F6BFF"/><circle cx="880" cy="80" r="8" fill="#fff"/></g>
+      </g>
+      <g data-passo="2" font-family="Figtree,sans-serif" font-weight="800" font-size="30" text-anchor="middle">
+        <path d="M320 60 Q595 40 870 60" fill="none" stroke="#6551D1" stroke-width="4"/><text x="595" y="34" fill="#6551D1">3</text>
+        <path d="M890 60 Q1165 40 1440 60" fill="none" stroke="#2F6BFF" stroke-width="4"/><text x="1165" y="34" fill="#1E4FD8">3</text>
+      </g>
+    </svg>
+    <div class="caixa caixa-fundamental" data-passo="3" style="position:absolute;left:0;width:820px;top:420px;padding:20px 30px">
+      <span class="rotulo">Módulo ou valor absoluto</span>
+      <div class="texto" style="font-size:31px">\(|x|\) é a distância de \(x\) até o zero. Distância nunca é negativa: \(|x| \geq 0\).</div>
+    </div>
+    <div style="position:absolute;left:900px;width:420px;top:420px;display:flex;flex-direction:column;gap:6px;font-size:46px">
+      <div data-passo="4">\(|7| = 7\)</div><div data-passo="4">\(|-7| = 7\)</div><div data-passo="4">\(|0| = 0\)</div>
+    </div>
+    <div class="caixa" data-passo="5" style="position:absolute;left:1340px;right:0;top:420px;padding:18px 24px;font-size:40px">
+      \(|x| = \begin{cases} x, & x \geq 0 \\ -x, & x &lt; 0 \end{cases}\)
+      <div class="texto" style="font-size:24px;margin-top:6px">Se \(x = -7\): \(-x = 7\).</div>
+    </div>
+  </div>
+  <aside class="notas">
+    <p>Clique 1: no ponto de ônibus (o zero), sua amiga anda 3 quarteirões para a esquerda e você, 3 para a direita. Clique 2: sentidos opostos, mesma distância. Clique 3: a definição. Clique 4: exemplos da apostila. Clique 5: a fórmula em duas linhas; o −x da segunda linha é positivo.</p>
+  </aside>
+</section>
+
+<!-- 11. Distância entre dois números -->
+<section class="slide" data-nome="Distância entre dois números">
+  <div class="conteudo">
+    <p class="olho">O módulo também mede distância</p>
+    <h2 class="titulo">Distância entre −4 e 3</h2>
+    <svg viewBox="0 0 1760 260" style="position:absolute;left:0;top:150px;width:1760px;height:260px" aria-hidden="true">
+      <line x1="60" y1="190" x2="1700" y2="190" stroke="#C9C0F0" stroke-width="6" stroke-linecap="round"/>
+      <g stroke="#8C7BEA" stroke-width="4"><line x1="120" y1="178" x2="120" y2="202"/><line x1="310" y1="178" x2="310" y2="202"/><line x1="500" y1="178" x2="500" y2="202"/><line x1="690" y1="178" x2="690" y2="202"/><line x1="880" y1="170" x2="880" y2="210"/><line x1="1070" y1="178" x2="1070" y2="202"/><line x1="1260" y1="178" x2="1260" y2="202"/><line x1="1450" y1="178" x2="1450" y2="202"/><line x1="1640" y1="178" x2="1640" y2="202"/></g>
+      <g class="rot" text-anchor="middle" style="font-size:30px"><text x="120" y="246">−4</text><text x="310" y="246">−3</text><text x="500" y="246">−2</text><text x="690" y="246">−1</text><text x="880" y="246" style="fill:#3F2FA0;font-weight:800">0</text><text x="1070" y="246">1</text><text x="1260" y="246">2</text><text x="1450" y="246">3</text><text x="1640" y="246">4</text></g>
+      <circle cx="120" cy="190" r="16" fill="#2F6BFF" stroke="#fff" stroke-width="4"/><circle cx="1450" cy="190" r="16" fill="#2F6BFF" stroke="#fff" stroke-width="4"/>
+      <g font-family="Figtree,sans-serif" font-weight="800" font-size="32" text-anchor="middle">
+        <g data-passo="5"><path d="M130 150 Q500 110 870 150" fill="none" stroke="#6551D1" stroke-width="4"/><text x="500" y="116" fill="#6551D1">4</text></g>
+        <g data-passo="5"><path d="M890 150 Q1170 110 1440 150" fill="none" stroke="#6551D1" stroke-width="4"/><text x="1165" y="116" fill="#6551D1">3</text></g>
+        <g data-passo="4"><path d="M120 75 Q785 15 1450 75" fill="none" stroke="#1F9D62" stroke-width="5"/><text x="785" y="34" fill="#1F9D62">7</text></g>
+      </g>
+    </svg>
+    <div class="caixa caixa-fundamental" style="position:absolute;left:0;width:500px;top:440px;padding:20px 30px">
+      <span class="rotulo">Distância entre a e b</span>
+      <div style="font-size:52px">\(d = |a - b|\)</div>
+    </div>
+    <div class="contas" style="position:absolute;left:640px;top:440px;font-size:48px">
+      <div class="eq" data-passo="1"><span>\(d\)</span><span>\(=\)</span><span>\(|-4 - 3|\)</span></div>
+      <div class="eq" data-passo="2"><span>\(d\)</span><span>\(=\)</span><span>\(|-7|\)</span></div>
+      <div class="eq final" data-passo="3"><span>\(d\)</span><span>\(=\)</span><span>\(7\)</span></div>
+    </div>
+    <p class="texto" data-passo="5" style="position:absolute;left:1180px;right:0;top:450px;margin:0;font-size:32px">Confira contando: do −4 ao 0 são <b>4</b>; do 0 ao 3, mais <b>3</b>.</p>
+  </div>
+  <aside class="notas"><p>Da apostila. Cliques 1 a 3: a conta. Clique 4: a distância na reta. Clique 5: a conferência contando, 4 + 3 = 7.</p></aside>
+</section>
+
+<!-- 12. Expressão com módulo -->
+<section class="slide" data-nome="Expressões com módulo">
+  <div class="conteudo">
+    <p class="olho">As barras funcionam como parênteses</p>
+    <h2 class="titulo">Primeiro a conta de dentro</h2>
+    <div class="contas folga" style="position:absolute;left:600px;top:160px;font-size:50px">
+      <div class="eq" data-passo="1"><span>\(E\)</span><span>\(=\)</span><span>\(|-8| + |3 - 5| - 3 \cdot |-2|\)</span></div>
+      <div class="eq" data-passo="2"><span>\(E\)</span><span>\(=\)</span><span>\(8 + |-2| - 3 \cdot 2\)</span></div>
+      <div class="eq" data-passo="3"><span>\(E\)</span><span>\(=\)</span><span>\(8 + 2 - 6\)</span></div>
+      <div class="eq final" data-passo="4"><span>\(E\)</span><span>\(=\)</span><span>\(4\)</span></div>
+    </div>
+    <div class="caixa caixa-atencao" data-passo="5" style="position:absolute;left:600px;right:0;top:580px;padding:18px 30px">
+      <div class="texto" style="font-size:31px">\(|3 - 5|\) é \(|-2| = 2\), <b>não</b> \(3 + 5\): o módulo age só no resultado. E o sinal de fora fica: \(-|-4| = -4\).</div>
+    </div>
+  </div>
+  <aside class="notas"><p>Expressão da apostila, uma linha por clique. Clique 5: a atenção "Primeiro a conta de dentro".</p></aside>
+</section>
+
+<!-- 13. Exemplo: módulo com raiz -->
+<section class="slide" data-nome="Exemplo: módulo com raiz">
+  <div class="conteudo">
+    <p class="olho">Exemplo</p>
+    <h2 class="titulo">Escreva \(|1 - \sqrt{2}|\) sem as barras</h2>
+    <svg viewBox="0 0 1160 200" style="position:absolute;left:600px;top:160px;width:1160px;height:200px" aria-hidden="true">
+      <line x1="40" y1="120" x2="1120" y2="120" stroke="#C9C0F0" stroke-width="6" stroke-linecap="round"/>
+      <g stroke="#8C7BEA" stroke-width="4"><line x1="180" y1="106" x2="180" y2="134"/><line x1="580" y1="100" x2="580" y2="140"/><line x1="980" y1="106" x2="980" y2="134"/></g>
+      <g class="rot" text-anchor="middle" style="font-size:30px"><text x="180" y="176">−1</text><text x="580" y="176" style="fill:#3F2FA0;font-weight:800">0</text><text x="980" y="176">1</text></g>
+      <g data-passo="1"><circle class="pop" cx="416" cy="120" r="15" fill="#C2384F" stroke="#fff" stroke-width="4"/><text x="416" y="70" text-anchor="middle" font-family="Figtree,sans-serif" font-weight="800" font-size="30" fill="#C2384F">1 − √2 ≈ −0,41</text></g>
+      <g data-passo="3"><circle class="pop" cx="744" cy="120" r="15" fill="#1F9D62" stroke="#fff" stroke-width="4"/><text x="744" y="70" text-anchor="middle" font-family="Figtree,sans-serif" font-weight="800" font-size="30" fill="#1F9D62">√2 − 1 ≈ 0,41</text></g>
+    </svg>
+    <p class="texto" data-passo="1" style="position:absolute;left:600px;right:0;top:390px;margin:0">\(\sqrt{2} \approx 1{,}41\), então \(1 - \sqrt{2}\) é <b>negativo</b>: o módulo é o oposto.</p>
+    <div class="contas" style="position:absolute;left:600px;top:500px;font-size:54px">
+      <div class="eq" data-passo="2"><span>\(|1 - \sqrt{2}|\)</span><span>\(=\)</span><span>\(-(1 - \sqrt{2})\)</span></div>
+      <div class="eq final" data-passo="3"><span>\(|1 - \sqrt{2}|\)</span><span>\(=\)</span><span>\(\sqrt{2} - 1\)</span></div>
+    </div>
+  </div>
+  <aside class="notas"><p>Exemplo da apostila. Clique 1: 1 − √2 cai à esquerda do zero. Cliques 2 e 3: o módulo de um negativo é o oposto, que fica à mesma distância do zero, do outro lado.</p></aside>
+</section>
+
+<!-- 14. Questão 1 -->
+<section class="slide questao" data-nome="Questão 1">
+  <div class="conteudo">
+    <div class="area-resolucao"></div>
+    <span class="pilula pilula-pausa" data-em="1:some">Pause o vídeo e tente</span>
+    <div class="painel-questao">
+      <p class="olho">Questão 1 · Modelo IF</p>
+      <p class="enunciado" style="font-size:30px">Na escola, a professora de Matemática escreveu cinco números no quadro e pediu à turma que apontasse o único número <b>irracional</b>. Qual é ele?</p>
+      <ol class="alternativas alt-mat">
+        <li data-em="2:apaga"><b>A</b><span>\(0{,}121212\ldots\)</span></li>
+        <li data-em="2:apaga"><b>B</b><span>\(\sqrt{81}\)</span></li>
+        <li data-em="2:apaga"><b>C</b><span>\(-\dfrac{5}{4}\)</span></li>
+        <li data-em="2:apaga"><b>D</b><span>\(3{,}14\)</span></li>
+        <li data-em="2:certo"><b>E</b><span>\(\sqrt{15}\)</span></li>
+      </ol>
+    </div>
+  </div>
+  <aside class="resolucao">
+    <p class="dados"><b>Dados:</b> procurar o número que não vira fração.</p>
+    <ol class="passos">
+      <li>\(0{,}1212\ldots = \frac{12}{99}\): dízima, racional.</li>
+      <li>\(\sqrt{81} = 9\): natural.</li>
+      <li>\(-\frac{5}{4}\) já é fração; \(3{,}14 = \frac{314}{100}\).</li>
+      <li>\(3^2 = 9 &lt; 15 &lt; 16 = 4^2\): \(\sqrt{15}\) não é exata.</li>
+    </ol>
+    <p class="resposta"><b>Resposta:</b> \(\sqrt{15}\) é irracional. <b>Gabarito E.</b></p>
+    <p class="atencao"><b>Destaque no quadro:</b> Dízima periódica é racional; 3,14 é só uma aproximação de \(\pi\).</p>
+    <ul class="erros">
+      <li><b>A</b> Dízima periódica: racional.</li>
+      <li><b>B</b> \(\sqrt{81} = 9\).</li>
+      <li><b>C</b> Negativo e fração: racional.</li>
+      <li><b>D</b> 3,14 tem duas casas: racional.</li>
+    </ul>
+  </aside>
+  <aside class="notas">
+    <p>Clique 1 tira o aviso de pausa: resolva na área (D liga a caneta; E esconde o enunciado). Clique 2: gabarito E.</p>
+    <p>Questão Modelo IF da apostila: lote if-matematica-conjuntos-numericos, m001, MAT-1196. No banco o enunciado começa com "Numa aula de Matemática"; aqui virou "Na escola", porque os slides não usam a palavra.</p>
+  </aside>
+</section>
+
+<!-- 15. Questão 2 -->
+<section class="slide questao" data-nome="Questão 2">
+  <div class="conteudo">
+    <div class="area-resolucao"></div>
+    <span class="pilula pilula-pausa" data-em="1:some">Pause o vídeo e tente</span>
+    <div class="painel-questao">
+      <p class="olho">Questão 2 · IF Sudeste MG 2014</p>
+      <p class="enunciado" style="font-size:32px">O valor da expressão \(\dfrac{1}{5} + \dfrac{1}{50} + \dfrac{1}{500} + \ldots\) é:</p>
+      <ol class="alternativas curtas alt-mat">
+        <li data-em="2:apaga"><b>A</b><span>\(\dfrac{1}{9}\)</span></li>
+        <li data-em="2:certo"><b>B</b><span>\(\dfrac{2}{9}\)</span></li>
+        <li data-em="2:apaga"><b>C</b><span>\(\dfrac{1}{3}\)</span></li>
+        <li data-em="2:apaga"><b>D</b><span>\(\dfrac{1}{2}\)</span></li>
+        <li data-em="2:apaga"><b>E</b><span>\(1\)</span></li>
+      </ol>
+    </div>
+  </div>
+  <aside class="resolucao">
+    <p class="dados"><b>Dados:</b> parcelas 10 vezes menores, sem fim.</p>
+    <ol class="passos">
+      <li>\(\frac{1}{5} = 0{,}2\) · \(\frac{1}{50} = 0{,}02\) · \(\frac{1}{500} = 0{,}002\)</li>
+      <li>\(S = 0{,}222\ldots\)</li>
+      <li>\(10S = 2{,}222\ldots\)</li>
+      <li>\(10S - S = 2 \Rightarrow 9S = 2\)</li>
+      <li>\(S = \frac{2}{9}\)</li>
+    </ol>
+    <p class="resposta"><b>Resposta:</b> \(\dfrac{2}{9}\). <b>Gabarito B.</b></p>
+    <p class="atencao"><b>Destaque no quadro:</b> Passe cada parcela para decimal: a soma vira dízima.</p>
+    <ul class="erros">
+      <li><b>A</b> \(\frac{1}{9} = 0{,}111\ldots\): confunde \(\frac{1}{5}\) com \(\frac{1}{10}\).</li>
+      <li><b>C</b> \(\frac{1}{3} = 0{,}333\ldots\)</li>
+      <li><b>D</b> A soma nunca passa de 0,23.</li>
+      <li><b>E</b> Soma infinita não precisa dar 1.</li>
+    </ul>
+  </aside>
+  <aside class="notas">
+    <p>Clique 1 tira o aviso de pausa: resolva na área. Clique 2: gabarito B.</p>
+    <p>Questão oficial do IF Sudeste MG 2014-1 (prova extra), q15, MAT-0423 (da apostila; sobra do capítulo). Quem já viu PG infinita chega ao mesmo 2/9; aqui basta a geratriz.</p>
+  </aside>
+</section>
+
+<!-- 16. Questão 3 -->
+<section class="slide questao" data-nome="Questão 3">
+  <div class="conteudo">
+    <div class="area-resolucao"></div>
+    <span class="pilula pilula-pausa" data-em="1:some">Pause o vídeo e tente</span>
+    <div class="painel-questao">
+      <p class="olho">Questão 3 · IF Sudeste MG 2014</p>
+      <p class="enunciado" style="font-size:32px">A expressão \(\sqrt{\dfrac{1}{9} + 2{,}666\ldots}\) é igual a:</p>
+      <ol class="alternativas curtas alt-mat">
+        <li data-em="2:certo"><b>A</b><span>\(\dfrac{5}{3}\)</span></li>
+        <li data-em="2:apaga"><b>B</b><span>\(\dfrac{4}{3}\)</span></li>
+        <li data-em="2:apaga"><b>C</b><span>\(\dfrac{2}{3}\)</span></li>
+        <li data-em="2:apaga"><b>D</b><span>\(1\)</span></li>
+        <li data-em="2:apaga"><b>E</b><span>\(2\)</span></li>
+      </ol>
+    </div>
+  </div>
+  <aside class="resolucao">
+    <p class="dados"><b>Dados:</b> \(g = 2{,}666\ldots\)</p>
+    <ol class="passos">
+      <li>\(10g = 26{,}666\ldots\)</li>
+      <li>\(10g - g = 24 \Rightarrow g = \frac{24}{9}\)</li>
+      <li>\(\frac{1}{9} + \frac{24}{9} = \frac{25}{9}\)</li>
+      <li>\(\sqrt{\frac{25}{9}} = \frac{5}{3}\)</li>
+    </ol>
+    <p class="resposta"><b>Resposta:</b> \(\dfrac{5}{3}\). <b>Gabarito A.</b></p>
+    <p class="atencao"><b>Destaque no quadro:</b> Dízima vira fração antes de somar.</p>
+    <ul class="erros">
+      <li><b>B</b> \(\sqrt{\frac{16}{9}}\): usa \(\frac{15}{9}\) como geratriz.</li>
+      <li><b>C</b> \(\sqrt{\frac{4}{9}}\): esquece a parte inteira 2.</li>
+      <li><b>D</b> Seria \(\sqrt{\frac{9}{9}}\).</li>
+      <li><b>E</b> Seria \(\sqrt{4}\); a soma é \(\frac{25}{9} \approx 2{,}78\).</li>
+    </ul>
+  </aside>
+  <aside class="notas">
+    <p>Clique 1 tira o aviso de pausa: resolva na área. Clique 2: gabarito A.</p>
+    <p>Questão oficial do IF Sudeste MG 2014-1, q18, MAT-0346 (da apostila; sobra do capítulo). A raiz de uma fração é a raiz de cima sobre a de baixo (√25 = 5, √9 = 3); radicais vêm em Potências e radicais.</p>
+  </aside>
+</section>
+
+<!-- 17. Resumo -->
+<section class="slide" data-nome="Resumo">
+  <div class="conteudo">
+    <p class="olho">Resumo</p>
+    <h2 class="titulo">O essencial</h2>
+    <div class="resumo" style="position:absolute;left:0;right:0;top:150px">
+      <div>\(\mathbb{N} \subset \mathbb{Z} \subset \mathbb{Q} \subset \mathbb{R}\); os <b>irracionais</b> completam os reais.</div>
+      <div><b>Dízima periódica</b> é racional: tem fração geratriz (multiplique por 10 ou 100 e subtraia).</div>
+      <div><b>Irracional:</b> infinitas casas sem período: \(\sqrt{2}\), \(\pi\). Nem toda raiz é irracional: \(\sqrt{9} = 3\).</div>
+      <div><b>Reta numérica:</b> cada real é um ponto; à direita, os maiores.</div>
+      <div><b>Módulo</b> \(|x|\): distância de \(x\) até o zero, nunca negativa.</div>
+      <div><b>Distância</b> entre \(a\) e \(b\): \(|a - b|\). Nas barras, primeiro a conta de dentro.</div>
+    </div>
+  </div>
+  <aside class="notas"><p>Resumo da apostila. Peça para tirarem um print desta tela.</p></aside>
+</section>
+
+<!-- 18. A seguir -->
+<section class="slide capa" data-nome="A seguir">
+  <div class="estrelas"></div>
+  <div class="texto-capa" style="top:170px">
+    <span class="selo">Matemática · IF</span>
+    <p class="aula" style="font-size:26px">A seguir · Múltiplos e divisores · Parte 1 de 2</p>
+    <h1 style="font-size:116px">Divisibilidade e números primos</h1>
+    <p class="sub">Dividir sem sobrar</p>
+  </div>
+  <svg class="emblema" viewBox="0 0 640 640" aria-hidden="true">
+    <g fill="#fff" fill-opacity=".9">
+      <rect x="110" y="150" width="70" height="70" rx="14"/><rect x="200" y="150" width="70" height="70" rx="14"/><rect x="290" y="150" width="70" height="70" rx="14"/><rect x="380" y="150" width="70" height="70" rx="14"/>
+      <rect x="110" y="240" width="70" height="70" rx="14"/><rect x="200" y="240" width="70" height="70" rx="14"/><rect x="290" y="240" width="70" height="70" rx="14"/><rect x="380" y="240" width="70" height="70" rx="14"/>
+      <rect x="110" y="330" width="70" height="70" rx="14"/><rect x="200" y="330" width="70" height="70" rx="14"/><rect x="290" y="330" width="70" height="70" rx="14"/><rect x="380" y="330" width="70" height="70" rx="14"/>
+    </g>
+    <circle cx="490" cy="450" r="90" fill="#FFD10C"/>
+    <text x="490" y="478" text-anchor="middle" font-family="'Bricolage Grotesque',Figtree,sans-serif" font-weight="800" font-size="76" fill="#3F2FA0">7</text>
+  </svg>
+  <img class="logo-capa" src="{{LOGO_BRANCO}}" alt="Quarks">
+  <aside class="notas"><p>Próximo subcapítulo: múltiplos, divisores, critérios de divisibilidade, números primos e fatoração.</p></aside>
+</section>
