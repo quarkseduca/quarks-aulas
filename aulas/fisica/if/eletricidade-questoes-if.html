@@ -1,0 +1,244 @@
+<!--aula
+{"disciplina": "fisica", "curso": "IF", "assunto": "Eletricidade", "parte": "Questões do IF Sudeste", "titulo": "Questões do IF Sudeste"}
+-->
+<!-- Fonte: questões do capítulo Eletricidade reservadas em planejamento/questoes-if.md e no cronograma (IF Sudeste MG 2014-1 q37 FIS-0530, 2016-2 q29 FIS-0590, 2019-2 q30 FIS-0603, 2018-2 q28 FIS-0597) e a Modelo IF if-fisica-energia-e-sociedade m001 (FIS-8796) para Usinas. Nenhuma repetida das partes. -->
+<style>
+  .caixa, .el-card, .el-linha { box-sizing: border-box; }
+  .el-cards { display: grid; gap: 22px; }
+  .el-card { background: var(--branco); border: 2px solid var(--lilas-2); border-radius: 26px; padding: 16px 22px; font-size: 27px; line-height: 1.3; }
+  .el-card h3 { margin: 0 0 4px; font: 800 32px var(--fonte-titulo); color: var(--roxo-titulo); letter-spacing: -.01em; display: flex; align-items: center; gap: 14px; }
+  .el-card h3 svg { width: 70px; height: 70px; flex: none; }
+  .el-card p { margin: 0; color: var(--carvao); }
+  .el-card.d { background: var(--d-clara); border-color: color-mix(in srgb, var(--d) 35%, transparent); }
+  .el-linha { display: grid; grid-template-columns: 90px 1fr auto; align-items: center; gap: 22px; background: var(--branco); border: 2px solid var(--lilas-2); border-radius: 22px; padding: 10px 24px; font-size: 30px; }
+  .el-linha svg { width: 80px; height: 70px; }
+  .el-linha b { color: var(--roxo-titulo); }
+  .tag { justify-self: end; padding: 6px 20px; border-radius: 999px; font-weight: 800; font-size: 25px; white-space: nowrap; }
+  .tag-d { background: var(--d-clara); color: var(--d-forte); }
+  .tag-a { background: #FFF4C2; color: #8A6A00; }
+  .tag-r { background: var(--erro-claro); color: var(--erro); }
+  .el-lista { margin: 0; padding: 0; list-style: none; display: flex; flex-direction: column; gap: 14px; }
+  .el-lista li { display: flex; align-items: baseline; gap: 16px; font-size: 31px; line-height: 1.3; }
+  .el-lista li b.n { flex: none; width: 46px; height: 46px; border-radius: 50%; display: grid; place-items: center; background: var(--d); color: #fff; font: 800 26px var(--fonte-titulo); transform: translateY(6px); }
+  .el-lista li > span b { color: var(--roxo-titulo); }
+  .el-cadeia { display: flex; align-items: center; gap: 14px; flex-wrap: wrap; }
+  .el-cadeia .f { padding: 10px 24px; border-radius: 999px; background: var(--d-clara); color: var(--d-forte); font-weight: 800; font-size: 30px; }
+  .el-cadeia .f.am { background: #FFF4C2; color: #8A6A00; }
+  .el-cadeia .s { font: 800 36px var(--fonte-titulo); color: var(--roxo-claro); }
+  .tabela.el-t { font-size: 30px; }
+  .tabela.el-t th { padding: 12px 28px; }
+  .tabela.el-t td { padding: 10px 28px; text-align: left; }
+  /* colunas de enunciado mais largas para questões longas (data-largo); E continua ampliando a área */
+  .questao[data-largo="1"] .area-resolucao { width: 1070px; } .questao[data-largo="1"] .painel-questao { left: 1110px; } .questao[data-largo="1"] .pilula-pausa { left: 535px; }
+  .questao[data-largo="2"] .area-resolucao { width: 960px; } .questao[data-largo="2"] .painel-questao { left: 1000px; } .questao[data-largo="2"] .pilula-pausa { left: 480px; }
+  .questao[data-largo].amplia .area-resolucao { width: 1760px; } .questao[data-largo].amplia .pilula-pausa { left: 880px; }
+  .questao[data-gap="8"] .painel-questao { gap: 8px; } .questao[data-gap="10"] .painel-questao { gap: 10px; } .questao[data-gap="12"] .painel-questao { gap: 12px; } .questao[data-gap="14"] .painel-questao { gap: 14px; }
+  .painel-questao .figura { display: block; margin: 0 auto; flex: none; }
+  .painel-questao .el-mini { font-size: 22px; border-collapse: separate; border-spacing: 0; background: #fff; border: 2px solid var(--lilas-2); border-radius: 16px; overflow: hidden; }
+  .painel-questao .el-mini th { background: var(--d-clara); color: var(--d-forte); padding: 5px 12px; font-weight: 800; }
+  .painel-questao .el-mini td { padding: 4px 12px; border-top: 2px solid var(--lilas); text-align: center; }
+  .painel-questao .el-mini td:first-child { text-align: left; }
+  .el-fios path, .el-fio { fill: none; stroke: #292B2C; stroke-width: 6; stroke-linejoin: round; stroke-linecap: round; }
+  /* ---------- Animações (só na tela aberta) ---------- */
+  /* cargas andando pelo fio: pontinhos amarelos que correm quando o circuito está fechado */
+  .el-fluxo { fill: none; stroke: #FFD10C; stroke-width: 10; stroke-linecap: round; stroke-dasharray: 0 32; opacity: 0; transition: opacity .5s; }
+  .el-on .el-fluxo, .el-fluxo.sempre { opacity: 1; }
+  .el-off .el-fluxo, .el-on .el-off .el-fluxo { opacity: 0 !important; }
+  .slide.ativo .el-on .el-fluxo, .slide.ativo .el-fluxo.sempre { animation: el-flui 1.6s linear infinite; }
+  .slide.ativo .el-on .el-fluxo.lento { animation-duration: 3.2s; }
+  @keyframes el-flui { to { stroke-dashoffset: -32; } }
+  .el-agua { fill: none; stroke: #8FC8F0; stroke-width: 12; stroke-linecap: round; stroke-dasharray: 2 26; }
+  .slide.ativo .el-agua { animation: el-flui 1.8s linear infinite; }
+  /* lâmpada: acende quando o circuito fecha (sem piscar) */
+  .el-lamp .luz { opacity: 0; transition: opacity .7s ease; }
+  .el-on .el-lamp .luz, .el-lamp.acesa .luz { opacity: 1; }
+  .el-on .el-lamp.fraca .luz { opacity: .42; }
+  .el-off .el-lamp .luz, .el-on .el-off .el-lamp .luz { opacity: 0 !important; }
+  .el-lamp { transition: transform .8s ease, opacity .8s ease; }
+  .el-tira .el-lamp.sai { transform: translateY(-46px); opacity: .3; }
+  /* chave: a alavanca baixa e fecha o circuito */
+  .el-alavanca { transform: rotate(-32deg); transition: transform .7s ease; }
+  .el-alavanca.fechada, .el-fecha .el-alavanca { transform: none; }
+  .el-abre .el-alavanca { transform: rotate(-32deg) !important; }
+  /* rodas que giram (turbina, pás) e raios do Sol */
+  .slide.ativo .el-roda { animation: el-gira 9s linear infinite; }
+  .slide.ativo .el-roda.rapida { animation-duration: 5s; }
+  .slide.ativo .el-raios { animation: el-gira 30s linear infinite; }
+  @keyframes el-gira { to { transform: rotate(360deg); } }
+  /* calor que sobe */
+  .el-calor path { opacity: 0; }
+  .slide.ativo .el-calor path { animation: el-sobe 5s ease-in-out infinite; }
+  .el-calor path:nth-child(2) { animation-delay: -1.7s !important; } .el-calor path:nth-child(3) { animation-delay: -3.4s !important; }
+  @keyframes el-sobe { 0% { transform: translateY(10px); opacity: 0; } 30% { opacity: .9; } 100% { transform: translateY(-34px); opacity: 0; } }
+  /* gotas que caem (chuveiro) */
+  .el-gotas circle { opacity: 0; }
+  .slide.ativo .el-gotas circle { animation: el-cai 2.6s linear infinite; }
+  .el-gotas circle:nth-child(2) { animation-delay: -.9s !important; } .el-gotas circle:nth-child(3) { animation-delay: -1.7s !important; } .el-gotas circle:nth-child(4) { animation-delay: -.4s !important; } .el-gotas circle:nth-child(5) { animation-delay: -2.1s !important; }
+  @keyframes el-cai { 0% { transform: translateY(0); opacity: 0; } 15% { opacity: 1; } 85% { opacity: 1; } 100% { transform: translateY(70px); opacity: 0; } }
+  /* barras que crescem quando aparecem */
+  .el-barra { transform: scaleX(0); transform-box: fill-box; transform-origin: left center; transition: transform 2.2s ease-out; }
+  .mostra .el-barra, .mostra.el-barra, .el-barra.ja { transform: none; }
+  .el-barra-v { transform: scaleY(0); transform-box: fill-box; transform-origin: center bottom; transition: transform 2.2s ease-out; }
+  .mostra .el-barra-v, .mostra.el-barra-v { transform: none; }
+  /* traço que se desenha */
+  .el-traca { stroke-dasharray: 1; stroke-dashoffset: 1; transition: stroke-dashoffset 1.6s ease-in-out; }
+  .mostra .el-traca, .mostra.el-traca { stroke-dashoffset: 0; }
+  @media (prefers-reduced-motion: reduce) { .el-barra, .el-barra-v { transform: none; } .el-traca { stroke-dashoffset: 0; } .el-alavanca { transition: none; } }
+</style>
+<svg width="0" height="0" style="position:absolute" aria-hidden="true">
+  <defs>
+    <radialGradient id="elBrilho" cx=".5" cy=".5" r=".5"><stop offset="0" stop-color="#FFE680" stop-opacity=".95"/><stop offset=".45" stop-color="#FFD10C" stop-opacity=".45"/><stop offset="1" stop-color="#FFD10C" stop-opacity="0"/></radialGradient>
+    <linearGradient id="elAgua" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#CFE6FA"/><stop offset="1" stop-color="#8CC1EE"/></linearGradient>
+    <linearGradient id="elCobre" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#F2A86B"/><stop offset="1" stop-color="#B9652A"/></linearGradient>
+  </defs>
+</svg>
+
+<section class="slide capa" data-nome="Capa">
+  <div class="estrelas"></div>
+  <div class="texto-capa" style="top:150px">
+    <span class="selo">Física · IF</span>
+    <p class="aula">Eletricidade</p>
+    <h1>Questões do IF Sudeste</h1>
+    <p class="sub">Provas oficiais, uma por tela</p>
+  </div>
+  <svg class="emblema" viewBox="0 0 640 640" aria-hidden="true">
+    <rect x="150" y="110" width="340" height="430" rx="34" fill="#fff" fill-opacity=".12" stroke="#fff" stroke-opacity=".6" stroke-width="4"/>
+    <g fill="#fff" fill-opacity=".7"><rect x="200" y="170" width="240" height="18" rx="9"/><rect x="200" y="210" width="200" height="18" rx="9"/><rect x="200" y="250" width="220" height="18" rx="9"/></g>
+    <g fill="none" stroke="#fff" stroke-opacity=".75" stroke-width="4"><circle cx="216" cy="330" r="16"/><circle cx="216" cy="390" r="16"/><circle cx="216" cy="450" r="16"/></g>
+    <circle cx="216" cy="390" r="16" fill="#FFD10C"/>
+    <g fill="#fff" fill-opacity=".55"><rect x="250" y="321" width="150" height="16" rx="8"/><rect x="250" y="381" width="170" height="16" rx="8"/><rect x="250" y="441" width="130" height="16" rx="8"/></g>
+    <circle cx="470" cy="130" r="54" fill="#FFD10C"/>
+    <path d="M482 92 L452 138 H472 L462 172 L494 122 H474 Z" fill="#4B258D"/>
+  </svg>
+  <img class="logo-capa" src="{{LOGO_BRANCO}}" alt="Quarks">
+  <aside class="notas"><p>Fechamento de Eletricidade: as questões do IF Sudeste MG do capítulo (fontes de energia, circuitos e consumo) e uma questão Modelo de usinas, subcapítulo que o IF ainda não cobrou. Em cada uma, pause, tente e depois confira a resolução.</p><p>Nenhuma delas apareceu nas partes do capítulo.</p></aside>
+</section>
+
+<section class="slide questao" data-nome="IF 2014 · a manga que cai" data-largo="1" data-gap="10">
+  <div class="conteudo">
+    <div class="area-resolucao"></div>
+    <span class="pilula pilula-pausa" data-em="1:some">Pause o vídeo e tente</span>
+    <div class="painel-questao">
+      <p class="olho">IF Sudeste MG 2014 · Questão 37</p>
+      <p class="enunciado" style="font-size:22px">Ao acender uma vela, estamos presenciando a transformação de energia química em energia luminosa e térmica, pois a cera da vela, ao ser derretida sobe pelo barbante e é, então, transformada em luz e calor. Existem outras formas de transformação de energia, uma delas consiste na queda de uma manga presa em um galho a certa altura do solo. Durante a queda da fruta, até tocar no solo e esborrachar-se toda, caso esteja muito madura, ocorrem algumas transformações de energia. A sequência <b>CORRETA</b> de transformações de energia que podem acontecer, durante a queda da manga até tocar o solo, é:</p>
+      
+      
+      <ol class="alternativas" style="gap:8px"><li data-em="2:apaga" style="font-size:20px;padding:6px 14px"><b>A</b><span>energia cinética transformando-se em energia potencial gravitacional, que, por sua vez, transforma-se em energia potencial química.</span></li><li data-em="2:apaga" style="font-size:20px;padding:6px 14px"><b>B</b><span>energia potencial química transformando-se em energia sonora, que, por sua vez, transforma-se em energia térmica.</span></li><li data-em="2:certo" style="font-size:20px;padding:6px 14px"><b>C</b><span>energia potencial gravitacional transformando-se em energia cinética, que, por sua vez, transforma-se em energia sonora.</span></li><li data-em="2:apaga" style="font-size:20px;padding:6px 14px"><b>D</b><span>energia térmica transformando-se em energia cinética, que, por sua vez, transforma-se em energia potencial gravitacional.</span></li><li data-em="2:apaga" style="font-size:20px;padding:6px 14px"><b>E</b><span>energia sonora transformando-se em energia potencial química, que, por sua vez, transforma-se em energia potencial gravitacional.</span></li></ol>
+    </div>
+  </div>
+  <aside class="resolucao">
+    <p class="dados"><b>Dados:</b> manga parada no galho, no alto; cai e bate no chão.</p>
+    <ol class="passos"><li><b>1.</b> No galho: parada e no alto: potencial gravitacional.</li><li><b>2.</b> Caindo: perde altura, ganha velocidade: cinética.</li><li><b>3.</b> Na batida: o barulho: sonora (e um pouco de calor).</li></ol>
+    <p class="resposta"><b>Resposta:</b> potencial gravitacional → cinética → sonora. <b>Gabarito C.</b></p>
+    <p class="atencao"><b>Destaque no quadro:</b> Queda: altura vira velocidade.</p>
+    <ul class="erros"><li><b>A</b> Inverte: a manga começa parada e no alto.</li><li><b>B</b> A química da fruta não a faz cair.</li><li><b>D</b> Calor não causa a queda; a manga não ganha altura.</li><li><b>E</b> A queda não começa com som.</li></ul>
+  </aside>
+  <aside class="notas"><p>Clique 1 tira o aviso de pausa: resolva na área (D liga a caneta; E esconde o enunciado). Clique 2: gabarito C.</p><p>Questão oficial do IF Sudeste MG 2014-1, q37, FIS-0530 (Fontes e transformações de energia). A vela do início é só contexto: a pergunta é sobre a manga.</p></aside>
+</section>
+
+<section class="slide questao" data-nome="IF 2016 · os circuitos de Sofia" data-largo="1" data-gap="8">
+  <div class="conteudo">
+    <div class="area-resolucao"></div>
+    <span class="pilula pilula-pausa" data-em="1:some">Pause o vídeo e tente</span>
+    <div class="painel-questao">
+      <p class="olho">IF Sudeste MG 2016 · Questão 29</p>
+      <p class="enunciado" style="font-size:21px">Sofia, uma garota muito curiosa, montou o circuito 1 abaixo, com duas pequenas lâmpadas incandescentes \(L_1\) e \(L_2\), e depois conectou o circuito aos terminais de uma pilha ideal que fornece uma tensão constante. Sofia observou que, nessa situação, o brilho da lâmpada \(L_1\) é maior que o brilho da lâmpada \(L_2\). Com as mesmas lâmpadas \(L_1\) e \(L_2\) e com a mesma pilha, Sofia montou o circuito 2, utilizando também uma chave C, inicialmente desligada.</p>
+      <div class="figura" style="display:flex;gap:20px;align-items:flex-start"><svg viewBox="0 0 700 420" width="300" height="180"  style="overflow:visible;font-family:Figtree,'Segoe UI',sans-serif;" aria-hidden="true"><g class="el-on"><path class="el-fio" d="M110 158 V70 H500 M500 360 H110 V286" /><path class="el-fluxo " d="M110 158 V70 H500" /><path class="el-fluxo " d="M500 360 H110 V286" /><rect x="98.0" y="146" width="24" height="14" rx="3" fill="#052E30"/><rect x="80" y="158" width="60" height="116" rx="12" fill="var(--d)" stroke="#052E30" stroke-width="3"/><text x="110.0" y="194" text-anchor="middle" font-size="34" font-weight="800" fill="#fff">+</text><text x="110.0" y="260" text-anchor="middle" font-size="40" font-weight="800" fill="#fff">−</text><g><path class="el-fio" d="M300 70 V179.0 M300 251.0 V360" /><path class="el-fluxo " d="M300 70 V360" /><g class="el-lamp" ><circle class="luz" cx="300" cy="215.0" r="83" fill="url(#elBrilho)"/><circle cx="300" cy="215.0" r="36" fill="#fff" stroke="#292B2C" stroke-width="5"/><circle class="luz" cx="300" cy="215.0" r="32" fill="#FFE680"/><path d="M274.8 189.8 L325.2 240.2 M325.2 189.8 L274.8 240.2" stroke="#292B2C" stroke-width="4"/><text x="350" y="225.0" text-anchor="start" font-size="30" font-weight="800" fill="#3F2FA0" >L₁</text></g><circle cx="300" cy="70" r="7" fill="#292B2C"/><circle cx="300" cy="360" r="7" fill="#292B2C"/></g><g><path class="el-fio" d="M500 70 V179.0 M500 251.0 V360" /><path class="el-fluxo " d="M500 70 V360" /><g class="el-lamp fraca" ><circle class="luz" cx="500" cy="215.0" r="83" fill="url(#elBrilho)"/><circle cx="500" cy="215.0" r="36" fill="#fff" stroke="#292B2C" stroke-width="5"/><circle class="luz" cx="500" cy="215.0" r="32" fill="#FFE680"/><path d="M474.8 189.8 L525.2 240.2 M525.2 189.8 L474.8 240.2" stroke="#292B2C" stroke-width="4"/><text x="550" y="225.0" text-anchor="start" font-size="30" font-weight="800" fill="#3F2FA0" >L₂</text></g></g></g><text x="300" y="410" text-anchor="middle" font-size="30" font-weight="800" fill="#292B2C" >CIRCUITO 1</text></svg><svg viewBox="0 0 700 420" width="300" height="206"  style="overflow:visible;font-family:Figtree,'Segoe UI',sans-serif;" aria-hidden="true"><g><path class="el-fio" d="M110 158 V70 H224 M296 70 H384 M456 70 H560 V360 H420 M340 360 H110 V286" /><circle cx="340" cy="360" r="8" fill="#292B2C"/><circle cx="420" cy="360" r="8" fill="#292B2C"/><line class="el-alavanca" style="transform-origin:340px 360px" x1="340" y1="360" x2="420" y2="360" stroke="#292B2C" stroke-width="7" stroke-linecap="round"/><text x="380.0" y="405" text-anchor="middle" font-size="26" font-weight="800" fill="#5E5A70" >CHAVE C</text><rect x="98.0" y="146" width="24" height="14" rx="3" fill="#052E30"/><rect x="80" y="158" width="60" height="116" rx="12" fill="var(--d)" stroke="#052E30" stroke-width="3"/><text x="110.0" y="194" text-anchor="middle" font-size="34" font-weight="800" fill="#fff">+</text><text x="110.0" y="260" text-anchor="middle" font-size="40" font-weight="800" fill="#fff">−</text><g class="el-lamp " ><circle class="luz" cx="260" cy="70" r="83" fill="url(#elBrilho)"/><circle cx="260" cy="70" r="36" fill="#fff" stroke="#292B2C" stroke-width="5"/><circle class="luz" cx="260" cy="70" r="32" fill="#FFE680"/><path d="M234.8 44.8 L285.2 95.2 M285.2 44.8 L234.8 95.2" stroke="#292B2C" stroke-width="4"/><text x="260" y="18" text-anchor="middle" font-size="30" font-weight="800" fill="#3F2FA0" >L₁</text></g><g class="el-lamp " ><circle class="luz" cx="420" cy="70" r="83" fill="url(#elBrilho)"/><circle cx="420" cy="70" r="36" fill="#fff" stroke="#292B2C" stroke-width="5"/><circle class="luz" cx="420" cy="70" r="32" fill="#FFE680"/><path d="M394.8 44.8 L445.2 95.2 M445.2 44.8 L394.8 95.2" stroke="#292B2C" stroke-width="4"/><text x="420" y="18" text-anchor="middle" font-size="30" font-weight="800" fill="#3F2FA0" >L₂</text></g></g><text x="300" y="470" text-anchor="middle" font-size="30" font-weight="800" fill="#292B2C" >CIRCUITO 2</text></svg></div>
+      <p class="enunciado" style="font-size:21px">Ao ligar a chave C, Sofia observará:</p>
+      <ol class="alternativas" style="gap:8px"><li data-em="2:apaga" style="font-size:19px;padding:6px 14px"><b>A</b><span>as duas lâmpadas com o mesmo brilho, pois a corrente elétrica é constante.</span></li><li data-em="2:apaga" style="font-size:19px;padding:6px 14px"><b>B</b><span>o brilho da lâmpada \(L_1\) maior que o brilho da lâmpada \(L_2\), pois \(L_1\) tem resistência elétrica menor que \(L_2\).</span></li><li data-em="2:apaga" style="font-size:19px;padding:6px 14px"><b>C</b><span>o brilho da lâmpada \(L_1\) maior que o brilho da lâmpada \(L_2\), pois \(L_1\) tem resistência elétrica maior que \(L_2\).</span></li><li data-em="2:certo" style="font-size:19px;padding:6px 14px"><b>D</b><span>o brilho da lâmpada \(L_2\) maior que o brilho da lâmpada \(L_1\), pois \(L_2\) tem resistência elétrica maior que \(L_1\).</span></li><li data-em="2:apaga" style="font-size:19px;padding:6px 14px"><b>E</b><span>o brilho da lâmpada \(L_2\) maior que o brilho da lâmpada \(L_1\), pois \(L_2\) tem resistência elétrica menor que \(L_1\).</span></li></ol>
+    </div>
+  </div>
+  <aside class="resolucao">
+    <p class="dados"><b>Dados:</b> circuito 1: paralelo, L₁ brilha mais; circuito 2: série.</p>
+    <ol class="passos"><li><b>1.</b> Paralelo: mesma U; \(P = U^2 \div R\).</li><li><b>2.</b> L₁ brilha mais: \(R_1 < R_2\).</li><li><b>3.</b> Série: mesma i; \(P = R \cdot i^2\).</li><li><b>4.</b> Maior R brilha mais: L₂.</li></ol>
+    <p class="resposta"><b>Resposta:</b> L₂ brilha mais, porque tem resistência maior. <b>Gabarito D.</b></p>
+    <p class="atencao"><b>Destaque no quadro:</b> Série: maior R brilha mais. Paralelo: menor R brilha mais.</p>
+    <ul class="erros"><li><b>A</b> Mesma corrente, mas R diferentes: P = R · i² diferente.</li><li><b>B</b> Repete o comportamento do paralelo.</li><li><b>C</b> R₁ é a menor, e em série L₂ brilha mais.</li><li><b>E</b> L₂ brilha mais, mas porque R₂ é maior.</li></ul>
+  </aside>
+  <aside class="notas"><p>Clique 1 tira o aviso de pausa. Clique 2: gabarito D.</p><p>Questão oficial do IF Sudeste MG 2016-2, q29, FIS-0590 (Circuitos elétricos). Figura refeita no molde a partir da prova: no circuito 1, L₁ aparece mais brilhante; no circuito 2, a chave C está desligada.</p><p>É a regra do brilho vista em Consumo de energia elétrica, Parte 1: em série ganha a de maior R; em paralelo, a de menor R.</p></aside>
+</section>
+
+<section class="slide questao" data-nome="IF 2019 · a iluminação do carro" data-largo="2" data-gap="8">
+  <div class="conteudo">
+    <div class="area-resolucao"></div>
+    <span class="pilula pilula-pausa" data-em="1:some">Pause o vídeo e tente</span>
+    <div class="painel-questao">
+      <p class="olho">IF Sudeste MG 2019 · Questão 30</p>
+      <p class="enunciado" style="font-size:21px">Um inventor está finalizando um projeto de instalação elétrica de iluminação em um carro de passeio (convencional). Para esse projeto, o inventor dispõe de uma bateria com uma diferença de potencial (voltagem) de 12 Volts para alimentar um sistema com cinco pares de lâmpadas. Um par de lâmpadas na dianteira (faróis dianteiros), um par de lâmpadas na traseira (faróis traseiros), dois pares de lâmpadas em cada lateral (lâmpadas de setas) e um par de lâmpadas internas (no interior do veículo). Duas especificações deverão ser atendidas simultaneamente nesse projeto; primeiro: todas as lâmpadas devem ser alimentadas com a mesma voltagem de 12 Volts e, segundo: o defeito em uma lâmpada (lâmpada queimada) não pode influenciar no funcionamento das demais. Considerando que todas as lâmpadas possuem as mesmas características de voltagem, resistência e corrente, para atender simultaneamente as duas especificações do projeto, a <b>CORRETA</b> escolha para montar o circuito elétrico de iluminação será:</p>
+      
+      
+      <ol class="alternativas" style="gap:8px"><li data-em="2:apaga" style="font-size:19px;padding:6px 14px"><b>A</b><span>em série, pois, dessa forma, todas as lâmpadas possuirão a mesma voltagem e o defeito em uma não influenciará no funcionamento das demais.</span></li><li data-em="2:apaga" style="font-size:19px;padding:6px 14px"><b>B</b><span>em série, pois, dessa forma, todas as lâmpadas possuirão a mesma corrente e o defeito em uma não influenciará no funcionamento das demais.</span></li><li data-em="2:certo" style="font-size:19px;padding:6px 14px"><b>C</b><span>em paralelo, pois, dessa forma, todas as lâmpadas possuirão a mesma voltagem e o defeito em uma não influenciará no funcionamento das demais.</span></li><li data-em="2:apaga" style="font-size:19px;padding:6px 14px"><b>D</b><span>em paralelo, pois, dessa forma, todas as lâmpadas possuirão voltagens diferentes e o defeito em uma não influenciará no funcionamento das demais.</span></li><li data-em="2:apaga" style="font-size:19px;padding:6px 14px"><b>E</b><span>em série e paralelo (circuito misto), pois, dessa forma, todas as lâmpadas possuirão a mesma corrente e o defeito em uma não influenciará no funcionamento das demais.</span></li></ol>
+    </div>
+  </div>
+  <aside class="resolucao">
+    <p class="dados"><b>Dados:</b> bateria de 12 V; todas com 12 V; uma queimada não afeta as outras.</p>
+    <ol class="passos"><li><b>1.</b> Série: tensão dividida; uma queima, todas apagam.</li><li><b>2.</b> Paralelo: cada uma com os 12 V.</li><li><b>3.</b> Paralelo: ramos independentes.</li><li><b>4.</b> As duas exigências: paralelo.</li></ol>
+    <p class="resposta"><b>Resposta:</b> em paralelo, com a mesma voltagem em todas. <b>Gabarito C.</b></p>
+    <p class="atencao"><b>Destaque no quadro:</b> Mesma tensão + independentes = paralelo.</p>
+    <ul class="erros"><li><b>A</b> Em série a tensão se divide e uma queimada apaga todas.</li><li><b>B</b> Corrente igual, sim; mas uma queimada apaga todas.</li><li><b>D</b> Em paralelo a voltagem é a mesma.</li><li><b>E</b> No misto, as do mesmo trecho em série dependem umas das outras.</li></ul>
+  </aside>
+  <aside class="notas"><p>Clique 1 tira o aviso de pausa. Clique 2: gabarito C.</p><p>Questão oficial do IF Sudeste MG 2019-2, q30, FIS-0603 (Circuitos elétricos). Enunciado longo: sublinhe com a caneta as duas exigências antes de olhar as alternativas.</p></aside>
+</section>
+
+<section class="slide questao" data-nome="IF 2018 · as lâmpadas do Sr. Paulo" data-largo="1" data-gap="10">
+  <div class="conteudo">
+    <div class="area-resolucao"></div>
+    <span class="pilula pilula-pausa" data-em="1:some">Pause o vídeo e tente</span>
+    <div class="painel-questao">
+      <p class="olho">IF Sudeste MG 2018 · Questão 28</p>
+      <p class="enunciado" style="font-size:22px">Com a necessidade cada vez maior de economizarmos energia elétrica, faz-se necessária a compra de eletrodomésticos cada vez mais eficientes. Por exemplo, podemos trocar nossas lâmpadas florescentes por lâmpadas de LED que apresentam uma eficiência energética maior. Pensando assim, Sr. Paulo resolveu mudar as 8 lâmpadas de sua casa pelo modelo mais econômico, cada lâmpada nova apresentava, em sua embalagem, a seguinte descrição: 120V - 10W. Em média, as 8 lâmpadas ficam ligadas durante 2 horas por dia cada uma. Considerando que um mês tem 30 dias, a alternativa <b>CORRETA</b> que representa o gasto, em reais, com a utilização dessas novas lâmpadas é:</p><p class="enunciado" style="font-size:22px">Considere o preço do kW/h, na casa do Sr. Paulo, como sendo de R$ 0,50.</p>
+      
+      
+      <ol class="alternativas curtas"><li data-em="2:apaga"><b>A</b><span>R$ 28,80</span></li><li data-em="2:apaga"><b>B</b><span>R$ 14,40</span></li><li data-em="2:apaga"><b>C</b><span>R$ 8,00</span></li><li data-em="2:certo"><b>D</b><span>R$ 2,40</span></li><li data-em="2:apaga"><b>E</b><span>R$ 1,20</span></li></ol>
+    </div>
+  </div>
+  <aside class="resolucao">
+    <p class="dados"><b>Dados:</b> 8 lâmpadas de 10 W; 2 h por dia; 30 dias; R$ 0,50 por kWh.</p>
+    <ol class="passos"><li><b>1.</b> \(P = 8 \cdot 10 = 80\ \text{W} = 0{,}08\ \text{kW}\)</li><li><b>2.</b> \(\Delta t = 2 \cdot 30 = 60\ \text{h}\)</li><li><b>3.</b> \(E = 0{,}08 \cdot 60 = 4{,}8\ \text{kWh}\)</li><li><b>4.</b> gasto = \(4{,}8 \cdot 0{,}50\) = R$ 2,40</li></ol>
+    <p class="resposta"><b>Resposta:</b> R$ 2,40. <b>Gabarito D.</b></p>
+    <p class="atencao"><b>Destaque no quadro:</b> O 120 V não entra na conta; o preço é por kWh.</p>
+    <ul class="erros"><li><b>A</b> 12 vezes o gasto certo.</li><li><b>B</b> 6 vezes o gasto certo.</li><li><b>C</b> Seria o gasto de 16 kWh.</li><li><b>E</b> Metade: 1 h por dia, ou 4 lâmpadas, ou 15 dias.</li></ul>
+  </aside>
+  <aside class="notas"><p>Clique 1 tira o aviso de pausa. Clique 2: gabarito D.</p><p>Questão oficial do IF Sudeste MG 2018-2, q28, FIS-0597 (Consumo de energia elétrica). A prova escreve "kW/h" e "florescentes"; o certo é kWh (quilowatt vezes hora) e fluorescentes. Mantivemos o texto da prova; corrija em voz alta.</p></aside>
+</section>
+
+<section class="slide questao" data-nome="Modelo · Marmelos e as usinas" data-largo="1" data-gap="10">
+  <div class="conteudo">
+    <div class="area-resolucao"></div>
+    <span class="pilula pilula-pausa" data-em="1:some">Pause o vídeo e tente</span>
+    <div class="painel-questao">
+      <p class="olho">Modelo IF · Usinas de energia elétrica</p>
+      <p class="enunciado" style="font-size:23px">Em 1889, a Usina de Marmelos, no Rio Paraibuna, começou a fornecer eletricidade para Juiz de Fora. Foi uma das primeiras hidrelétricas da América do Sul. Hoje, mais da metade da eletricidade do Brasil ainda vem de hidrelétricas, mas o país também usa termelétricas, usinas nucleares, eólicas e solares.</p><p class="enunciado" style="font-size:23px">Sobre essas usinas, é CORRETO afirmar que</p>
+      
+      
+      <ol class="alternativas" style="gap:8px"><li data-em="2:certo" style="font-size:20px;padding:6px 14px"><b>A</b><span>na hidrelétrica, a energia potencial da água da represa vira energia cinética, que gira a turbina, e o gerador transforma esse movimento em energia elétrica.</span></li><li data-em="2:apaga" style="font-size:20px;padding:6px 14px"><b>B</b><span>a hidrelétrica não causa impacto socioambiental, porque usa uma fonte renovável, a água dos rios.</span></li><li data-em="2:apaga" style="font-size:20px;padding:6px 14px"><b>C</b><span>a usina solar fotovoltaica, assim como a termelétrica, aquece água para que o vapor gire uma turbina.</span></li><li data-em="2:apaga" style="font-size:20px;padding:6px 14px"><b>D</b><span>a usina nuclear de Angra dos Reis usa uma fonte renovável, porque o urânio não libera gás carbônico.</span></li><li data-em="2:apaga" style="font-size:20px;padding:6px 14px"><b>E</b><span>a energia sai da usina com a mesma tensão das tomadas, 127 V ou 220 V, para diminuir as perdas nos fios.</span></li></ol>
+    </div>
+  </div>
+  <aside class="resolucao">
+    <p class="dados"><b>Dados:</b> usinas hidrelétrica, termelétrica, nuclear, eólica e solar.</p>
+    <ol class="passos"><li><b>1.</b> Hidrelétrica: potencial → cinética → turbina → gerador → elétrica.</li><li><b>2.</b> Renovável também tem impacto.</li><li><b>3.</b> Solar: luz direto em eletricidade, sem turbina.</li><li><b>4.</b> Urânio é minério: não renovável.</li><li><b>5.</b> Transmissão em tensão muito alta.</li></ol>
+    <p class="resposta"><b>Resposta:</b> a alternativa A descreve a hidrelétrica. <b>Gabarito A.</b></p>
+    <p class="atencao"><b>Destaque no quadro:</b> Usina: o que gira a turbina? Qual o impacto?</p>
+    <ul class="erros"><li><b>B</b> A represa alaga áreas e desloca famílias.</li><li><b>C</b> Fotovoltaica não usa vapor nem turbina.</li><li><b>D</b> Urânio acaba: não renovável; e gera lixo radioativo.</li><li><b>E</b> É o contrário: tensão alta para perder menos.</li></ul>
+  </aside>
+  <aside class="notas"><p>Clique 1 tira o aviso de pausa. Clique 2: gabarito A.</p><p>Modelo IF, lote if-fisica-energia-e-sociedade, m001, FIS-8796. O IF ainda não cobrou Usinas de energia elétrica; depois da prova de 22/11/2026, trocar por oficial se cair.</p></aside>
+</section>
+
+<section class="slide capa" data-nome="Fim">
+  <div class="estrelas"></div>
+  <div class="texto-capa" style="top:150px">
+    <span class="selo">Física · IF</span>
+    <p class="aula">Fim · Eletricidade</p>
+    <h1 style="font-size:118px">Fim da Física do IF</h1>
+    <p class="sub">Eletricidade fecha o percurso</p>
+  </div>
+  <svg class="emblema" viewBox="0 0 640 640" aria-hidden="true">
+    <g class="gira-lento"><ellipse cx="320" cy="320" rx="300" ry="128" fill="none" stroke="#fff" stroke-opacity=".38" stroke-width="2" transform="rotate(-10 320 320)"/></g>
+    <g class="gira"><ellipse cx="320" cy="320" rx="236" ry="196" fill="none" stroke="#FFD10C" stroke-opacity=".75" stroke-width="2.5" stroke-dasharray="3 14" stroke-linecap="round" transform="rotate(-8 320 320)"/>
+      <circle cx="84" cy="300" r="13" fill="var(--d)" stroke="#fff" stroke-width="3"/></g>
+    <circle cx="320" cy="320" r="150" fill="#FFD10C"/>
+    <path d="M346 196 L262 336 H318 L292 450 L382 300 H326 Z" fill="#4B258D" stroke="#4B258D" stroke-width="8" stroke-linejoin="round"/>
+  </svg>
+  <img class="logo-capa" src="{{LOGO_BRANCO}}" alt="Quarks">
+  <aside class="notas"><p>Fim de Eletricidade, o último capítulo da Física do IF (Astronomia, Mecânica, Termologia, Óptica, Ondas e Eletricidade).</p><p>Sugestão: retomar as questões oficiais de todos os capítulos na semana da prova.</p></aside>
+</section>

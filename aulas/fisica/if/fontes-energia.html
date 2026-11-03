@@ -1,0 +1,372 @@
+<!--aula
+{"disciplina": "fisica", "curso": "IF", "assunto": "Eletricidade", "parte": "Parte única", "titulo": "Fontes e transformações de energia", "scripts": ["animacoes-eletricidade.js"]}
+-->
+<!-- Fonte: apostila IF, Física, cap. 6 (6.1 Fontes e transformações de energia: formas e transformações, fontes renováveis e não renováveis, potência e transformação nos aparelhos, resumo). Questões Modelo IF do lote if-fisica-fontes-e-transformacoes-de-energia (m004, m005, m007); a oficial do subcapítulo (2014-1 q37, FIS-0530) fica reservada para o bloco do fim do capítulo. -->
+<style>
+  .caixa, .el-card, .el-linha { box-sizing: border-box; }
+  .el-cards { display: grid; gap: 22px; }
+  .el-card { background: var(--branco); border: 2px solid var(--lilas-2); border-radius: 26px; padding: 16px 22px; font-size: 27px; line-height: 1.3; }
+  .el-card h3 { margin: 0 0 4px; font: 800 32px var(--fonte-titulo); color: var(--roxo-titulo); letter-spacing: -.01em; display: flex; align-items: center; gap: 14px; }
+  .el-card h3 svg { width: 70px; height: 70px; flex: none; }
+  .el-card p { margin: 0; color: var(--carvao); }
+  .el-card.d { background: var(--d-clara); border-color: color-mix(in srgb, var(--d) 35%, transparent); }
+  .el-linha { display: grid; grid-template-columns: 90px 1fr auto; align-items: center; gap: 22px; background: var(--branco); border: 2px solid var(--lilas-2); border-radius: 22px; padding: 10px 24px; font-size: 30px; }
+  .el-linha svg { width: 80px; height: 70px; }
+  .el-linha b { color: var(--roxo-titulo); }
+  .tag { justify-self: end; padding: 6px 20px; border-radius: 999px; font-weight: 800; font-size: 25px; white-space: nowrap; }
+  .tag-d { background: var(--d-clara); color: var(--d-forte); }
+  .tag-a { background: #FFF4C2; color: #8A6A00; }
+  .tag-r { background: var(--erro-claro); color: var(--erro); }
+  .el-lista { margin: 0; padding: 0; list-style: none; display: flex; flex-direction: column; gap: 14px; }
+  .el-lista li { display: flex; align-items: baseline; gap: 16px; font-size: 31px; line-height: 1.3; }
+  .el-lista li b.n { flex: none; width: 46px; height: 46px; border-radius: 50%; display: grid; place-items: center; background: var(--d); color: #fff; font: 800 26px var(--fonte-titulo); transform: translateY(6px); }
+  .el-lista li > span b { color: var(--roxo-titulo); }
+  .el-cadeia { display: flex; align-items: center; gap: 14px; flex-wrap: wrap; }
+  .el-cadeia .f { padding: 10px 24px; border-radius: 999px; background: var(--d-clara); color: var(--d-forte); font-weight: 800; font-size: 30px; }
+  .el-cadeia .f.am { background: #FFF4C2; color: #8A6A00; }
+  .el-cadeia .s { font: 800 36px var(--fonte-titulo); color: var(--roxo-claro); }
+  .tabela.el-t { font-size: 30px; }
+  .tabela.el-t th { padding: 12px 28px; }
+  .tabela.el-t td { padding: 10px 28px; text-align: left; }
+  /* colunas de enunciado mais largas para questões longas (data-largo); E continua ampliando a área */
+  .questao[data-largo="1"] .area-resolucao { width: 1070px; } .questao[data-largo="1"] .painel-questao { left: 1110px; } .questao[data-largo="1"] .pilula-pausa { left: 535px; }
+  .questao[data-largo="2"] .area-resolucao { width: 960px; } .questao[data-largo="2"] .painel-questao { left: 1000px; } .questao[data-largo="2"] .pilula-pausa { left: 480px; }
+  .questao[data-largo].amplia .area-resolucao { width: 1760px; } .questao[data-largo].amplia .pilula-pausa { left: 880px; }
+  .questao[data-gap="8"] .painel-questao { gap: 8px; } .questao[data-gap="10"] .painel-questao { gap: 10px; } .questao[data-gap="12"] .painel-questao { gap: 12px; } .questao[data-gap="14"] .painel-questao { gap: 14px; }
+  .painel-questao .figura { display: block; margin: 0 auto; flex: none; }
+  .painel-questao .el-mini { font-size: 22px; border-collapse: separate; border-spacing: 0; background: #fff; border: 2px solid var(--lilas-2); border-radius: 16px; overflow: hidden; }
+  .painel-questao .el-mini th { background: var(--d-clara); color: var(--d-forte); padding: 5px 12px; font-weight: 800; }
+  .painel-questao .el-mini td { padding: 4px 12px; border-top: 2px solid var(--lilas); text-align: center; }
+  .painel-questao .el-mini td:first-child { text-align: left; }
+  .el-fios path, .el-fio { fill: none; stroke: #292B2C; stroke-width: 6; stroke-linejoin: round; stroke-linecap: round; }
+  /* ---------- Animações (só na tela aberta) ---------- */
+  /* cargas andando pelo fio: pontinhos amarelos que correm quando o circuito está fechado */
+  .el-fluxo { fill: none; stroke: #FFD10C; stroke-width: 10; stroke-linecap: round; stroke-dasharray: 0 32; opacity: 0; transition: opacity .5s; }
+  .el-on .el-fluxo, .el-fluxo.sempre { opacity: 1; }
+  .el-off .el-fluxo, .el-on .el-off .el-fluxo { opacity: 0 !important; }
+  .slide.ativo .el-on .el-fluxo, .slide.ativo .el-fluxo.sempre { animation: el-flui 1.6s linear infinite; }
+  .slide.ativo .el-on .el-fluxo.lento { animation-duration: 3.2s; }
+  @keyframes el-flui { to { stroke-dashoffset: -32; } }
+  .el-agua { fill: none; stroke: #8FC8F0; stroke-width: 12; stroke-linecap: round; stroke-dasharray: 2 26; }
+  .slide.ativo .el-agua { animation: el-flui 1.8s linear infinite; }
+  /* lâmpada: acende quando o circuito fecha (sem piscar) */
+  .el-lamp .luz { opacity: 0; transition: opacity .7s ease; }
+  .el-on .el-lamp .luz, .el-lamp.acesa .luz { opacity: 1; }
+  .el-on .el-lamp.fraca .luz { opacity: .42; }
+  .el-off .el-lamp .luz, .el-on .el-off .el-lamp .luz { opacity: 0 !important; }
+  .el-lamp { transition: transform .8s ease, opacity .8s ease; }
+  .el-tira .el-lamp.sai { transform: translateY(-46px); opacity: .3; }
+  /* chave: a alavanca baixa e fecha o circuito */
+  .el-alavanca { transform: rotate(-32deg); transition: transform .7s ease; }
+  .el-alavanca.fechada, .el-fecha .el-alavanca { transform: none; }
+  .el-abre .el-alavanca { transform: rotate(-32deg) !important; }
+  /* rodas que giram (turbina, pás) e raios do Sol */
+  .slide.ativo .el-roda { animation: el-gira 9s linear infinite; }
+  .slide.ativo .el-roda.rapida { animation-duration: 5s; }
+  .slide.ativo .el-raios { animation: el-gira 30s linear infinite; }
+  @keyframes el-gira { to { transform: rotate(360deg); } }
+  /* calor que sobe */
+  .el-calor path { opacity: 0; }
+  .slide.ativo .el-calor path { animation: el-sobe 5s ease-in-out infinite; }
+  .el-calor path:nth-child(2) { animation-delay: -1.7s !important; } .el-calor path:nth-child(3) { animation-delay: -3.4s !important; }
+  @keyframes el-sobe { 0% { transform: translateY(10px); opacity: 0; } 30% { opacity: .9; } 100% { transform: translateY(-34px); opacity: 0; } }
+  /* gotas que caem (chuveiro) */
+  .el-gotas circle { opacity: 0; }
+  .slide.ativo .el-gotas circle { animation: el-cai 2.6s linear infinite; }
+  .el-gotas circle:nth-child(2) { animation-delay: -.9s !important; } .el-gotas circle:nth-child(3) { animation-delay: -1.7s !important; } .el-gotas circle:nth-child(4) { animation-delay: -.4s !important; } .el-gotas circle:nth-child(5) { animation-delay: -2.1s !important; }
+  @keyframes el-cai { 0% { transform: translateY(0); opacity: 0; } 15% { opacity: 1; } 85% { opacity: 1; } 100% { transform: translateY(70px); opacity: 0; } }
+  /* barras que crescem quando aparecem */
+  .el-barra { transform: scaleX(0); transform-box: fill-box; transform-origin: left center; transition: transform 2.2s ease-out; }
+  .mostra .el-barra, .mostra.el-barra, .el-barra.ja { transform: none; }
+  .el-barra-v { transform: scaleY(0); transform-box: fill-box; transform-origin: center bottom; transition: transform 2.2s ease-out; }
+  .mostra .el-barra-v, .mostra.el-barra-v { transform: none; }
+  /* traço que se desenha */
+  .el-traca { stroke-dasharray: 1; stroke-dashoffset: 1; transition: stroke-dashoffset 1.6s ease-in-out; }
+  .mostra .el-traca, .mostra.el-traca { stroke-dashoffset: 0; }
+  @media (prefers-reduced-motion: reduce) { .el-barra, .el-barra-v { transform: none; } .el-traca { stroke-dashoffset: 0; } .el-alavanca { transition: none; } }
+</style>
+<svg width="0" height="0" style="position:absolute" aria-hidden="true">
+  <defs>
+    <radialGradient id="elBrilho" cx=".5" cy=".5" r=".5"><stop offset="0" stop-color="#FFE680" stop-opacity=".95"/><stop offset=".45" stop-color="#FFD10C" stop-opacity=".45"/><stop offset="1" stop-color="#FFD10C" stop-opacity="0"/></radialGradient>
+    <linearGradient id="elAgua" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#CFE6FA"/><stop offset="1" stop-color="#8CC1EE"/></linearGradient>
+    <linearGradient id="elCobre" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#F2A86B"/><stop offset="1" stop-color="#B9652A"/></linearGradient>
+  </defs>
+</svg>
+
+<section class="slide capa" data-nome="Capa">
+  <div class="estrelas"></div>
+  <div class="texto-capa" style="top:140px">
+    <span class="selo">Física · IF</span>
+    <p class="aula">Eletricidade</p>
+    <h1 style="font-size:112px">Fontes e transformações de energia</h1>
+    <p class="sub">De onde vem e no que se transforma</p>
+  </div>
+  <svg class="emblema" viewBox="0 0 640 640" aria-hidden="true">
+    <g class="gira-lento"><ellipse cx="320" cy="320" rx="300" ry="128" fill="none" stroke="#fff" stroke-opacity=".38" stroke-width="2" transform="rotate(-10 320 320)"/></g>
+    <g class="gira"><ellipse cx="320" cy="320" rx="236" ry="196" fill="none" stroke="#FFD10C" stroke-opacity=".75" stroke-width="2.5" stroke-dasharray="3 14" stroke-linecap="round" transform="rotate(-8 320 320)"/>
+      <circle cx="84" cy="300" r="13" fill="var(--d)" stroke="#fff" stroke-width="3"/></g>
+    <circle cx="320" cy="320" r="150" fill="#FFD10C"/>
+    <path d="M346 196 L262 336 H318 L292 450 L382 300 H326 Z" fill="#4B258D" stroke="#4B258D" stroke-width="8" stroke-linejoin="round"/>
+  </svg>
+  <img class="logo-capa" src="{{LOGO_BRANCO}}" alt="Quarks">
+  <aside class="notas"><p>Abertura de Eletricidade, o último capítulo da Física do IF. Hoje: formas de energia, conservação, fontes renováveis e não renováveis e o que cada aparelho da casa faz com a energia da tomada.</p><p>Esta parte é só conceito, quase sem conta: o IF cobra com contexto do dia a dia e frases para julgar.</p></aside>
+</section>
+
+<section class="slide" data-nome="O que é energia">
+  <div class="conteudo">
+    <p class="olho">Para começar</p>
+    <h2 class="titulo">O que eles têm em comum?</h2>
+    <div class="el-cards" style="position:absolute;left:0;right:0;top:170px;grid-template-columns:repeat(4,1fr)"><div class="el-card" data-passo="1" style="text-align:center"><svg viewBox="0 0 100 100" width="170" height="170" style="overflow:visible;" aria-hidden="true"><path d="M12 70 C 10 40 30 26 50 26 C 70 26 90 40 88 70 Z" fill="#E2B36B" stroke="#A86B24" stroke-width="4"/><path d="M34 40 l8 12 M50 36 l8 12 M66 40 l8 12" stroke="#A86B24" stroke-width="4" stroke-linecap="round"/></svg><h3 style="justify-content:center;font-size:36px">O pão do café</h3><p style="color:var(--cinza);font-size:29px">energia dos alimentos</p></div><div class="el-card" data-passo="2" style="text-align:center"><svg viewBox="0 0 100 100" width="170" height="170" style="overflow:visible;" aria-hidden="true"><rect x="18" y="30" width="60" height="40" rx="8" fill="none" stroke="#292B2C" stroke-width="5"/><rect x="78" y="42" width="8" height="16" rx="2" fill="#292B2C"/><rect x="24" y="36" width="34" height="28" rx="4" fill="var(--d)"/></svg><h3 style="justify-content:center;font-size:36px">A bateria do celular</h3><p style="color:var(--cinza);font-size:29px">energia guardada</p></div><div class="el-card" data-passo="3" style="text-align:center"><svg viewBox="0 0 100 100" width="170" height="170" style="overflow:visible;" aria-hidden="true"><path d="M8 40 H52 V84 H8 Z" fill="url(#elAgua)"/><path d="M52 24 L70 24 L80 84 L52 84 Z" fill="#B8B3C9" stroke="#7F7A99" stroke-width="3"/><path d="M80 74 H96 V84 H80 Z" fill="#8CC1EE"/></svg><h3 style="justify-content:center;font-size:36px">A água da represa</h3><p style="color:var(--cinza);font-size:29px">energia por estar no alto</p></div><div class="el-card" data-passo="4" style="text-align:center"><svg viewBox="0 0 100 100" width="170" height="170" style="overflow:visible;" aria-hidden="true"><line x1="50" y1="50" x2="50" y2="96" stroke="#7F7A99" stroke-width="5" stroke-linecap="round"/><g class="el-roda" style="transform-origin:50px 50px"><path d="M50 50 L46 10 Q50 6 54 10 Z" fill="var(--d)"/><path d="M50 50 L46 10 Q50 6 54 10 Z" fill="var(--d)" transform="rotate(120 50 50)"/><path d="M50 50 L46 10 Q50 6 54 10 Z" fill="var(--d)" transform="rotate(240 50 50)"/></g><circle cx="50" cy="50" r="6" fill="#FFD10C"/></svg><h3 style="justify-content:center;font-size:36px">O vento no cata-vento</h3><p style="color:var(--cinza);font-size:29px">energia do movimento</p></div></div>
+    <div class="caixa caixa-fundamental" data-passo="5" style="position:absolute;left:560px;right:0;top:600px;padding:22px 32px">
+      <span class="rotulo">Energia</span>
+      <div class="texto" style="font-size:34px">Todos guardam <b>energia</b>: a capacidade de provocar mudanças, como <b>movimento</b>, <b>aquecimento</b>, <b>luz</b> ou <b>som</b>.</div>
+    </div>
+  </div>
+  <aside class="notas"><p>Cliques 1 a 4: o pão, a bateria, a água da represa e o vento. Pergunte o que eles têm em comum antes do clique 5.</p><p>Clique 5: a ideia de energia como capacidade de provocar mudanças. Repare no cata-vento girando: é energia do vento virando movimento.</p></aside>
+</section>
+
+<section class="slide" data-nome="Formas de energia">
+  <div class="conteudo">
+    <p class="olho">Tipos de energia</p>
+    <h2 class="titulo">As formas mais comuns</h2>
+    <div class="el-cards" style="position:absolute;left:0;right:0;top:160px;grid-template-columns:repeat(3,1fr)"><div class="el-card" data-passo="1"><h3 style="font-size:34px"><svg viewBox="0 0 100 100" width="74" height="74" style="overflow:visible;" aria-hidden="true"><line x1="50" y1="50" x2="50" y2="96" stroke="#7F7A99" stroke-width="5" stroke-linecap="round"/><g class="el-roda" style="transform-origin:50px 50px"><path d="M50 50 L46 10 Q50 6 54 10 Z" fill="var(--d)"/><path d="M50 50 L46 10 Q50 6 54 10 Z" fill="var(--d)" transform="rotate(120 50 50)"/><path d="M50 50 L46 10 Q50 6 54 10 Z" fill="var(--d)" transform="rotate(240 50 50)"/></g><circle cx="50" cy="50" r="6" fill="#FFD10C"/></svg>Cinética</h3><p>tudo o que se move: carro, vento, água do rio</p></div><div class="el-card" data-passo="2"><h3 style="font-size:30px"><svg viewBox="0 0 100 100" width="74" height="74" style="overflow:visible;" aria-hidden="true"><path d="M8 40 H52 V84 H8 Z" fill="url(#elAgua)"/><path d="M52 24 L70 24 L80 84 L52 84 Z" fill="#B8B3C9" stroke="#7F7A99" stroke-width="3"/><path d="M80 74 H96 V84 H80 Z" fill="#8CC1EE"/></svg>Potencial gravitacional</h3><p>o que está no alto: água da represa</p></div><div class="el-card" data-passo="3"><h3 style="font-size:34px"><svg viewBox="0 0 100 100" width="74" height="74" style="overflow:visible;" aria-hidden="true"><path d="M12 70 C 10 40 30 26 50 26 C 70 26 90 40 88 70 Z" fill="#E2B36B" stroke="#A86B24" stroke-width="4"/><path d="M34 40 l8 12 M50 36 l8 12 M66 40 l8 12" stroke="#A86B24" stroke-width="4" stroke-linecap="round"/></svg>Química</h3><p>alimentos, combustíveis, pilhas</p></div><div class="el-card" data-passo="4"><h3 style="font-size:34px"><svg viewBox="0 0 100 100" width="74" height="74" style="overflow:visible;" aria-hidden="true"><path d="M50 8 C 62 30 78 40 78 62 a28 28 0 0 1 -56 0 C 22 48 32 40 36 28 C 42 40 46 42 50 8 Z" fill="#E86A3A"/><path d="M50 50 C 56 60 62 64 62 72 a12 12 0 0 1 -24 0 C 38 64 44 60 50 50 Z" fill="#FFD10C"/></svg>Térmica</h3><p>corpos quentes, chama</p></div><div class="el-card" data-passo="5"><h3 style="font-size:34px"><svg viewBox="0 0 100 100" width="74" height="74" style="overflow:visible;" aria-hidden="true"><rect x="18" y="30" width="60" height="40" rx="8" fill="none" stroke="#292B2C" stroke-width="5"/><rect x="78" y="42" width="8" height="16" rx="2" fill="#292B2C"/><rect x="24" y="36" width="34" height="28" rx="4" fill="var(--d)"/></svg>Elétrica</h3><p>corrente nos fios e aparelhos</p></div><div class="el-card" data-passo="6"><h3 style="font-size:30px"><svg viewBox="0 0 100 100" width="74" height="74" style="overflow:visible;" aria-hidden="true"><circle cx="50" cy="40" r="26" fill="#FFE680" stroke="#292B2C" stroke-width="4"/><rect x="38" y="66" width="24" height="18" rx="4" fill="#7F7A99"/><path d="M42 44 l8 -8 l8 8" fill="none" stroke="#C99A00" stroke-width="3"/></svg>Luminosa e sonora</h3><p>lâmpada acesa, alto-falante</p></div></div>
+    <div class="caixa caixa-fundamental" data-passo="7" style="position:absolute;left:560px;right:0;top:620px;padding:20px 32px">
+      <div class="texto" style="font-size:34px">O mais importante: <b>uma forma vira outra</b>.</div>
+    </div>
+  </div>
+  <aside class="notas"><p>Uma forma por clique, com um exemplo de onde ela aparece. Peça um exemplo da turma antes de mostrar.</p><p>Química: está nas substâncias (comida, gasolina, pilha) e só aparece quando elas se transformam. Potencial gravitacional: depende da altura.</p></aside>
+</section>
+
+<section class="slide" data-nome="Conservação da energia">
+  <div class="conteudo">
+    <p class="olho">Transformações</p>
+    <h2 class="titulo">Uma forma vira outra</h2>
+    <div style="position:absolute;left:0;right:0;top:160px;display:flex;flex-direction:column;gap:22px">
+      <div class="el-linha" data-passo="1" style="grid-template-columns:110px 300px 1fr"><span><svg viewBox="0 0 100 100" width="96" height="96" style="overflow:visible;" aria-hidden="true"><line x1="50" y1="50" x2="50" y2="88" stroke="#7F7A99" stroke-width="6"/><rect x="30" y="86" width="40" height="8" rx="4" fill="#7F7A99"/><circle cx="50" cy="44" r="34" fill="none" stroke="#C9C0F0" stroke-width="4"/><g class="el-roda rapida" style="transform-origin:50px 44px"><ellipse cx="50" cy="26" rx="9" ry="17" fill="var(--d)"/><ellipse cx="50" cy="26" rx="9" ry="17" fill="var(--d)" transform="rotate(120 50 44)"/><ellipse cx="50" cy="26" rx="9" ry="17" fill="var(--d)" transform="rotate(240 50 44)"/></g><circle cx="50" cy="44" r="6" fill="#FFD10C"/></svg></span><b style="font-size:36px">Ventilador</b>
+        <div class="el-cadeia"><span class="f">elétrica</span><span class="s">→</span><span class="f am">cinética das pás</span></div></div>
+      <div class="el-linha" data-passo="2" style="grid-template-columns:110px 300px 1fr"><span><svg viewBox="0 0 100 100" width="96" height="96" style="overflow:visible;" aria-hidden="true"><g fill="none" stroke="#292B2C" stroke-width="5"><circle cx="24" cy="66" r="18"/><circle cx="76" cy="66" r="18"/><path d="M24 66 L42 40 L66 40 L76 66 M42 40 L52 66 L66 40 M38 32 H48"/></g></svg></span><b style="font-size:36px">Bicicleta</b>
+        <div class="el-cadeia"><span class="f">química dos alimentos</span><span class="s">→</span><span class="f am">cinética das pernas e das rodas</span></div></div>
+    </div>
+    <div class="caixa caixa-fundamental" data-passo="3" style="position:absolute;left:560px;right:0;top:470px;padding:22px 32px">
+      <span class="rotulo">Conservação da energia</span>
+      <div class="texto" style="font-size:33px">A energia <b>não é criada nem destruída</b>: ela se <b>transforma</b> de uma forma em outra. Em toda transformação, a quantidade <b>total</b> continua a mesma.</div>
+    </div>
+  </div>
+  <aside class="notas"><p>Cliques 1 e 2: duas cadeias curtas. No ventilador, a tomada entrega energia elétrica e as pás giram. Na bicicleta, quem pedala usa a energia química do que comeu.</p><p>Clique 3: a lei mais importante do capítulo. Escreva no quadro: energia não se cria nem some, só muda de forma.</p></aside>
+</section>
+
+<section class="slide" data-nome="Por que gasta">
+  <div class="conteudo">
+    <p class="olho">Conservação da energia</p>
+    <h2 class="titulo">Se não some, por que dizemos que gasta?</h2>
+    <div style="position:absolute;left:0;top:190px"><svg viewBox="0 0 760 420" width="760" height="420"  style="overflow:visible;font-family:Figtree,'Segoe UI',sans-serif;" aria-hidden="true"><path d="M20 200 H330" stroke="var(--d)" stroke-width="70" fill="none"/><path d="M330 172 C 420 172 440 120 700 120" stroke="var(--d)" stroke-width="42" fill="none"/><path d="M330 222 C 420 222 460 300 560 300" stroke="#E86A3A" stroke-width="26" fill="none" stroke-opacity=".75"/><polygon points="700,92 744,120 700,148" fill="var(--d)"/><g class="el-calor" fill="none" stroke="#E86A3A" stroke-width="6" stroke-linecap="round"><path d="M560 300 q14 -18 0 -36 q-14 -18 0 -36"/><path d="M610 300 q14 -18 0 -36 q-14 -18 0 -36"/><path d="M660 300 q14 -18 0 -36 q-14 -18 0 -36"/></g><text x="30" y="150" text-anchor="start" font-size="28" font-weight="800" fill="var(--d-forte)" >energia que entra</text><text x="560" y="80" text-anchor="start" font-size="28" font-weight="800" fill="var(--d-forte)" >o que queremos</text><text x="450" y="380" text-anchor="start" font-size="28" font-weight="800" fill="#C2502A" >calor que se espalha</text></svg></div>
+    <div style="position:absolute;left:900px;right:0;top:180px;display:flex;flex-direction:column;gap:26px">
+      <p class="texto" data-passo="1" style="margin:0;font-size:34px">Em toda transformação, uma parte vira <b>calor</b> que se espalha no ambiente.</p>
+      <p class="texto" data-passo="2" style="margin:0;font-size:34px">Esse calor <b>não serve</b> mais para o que queremos.</p>
+      <div class="caixa caixa-atencao" data-passo="3"><span class="rotulo">Atenção</span><div class="texto" style="font-size:32px">A energia continua existindo, mas fica <b>difícil de aproveitar</b>. "Gastar" é isso.</div></div>
+    </div>
+  </div>
+  <aside class="notas"><p>A figura mostra o caminho da energia: a faixa larga entra, a maior parte vai para o que queremos, e uma parte escapa como calor (as ondinhas laranja sobem e se espalham). As larguras só ilustram a ideia; não são medidas.</p><p>Cliques 1 a 3: por que dizemos que um aparelho gasta energia se ela não some.</p></aside>
+</section>
+
+<section class="slide" data-nome="Exemplo: liquidificador">
+  <div class="conteudo">
+    <p class="olho">Exemplo</p>
+    <h2 class="titulo">A cadeia do liquidificador</h2>
+    <p class="texto" style="position:absolute;left:0;right:0;top:140px;margin:0;font-size:32px">Diga as transformações de energia num liquidificador ligado.</p>
+    <div style="position:absolute;left:0;top:230px"><svg viewBox="0 0 100 100" width="330" height="330" style="overflow:visible;" aria-hidden="true"><path d="M30 14 H70 L64 62 H36 Z" fill="var(--d-clara)" stroke="#7F7A99" stroke-width="4"/><rect x="28" y="62" width="44" height="26" rx="6" fill="var(--d)"/><g class="el-roda rapida" style="transform-origin:50px 52px"><path d="M38 52 H62" stroke="#292B2C" stroke-width="4" stroke-linecap="round"/></g></svg></div>
+    <div style="position:absolute;left:560px;top:200px" data-passo="1"><svg viewBox="0 0 820 520" width="760" height="482"  style="overflow:visible;font-family:Figtree,'Segoe UI',sans-serif;" aria-hidden="true"><rect x="0" y="180" width="200" height="130" rx="22" fill="var(--d)"/><text x="100" y="238" text-anchor="middle" font-size="34" font-weight="800" fill="#fff" >elétrica</text><text x="100" y="278" text-anchor="middle" font-size="24" font-weight="700" fill="#fff" >(da tomada)</text><g data-passo="2"><path class="el-traca" pathLength="1" d="M200 220 C 340 220 380 90 560 90" stroke="var(--d)" stroke-width="56" fill="none" stroke-opacity=".85"/><text x="580" y="100" text-anchor="start" font-size="30" font-weight="800" fill="var(--d-forte)" >cinética das lâminas</text><text x="580" y="134" text-anchor="start" font-size="24" font-weight="700" fill="#5E5A70" >a que queremos</text></g><g data-passo="3"><path class="el-traca" pathLength="1" d="M200 262 C 350 262 400 260 560 260" stroke="#8C7BEA" stroke-width="16" fill="none"/><text x="580" y="270" text-anchor="start" font-size="30" font-weight="800" fill="#5340B8" >sonora (o barulho)</text></g><g data-passo="4"><path class="el-traca" pathLength="1" d="M200 296 C 340 296 380 420 560 420" stroke="#E86A3A" stroke-width="26" fill="none" stroke-opacity=".8"/><text x="580" y="430" text-anchor="start" font-size="30" font-weight="800" fill="#C2502A" >térmica (o motor esquenta)</text></g></svg></div>
+    <div class="caixa caixa-fundamental" data-passo="5" style="position:absolute;left:560px;right:0;top:720px;padding:16px 30px">
+      <span class="rotulo">Repare</span>
+      <div class="texto" style="font-size:31px">A soma do que sai é <b>igual</b> ao que entrou. Nada sumiu, só mudou de forma.</div>
+    </div>
+  </div>
+  <aside class="notas"><p>Clique 1: entra energia elétrica, da tomada. Cliques 2 a 4: sai cinética das lâminas (a que queremos), sonora (o barulho) e térmica (o motor esquenta). As faixas se desenham na ordem.</p><p>Clique 5: a conservação. As larguras das faixas só ilustram; a apostila não dá valores.</p></aside>
+</section>
+
+<section class="slide" data-nome="Renováveis e não renováveis">
+  <div class="conteudo">
+    <p class="olho">Fontes de energia</p>
+    <h2 class="titulo">Renováveis e não renováveis</h2>
+    <p class="texto" style="position:absolute;left:0;right:0;top:140px;margin:0;font-size:32px">A <b>fonte de energia</b> é o lugar da natureza de onde a sociedade tira energia.</p>
+    <div class="caixa" data-passo="1" style="position:absolute;left:0;width:840px;top:220px;padding:18px 24px">
+      <span class="rotulo">Renováveis</span><div class="texto" style="font-size:28px;margin-bottom:12px">Se refazem em <b>pouco tempo</b>, na escala da vida humana.</div>
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px"><div class="el-card" style="display:flex;align-items:center;gap:16px;padding:12px 18px;font-size:32px;font-weight:700"><svg viewBox="0 0 100 100" width="96" height="96" style="overflow:visible;" aria-hidden="true"><g class="el-raios" style="transform-origin:50px 50px" stroke="#F2B800" stroke-width="6" stroke-linecap="round"><line x1="80.0" y1="50.0" x2="94.0" y2="50.0"/><line x1="71.2" y1="71.2" x2="81.1" y2="81.1"/><line x1="50.0" y1="80.0" x2="50.0" y2="94.0"/><line x1="28.8" y1="71.2" x2="18.9" y2="81.1"/><line x1="20.0" y1="50.0" x2="6.0" y2="50.0"/><line x1="28.8" y1="28.8" x2="18.9" y2="18.9"/><line x1="50.0" y1="20.0" x2="50.0" y2="6.0"/><line x1="71.2" y1="28.8" x2="81.1" y2="18.9"/></g><circle cx="50" cy="50" r="22" fill="#FFD10C"/></svg>Sol</div><div class="el-card" style="display:flex;align-items:center;gap:16px;padding:12px 18px;font-size:32px;font-weight:700"><svg viewBox="0 0 100 100" width="96" height="96" style="overflow:visible;" aria-hidden="true"><g fill="none" stroke="var(--d)" stroke-width="7" stroke-linecap="round"><path d="M10 38 H62 a12 12 0 1 0 -12 -12"/><path d="M10 58 H78 a12 12 0 1 1 -12 12"/><path d="M18 78 H44"/></g></svg>Vento</div><div class="el-card" style="display:flex;align-items:center;gap:16px;padding:12px 18px;font-size:32px;font-weight:700"><svg viewBox="0 0 100 100" width="96" height="96" style="overflow:visible;" aria-hidden="true"><path d="M50 10 C 66 34 80 50 80 64 a30 30 0 0 1 -60 0 C 20 50 34 34 50 10 Z" fill="#8CC1EE" stroke="#3E8CCB" stroke-width="4"/><path d="M36 64 a14 14 0 0 0 10 14" fill="none" stroke="#fff" stroke-width="5" stroke-linecap="round"/></svg>Água dos rios</div><div class="el-card" style="display:flex;align-items:center;gap:16px;padding:12px 18px;font-size:32px;font-weight:700"><svg viewBox="0 0 100 100" width="96" height="96" style="overflow:visible;" aria-hidden="true"><path d="M20 82 C 20 40 50 16 86 14 C 86 52 62 82 20 82 Z" fill="#4CB36B" stroke="#1F7A45" stroke-width="4"/><path d="M20 82 L64 38" stroke="#1F7A45" stroke-width="4"/></svg>Biomassa</div></div></div>
+    <div class="caixa" data-passo="2" style="position:absolute;left:900px;right:0;top:220px;padding:18px 24px">
+      <span class="rotulo" style="color:var(--erro)">Não renováveis</span><div class="texto" style="font-size:28px;margin-bottom:12px">Levaram <b>milhões de anos</b> para se formar e <b>acabam</b> com o uso.</div>
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px"><div class="el-card" style="display:flex;align-items:center;gap:16px;padding:12px 18px;font-size:32px;font-weight:700"><svg viewBox="0 0 100 100" width="96" height="96" style="overflow:visible;" aria-hidden="true"><path d="M50 10 C 66 34 80 50 80 64 a30 30 0 0 1 -60 0 C 20 50 34 34 50 10 Z" fill="#292B2C"/><path d="M36 64 a14 14 0 0 0 10 14" fill="none" stroke="#8C7BEA" stroke-width="5" stroke-linecap="round"/></svg>Petróleo</div><div class="el-card" style="display:flex;align-items:center;gap:16px;padding:12px 18px;font-size:32px;font-weight:700"><svg viewBox="0 0 100 100" width="96" height="96" style="overflow:visible;" aria-hidden="true"><path d="M12 80 L22 52 L44 44 L58 56 L70 40 L88 52 L92 80 Z" fill="#3B3B44"/><path d="M30 58 L40 54 M64 50 L72 46" stroke="#8A8A96" stroke-width="4" stroke-linecap="round"/></svg>Carvão mineral</div><div class="el-card" style="display:flex;align-items:center;gap:16px;padding:12px 18px;font-size:32px;font-weight:700"><svg viewBox="0 0 100 100" width="96" height="96" style="overflow:visible;" aria-hidden="true"><path d="M50 8 C 62 30 78 40 78 62 a28 28 0 0 1 -56 0 C 22 48 32 40 36 28 C 42 40 46 42 50 8 Z" fill="#4B8FE0"/><path d="M50 50 C 56 60 62 64 62 72 a12 12 0 0 1 -24 0 C 38 64 44 60 50 50 Z" fill="#FFD10C"/></svg>Gás natural</div><div class="el-card" style="display:flex;align-items:center;gap:16px;padding:12px 18px;font-size:32px;font-weight:700"><svg viewBox="0 0 100 100" width="96" height="96" style="overflow:visible;" aria-hidden="true"><g fill="none" stroke="var(--d)" stroke-width="5"><ellipse cx="50" cy="50" rx="42" ry="16"/><ellipse cx="50" cy="50" rx="42" ry="16" transform="rotate(60 50 50)"/><ellipse cx="50" cy="50" rx="42" ry="16" transform="rotate(-60 50 50)"/></g><circle cx="50" cy="50" r="10" fill="#FFD10C"/></svg>Urânio</div></div></div>
+    <div class="caixa caixa-fundamental" data-passo="3" style="position:absolute;left:560px;right:0;top:700px;padding:16px 30px"><div class="texto" style="font-size:31px"><b>Biomassa:</b> matéria de seres vivos usada como fonte: lenha plantada, bagaço de cana.</div></div>
+  </div>
+  <aside class="notas"><p>Clique 1: as renováveis (o Sol brilha todo dia, o vento sopra, a chuva enche os rios, a cana é replantada). Clique 2: as não renováveis.</p><p>Clique 3: biomassa é matéria de seres vivos usada como combustível: lenha plantada, bagaço de cana.</p></aside>
+</section>
+
+<section class="slide" data-nome="Combustíveis fósseis">
+  <div class="conteudo">
+    <p class="olho">Fontes de energia</p>
+    <h2 class="titulo">Combustíveis fósseis</h2>
+    <div style="position:absolute;left:0;width:1060px;top:160px;display:flex;flex-direction:column;gap:22px">
+      <p class="texto" style="margin:0;font-size:33px"><b>Petróleo</b>, <b>carvão mineral</b> e <b>gás natural</b> vieram de restos de seres vivos soterrados há milhões de anos.</p>
+      <div class="el-cadeia" data-passo="1"><span class="f">concentram muita energia</span><span class="s">mas</span><span class="f am">ao queimar, liberam gás carbônico</span></div>
+      <p class="texto" data-passo="2" style="margin:0;font-size:33px">O gás carbônico <b>intensifica o efeito estufa</b>.</p>
+    </div>
+    <div style="position:absolute;left:1180px;top:100px" data-passo="1"><svg viewBox="0 0 300 300" width="400" height="400"  style="overflow:visible;font-family:Figtree,'Segoe UI',sans-serif;" aria-hidden="true"><rect x="70" y="180" width="110" height="110" rx="10" fill="#7F7A99"/><rect x="100" y="140" width="34" height="50" fill="#5E5A70"/><g class="el-calor" fill="#B8B3C9"><path d="M120 120 a16 16 0 1 0 0.1 0 Z"/><path d="M150 100 a12 12 0 1 0 0.1 0 Z"/><path d="M96 92 a10 10 0 1 0 0.1 0 Z"/></g><text x="240" y="110" text-anchor="middle" font-size="36" font-weight="800" fill="#5E5A70" >CO₂</text></svg></div>
+    <div class="caixa caixa-atencao" data-passo="3" style="position:absolute;left:560px;right:0;top:520px;padding:22px 32px">
+      <span class="rotulo">Renovável não quer dizer sem impacto</span>
+      <div class="texto" style="font-size:31px">A hidrelétrica usa uma fonte renovável, a água, e mesmo assim <b>alaga grandes áreas</b>. O que se discute é qual impacto é <b>menor</b> em cada caso.</div>
+    </div>
+  </div>
+  <aside class="notas"><p>Clique 1: a vantagem e o problema dos fósseis. A fumaça sobe da chaminé. Clique 2: o efeito estufa (visto em Termologia).</p><p>Clique 3: a pegadinha mais comum do IF: renovável não é sinônimo de sem impacto.</p></aside>
+</section>
+
+<section class="slide" data-nome="Exemplo: classificando">
+  <div class="conteudo">
+    <p class="olho">Exemplo</p>
+    <h2 class="titulo">Renovável ou não renovável?</h2>
+    <div style="position:absolute;left:0;right:0;top:150px;display:flex;flex-direction:column;gap:16px"><div class="el-linha" data-passo="1" style="grid-template-columns:70px 330px 1fr 260px;padding:12px 24px"><b style="font-size:32px">(a)</b><b style="font-size:34px">Energia solar</b><span>o Sol brilha todos os dias</span><span class="tag tag-d">Renovável</span></div><div class="el-linha" data-passo="2" style="grid-template-columns:70px 330px 1fr 260px;padding:12px 24px"><b style="font-size:32px">(b)</b><b style="font-size:34px">Gás de cozinha</b><span>vem do petróleo</span><span class="tag tag-r">Não renovável</span></div><div class="el-linha" data-passo="3" style="grid-template-columns:70px 330px 1fr 260px;padding:12px 24px"><b style="font-size:32px">(c)</b><b style="font-size:34px">Bagaço de cana</b><span>a cana é replantada a cada safra</span><span class="tag tag-d">Renovável</span></div><div class="el-linha" data-passo="4" style="grid-template-columns:70px 330px 1fr 260px;padding:12px 24px"><b style="font-size:32px">(d)</b><b style="font-size:34px">Urânio</b><span>é um minério, que acaba</span><span class="tag tag-r">Não renovável</span></div></div>
+    <div class="caixa caixa-atencao" data-passo="5" style="position:absolute;left:560px;right:0;top:600px;padding:20px 30px">
+      <span class="rotulo">Atenção: fonte não é forma</span>
+      <div class="texto" style="font-size:30px">"Elétrica" é uma <b>forma</b> de energia, não uma fonte. A eletricidade da sua casa veio de alguma fonte: da água de um rio, do vento, do Sol ou de um combustível.</div>
+    </div>
+  </div>
+  <aside class="notas"><p>Peça a resposta antes de cada clique. (b) é a que mais erram: trocar o botijão não renova o petróleo.</p><p>Clique 5: fonte (de onde vem) × forma (como a energia está). Volta nas questões.</p></aside>
+</section>
+
+<section class="slide" data-nome="Nos aparelhos da casa">
+  <div class="conteudo">
+    <p class="olho">Transformações nos aparelhos</p>
+    <h2 class="titulo">A energia elétrica vira principalmente…</h2>
+    <div style="position:absolute;left:0;right:0;top:150px;display:flex;flex-direction:column;gap:10px"><div class="el-linha" data-passo="1" style="grid-template-columns:90px 640px 1fr;padding:3px 24px;font-size:31px"><svg viewBox="0 0 100 100" width="60" height="60" style="overflow:visible;" aria-hidden="true"><path d="M20 14 V26 H56" fill="none" stroke="#7F7A99" stroke-width="6" stroke-linecap="round"/><path d="M40 26 h32 a8 8 0 0 1 8 8 v6 H32 v-6 a8 8 0 0 1 8 -8 Z" fill="var(--d)"/><g class="el-gotas" fill="#8CC1EE"><circle cx="40" cy="50" r="4"/><circle cx="52" cy="50" r="4"/><circle cx="64" cy="50" r="4"/><circle cx="46" cy="50" r="3"/><circle cx="72" cy="50" r="3"/></g></svg><span>Chuveiro, ferro, aquecedor, torradeira</span><span class="tag tag-d" style="justify-self:start">térmica</span></div><div class="el-linha" data-passo="2" style="grid-template-columns:90px 640px 1fr;padding:3px 24px;font-size:31px"><svg viewBox="0 0 100 100" width="60" height="60" style="overflow:visible;" aria-hidden="true"><circle cx="50" cy="40" r="26" fill="#FFE680" stroke="#292B2C" stroke-width="4"/><rect x="38" y="66" width="24" height="18" rx="4" fill="#7F7A99"/><path d="M42 44 l8 -8 l8 8" fill="none" stroke="#C99A00" stroke-width="3"/></svg><span>Lâmpada</span><span class="tag tag-d" style="justify-self:start">luminosa (e um pouco de térmica)</span></div><div class="el-linha" data-passo="3" style="grid-template-columns:90px 640px 1fr;padding:3px 24px;font-size:31px"><svg viewBox="0 0 100 100" width="60" height="60" style="overflow:visible;" aria-hidden="true"><line x1="50" y1="50" x2="50" y2="88" stroke="#7F7A99" stroke-width="6"/><rect x="30" y="86" width="40" height="8" rx="4" fill="#7F7A99"/><circle cx="50" cy="44" r="34" fill="none" stroke="#C9C0F0" stroke-width="4"/><g class="el-roda rapida" style="transform-origin:50px 44px"><ellipse cx="50" cy="26" rx="9" ry="17" fill="var(--d)"/><ellipse cx="50" cy="26" rx="9" ry="17" fill="var(--d)" transform="rotate(120 50 44)"/><ellipse cx="50" cy="26" rx="9" ry="17" fill="var(--d)" transform="rotate(240 50 44)"/></g><circle cx="50" cy="44" r="6" fill="#FFD10C"/></svg><span>Ventilador, liquidificador, geladeira</span><span class="tag tag-d" style="justify-self:start">mecânica (movimento do motor)</span></div><div class="el-linha" data-passo="4" style="grid-template-columns:90px 640px 1fr;padding:3px 24px;font-size:31px"><svg viewBox="0 0 100 100" width="60" height="60" style="overflow:visible;" aria-hidden="true"><rect x="12" y="34" width="76" height="48" rx="10" fill="var(--d)"/><circle cx="36" cy="58" r="14" fill="#fff"/><circle cx="36" cy="58" r="6" fill="#292B2C"/><rect x="58" y="46" width="22" height="6" rx="3" fill="#fff"/><rect x="58" y="60" width="22" height="6" rx="3" fill="#fff"/><line x1="70" y1="34" x2="84" y2="12" stroke="#7F7A99" stroke-width="4"/></svg><span>Rádio, caixa de som</span><span class="tag tag-d" style="justify-self:start">sonora</span></div><div class="el-linha" data-passo="5" style="grid-template-columns:90px 640px 1fr;padding:3px 24px;font-size:31px"><svg viewBox="0 0 100 100" width="60" height="60" style="overflow:visible;" aria-hidden="true"><rect x="10" y="20" width="80" height="54" rx="8" fill="#292B2C"/><rect x="16" y="26" width="68" height="42" rx="4" fill="var(--d-clara)"/><path d="M40 36 L62 47 L40 58 Z" fill="var(--d)"/><path d="M38 86 H62 M50 74 V86" stroke="#7F7A99" stroke-width="5" stroke-linecap="round"/></svg><span>TV, celular</span><span class="tag tag-d" style="justify-self:start">luminosa e sonora</span></div></div>
+    <div class="caixa caixa-fundamental" style="position:absolute;left:560px;right:0;top:660px;padding:16px 30px"><div class="texto" style="font-size:31px">Todos recebem a <b>mesma energia elétrica</b> da tomada, mas cada um a transforma em outra coisa.</div></div>
+  </div>
+  <aside class="notas"><p>Um grupo de aparelhos por clique. Pergunte antes: no que o chuveiro transforma a energia? O que interessa é a transformação principal, o objetivo do aparelho.</p><p>Repare nas gotas do chuveiro e nas pás do ventilador: cada ícone mostra o efeito.</p></aside>
+</section>
+
+<section class="slide" data-nome="Efeito Joule e potência">
+  <div class="conteudo">
+    <p class="olho">Transformações nos aparelhos</p>
+    <h2 class="titulo">Efeito Joule e potência</h2>
+    <div style="position:absolute;left:0;top:130px"><svg viewBox="0 0 520 300" width="540" height="312"  style="overflow:visible;font-family:Figtree,'Segoe UI',sans-serif;" aria-hidden="true"><path d="M20 170 H120" class="el-fio"/><path d="M400 170 H500" class="el-fio"/><path d="M120 170 l20 -40 l30 80 l30 -80 l30 80 l30 -80 l30 80 l30 -80 l30 80 l20 -40" fill="none" stroke="#E86A3A" stroke-width="10" stroke-linejoin="round" stroke-linecap="round"/><g class="el-calor" fill="none" stroke="#E86A3A" stroke-width="6" stroke-linecap="round"><path d="M200 110 q14 -18 0 -36 q-14 -18 0 -36"/><path d="M260 110 q14 -18 0 -36 q-14 -18 0 -36"/><path d="M320 110 q14 -18 0 -36 q-14 -18 0 -36"/></g><path class="el-fluxo sempre" d="M20 170 H120 M400 170 H500"/><text x="260" y="270" text-anchor="middle" font-size="26" font-weight="800" fill="#C2502A" >resistor: a corrente passa e ele esquenta</text></svg></div>
+    <p class="texto" style="position:absolute;left:0;width:560px;top:460px;margin:0;font-size:29px">No chuveiro, esquentar é o <b>objetivo</b>. No carregador do celular, esse calor é <b>desperdício</b>.</p>
+    <div style="position:absolute;left:660px;right:0;top:160px;display:flex;flex-direction:column;gap:22px">
+      <div class="caixa caixa-fundamental" data-passo="1" style="padding:18px 28px"><span class="rotulo">Potência elétrica</span>
+        <div class="texto" style="font-size:32px">Diz quanta energia o aparelho <b>transforma a cada segundo</b>. Medida em <b>watts (W)</b>. Mais potência: mais energia no mesmo tempo.</div></div>
+      <div class="caixa" data-passo="2" style="padding:16px 28px;font-size:44px;text-align:center">\(1\ \text{kW} = 1000\ \text{W}\)</div>
+      <div data-passo="3" style="display:flex;align-items:center;gap:26px">
+        <div style="background:var(--d-clara);border:3px solid var(--d-escura);border-radius:20px;padding:12px 26px;font-size:30px;line-height:1.4"><b style="color:var(--d-escura)">ETIQUETA</b><br>220 V, 5500 W</div>
+        <span class="pilula pilula-resposta">= 5,5 kW</span></div>
+    </div>
+  </div>
+  <aside class="notas"><p>Efeito Joule: quando a corrente passa por um resistor, ele esquenta (os pontinhos amarelos são as cargas andando no fio; o calor sobe do resistor).</p><p>Clique 1: potência é rapidez: energia por segundo. Clique 2: quilowatt. Clique 3: a etiqueta traz a tensão e a potência; 5500 W = 5,5 kW.</p></aside>
+</section>
+
+<section class="slide" data-nome="Exemplo: secador">
+  <div class="conteudo">
+    <p class="olho">Exemplo</p>
+    <h2 class="titulo">O secador de cabelo</h2>
+    <div style="position:absolute;left:0;top:150px;display:flex;gap:30px;align-items:center"><svg viewBox="0 0 100 100" width="190" height="190" style="overflow:visible;" aria-hidden="true"><path d="M14 26 H62 a20 20 0 0 1 0 40 H40 V90 H26 V66 H14 Z" fill="var(--d)"/><circle cx="62" cy="46" r="10" fill="#fff"/><g class="el-calor" fill="none" stroke="#E86A3A" stroke-width="4" stroke-linecap="round"><path d="M86 34 h10"/><path d="M86 46 h12"/><path d="M86 58 h10"/></g></svg><div style="background:var(--d-clara);border:3px solid var(--d-escura);border-radius:20px;padding:12px 26px;font-size:32px;line-height:1.4;display:inline-block"><b style="color:var(--d-escura)">SECADOR</b><br>127 V, 1200 W</div></div>
+    <div style="position:absolute;left:0;width:1000px;top:390px;display:flex;flex-direction:column;gap:16px">
+      <div class="el-cadeia" data-passo="1"><span class="f">elétrica</span><span class="s">→</span><span class="f am">térmica: o ar quente (efeito Joule)</span></div>
+      <div class="el-cadeia" data-passo="2"><span class="f">elétrica</span><span class="s">→</span><span class="f am">mecânica: o motor do ventilador interno</span></div>
+    </div>
+    <div style="position:absolute;left:1100px;right:0;top:170px">
+      <p class="texto" style="margin:0 0 16px;font-size:30px"><b>Potência em kW</b></p>
+      <div class="contas" style="font-size:44px;"><div class="eq" data-passo="3"><span>\(P\)</span><span>\(=\)</span><span>\(1200\ \text{W}\)</span></div><div class="eq" data-passo="4"><span>\(P\)</span><span>\(=\)</span><span>\(\dfrac{1200}{1000}\ \text{kW}\)</span></div><div class="eq final" data-passo="5"><span>\(P\)</span><span>\(=\)</span><span>\(1{,}2\ \text{kW}\)</span></div></div>
+    </div>
+  </div>
+  <aside class="notas"><p>A etiqueta: 127 V é a tensão; 1200 W é a potência. Cliques 1 e 2: o secador faz duas transformações: o resistor esquenta o ar e um motor sopra esse ar.</p><p>Cliques 3 a 5: passar para kW, dividindo por 1000.</p></aside>
+</section>
+
+<section class="slide questao" data-nome="Questão 1" data-gap="14">
+  <div class="conteudo">
+    <div class="area-resolucao"></div>
+    <span class="pilula pilula-pausa" data-em="1:some">Pause o vídeo e tente</span>
+    <div class="painel-questao">
+      <p class="olho">Questão 1 · Modelo IF</p>
+      <p class="enunciado" style="font-size:27px">Um ciclista de Juiz de Fora instalou na bicicleta um farol ligado a um <b>dínamo</b>, um pequeno gerador elétrico que encosta no pneu e gira junto com a roda. O farol só acende enquanto ele pedala: quando a bicicleta para, a luz apaga.</p><p class="enunciado" style="font-size:27px">A sequência <b>CORRETA</b> das principais transformações de energia, desde o corpo do ciclista até a luz do farol, é:</p>
+      
+      
+      <ol class="alternativas" style="gap:8px"><li data-em="2:certo" style="font-size:25px;padding:6px 14px"><b>A</b><span>química → cinética → elétrica → luminosa.</span></li><li data-em="2:apaga" style="font-size:25px;padding:6px 14px"><b>B</b><span>elétrica → cinética → química → luminosa.</span></li><li data-em="2:apaga" style="font-size:25px;padding:6px 14px"><b>C</b><span>cinética → química → elétrica → luminosa.</span></li><li data-em="2:apaga" style="font-size:25px;padding:6px 14px"><b>D</b><span>química → elétrica → cinética → luminosa.</span></li><li data-em="2:apaga" style="font-size:25px;padding:6px 14px"><b>E</b><span>térmica → cinética → elétrica → luminosa.</span></li></ol>
+    </div>
+  </div>
+  <aside class="resolucao">
+    <p class="dados"><b>Dados:</b> o dínamo gira com a roda; o farol apaga quando a bicicleta para.</p>
+    <ol class="passos"><li><b>1.</b> Ciclista: energia química dos alimentos.</li><li><b>2.</b> Pernas e roda: cinética.</li><li><b>3.</b> Dínamo: cinética → elétrica.</li><li><b>4.</b> Farol: elétrica → luminosa.</li></ol>
+    <p class="resposta"><b>Resposta:</b> química → cinética → elétrica → luminosa. <b>Gabarito A.</b></p>
+    <p class="atencao"><b>Destaque no quadro:</b> A cadeia começa no que o ciclista comeu.</p>
+    <ul class="erros"><li><b>B</b> Não há pilha: a elétrica só aparece no dínamo.</li><li><b>C</b> A química (alimento) vem antes do movimento.</li><li><b>D</b> O dínamo precisa de movimento antes de gerar.</li><li><b>E</b> O calor do corpo não move os pedais.</li></ul>
+  </aside>
+  <aside class="notas"><p>Clique 1 tira o aviso de pausa: resolva na área (D liga a caneta; E esconde o enunciado). Clique 2: gabarito A.</p><p>Modelo IF, lote if-fisica-fontes-e-transformacoes-de-energia, m004, FIS-8789. Por isso o farol apaga quando para: sem movimento, o dínamo não gera.</p></aside>
+</section>
+
+<section class="slide questao" data-nome="Questão 2" data-gap="12">
+  <div class="conteudo">
+    <div class="area-resolucao"></div>
+    <span class="pilula pilula-pausa" data-em="1:some">Pause o vídeo e tente</span>
+    <div class="painel-questao">
+      <p class="olho">Questão 2 · Modelo IF</p>
+      <p class="enunciado" style="font-size:23px">Numa casa da zona rural da Zona da Mata mineira, a família cozinha no fogão a lenha, com madeira de eucalipto plantado no próprio sítio, e usa o fogão a gás nos dias de pressa. Sobre as fontes de energia dessa casa, a família comentou:</p><p class="enunciado" style="font-size:23px">I. O gás de cozinha é uma fonte renovável, porque o botijão vazio pode ser trocado por outro cheio.<br>II. A lenha de eucalipto plantado é biomassa, uma fonte renovável, porque as árvores podem ser replantadas.<br>III. Por ser renovável, a lenha não causa nenhum impacto ao ambiente quando é queimada.</p><p class="enunciado" style="font-size:23px">Está <b>CORRETO</b> o que se afirma em</p>
+      
+      
+      <ol class="alternativas curtas"><li data-em="2:apaga"><b>A</b><span>I, apenas.</span></li><li data-em="2:certo"><b>B</b><span>II, apenas.</span></li><li data-em="2:apaga"><b>C</b><span>III, apenas.</span></li><li data-em="2:apaga"><b>D</b><span>I e II, apenas.</span></li><li data-em="2:apaga"><b>E</b><span>II e III, apenas.</span></li></ol>
+    </div>
+  </div>
+  <aside class="resolucao">
+    <p class="dados"><b>Dados:</b> lenha de eucalipto plantado; gás de cozinha (botijão).</p>
+    <ol class="passos"><li><b>I.</b> Falsa: o gás vem do petróleo (fóssil).</li><li><b>II.</b> Verdadeira: lenha plantada é biomassa.</li><li><b>III.</b> Falsa: a queima solta fumaça e CO₂.</li></ol>
+    <p class="resposta"><b>Resposta:</b> só a II está correta. <b>Gabarito B.</b></p>
+    <p class="atencao"><b>Destaque no quadro:</b> Trocar o botijão não renova o petróleo.</p>
+    <ul class="erros"><li><b>A</b> A I é falsa: o que se renova é o botijão, não o gás.</li><li><b>C</b> A III é falsa: renovável não é sem impacto.</li><li><b>D</b> Aceita a I.</li><li><b>E</b> Aceita a III.</li></ul>
+  </aside>
+  <aside class="notas"><p>Clique 1 tira o aviso de pausa. Clique 2: gabarito B.</p><p>Modelo IF, lote if-fisica-fontes-e-transformacoes-de-energia, m005, FIS-8790. Enunciado sem a frase sobre a área de eucalipto de Minas (contexto que não muda a resposta), para caber na tela.</p></aside>
+</section>
+
+<section class="slide questao" data-nome="Questão 3" data-gap="12">
+  <div class="conteudo">
+    <div class="area-resolucao"></div>
+    <span class="pilula pilula-pausa" data-em="1:some">Pause o vídeo e tente</span>
+    <div class="painel-questao">
+      <p class="olho">Questão 3 · Modelo IF</p>
+      <p class="enunciado" style="font-size:24px">Um ventilador de teto tem potência de 60 W: a cada segundo, ele recebe 60 J de energia elétrica da tomada. A tabela mostra em que essa energia se transforma a cada segundo.</p>
+      
+      <table class="el-mini" style="align-self:center"><tr><th>Forma de energia</th><th>A cada segundo</th></tr><tr><td>cinética das pás e do ar</td><td>45 J</td></tr><tr><td>sonora (o barulho)</td><td>1 J</td></tr><tr><td>térmica (o motor esquenta)</td><td>?</td></tr></table>
+      <p class="enunciado" style="font-size:24px">A energia térmica produzida a cada segundo e a energia que é aproveitada para o objetivo do ventilador são, respectivamente,</p>
+      <ol class="alternativas" style="gap:8px"><li data-em="2:certo" style="font-size:22px;padding:6px 14px"><b>A</b><span>14 J; a cinética das pás e do ar.</span></li><li data-em="2:apaga" style="font-size:22px;padding:6px 14px"><b>B</b><span>14 J; a térmica, porque é ela que refresca o ambiente.</span></li><li data-em="2:apaga" style="font-size:22px;padding:6px 14px"><b>C</b><span>15 J; a cinética das pás e do ar.</span></li><li data-em="2:apaga" style="font-size:22px;padding:6px 14px"><b>D</b><span>46 J; a cinética das pás e do ar.</span></li><li data-em="2:apaga" style="font-size:22px;padding:6px 14px"><b>E</b><span>0 J, porque o ventilador não tem resistor; a cinética das pás e do ar.</span></li></ol>
+    </div>
+  </div>
+  <aside class="resolucao">
+    <p class="dados"><b>Dados:</b> entram 60 J/s; saem 45 J (cinética) + 1 J (sonora) + ? (térmica).</p>
+    <ol class="passos"><li><b>Conservação:</b> entra = soma do que sai.</li><li>\(60 = 45 + 1 + E_t\)</li><li>\(60 = 46 + E_t\)</li><li>\(E_t = 14\ \text{J}\)</li><li><b>Objetivo:</b> mover o ar: cinética.</li></ol>
+    <p class="resposta"><b>Resposta:</b> 14 J; a energia aproveitada é a cinética. <b>Gabarito A.</b></p>
+    <p class="atencao"><b>Destaque no quadro:</b> O que entra = soma do que sai.</p>
+    <ul class="erros"><li><b>B</b> O ventilador refresca movendo o ar; o calor é perda.</li><li><b>C</b> Esquece o 1 J do som.</li><li><b>D</b> Soma o que sai em vez de subtrair.</li><li><b>E</b> Todo motor esquenta; a energia não some.</li></ul>
+  </aside>
+  <aside class="notas"><p>Clique 1 tira o aviso de pausa. Clique 2: gabarito A.</p><p>Modelo IF, lote if-fisica-fontes-e-transformacoes-de-energia, m007, FIS-8792. A conta: 60 − 45 − 1 = 14 J.</p></aside>
+</section>
+
+<section class="slide" data-nome="Resumo">
+  <div class="conteudo">
+    <p class="olho">Resumo</p>
+    <h2 class="titulo">O essencial</h2>
+<div class="resumo" style="position:absolute;left:0;right:0;top:150px"><div><b>Energia</b>: capacidade de provocar mudanças. Formas: cinética, potencial, química, térmica, elétrica, luminosa, sonora.</div><div><b>Conservação</b>: a energia não é criada nem destruída, só se transforma. Uma parte sempre vira calor.</div><div><b>Renováveis</b> (Sol, vento, água, biomassa) se refazem; <b>não renováveis</b> (petróleo, carvão, gás natural, urânio) acabam.</div><div><b>Fósseis</b> liberam gás carbônico. Renovável <b>não</b> é sem impacto.</div><div>Aparelhos transformam a elétrica em <b>térmica</b> (efeito Joule), luminosa, sonora ou mecânica.</div><div><b>Potência</b>: energia por segundo, em W. 1 kW = 1000 W.</div></div><div class="caixa caixa-atencao" style="position:absolute;left:560px;right:0;top:640px"><div class="texto" style="font-size:30px">Fonte não é forma: <b>elétrica</b> é forma; a fonte é a água, o vento, o Sol ou o combustível.</div></div>
+  </div>
+  <aside class="notas"><p>Peça para tirarem um print desta tela.</p></aside>
+</section>
+
+<section class="slide capa" data-nome="A seguir">
+  <div class="estrelas"></div>
+  <div class="texto-capa" style="top:150px">
+    <span class="selo">Física · IF</span>
+    <p class="aula" style="font-size:26px">A seguir · Circuitos elétricos · Parte 1 de 2</p>
+    <h1 style="font-size:130px">Circuitos elétricos</h1>
+    <p class="sub">Corrente e o circuito simples</p>
+  </div>
+  <svg class="emblema" viewBox="0 0 640 640" aria-hidden="true">
+    <g class="gira-lento"><ellipse cx="320" cy="320" rx="300" ry="128" fill="none" stroke="#fff" stroke-opacity=".38" stroke-width="2" transform="rotate(-10 320 320)"/></g>
+    <g class="gira"><ellipse cx="320" cy="320" rx="236" ry="196" fill="none" stroke="#FFD10C" stroke-opacity=".75" stroke-width="2.5" stroke-dasharray="3 14" stroke-linecap="round" transform="rotate(-8 320 320)"/>
+      <circle cx="84" cy="300" r="13" fill="var(--d)" stroke="#fff" stroke-width="3"/></g>
+    <circle cx="320" cy="320" r="150" fill="#FFD10C"/>
+    <path d="M346 196 L262 336 H318 L292 450 L382 300 H326 Z" fill="#4B258D" stroke="#4B258D" stroke-width="8" stroke-linejoin="round"/>
+  </svg>
+  <img class="logo-capa" src="{{LOGO_BRANCO}}" alt="Quarks">
+  <aside class="notas"><p>Próxima: como a energia elétrica chega à lâmpada: corrente elétrica e o circuito simples.</p></aside>
+</section>

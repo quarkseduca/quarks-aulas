@@ -1,0 +1,323 @@
+<!--aula
+{"disciplina": "fisica", "curso": "IF", "assunto": "Eletricidade", "parte": "Parte única", "titulo": "Usinas de energia elétrica", "scripts": ["animacoes-eletricidade.js"]}
+-->
+<!-- Fonte: apostila IF, Física, cap. 6 (6.4 Usinas de energia elétrica: usinas elétricas e seus impactos; da usina até a sua casa; resumo do 6.4). Questões Modelo IF do lote if-fisica-energia-e-sociedade (m003, m006, m010); a m001 (FIS-8796) fica reservada para o bloco do fim do capítulo. -->
+<style>
+  .caixa, .el-card, .el-linha { box-sizing: border-box; }
+  .el-cards { display: grid; gap: 22px; }
+  .el-card { background: var(--branco); border: 2px solid var(--lilas-2); border-radius: 26px; padding: 16px 22px; font-size: 27px; line-height: 1.3; }
+  .el-card h3 { margin: 0 0 4px; font: 800 32px var(--fonte-titulo); color: var(--roxo-titulo); letter-spacing: -.01em; display: flex; align-items: center; gap: 14px; }
+  .el-card h3 svg { width: 70px; height: 70px; flex: none; }
+  .el-card p { margin: 0; color: var(--carvao); }
+  .el-card.d { background: var(--d-clara); border-color: color-mix(in srgb, var(--d) 35%, transparent); }
+  .el-linha { display: grid; grid-template-columns: 90px 1fr auto; align-items: center; gap: 22px; background: var(--branco); border: 2px solid var(--lilas-2); border-radius: 22px; padding: 10px 24px; font-size: 30px; }
+  .el-linha svg { width: 80px; height: 70px; }
+  .el-linha b { color: var(--roxo-titulo); }
+  .tag { justify-self: end; padding: 6px 20px; border-radius: 999px; font-weight: 800; font-size: 25px; white-space: nowrap; }
+  .tag-d { background: var(--d-clara); color: var(--d-forte); }
+  .tag-a { background: #FFF4C2; color: #8A6A00; }
+  .tag-r { background: var(--erro-claro); color: var(--erro); }
+  .el-lista { margin: 0; padding: 0; list-style: none; display: flex; flex-direction: column; gap: 14px; }
+  .el-lista li { display: flex; align-items: baseline; gap: 16px; font-size: 31px; line-height: 1.3; }
+  .el-lista li b.n { flex: none; width: 46px; height: 46px; border-radius: 50%; display: grid; place-items: center; background: var(--d); color: #fff; font: 800 26px var(--fonte-titulo); transform: translateY(6px); }
+  .el-lista li > span b { color: var(--roxo-titulo); }
+  .el-cadeia { display: flex; align-items: center; gap: 14px; flex-wrap: wrap; }
+  .el-cadeia .f { padding: 10px 24px; border-radius: 999px; background: var(--d-clara); color: var(--d-forte); font-weight: 800; font-size: 30px; }
+  .el-cadeia .f.am { background: #FFF4C2; color: #8A6A00; }
+  .el-cadeia .s { font: 800 36px var(--fonte-titulo); color: var(--roxo-claro); }
+  .tabela.el-t { font-size: 30px; }
+  .tabela.el-t th { padding: 12px 28px; }
+  .tabela.el-t td { padding: 10px 28px; text-align: left; }
+  /* colunas de enunciado mais largas para questões longas (data-largo); E continua ampliando a área */
+  .questao[data-largo="1"] .area-resolucao { width: 1070px; } .questao[data-largo="1"] .painel-questao { left: 1110px; } .questao[data-largo="1"] .pilula-pausa { left: 535px; }
+  .questao[data-largo="2"] .area-resolucao { width: 960px; } .questao[data-largo="2"] .painel-questao { left: 1000px; } .questao[data-largo="2"] .pilula-pausa { left: 480px; }
+  .questao[data-largo].amplia .area-resolucao { width: 1760px; } .questao[data-largo].amplia .pilula-pausa { left: 880px; }
+  .questao[data-gap="8"] .painel-questao { gap: 8px; } .questao[data-gap="10"] .painel-questao { gap: 10px; } .questao[data-gap="12"] .painel-questao { gap: 12px; } .questao[data-gap="14"] .painel-questao { gap: 14px; }
+  .painel-questao .figura { display: block; margin: 0 auto; flex: none; }
+  .painel-questao .el-mini { font-size: 22px; border-collapse: separate; border-spacing: 0; background: #fff; border: 2px solid var(--lilas-2); border-radius: 16px; overflow: hidden; }
+  .painel-questao .el-mini th { background: var(--d-clara); color: var(--d-forte); padding: 5px 12px; font-weight: 800; }
+  .painel-questao .el-mini td { padding: 4px 12px; border-top: 2px solid var(--lilas); text-align: center; }
+  .painel-questao .el-mini td:first-child { text-align: left; }
+  .el-fios path, .el-fio { fill: none; stroke: #292B2C; stroke-width: 6; stroke-linejoin: round; stroke-linecap: round; }
+  /* ---------- Animações (só na tela aberta) ---------- */
+  /* cargas andando pelo fio: pontinhos amarelos que correm quando o circuito está fechado */
+  .el-fluxo { fill: none; stroke: #FFD10C; stroke-width: 10; stroke-linecap: round; stroke-dasharray: 0 32; opacity: 0; transition: opacity .5s; }
+  .el-on .el-fluxo, .el-fluxo.sempre { opacity: 1; }
+  .el-off .el-fluxo, .el-on .el-off .el-fluxo { opacity: 0 !important; }
+  .slide.ativo .el-on .el-fluxo, .slide.ativo .el-fluxo.sempre { animation: el-flui 1.6s linear infinite; }
+  .slide.ativo .el-on .el-fluxo.lento { animation-duration: 3.2s; }
+  @keyframes el-flui { to { stroke-dashoffset: -32; } }
+  .el-agua { fill: none; stroke: #8FC8F0; stroke-width: 12; stroke-linecap: round; stroke-dasharray: 2 26; }
+  .slide.ativo .el-agua { animation: el-flui 1.8s linear infinite; }
+  /* lâmpada: acende quando o circuito fecha (sem piscar) */
+  .el-lamp .luz { opacity: 0; transition: opacity .7s ease; }
+  .el-on .el-lamp .luz, .el-lamp.acesa .luz { opacity: 1; }
+  .el-on .el-lamp.fraca .luz { opacity: .42; }
+  .el-off .el-lamp .luz, .el-on .el-off .el-lamp .luz { opacity: 0 !important; }
+  .el-lamp { transition: transform .8s ease, opacity .8s ease; }
+  .el-tira .el-lamp.sai { transform: translateY(-46px); opacity: .3; }
+  /* chave: a alavanca baixa e fecha o circuito */
+  .el-alavanca { transform: rotate(-32deg); transition: transform .7s ease; }
+  .el-alavanca.fechada, .el-fecha .el-alavanca { transform: none; }
+  .el-abre .el-alavanca { transform: rotate(-32deg) !important; }
+  /* rodas que giram (turbina, pás) e raios do Sol */
+  .slide.ativo .el-roda { animation: el-gira 9s linear infinite; }
+  .slide.ativo .el-roda.rapida { animation-duration: 5s; }
+  .slide.ativo .el-raios { animation: el-gira 30s linear infinite; }
+  @keyframes el-gira { to { transform: rotate(360deg); } }
+  /* calor que sobe */
+  .el-calor path { opacity: 0; }
+  .slide.ativo .el-calor path { animation: el-sobe 5s ease-in-out infinite; }
+  .el-calor path:nth-child(2) { animation-delay: -1.7s !important; } .el-calor path:nth-child(3) { animation-delay: -3.4s !important; }
+  @keyframes el-sobe { 0% { transform: translateY(10px); opacity: 0; } 30% { opacity: .9; } 100% { transform: translateY(-34px); opacity: 0; } }
+  /* gotas que caem (chuveiro) */
+  .el-gotas circle { opacity: 0; }
+  .slide.ativo .el-gotas circle { animation: el-cai 2.6s linear infinite; }
+  .el-gotas circle:nth-child(2) { animation-delay: -.9s !important; } .el-gotas circle:nth-child(3) { animation-delay: -1.7s !important; } .el-gotas circle:nth-child(4) { animation-delay: -.4s !important; } .el-gotas circle:nth-child(5) { animation-delay: -2.1s !important; }
+  @keyframes el-cai { 0% { transform: translateY(0); opacity: 0; } 15% { opacity: 1; } 85% { opacity: 1; } 100% { transform: translateY(70px); opacity: 0; } }
+  /* barras que crescem quando aparecem */
+  .el-barra { transform: scaleX(0); transform-box: fill-box; transform-origin: left center; transition: transform 2.2s ease-out; }
+  .mostra .el-barra, .mostra.el-barra, .el-barra.ja { transform: none; }
+  .el-barra-v { transform: scaleY(0); transform-box: fill-box; transform-origin: center bottom; transition: transform 2.2s ease-out; }
+  .mostra .el-barra-v, .mostra.el-barra-v { transform: none; }
+  /* traço que se desenha */
+  .el-traca { stroke-dasharray: 1; stroke-dashoffset: 1; transition: stroke-dashoffset 1.6s ease-in-out; }
+  .mostra .el-traca, .mostra.el-traca { stroke-dashoffset: 0; }
+  @media (prefers-reduced-motion: reduce) { .el-barra, .el-barra-v { transform: none; } .el-traca { stroke-dashoffset: 0; } .el-alavanca { transition: none; } }
+</style>
+<svg width="0" height="0" style="position:absolute" aria-hidden="true">
+  <defs>
+    <radialGradient id="elBrilho" cx=".5" cy=".5" r=".5"><stop offset="0" stop-color="#FFE680" stop-opacity=".95"/><stop offset=".45" stop-color="#FFD10C" stop-opacity=".45"/><stop offset="1" stop-color="#FFD10C" stop-opacity="0"/></radialGradient>
+    <linearGradient id="elAgua" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#CFE6FA"/><stop offset="1" stop-color="#8CC1EE"/></linearGradient>
+    <linearGradient id="elCobre" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#F2A86B"/><stop offset="1" stop-color="#B9652A"/></linearGradient>
+  </defs>
+</svg>
+
+<section class="slide capa" data-nome="Capa">
+  <div class="estrelas"></div>
+  <div class="texto-capa" style="top:150px">
+    <span class="selo">Física · IF</span>
+    <p class="aula">Eletricidade</p>
+    <h1 style="font-size:118px">Usinas de energia elétrica</h1>
+    <p class="sub">Da usina até a tomada</p>
+  </div>
+  <svg class="emblema" viewBox="0 0 640 640" aria-hidden="true">
+    <g class="gira-lento"><ellipse cx="320" cy="320" rx="300" ry="128" fill="none" stroke="#fff" stroke-opacity=".38" stroke-width="2" transform="rotate(-10 320 320)"/></g>
+    <g class="gira"><ellipse cx="320" cy="320" rx="236" ry="196" fill="none" stroke="#FFD10C" stroke-opacity=".75" stroke-width="2.5" stroke-dasharray="3 14" stroke-linecap="round" transform="rotate(-8 320 320)"/>
+      <circle cx="84" cy="300" r="13" fill="var(--d)" stroke="#fff" stroke-width="3"/></g>
+    <circle cx="320" cy="320" r="150" fill="#FFD10C"/>
+    <path d="M346 196 L262 336 H318 L292 450 L382 300 H326 Z" fill="#4B258D" stroke="#4B258D" stroke-width="8" stroke-linejoin="round"/>
+  </svg>
+  <img class="logo-capa" src="{{LOGO_BRANCO}}" alt="Quarks">
+  <aside class="notas"><p>Hoje: como as usinas produzem eletricidade, os impactos de cada tipo e o caminho da energia até a casa.</p><p>Em quase toda usina a ideia é a mesma: girar um gerador. Repare no que faz girar em cada figura.</p></aside>
+</section>
+
+<section class="slide" data-nome="A ideia comum">
+  <div class="conteudo">
+    <p class="olho">Tipos de usina</p>
+    <h2 class="titulo">Quase toda usina gira um gerador</h2>
+    <div style="position:absolute;left:0;top:160px"><svg viewBox="0 0 900 320" width="900" height="320"  style="overflow:visible;font-family:Figtree,'Segoe UI',sans-serif;" aria-hidden="true"><circle cx="150" cy="160" r="100" fill="#fff" stroke="#C9C0F0" stroke-width="4"/><g class="el-roda" style="transform-origin:150px 160px"><path d="M150 160 L140 70 Q150 60 164 74 Z" fill="var(--d)" transform="rotate(0 150 160)"/><path d="M150 160 L140 70 Q150 60 164 74 Z" fill="var(--d)" transform="rotate(45 150 160)"/><path d="M150 160 L140 70 Q150 60 164 74 Z" fill="var(--d)" transform="rotate(90 150 160)"/><path d="M150 160 L140 70 Q150 60 164 74 Z" fill="var(--d)" transform="rotate(135 150 160)"/><path d="M150 160 L140 70 Q150 60 164 74 Z" fill="var(--d)" transform="rotate(180 150 160)"/><path d="M150 160 L140 70 Q150 60 164 74 Z" fill="var(--d)" transform="rotate(225 150 160)"/><path d="M150 160 L140 70 Q150 60 164 74 Z" fill="var(--d)" transform="rotate(270 150 160)"/><path d="M150 160 L140 70 Q150 60 164 74 Z" fill="var(--d)" transform="rotate(315 150 160)"/></g><circle cx="150" cy="160" r="12" fill="#FFD10C" stroke="#292B2C" stroke-width="3"/><rect x="250" y="150" width="200" height="20" rx="10" fill="#7F7A99"/><rect x="450" y="105" width="190" height="130" rx="20" fill="var(--d-clara)" stroke="var(--d)" stroke-width="5"/><path d="M553.0 123 L527.0 174.0 H547.0 L537.0 219 L565.0 164.0 H545.0 Z" fill="#FFD10C" stroke="#8A6A00" stroke-width="2" stroke-linejoin="round"/><path class="el-fio" d="M640 140 H860" /><path class="el-fio" d="M640 200 H860" /><g class="el-on"><path class="el-fluxo " d="M640 140 H860" /><path class="el-fluxo " d="M860 200 H640" /></g><text x="150" y="300" text-anchor="middle" font-size="30" font-weight="800" fill="var(--d-forte)" >turbina</text><text x="545" y="300" text-anchor="middle" font-size="30" font-weight="800" fill="var(--d-forte)" >gerador</text><text x="760" y="120" text-anchor="middle" font-size="26" font-weight="700" fill="#5E5A70" >energia elétrica</text></svg></div>
+    <div style="position:absolute;left:1000px;right:0;top:170px;display:flex;flex-direction:column;gap:22px">
+      <div class="caixa caixa-fundamental" style="padding:20px 28px"><span class="rotulo">Gerador</span><div class="texto" style="font-size:31px">Máquina que transforma <b>movimento</b> em <b>energia elétrica</b>.</div></div>
+      <div class="caixa" data-passo="1" style="padding:20px 28px"><span class="rotulo">Turbina</span><div class="texto" style="font-size:31px">Roda de pás ligada ao gerador. O que muda de uma usina para outra é <b>o que faz a turbina girar</b>.</div></div>
+    </div>
+  </div>
+  <aside class="notas"><p>A turbina gira, o eixo gira o gerador e sai corrente nos fios (os pontinhos amarelos).</p><p>Clique 1: a pergunta-chave de cada usina: o que faz girar? Água, vapor ou vento.</p></aside>
+</section>
+
+<section class="slide" data-nome="Hidrelétrica">
+  <div class="conteudo">
+    <p class="olho">Tipos de usina</p>
+    <h2 class="titulo">Usina hidrelétrica</h2>
+    <div style="position:absolute;left:0;top:140px"><svg viewBox="0 0 1000 470" width="1000" height="470"  style="overflow:visible;font-family:Figtree,'Segoe UI',sans-serif;" aria-hidden="true"><path d="M0 120 H330 V400 H0 Z" fill="url(#elAgua)"/><path d="M330 60 L410 60 L460 420 L330 420 Z" fill="#B8B3C9" stroke="#7F7A99" stroke-width="4"/><path d="M300 300 C 380 300 420 330 470 370 L560 400" fill="none" stroke="#5E5A70" stroke-width="34" stroke-linecap="round"/><path class="el-agua" d="M300 300 C 380 300 420 330 470 370 L560 400"/><circle cx="600" cy="400" r="56" fill="#fff" stroke="#C9C0F0" stroke-width="4"/><g class="el-roda rapida" style="transform-origin:600px 400px"><path d="M600 400 L590 354 Q600 344 614 358 Z" fill="var(--d)" transform="rotate(0 600 400)"/><path d="M600 400 L590 354 Q600 344 614 358 Z" fill="var(--d)" transform="rotate(45 600 400)"/><path d="M600 400 L590 354 Q600 344 614 358 Z" fill="var(--d)" transform="rotate(90 600 400)"/><path d="M600 400 L590 354 Q600 344 614 358 Z" fill="var(--d)" transform="rotate(135 600 400)"/><path d="M600 400 L590 354 Q600 344 614 358 Z" fill="var(--d)" transform="rotate(180 600 400)"/><path d="M600 400 L590 354 Q600 344 614 358 Z" fill="var(--d)" transform="rotate(225 600 400)"/><path d="M600 400 L590 354 Q600 344 614 358 Z" fill="var(--d)" transform="rotate(270 600 400)"/><path d="M600 400 L590 354 Q600 344 614 358 Z" fill="var(--d)" transform="rotate(315 600 400)"/></g><circle cx="600" cy="400" r="12" fill="#FFD10C" stroke="#292B2C" stroke-width="3"/><rect x="592" y="250" width="16" height="110" fill="#7F7A99"/><rect x="530" y="150" width="140" height="100" rx="20" fill="var(--d-clara)" stroke="var(--d)" stroke-width="5"/><path d="M608.0 168 L582.0 204.0 H602.0 L592.0 234 L620.0 194.0 H600.0 Z" fill="#FFD10C" stroke="#8A6A00" stroke-width="2" stroke-linejoin="round"/><path d="M660 420 H1000 V470 H640 Z" fill="url(#elAgua)"/><path class="el-agua" d="M650 440 H990" style="stroke-dasharray:2 30"/><path class="el-fio" d="M670 180 H840 V60 H1000" /><g class="el-on"><path class="el-fluxo " d="M670 180 H840 V60 H1000" /></g><g data-passo="1"><text x="160" y="100" text-anchor="middle" font-size="30" font-weight="800" fill="#2F6FA8" >represa</text><text x="160" y="210" text-anchor="middle" font-size="26" font-weight="800" fill="#2F6FA8" >energia potencial</text></g><g data-passo="2"><text x="700" y="410" text-anchor="start" font-size="28" font-weight="800" fill="var(--d-forte)" >turbina</text></g><g data-passo="3"><text x="520" y="130" text-anchor="start" font-size="28" font-weight="800" fill="var(--d-forte)" >gerador: elétrica</text></g></svg></div>
+    <div style="position:absolute;left:1080px;right:0;top:170px;display:flex;flex-direction:column;gap:20px">
+      <p class="texto" style="margin:0;font-size:30px">A água acumulada na <b>represa</b> desce por tubos e gira a <b>turbina</b>, ligada ao <b>gerador</b>.</p>
+      <div class="el-cadeia" data-passo="4" style="flex-direction:column;align-items:flex-start;gap:8px"><span class="f">potencial (água no alto)</span><span class="s">↓</span><span class="f">cinética (água descendo)</span><span class="s">↓</span><span class="f am">elétrica (gerador)</span></div>
+    </div>
+  </div>
+  <aside class="notas"><p>Esquema fora de escala. A água desce pelo tubo (tracejado andando), gira a turbina e sai pelo rio; o gerador manda a corrente para a linha.</p><p>Cliques 1 a 3: os nomes na figura. Clique 4: a cadeia de energia, que o IF gosta de cobrar.</p></aside>
+</section>
+
+<section class="slide" data-nome="Termelétrica e nuclear">
+  <div class="conteudo">
+    <p class="olho">Tipos de usina</p>
+    <h2 class="titulo">Termelétrica e nuclear: calor que vira vapor</h2>
+    <div style="position:absolute;left:0;top:150px"><svg viewBox="0 0 820 300" width="820" height="300"  style="overflow:visible;font-family:Figtree,'Segoe UI',sans-serif;" aria-hidden="true"><rect x="20" y="80" width="200" height="200" rx="24" fill="#fff" stroke="#7F7A99" stroke-width="5"/><svg x="70" y="150" width="100" height="110" viewBox="0 0 100 100"><path d="M50 8 C 62 30 78 40 78 62 a28 28 0 0 1 -56 0 C 22 48 32 40 36 28 C 42 40 46 42 50 8 Z" fill="#E86A3A"/><path d="M50 50 C 56 60 62 64 62 72 a12 12 0 0 1 -24 0 C 38 64 44 60 50 50 Z" fill="#FFD10C"/></svg><path d="M60 130 q20 -14 40 0 t40 0 t40 0" fill="none" stroke="#8CC1EE" stroke-width="10" stroke-linecap="round"/><path d="M220 120 H420" stroke="#B8B3C9" stroke-width="30" stroke-linecap="round"/><path class="el-agua" d="M220 120 H420" style="stroke:#fff"/><circle cx="480" cy="140" r="60" fill="#fff" stroke="#C9C0F0" stroke-width="4"/><g class="el-roda" style="transform-origin:480px 140px"><path d="M480 140 L470 90 Q480 80 494 94 Z" fill="var(--d)" transform="rotate(0 480 140)"/><path d="M480 140 L470 90 Q480 80 494 94 Z" fill="var(--d)" transform="rotate(45 480 140)"/><path d="M480 140 L470 90 Q480 80 494 94 Z" fill="var(--d)" transform="rotate(90 480 140)"/><path d="M480 140 L470 90 Q480 80 494 94 Z" fill="var(--d)" transform="rotate(135 480 140)"/><path d="M480 140 L470 90 Q480 80 494 94 Z" fill="var(--d)" transform="rotate(180 480 140)"/><path d="M480 140 L470 90 Q480 80 494 94 Z" fill="var(--d)" transform="rotate(225 480 140)"/><path d="M480 140 L470 90 Q480 80 494 94 Z" fill="var(--d)" transform="rotate(270 480 140)"/><path d="M480 140 L470 90 Q480 80 494 94 Z" fill="var(--d)" transform="rotate(315 480 140)"/></g><circle cx="480" cy="140" r="12" fill="#FFD10C" stroke="#292B2C" stroke-width="3"/><rect x="530" y="132" width="80" height="16" rx="8" fill="#7F7A99"/><rect x="610" y="85" width="140" height="110" rx="20" fill="var(--d-clara)" stroke="var(--d)" stroke-width="5"/><path d="M688.0 103 L662.0 144.0 H682.0 L672.0 179 L700.0 134.0 H680.0 Z" fill="#FFD10C" stroke="#8A6A00" stroke-width="2" stroke-linejoin="round"/><path class="el-fio" d="M750 120 H820" /><g class="el-on"><path class="el-fluxo " d="M750 120 H820" /></g><text x="120" y="50" text-anchor="middle" font-size="28" font-weight="800" fill="#3F2FA0" >caldeira</text><text x="320" y="90" text-anchor="middle" font-size="26" font-weight="800" fill="#5E5A70" >vapor</text><text x="480" y="240" text-anchor="middle" font-size="26" font-weight="800" fill="var(--d-forte)" >turbina</text><text x="680" y="240" text-anchor="middle" font-size="26" font-weight="800" fill="var(--d-forte)" >gerador</text></svg></div>
+    <div style="position:absolute;left:900px;right:0;top:160px"><div class="caixa" style="padding:18px 26px"><span class="rotulo">Termelétrica</span>
+      <div class="texto" style="font-size:29px">A queima de <b>carvão</b>, <b>óleo</b>, <b>gás natural</b> ou <b>bagaço de cana</b> ferve água; o <b>vapor</b> gira a turbina.</div></div></div>
+    <div data-passo="1" style="position:absolute;left:560px;top:500px"><svg viewBox="0 0 820 300" width="700" height="256"  style="overflow:visible;font-family:Figtree,'Segoe UI',sans-serif;" aria-hidden="true"><rect x="20" y="80" width="200" height="200" rx="24" fill="#fff" stroke="#7F7A99" stroke-width="5"/><svg x="70" y="150" width="100" height="110" viewBox="0 0 100 100"><g fill="none" stroke="var(--d)" stroke-width="5"><ellipse cx="50" cy="50" rx="42" ry="16"/><ellipse cx="50" cy="50" rx="42" ry="16" transform="rotate(60 50 50)"/><ellipse cx="50" cy="50" rx="42" ry="16" transform="rotate(-60 50 50)"/></g><circle cx="50" cy="50" r="10" fill="#FFD10C"/></svg><path d="M60 130 q20 -14 40 0 t40 0 t40 0" fill="none" stroke="#8CC1EE" stroke-width="10" stroke-linecap="round"/><path d="M220 120 H420" stroke="#B8B3C9" stroke-width="30" stroke-linecap="round"/><path class="el-agua" d="M220 120 H420" style="stroke:#fff"/><circle cx="480" cy="140" r="60" fill="#fff" stroke="#C9C0F0" stroke-width="4"/><g class="el-roda" style="transform-origin:480px 140px"><path d="M480 140 L470 90 Q480 80 494 94 Z" fill="var(--d)" transform="rotate(0 480 140)"/><path d="M480 140 L470 90 Q480 80 494 94 Z" fill="var(--d)" transform="rotate(45 480 140)"/><path d="M480 140 L470 90 Q480 80 494 94 Z" fill="var(--d)" transform="rotate(90 480 140)"/><path d="M480 140 L470 90 Q480 80 494 94 Z" fill="var(--d)" transform="rotate(135 480 140)"/><path d="M480 140 L470 90 Q480 80 494 94 Z" fill="var(--d)" transform="rotate(180 480 140)"/><path d="M480 140 L470 90 Q480 80 494 94 Z" fill="var(--d)" transform="rotate(225 480 140)"/><path d="M480 140 L470 90 Q480 80 494 94 Z" fill="var(--d)" transform="rotate(270 480 140)"/><path d="M480 140 L470 90 Q480 80 494 94 Z" fill="var(--d)" transform="rotate(315 480 140)"/></g><circle cx="480" cy="140" r="12" fill="#FFD10C" stroke="#292B2C" stroke-width="3"/><rect x="530" y="132" width="80" height="16" rx="8" fill="#7F7A99"/><rect x="610" y="85" width="140" height="110" rx="20" fill="var(--d-clara)" stroke="var(--d)" stroke-width="5"/><path d="M688.0 103 L662.0 144.0 H682.0 L672.0 179 L700.0 134.0 H680.0 Z" fill="#FFD10C" stroke="#8A6A00" stroke-width="2" stroke-linejoin="round"/><path class="el-fio" d="M750 120 H820" /><g class="el-on"><path class="el-fluxo " d="M750 120 H820" /></g><text x="120" y="50" text-anchor="middle" font-size="28" font-weight="800" fill="#3F2FA0" >reator</text><text x="320" y="90" text-anchor="middle" font-size="26" font-weight="800" fill="#5E5A70" >vapor</text><text x="480" y="240" text-anchor="middle" font-size="26" font-weight="800" fill="var(--d-forte)" >turbina</text><text x="680" y="240" text-anchor="middle" font-size="26" font-weight="800" fill="var(--d-forte)" >gerador</text></svg></div>
+    <div class="caixa" data-passo="1" style="position:absolute;left:1300px;right:0;top:500px;padding:18px 26px"><span class="rotulo">Nuclear</span>
+      <div class="texto" style="font-size:28px">Funciona como a termelétrica, mas o calor vem do <b>urânio</b>. No Brasil: <b>Angra dos Reis (RJ)</b>.</div></div>
+  </div>
+  <aside class="notas"><p>O calor ferve a água; o vapor (tracejado branco andando no tubo) gira a turbina, que gira o gerador.</p><p>Clique 1: a nuclear é a mesma máquina; só muda a fonte do calor, o urânio.</p></aside>
+</section>
+
+<section class="slide" data-nome="Eólica e solar">
+  <div class="conteudo">
+    <p class="olho">Tipos de usina</p>
+    <h2 class="titulo">Eólica e solar fotovoltaica</h2>
+    <div style="position:absolute;left:0;top:140px"><svg viewBox="0 0 360 460" width="320" height="409"  style="overflow:visible;font-family:Figtree,'Segoe UI',sans-serif;" aria-hidden="true"><path d="M172 150 L160 450 H200 L188 150 Z" fill="#E4DEFB" stroke="#7F7A99" stroke-width="3"/><g class="el-roda" style="transform-origin:180px 150px"><path d="M180 150 L170 20 Q180 6 192 22 Z" fill="#fff" stroke="#7F7A99" stroke-width="3" transform="rotate(0 180 150)"/><path d="M180 150 L170 20 Q180 6 192 22 Z" fill="#fff" stroke="#7F7A99" stroke-width="3" transform="rotate(120 180 150)"/><path d="M180 150 L170 20 Q180 6 192 22 Z" fill="#fff" stroke="#7F7A99" stroke-width="3" transform="rotate(240 180 150)"/></g><circle cx="180" cy="150" r="14" fill="var(--d)"/></svg></div>
+    <div class="caixa" style="position:absolute;left:340px;width:460px;top:170px;padding:18px 24px"><span class="rotulo">Eólica</span>
+      <div class="texto" style="font-size:29px">O <b>vento</b> gira as pás de grandes cata-ventos, os <b>aerogeradores</b>.</div></div>
+    <div data-passo="1" style="position:absolute;left:880px;top:150px"><svg viewBox="0 0 460 400" width="460" height="400"  style="overflow:visible;font-family:Figtree,'Segoe UI',sans-serif;" aria-hidden="true"><svg x="300" y="0" width="140" height="140" viewBox="0 0 100 100"><g class="el-raios" style="transform-origin:50px 50px" stroke="#F2B800" stroke-width="6" stroke-linecap="round"><line x1="80.0" y1="50.0" x2="94.0" y2="50.0"/><line x1="71.2" y1="71.2" x2="81.1" y2="81.1"/><line x1="50.0" y1="80.0" x2="50.0" y2="94.0"/><line x1="28.8" y1="71.2" x2="18.9" y2="81.1"/><line x1="20.0" y1="50.0" x2="6.0" y2="50.0"/><line x1="28.8" y1="28.8" x2="18.9" y2="18.9"/><line x1="50.0" y1="20.0" x2="50.0" y2="6.0"/><line x1="71.2" y1="28.8" x2="81.1" y2="18.9"/></g><circle cx="50" cy="50" r="22" fill="#FFD10C"/></svg><g stroke="#FFD10C" stroke-width="5" stroke-dasharray="10 12" class="el-fluxo sempre" style="stroke:#FFD10C;stroke-width:5"><path d="M330 120 L230 200"/><path d="M380 130 L300 220"/></g><path d="M40 330 L120 190 H360 L280 330 Z" fill="#2C4A8C" stroke="#1B2E5C" stroke-width="4"/><path d="M80 330 L160 190" stroke="#8FA8E0" stroke-width="2"/><path d="M140 330 L220 190" stroke="#8FA8E0" stroke-width="2"/><path d="M200 330 L280 190" stroke="#8FA8E0" stroke-width="2"/><path d="M260 330 L340 190" stroke="#8FA8E0" stroke-width="2"/><path d="M80 260 H320" stroke="#8FA8E0" stroke-width="2"/><path class="el-fio" d="M200 330 V390 H460" /><g class="el-on"><path class="el-fluxo " d="M200 330 V390 H460" /></g></svg></div>
+    <div class="caixa caixa-fundamental" data-passo="1" style="position:absolute;left:560px;width:620px;top:580px;padding:18px 24px"><span class="rotulo">Solar fotovoltaica</span>
+      <div class="texto" style="font-size:29px">Painéis transformam a <b>luz do Sol</b> diretamente em eletricidade, <b>sem turbina</b>.</div></div>
+  </div>
+  <aside class="notas"><p>As pás giram com o vento e o gerador fica lá em cima, no alto da torre.</p><p>Clique 1: a solar fotovoltaica é a exceção: não gira nada. A luz chega ao painel e já sai corrente.</p></aside>
+</section>
+
+<section class="slide" data-nome="As cadeias de energia">
+  <div class="conteudo">
+    <p class="olho">Tipos de usina</p>
+    <h2 class="titulo">De onde vem a energia em cada usina</h2>
+    <div style="position:absolute;left:0;right:0;top:150px;display:flex;flex-direction:column;gap:12px"><div class="el-linha" data-passo="1" style="grid-template-columns:260px 1fr;padding:8px 24px"><b style="font-size:32px">Hidrelétrica</b><div class="el-cadeia"><span class="f">potencial</span><span class="s">→</span><span class="f">cinética</span><span class="s">→</span><span class="f am">elétrica</span></div></div><div class="el-linha" data-passo="2" style="grid-template-columns:260px 1fr;padding:8px 24px"><b style="font-size:32px">Termelétrica</b><div class="el-cadeia"><span class="f">química</span><span class="s">→</span><span class="f">térmica</span><span class="s">→</span><span class="f">cinética</span><span class="s">→</span><span class="f am">elétrica</span></div></div><div class="el-linha" data-passo="3" style="grid-template-columns:260px 1fr;padding:8px 24px"><b style="font-size:32px">Nuclear</b><div class="el-cadeia"><span class="f">calor do urânio</span><span class="s">→</span><span class="f">cinética</span><span class="s">→</span><span class="f am">elétrica</span></div></div><div class="el-linha" data-passo="4" style="grid-template-columns:260px 1fr;padding:8px 24px"><b style="font-size:32px">Eólica</b><div class="el-cadeia"><span class="f">cinética do vento</span><span class="s">→</span><span class="f am">elétrica</span></div></div><div class="el-linha" data-passo="5" style="grid-template-columns:260px 1fr;padding:8px 24px"><b style="font-size:32px">Solar</b><div class="el-cadeia"><span class="f">luminosa</span><span class="s">→</span><span class="f am">elétrica</span></div></div></div>
+  </div>
+  <aside class="notas"><p>Uma usina por clique; peça a cadeia antes de mostrar. Na termelétrica, o combustível (energia química) queima: térmica; o vapor gira a turbina: cinética; o gerador: elétrica.</p><p>Na nuclear, a apostila só diz que o calor vem do urânio; por isso a cadeia começa no calor.</p></aside>
+</section>
+
+<section class="slide" data-nome="Impactos">
+  <div class="conteudo">
+    <p class="olho">Impactos socioambientais</p>
+    <h2 class="titulo">Cada usina tem o seu impacto</h2>
+    <div style="position:absolute;left:0;right:0;top:150px;display:flex;flex-direction:column;gap:10px"><div class="el-linha" data-passo="1" style="grid-template-columns:76px 260px 1fr;padding:4px 24px"><svg viewBox="0 0 100 100" width="64" height="64" style="overflow:visible;" aria-hidden="true"><path d="M8 40 H52 V84 H8 Z" fill="url(#elAgua)"/><path d="M52 24 L70 24 L80 84 L52 84 Z" fill="#B8B3C9" stroke="#7F7A99" stroke-width="3"/><path d="M80 74 H96 V84 H80 Z" fill="#8CC1EE"/></svg><b style="font-size:31px">Hidrelétrica</b><span>alaga áreas, desloca famílias, muda o rio e os peixes</span></div><div class="el-linha" data-passo="2" style="grid-template-columns:76px 260px 1fr;padding:4px 24px"><svg viewBox="0 0 100 100" width="64" height="64" style="overflow:visible;" aria-hidden="true"><path d="M50 8 C 62 30 78 40 78 62 a28 28 0 0 1 -56 0 C 22 48 32 40 36 28 C 42 40 46 42 50 8 Z" fill="#E86A3A"/><path d="M50 50 C 56 60 62 64 62 72 a12 12 0 0 1 -24 0 C 38 64 44 60 50 50 Z" fill="#FFD10C"/></svg><b style="font-size:31px">Termelétrica</b><span>polui o ar e libera gás carbônico</span></div><div class="el-linha" data-passo="3" style="grid-template-columns:76px 260px 1fr;padding:4px 24px"><svg viewBox="0 0 100 100" width="64" height="64" style="overflow:visible;" aria-hidden="true"><g fill="none" stroke="var(--d)" stroke-width="5"><ellipse cx="50" cy="50" rx="42" ry="16"/><ellipse cx="50" cy="50" rx="42" ry="16" transform="rotate(60 50 50)"/><ellipse cx="50" cy="50" rx="42" ry="16" transform="rotate(-60 50 50)"/></g><circle cx="50" cy="50" r="10" fill="#FFD10C"/></svg><b style="font-size:31px">Nuclear</b><span>lixo radioativo e risco de acidente</span></div><div class="el-linha" data-passo="4" style="grid-template-columns:76px 260px 1fr;padding:4px 24px"><svg viewBox="0 0 100 100" width="64" height="64" style="overflow:visible;" aria-hidden="true"><line x1="50" y1="50" x2="50" y2="96" stroke="#7F7A99" stroke-width="5" stroke-linecap="round"/><g class="el-roda" style="transform-origin:50px 50px"><path d="M50 50 L46 10 Q50 6 54 10 Z" fill="var(--d)"/><path d="M50 50 L46 10 Q50 6 54 10 Z" fill="var(--d)" transform="rotate(120 50 50)"/><path d="M50 50 L46 10 Q50 6 54 10 Z" fill="var(--d)" transform="rotate(240 50 50)"/></g><circle cx="50" cy="50" r="6" fill="#FFD10C"/></svg><b style="font-size:31px">Eólica</b><span>ruído, risco para aves, muda a paisagem</span></div><div class="el-linha" data-passo="5" style="grid-template-columns:76px 260px 1fr;padding:4px 24px"><svg viewBox="0 0 100 100" width="64" height="64" style="overflow:visible;" aria-hidden="true"><g class="el-raios" style="transform-origin:50px 50px" stroke="#F2B800" stroke-width="6" stroke-linecap="round"><line x1="80.0" y1="50.0" x2="94.0" y2="50.0"/><line x1="71.2" y1="71.2" x2="81.1" y2="81.1"/><line x1="50.0" y1="80.0" x2="50.0" y2="94.0"/><line x1="28.8" y1="71.2" x2="18.9" y2="81.1"/><line x1="20.0" y1="50.0" x2="6.0" y2="50.0"/><line x1="28.8" y1="28.8" x2="18.9" y2="18.9"/><line x1="50.0" y1="20.0" x2="50.0" y2="6.0"/><line x1="71.2" y1="28.8" x2="81.1" y2="18.9"/></g><circle cx="50" cy="50" r="22" fill="#FFD10C"/></svg><b style="font-size:31px">Solar</b><span>ocupa área; descarte dos painéis</span></div></div>
+    <div class="caixa caixa-atencao" data-passo="6" style="position:absolute;left:560px;right:0;top:640px;padding:16px 28px"><div class="texto" style="font-size:30px">Todas têm vantagens e problemas. <b>Renovável não quer dizer sem impacto</b>.</div></div>
+  </div>
+  <aside class="notas"><p>Uma usina por clique. Pergunte o impacto antes de mostrar.</p><p>As questões costumam pedir para associar a usina ao impacto principal.</p></aside>
+</section>
+
+<section class="slide" data-nome="No Brasil">
+  <div class="conteudo">
+    <p class="olho">Hidrelétricas, termelétricas, nucleares, eólicas e solares</p>
+    <h2 class="titulo">E no Brasil?</h2>
+    <div style="position:absolute;left:0;width:860px;top:160px;display:flex;flex-direction:column;gap:18px">
+      <p class="texto" style="margin:0;font-size:31px"><b>Mais da metade</b> da eletricidade vem de <b>hidrelétricas</b>, por causa dos muitos rios com desnível.</p>
+      <div data-passo="1"><svg viewBox="0 0 620 200" width="620" height="200" class="277"  style="overflow:visible;font-family:Figtree,'Segoe UI',sans-serif;860" aria-hidden="true"><rect x="20" y="40" width="580" height="80" rx="18" fill="#E4DEFB"/><rect class="el-barra" x="20" y="40" width="330" height="80" rx="18" fill="#3E8CCB"/><text x="185" y="92" text-anchor="middle" font-size="28" font-weight="800" fill="#fff" >hidrelétricas</text><text x="185" y="170" text-anchor="middle" font-size="30" font-weight="800" fill="#2F6FA8" >mais da metade</text></svg></div>
+      <p class="texto" data-passo="2" style="margin:0;font-size:31px">A energia <b>eólica</b> e a <b>solar</b> cresceram muito nos últimos anos.</p>
+    </div>
+    <div class="caixa caixa-fundamental" data-passo="3" style="position:absolute;left:960px;right:0;top:160px;padding:22px 30px">
+      <span class="rotulo">Juiz de Fora nessa história</span>
+      <div style="font:800 96px var(--fonte-titulo);color:var(--roxo-titulo);letter-spacing:-.03em;line-height:1">1889</div>
+      <div class="texto" style="font-size:31px;margin-top:10px">A <b>Usina de Marmelos</b>, no Rio Paraibuna, foi uma das primeiras hidrelétricas da <b>América do Sul</b>.</div>
+    </div>
+  </div>
+  <aside class="notas"><p>A barra mostra só 'mais da metade', como na apostila; o valor exato muda de ano para ano.</p><p>Clique 3: a Usina de Marmelos, de Juiz de Fora (1889). Volta na questão do bloco do fim do capítulo.</p></aside>
+</section>
+
+<section class="slide" data-nome="Da usina até a casa">
+  <div class="conteudo">
+    <p class="olho">Da usina até a casa</p>
+    <h2 class="titulo">O caminho da energia</h2>
+    <p class="texto" style="position:absolute;left:0;right:0;top:140px;margin:0;font-size:30px">As grandes usinas ficam <b>longe</b> das cidades, perto dos rios ou dos ventos. A energia viaja <b>centenas de quilômetros</b> por fios.</p>
+    <div style="position:absolute;left:0;top:210px"><svg viewBox="0 0 1720 440" width="1720" height="390"  style="overflow:visible;font-family:Figtree,'Segoe UI',sans-serif;" aria-hidden="true"><path class="el-fio" d="M60 250 H1650" /><g class="el-on"><path class="el-fluxo lento" d="M60 250 H1650" /></g><rect x="10" y="170" width="120" height="110" rx="16" fill="var(--d)"/><text x="70" y="232" text-anchor="middle" font-size="24" font-weight="800" fill="#fff" >usina</text><g data-passo="1"><rect x="220" y="200" width="80" height="100" rx="12" fill="#fff" stroke="#292B2C" stroke-width="5"/><path d="M240 235 h40 M240 255 h40 M240 275 h40" stroke="#292B2C" stroke-width="4"/><text x="260" y="340" text-anchor="middle" font-size="22" font-weight="800" fill="var(--d-forte)" >transformador</text><text x="260" y="366" text-anchor="middle" font-size="22" font-weight="700" fill="#5E5A70" >eleva a tensão</text></g><g data-passo="2"><path d="M400 300 L430 140 L460 300 M408 260 H452 M414 220 H446 M420 180 H440 M394 150 H466" fill="none" stroke="#7F7A99" stroke-width="4"/><path d="M620 300 L650 140 L680 300 M628 260 H672 M634 220 H666 M640 180 H660 M614 150 H686" fill="none" stroke="#7F7A99" stroke-width="4"/><text x="540" y="120" text-anchor="middle" font-size="24" font-weight="800" fill="var(--d-forte)" >linhas de transmissão</text><text x="540" y="340" text-anchor="middle" font-size="24" font-weight="800" fill="#C2384F" >tensão muito alta</text></g><g data-passo="3"><rect x="760" y="190" width="120" height="110" rx="12" fill="#fff" stroke="#292B2C" stroke-width="5"/><path d="M780 225 h80 M780 245 h80 M780 265 h80" stroke="#292B2C" stroke-width="4"/><text x="820" y="340" text-anchor="middle" font-size="22" font-weight="800" fill="var(--d-forte)" >subestação</text><text x="820" y="366" text-anchor="middle" font-size="22" font-weight="700" fill="#5E5A70" >reduz a tensão</text></g><g data-passo="4"><path d="M1000 300 V160 M970 170 H1030" stroke="#B8B3C9" stroke-width="8" stroke-linecap="round"/><path d="M1160 300 V160 M1130 170 H1190" stroke="#B8B3C9" stroke-width="8" stroke-linecap="round"/><text x="1080" y="120" text-anchor="middle" font-size="24" font-weight="800" fill="var(--d-forte)" >rede de distribuição</text></g><g data-passo="5"><path d="M1320 300 V140" stroke="#B8B3C9" stroke-width="10"/><rect x="1330" y="190" width="56" height="70" rx="10" fill="#fff" stroke="#292B2C" stroke-width="4"/><text x="1356" y="120" text-anchor="middle" font-size="22" font-weight="800" fill="var(--d-forte)" >transformador do poste</text></g><g data-passo="6"><path d="M1560 200 L1640 140 L1720 200 V300 H1560 Z" fill="#fff" stroke="#3F2FA0" stroke-width="5" stroke-linejoin="round"/><g class="el-lamp acesa" ><circle class="luz" cx="1640" cy="240" r="51" fill="url(#elBrilho)"/><circle cx="1640" cy="240" r="22" fill="#fff" stroke="#292B2C" stroke-width="5"/><circle class="luz" cx="1640" cy="240" r="18" fill="#FFE680"/><path d="M1624.6 224.6 L1655.4 255.4 M1655.4 224.6 L1624.6 255.4" stroke="#292B2C" stroke-width="4"/></g><text x="1640" y="340" text-anchor="middle" font-size="24" font-weight="800" fill="var(--d-forte)" >127 V ou 220 V</text></g></svg></div>
+  </div>
+  <aside class="notas"><p>Esquema fora de escala. Um trecho por clique: transformador que eleva, linhas de transmissão nas torres altas, subestação que reduz, rede de distribuição nos postes, transformador do poste e a casa.</p><p>Os pontinhos andando mostram a energia indo da usina até a lâmpada da casa.</p></aside>
+</section>
+
+<section class="slide" data-nome="Por que tensão alta">
+  <div class="conteudo">
+    <p class="olho">Da usina até a casa</p>
+    <h2 class="titulo">Por que a tensão é tão alta no caminho?</h2>
+    <div style="position:absolute;left:0;right:0;top:160px;display:grid;grid-template-columns:1fr 1fr;gap:28px">
+      <div class="caixa" style="padding:20px 28px"><span class="rotulo">No caminho</span><div class="texto" style="font-size:30px">Uma parte da energia vira <b>calor</b> nos próprios fios. Para <b>diminuir essa perda</b>, a energia viaja com <b>tensão muito alta</b>.</div></div>
+      <div class="caixa" data-passo="1" style="padding:20px 28px"><span class="rotulo">Perto das casas</span><div class="texto" style="font-size:30px">A tensão é <b>baixada</b> de novo: tensão alta seria <b>perigosa</b> para as pessoas e para os aparelhos.</div></div>
+    </div>
+    <div class="caixa caixa-fundamental" data-passo="2" style="position:absolute;left:0;width:1100px;top:420px;padding:18px 28px"><div class="texto" style="font-size:30px">A <b>tensão</b>, em volts (V), é o "empurrão" que a corrente recebe. Quem sobe e desce a tensão é o <b>transformador</b>; ele <b>não cria</b> energia.</div></div>
+    <div class="caixa caixa-atencao" data-passo="3" style="position:absolute;left:560px;right:0;top:600px;padding:18px 28px"><span class="rotulo">Fio no chão: distância</span>
+      <div class="texto" style="font-size:30px">Fio partido caído na rua pode estar energizado. <b>Não toque nem chegue perto</b>: avise a companhia de energia ou os bombeiros.</div></div>
+  </div>
+  <aside class="notas"><p>Clique 1: por que baixar perto das casas. Clique 2: o transformador só muda a tensão (a energia não é criada). Clique 3: segurança.</p></aside>
+</section>
+
+<section class="slide questao" data-nome="Questão 1" data-gap="14">
+  <div class="conteudo">
+    <div class="area-resolucao"></div>
+    <span class="pilula pilula-pausa" data-em="1:some">Pause o vídeo e tente</span>
+    <div class="painel-questao">
+      <p class="olho">Questão 1 · Modelo IF</p>
+      <p class="enunciado" style="font-size:26px">Muitas usinas de açúcar e etanol do Brasil queimam o bagaço da cana que sobra da moagem. O calor da queima ferve a água de uma caldeira, e o vapor gira uma turbina ligada a um gerador. Assim, a usina produz a própria eletricidade e ainda vende o que sobra.</p><p class="enunciado" style="font-size:26px">A sequência de transformações de energia nessa usina termelétrica, do bagaço até a eletricidade, é</p>
+      
+      
+      <ol class="alternativas" style="gap:8px"><li data-em="2:apaga" style="font-size:24px;padding:6px 14px"><b>A</b><span>térmica → química → elétrica → cinética.</span></li><li data-em="2:certo" style="font-size:24px;padding:6px 14px"><b>B</b><span>química → térmica → cinética → elétrica.</span></li><li data-em="2:apaga" style="font-size:24px;padding:6px 14px"><b>C</b><span>potencial gravitacional → cinética → elétrica.</span></li><li data-em="2:apaga" style="font-size:24px;padding:6px 14px"><b>D</b><span>química → elétrica, sem outras etapas.</span></li><li data-em="2:apaga" style="font-size:24px;padding:6px 14px"><b>E</b><span>luminosa → elétrica.</span></li></ol>
+    </div>
+  </div>
+  <aside class="resolucao">
+    <p class="dados"><b>Dados:</b> bagaço queimado; caldeira; vapor; turbina; gerador.</p>
+    <ol class="passos"><li><b>1.</b> Bagaço: energia química.</li><li><b>2.</b> Queima: térmica (ferve a água).</li><li><b>3.</b> Vapor gira a turbina: cinética.</li><li><b>4.</b> Gerador: elétrica.</li></ol>
+    <p class="resposta"><b>Resposta:</b> química → térmica → cinética → elétrica. <b>Gabarito B.</b></p>
+    <p class="atencao"><b>Destaque no quadro:</b> Siga o caminho do enunciado, etapa por etapa.</p>
+    <ul class="erros"><li><b>A</b> Ordem trocada.</li><li><b>C</b> É a cadeia da hidrelétrica.</li><li><b>D</b> Química direto em elétrica é pilha.</li><li><b>E</b> É a solar fotovoltaica.</li></ul>
+  </aside>
+  <aside class="notas"><p>Clique 1 tira o aviso de pausa: resolva na área (D liga a caneta; E esconde o enunciado). Clique 2: gabarito B.</p><p>Modelo IF, lote if-fisica-energia-e-sociedade, m003, FIS-8798.</p></aside>
+</section>
+
+<section class="slide questao" data-nome="Questão 2" data-gap="14">
+  <div class="conteudo">
+    <div class="area-resolucao"></div>
+    <span class="pilula pilula-pausa" data-em="1:some">Pause o vídeo e tente</span>
+    <div class="painel-questao">
+      <p class="olho">Questão 2 · Modelo IF</p>
+      <p class="enunciado" style="font-size:26px">A Usina Hidrelétrica de Furnas, no Rio Grande, no sul de Minas Gerais, começou a funcionar na década de 1960. Para formar a represa, as águas cobriram terras de vários municípios, e o lago ficou tão grande que ganhou o apelido de "Mar de Minas".</p><p class="enunciado" style="font-size:26px">Um impacto socioambiental típico da construção de uma represa como essa é</p>
+      
+      
+      <ol class="alternativas" style="gap:8px"><li data-em="2:apaga" style="font-size:23px;padding:6px 14px"><b>A</b><span>a fumaça da queima de combustível, que polui o ar das cidades próximas.</span></li><li data-em="2:apaga" style="font-size:23px;padding:6px 14px"><b>B</b><span>a produção de lixo radioativo, que precisa ser guardado com segurança por muitos anos.</span></li><li data-em="2:apaga" style="font-size:23px;padding:6px 14px"><b>C</b><span>o ruído das pás girando e o risco de as aves se chocarem contra elas.</span></li><li data-em="2:apaga" style="font-size:23px;padding:6px 14px"><b>D</b><span>o descarte de grande quantidade de painéis quando eles ficam velhos.</span></li><li data-em="2:certo" style="font-size:23px;padding:6px 14px"><b>E</b><span>o alagamento de grandes áreas, com famílias deslocadas e mudanças no rio e na vida dos peixes.</span></li></ol>
+    </div>
+  </div>
+  <aside class="resolucao">
+    <p class="dados"><b>Dados:</b> hidrelétrica de Furnas; represa cobriu terras de vários municípios.</p>
+    <ol class="passos"><li><b>1.</b> Barragem: o rio se espalha e forma a represa.</li><li><b>2.</b> Terras alagadas; famílias se mudam.</li><li><b>3.</b> O rio para de correr livre: muda a vida dos peixes.</li></ol>
+    <p class="resposta"><b>Resposta:</b> alagamento, famílias deslocadas, rio alterado. <b>Gabarito E.</b></p>
+    <p class="atencao"><b>Destaque no quadro:</b> Cada usina, o seu impacto principal.</p>
+    <ul class="erros"><li><b>A</b> Fumaça: termelétrica.</li><li><b>B</b> Lixo radioativo: nuclear.</li><li><b>C</b> Pás e aves: eólica.</li><li><b>D</b> Painéis: solar.</li></ul>
+  </aside>
+  <aside class="notas"><p>Clique 1 tira o aviso de pausa. Clique 2: gabarito E.</p><p>Modelo IF, lote if-fisica-energia-e-sociedade, m006, FIS-8801. Cada distrator é o impacto de outra usina da tabela.</p></aside>
+</section>
+
+<section class="slide questao" data-nome="Questão 3" data-largo="1" data-gap="10">
+  <div class="conteudo">
+    <div class="area-resolucao"></div>
+    <span class="pilula pilula-pausa" data-em="1:some">Pause o vídeo e tente</span>
+    <div class="painel-questao">
+      <p class="olho">Questão 3 · Modelo IF</p>
+      <p class="enunciado" style="font-size:23px">A Usina de Itaipu, no Rio Paraná, entre o Brasil e o Paraguai, é uma das maiores hidrelétricas do mundo. A energia produzida por ela viaja centenas de quilômetros até a região Sudeste, em linhas de transmissão com tensões de centenas de milhares de volts. Já as tomadas das casas recebem apenas 127 V ou 220 V.</p><p class="enunciado" style="font-size:23px">Essa diferença de tensão entre a transmissão e as casas acontece porque</p>
+      
+      
+      <ol class="alternativas" style="gap:8px"><li data-em="2:apaga" style="font-size:20px;padding:6px 14px"><b>A</b><span>a tensão alta faz a energia viajar mais depressa pelos fios, e a tensão baixa faz ela chegar devagar, sem estragar os aparelhos.</span></li><li data-em="2:apaga" style="font-size:20px;padding:6px 14px"><b>B</b><span>a tensão alta aumenta a energia que a usina produz, e os transformadores perto das cidades criam a energia que se perdeu no caminho.</span></li><li data-em="2:apaga" style="font-size:20px;padding:6px 14px"><b>C</b><span>a tensão alta impede que uma pessoa leve choque se tocar num fio de transmissão caído no chão.</span></li><li data-em="2:certo" style="font-size:20px;padding:6px 14px"><b>D</b><span>com tensão muito alta, perde-se menos energia em forma de calor nos fios ao longo do caminho; perto das casas, a tensão é baixada porque seria perigosa para as pessoas e para os aparelhos.</span></li><li data-em="2:apaga" style="font-size:20px;padding:6px 14px"><b>E</b><span>as usinas ficam longe e precisam de tensão alta para empurrar a energia até lá, e nas casas a tensão é baixa porque a conta de luz é cobrada pelos volts recebidos.</span></li></ol>
+    </div>
+  </div>
+  <aside class="resolucao">
+    <p class="dados"><b>Dados:</b> transmissão: centenas de milhares de volts; casas: 127 V ou 220 V.</p>
+    <ol class="passos"><li><b>1.</b> Nos fios, parte da energia vira calor.</li><li><b>2.</b> Tensão muito alta: menos perda no caminho.</li><li><b>3.</b> Perto das casas: transformador baixa a tensão.</li><li><b>4.</b> Tensão alta em casa seria perigosa.</li></ol>
+    <p class="resposta"><b>Resposta:</b> menos perda em calor na transmissão; baixa em casa por segurança. <b>Gabarito D.</b></p>
+    <p class="atencao"><b>Destaque no quadro:</b> Transformador muda a tensão; não cria energia.</p>
+    <ul class="erros"><li><b>A</b> Tensão não é velocidade da energia.</li><li><b>B</b> Transformador não cria energia.</li><li><b>C</b> Fio de alta tensão caído é muito perigoso.</li><li><b>E</b> A conta é em kWh, não em volts.</li></ul>
+  </aside>
+  <aside class="notas"><p>Clique 1 tira o aviso de pausa. Clique 2: gabarito D.</p><p>Modelo IF, lote if-fisica-energia-e-sociedade, m010, FIS-8805.</p></aside>
+</section>
+
+<section class="slide" data-nome="Resumo">
+  <div class="conteudo">
+    <p class="olho">Resumo</p>
+    <h2 class="titulo">O essencial</h2>
+<div class="resumo" style="position:absolute;left:0;right:0;top:150px"><div>A maioria das usinas gira um <b>gerador</b> com uma <b>turbina</b>.</div><div><b>Hidrelétrica</b>: água da represa. <b>Termelétrica</b>: vapor da queima de combustível. <b>Nuclear</b>: vapor, com calor do urânio.</div><div><b>Eólica</b>: o vento gira as pás. <b>Solar fotovoltaica</b>: a luz vira eletricidade, sem gerador.</div><div>Cada tipo tem <b>impactos socioambientais</b>; no Brasil, predominam as <b>hidrelétricas</b>.</div><div><b>Transformadores</b> elevam a tensão para a transmissão (menos perda em calor) e a baixam para a casa.</div><div>Na casa chegam <b>127 V</b> ou <b>220 V</b>, conforme a região.</div></div><div class="caixa caixa-atencao" style="position:absolute;left:560px;right:0;top:640px"><div class="texto" style="font-size:30px">Fio caído na rua: <b>não toque nem chegue perto</b>. Avise a companhia de energia ou os bombeiros.</div></div>
+  </div>
+  <aside class="notas"><p>Peça para tirarem um print desta tela.</p></aside>
+</section>
+
+<section class="slide capa" data-nome="A seguir">
+  <div class="estrelas"></div>
+  <div class="texto-capa" style="top:150px">
+    <span class="selo">Física · IF</span>
+    <p class="aula" style="font-size:26px">A seguir · Eletricidade · Questões do IF Sudeste</p>
+    <h1 style="font-size:118px">Questões do IF Sudeste</h1>
+    <p class="sub">Eletricidade</p>
+  </div>
+  <svg class="emblema" viewBox="0 0 640 640" aria-hidden="true">
+    <g class="gira-lento"><ellipse cx="320" cy="320" rx="300" ry="128" fill="none" stroke="#fff" stroke-opacity=".38" stroke-width="2" transform="rotate(-10 320 320)"/></g>
+    <g class="gira"><ellipse cx="320" cy="320" rx="236" ry="196" fill="none" stroke="#FFD10C" stroke-opacity=".75" stroke-width="2.5" stroke-dasharray="3 14" stroke-linecap="round" transform="rotate(-8 320 320)"/>
+      <circle cx="84" cy="300" r="13" fill="var(--d)" stroke="#fff" stroke-width="3"/></g>
+    <circle cx="320" cy="320" r="150" fill="#FFD10C"/>
+    <path d="M346 196 L262 336 H318 L292 450 L382 300 H326 Z" fill="#4B258D" stroke="#4B258D" stroke-width="8" stroke-linejoin="round"/>
+  </svg>
+  <img class="logo-capa" src="{{LOGO_BRANCO}}" alt="Quarks">
+  <aside class="notas"><p>Fim das partes de Eletricidade. A seguir, o bloco com as questões do IF Sudeste do capítulo, uma por tela.</p></aside>
+</section>

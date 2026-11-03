@@ -1,0 +1,379 @@
+<!--aula
+{"disciplina": "fisica", "curso": "IF", "assunto": "Consumo de energia elétrica", "parte": "Parte 1 de 2", "titulo": "Potência, kWh e a conta de luz", "scripts": ["animacoes-eletricidade.js"]}
+-->
+<!-- Fonte: apostila IF, Física, cap. 6 (6.3 Consumo de energia elétrica: potência, tensão e corrente; consumo de energia em kWh; a conta de luz). Questões Modelo IF do lote if-fisica-potencia-e-energia-eletrica (m002, m005, m007); a oficial do subcapítulo (2018-2 q28, FIS-0597) fica no bloco do fim do capítulo. -->
+<style>
+  .caixa, .el-card, .el-linha { box-sizing: border-box; }
+  .el-cards { display: grid; gap: 22px; }
+  .el-card { background: var(--branco); border: 2px solid var(--lilas-2); border-radius: 26px; padding: 16px 22px; font-size: 27px; line-height: 1.3; }
+  .el-card h3 { margin: 0 0 4px; font: 800 32px var(--fonte-titulo); color: var(--roxo-titulo); letter-spacing: -.01em; display: flex; align-items: center; gap: 14px; }
+  .el-card h3 svg { width: 70px; height: 70px; flex: none; }
+  .el-card p { margin: 0; color: var(--carvao); }
+  .el-card.d { background: var(--d-clara); border-color: color-mix(in srgb, var(--d) 35%, transparent); }
+  .el-linha { display: grid; grid-template-columns: 90px 1fr auto; align-items: center; gap: 22px; background: var(--branco); border: 2px solid var(--lilas-2); border-radius: 22px; padding: 10px 24px; font-size: 30px; }
+  .el-linha svg { width: 80px; height: 70px; }
+  .el-linha b { color: var(--roxo-titulo); }
+  .tag { justify-self: end; padding: 6px 20px; border-radius: 999px; font-weight: 800; font-size: 25px; white-space: nowrap; }
+  .tag-d { background: var(--d-clara); color: var(--d-forte); }
+  .tag-a { background: #FFF4C2; color: #8A6A00; }
+  .tag-r { background: var(--erro-claro); color: var(--erro); }
+  .el-lista { margin: 0; padding: 0; list-style: none; display: flex; flex-direction: column; gap: 14px; }
+  .el-lista li { display: flex; align-items: baseline; gap: 16px; font-size: 31px; line-height: 1.3; }
+  .el-lista li b.n { flex: none; width: 46px; height: 46px; border-radius: 50%; display: grid; place-items: center; background: var(--d); color: #fff; font: 800 26px var(--fonte-titulo); transform: translateY(6px); }
+  .el-lista li > span b { color: var(--roxo-titulo); }
+  .el-cadeia { display: flex; align-items: center; gap: 14px; flex-wrap: wrap; }
+  .el-cadeia .f { padding: 10px 24px; border-radius: 999px; background: var(--d-clara); color: var(--d-forte); font-weight: 800; font-size: 30px; }
+  .el-cadeia .f.am { background: #FFF4C2; color: #8A6A00; }
+  .el-cadeia .s { font: 800 36px var(--fonte-titulo); color: var(--roxo-claro); }
+  .tabela.el-t { font-size: 30px; }
+  .tabela.el-t th { padding: 12px 28px; }
+  .tabela.el-t td { padding: 10px 28px; text-align: left; }
+  /* colunas de enunciado mais largas para questões longas (data-largo); E continua ampliando a área */
+  .questao[data-largo="1"] .area-resolucao { width: 1070px; } .questao[data-largo="1"] .painel-questao { left: 1110px; } .questao[data-largo="1"] .pilula-pausa { left: 535px; }
+  .questao[data-largo="2"] .area-resolucao { width: 960px; } .questao[data-largo="2"] .painel-questao { left: 1000px; } .questao[data-largo="2"] .pilula-pausa { left: 480px; }
+  .questao[data-largo].amplia .area-resolucao { width: 1760px; } .questao[data-largo].amplia .pilula-pausa { left: 880px; }
+  .questao[data-gap="8"] .painel-questao { gap: 8px; } .questao[data-gap="10"] .painel-questao { gap: 10px; } .questao[data-gap="12"] .painel-questao { gap: 12px; } .questao[data-gap="14"] .painel-questao { gap: 14px; }
+  .painel-questao .figura { display: block; margin: 0 auto; flex: none; }
+  .painel-questao .el-mini { font-size: 22px; border-collapse: separate; border-spacing: 0; background: #fff; border: 2px solid var(--lilas-2); border-radius: 16px; overflow: hidden; }
+  .painel-questao .el-mini th { background: var(--d-clara); color: var(--d-forte); padding: 5px 12px; font-weight: 800; }
+  .painel-questao .el-mini td { padding: 4px 12px; border-top: 2px solid var(--lilas); text-align: center; }
+  .painel-questao .el-mini td:first-child { text-align: left; }
+  .el-fios path, .el-fio { fill: none; stroke: #292B2C; stroke-width: 6; stroke-linejoin: round; stroke-linecap: round; }
+  /* ---------- Animações (só na tela aberta) ---------- */
+  /* cargas andando pelo fio: pontinhos amarelos que correm quando o circuito está fechado */
+  .el-fluxo { fill: none; stroke: #FFD10C; stroke-width: 10; stroke-linecap: round; stroke-dasharray: 0 32; opacity: 0; transition: opacity .5s; }
+  .el-on .el-fluxo, .el-fluxo.sempre { opacity: 1; }
+  .el-off .el-fluxo, .el-on .el-off .el-fluxo { opacity: 0 !important; }
+  .slide.ativo .el-on .el-fluxo, .slide.ativo .el-fluxo.sempre { animation: el-flui 1.6s linear infinite; }
+  .slide.ativo .el-on .el-fluxo.lento { animation-duration: 3.2s; }
+  @keyframes el-flui { to { stroke-dashoffset: -32; } }
+  .el-agua { fill: none; stroke: #8FC8F0; stroke-width: 12; stroke-linecap: round; stroke-dasharray: 2 26; }
+  .slide.ativo .el-agua { animation: el-flui 1.8s linear infinite; }
+  /* lâmpada: acende quando o circuito fecha (sem piscar) */
+  .el-lamp .luz { opacity: 0; transition: opacity .7s ease; }
+  .el-on .el-lamp .luz, .el-lamp.acesa .luz { opacity: 1; }
+  .el-on .el-lamp.fraca .luz { opacity: .42; }
+  .el-off .el-lamp .luz, .el-on .el-off .el-lamp .luz { opacity: 0 !important; }
+  .el-lamp { transition: transform .8s ease, opacity .8s ease; }
+  .el-tira .el-lamp.sai { transform: translateY(-46px); opacity: .3; }
+  /* chave: a alavanca baixa e fecha o circuito */
+  .el-alavanca { transform: rotate(-32deg); transition: transform .7s ease; }
+  .el-alavanca.fechada, .el-fecha .el-alavanca { transform: none; }
+  .el-abre .el-alavanca { transform: rotate(-32deg) !important; }
+  /* rodas que giram (turbina, pás) e raios do Sol */
+  .slide.ativo .el-roda { animation: el-gira 9s linear infinite; }
+  .slide.ativo .el-roda.rapida { animation-duration: 5s; }
+  .slide.ativo .el-raios { animation: el-gira 30s linear infinite; }
+  @keyframes el-gira { to { transform: rotate(360deg); } }
+  /* calor que sobe */
+  .el-calor path { opacity: 0; }
+  .slide.ativo .el-calor path { animation: el-sobe 5s ease-in-out infinite; }
+  .el-calor path:nth-child(2) { animation-delay: -1.7s !important; } .el-calor path:nth-child(3) { animation-delay: -3.4s !important; }
+  @keyframes el-sobe { 0% { transform: translateY(10px); opacity: 0; } 30% { opacity: .9; } 100% { transform: translateY(-34px); opacity: 0; } }
+  /* gotas que caem (chuveiro) */
+  .el-gotas circle { opacity: 0; }
+  .slide.ativo .el-gotas circle { animation: el-cai 2.6s linear infinite; }
+  .el-gotas circle:nth-child(2) { animation-delay: -.9s !important; } .el-gotas circle:nth-child(3) { animation-delay: -1.7s !important; } .el-gotas circle:nth-child(4) { animation-delay: -.4s !important; } .el-gotas circle:nth-child(5) { animation-delay: -2.1s !important; }
+  @keyframes el-cai { 0% { transform: translateY(0); opacity: 0; } 15% { opacity: 1; } 85% { opacity: 1; } 100% { transform: translateY(70px); opacity: 0; } }
+  /* barras que crescem quando aparecem */
+  .el-barra { transform: scaleX(0); transform-box: fill-box; transform-origin: left center; transition: transform 2.2s ease-out; }
+  .mostra .el-barra, .mostra.el-barra, .el-barra.ja { transform: none; }
+  .el-barra-v { transform: scaleY(0); transform-box: fill-box; transform-origin: center bottom; transition: transform 2.2s ease-out; }
+  .mostra .el-barra-v, .mostra.el-barra-v { transform: none; }
+  /* traço que se desenha */
+  .el-traca { stroke-dasharray: 1; stroke-dashoffset: 1; transition: stroke-dashoffset 1.6s ease-in-out; }
+  .mostra .el-traca, .mostra.el-traca { stroke-dashoffset: 0; }
+  @media (prefers-reduced-motion: reduce) { .el-barra, .el-barra-v { transform: none; } .el-traca { stroke-dashoffset: 0; } .el-alavanca { transition: none; } }
+</style>
+<svg width="0" height="0" style="position:absolute" aria-hidden="true">
+  <defs>
+    <radialGradient id="elBrilho" cx=".5" cy=".5" r=".5"><stop offset="0" stop-color="#FFE680" stop-opacity=".95"/><stop offset=".45" stop-color="#FFD10C" stop-opacity=".45"/><stop offset="1" stop-color="#FFD10C" stop-opacity="0"/></radialGradient>
+    <linearGradient id="elAgua" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#CFE6FA"/><stop offset="1" stop-color="#8CC1EE"/></linearGradient>
+    <linearGradient id="elCobre" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#F2A86B"/><stop offset="1" stop-color="#B9652A"/></linearGradient>
+  </defs>
+</svg>
+
+<section class="slide capa" data-nome="Capa">
+  <div class="estrelas"></div>
+  <div class="texto-capa" style="top:150px">
+    <span class="selo">Física · IF</span>
+    <p class="aula">Consumo de energia elétrica · Parte 1 de 2</p>
+    <h1 style="font-size:130px">Potência e consumo</h1>
+    <p class="sub">Potência, kWh e a conta de luz</p>
+  </div>
+  <svg class="emblema" viewBox="0 0 640 640" aria-hidden="true">
+    <g class="gira-lento"><ellipse cx="320" cy="320" rx="300" ry="128" fill="none" stroke="#fff" stroke-opacity=".38" stroke-width="2" transform="rotate(-10 320 320)"/></g>
+    <g class="gira"><ellipse cx="320" cy="320" rx="236" ry="196" fill="none" stroke="#FFD10C" stroke-opacity=".75" stroke-width="2.5" stroke-dasharray="3 14" stroke-linecap="round" transform="rotate(-8 320 320)"/>
+      <circle cx="84" cy="300" r="13" fill="var(--d)" stroke="#fff" stroke-width="3"/></g>
+    <circle cx="320" cy="320" r="150" fill="#FFD10C"/>
+    <path d="M346 196 L262 336 H318 L292 450 L382 300 H326 Z" fill="#4B258D" stroke="#4B258D" stroke-width="8" stroke-linejoin="round"/>
+  </svg>
+  <img class="logo-capa" src="{{LOGO_BRANCO}}" alt="Quarks">
+  <aside class="notas"><p>Hoje: de onde vem a potência (P = U · i), a chave inverno/verão, o brilho das lâmpadas, o quilowatt-hora e a conta de luz.</p><p>É a parte de mais contas do capítulo; o IF cobra quase sempre consumo em kWh e valor da conta.</p></aside>
+</section>
+
+<section class="slide" data-nome="P = U · i">
+  <div class="conteudo">
+    <p class="olho">Potência dos aparelhos</p>
+    <h2 class="titulo">De onde vem a potência</h2>
+    <div style="position:absolute;left:0;right:0;top:150px;display:grid;grid-template-columns:1fr 1fr;gap:26px">
+      <div class="caixa" data-passo="1"><span class="rotulo">Tensão</span><div class="texto" style="font-size:31px">Diz quanta <b>energia</b> cada coulomb de carga entrega ao passar.</div></div>
+      <div class="caixa" data-passo="2"><span class="rotulo">Corrente</span><div class="texto" style="font-size:31px">Diz quantos <b>coulombs</b> passam por segundo.</div></div>
+    </div>
+    <div class="caixa caixa-fundamental" data-passo="3" style="position:absolute;left:480px;right:480px;top:370px;text-align:center;font-size:96px;padding:10px">\(P = U \cdot i\)</div>
+    <div class="letras" data-passo="4" style="position:absolute;left:560px;right:0;top:560px;grid-template-columns:repeat(3,1fr)">
+      <div><span class="simbolo">\(P\)</span>potência<br><span class="unidade">watt (W)</span></div>
+      <div><span class="simbolo">\(U\)</span>tensão<br><span class="unidade">volt (V)</span></div>
+      <div><span class="simbolo">\(i\)</span>corrente<br><span class="unidade">ampère (A)</span></div>
+    </div>
+  </div>
+  <aside class="notas"><p>Cliques 1 e 2: o que cada grandeza diz. Clique 3: multiplicando, energia por coulomb × coulombs por segundo = energia por segundo, que é a potência.</p><p>Clique 4: as unidades.</p></aside>
+</section>
+
+<section class="slide" data-nome="Exemplo: disjuntor">
+  <div class="conteudo">
+    <p class="olho">Exemplo</p>
+    <h2 class="titulo">O disjuntor do chuveiro</h2>
+    <p class="texto" style="position:absolute;left:0;width:860px;top:150px;margin:0;font-size:31px">Qual é a corrente quando o chuveiro está ligado? Um disjuntor de <b>20 A</b> aguentaria?</p>
+    <div style="position:absolute;left:0;top:300px;display:flex;align-items:center;gap:30px"><svg viewBox="0 0 100 100" width="200" height="200" style="overflow:visible;" aria-hidden="true"><path d="M20 14 V26 H56" fill="none" stroke="#7F7A99" stroke-width="6" stroke-linecap="round"/><path d="M40 26 h32 a8 8 0 0 1 8 8 v6 H32 v-6 a8 8 0 0 1 8 -8 Z" fill="var(--d)"/><g class="el-gotas" fill="#8CC1EE"><circle cx="40" cy="50" r="4"/><circle cx="52" cy="50" r="4"/><circle cx="64" cy="50" r="4"/><circle cx="46" cy="50" r="3"/><circle cx="72" cy="50" r="3"/></g></svg><div style="background:var(--d-clara);border:3px solid var(--d-escura);border-radius:20px;padding:12px 26px;font-size:32px;line-height:1.4;display:inline-block"><b style="color:var(--d-escura)">CHUVEIRO</b><br>220 V, 5500 W</div></div>
+    <div style="position:absolute;left:1000px;top:150px"><div class="contas" style="font-size:46px;"><div class="eq" data-passo="1"><span>\(P\)</span><span>\(=\)</span><span>\(U \cdot i\)</span></div><div class="eq" data-passo="2"><span>\(5500\)</span><span>\(=\)</span><span>\(220 \cdot i\)</span></div><div class="eq" data-passo="3"><span>\(i\)</span><span>\(=\)</span><span>\(\dfrac{5500}{220}\)</span></div><div class="eq final" data-passo="4"><span>\(i\)</span><span>\(=\)</span><span>\(25\ \text{A}\)</span></div></div></div>
+    <div class="caixa caixa-atencao" data-passo="5" style="position:absolute;left:560px;right:0;top:620px;padding:18px 28px"><div class="texto" style="font-size:30px"><b>25 A</b> passa de 20 A: o disjuntor <b>desarmaria</b>. O chuveiro precisa de um circuito próprio, com disjuntor e fios para correntes maiores.</div></div>
+  </div>
+  <aside class="notas"><p>Dados: P = 5500 W e U = 220 V. Cliques 1 a 4: i = 5500 ÷ 220 = 25 A (220 × 25 = 5500).</p><p>Clique 5: por isso o chuveiro tem disjuntor só para ele.</p></aside>
+</section>
+
+<section class="slide" data-nome="Inverno e verão">
+  <div class="conteudo">
+    <p class="olho">Potência dos aparelhos</p>
+    <h2 class="titulo">A chave inverno/verão do chuveiro</h2>
+    <p class="texto" style="position:absolute;left:0;right:0;top:140px;margin:0;font-size:31px">A tensão da casa é <b>sempre a mesma</b>. A chave muda o trecho do resistor por onde a corrente passa.</p>
+    <div class="caixa" style="position:absolute;left:0;width:1000px;top:220px;padding:18px 26px" data-passo="1"><span class="rotulo">Inverno</span>
+      <div class="el-cadeia" style="margin-top:6px"><span class="f">trecho menor</span><span class="s">→</span><span class="f">R menor</span><span class="s">→</span><span class="f">\(i = U \div R\) maior</span><span class="s">→</span><span class="f am">\(P = U \cdot i\) maior</span></div>
+      <p class="texto" style="margin:10px 0 0;font-size:30px">A água sai <b>mais quente</b>.</p></div>
+    <div class="caixa" style="position:absolute;left:0;width:1000px;top:505px;padding:18px 26px" data-passo="2"><span class="rotulo">Verão</span>
+      <div class="texto" style="font-size:30px">O resistor <b>inteiro</b>: R maior, corrente e potência menores.</div></div>
+    <div style="position:absolute;left:1120px;top:200px" data-passo="1"><svg viewBox="0 0 420 230" width="420" height="230"  style="overflow:visible;font-family:Figtree,'Segoe UI',sans-serif;" aria-hidden="true"><path d="M60 150 q20 -40 40 0 t40 0 t40 0 t40 0 t40 0 t40 0 t40 0" fill="none" stroke="#C9C0F0" stroke-width="10" stroke-linecap="round"/><path d="M220 150 q20 -40 40 0 t40 0 t40 0" fill="none" stroke="#E86A3A" stroke-width="10" stroke-linecap="round"/><path class="el-fio" d="M20 60 H220 V150" /><path class="el-fio" d="M380 60 H340 V150" /><g class="el-on"><path class="el-fluxo " d="M20 60 H220 V150" /><path class="el-fluxo " d="M340 150 V60 H380" /></g><g class="el-calor" fill="none" stroke="#E86A3A" stroke-width="5" stroke-linecap="round"><path d="M240 112 q10 -14 0 -28 q-10 -14 0 -28"/><path d="M290 112 q10 -14 0 -28 q-10 -14 0 -28"/><path d="M340 112 q10 -14 0 -28 q-10 -14 0 -28"/></g><text x="200" y="215" text-anchor="middle" font-size="32" font-weight="800" fill="#E86A3A" >inverno: trecho menor</text></svg></div>
+    <div style="position:absolute;left:1120px;top:460px" data-passo="2"><svg viewBox="0 0 420 230" width="420" height="230"  style="overflow:visible;font-family:Figtree,'Segoe UI',sans-serif;" aria-hidden="true"><path d="M60 150 q20 -40 40 0 t40 0 t40 0 t40 0 t40 0 t40 0 t40 0" fill="none" stroke="#C9C0F0" stroke-width="10" stroke-linecap="round"/><path d="M60 150 q20 -40 40 0 t40 0 t40 0 t40 0 t40 0 t40 0 t40 0" fill="none" stroke="#E0A800" stroke-width="10" stroke-linecap="round"/><path class="el-fio" d="M20 60 H60 V150" /><path class="el-fio" d="M380 60 H340 V150" /><g class="el-on"><path class="el-fluxo " d="M20 60 H60 V150" /><path class="el-fluxo " d="M340 150 V60 H380" /></g><g class="el-calor" fill="none" stroke="#E0A800" stroke-width="5" stroke-linecap="round"><path d="M80 112 q10 -14 0 -28 q-10 -14 0 -28"/><path d="M130 112 q10 -14 0 -28 q-10 -14 0 -28"/><path d="M180 112 q10 -14 0 -28 q-10 -14 0 -28"/></g><text x="200" y="215" text-anchor="middle" font-size="32" font-weight="800" fill="#E0A800" >verão: resistor inteiro</text></svg></div>
+  </div>
+  <aside class="notas"><p>Cada figura mostra o resistor (a mola) e o trecho por onde a corrente passa; o calor sobe desse trecho.</p><p>Clique 1: inverno: trecho menor, menos resistência, mais corrente, mais potência. Clique 2: verão: o resistor inteiro, menos potência.</p><p>Pergunte: qual posição gasta mais energia no mesmo banho? (Inverno.)</p></aside>
+</section>
+
+<section class="slide" data-nome="O brilho das lâmpadas">
+  <div class="conteudo">
+    <p class="olho">Potência dos aparelhos</p>
+    <h2 class="titulo">O brilho depende da potência</h2>
+    <p class="texto" style="position:absolute;left:0;right:0;top:140px;margin:0;font-size:32px">O <b>brilho</b> de uma lâmpada depende da <b>potência</b> que ela recebe. E o tipo de ligação muda tudo:</p>
+    <div class="caixa" data-passo="1" style="position:absolute;left:0;width:840px;top:250px;padding:20px 28px"><span class="rotulo">Em série</span>
+      <div class="texto" style="font-size:31px">A <b>corrente</b> é a mesma; a lâmpada de <b>maior</b> resistência fica com mais tensão e <b>brilha mais</b>.</div></div>
+    <div class="caixa" data-passo="2" style="position:absolute;left:900px;right:0;top:250px;padding:20px 28px"><span class="rotulo">Em paralelo</span>
+      <div class="texto" style="font-size:31px">A <b>tensão</b> é a mesma; a lâmpada de <b>menor</b> resistência recebe mais corrente e <b>brilha mais</b>.</div></div>
+    <div class="caixa caixa-atencao" data-passo="3" style="position:absolute;left:560px;right:0;top:520px;padding:18px 28px"><div class="texto" style="font-size:30px">A mesma lâmpada pode ser a mais forte num circuito e a mais fraca no outro. O exemplo mostra.</div></div>
+  </div>
+  <aside class="notas"><p>Cliques 1 e 2: a regra de cada ligação. Clique 3: é a ideia da questão de Sofia, no bloco do fim do capítulo.</p></aside>
+</section>
+
+<section class="slide" data-nome="Exemplo: brilho em série">
+  <div class="conteudo">
+    <p class="olho">Exemplo</p>
+    <h2 class="titulo">Qual brilha mais? Em série</h2>
+    <p class="texto" style="position:absolute;left:0;right:0;top:140px;margin:0;font-size:30px">\(L_1\) de <b>30 Ω</b> e \(L_2\) de <b>10 Ω</b>, ligadas a <b>12 V</b>.</p>
+    <div style="position:absolute;left:0;top:220px"><svg viewBox="0 0 800 440" width="620" height="341"  style="overflow:visible;font-family:Figtree,'Segoe UI',sans-serif;" aria-hidden="true"><g class="el-on" data-em=""><path class="el-fio" d="M110 158 V80 H264 M336 80 H484 M556 80 H700 V380 H110 V286" /><path class="el-fluxo " d="M110 158 V80 H700 V380 H110 V286" /><rect x="98.0" y="146" width="24" height="14" rx="3" fill="#052E30"/><rect x="80" y="158" width="60" height="116" rx="12" fill="var(--d)" stroke="#052E30" stroke-width="3"/><text x="110.0" y="194" text-anchor="middle" font-size="34" font-weight="800" fill="#fff">+</text><text x="110.0" y="260" text-anchor="middle" font-size="40" font-weight="800" fill="#fff">−</text><g class="el-lamp  " ><circle class="luz" cx="300" cy="80" r="83" fill="url(#elBrilho)"/><circle cx="300" cy="80" r="36" fill="#fff" stroke="#292B2C" stroke-width="5"/><circle class="luz" cx="300" cy="80" r="32" fill="#FFE680"/><path d="M274.8 54.8 L325.2 105.2 M325.2 54.8 L274.8 105.2" stroke="#292B2C" stroke-width="4"/><text x="300" y="28" text-anchor="middle" font-size="30" font-weight="800" fill="#3F2FA0" >L₁ · 30 Ω</text></g><g class="el-lamp  fraca" ><circle class="luz" cx="520" cy="80" r="83" fill="url(#elBrilho)"/><circle cx="520" cy="80" r="36" fill="#fff" stroke="#292B2C" stroke-width="5"/><circle class="luz" cx="520" cy="80" r="32" fill="#FFE680"/><path d="M494.8 54.8 L545.2 105.2 M545.2 54.8 L494.8 105.2" stroke="#292B2C" stroke-width="4"/><text x="520" y="28" text-anchor="middle" font-size="30" font-weight="800" fill="#3F2FA0" >L₂ · 10 Ω</text></g></g></svg></div>
+    <div style="position:absolute;left:700px;top:200px">
+      <p class="texto" data-passo="1" style="margin:0 0 12px;font-size:30px">\(R_{eq} = 30 + 10 = 40\ \Omega\) e \(i = 12 \div 40 = 0{,}3\ \text{A}\) nas duas.</p>
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:50px">
+        <div class="contas" style="font-size:40px;"><div class="eq" data-passo="2"><span>\(U_1\)</span><span>\(=\)</span><span>\(R_1 \cdot i\)</span></div><div class="eq" data-passo="3"><span>\(U_1\)</span><span>\(=\)</span><span>\(30 \cdot 0{,}3\)</span></div><div class="eq final" data-passo="4"><span>\(U_1\)</span><span>\(=\)</span><span>\(9\ \text{V}\)</span></div></div>
+        <div class="contas" style="font-size:40px;"><div class="eq" data-passo="2"><span>\(U_2\)</span><span>\(=\)</span><span>\(R_2 \cdot i\)</span></div><div class="eq" data-passo="3"><span>\(U_2\)</span><span>\(=\)</span><span>\(10 \cdot 0{,}3\)</span></div><div class="eq final" data-passo="4"><span>\(U_2\)</span><span>\(=\)</span><span>\(3\ \text{V}\)</span></div></div>
+      </div>
+      <p class="texto" data-passo="5" style="margin:22px 0 0;font-size:31px">Com \(P = U \cdot i\): \(P_1 = 9 \cdot 0{,}3 = 2{,}7\ \text{W}\) e \(P_2 = 3 \cdot 0{,}3 = 0{,}9\ \text{W}\).</p>
+    </div>
+    <span class="pilula pilula-resposta" data-passo="6" style="position:absolute;left:700px;top:720px">Em série, brilha mais \(L_1\) (maior R)</span>
+  </div>
+  <aside class="notas"><p>Clique 1: R_eq e a corrente comum. Cliques 2 a 4: a tensão de cada uma (9 V + 3 V = 12 V). Clique 5: as potências.</p><p>Na figura, L₁ brilha forte e L₂ fraco: em série, ganha a de maior resistência.</p></aside>
+</section>
+
+<section class="slide" data-nome="Exemplo: brilho em paralelo">
+  <div class="conteudo">
+    <p class="olho">Exemplo</p>
+    <h2 class="titulo">Qual brilha mais? Em paralelo</h2>
+    <p class="texto" style="position:absolute;left:0;right:0;top:140px;margin:0;font-size:30px">As mesmas lâmpadas, agora em paralelo, a <b>12 V</b>: as duas recebem os 12 V.</p>
+    <div style="position:absolute;left:0;top:210px"><svg viewBox="0 0 800 460" width="620" height="357"  style="overflow:visible;font-family:Figtree,'Segoe UI',sans-serif;" aria-hidden="true"><g class="el-on"><path class="el-fio" d="M110 158 V80 H560 M560 400 H110 V286" /><path class="el-fluxo " d="M110 158 V80 H560" /><path class="el-fluxo " d="M560 400 H110 V286" /><rect x="98.0" y="146" width="24" height="14" rx="3" fill="#052E30"/><rect x="80" y="158" width="60" height="116" rx="12" fill="var(--d)" stroke="#052E30" stroke-width="3"/><text x="110.0" y="194" text-anchor="middle" font-size="34" font-weight="800" fill="#fff">+</text><text x="110.0" y="260" text-anchor="middle" font-size="40" font-weight="800" fill="#fff">−</text><g><path class="el-fio" d="M320 80 V204.0 M320 276.0 V400" /><path class="el-fluxo " d="M320 80 V400" /><g class="el-lamp fraca" ><circle class="luz" cx="320" cy="240.0" r="83" fill="url(#elBrilho)"/><circle cx="320" cy="240.0" r="36" fill="#fff" stroke="#292B2C" stroke-width="5"/><circle class="luz" cx="320" cy="240.0" r="32" fill="#FFE680"/><path d="M294.8 214.8 L345.2 265.2 M345.2 214.8 L294.8 265.2" stroke="#292B2C" stroke-width="4"/><text x="370" y="250.0" text-anchor="start" font-size="30" font-weight="800" fill="#3F2FA0" >L₁ · 30 Ω</text></g><circle cx="320" cy="80" r="7" fill="#292B2C"/><circle cx="320" cy="400" r="7" fill="#292B2C"/></g><g><path class="el-fio" d="M560 80 V204.0 M560 276.0 V400" /><path class="el-fluxo " d="M560 80 V400" /><g class="el-lamp " ><circle class="luz" cx="560" cy="240.0" r="83" fill="url(#elBrilho)"/><circle cx="560" cy="240.0" r="36" fill="#fff" stroke="#292B2C" stroke-width="5"/><circle class="luz" cx="560" cy="240.0" r="32" fill="#FFE680"/><path d="M534.8 214.8 L585.2 265.2 M585.2 214.8 L534.8 265.2" stroke="#292B2C" stroke-width="4"/><text x="610" y="250.0" text-anchor="start" font-size="30" font-weight="800" fill="#3F2FA0" >L₂ · 10 Ω</text></g></g></g></svg></div>
+    <div style="position:absolute;left:760px;top:210px;display:grid;grid-template-columns:1fr 1fr;gap:50px">
+      <div class="contas" style="font-size:40px;"><div class="eq" data-passo="1"><span>\(i_1\)</span><span>\(=\)</span><span>\(12 \div 30\)</span></div><div class="eq" data-passo="2"><span>\(i_1\)</span><span>\(=\)</span><span>\(0{,}4\ \text{A}\)</span></div><div class="eq" data-passo="3"><span>\(P_1\)</span><span>\(=\)</span><span>\(12 \cdot 0{,}4\)</span></div><div class="eq final" data-passo="4"><span>\(P_1\)</span><span>\(=\)</span><span>\(4{,}8\ \text{W}\)</span></div></div>
+      <div class="contas" style="font-size:40px;"><div class="eq" data-passo="1"><span>\(i_2\)</span><span>\(=\)</span><span>\(12 \div 10\)</span></div><div class="eq" data-passo="2"><span>\(i_2\)</span><span>\(=\)</span><span>\(1{,}2\ \text{A}\)</span></div><div class="eq" data-passo="3"><span>\(P_2\)</span><span>\(=\)</span><span>\(12 \cdot 1{,}2\)</span></div><div class="eq final" data-passo="4"><span>\(P_2\)</span><span>\(=\)</span><span>\(14{,}4\ \text{W}\)</span></div></div>
+    </div>
+    <span class="pilula pilula-resposta" data-passo="5" style="position:absolute;left:760px;top:640px">Em paralelo, brilha mais \(L_2\) (menor R)</span>
+  </div>
+  <aside class="notas"><p>Cliques 1 a 4: a corrente e a potência de cada uma, com a mesma tensão de 12 V.</p><p>Clique 5: agora ganha L₂, a de menor resistência. Compare com o slide anterior: a mesma L₁ era a mais forte em série.</p></aside>
+</section>
+
+<section class="slide" data-nome="Energia em kWh">
+  <div class="conteudo">
+    <p class="olho">Energia elétrica e o kWh</p>
+    <h2 class="titulo">Consumo: potência e tempo</h2>
+    <p class="texto" style="position:absolute;left:0;width:1000px;top:150px;margin:0;font-size:31px">Um chuveiro de 6000 W e uma lâmpada de 10 W, ligados por pouco tempo, podem gastar pouco; por muito tempo, gastam muito. É preciso juntar a <b>potência</b> e o <b>tempo de uso</b>.</p>
+    <div class="caixa caixa-fundamental" style="position:absolute;left:1100px;right:0;top:150px;text-align:center;font-size:84px;padding:14px">\(E = P \cdot \Delta t\)</div>
+    <div class="letras" style="position:absolute;left:0;right:0;top:360px;grid-template-columns:repeat(3,1fr)">
+      <div data-passo="1"><span class="simbolo">\(E\)</span>energia consumida<br><span class="unidade">kWh</span></div>
+      <div data-passo="2"><span class="simbolo">\(P\)</span>potência do aparelho<br><span class="unidade">kW</span></div>
+      <div data-passo="3"><span class="simbolo">\(\Delta t\)</span>tempo de uso<br><span class="unidade">horas (h)</span></div>
+    </div>
+    <div class="caixa" data-passo="4" style="position:absolute;left:560px;right:0;top:600px;padding:18px 28px"><span class="rotulo">Quilowatt-hora (kWh)</span>
+      <div class="texto" style="font-size:31px">É a energia que um aparelho de <b>1 kW</b> consome ligado durante <b>1 hora</b>. É a unidade da <b>conta de luz</b>.</div></div>
+  </div>
+  <aside class="notas"><p>Cliques 1 a 3: as letras. Com P em kW e o tempo em horas, a energia sai em kWh.</p><p>Clique 4: o quilowatt-hora.</p></aside>
+</section>
+
+<section class="slide" data-nome="Exemplo: TV">
+  <div class="conteudo">
+    <p class="olho">Exemplo</p>
+    <h2 class="titulo">A TV da sala</h2>
+    <div class="caixa" style="position:absolute;left:0;width:620px;top:150px;padding:18px 26px"><span class="rotulo">Calcular o consumo do mês</span>
+      <ol class="el-lista" style="margin-top:6px"><li><b class="n">1</b><span>Potência em <b>kW</b> (÷ 1000).</span></li><li><b class="n">2</b><span>Tempo total no mês, em <b>horas</b>.</span></li><li><b class="n">3</b><span>Multiplique: \(E = P \cdot \Delta t\).</span></li></ol></div>
+    <p class="texto" style="position:absolute;left:700px;right:0;top:150px;margin:0;font-size:31px">Uma TV de <b>100 W</b> fica ligada <b>5 h por dia</b>. Quanto ela consome em <b>30 dias</b>?</p>
+    <div style="position:absolute;left:700px;top:270px;display:grid;grid-template-columns:1fr 1fr 1fr;gap:40px">
+      <div class="contas" style="font-size:40px;"><div class="eq" data-passo="1"><span>\(P\)</span><span>\(=\)</span><span>\(\dfrac{100}{1000}\)</span></div><div class="eq" data-passo="2"><span>\(P\)</span><span>\(=\)</span><span>\(0{,}1\ \text{kW}\)</span></div></div>
+      <div class="contas" style="font-size:40px;"><div class="eq" data-passo="3"><span>\(\Delta t\)</span><span>\(=\)</span><span>\(5 \cdot 30\)</span></div><div class="eq" data-passo="4"><span>\(\Delta t\)</span><span>\(=\)</span><span>\(150\ \text{h}\)</span></div></div>
+      <div class="contas" style="font-size:40px;"><div class="eq" data-passo="5"><span>\(E\)</span><span>\(=\)</span><span>\(P \cdot \Delta t\)</span></div><div class="eq" data-passo="6"><span>\(E\)</span><span>\(=\)</span><span>\(0{,}1 \cdot 150\)</span></div><div class="eq final" data-passo="7"><span>\(E\)</span><span>\(=\)</span><span>\(15\ \text{kWh}\)</span></div></div>
+    </div>
+    <div style="position:absolute;left:700px;top:560px" data-passo="7"><svg viewBox="0 0 100 100" width="200" height="200" style="overflow:visible;" aria-hidden="true"><rect x="10" y="20" width="80" height="54" rx="8" fill="#292B2C"/><rect x="16" y="26" width="68" height="42" rx="4" fill="var(--d-clara)"/><path d="M40 36 L62 47 L40 58 Z" fill="var(--d)"/><path d="M38 86 H62 M50 74 V86" stroke="#7F7A99" stroke-width="5" stroke-linecap="round"/></svg></div>
+    <span class="pilula pilula-resposta" data-passo="7" style="position:absolute;left:960px;top:640px">15 kWh por mês</span>
+  </div>
+  <aside class="notas"><p>O passo a passo da apostila, à esquerda. Cliques 1 e 2: a potência em kW. Cliques 3 e 4: o tempo do mês. Cliques 5 a 7: a energia.</p></aside>
+</section>
+
+<section class="slide" data-nome="Exemplo: banho">
+  <div class="conteudo">
+    <p class="olho">Exemplo</p>
+    <h2 class="titulo">O banho de cada dia</h2>
+    <p class="texto" style="position:absolute;left:0;right:0;top:140px;margin:0;font-size:31px">Um chuveiro de <b>6000 W</b> fica ligado <b>20 min por dia</b>. Quanto ele consome em <b>30 dias</b>?</p>
+    <div style="position:absolute;left:0;top:230px;display:grid;grid-template-columns:auto auto;gap:60px">
+      <div class="contas" style="font-size:40px;"><div class="eq" data-passo="1"><span>\(\Delta t\)</span><span>\(=\)</span><span>\(20 \cdot 30\)</span></div><div class="eq" data-passo="2"><span>\(\Delta t\)</span><span>\(=\)</span><span>\(600\ \text{min}\)</span></div><div class="eq" data-passo="3"><span>\(\Delta t\)</span><span>\(=\)</span><span>\(\dfrac{600}{60}\)</span></div><div class="eq" data-passo="4"><span>\(\Delta t\)</span><span>\(=\)</span><span>\(10\ \text{h}\)</span></div></div>
+      <div class="contas" style="font-size:40px;"><div class="eq" data-passo="5"><span>\(E\)</span><span>\(=\)</span><span>\(6 \cdot 10\)</span></div><div class="eq final" data-passo="6"><span>\(E\)</span><span>\(=\)</span><span>\(60\ \text{kWh}\)</span></div></div>
+    </div>
+    <div style="position:absolute;left:1000px;top:220px"><svg viewBox="0 0 700 260" width="700" height="260"  style="overflow:visible;font-family:Figtree,'Segoe UI',sans-serif;" aria-hidden="true"><g data-passo="7"><rect class="el-barra" x="160" y="40" width="500" height="64" rx="14" fill="#E86A3A"/><text x="150" y="82" text-anchor="end" font-size="28" font-weight="800" fill="#C2502A" >chuveiro</text><text x="640" y="82" text-anchor="end" font-size="28" font-weight="800" fill="#fff" >60 kWh</text><rect class="el-barra" x="160" y="140" width="125" height="64" rx="14" fill="var(--d)"/><text x="150" y="182" text-anchor="end" font-size="28" font-weight="800" fill="var(--d-forte)" >TV</text><text x="300" y="182" text-anchor="start" font-size="28" font-weight="800" fill="var(--d-forte)" >15 kWh</text></g></svg></div>
+    <div class="caixa caixa-fundamental" data-passo="8" style="position:absolute;left:560px;right:0;top:620px;padding:16px 28px"><div class="texto" style="font-size:31px"><b>60 kWh</b> por mês: <b>quatro vezes</b> o consumo da TV, mesmo ligado bem menos tempo.</div></div>
+  </div>
+  <aside class="notas"><p>Cliques 1 a 4: primeiro o tempo total, em horas (600 min ÷ 60 = 10 h). Cliques 5 e 6: com P = 6 kW, E = 60 kWh.</p><p>Clique 7: as barras crescem e comparam com a TV (15 kWh). Clique 8: 60 ÷ 15 = 4.</p></aside>
+</section>
+
+<section class="slide" data-nome="Watt não é kWh">
+  <div class="conteudo">
+    <p class="olho">Atenção</p>
+    <h2 class="titulo">Watt não é kWh</h2>
+    <div style="position:absolute;left:0;right:0;top:170px;display:grid;grid-template-columns:1fr 1fr;gap:30px">
+      <div class="caixa caixa-fundamental" style="padding:24px 32px"><span class="rotulo">Watt (W)</span><div class="texto" style="font-size:34px">mede <b>potência</b>: a <b>rapidez</b> do consumo.</div><div style="font-size:30px;color:var(--cinza);margin-top:10px">como a velocidade do carro</div></div>
+      <div class="caixa caixa-fundamental" data-passo="1" style="padding:24px 32px"><span class="rotulo">Quilowatt-hora (kWh)</span><div class="texto" style="font-size:34px">mede <b>energia</b>: o <b>total</b> consumido.</div><div style="font-size:30px;color:var(--cinza);margin-top:10px">como a distância percorrida</div></div>
+    </div>
+    <div class="caixa caixa-atencao" data-passo="2" style="position:absolute;left:560px;right:0;top:500px;padding:20px 30px"><span class="rotulo">Antes de multiplicar</span><div class="texto" style="font-size:32px">Confira se a potência está em <b>kW</b> e o tempo em <b>horas</b>.</div></div>
+  </div>
+  <aside class="notas"><p>A comparação com velocidade e distância é só para fixar: watt é ritmo; kWh é o total.</p><p>Clique 2: o erro mais comum nas questões: esquecer de dividir os watts por 1000 ou deixar o tempo em minutos.</p></aside>
+</section>
+
+<section class="slide" data-nome="A conta de luz">
+  <div class="conteudo">
+    <p class="olho">Cálculo do consumo e a conta de luz</p>
+    <h2 class="titulo">Quanto deu a conta?</h2>
+    <p class="texto" style="position:absolute;left:0;width:980px;top:140px;margin:0;font-size:30px">O <b>medidor</b> marca, como um odômetro, o total de energia já consumida. Consumo do mês = leitura atual − leitura anterior. Valor = consumo × preço do kWh, mais impostos e taxas.</p>
+    <div style="position:absolute;left:1180px;top:130px"><div data-anima="el-medidor" data-de="4150" data-ate="4350" data-anima-passo="1" style="width:460px;height:300px"></div></div>
+    <p class="texto" data-passo="1" style="position:absolute;left:0;width:1000px;top:330px;margin:0;font-size:30px">Mês passado: <b>4150 kWh</b>. Agora: <b>4350 kWh</b>. kWh a <b>R$ 1,00</b> (valor fictício, sem impostos).</p>
+    <div style="position:absolute;left:560px;top:430px;display:grid;grid-template-columns:auto auto;gap:70px">
+      <div class="contas" style="font-size:40px;"><div class="eq" data-passo="2"><span>\(C\)</span><span>\(=\)</span><span>\(L_2 - L_1\)</span></div><div class="eq" data-passo="3"><span>\(C\)</span><span>\(=\)</span><span>\(4350 - 4150\)</span></div><div class="eq final" data-passo="4"><span>\(C\)</span><span>\(=\)</span><span>\(200\ \text{kWh}\)</span></div></div>
+      <div class="contas" style="font-size:40px;"><div class="eq" data-passo="5"><span>valor</span><span>\(=\)</span><span>\(200 \cdot 1{,}00\)</span></div><div class="eq final" data-passo="6"><span>valor</span><span>\(=\)</span><span>R$ 200,00</span></div></div>
+    </div>
+  </div>
+  <aside class="notas"><p>O preço do kWh muda de cidade para cidade e ao longo do ano; aqui é fictício e redondo, como na apostila.</p><p>Clique 1: o medidor gira de 4150 a 4350. Cliques 2 a 4: o consumo é a diferença. Cliques 5 e 6: vezes o preço.</p></aside>
+</section>
+
+<section class="slide questao" data-nome="Questão 1" data-gap="14">
+  <div class="conteudo">
+    <div class="area-resolucao"></div>
+    <span class="pilula pilula-pausa" data-em="1:some">Pause o vídeo e tente</span>
+    <div class="painel-questao">
+      <p class="olho">Questão 1 · Modelo IF</p>
+      <p class="enunciado" style="font-size:27px">Ao comprar um chuveiro novo, Lúcia encontrou na caixa a etiqueta abaixo.</p>
+      <div class="figura" style="background:var(--d-clara);border:3px solid var(--d-escura);border-radius:18px;padding:10px 30px;font-size:26px;line-height:1.5;text-align:center"><b style="color:var(--d-escura);letter-spacing:.05em">CHUVEIRO ELÉTRICO</b><br>Tensão: 220 V<br>Potência: 5500 W</div>
+      <p class="enunciado" style="font-size:27px">A informação "Potência: 5500 W" quer dizer que:</p>
+      <ol class="alternativas" style="gap:8px"><li data-em="2:certo" style="font-size:24px;padding:6px 14px"><b>A</b><span>ligado, o chuveiro transforma energia elétrica em térmica num ritmo de 5,5 kW.</span></li><li data-em="2:apaga" style="font-size:24px;padding:6px 14px"><b>B</b><span>o chuveiro consome 5500 kWh de energia elétrica por mês.</span></li><li data-em="2:apaga" style="font-size:24px;padding:6px 14px"><b>C</b><span>o chuveiro precisa de uma tensão de 5500 W na tomada.</span></li><li data-em="2:apaga" style="font-size:24px;padding:6px 14px"><b>D</b><span>a potência do chuveiro é de 55 kW.</span></li><li data-em="2:apaga" style="font-size:24px;padding:6px 14px"><b>E</b><span>o chuveiro gasta 5500 W em cada banho, curto ou demorado.</span></li></ol>
+    </div>
+  </div>
+  <aside class="resolucao">
+    <p class="dados"><b>Dados:</b> etiqueta: 220 V e 5500 W.</p>
+    <ol class="passos"><li><b>1.</b> Potência: energia transformada por segundo.</li><li><b>2.</b> \(P = 5500 \div 1000 = 5{,}5\ \text{kW}\)</li><li><b>3.</b> No chuveiro: elétrica → térmica.</li></ol>
+    <p class="resposta"><b>Resposta:</b> transforma energia no ritmo de 5,5 kW. <b>Gabarito A.</b></p>
+    <p class="atencao"><b>Destaque no quadro:</b> W é ritmo (potência); kWh é total (energia).</p>
+    <ul class="erros"><li><b>B</b> W não é kWh; o consumo depende do tempo.</li><li><b>C</b> Tensão é 220 V, em volts.</li><li><b>D</b> 5500 W = 5,5 kW, não 55 kW.</li><li><b>E</b> A energia do banho depende da duração.</li></ul>
+  </aside>
+  <aside class="notas"><p>Clique 1 tira o aviso de pausa: resolva na área (D liga a caneta; E esconde o enunciado). Clique 2: gabarito A.</p><p>Modelo IF, lote if-fisica-potencia-e-energia-eletrica, m002, FIS-1618. Etiqueta refeita no molde.</p></aside>
+</section>
+
+<section class="slide questao" data-nome="Questão 2" data-gap="14">
+  <div class="conteudo">
+    <div class="area-resolucao"></div>
+    <span class="pilula pilula-pausa" data-em="1:some">Pause o vídeo e tente</span>
+    <div class="painel-questao">
+      <p class="olho">Questão 2 · Modelo IF</p>
+      <p class="enunciado" style="font-size:28px">Numa casa em Juiz de Fora moram 4 pessoas. Cada uma toma um banho de 15 minutos por dia, num chuveiro elétrico de 5400 W.</p><p class="enunciado" style="font-size:28px">Considerando um mês de 30 dias, a energia elétrica consumida pelo chuveiro no mês é de:</p>
+      
+      
+      <ol class="alternativas curtas"><li data-em="2:apaga"><b>A</b><span>40,5 kWh.</span></li><li data-em="2:apaga"><b>B</b><span>97,2 kWh.</span></li><li data-em="2:apaga"><b>C</b><span>5,4 kWh.</span></li><li data-em="2:certo"><b>D</b><span>162 kWh.</span></li><li data-em="2:apaga"><b>E</b><span>162 000 kWh.</span></li></ol>
+    </div>
+  </div>
+  <aside class="resolucao">
+    <p class="dados"><b>Dados:</b> \(P = 5400\ \text{W}\); 4 banhos de 15 min por dia; 30 dias.</p>
+    <ol class="passos"><li><b>1.</b> \(P = 5{,}4\ \text{kW}\)</li><li><b>2.</b> \(\Delta t = 4 \cdot 15 \cdot 30 = 1800\ \text{min}\)</li><li><b>3.</b> \(\Delta t = 1800 \div 60 = 30\ \text{h}\)</li><li><b>4.</b> \(E = 5{,}4 \cdot 30 = 162\ \text{kWh}\)</li></ol>
+    <p class="resposta"><b>Resposta:</b> 162 kWh. <b>Gabarito D.</b></p>
+    <p class="atencao"><b>Destaque no quadro:</b> 15 min = 0,25 h, não 0,15 h.</p>
+    <ul class="erros"><li><b>A</b> Esqueceu as 4 pessoas.</li><li><b>B</b> Trocou 15 min por 0,15 h.</li><li><b>C</b> Consumo de um dia só.</li><li><b>E</b> Deixou a potência em watts.</li></ul>
+  </aside>
+  <aside class="notas"><p>Clique 1 tira o aviso de pausa. Clique 2: gabarito D.</p><p>Modelo IF, lote if-fisica-potencia-e-energia-eletrica, m005, FIS-1621. Conferência: 5,4 × 30 = 162.</p></aside>
+</section>
+
+<section class="slide questao" data-nome="Questão 3" data-gap="14">
+  <div class="conteudo">
+    <div class="area-resolucao"></div>
+    <span class="pilula pilula-pausa" data-em="1:some">Pause o vídeo e tente</span>
+    <div class="painel-questao">
+      <p class="olho">Questão 3 · Modelo IF</p>
+      <p class="enunciado" style="font-size:28px">O medidor de energia de uma casa marca, como um odômetro, o total de energia já consumida. No dia da leitura do mês passado, ele marcava 5236 kWh. Neste mês, no dia da leitura, ele marca 5416 kWh.</p><p class="enunciado" style="font-size:28px">Considerando o preço do kWh igual a R$ 0,80 (valor fictício, sem impostos e taxas), o valor da energia consumida neste mês é de:</p>
+      
+      
+      <ol class="alternativas curtas"><li data-em="2:apaga"><b>A</b><span>R$ 180,00</span></li><li data-em="2:apaga"><b>B</b><span>R$ 225,00</span></li><li data-em="2:apaga"><b>C</b><span>R$ 4.188,80</span></li><li data-em="2:apaga"><b>D</b><span>R$ 4.332,80</span></li><li data-em="2:certo"><b>E</b><span>R$ 144,00</span></li></ol>
+    </div>
+  </div>
+  <aside class="resolucao">
+    <p class="dados"><b>Dados:</b> \(L_1 = 5236\ \text{kWh}\); \(L_2 = 5416\ \text{kWh}\); R$ 0,80 por kWh.</p>
+    <ol class="passos"><li><b>1.</b> \(C = 5416 - 5236 = 180\ \text{kWh}\)</li><li><b>2.</b> valor = \(180 \cdot 0{,}80\)</li><li><b>3.</b> valor = R$ 144,00</li></ol>
+    <p class="resposta"><b>Resposta:</b> R$ 144,00. <b>Gabarito E.</b></p>
+    <p class="atencao"><b>Destaque no quadro:</b> Consumo é a diferença das leituras.</p>
+    <ul class="erros"><li><b>A</b> Esqueceu o preço.</li><li><b>B</b> Dividiu pelo preço.</li><li><b>C</b> Usou a leitura anterior inteira.</li><li><b>D</b> Usou a leitura atual inteira.</li></ul>
+  </aside>
+  <aside class="notas"><p>Clique 1 tira o aviso de pausa. Clique 2: gabarito E.</p><p>Modelo IF, lote if-fisica-potencia-e-energia-eletrica, m007, FIS-1623. Conferência: 180 × 0,8 = 144.</p></aside>
+</section>
+
+<section class="slide" data-nome="Resumo">
+  <div class="conteudo">
+    <p class="olho">Resumo</p>
+    <h2 class="titulo">O essencial</h2>
+<div class="resumo" style="position:absolute;left:0;right:0;top:150px"><div>\(P = U \cdot i\): potência em W, tensão em V, corrente em A.</div><div>Chave <b>inverno</b>: R menor, corrente e potência maiores; água mais quente.</div><div>Brilho: em <b>série</b>, ganha a de <b>maior</b> R; em <b>paralelo</b>, a de <b>menor</b> R.</div><div>\(E = P \cdot \Delta t\): P em <b>kW</b> e tempo em <b>h</b> dá <b>kWh</b>.</div><div>1 kWh: 1 kW ligado durante 1 hora. Watt mede rapidez; kWh mede o total.</div><div>Conta: (leitura atual − anterior) × preço do kWh, mais impostos.</div></div><div class="caixa caixa-atencao" style="position:absolute;left:560px;right:0;top:640px"><div class="texto" style="font-size:30px">Antes de multiplicar: potência em <b>kW</b> e tempo em <b>horas</b>.</div></div>
+  </div>
+  <aside class="notas"><p>Peça para tirarem um print desta tela.</p></aside>
+</section>
+
+<section class="slide capa" data-nome="A seguir">
+  <div class="estrelas"></div>
+  <div class="texto-capa" style="top:150px">
+    <span class="selo">Física · IF</span>
+    <p class="aula" style="font-size:26px">A seguir · Consumo de energia elétrica · Parte 2 de 2</p>
+    <h1 style="font-size:130px">Uso consciente</h1>
+    <p class="sub">Eficiência, selo Procel e economia</p>
+  </div>
+  <svg class="emblema" viewBox="0 0 640 640" aria-hidden="true">
+    <g class="gira-lento"><ellipse cx="320" cy="320" rx="300" ry="128" fill="none" stroke="#fff" stroke-opacity=".38" stroke-width="2" transform="rotate(-10 320 320)"/></g>
+    <g class="gira"><ellipse cx="320" cy="320" rx="236" ry="196" fill="none" stroke="#FFD10C" stroke-opacity=".75" stroke-width="2.5" stroke-dasharray="3 14" stroke-linecap="round" transform="rotate(-8 320 320)"/>
+      <circle cx="84" cy="300" r="13" fill="var(--d)" stroke="#fff" stroke-width="3"/></g>
+    <circle cx="320" cy="320" r="150" fill="#FFD10C"/>
+    <path d="M346 196 L262 336 H318 L292 450 L382 300 H326 Z" fill="#4B258D" stroke="#4B258D" stroke-width="8" stroke-linejoin="round"/>
+  </svg>
+  <img class="logo-capa" src="{{LOGO_BRANCO}}" alt="Quarks">
+  <aside class="notas"><p>Próxima: aparelhos eficientes, etiqueta do Inmetro, selo Procel e como economizar energia.</p></aside>
+</section>

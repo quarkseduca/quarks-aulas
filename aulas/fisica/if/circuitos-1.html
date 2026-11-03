@@ -1,0 +1,418 @@
+<!--aula
+{"disciplina": "fisica", "curso": "IF", "assunto": "Circuitos elétricos", "parte": "Parte 1 de 2", "titulo": "A corrente e o circuito simples", "scripts": ["animacoes-eletricidade.js"]}
+-->
+<!-- Fonte: apostila IF, Física, cap. 6 (6.2 Circuitos elétricos: corrente elétrica, circuito elétrico simples, primeira lei de Ohm). Questões: oficial IF Sudeste MG 2020-1 q31 (FIS-0608, sobra do bloco) e Modelo IF do lote if-fisica-corrente-e-resistores (m005, m008). -->
+<style>
+  .caixa, .el-card, .el-linha { box-sizing: border-box; }
+  .el-cards { display: grid; gap: 22px; }
+  .el-card { background: var(--branco); border: 2px solid var(--lilas-2); border-radius: 26px; padding: 16px 22px; font-size: 27px; line-height: 1.3; }
+  .el-card h3 { margin: 0 0 4px; font: 800 32px var(--fonte-titulo); color: var(--roxo-titulo); letter-spacing: -.01em; display: flex; align-items: center; gap: 14px; }
+  .el-card h3 svg { width: 70px; height: 70px; flex: none; }
+  .el-card p { margin: 0; color: var(--carvao); }
+  .el-card.d { background: var(--d-clara); border-color: color-mix(in srgb, var(--d) 35%, transparent); }
+  .el-linha { display: grid; grid-template-columns: 90px 1fr auto; align-items: center; gap: 22px; background: var(--branco); border: 2px solid var(--lilas-2); border-radius: 22px; padding: 10px 24px; font-size: 30px; }
+  .el-linha svg { width: 80px; height: 70px; }
+  .el-linha b { color: var(--roxo-titulo); }
+  .tag { justify-self: end; padding: 6px 20px; border-radius: 999px; font-weight: 800; font-size: 25px; white-space: nowrap; }
+  .tag-d { background: var(--d-clara); color: var(--d-forte); }
+  .tag-a { background: #FFF4C2; color: #8A6A00; }
+  .tag-r { background: var(--erro-claro); color: var(--erro); }
+  .el-lista { margin: 0; padding: 0; list-style: none; display: flex; flex-direction: column; gap: 14px; }
+  .el-lista li { display: flex; align-items: baseline; gap: 16px; font-size: 31px; line-height: 1.3; }
+  .el-lista li b.n { flex: none; width: 46px; height: 46px; border-radius: 50%; display: grid; place-items: center; background: var(--d); color: #fff; font: 800 26px var(--fonte-titulo); transform: translateY(6px); }
+  .el-lista li > span b { color: var(--roxo-titulo); }
+  .el-cadeia { display: flex; align-items: center; gap: 14px; flex-wrap: wrap; }
+  .el-cadeia .f { padding: 10px 24px; border-radius: 999px; background: var(--d-clara); color: var(--d-forte); font-weight: 800; font-size: 30px; }
+  .el-cadeia .f.am { background: #FFF4C2; color: #8A6A00; }
+  .el-cadeia .s { font: 800 36px var(--fonte-titulo); color: var(--roxo-claro); }
+  .tabela.el-t { font-size: 30px; }
+  .tabela.el-t th { padding: 12px 28px; }
+  .tabela.el-t td { padding: 10px 28px; text-align: left; }
+  /* colunas de enunciado mais largas para questões longas (data-largo); E continua ampliando a área */
+  .questao[data-largo="1"] .area-resolucao { width: 1070px; } .questao[data-largo="1"] .painel-questao { left: 1110px; } .questao[data-largo="1"] .pilula-pausa { left: 535px; }
+  .questao[data-largo="2"] .area-resolucao { width: 960px; } .questao[data-largo="2"] .painel-questao { left: 1000px; } .questao[data-largo="2"] .pilula-pausa { left: 480px; }
+  .questao[data-largo].amplia .area-resolucao { width: 1760px; } .questao[data-largo].amplia .pilula-pausa { left: 880px; }
+  .questao[data-gap="8"] .painel-questao { gap: 8px; } .questao[data-gap="10"] .painel-questao { gap: 10px; } .questao[data-gap="12"] .painel-questao { gap: 12px; } .questao[data-gap="14"] .painel-questao { gap: 14px; }
+  .painel-questao .figura { display: block; margin: 0 auto; flex: none; }
+  .painel-questao .el-mini { font-size: 22px; border-collapse: separate; border-spacing: 0; background: #fff; border: 2px solid var(--lilas-2); border-radius: 16px; overflow: hidden; }
+  .painel-questao .el-mini th { background: var(--d-clara); color: var(--d-forte); padding: 5px 12px; font-weight: 800; }
+  .painel-questao .el-mini td { padding: 4px 12px; border-top: 2px solid var(--lilas); text-align: center; }
+  .painel-questao .el-mini td:first-child { text-align: left; }
+  .el-fios path, .el-fio { fill: none; stroke: #292B2C; stroke-width: 6; stroke-linejoin: round; stroke-linecap: round; }
+  /* ---------- Animações (só na tela aberta) ---------- */
+  /* cargas andando pelo fio: pontinhos amarelos que correm quando o circuito está fechado */
+  .el-fluxo { fill: none; stroke: #FFD10C; stroke-width: 10; stroke-linecap: round; stroke-dasharray: 0 32; opacity: 0; transition: opacity .5s; }
+  .el-on .el-fluxo, .el-fluxo.sempre { opacity: 1; }
+  .el-off .el-fluxo, .el-on .el-off .el-fluxo { opacity: 0 !important; }
+  .slide.ativo .el-on .el-fluxo, .slide.ativo .el-fluxo.sempre { animation: el-flui 1.6s linear infinite; }
+  .slide.ativo .el-on .el-fluxo.lento { animation-duration: 3.2s; }
+  @keyframes el-flui { to { stroke-dashoffset: -32; } }
+  .el-agua { fill: none; stroke: #8FC8F0; stroke-width: 12; stroke-linecap: round; stroke-dasharray: 2 26; }
+  .slide.ativo .el-agua { animation: el-flui 1.8s linear infinite; }
+  /* lâmpada: acende quando o circuito fecha (sem piscar) */
+  .el-lamp .luz { opacity: 0; transition: opacity .7s ease; }
+  .el-on .el-lamp .luz, .el-lamp.acesa .luz { opacity: 1; }
+  .el-on .el-lamp.fraca .luz { opacity: .42; }
+  .el-off .el-lamp .luz, .el-on .el-off .el-lamp .luz { opacity: 0 !important; }
+  .el-lamp { transition: transform .8s ease, opacity .8s ease; }
+  .el-tira .el-lamp.sai { transform: translateY(-46px); opacity: .3; }
+  /* chave: a alavanca baixa e fecha o circuito */
+  .el-alavanca { transform: rotate(-32deg); transition: transform .7s ease; }
+  .el-alavanca.fechada, .el-fecha .el-alavanca { transform: none; }
+  .el-abre .el-alavanca { transform: rotate(-32deg) !important; }
+  /* rodas que giram (turbina, pás) e raios do Sol */
+  .slide.ativo .el-roda { animation: el-gira 9s linear infinite; }
+  .slide.ativo .el-roda.rapida { animation-duration: 5s; }
+  .slide.ativo .el-raios { animation: el-gira 30s linear infinite; }
+  @keyframes el-gira { to { transform: rotate(360deg); } }
+  /* calor que sobe */
+  .el-calor path { opacity: 0; }
+  .slide.ativo .el-calor path { animation: el-sobe 5s ease-in-out infinite; }
+  .el-calor path:nth-child(2) { animation-delay: -1.7s !important; } .el-calor path:nth-child(3) { animation-delay: -3.4s !important; }
+  @keyframes el-sobe { 0% { transform: translateY(10px); opacity: 0; } 30% { opacity: .9; } 100% { transform: translateY(-34px); opacity: 0; } }
+  /* gotas que caem (chuveiro) */
+  .el-gotas circle { opacity: 0; }
+  .slide.ativo .el-gotas circle { animation: el-cai 2.6s linear infinite; }
+  .el-gotas circle:nth-child(2) { animation-delay: -.9s !important; } .el-gotas circle:nth-child(3) { animation-delay: -1.7s !important; } .el-gotas circle:nth-child(4) { animation-delay: -.4s !important; } .el-gotas circle:nth-child(5) { animation-delay: -2.1s !important; }
+  @keyframes el-cai { 0% { transform: translateY(0); opacity: 0; } 15% { opacity: 1; } 85% { opacity: 1; } 100% { transform: translateY(70px); opacity: 0; } }
+  /* barras que crescem quando aparecem */
+  .el-barra { transform: scaleX(0); transform-box: fill-box; transform-origin: left center; transition: transform 2.2s ease-out; }
+  .mostra .el-barra, .mostra.el-barra, .el-barra.ja { transform: none; }
+  .el-barra-v { transform: scaleY(0); transform-box: fill-box; transform-origin: center bottom; transition: transform 2.2s ease-out; }
+  .mostra .el-barra-v, .mostra.el-barra-v { transform: none; }
+  /* traço que se desenha */
+  .el-traca { stroke-dasharray: 1; stroke-dashoffset: 1; transition: stroke-dashoffset 1.6s ease-in-out; }
+  .mostra .el-traca, .mostra.el-traca { stroke-dashoffset: 0; }
+  @media (prefers-reduced-motion: reduce) { .el-barra, .el-barra-v { transform: none; } .el-traca { stroke-dashoffset: 0; } .el-alavanca { transition: none; } }
+</style>
+<svg width="0" height="0" style="position:absolute" aria-hidden="true">
+  <defs>
+    <radialGradient id="elBrilho" cx=".5" cy=".5" r=".5"><stop offset="0" stop-color="#FFE680" stop-opacity=".95"/><stop offset=".45" stop-color="#FFD10C" stop-opacity=".45"/><stop offset="1" stop-color="#FFD10C" stop-opacity="0"/></radialGradient>
+    <linearGradient id="elAgua" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#CFE6FA"/><stop offset="1" stop-color="#8CC1EE"/></linearGradient>
+    <linearGradient id="elCobre" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#F2A86B"/><stop offset="1" stop-color="#B9652A"/></linearGradient>
+  </defs>
+</svg>
+
+<section class="slide capa" data-nome="Capa">
+  <div class="estrelas"></div>
+  <div class="texto-capa" style="top:150px">
+    <span class="selo">Física · IF</span>
+    <p class="aula">Circuitos elétricos · Parte 1 de 2</p>
+    <h1 style="font-size:118px">A corrente e o circuito simples</h1>
+    <p class="sub">Pilha, fios, lâmpada e interruptor</p>
+  </div>
+  <svg class="emblema" viewBox="0 0 640 640" aria-hidden="true">
+    <g class="gira-lento"><ellipse cx="320" cy="320" rx="300" ry="128" fill="none" stroke="#fff" stroke-opacity=".38" stroke-width="2" transform="rotate(-10 320 320)"/></g>
+    <g class="gira"><ellipse cx="320" cy="320" rx="236" ry="196" fill="none" stroke="#FFD10C" stroke-opacity=".75" stroke-width="2.5" stroke-dasharray="3 14" stroke-linecap="round" transform="rotate(-8 320 320)"/>
+      <circle cx="84" cy="300" r="13" fill="var(--d)" stroke="#fff" stroke-width="3"/></g>
+    <circle cx="320" cy="320" r="150" fill="#FFD10C"/>
+    <path d="M346 196 L262 336 H318 L292 450 L382 300 H326 Z" fill="#4B258D" stroke="#4B258D" stroke-width="8" stroke-linejoin="round"/>
+  </svg>
+  <img class="logo-capa" src="{{LOGO_BRANCO}}" alt="Quarks">
+  <aside class="notas"><p>Hoje: o que é corrente elétrica, como medir (ampère e mAh), as partes de um circuito simples, aberto e fechado, curto-circuito e a primeira lei de Ohm.</p><p>Os pontinhos amarelos que andam nos fios, em todas as figuras, são as cargas em movimento: só andam com o circuito fechado.</p></aside>
+</section>
+
+<section class="slide" data-nome="O fio do carregador">
+  <div class="conteudo">
+    <p class="olho">Para começar</p>
+    <h2 class="titulo">Por dentro de um fio</h2>
+    <p class="texto" style="position:absolute;left:0;width:760px;top:160px;margin:0;font-size:34px">Repare num fio de carregador partido: por dentro, fios finos de <b>cobre</b>; por fora, uma capa de <b>plástico</b>.</p>
+    <div style="position:absolute;left:820px;top:170px"><svg viewBox="0 0 820 360" width="820" height="360"  style="overflow:visible;font-family:Figtree,'Segoe UI',sans-serif;" aria-hidden="true"><rect x="40" y="110" width="430" height="140" rx="70" fill="#5E5A70"/><path d="M470 140 C 540 140 560 120 620 112 M470 180 C 560 180 580 180 700 176 M470 220 C 540 220 560 240 640 250" stroke="url(#elCobre)" stroke-width="22" stroke-linecap="round" fill="none"/><path d="M470 150 C 540 150 570 140 630 140 M470 200 C 540 205 570 215 650 215" stroke="#D88A4A" stroke-width="14" stroke-linecap="round" fill="none"/><ellipse cx="470" cy="180" rx="22" ry="70" fill="#7F7A99"/><g data-passo="1"><text x="700" y="100" text-anchor="start" font-size="32" font-weight="800" fill="#B9652A" >cobre</text><text x="700" y="136" text-anchor="start" font-size="26" font-weight="700" fill="#5E5A70" >condutor: deixa passar</text></g><g data-passo="2"><text x="250" y="300" text-anchor="middle" font-size="32" font-weight="800" fill="#3F2FA0" >plástico</text><text x="250" y="336" text-anchor="middle" font-size="26" font-weight="700" fill="#5E5A70" >isolante: não deixa chegar à mão</text></g></svg></div>
+    <div class="caixa caixa-fundamental" data-passo="3" style="position:absolute;left:560px;right:0;top:600px;padding:20px 30px"><div class="texto" style="font-size:32px">O <b>condutor</b> deixa a eletricidade passar; o <b>isolante</b> não deixa ela chegar até a sua mão.</div></div>
+  </div>
+  <aside class="notas"><p>Cliques 1 e 2: o cobre (condutor) e o plástico (isolante). Clique 3: a combinação não é por acaso.</p><p>Pergunte: por que o fio da rede tem capa? Para a corrente seguir pelo cobre e não pelo corpo.</p></aside>
+</section>
+
+<section class="slide" data-nome="Elétrons livres">
+  <div class="conteudo">
+    <p class="olho">Corrente elétrica</p>
+    <h2 class="titulo">O que a pilha faz com os elétrons</h2>
+    <div style="position:absolute;left:0;width:780px;top:150px;display:flex;flex-direction:column;gap:6px">
+      <p class="texto" style="margin:0;font-size:30px"><b>Sem pilha:</b> os elétrons livres do metal andam o tempo todo, mas <b>cada um para um lado</b>.</p>
+      <div data-anima="el-eletrons" data-modo="caos" style="width:760px;height:200px"></div>
+    </div>
+    <div data-passo="1" style="position:absolute;left:900px;right:0;top:150px;display:flex;flex-direction:column;gap:6px">
+      <p class="texto" style="margin:0;font-size:30px"><b>Com pilha:</b> a tensão da pilha empurra, e eles passam a andar <b>todos no mesmo sentido</b>.</p>
+      <div data-anima="el-eletrons" data-modo="ordem" data-anima-passo="1" style="width:760px;height:200px"></div>
+    </div>
+    <div class="caixa caixa-fundamental" data-passo="2" style="position:absolute;left:560px;right:0;top:520px;padding:20px 30px">
+      <span class="rotulo">Corrente elétrica</span>
+      <div class="texto" style="font-size:32px">É o <b>movimento ordenado</b> de cargas elétricas por um caminho. Precisa de uma <b>fonte</b> (pilha, bateria, tomada), que mantém a tensão entre os polos, e de um <b>caminho fechado</b> de condutores.</div>
+    </div>
+  </div>
+  <aside class="notas"><p>À esquerda, os elétrons livres do cobre (amarelos) andam ao acaso entre os átomos (cobre): não há corrente. Clique 1: com a pilha, eles continuam tremendo, mas agora derivam todos para o mesmo lado: isso é a corrente.</p><p>Clique 2: a definição. Os elétrons livres foram vistos em Carga e eletrização.</p></aside>
+</section>
+
+<section class="slide" data-nome="Intensidade da corrente">
+  <div class="conteudo">
+    <p class="olho">Corrente elétrica</p>
+    <h2 class="titulo">Intensidade da corrente</h2>
+    <p class="texto" style="position:absolute;left:0;right:0;top:140px;margin:0;font-size:32px">Diz <b>quanta carga</b> atravessa o fio <b>a cada segundo</b>.</p>
+    <div class="caixa caixa-fundamental" style="position:absolute;left:480px;right:480px;top:200px;text-align:center;font-size:76px;padding:8px">\(i = \dfrac{Q}{\Delta t}\)</div>
+    <div class="letras" style="position:absolute;left:0;right:0;top:405px;grid-template-columns:repeat(3,1fr)">
+      <div data-passo="1"><span class="simbolo">\(i\)</span>intensidade da corrente<br><span class="unidade">ampère (A)</span></div>
+      <div data-passo="2"><span class="simbolo">\(Q\)</span>carga que passou<br><span class="unidade">coulomb (C)</span></div>
+      <div data-passo="3"><span class="simbolo">\(\Delta t\)</span>tempo<br><span class="unidade">segundo (s)</span></div>
+    </div>
+    <span class="pilula pilula-resposta" data-passo="4" style="position:absolute;right:0;top:760px">1 A = 1 coulomb por segundo</span>
+  </div>
+  <aside class="notas"><p>Uma letra por clique, com a unidade.</p><p>Clique 4: 1 ampère é a passagem de 1 coulomb a cada segundo.</p></aside>
+</section>
+
+<section class="slide" data-nome="A bateria do celular">
+  <div class="conteudo">
+    <p class="olho">Corrente elétrica</p>
+    <h2 class="titulo">A bateria do celular e o mAh</h2>
+    <p class="texto" style="position:absolute;left:0;width:880px;top:150px;margin:0;font-size:32px">A <b>capacidade</b> da bateria vem em <b>miliampère-hora (mAh)</b>: é a <b>carga</b> que ela guarda, contada como <b>corrente × tempo</b>.</p>
+    <div style="position:absolute;left:960px;right:0;top:150px;display:flex;gap:50px">
+      <div data-passo="1"><svg viewBox="0 0 240 300" width="240" height="300"  style="overflow:visible;font-family:Figtree,'Segoe UI',sans-serif;" aria-hidden="true"><rect x="60" y="30" width="120" height="220" rx="20" fill="#fff" stroke="#292B2C" stroke-width="6"/><rect x="94" y="14" width="52" height="18" rx="5" fill="#292B2C"/><rect x="72" y="42" width="96" height="196" rx="10" fill="var(--d)"/><text x="120" y="290" text-anchor="middle" font-size="30" font-weight="800" fill="#3F2FA0" >4000 mA</text><text x="120" y="326" text-anchor="middle" font-size="26" font-weight="700" fill="#5E5A70" >durante 1 h</text></svg></div>
+      <div data-passo="2"><svg viewBox="0 0 240 300" width="240" height="300"  style="overflow:visible;font-family:Figtree,'Segoe UI',sans-serif;" aria-hidden="true"><rect x="60" y="30" width="120" height="220" rx="20" fill="#fff" stroke="#292B2C" stroke-width="6"/><rect x="94" y="14" width="52" height="18" rx="5" fill="#292B2C"/><rect x="72" y="42" width="96" height="196" rx="10" fill="var(--d)"/><text x="120" y="290" text-anchor="middle" font-size="30" font-weight="800" fill="#3F2FA0" >2000 mA</text><text x="120" y="326" text-anchor="middle" font-size="26" font-weight="700" fill="#5E5A70" >durante 2 h</text></svg></div>
+    </div>
+    <div class="caixa" data-passo="3" style="position:absolute;left:0;width:520px;top:390px;padding:16px 26px;text-align:center;font-size:48px">\(1\ \text{A} = 1000\ \text{mA}\)</div>
+    <div class="caixa caixa-fundamental" data-passo="2" style="position:absolute;left:960px;right:0;top:580px;padding:16px 26px"><div class="texto" style="font-size:30px">Uma bateria de <b>4000 mAh</b> entrega as duas coisas: mais corrente por menos tempo, ou menos corrente por mais tempo.</div></div>
+  </div>
+  <aside class="notas"><p>Clique 1: 4000 mA durante 1 h. Clique 2: ou 2000 mA durante 2 h; a mesma carga. Clique 3: a conversão de mA para A.</p><p>mAh é unidade de carga (corrente × tempo), não de energia nem de corrente.</p></aside>
+</section>
+
+<section class="slide" data-nome="Exemplo: carregar">
+  <div class="conteudo">
+    <p class="olho">Exemplo</p>
+    <h2 class="titulo">Quanto tempo para carregar?</h2>
+    <p class="texto" style="position:absolute;left:0;width:1040px;top:150px;margin:0;font-size:31px">Uma bateria de <b>5000 mAh</b> está descarregada. O carregador fornece <b>2 A</b>. Sem perdas, quanto tempo leva a carga completa?</p>
+    <p class="texto" data-passo="1" style="position:absolute;left:0;width:1040px;top:270px;margin:0;font-size:30px"><b>Dados:</b> \(Q = 5000\ \text{mAh}\) e \(i = 2\ \text{A} = 2000\ \text{mA}\). Da fórmula, \(Q = i \cdot \Delta t\).</p>
+    <div style="position:absolute;left:640px;top:350px"><div class="contas" style="font-size:44px;"><div class="eq" data-passo="2"><span>\(Q\)</span><span>\(=\)</span><span>\(i \cdot \Delta t\)</span></div><div class="eq" data-passo="3"><span>\(5000\)</span><span>\(=\)</span><span>\(2000 \cdot \Delta t\)</span></div><div class="eq" data-passo="4"><span>\(\Delta t\)</span><span>\(=\)</span><span>\(\dfrac{5000}{2000}\)</span></div><div class="eq final" data-passo="5"><span>\(\Delta t\)</span><span>\(=\)</span><span>\(2{,}5\ \text{h}\)</span></div></div></div>
+    <div data-passo="6" style="position:absolute;left:1360px;top:300px"><div data-anima="el-carga" data-anima-passo="6" style="width:300px;height:330px"></div></div>
+    <span class="pilula pilula-resposta" data-passo="7" style="position:absolute;left:1250px;top:760px">2,5 h = 2 h e 30 min</span>
+  </div>
+  <aside class="notas"><p>Clique 1: os dados, com a corrente já em mA (mesma unidade do mAh). Cliques 2 a 5: a conta.</p><p>Clique 6: a bateria enche enquanto o relógio vai de 0 a 2 h 30 min. Clique 7: meia hora são 30 min (não 2 h 50 min!).</p></aside>
+</section>
+
+<section class="slide" data-nome="Resistência elétrica">
+  <div class="conteudo">
+    <p class="olho">Corrente elétrica</p>
+    <h2 class="titulo">Resistência elétrica</h2>
+    <div style="position:absolute;left:0;width:900px;top:160px;display:flex;flex-direction:column;gap:22px">
+      <p class="texto" style="margin:0;font-size:33px">Mesmo os condutores oferecem alguma dificuldade à corrente: a <b>resistência elétrica</b>.</p>
+      <p class="texto" data-passo="1" style="margin:0;font-size:33px">Quanto maior a resistência, mais o material <b>esquenta</b> quando a corrente passa.</p>
+      <p class="texto" data-passo="2" style="margin:0;font-size:33px">Uma peça feita para ter resistência é um <b>resistor</b>: a "resistência" do chuveiro é um resistor que esquenta a água.</p>
+    </div>
+    <div data-passo="2" style="position:absolute;left:1040px;top:110px"><svg viewBox="0 0 100 100" width="420" height="420" style="overflow:visible;" aria-hidden="true"><path d="M20 14 V26 H56" fill="none" stroke="#7F7A99" stroke-width="6" stroke-linecap="round"/><path d="M40 26 h32 a8 8 0 0 1 8 8 v6 H32 v-6 a8 8 0 0 1 8 -8 Z" fill="var(--d)"/><g class="el-gotas" fill="#8CC1EE"><circle cx="40" cy="50" r="4"/><circle cx="52" cy="50" r="4"/><circle cx="64" cy="50" r="4"/><circle cx="46" cy="50" r="3"/><circle cx="72" cy="50" r="3"/></g></svg></div>
+    <div class="caixa caixa-atencao" data-passo="3" style="position:absolute;left:560px;right:0;top:560px;padding:20px 30px">
+      <span class="rotulo">Atenção: mão molhada conduz</span>
+      <div class="texto" style="font-size:30px">A água da torneira tem sais dissolvidos e conduz eletricidade. Com a pele molhada, a corrente passa pelo corpo com muito mais facilidade. <b>Nunca</b> mexa em tomadas ou aparelhos ligados com as mãos molhadas ou os pés descalços no chão molhado.</div>
+    </div>
+  </div>
+  <aside class="notas"><p>Cliques 1 e 2: resistência e resistor. Clique 3: segurança, que o IF gosta de cobrar.</p></aside>
+</section>
+
+<section class="slide" data-nome="Circuito simples">
+  <div class="conteudo">
+    <p class="olho">Circuito elétrico simples</p>
+    <h2 class="titulo">As quatro partes de um circuito</h2>
+    <div style="position:absolute;left:60px;top:140px"><svg viewBox="0 0 760 500" width="760" height="500"  style="overflow:visible;font-family:Figtree,'Segoe UI',sans-serif;" aria-hidden="true"><path class="el-fio" d="M110 128 V70 H330 M410 70 H630 V230 M630 330 V430 H110 V244" /><circle cx="330" cy="70" r="8" fill="#292B2C"/><circle cx="410" cy="70" r="8" fill="#292B2C"/><line class="el-alavanca fechada" style="transform-origin:330px 70px" x1="330" y1="70" x2="410" y2="70" stroke="#292B2C" stroke-width="7" stroke-linecap="round"/><rect x="98.0" y="116" width="24" height="14" rx="3" fill="#052E30"/><rect x="80" y="128" width="60" height="116" rx="12" fill="var(--d)" stroke="#052E30" stroke-width="3"/><text x="110.0" y="164" text-anchor="middle" font-size="34" font-weight="800" fill="#fff">+</text><text x="110.0" y="230" text-anchor="middle" font-size="40" font-weight="800" fill="#fff">−</text><g class="el-lamp " ><circle class="luz" cx="630" cy="280" r="106" fill="url(#elBrilho)"/><circle cx="630" cy="280" r="46" fill="#fff" stroke="#292B2C" stroke-width="5"/><circle class="luz" cx="630" cy="280" r="42" fill="#FFE680"/><path d="M597.8 247.8 L662.2 312.2 M662.2 247.8 L597.8 312.2" stroke="#292B2C" stroke-width="4"/></g><g class="el-on"><path class="el-fluxo " d="M110 128 V70 H630 V430 H110 V244" /></g><g class="el-lamp acesa" ><circle class="luz" cx="630" cy="280" r="106" fill="url(#elBrilho)"/><circle cx="630" cy="280" r="46" fill="#fff" stroke="#292B2C" stroke-width="5"/><circle class="luz" cx="630" cy="280" r="42" fill="#FFE680"/><path d="M597.8 247.8 L662.2 312.2 M662.2 247.8 L597.8 312.2" stroke="#292B2C" stroke-width="4"/></g><g data-passo="1"><text x="60" y="196" text-anchor="end" font-size="30" font-weight="800" fill="var(--d-forte)" >fonte</text></g><g data-passo="2"><text x="370" y="410" text-anchor="middle" font-size="30" font-weight="800" fill="var(--d-forte)" >fios</text></g><g data-passo="3"><text x="700" y="290" text-anchor="start" font-size="30" font-weight="800" fill="var(--d-forte)" >aparelho</text></g><g data-passo="4"><text x="370" y="30" text-anchor="middle" font-size="30" font-weight="800" fill="var(--d-forte)" >interruptor</text></g></svg></div>
+    <div style="position:absolute;left:940px;right:0;top:170px">
+      <p class="texto" style="margin:0 0 20px;font-size:31px"><b>Circuito elétrico:</b> o caminho completo que a corrente percorre, saindo de um polo da fonte e voltando ao outro.</p>
+      <ol class="el-lista"><li data-passo="1"><b class="n">1</b><span>A <b>fonte</b>, com polo positivo (+) e negativo (−).</span></li><li data-passo="2"><b class="n">2</b><span>Os <b>fios</b>, condutores que ligam as peças.</span></li><li data-passo="3"><b class="n">3</b><span>O <b>aparelho</b>, usa a energia: lâmpada, motor, campainha.</span></li><li data-passo="4"><b class="n">4</b><span>O <b>interruptor</b>, abre ou fecha o caminho.</span></li></ol>
+    </div>
+  </div>
+  <aside class="notas"><p>Monte com pilha, dois fios e uma lampadinha, se tiver na sala. Uma parte por clique, com o rótulo na figura.</p><p>As cargas (amarelas) saem de um polo, passam pela lâmpada e voltam ao outro polo.</p></aside>
+</section>
+
+<section class="slide" data-nome="Aberto ou fechado">
+  <div class="conteudo">
+    <p class="olho">Circuito elétrico simples</p>
+    <h2 class="titulo">Aberto ou fechado?</h2>
+    <div style="position:absolute;left:0;top:150px"><svg viewBox="0 0 800 500" width="800" height="500"  style="overflow:visible;font-family:Figtree,'Segoe UI',sans-serif;" aria-hidden="true"><g data-em="1:el-fecha 1:el-on"><path class="el-fio" d="M140 128 V70 H360 M440 70 H660 V230 M660 330 V430 H140 V244" /><path class="el-fluxo " d="M140 128 V70 H660 V430 H140 V244" /><circle cx="360" cy="70" r="8" fill="#292B2C"/><circle cx="440" cy="70" r="8" fill="#292B2C"/><line class="el-alavanca" style="transform-origin:360px 70px" x1="360" y1="70" x2="440" y2="70" stroke="#292B2C" stroke-width="7" stroke-linecap="round"/><text x="400.0" y="112" text-anchor="middle" font-size="26" font-weight="800" fill="#5E5A70" >interruptor</text><rect x="128.0" y="116" width="24" height="14" rx="3" fill="#052E30"/><rect x="110" y="128" width="60" height="116" rx="12" fill="var(--d)" stroke="#052E30" stroke-width="3"/><text x="140.0" y="164" text-anchor="middle" font-size="34" font-weight="800" fill="#fff">+</text><text x="140.0" y="230" text-anchor="middle" font-size="40" font-weight="800" fill="#fff">−</text><g class="el-lamp " ><circle class="luz" cx="660" cy="280" r="106" fill="url(#elBrilho)"/><circle cx="660" cy="280" r="46" fill="#fff" stroke="#292B2C" stroke-width="5"/><circle class="luz" cx="660" cy="280" r="42" fill="#FFE680"/><path d="M627.8 247.8 L692.2 312.2 M692.2 247.8 L627.8 312.2" stroke="#292B2C" stroke-width="4"/></g></g></svg></div>
+    <div style="position:absolute;left:900px;right:0;top:160px;display:flex;flex-direction:column;gap:24px">
+      <div class="el-linha" style="grid-template-columns:1fr auto"><span><b>Interruptor aberto:</b> o caminho está cortado.</span><span class="tag tag-r">apaga</span></div>
+      <div class="el-linha" data-passo="1" style="grid-template-columns:1fr auto"><span><b>Interruptor fechado:</b> a corrente circula.</span><span class="tag tag-d">acende</span></div>
+      <div class="caixa caixa-fundamental" data-passo="2" style="padding:20px 28px"><span class="rotulo">Aberto ou fechado</span>
+        <div class="texto" style="font-size:30px">A corrente só circula num <b>circuito fechado</b>: um caminho sem interrupções do polo + ao polo −. Cortado em qualquer ponto, o circuito está <b>aberto</b> e nada funciona.</div></div>
+    </div>
+  </div>
+  <aside class="notas"><p>Começa aberto: a lâmpada apagada e nenhuma carga andando. Clique 1: a alavanca do interruptor baixa, o circuito fecha, as cargas começam a andar e a lâmpada acende.</p><p>Clique 2: a definição. Volte (seta para a esquerda) para abrir de novo e mostrar que tudo para na hora.</p></aside>
+</section>
+
+<section class="slide" data-nome="Na sua casa">
+  <div class="conteudo">
+    <p class="olho">Circuito elétrico simples</p>
+    <h2 class="titulo">A instalação da casa</h2>
+    <div style="position:absolute;left:0;top:130px"><svg viewBox="0 0 760 470" width="760" height="470"  style="overflow:visible;font-family:Figtree,'Segoe UI',sans-serif;" aria-hidden="true"><path d="M60 200 L230 80 L400 200 V440 H60 Z" fill="#fff" stroke="#C9C0F0" stroke-width="5" stroke-linejoin="round"/><rect x="560" y="60" width="16" height="390" fill="#B8B3C9"/><rect x="520" y="90" width="96" height="10" rx="5" fill="#7F7A99"/><path class="el-fio" d="M568 95 C 500 110 440 140 380 230 H330" /><g class="el-on"><path class="el-fluxo lento" d="M568 95 C 500 110 440 140 380 230 H330" /></g><rect x="250" y="200" width="80" height="70" rx="10" fill="var(--d-clara)" stroke="var(--d)" stroke-width="4"/><text x="290" y="246" text-anchor="middle" font-size="26" font-weight="800" fill="var(--d-forte)" >QD</text><path class="el-fio" d="M250 236 H140 V300" /><path class="el-fio" d="M290 270 V360 H200" /><g class="el-on"><path class="el-fluxo lento" d="M250 236 H140 V300" /><path class="el-fluxo lento" d="M290 270 V360 H200" /></g><g class="el-lamp acesa" ><circle class="luz" cx="140" cy="330" r="64" fill="url(#elBrilho)"/><circle cx="140" cy="330" r="28" fill="#fff" stroke="#292B2C" stroke-width="5"/><circle class="luz" cx="140" cy="330" r="24" fill="#FFE680"/><path d="M120.4 310.4 L159.6 349.6 M159.6 310.4 L120.4 349.6" stroke="#292B2C" stroke-width="4"/></g><rect x="160" y="340" width="40" height="44" rx="8" fill="#fff" stroke="#292B2C" stroke-width="4"/><circle cx="174" cy="362" r="4" fill="#292B2C"/><circle cx="188" cy="362" r="4" fill="#292B2C"/><text x="568" y="40" text-anchor="middle" font-size="26" font-weight="700" fill="#5E5A70" >poste</text><text x="290" y="190" text-anchor="middle" font-size="24" font-weight="800" fill="var(--d-forte)" >disjuntores</text></svg></div>
+    <div style="position:absolute;left:880px;right:0;top:150px;display:flex;flex-direction:column;gap:20px">
+      <p class="texto" style="margin:0;font-size:30px">A mesma ideia, em tamanho maior: a <b>fonte</b> é a rede elétrica, que chega pelo poste; os <b>fios</b> correm dentro das paredes até as tomadas e as lâmpadas; o <b>interruptor</b> da parede abre e fecha o circuito de cada lâmpada.</p>
+      <div class="caixa caixa-atencao" data-passo="1" style="padding:16px 26px"><span class="rotulo">Curto-circuito</span>
+        <div class="texto" style="font-size:29px">Os dois fios da fonte se tocam <b>sem passar por nenhum aparelho</b>: a corrente fica <b>enorme</b>, os fios esquentam e podem pegar fogo.</div></div>
+      <div class="caixa caixa-fundamental" data-passo="2" style="padding:16px 26px"><span class="rotulo">Disjuntor</span>
+        <div class="texto" style="font-size:29px">Desliga o circuito <b>sozinho</b> quando a corrente passa do limite.</div></div>
+    </div>
+  </div>
+  <aside class="notas"><p>A energia chega pelo poste, passa pelo quadro de disjuntores (QD) e vai para cada lâmpada e tomada.</p><p>Clique 1: curto-circuito. Clique 2: o disjuntor protege a casa desligando o circuito.</p></aside>
+</section>
+
+<section class="slide" data-nome="Exemplo: acende?">
+  <div class="conteudo">
+    <p class="olho">Exemplo</p>
+    <h2 class="titulo">A lâmpada acende?</h2>
+    <p class="texto" style="position:absolute;left:0;right:0;top:140px;margin:0;font-size:31px">Bia liga um fio do <b>polo positivo</b> da pilha à lâmpada e deixa o <b>polo negativo livre</b>. A lâmpada acende?</p>
+    <div style="position:absolute;left:880px;top:210px"><svg viewBox="0 0 800 500" width="800" height="500"  style="overflow:visible;font-family:Figtree,'Segoe UI',sans-serif;" aria-hidden="true"><path class="el-fio" d="M140 128 V70 H660 V230 M660 330 V420" /><rect x="128.0" y="116" width="24" height="14" rx="3" fill="#052E30"/><rect x="110" y="128" width="60" height="116" rx="12" fill="var(--d)" stroke="#052E30" stroke-width="3"/><text x="140.0" y="164" text-anchor="middle" font-size="34" font-weight="800" fill="#fff">+</text><text x="140.0" y="230" text-anchor="middle" font-size="40" font-weight="800" fill="#fff">−</text><g class="el-lamp " ><circle class="luz" cx="660" cy="280" r="106" fill="url(#elBrilho)"/><circle cx="660" cy="280" r="46" fill="#fff" stroke="#292B2C" stroke-width="5"/><circle class="luz" cx="660" cy="280" r="42" fill="#FFE680"/><path d="M627.8 247.8 L692.2 312.2 M692.2 247.8 L627.8 312.2" stroke="#292B2C" stroke-width="4"/></g><g data-passo="2"><path class="el-fio" d="M660 420 V430 H140 V244" stroke="#C2384F" style="stroke:#C2384F;stroke-dasharray:14 12"/><text x="400" y="476" text-anchor="middle" font-size="28" font-weight="800" fill="#C2384F" >falta este fio</text></g><circle cx="660" cy="420" r="9" fill="#292B2C"/><text x="150" y="300" text-anchor="start" font-size="40" font-weight="800" fill="#C2384F" >−</text></svg></div>
+    <div style="position:absolute;left:0;width:800px;top:250px;display:flex;flex-direction:column;gap:22px">
+      <div class="caixa" data-passo="1" style="padding:18px 28px"><span class="rotulo">Raciocínio</span><div class="texto" style="font-size:30px">A corrente precisa sair de um polo, passar pela lâmpada e <b>voltar ao outro polo</b>. Sem o fio até o polo −, o caminho não fecha.</div></div>
+      <span class="pilula pilula-resposta" data-passo="3" style="white-space:normal;line-height:1.25;border-radius:28px">Não acende: o circuito está aberto</span>
+    </div>
+  </div>
+  <aside class="notas"><p>Peça a resposta antes do clique 1. Clique 2: o fio que falta (tracejado vermelho). Clique 3: a resposta.</p><p>Erro comum: achar que basta ligar a lâmpada no +. É a montagem II da questão 2 daqui a pouco.</p></aside>
+</section>
+
+<section class="slide" data-nome="Lei de Ohm: medidas">
+  <div class="conteudo">
+    <p class="olho">Primeira lei de Ohm</p>
+    <h2 class="titulo">Dobrou a tensão, dobrou a corrente</h2>
+    <p class="texto" style="position:absolute;left:0;right:0;top:140px;margin:0;font-size:30px">Medidas feitas com um mesmo resistor, ligado a tensões diferentes:</p>
+    <div style="position:absolute;left:0;top:220px"><table class="tabela" style="font-size:36px"><tr><th style="padding:10px 30px">\(U\) (V)</th><th style="padding:10px 30px">\(i\) (A)</th><th style="padding:10px 30px">\(U \div i\)</th></tr><tr data-passo="1"><td style="padding:8px 30px">5</td><td style="padding:8px 30px">0,5</td><td style="padding:8px 30px;font-weight:800;color:var(--d-forte)">10</td></tr><tr data-passo="2"><td style="padding:8px 30px">10</td><td style="padding:8px 30px">1,0</td><td style="padding:8px 30px;font-weight:800;color:var(--d-forte)">10</td></tr><tr data-passo="3"><td style="padding:8px 30px">20</td><td style="padding:8px 30px">2,0</td><td style="padding:8px 30px;font-weight:800;color:var(--d-forte)">10</td></tr></table></div>
+    <div style="position:absolute;left:840px;top:180px"><svg viewBox="0 0 520 460" width="600" height="530"  style="overflow:visible;font-family:Figtree,'Segoe UI',sans-serif;" aria-hidden="true"><path d="M90 420 H470 M90 420 V60" stroke="#5E5A70" stroke-width="4" fill="none"/><text x="480" y="430" text-anchor="start" font-size="26" font-weight="800" fill="#5E5A70" >i (A)</text><text x="90" y="44" text-anchor="middle" font-size="26" font-weight="800" fill="#5E5A70" >U (V)</text><line x1="82" y1="345" x2="90" y2="345" stroke="#5E5A70" stroke-width="3"/><text x="76" y="354" text-anchor="end" font-size="24" font-weight="700" fill="#5E5A70" >5</text><line x1="82" y1="270" x2="90" y2="270" stroke="#5E5A70" stroke-width="3"/><text x="76" y="279" text-anchor="end" font-size="24" font-weight="700" fill="#5E5A70" >10</text><line x1="82" y1="195" x2="90" y2="195" stroke="#5E5A70" stroke-width="3"/><text x="76" y="204" text-anchor="end" font-size="24" font-weight="700" fill="#5E5A70" >15</text><line x1="82" y1="120" x2="90" y2="120" stroke="#5E5A70" stroke-width="3"/><text x="76" y="129" text-anchor="end" font-size="24" font-weight="700" fill="#5E5A70" >20</text><line x1="170.0" y1="420" x2="170.0" y2="428" stroke="#5E5A70" stroke-width="3"/><text x="170.0" y="454" text-anchor="middle" font-size="24" font-weight="700" fill="#5E5A70" >0,5</text><line x1="250" y1="420" x2="250" y2="428" stroke="#5E5A70" stroke-width="3"/><text x="250" y="454" text-anchor="middle" font-size="24" font-weight="700" fill="#5E5A70" >1,0</text><line x1="330.0" y1="420" x2="330.0" y2="428" stroke="#5E5A70" stroke-width="3"/><text x="330.0" y="454" text-anchor="middle" font-size="24" font-weight="700" fill="#5E5A70" >1,5</text><line x1="410" y1="420" x2="410" y2="428" stroke="#5E5A70" stroke-width="3"/><text x="410" y="454" text-anchor="middle" font-size="24" font-weight="700" fill="#5E5A70" >2,0</text><g data-passo="1"><path d="M170.0 420 V345 H90" stroke="#C9C0F0" stroke-width="3" stroke-dasharray="7 7" fill="none"/><circle cx="170.0" cy="345" r="11" fill="var(--d)" stroke="#fff" stroke-width="3"/></g><g data-passo="2"><path d="M250 420 V270 H90" stroke="#C9C0F0" stroke-width="3" stroke-dasharray="7 7" fill="none"/><circle cx="250" cy="270" r="11" fill="var(--d)" stroke="#fff" stroke-width="3"/></g><g data-passo="3"><path d="M410 420 V120 H90" stroke="#C9C0F0" stroke-width="3" stroke-dasharray="7 7" fill="none"/><circle cx="410" cy="120" r="11" fill="var(--d)" stroke="#fff" stroke-width="3"/></g><path data-passo="4" class="el-traca" pathLength="1" d="M90 420 L450.0 82.5" stroke="var(--d)" stroke-width="6" fill="none"/></svg></div>
+    <div class="caixa caixa-fundamental" data-passo="5" style="position:absolute;left:0;width:600px;top:490px;padding:14px 24px"><div class="texto" style="font-size:28px">A divisão dá sempre <b>10</b>: é a <b>resistência</b> do resistor, em <b>ohms (Ω)</b>.</div></div>
+  </div>
+  <aside class="notas"><p>Cliques 1 a 3: uma medida por clique, na tabela e no gráfico. Clique 4: a reta passa pela origem: resistor ôhmico.</p><p>Clique 5: U ÷ i é sempre 10 Ω. Quanto maior a resistência, mais tensão é preciso para a mesma corrente. Ohm (Ω, ômega), em homenagem a Georg Ohm.</p></aside>
+</section>
+
+<section class="slide" data-nome="Primeira lei de Ohm">
+  <div class="conteudo">
+    <p class="olho">Primeira lei de Ohm</p>
+    <h2 class="titulo">U = R · i</h2>
+    <div class="caixa caixa-fundamental" style="position:absolute;left:420px;right:420px;top:150px;text-align:center;font-size:96px;padding:14px">\(U = R \cdot i\)</div>
+    <div class="letras" style="position:absolute;left:0;right:0;top:360px;grid-template-columns:repeat(3,1fr)">
+      <div data-passo="1"><span class="simbolo">\(U\)</span>tensão<br><span class="unidade">volt (V)</span></div>
+      <div data-passo="2"><span class="simbolo">\(R\)</span>resistência<br><span class="unidade">ohm (Ω)</span></div>
+      <div data-passo="3"><span class="simbolo">\(i\)</span>corrente<br><span class="unidade">ampère (A)</span></div>
+    </div>
+    <div class="caixa" data-passo="4" style="position:absolute;left:560px;right:0;top:640px;padding:16px 28px"><div class="texto" style="font-size:30px">Num resistor de resistência constante (<b>ôhmico</b>), a tensão é <b>proporcional</b> à corrente; no gráfico \(U \times i\), uma reta pela origem. Mais inclinada: maior a resistência.</div></div>
+  </div>
+  <aside class="notas"><p>Uma letra por clique. Clique 4: o resistor ôhmico.</p></aside>
+</section>
+
+<section class="slide" data-nome="Exemplos: Ohm">
+  <div class="conteudo">
+    <p class="olho">Exemplo</p>
+    <h2 class="titulo">Usando U = R · i</h2>
+    <div style="position:absolute;left:0;width:820px;top:150px">
+      <p class="texto" style="margin:0 0 14px;font-size:30px">Um resistor de <b>20 Ω</b> é ligado a uma bateria de <b>12 V</b>. Qual é a corrente?</p>
+      <div class="contas" style="font-size:42px;margin-left:120px"><div class="eq" data-passo="1"><span>\(U\)</span><span>\(=\)</span><span>\(R \cdot i\)</span></div><div class="eq" data-passo="2"><span>\(12\)</span><span>\(=\)</span><span>\(20 \cdot i\)</span></div><div class="eq" data-passo="3"><span>\(i\)</span><span>\(=\)</span><span>\(\dfrac{12}{20}\)</span></div><div class="eq final" data-passo="4"><span>\(i\)</span><span>\(=\)</span><span>\(0{,}6\ \text{A}\)</span></div></div>
+    </div>
+    <div style="position:absolute;left:940px;right:0;top:150px">
+      <p class="texto" style="margin:0 0 14px;font-size:30px">Um chuveiro em <b>220 V</b> é atravessado por <b>20 A</b>. Qual é a resistência dele?</p>
+      <div class="contas" style="font-size:42px;margin-left:120px"><div class="eq" data-passo="5"><span>\(U\)</span><span>\(=\)</span><span>\(R \cdot i\)</span></div><div class="eq" data-passo="6"><span>\(220\)</span><span>\(=\)</span><span>\(R \cdot 20\)</span></div><div class="eq" data-passo="7"><span>\(R\)</span><span>\(=\)</span><span>\(\dfrac{220}{20}\)</span></div><div class="eq final" data-passo="8"><span>\(R\)</span><span>\(=\)</span><span>\(11\ \Omega\)</span></div></div>
+    </div>
+  </div>
+  <aside class="notas"><p>Cliques 1 a 4: R = 20 Ω e U = 12 V: i = 0,6 A. Cliques 5 a 8: U = 220 V e i = 20 A: R = 11 Ω.</p><p>Mesma fórmula, incógnita diferente: isole a letra que falta.</p></aside>
+</section>
+
+<section class="slide" data-nome="Do que depende R">
+  <div class="conteudo">
+    <p class="olho">Primeira lei de Ohm</p>
+    <h2 class="titulo">Do que depende a resistência</h2>
+    <div style="position:absolute;left:0;width:860px;top:160px;display:flex;flex-direction:column;gap:18px">
+      <p class="texto" style="margin:0;font-size:32px">É <b>maior</b> quando o fio é mais <b>comprido</b> e mais <b>fino</b>.</p>
+      <p class="texto" data-passo="1" style="margin:0;font-size:32px">Depende do <b>material</b>: o <b>cobre</b> tem resistência baixa (fios da casa); ligas como o <b>níquel-cromo</b>, alta (resistores que esquentam).</p>
+    </div>
+    <div style="position:absolute;left:960px;top:170px"><svg viewBox="0 0 560 300" width="720" height="386"  style="overflow:visible;font-family:Figtree,'Segoe UI',sans-serif;" aria-hidden="true"><rect x="20" y="40" width="300" height="16" rx="8" fill="url(#elCobre)"/><text x="340" y="56" text-anchor="start" font-size="24" font-weight="800" fill="var(--d-forte)" >curto e grosso: menor R</text><rect x="20" y="130" width="520" height="7" rx="4" fill="url(#elCobre)"/><text x="20" y="180" text-anchor="start" font-size="24" font-weight="800" fill="#C2384F" >comprido e fino: maior R</text><rect x="20" y="230" width="300" height="16" rx="8" fill="#9C9AA6"/><text x="340" y="246" text-anchor="start" font-size="24" font-weight="800" fill="#5E5A70" >níquel-cromo: R alta</text></svg></div>
+    <div class="caixa caixa-atencao" data-passo="2" style="position:absolute;left:560px;right:0;top:560px;padding:20px 30px">
+      <span class="rotulo">Atenção: R não muda com a tensão</span>
+      <div class="texto" style="font-size:30px">Num resistor ôhmico, dobrar a tensão dobra a <b>corrente</b>; a resistência continua a mesma. Ela depende do material, do comprimento e da espessura do fio, não da pilha ligada a ele.</div>
+    </div>
+  </div>
+  <aside class="notas"><p>Clique 1: o material. Clique 2: pegadinha clássica: U = R · i não quer dizer que R aumenta quando U aumenta.</p></aside>
+</section>
+
+<section class="slide questao" data-nome="Questão 1" data-gap="14">
+  <div class="conteudo">
+    <div class="area-resolucao"></div>
+    <span class="pilula pilula-pausa" data-em="1:some">Pause o vídeo e tente</span>
+    <div class="painel-questao">
+      <p class="olho">Questão 1 · IF Sudeste MG 2020</p>
+      <p class="enunciado" style="font-size:25px">Francisco, querendo saber o tempo de carga de um aparelho celular cuja capacidade de carga elétrica indicada na bateria era de 3400 mAh (miliampères-hora), ao olhar a indicação de seu carregador de celular, ele observa que o mesmo indica uma corrente elétrica de 2,0 A (ampères). A partir desses dados e supondo que não existam perdas de energia durante o carregamento do aparelho e que o mesmo encontra-se totalmente descarregado, qual é o tempo estimado para carregar o aparelho completamente?</p>
+      
+      
+      <ol class="alternativas" style="gap:8px"><li data-em="2:apaga" style="font-size:24px;padding:6px 14px"><b>A</b><span>1 hora e 11 minutos</span></li><li data-em="2:apaga" style="font-size:24px;padding:6px 14px"><b>B</b><span>1 hora e 20 minutos</span></li><li data-em="2:apaga" style="font-size:24px;padding:6px 14px"><b>C</b><span>1 hora e 35 minutos</span></li><li data-em="2:certo" style="font-size:24px;padding:6px 14px"><b>D</b><span>1 hora e 42 minutos</span></li><li data-em="2:apaga" style="font-size:24px;padding:6px 14px"><b>E</b><span>2 horas e 10 minutos</span></li></ol>
+    </div>
+  </div>
+  <aside class="resolucao">
+    <p class="dados"><b>Dados:</b> \(Q = 3400\ \text{mAh}\); \(i = 2{,}0\ \text{A}\).</p>
+    <ol class="passos"><li><b>1.</b> \(Q = 3400 \div 1000 = 3{,}4\ \text{Ah}\)</li><li><b>2.</b> \(\Delta t = Q \div i\)</li><li><b>3.</b> \(\Delta t = 3{,}4 \div 2{,}0 = 1{,}7\ \text{h}\)</li><li><b>4.</b> \(0{,}7\ \text{h} = 0{,}7 \cdot 60 = 42\ \text{min}\)</li></ol>
+    <p class="resposta"><b>Resposta:</b> 1 h e 42 min. <b>Gabarito D.</b></p>
+    <p class="atencao"><b>Destaque no quadro:</b> 1,7 h não é 1 h 70 min nem 1 h 7 min.</p>
+    <ul class="erros"><li><b>A</b> 1 h 11 min daria cerca de 2370 mAh.</li><li><b>B</b> 1 h 20 min daria cerca de 2670 mAh.</li><li><b>C</b> 1 h 35 min daria cerca de 3170 mAh.</li><li><b>E</b> 2 h 10 min daria cerca de 4330 mAh.</li></ul>
+  </aside>
+  <aside class="notas"><p>Clique 1 tira o aviso de pausa: resolva na área (D liga a caneta; E esconde o enunciado). Clique 2: gabarito D.</p><p>Questão oficial do IF Sudeste MG 2020-1, q31, FIS-0608 (sobra do bloco, usada aqui). Mesma ideia do exemplo da bateria: tempo = carga ÷ corrente; a parte decimal da hora vezes 60.</p></aside>
+</section>
+
+<section class="slide questao" data-nome="Questão 2" data-gap="14">
+  <div class="conteudo">
+    <div class="area-resolucao"></div>
+    <span class="pilula pilula-pausa" data-em="1:some">Pause o vídeo e tente</span>
+    <div class="painel-questao">
+      <p class="olho">Questão 2 · Modelo IF</p>
+      <p class="enunciado" style="font-size:27px">Numa aula de Ciências, Bia recebeu uma pilha, fios, uma lâmpada pequena e um interruptor. Ela fez as três montagens abaixo.</p>
+      <svg viewBox="0 0 1200 400" width="520" height="173" class="figura"  style="overflow:visible;font-family:Figtree,'Segoe UI',sans-serif;" aria-hidden="true"><g transform="translate(0 0)"><path class="el-fio" d="M80 120 V60 H300 V200 M300 260 V320 H80 V236" /><rect x="68.0" y="108" width="24" height="14" rx="3" fill="#052E30"/><rect x="52" y="120" width="56" height="116" rx="12" fill="var(--d)" stroke="#052E30" stroke-width="3"/><text x="80.0" y="156" text-anchor="middle" font-size="34" font-weight="800" fill="#fff">+</text><text x="80.0" y="222" text-anchor="middle" font-size="40" font-weight="800" fill="#fff">−</text><g class="el-lamp " ><circle class="luz" cx="300" cy="230" r="69" fill="url(#elBrilho)"/><circle cx="300" cy="230" r="30" fill="#fff" stroke="#292B2C" stroke-width="5"/><circle class="luz" cx="300" cy="230" r="26" fill="#FFE680"/><path d="M279.0 209.0 L321.0 251.0 M321.0 209.0 L279.0 251.0" stroke="#292B2C" stroke-width="4"/></g><text x="190" y="380" text-anchor="middle" font-size="40" font-weight="800" fill="#292B2C" >I</text></g><g transform="translate(400 0)"><path class="el-fio" d="M80 120 V60 H300 V200 M300 260 V320 H190 V60" /><circle cx="190" cy="60" r="8" fill="#292B2C"/><rect x="68.0" y="108" width="24" height="14" rx="3" fill="#052E30"/><rect x="52" y="120" width="56" height="116" rx="12" fill="var(--d)" stroke="#052E30" stroke-width="3"/><text x="80.0" y="156" text-anchor="middle" font-size="34" font-weight="800" fill="#fff">+</text><text x="80.0" y="222" text-anchor="middle" font-size="40" font-weight="800" fill="#fff">−</text><g class="el-lamp " ><circle class="luz" cx="300" cy="230" r="69" fill="url(#elBrilho)"/><circle cx="300" cy="230" r="30" fill="#fff" stroke="#292B2C" stroke-width="5"/><circle class="luz" cx="300" cy="230" r="26" fill="#FFE680"/><path d="M279.0 209.0 L321.0 251.0 M321.0 209.0 L279.0 251.0" stroke="#292B2C" stroke-width="4"/></g><text x="190" y="380" text-anchor="middle" font-size="40" font-weight="800" fill="#292B2C" >II</text></g><g transform="translate(800 0)"><path class="el-fio" d="M80 120 V60 H150 M220 60 H300 V200 M300 260 V320 H80 V236" /><circle cx="150" cy="60" r="8" fill="#292B2C"/><circle cx="220" cy="60" r="8" fill="#292B2C"/><line class="el-alavanca" style="transform-origin:150px 60px" x1="150" y1="60" x2="220" y2="60" stroke="#292B2C" stroke-width="7" stroke-linecap="round"/><rect x="68.0" y="108" width="24" height="14" rx="3" fill="#052E30"/><rect x="52" y="120" width="56" height="116" rx="12" fill="var(--d)" stroke="#052E30" stroke-width="3"/><text x="80.0" y="156" text-anchor="middle" font-size="34" font-weight="800" fill="#fff">+</text><text x="80.0" y="222" text-anchor="middle" font-size="40" font-weight="800" fill="#fff">−</text><g class="el-lamp " ><circle class="luz" cx="300" cy="230" r="69" fill="url(#elBrilho)"/><circle cx="300" cy="230" r="30" fill="#fff" stroke="#292B2C" stroke-width="5"/><circle class="luz" cx="300" cy="230" r="26" fill="#FFE680"/><path d="M279.0 209.0 L321.0 251.0 M321.0 209.0 L279.0 251.0" stroke="#292B2C" stroke-width="4"/></g><text x="190" y="380" text-anchor="middle" font-size="40" font-weight="800" fill="#292B2C" >III</text></g></svg>
+      <p class="enunciado" style="font-size:27px">A lâmpada acende:</p>
+      <ol class="alternativas" style="gap:8px"><li data-em="2:apaga"><b>A</b><span>nas montagens I e II.</span></li><li data-em="2:apaga"><b>B</b><span>nas montagens I e III.</span></li><li data-em="2:apaga"><b>C</b><span>somente na montagem II.</span></li><li data-em="2:certo"><b>D</b><span>somente na montagem I.</span></li><li data-em="2:apaga"><b>E</b><span>nas montagens I, II e III.</span></li></ol>
+    </div>
+  </div>
+  <aside class="resolucao">
+    <p class="dados"><b>Dados:</b> pilha, fios, lâmpada e interruptor; três montagens.</p>
+    <ol class="passos"><li><b>I:</b> + → lâmpada → −: fechado, acende.</li><li><b>II:</b> os dois fios da lâmpada no +: aberto.</li><li><b>III:</b> interruptor aberto: caminho cortado.</li></ol>
+    <p class="resposta"><b>Resposta:</b> só a montagem I acende. <b>Gabarito D.</b></p>
+    <p class="atencao"><b>Destaque no quadro:</b> Precisa de caminho fechado do + ao −.</p>
+    <ul class="erros"><li><b>A</b> Em II a lâmpada só vai ao polo +.</li><li><b>B</b> Em III o interruptor está aberto.</li><li><b>C</b> A II não acende; a I sim.</li><li><b>E</b> Só a I tem caminho fechado.</li></ul>
+  </aside>
+  <aside class="notas"><p>Clique 1 tira o aviso de pausa. Clique 2: gabarito D.</p><p>Modelo IF, lote if-fisica-corrente-e-resistores, m005, FIS-1611. Figura refeita no molde (mesmas três montagens da apostila).</p></aside>
+</section>
+
+<section class="slide questao" data-nome="Questão 3" data-gap="14">
+  <div class="conteudo">
+    <div class="area-resolucao"></div>
+    <span class="pilula pilula-pausa" data-em="1:some">Pause o vídeo e tente</span>
+    <div class="painel-questao">
+      <p class="olho">Questão 3 · Modelo IF</p>
+      <p class="enunciado" style="font-size:24px">Uma lanterna simples tem duas pilhas, uma lâmpada, um botão de liga e desliga e tiras de metal que ligam essas peças por dentro. Lúcia fez três afirmações sobre o funcionamento da lanterna.</p><p class="enunciado" style="font-size:24px">I. Com o botão desligado, o circuito está aberto e não há corrente elétrica passando pela lâmpada.<br>II. Nas tiras de metal existem elétrons quase livres; com o botão ligado, eles passam a andar todos no mesmo sentido.<br>III. Com o botão ligado, a corrente sai das pilhas e é toda gasta na lâmpada, sem precisar de um caminho de volta até as pilhas.</p><p class="enunciado" style="font-size:24px">Está correto o que se afirma em:</p>
+      
+      
+      <ol class="alternativas curtas"><li data-em="2:apaga"><b>A</b><span>I, apenas.</span></li><li data-em="2:apaga"><b>B</b><span>II, apenas.</span></li><li data-em="2:certo"><b>C</b><span>I e II, apenas.</span></li><li data-em="2:apaga"><b>D</b><span>I e III, apenas.</span></li><li data-em="2:apaga"><b>E</b><span>I, II e III.</span></li></ol>
+    </div>
+  </div>
+  <aside class="resolucao">
+    <p class="dados"><b>Dados:</b> lanterna: pilhas, lâmpada, botão e tiras de metal.</p>
+    <ol class="passos"><li><b>I.</b> Verdadeira: botão desligado abre o circuito.</li><li><b>II.</b> Verdadeira: corrente = elétrons em movimento ordenado.</li><li><b>III.</b> Falsa: precisa voltar ao outro polo.</li></ol>
+    <p class="resposta"><b>Resposta:</b> I e II. <b>Gabarito C.</b></p>
+    <p class="atencao"><b>Destaque no quadro:</b> A lâmpada não gasta as cargas: o caminho volta à pilha.</p>
+    <ul class="erros"><li><b>A</b> Esquece a II.</li><li><b>B</b> Esquece a I.</li><li><b>D</b> Aceita a III.</li><li><b>E</b> A III é falsa.</li></ul>
+  </aside>
+  <aside class="notas"><p>Clique 1 tira o aviso de pausa. Clique 2: gabarito C.</p><p>Modelo IF, lote if-fisica-corrente-e-resistores, m008, FIS-1614.</p></aside>
+</section>
+
+<section class="slide" data-nome="Resumo">
+  <div class="conteudo">
+    <p class="olho">Resumo</p>
+    <h2 class="titulo">O essencial</h2>
+<div class="resumo" style="position:absolute;left:0;right:0;top:150px"><div><b>Corrente elétrica</b>: movimento ordenado de cargas. Precisa de uma <b>fonte</b> e de um <b>caminho fechado</b>.</div><div>\(i = \dfrac{Q}{\Delta t}\), em ampères (A). Bateria em mAh: corrente × tempo. 1 A = 1000 mA.</div><div>Circuito: <b>fonte</b>, <b>fios</b>, <b>aparelho</b> e <b>interruptor</b>. Fechado funciona; aberto, não.</div><div><b>Curto-circuito</b>: corrente enorme. O <b>disjuntor</b> desliga sozinho.</div><div><b>Lei de Ohm</b>: \(U = R \cdot i\), com R em ohms (Ω).</div><div>R maior: fio <b>comprido</b>, <b>fino</b> e de material como o níquel-cromo.</div></div><div class="caixa caixa-atencao" style="position:absolute;left:560px;right:0;top:640px"><div class="texto" style="font-size:30px">Mão molhada conduz: nada de mexer em tomada com a pele ou o chão molhados.</div></div>
+  </div>
+  <aside class="notas"><p>Peça para tirarem um print desta tela.</p></aside>
+</section>
+
+<section class="slide capa" data-nome="A seguir">
+  <div class="estrelas"></div>
+  <div class="texto-capa" style="top:150px">
+    <span class="selo">Física · IF</span>
+    <p class="aula" style="font-size:26px">A seguir · Circuitos elétricos · Parte 2 de 2</p>
+    <h1 style="font-size:130px">Série e paralelo</h1>
+    <p class="sub">E a instalação da sua casa</p>
+  </div>
+  <svg class="emblema" viewBox="0 0 640 640" aria-hidden="true">
+    <g class="gira-lento"><ellipse cx="320" cy="320" rx="300" ry="128" fill="none" stroke="#fff" stroke-opacity=".38" stroke-width="2" transform="rotate(-10 320 320)"/></g>
+    <g class="gira"><ellipse cx="320" cy="320" rx="236" ry="196" fill="none" stroke="#FFD10C" stroke-opacity=".75" stroke-width="2.5" stroke-dasharray="3 14" stroke-linecap="round" transform="rotate(-8 320 320)"/>
+      <circle cx="84" cy="300" r="13" fill="var(--d)" stroke="#fff" stroke-width="3"/></g>
+    <circle cx="320" cy="320" r="150" fill="#FFD10C"/>
+    <path d="M346 196 L262 336 H318 L292 450 L382 300 H326 Z" fill="#4B258D" stroke="#4B258D" stroke-width="8" stroke-linejoin="round"/>
+  </svg>
+  <img class="logo-capa" src="{{LOGO_BRANCO}}" alt="Quarks">
+  <aside class="notas"><p>Próxima: as duas formas de ligar vários aparelhos, a resistência equivalente e por que a casa é ligada em paralelo.</p></aside>
+</section>
