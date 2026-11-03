@@ -1,0 +1,549 @@
+<!--aula
+{"disciplina": "fisica", "curso": "IF", "assunto": "Observação do céu", "parte": "Parte 1 de 2", "titulo": "O Sol que marca o tempo", "scripts": ["animacoes-astronomia.js"]}
+-->
+<!-- Fonte: apostila IF, Física, cap. 1 Astronomia, 1.1 Observação do céu (blocos "O céu ao longo do dia e do ano" e "Medidas de tempo e calendário"). Questões: Modelo IF, lote if-fisica-observacao-do-ceu (m002 FIS-8722, m008 FIS-8728, m006 FIS-8726). A m001 (FIS-8721) fica reservada para o bloco "Questões do IF Sudeste" de Astronomia. -->
+<style>
+  .caixa, .cartao, .linha-ex, .painel { box-sizing: border-box; }
+  .linha-ex { background: var(--branco); border: 2px solid var(--lilas-2); border-radius: 24px; padding: 14px 26px; font-size: 30px; line-height: 1.3; }
+  .linha-ex b { color: var(--roxo-titulo); }
+  .painel { background: var(--branco); border: 2px solid var(--lilas-2); border-radius: 30px; padding: 18px 26px; }
+  .painel h3 { margin: 0 0 6px; font: 800 36px var(--fonte-titulo); letter-spacing: -.02em; color: var(--roxo-titulo); }
+  .painel p { margin: 6px 0 0; font-size: 26px; line-height: 1.32; }
+  .painel b { color: var(--roxo-titulo); }
+  .rot-fig { font-family: Figtree, "Segoe UI", sans-serif; font-weight: 700; font-size: 24px; fill: #5E5A70; }
+  .ceu-tab { border-collapse: separate; border-spacing: 0; background: var(--branco); border: 2px solid var(--lilas-2); border-radius: 26px; overflow: hidden; font-size: 31px; }
+  .ceu-tab th { background: var(--d-clara); color: var(--d-forte); font-weight: 800; padding: 12px 30px; text-align: left; }
+  .ceu-tab td { padding: 12px 30px; border-top: 2px solid var(--lilas); vertical-align: middle; }
+  .ceu-tab td:first-child { font-weight: 800; color: var(--roxo-titulo); white-space: nowrap; }
+  .ceu-tab td svg { width: 64px; height: 64px; vertical-align: middle; margin-right: 14px; }
+  .resp { display: inline-block; padding: 6px 22px; border-radius: 999px; background: var(--d); color: #fff; font-weight: 800; font-size: 30px; }
+  /* o Sol cruza o céu: nasce a leste, sobe, se põe a oeste; depois, a noite com estrelas */
+  @keyframes arco-sol { 0% { transform: rotate(-104deg); } 66% { transform: rotate(104deg); } 100% { transform: rotate(104deg); } }
+  @keyframes ceu-dia { 0%, 2% { opacity: .15; } 14%, 54% { opacity: 1; } 66%, 100% { opacity: 0; } }
+  @keyframes ceu-noite { 0%, 4% { opacity: .6; } 12%, 60% { opacity: 0; } 72%, 96% { opacity: 1; } 100% { opacity: .6; } }
+  .sol-arco { transform-box: view-box; transform-origin: 600px 420px; transform: rotate(-60deg); }
+  .slide.ativo .mostra .sol-arco { animation: arco-sol 11s linear infinite; }
+  .slide.ativo .mostra .ceu-claro { animation: ceu-dia 11s linear infinite; }
+  .ceu-escuro { opacity: 0; }
+  .slide.ativo .mostra .ceu-escuro { animation: ceu-noite 11s linear infinite; }
+  /* Terra girando vista de cima do polo norte (sentido anti-horário) */
+  @keyframes gira-anti { to { transform: rotate(-360deg); } }
+  .terra-gira { transform-box: view-box; transform-origin: 300px 280px; }
+  .slide.ativo .mostra .terra-gira { animation: gira-anti 24s linear infinite; }
+  @keyframes cintila { 0%, 100% { opacity: .35; } 50% { opacity: 1; } }
+  .slide.ativo .cint circle { animation: cintila 4.5s ease-in-out infinite; }
+  .cint circle:nth-child(3n) { animation-delay: -1.5s !important; } .cint circle:nth-child(3n+1) { animation-delay: -3s !important; }
+  /* calendário: o 29 de fevereiro aparece */
+  .dia29 { transform-box: fill-box; transform-origin: center; transform: scale(0); transition: transform .8s cubic-bezier(.3,1.6,.5,1); }
+  .mostra .dia29, .dia29.mostra { transform: scale(1); }
+</style>
+
+<svg width="0" height="0" style="position:absolute" aria-hidden="true">
+  <defs>
+    <linearGradient id="oc1Dia" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#BFE0F7"/><stop offset="1" stop-color="#F4F9FD"/></linearGradient>
+    <linearGradient id="oc1Noite" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#1F1846"/><stop offset="1" stop-color="#4B3C8F"/></linearGradient>
+    <clipPath id="oc1Ceu"><rect x="0" y="0" width="1200" height="420" rx="30"/></clipPath>
+    <clipPath id="oc1Globo"><circle cx="300" cy="280" r="170"/></clipPath>
+  </defs>
+</svg>
+
+<!-- 1. Capa -->
+<section class="slide capa" data-nome="Capa">
+  <div class="estrelas"></div>
+  <div class="texto-capa">
+    <span class="selo">Física · IF</span>
+    <p class="aula">Observação do céu · Parte 1 de 2</p>
+    <h1>O Sol que marca o tempo</h1>
+    <p class="sub">Dia, semana, mês, ano e a sombra de uma vara</p>
+  </div>
+  <svg class="emblema" viewBox="0 0 640 640" aria-hidden="true">
+    <g class="gira-lento"><ellipse cx="320" cy="320" rx="300" ry="128" fill="none" stroke="#fff" stroke-opacity=".38" stroke-width="2" transform="rotate(-10 320 320)"/></g>
+    <path d="M60 420 A260 260 0 0 1 580 420" fill="none" stroke="#FFD10C" stroke-opacity=".75" stroke-width="3" stroke-dasharray="3 14" stroke-linecap="round"/>
+    <circle cx="430" cy="196" r="70" fill="#FFD10C"/>
+    <rect x="40" y="420" width="560" height="22" rx="11" fill="#fff" fill-opacity=".85"/>
+    <line x1="320" y1="420" x2="320" y2="300" stroke="#fff" stroke-width="12" stroke-linecap="round"/>
+    <line x1="320" y1="428" x2="220" y2="428" stroke="#2B2357" stroke-opacity=".7" stroke-width="16" stroke-linecap="round"/>
+    <text x="70" y="486" fill="#fff" fill-opacity=".8" font-family="Figtree,'Segoe UI',sans-serif" font-size="30" font-weight="700">leste</text>
+    <text x="570" y="486" fill="#fff" fill-opacity=".8" font-family="Figtree,'Segoe UI',sans-serif" font-size="30" font-weight="700" text-anchor="end">oeste</text>
+  </svg>
+  <img class="logo-capa" src="{{LOGO_BRANCO}}" alt="Quarks">
+  <aside class="notas"><p>Começa o capítulo Astronomia. Nesta parte: o movimento aparente do Sol, de onde vêm o dia, a semana, o mês e o ano, o ano bissexto e o gnômon (a vara cuja sombra conta as horas e as estações).</p></aside>
+</section>
+
+<!-- 2. O caminho do Sol -->
+<section class="slide" data-nome="O caminho do Sol">
+  <div class="conteudo">
+    <p class="olho">Para começar</p>
+    <h2 class="titulo">Todo dia, o mesmo caminho</h2>
+    <svg viewBox="0 0 1200 470" style="position:absolute;left:0;top:150px;width:1100px;height:431px" aria-hidden="true" data-passo="0">
+      <g clip-path="url(#oc1Ceu)">
+        <rect width="1200" height="420" fill="url(#oc1Noite)"/>
+        <g class="cint" fill="#fff"><circle cx="120" cy="80" r="3"/><circle cx="260" cy="150" r="2.5"/><circle cx="380" cy="60" r="3"/><circle cx="520" cy="130" r="2"/><circle cx="660" cy="70" r="3"/><circle cx="800" cy="160" r="2.5"/><circle cx="940" cy="90" r="3"/><circle cx="1080" cy="150" r="2.5"/><circle cx="200" cy="260" r="2"/><circle cx="1000" cy="270" r="2"/><circle cx="460" cy="230" r="2.5"/><circle cx="760" cy="250" r="2"/></g>
+        <rect class="ceu-claro" width="1200" height="420" fill="url(#oc1Dia)"/>
+        <path d="M220 420 A380 380 0 0 1 980 420" fill="none" stroke="#E0A100" stroke-opacity=".5" stroke-width="3" stroke-dasharray="4 12"/>
+        <g class="sol-arco"><circle cx="600" cy="40" r="56" fill="#FFD10C" opacity=".25"/><circle cx="600" cy="40" r="38" fill="#FFD10C" stroke="#F0A500" stroke-width="4"/></g>
+      </g>
+      <rect x="0" y="410" width="1200" height="30" rx="15" fill="#CFE5C0"/>
+      <text x="20" y="470" class="rot-fig" style="font-size:30px;font-weight:800;fill:#3F2FA0">leste</text>
+      <text x="1180" y="470" class="rot-fig" text-anchor="end" style="font-size:30px;font-weight:800;fill:#3F2FA0">oeste</text>
+    </svg>
+    <div style="position:absolute;left:1160px;right:0;top:160px;display:flex;flex-direction:column;gap:20px">
+      <div class="linha-ex" data-passo="1">O Sol <b>nasce</b> do lado <b>leste</b>…</div>
+      <div class="linha-ex" data-passo="2">…sobe, cruza o céu e se <b>põe</b> do lado <b>oeste</b>.</div>
+      <div class="linha-ex" data-passo="3">À noite, as <b>estrelas</b> fazem o mesmo caminho.</div>
+    </div>
+    <div class="caixa caixa-atencao" data-passo="4" style="position:absolute;left:600px;right:0;top:660px;padding:20px 30px">
+      <div class="texto" style="font-size:31px">Parece que o céu inteiro gira em volta de nós. <b>Será que é ele que gira?</b></div>
+    </div>
+  </div>
+  <aside class="notas">
+    <p>O Sol cruza o céu de leste para oeste; depois vem a noite, com as estrelas. Cliques 1 a 3: o que todo mundo já viu. Clique 4: a pergunta que o próximo slide responde.</p>
+    <p>Da apostila (1.1, "O céu ao longo do dia e do ano"). Esquema fora de escala.</p>
+  </aside>
+</section>
+
+<!-- 3. Quem gira é a Terra -->
+<section class="slide" data-nome="Movimento aparente">
+  <div class="conteudo">
+    <p class="olho">Movimento aparente</p>
+    <h2 class="titulo">Quem gira é a Terra</h2>
+    <svg viewBox="0 0 640 540" style="position:absolute;left:0;top:130px;width:557px;height:470px" aria-hidden="true">
+      <g stroke="#F0A500" stroke-width="5" stroke-linecap="round" fill="none">
+        <path d="M10 190 H80 M66 178 L82 190 L66 202"/><path d="M10 280 H80 M66 268 L82 280 L66 292"/><path d="M10 370 H80 M66 358 L82 370 L66 382"/>
+      </g>
+      <text x="10" y="150" class="rot-fig" style="fill:#B07A00">luz do Sol</text>
+      <g data-passo="1">
+        <circle cx="300" cy="280" r="170" fill="#4C9BE8"/>
+        <g clip-path="url(#oc1Globo)"><g class="terra-gira">
+          <path d="M220 160 q40 -40 90 -10 q30 30 -10 70 q-40 20 -70 -10 z M330 300 q60 -20 90 30 q10 60 -50 70 q-50 -20 -40 -100 z M170 300 q40 10 30 60 q-20 40 -60 10 q-10 -40 30 -70 z M380 170 q30 -10 40 20 q-10 30 -40 10 z" fill="#7CC67A" opacity=".9"/>
+          <g transform="translate(300 110)"><circle cx="0" cy="-14" r="10" fill="#FFD10C" stroke="#292B2C" stroke-width="3"/><path d="M0 -4 V22" stroke="#292B2C" stroke-width="5" stroke-linecap="round"/></g>
+        </g></g>
+        <path d="M300 110 A170 170 0 0 1 300 450 Z" fill="#3B2A73" opacity=".78"/>
+        <circle cx="300" cy="280" r="170" fill="none" stroke="#292B2C" stroke-width="4"/>
+        <circle cx="300" cy="280" r="9" fill="#292B2C"/>
+        <path d="M440 120 A210 210 0 0 0 160 120" fill="none" stroke="#3F2FA0" stroke-width="5" stroke-linecap="round"/>
+        <path d="M176 104 L156 124 L184 132" fill="none" stroke="#3F2FA0" stroke-width="5" stroke-linecap="round" stroke-linejoin="round"/>
+        <text x="190" y="500" class="rot-fig">dia</text><text x="370" y="500" class="rot-fig">noite</text>
+        <text x="300" y="530" class="rot-fig" text-anchor="middle" style="font-size:20px">vista de cima do polo norte, fora de escala</text>
+      </g>
+    </svg>
+    <div style="position:absolute;left:700px;right:0;top:160px;display:flex;flex-direction:column;gap:18px">
+      <div class="linha-ex" data-passo="1">A Terra gira em torno do <b>próprio eixo</b>, de <b>oeste para leste</b>.</div>
+      <div class="linha-ex" data-passo="2">Quem está nela vê o Sol aparecer do lado <b>leste</b> e sumir do lado <b>oeste</b>.</div>
+      <div class="caixa caixa-fundamental" data-passo="3" style="padding:18px 28px">
+        <span class="rotulo">Movimento aparente</span>
+        <div class="texto" style="font-size:30px">O Sol e as estrelas <b>parecem</b> girar em volta de nós. Quem gira, de verdade, é a <b>Terra</b>.</div>
+      </div>
+      <div class="linha-ex" data-passo="4" style="display:flex;gap:20px;align-items:center">
+        <svg viewBox="0 0 120 80" style="width:120px;height:80px;flex:none" aria-hidden="true"><rect x="6" y="14" width="108" height="50" rx="14" fill="#E4DEFB" stroke="#8C7BEA" stroke-width="3"/><rect x="18" y="22" width="26" height="20" rx="4" fill="#fff"/><rect x="50" y="22" width="26" height="20" rx="4" fill="#fff"/><rect x="82" y="22" width="22" height="20" rx="4" fill="#fff"/><circle cx="30" cy="66" r="9" fill="#292B2C"/><circle cx="92" cy="66" r="9" fill="#292B2C"/></svg>
+        <span>Como na janela do ônibus: as árvores <b>parecem correr para trás</b>.</span>
+      </div>
+    </div>
+  </div>
+  <aside class="notas">
+    <p>Clique 1: a Terra gira (no sentido anti-horário, olhando de cima do polo norte). Acompanhe o bonequinho amarelo: ele sai da noite para o dia na parte de cima do desenho (amanhecer) e volta para a noite embaixo (anoitecer).</p>
+    <p>Cliques 2 a 4: o Sol "nasce" a leste porque a Terra gira de oeste para leste; o movimento do Sol no céu é aparente. A comparação do ônibus é da apostila.</p>
+  </aside>
+</section>
+
+<!-- 4. De dia e de noite -->
+<section class="slide" data-nome="O que se vê no céu">
+  <div class="conteudo">
+    <p class="olho">O céu de dia e de noite</p>
+    <h2 class="titulo">Quem aparece e quando</h2>
+    <div style="position:absolute;left:0;right:0;top:160px;display:grid;grid-template-columns:1fr 1fr;gap:24px 34px">
+      <div class="painel" data-passo="1" style="display:grid;grid-template-columns:120px 1fr;gap:20px;align-items:center">
+        <svg viewBox="0 0 120 120" aria-hidden="true"><circle cx="60" cy="60" r="34" fill="#FFD10C" stroke="#F0A500" stroke-width="4"/><g stroke="#F0A500" stroke-width="5" stroke-linecap="round"><path d="M60 8v12M60 100v12M8 60h12M100 60h12M23 23l9 9M88 88l9 9M23 97l9-9M88 32l9-9"/></g></svg>
+        <div><h3>Sol</h3><p>Só é visto <b>de dia</b>.</p></div>
+      </div>
+      <div class="painel" data-passo="2" style="display:grid;grid-template-columns:120px 1fr;gap:20px;align-items:center">
+        <svg viewBox="0 0 120 120" aria-hidden="true"><rect x="4" y="4" width="112" height="112" rx="24" fill="#BFE0F7"/><g class="cint" fill="#fff"><circle cx="30" cy="34" r="5"/><circle cx="78" cy="26" r="4"/><circle cx="56" cy="64" r="5"/><circle cx="92" cy="80" r="4"/><circle cx="28" cy="88" r="4"/></g></svg>
+        <div><h3>Estrelas</h3><p>Estão no céu <b>também de dia</b>: a luz do Sol espalhada no ar as <b>esconde</b>.</p></div>
+      </div>
+      <div class="painel" data-passo="3" style="display:grid;grid-template-columns:120px 1fr;gap:20px;align-items:center">
+        <svg viewBox="0 0 120 120" aria-hidden="true"><circle cx="60" cy="60" r="40" fill="#3A3550"/><path d="M60 20 A40 40 0 0 0 60 100 A18 40 0 0 0 60 20 Z" fill="#F3F1FA"/><circle cx="60" cy="60" r="40" fill="none" stroke="#292B2C" stroke-width="3"/></svg>
+        <div><h3>Lua</h3><p>Pode aparecer <b>de noite ou de dia</b>, conforme a sua fase.</p></div>
+      </div>
+      <div class="painel" data-passo="4" style="display:grid;grid-template-columns:120px 1fr;gap:20px;align-items:center">
+        <svg viewBox="0 0 120 120" aria-hidden="true"><rect x="4" y="4" width="112" height="112" rx="24" fill="#4B3C8F"/><rect x="4" y="88" width="112" height="28" rx="0" fill="#2B2357"/><path d="M60 42 l6 14 l14 6 l-14 6 l-6 14 l-6 -14 l-14 -6 l14 -6 z" fill="#FFF4C2"/></svg>
+        <div><h3>Planetas</h3><p>Vênus, Júpiter e Marte parecem <b>estrelas muito brilhantes</b>.</p></div>
+      </div>
+    </div>
+    <div class="caixa caixa-atencao" data-passo="5" style="position:absolute;left:600px;right:0;top:640px;padding:20px 30px">
+      <div class="texto" style="font-size:30px"><b>Vênus</b> costuma aparecer perto do horizonte, logo <b>depois do pôr do sol</b> ou <b>antes do nascer</b>.</div>
+    </div>
+  </div>
+  <aside class="notas">
+    <p>Um astro por clique. Pergunte antes: "a Lua só aparece à noite?" (não, ela pode ser vista de dia, conforme a fase). "As estrelas vão embora de dia?" (não, ficam escondidas pela claridade do céu).</p>
+    <p>Clique 5: o "ponto brilhante" do fim da tarde perto do horizonte costuma ser Vênus. Tudo da apostila (1.1).</p>
+  </aside>
+</section>
+
+<!-- 5. O céu era o relógio -->
+<section class="slide" data-nome="Medidas de tempo">
+  <div class="conteudo">
+    <p class="olho">Medidas de tempo e calendário</p>
+    <h2 class="titulo">Antes dos relógios, o céu era o relógio</h2>
+    <table class="ceu-tab" style="position:absolute;left:0;right:0;top:170px;width:100%">
+      <tr><th style="width:330px">Medida</th><th>De onde vem</th></tr>
+      <tr data-passo="1"><td><svg viewBox="0 0 64 64" aria-hidden="true"><circle cx="32" cy="32" r="24" fill="#4C9BE8"/><path d="M32 8 A24 24 0 0 1 32 56 Z" fill="#2B2357" opacity=".85"/><circle cx="32" cy="32" r="24" fill="none" stroke="#292B2C" stroke-width="3"/></svg>Dia (24 h)</td><td>uma <b>rotação</b> da Terra: o dia claro e a noite</td></tr>
+      <tr data-passo="2"><td><svg viewBox="0 0 64 64" aria-hidden="true"><circle cx="32" cy="32" r="24" fill="#3A3550"/><path d="M32 8 A24 24 0 0 0 32 56 Z" fill="#F3F1FA"/><circle cx="32" cy="32" r="24" fill="none" stroke="#292B2C" stroke-width="3"/></svg>Semana (7 dias)</td><td>cerca de <b>um quarto</b> do ciclo da Lua</td></tr>
+      <tr data-passo="3"><td><svg viewBox="0 0 64 64" aria-hidden="true"><circle cx="32" cy="32" r="24" fill="#F3F1FA"/><circle cx="32" cy="32" r="24" fill="none" stroke="#292B2C" stroke-width="3"/><circle cx="24" cy="26" r="4" fill="#D9D5E8"/><circle cx="40" cy="40" r="5" fill="#D9D5E8"/></svg>Mês (cerca de 30 dias)</td><td>um ciclo de <b>fases da Lua</b>, de 29 dias e meio</td></tr>
+      <tr data-passo="4"><td><svg viewBox="0 0 64 64" aria-hidden="true"><ellipse cx="32" cy="32" rx="28" ry="16" fill="none" stroke="#8C7BEA" stroke-width="3" stroke-dasharray="4 4"/><circle cx="32" cy="32" r="9" fill="#FFD10C"/><circle cx="58" cy="30" r="6" fill="#4C9BE8" stroke="#292B2C" stroke-width="2"/></svg>Ano (365 dias)</td><td>uma <b>translação</b> da Terra: o ciclo das estações</td></tr>
+    </table>
+  </div>
+  <aside class="notas">
+    <p>O nascer e o pôr do sol, as fases da Lua e a volta das estações deram origem às nossas medidas de tempo. Uma linha por clique; peça à turma o "de onde vem" antes de clicar.</p>
+    <p>Tabela da apostila (1.1, "Medidas de tempo e calendário"). Rotação e translação são aprofundadas em Sistema Sol, Terra e Lua; as fases da Lua também.</p>
+  </aside>
+</section>
+
+<!-- 6. Períodos do dia -->
+<section class="slide" data-nome="Períodos do dia">
+  <div class="conteudo">
+    <p class="olho">O dia se divide em períodos</p>
+    <h2 class="titulo">Madrugada, manhã, tarde e noite</h2>
+    <svg viewBox="0 0 1760 380" style="position:absolute;left:0;top:150px;width:1760px;height:380px" aria-hidden="true">
+      <rect x="40" y="300" width="1680" height="22" rx="11" fill="#CFE5C0"/>
+      <path d="M380 310 A500 260 0 0 1 1380 310" fill="none" stroke="#E0A100" stroke-width="4" stroke-dasharray="4 12"/>
+      <g data-passo="1"><circle cx="380" cy="300" r="30" fill="#FFD10C" stroke="#F0A500" stroke-width="4"/><text x="380" y="370" class="rot-fig" text-anchor="middle" style="font-size:28px;fill:#3F2FA0;font-weight:800">nascer do sol</text></g>
+      <g data-passo="2"><circle cx="880" cy="50" r="34" fill="#FFD10C" stroke="#F0A500" stroke-width="4"/><text x="880" y="128" class="rot-fig" text-anchor="middle" style="font-size:28px;fill:#3F2FA0;font-weight:800">meio-dia</text><text x="880" y="160" class="rot-fig" text-anchor="middle" style="font-size:24px">Sol mais alto</text></g>
+      <g data-passo="3"><circle cx="1380" cy="300" r="30" fill="#FFD10C" stroke="#F0A500" stroke-width="4"/><text x="1380" y="370" class="rot-fig" text-anchor="middle" style="font-size:28px;fill:#3F2FA0;font-weight:800">pôr do sol</text></g>
+      <g data-passo="4">
+        <text x="620" y="240" class="rot-fig" text-anchor="middle" style="font-size:38px;fill:#0B6B6D;font-weight:800">manhã</text>
+        <text x="1140" y="240" class="rot-fig" text-anchor="middle" style="font-size:38px;fill:#0B6B6D;font-weight:800">tarde</text>
+      </g>
+      <g data-passo="5">
+        <text x="160" y="240" class="rot-fig" text-anchor="middle" style="font-size:34px;fill:#4B39B3;font-weight:800">madrugada</text>
+        <text x="1600" y="240" class="rot-fig" text-anchor="middle" style="font-size:34px;fill:#4B39B3;font-weight:800">noite</text>
+      </g>
+    </svg>
+    <div style="position:absolute;left:600px;right:0;top:600px;display:flex;flex-direction:column;gap:16px">
+      <div class="linha-ex" data-passo="4"><b>Manhã:</b> do nascer do sol até o meio-dia. <b>Tarde:</b> do meio-dia até o pôr do sol.</div>
+      <div class="linha-ex" data-passo="5">A noite e a madrugada são a parte <b>sem Sol</b> do dia de 24 horas.</div>
+    </div>
+  </div>
+  <aside class="notas">
+    <p>Cliques 1 a 3: nascer do sol, meio-dia (quando o Sol fica mais alto no céu) e pôr do sol. Clique 4: manhã e tarde, como define a apostila. Clique 5: madrugada e noite.</p>
+    <p>A apostila só cita os quatro períodos e define manhã e tarde; a frase do clique 5 só junta os dois períodos sem Sol, sem horário fixo.</p>
+  </aside>
+</section>
+
+<!-- 7. Ano bissexto -->
+<section class="slide" data-nome="Ano bissexto">
+  <div class="conteudo">
+    <p class="olho">Medidas de tempo e calendário</p>
+    <h2 class="titulo">De onde vem o 29 de fevereiro</h2>
+    <div style="position:absolute;left:0;width:820px;top:160px;display:flex;flex-direction:column;gap:16px">
+      <p class="texto" style="margin:0;font-size:32px">A translação não dura exatamente 365 dias, mas cerca de <b>365 dias e 6 horas</b>.</p>
+      <p class="texto" data-passo="1" style="margin:0;font-size:28px;color:var(--cinza)">\(n = 4\) anos e \(h = 6\) horas a mais por ano.</p>
+      <div class="caixa" data-passo="1" style="padding:20px 30px">
+        <span class="rotulo">As horas que sobram em 4 anos</span>
+        <div class="contas" style="font-size:40px;row-gap:8px">
+          <div class="eq" data-passo="2"><span>\(H\)</span><span>\(=\)</span><span>\(n \cdot h\)</span></div>
+          <div class="eq" data-passo="3"><span>\(H\)</span><span>\(=\)</span><span>\(4 \cdot 6\)</span></div>
+          <div class="eq final" data-passo="4"><span>\(H\)</span><span>\(=\)</span><span>\(24\ \text{h}\)</span></div>
+        </div>
+      </div>
+    </div>
+    <svg viewBox="0 0 520 470" style="position:absolute;left:1000px;top:150px;width:520px;height:470px" aria-hidden="true">
+      <rect x="10" y="10" width="500" height="450" rx="34" fill="#fff" stroke="#DCD6F3" stroke-width="3"/>
+      <rect x="10" y="10" width="500" height="80" rx="34" fill="var(--d)"/><rect x="10" y="60" width="500" height="30" fill="var(--d)"/>
+      <text x="260" y="66" text-anchor="middle" font-family="'Bricolage Grotesque',Figtree,sans-serif" font-size="40" font-weight="800" fill="#fff">fevereiro</text>
+      <g font-family="Figtree,sans-serif" font-size="30" font-weight="700" fill="#5E5A70" text-anchor="middle">
+        <text x="70" y="150">1</text><text x="140" y="150">2</text><text x="210" y="150">3</text><text x="280" y="150">4</text><text x="350" y="150">5</text><text x="420" y="150">6</text><text x="480" y="150">7</text>
+        <text x="70" y="220">8</text><text x="140" y="220">9</text><text x="210" y="220">10</text><text x="280" y="220">11</text><text x="350" y="220">12</text><text x="420" y="220">13</text><text x="480" y="220">14</text>
+        <text x="70" y="290">15</text><text x="140" y="290">16</text><text x="210" y="290">17</text><text x="280" y="290">18</text><text x="350" y="290">19</text><text x="420" y="290">20</text><text x="480" y="290">21</text>
+        <text x="70" y="360">22</text><text x="140" y="360">23</text><text x="210" y="360">24</text><text x="280" y="360">25</text><text x="350" y="360">26</text><text x="420" y="360">27</text><text x="480" y="360">28</text>
+      </g>
+      <g class="dia29" data-passo="5"><circle cx="70" cy="420" r="32" fill="#FFD10C"/><text x="70" y="431" text-anchor="middle" font-family="Figtree,sans-serif" font-size="32" font-weight="800" fill="#292B2C">29</text></g>
+    </svg>
+    <div class="caixa caixa-fundamental" data-passo="5" style="position:absolute;left:1000px;right:0;top:650px;padding:18px 28px">
+      <span class="rotulo">Ano bissexto</span>
+      <div class="texto" style="font-size:30px">A cada 4 anos, <b>um dia inteiro</b> a mais: 29 de fevereiro. O ano tem <b>366 dias</b>.</div>
+    </div>
+  </div>
+  <aside class="notas">
+    <p>Clique 1: a ideia; cliques 2 a 4: a conta, uma linha por clique (6 horas por ano, em 4 anos, dão 24 horas). Clique 5: o dia que entra no calendário.</p>
+    <p>Da apostila. Se perguntarem: há também a regra dos anos terminados em 00, mas ela não está na apostila do IF e não é cobrada.</p>
+  </aside>
+</section>
+
+<!-- 8. Atenção: mês -->
+<section class="slide" data-nome="Atenção: mês e Lua">
+  <div class="conteudo">
+    <p class="olho">Atenção</p>
+    <h2 class="titulo">Mês do calendário não é mês da Lua</h2>
+    <div class="caixa caixa-atencao" style="position:absolute;left:0;right:0;top:160px;padding:24px 34px">
+      <div class="texto">Os meses do calendário têm <b>28, 29, 30 ou 31 dias</b> e não acompanham mais as fases da Lua. O ciclo da Lua dura cerca de <b>29 dias e meio</b>.</div>
+    </div>
+    <div data-passo="1" style="position:absolute;left:0;right:0;top:380px;display:grid;grid-template-columns:repeat(3,1fr);gap:30px">
+      <div class="painel" style="text-align:center"><svg viewBox="0 0 120 120" style="width:96px;height:96px" aria-hidden="true"><circle cx="60" cy="60" r="44" fill="#F3F1FA" stroke="#292B2C" stroke-width="3"/></svg><p>lua cheia: dia <b>3</b> de um mês…</p></div>
+      <div class="painel" style="text-align:center"><svg viewBox="0 0 120 120" style="width:96px;height:96px" aria-hidden="true"><circle cx="60" cy="60" r="44" fill="#F3F1FA" stroke="#292B2C" stroke-width="3"/></svg><p>…dia <b>2</b> do mês seguinte…</p></div>
+      <div class="painel" style="text-align:center"><svg viewBox="0 0 120 120" style="width:96px;height:96px" aria-hidden="true"><circle cx="60" cy="60" r="44" fill="#F3F1FA" stroke="#292B2C" stroke-width="3"/></svg><p>…e assim por diante.</p></div>
+    </div>
+    <span class="pilula pilula-resposta" data-passo="2" style="position:absolute;right:0;top:720px">A lua cheia cai em dias diferentes a cada mês</span>
+  </div>
+  <aside class="notas">
+    <p>Da apostila (atenção "Mês do calendário não é mês da Lua"). Os dias 3 e 2 do clique 1 são só uma ilustração de como a data da lua cheia escorrega: como o ciclo tem 29 dias e meio e o mês tem 30 ou 31, a data muda de um mês para o outro. Não são datas de um ano específico.</p>
+  </aside>
+</section>
+
+<!-- 9. Exemplo: horas na semana -->
+<section class="slide" data-nome="Exemplo: horas na semana">
+  <div class="conteudo">
+    <p class="olho">Exemplo</p>
+    <h2 class="titulo">Quantas horas tem uma semana?</h2>
+    <div style="position:absolute;left:0;width:760px;top:170px">
+      <div class="caixa" style="padding:24px 32px">
+        <span class="rotulo">Dados</span>
+        <div class="texto">A semana tem \(n = 7\) dias.<br>Cada dia tem \(h = 24\) horas.</div>
+      </div>
+      <p class="texto" style="margin:26px 0 0">O total \(H\) é o número de dias vezes as horas de cada dia.</p>
+    </div>
+    <div style="position:absolute;left:900px;right:0;top:170px">
+      <div class="contas" style="font-size:54px;row-gap:24px">
+        <div class="eq" data-passo="1"><span>\(H\)</span><span>\(=\)</span><span>\(n \cdot h\)</span></div>
+        <div class="eq" data-passo="2"><span>\(H\)</span><span>\(=\)</span><span>\(7 \cdot 24\)</span></div>
+        <div class="eq final" data-passo="3"><span>\(H\)</span><span>\(=\)</span><span>\(168\ \text{h}\)</span></div>
+      </div>
+    </div>
+    <span class="pilula pilula-resposta" data-passo="4" style="position:absolute;right:0;top:620px">Resposta: 168 horas</span>
+  </div>
+  <aside class="notas">
+    <p>Exemplo da apostila ("Horas na semana"). Uma linha por clique. Conta: 7 · 24 = 168 (7 · 20 = 140 e 7 · 4 = 28).</p>
+  </aside>
+</section>
+
+<!-- 10. Gnômon -->
+<section class="slide" data-nome="Gnômon">
+  <div class="conteudo">
+    <p class="olho">A sombra mostra o movimento do Sol</p>
+    <h2 class="titulo">O gnômon: uma vara e a sua sombra</h2>
+    <div data-anima="gnomon" data-modo="dia" data-anima-passo="1" data-w="960" data-h="460" style="position:absolute;left:0;top:140px;width:960px;height:460px"></div>
+    <div style="position:absolute;left:1060px;right:0;top:160px;display:flex;flex-direction:column;gap:18px">
+      <div class="linha-ex" data-passo="2"><b>Manhã:</b> Sol baixo a leste. Sombra <b>longa</b>, apontando para <b>oeste</b>.</div>
+      <div class="linha-ex" data-passo="3"><b>Meio-dia:</b> Sol mais alto. Sombra <b>mais curta</b>.</div>
+      <div class="linha-ex" data-passo="4"><b>Tarde:</b> Sol a oeste. Sombra volta a crescer, apontando para <b>leste</b>.</div>
+      <div class="caixa caixa-fundamental" data-passo="5" style="padding:18px 28px">
+        <div class="texto" style="font-size:30px">A sombra fica sempre do lado <b>oposto ao Sol</b>.</div>
+      </div>
+    </div>
+  </div>
+  <aside class="notas">
+    <p><b>Gnômon</b> é uma vara fincada na vertical. Clique 1: o Sol cruza o céu; a sombra encolhe até o meio-dia e depois cresce para o outro lado. As marcas lilás ficam no chão (manhã, meio-dia e tarde), como os alunos fariam com giz. Depois vem a noite, e o ciclo recomeça.</p>
+    <p>Cliques 2 a 5: o que a apostila descreve. A mudança ao longo do dia vem da rotação da Terra. Esquema fora de escala; a sombra do meio-dia aponta, na verdade, para o sul ou para o norte, fora do plano do desenho (por isso aqui ela quase some).</p>
+  </aside>
+</section>
+
+<!-- 11. A sombra ao longo do ano -->
+<section class="slide" data-nome="A sombra ao longo do ano">
+  <div class="conteudo">
+    <p class="olho">A sombra conta a história</p>
+    <h2 class="titulo">E a sombra do meio-dia ao longo do ano?</h2>
+    <div data-anima="gnomon" data-modo="ano" data-anima-passo="1" data-w="900" data-h="450" style="position:absolute;left:0;top:150px;width:900px;height:450px"></div>
+    <div style="position:absolute;left:980px;right:0;top:160px;display:flex;flex-direction:column;gap:18px">
+      <div class="linha-ex" data-passo="2">Em Minas Gerais, a sombra do meio-dia é <b>mais longa no inverno</b> (junho)…</div>
+      <div class="linha-ex" data-passo="3">…e <b>mais curta no verão</b> (dezembro).</div>
+      <div class="caixa caixa-fundamental" data-passo="4" style="padding:18px 28px">
+        <span class="rotulo">A sombra conta a história</span>
+        <div class="texto" style="font-size:28px">Ao longo do <b>dia</b>, a sombra muda pela <b>rotação</b>. Ao longo do <b>ano</b>, a do meio-dia muda pela <b>translação</b> e pela <b>inclinação do eixo</b> da Terra.</div>
+      </div>
+    </div>
+  </div>
+  <aside class="notas">
+    <p>Clique 1: agora o desenho mostra só o meio-dia, visto de lado (sul à esquerda, norte à direita). O Sol do meio-dia sobe e desce ao longo do ano: baixo em junho (sombra longa), quase a pino em dezembro (sombra bem curta).</p>
+    <p>As alturas usadas na animação (cerca de 45° em junho e 88° em dezembro) são as do Sol do meio-dia em Juiz de Fora (latitude de cerca de 21,8° S); não precisam ser ditas. A explicação completa das estações vem em Sistema Sol, Terra e Lua.</p>
+  </aside>
+</section>
+
+<!-- 12. Exemplo: que horas são? -->
+<section class="slide" data-nome="Exemplo: que horas são?">
+  <div class="conteudo">
+    <p class="olho">Exemplo</p>
+    <h2 class="titulo">Manhã ou tarde?</h2>
+    <p class="texto" style="position:absolute;left:0;width:880px;top:160px;margin:0">Kauã vê a sombra de um poste <b>bem comprida</b>, apontando para <b>oeste</b>. É de manhã ou de tarde?</p>
+    <svg viewBox="0 0 860 330" style="position:absolute;left:0;top:290px;width:784px;height:300px" aria-hidden="true">
+      <rect x="0" y="260" width="860" height="22" rx="11" fill="#CFE5C0"/>
+      <text x="10" y="318" class="rot-fig">leste</text><text x="850" y="318" class="rot-fig" text-anchor="end">oeste</text>
+      <line x1="300" y1="266" x2="300" y2="110" stroke="#292B2C" stroke-width="10" stroke-linecap="round"/>
+      <line x1="300" y1="268" x2="760" y2="268" stroke="#4A4560" stroke-width="16" stroke-linecap="round" opacity=".85"/>
+      <g data-passo="2"><circle cx="70" cy="200" r="34" fill="#FFD10C" stroke="#F0A500" stroke-width="4"/><line x1="100" y1="196" x2="760" y2="262" stroke="#E0A100" stroke-width="3" stroke-dasharray="4 8"/></g>
+      <text x="530" y="236" class="rot-fig" text-anchor="middle" style="fill:#3F2FA0;font-weight:800">sombra</text>
+    </svg>
+    <div style="position:absolute;left:940px;right:0;top:340px;display:flex;flex-direction:column;gap:18px">
+      <div class="linha-ex" data-passo="1"><b>Raciocínio:</b> a sombra aponta para o lado <b>contrário</b> ao do Sol.</div>
+      <div class="linha-ex" data-passo="2">Sombra para <b>oeste</b> → Sol a <b>leste</b>, baixo, perto do horizonte.</div>
+      <div class="linha-ex" data-passo="3">Sol baixo a leste: o Sol acabou de nascer.</div>
+    </div>
+    <span class="pilula pilula-resposta" data-passo="4" style="position:absolute;right:0;top:720px">Resposta: é de manhã</span>
+  </div>
+  <aside class="notas">
+    <p>Exemplo da apostila ("Que horas são?"). Peça a resposta antes do clique 1. A sombra comprida diz que o Sol está baixo; o lado da sombra diz em que lado do céu ele está.</p>
+  </aside>
+</section>
+
+<!-- 13. Questão 1 -->
+<section class="slide questao" data-nome="Questão 1">
+  <div class="conteudo">
+    <div class="area-resolucao"></div>
+    <span class="pilula pilula-pausa" data-em="1:some">Pause o vídeo e tente</span>
+    <div class="painel-questao">
+      <p class="olho">Questão 1 · Modelo IF</p>
+      <p class="enunciado" style="font-size:25px">Muito antes dos relógios e dos calendários impressos, os povos marcavam a passagem do tempo pelos ciclos que viam no céu: o dia claro e a noite, as fases da Lua e a volta das estações. Até hoje, as principais medidas de tempo do nosso calendário vêm desses ciclos.</p>
+      <p class="enunciado" style="font-size:25px">O <b>ano</b>, de cerca de 365 dias, corresponde ao tempo que a Terra leva para</p>
+      <ol class="alternativas" style="gap:8px">
+        <li data-em="2:apaga" style="font-size:23px;padding:6px 14px"><b>A</b><span>girar uma vez em torno do próprio eixo.</span></li>
+        <li data-em="2:apaga" style="font-size:23px;padding:6px 14px"><b>B</b><span>completar um ciclo de fases da Lua.</span></li>
+        <li data-em="2:certo" style="font-size:23px;padding:6px 14px"><b>C</b><span>dar uma volta completa em torno do Sol.</span></li>
+        <li data-em="2:apaga" style="font-size:23px;padding:6px 14px"><b>D</b><span>passar por um quarto do ciclo das fases da Lua.</span></li>
+        <li data-em="2:apaga" style="font-size:23px;padding:6px 14px"><b>E</b><span>ir do nascer ao pôr do sol.</span></li>
+      </ol>
+    </div>
+  </div>
+  <aside class="resolucao">
+    <p class="dados"><b>Dados:</b> o ano tem cerca de 365 dias.</p>
+    <ol class="passos">
+      <li>Dia: uma rotação (24 h).</li>
+      <li>Semana: um quarto do ciclo da Lua.</li>
+      <li>Mês: um ciclo de fases (29,5 dias).</li>
+      <li>Ano: uma translação, a volta no Sol.</li>
+    </ol>
+    <p class="resposta"><b>Resposta:</b> uma volta completa em torno do Sol. <b>Gabarito C.</b></p>
+    <p class="atencao"><b>Destaque no quadro:</b> Rotação → dia. Translação → ano.</p>
+    <ul class="erros">
+      <li><b>A</b> Girar no próprio eixo é a rotação: o dia.</li>
+      <li><b>B</b> Um ciclo de fases da Lua deu origem ao mês.</li>
+      <li><b>D</b> Um quarto do ciclo da Lua deu origem à semana.</li>
+      <li><b>E</b> Do nascer ao pôr do sol é só o dia claro.</li>
+    </ul>
+  </aside>
+  <aside class="notas">
+    <p>Clique 1 tira o aviso de pausa: resolva na área (D liga a caneta; E esconde o enunciado). Clique 2: gabarito C.</p>
+    <p>Modelo IF, lote if-fisica-observacao-do-ceu, m002, FIS-8722 (nível 1). Está na apostila do IF, 1.1.</p>
+  </aside>
+</section>
+
+<!-- 14. Questão 2 -->
+<section class="slide questao" data-nome="Questão 2">
+  <div class="conteudo">
+    <div class="area-resolucao"></div>
+    <span class="pilula pilula-pausa" data-em="1:some">Pause o vídeo e tente</span>
+    <div class="painel-questao" style="gap:10px">
+      <p class="olho">Questão 2 · Modelo IF</p>
+      <p class="enunciado" style="font-size:21px">Durante uma semana de céu limpo, Lívia, que mora em Juiz de Fora, anotou no caderno o que viu no céu:</p>
+      <table style="border-collapse:collapse;font-size:18px;line-height:1.3;background:#fff;border:2px solid var(--lilas-2)">
+        <tr style="background:var(--d-clara);color:var(--d-forte);font-weight:800"><td style="padding:4px 8px">Nº</td><td style="padding:4px 8px">Hora</td><td style="padding:4px 8px">O que Lívia viu</td></tr>
+        <tr><td style="padding:4px 8px;border-top:1px solid var(--lilas-2)">1</td><td style="padding:4px 8px;border-top:1px solid var(--lilas-2)">7 h</td><td style="padding:4px 8px;border-top:1px solid var(--lilas-2)">O Sol estava baixo, do lado leste.</td></tr>
+        <tr><td style="padding:4px 8px;border-top:1px solid var(--lilas-2)">2</td><td style="padding:4px 8px;border-top:1px solid var(--lilas-2)">10 h</td><td style="padding:4px 8px;border-top:1px solid var(--lilas-2)">A Lua estava no céu, que estava claro.</td></tr>
+        <tr><td style="padding:4px 8px;border-top:1px solid var(--lilas-2)">3</td><td style="padding:4px 8px;border-top:1px solid var(--lilas-2);white-space:nowrap">18 h 30</td><td style="padding:4px 8px;border-top:1px solid var(--lilas-2)">Logo depois do pôr do sol, um ponto muito brilhante perto do horizonte, do lado oeste.</td></tr>
+        <tr><td style="padding:4px 8px;border-top:1px solid var(--lilas-2)">4</td><td style="padding:4px 8px;border-top:1px solid var(--lilas-2)">16 h</td><td style="padding:4px 8px;border-top:1px solid var(--lilas-2)">A sombra do poste da rua apontava para leste.</td></tr>
+      </table>
+      <p class="enunciado" style="font-size:21px">Um colega disse que algumas anotações eram impossíveis. Analisando as anotações, é <b>CORRETO</b> afirmar que</p>
+      <ol class="alternativas" style="gap:6px">
+        <li data-em="2:apaga" style="font-size:19px;padding:4px 12px"><b>A</b><span>a anotação 2 é impossível, porque a Lua só aparece no céu à noite.</span></li>
+        <li data-em="2:apaga" style="font-size:19px;padding:4px 12px"><b>B</b><span>a anotação 1 é impossível, porque às 7 h o Sol fica do lado oeste.</span></li>
+        <li data-em="2:apaga" style="font-size:19px;padding:4px 12px"><b>C</b><span>na anotação 3, o ponto brilhante só pode ser uma estrela, porque planetas não são vistos a olho nu.</span></li>
+        <li data-em="2:certo" style="font-size:19px;padding:4px 12px"><b>D</b><span>todas as anotações são possíveis; na anotação 3, o ponto brilhante pode ser Vênus, que costuma aparecer perto do horizonte logo depois do pôr do sol.</span></li>
+        <li data-em="2:apaga" style="font-size:19px;padding:4px 12px"><b>E</b><span>a anotação 4 é impossível, porque à tarde a sombra aponta para oeste.</span></li>
+      </ol>
+    </div>
+  </div>
+  <aside class="resolucao">
+    <p class="dados"><b>Dados:</b> quatro anotações; conferir uma a uma.</p>
+    <ol class="passos">
+      <li>1: Sol nasce a leste: às 7 h, baixo a leste. ✓</li>
+      <li>2: a Lua pode aparecer de dia. ✓</li>
+      <li>3: Vênus: perto do horizonte após o pôr do sol. ✓</li>
+      <li>4: 16 h: Sol a oeste → sombra para leste. ✓</li>
+    </ol>
+    <p class="resposta"><b>Resposta:</b> todas são possíveis. <b>Gabarito D.</b></p>
+    <p class="atencao"><b>Destaque no quadro:</b> A sombra aponta para o lado oposto ao do Sol.</p>
+    <ul class="erros">
+      <li><b>A</b> A Lua pode ser vista de dia, conforme a fase.</li>
+      <li><b>B</b> Às 7 h o Sol está a leste; a oeste ele fica à tarde.</li>
+      <li><b>C</b> Vênus, Júpiter e Marte são vistos a olho nu.</li>
+      <li><b>E</b> À tarde o Sol está a oeste; a sombra aponta para leste.</li>
+    </ul>
+  </aside>
+  <aside class="notas">
+    <p>Clique 1 tira o aviso de pausa: resolva na área (D liga a caneta; E esconde o enunciado). Clique 2: gabarito D.</p>
+    <p>Modelo IF, lote if-fisica-observacao-do-ceu, m008, FIS-8728 (nível 4). A tabela foi reduzida na coluna "Anotação" para "Nº" e "Horário" para "Hora", só para caber; o conteúdo é o mesmo.</p>
+  </aside>
+</section>
+
+<!-- 15. Questão 3 -->
+<section class="slide questao" data-nome="Questão 3">
+  <div class="conteudo">
+    <div class="area-resolucao"></div>
+    <span class="pilula pilula-pausa" data-em="1:some">Pause o vídeo e tente</span>
+    <div class="painel-questao" style="gap:10px">
+      <p class="olho">Questão 3 · Modelo IF</p>
+      <p class="enunciado" style="font-size:21px">Juliana nasceu em Juiz de Fora no dia 29 de fevereiro de 2012, num ano bissexto. Ela só comemora o aniversário na data exata quando o calendário tem o dia 29 de fevereiro; nos outros anos, faz a festa em 28 de fevereiro ou em 1º de março.</p>
+      <p class="enunciado" style="font-size:21px">Sobre o calendário e os aniversários de Juliana, é <b>CORRETO</b> afirmar que</p>
+      <ol class="alternativas" style="gap:6px">
+        <li data-em="2:apaga" style="font-size:19px;padding:4px 12px"><b>A</b><span>o ano bissexto existe porque a rotação da Terra dura um pouco mais de 24 horas.</span></li>
+        <li data-em="2:apaga" style="font-size:19px;padding:4px 12px"><b>B</b><span>de 2013 até 2026, Juliana teve 7 aniversários na data exata, porque o ano bissexto acontece a cada 2 anos.</span></li>
+        <li data-em="2:certo" style="font-size:19px;padding:4px 12px"><b>C</b><span>as cerca de 6 horas que sobram a cada translação formam um dia inteiro em 4 anos; de 2013 até 2026, Juliana teve 3 aniversários na data exata.</span></li>
+        <li data-em="2:apaga" style="font-size:19px;padding:4px 12px"><b>D</b><span>as cerca de 6 horas que sobram a cada translação formam um dia inteiro em 4 anos; de 2013 até 2026, Juliana teve 4 aniversários na data exata.</span></li>
+        <li data-em="2:apaga" style="font-size:19px;padding:4px 12px"><b>E</b><span>o ano bissexto tem 366 dias para acompanhar as fases da Lua, que duram 29 dias e meio.</span></li>
+      </ol>
+    </div>
+  </div>
+  <aside class="resolucao">
+    <p class="dados"><b>Dados:</b> translação: 365 dias e 6 h; nasceu em 2012 (bissexto).</p>
+    <ol class="passos">
+      <li>Sobra em 4 anos: \(H = 4 \cdot 6 = 24\ \text{h}\).</li>
+      <li>24 h = 1 dia: bissexto a cada 4 anos.</li>
+      <li>2012 + 4 → 2016, 2020, 2024, 2028.</li>
+      <li>De 2013 a 2026: 2016, 2020 e 2024 → 3.</li>
+    </ol>
+    <p class="resposta"><b>Resposta:</b> 6 h por ano formam 1 dia em 4 anos; 3 aniversários. <b>Gabarito C.</b></p>
+    <p class="atencao"><b>Destaque no quadro:</b> O dia em que ela nasceu (2012) não é aniversário.</p>
+    <ul class="erros">
+      <li><b>A</b> O bissexto vem da translação, não da rotação.</li>
+      <li><b>B</b> O bissexto é a cada 4 anos, não a cada 2.</li>
+      <li><b>D</b> Conta 2012 (o nascimento) ou 2028, fora do período.</li>
+      <li><b>E</b> O calendário não acompanha mais as fases da Lua.</li>
+    </ul>
+  </aside>
+  <aside class="notas">
+    <p>Clique 1 tira o aviso de pausa: resolva na área (D liga a caneta; E esconde o enunciado). Clique 2: gabarito C.</p>
+    <p>Modelo IF, lote if-fisica-observacao-do-ceu, m006, FIS-8726 (nível 4). Conta conferida: 4 · 6 = 24 h; anos múltiplos de 4 entre 2013 e 2026: 2016, 2020, 2024 (três).</p>
+  </aside>
+</section>
+
+<!-- 16. Resumo -->
+<section class="slide" data-nome="Resumo">
+  <div class="conteudo">
+    <p class="olho">Resumo</p>
+    <h2 class="titulo">O essencial</h2>
+    <div class="resumo" style="position:absolute;left:0;right:0;top:150px">
+      <div>O Sol <b>nasce a leste</b> e se <b>põe a oeste</b>. O movimento é <b>aparente</b>: quem gira é a Terra (rotação).</div>
+      <div>As estrelas estão no céu de dia, <b>escondidas</b> pela luz do Sol. A Lua pode aparecer de dia ou de noite.</div>
+      <div><b>Dia</b> (rotação), <b>semana</b> (um quarto do ciclo da Lua), <b>mês</b> (fases da Lua), <b>ano</b> (translação).</div>
+      <div><b>Ano bissexto:</b> 6 h por ano viram 24 h em 4 anos: 29 de fevereiro, 366 dias.</div>
+      <div><b>Gnômon:</b> sombra longa para oeste de manhã, curta ao meio-dia, longa para leste à tarde.</div>
+      <div>Em Minas, a sombra do meio-dia é <b>longa no inverno</b> e <b>curta no verão</b>.</div>
+    </div>
+  </div>
+  <aside class="notas"><p>Peça para tirarem um print desta tela.</p></aside>
+</section>
+
+<!-- 17. A seguir -->
+<section class="slide capa" data-nome="A seguir">
+  <div class="estrelas"></div>
+  <div class="texto-capa" style="top:200px">
+    <span class="selo">Física · IF</span>
+    <p class="aula" style="font-size:28px">A seguir · Observação do céu · Parte 2 de 2</p>
+    <h1 style="font-size:120px">Constelações e leituras do céu</h1>
+    <p class="sub">As figuras no céu e o que cada povo viu nelas</p>
+  </div>
+  <svg class="emblema" viewBox="0 0 640 640" aria-hidden="true">
+    <g stroke="#fff" stroke-opacity=".6" stroke-width="3" fill="none"><path d="M210 140 L300 250 L430 230 L470 120 M300 250 L340 330 L380 340 L420 330 M340 330 L250 520 M420 330 L480 510"/></g>
+    <g fill="#FFD10C"><circle cx="210" cy="140" r="12"/><circle cx="470" cy="120" r="12"/><circle cx="340" cy="330" r="10"/><circle cx="380" cy="340" r="10"/><circle cx="420" cy="330" r="10"/><circle cx="250" cy="520" r="12"/><circle cx="480" cy="510" r="11"/></g>
+    <g fill="#fff"><circle cx="300" cy="250" r="8"/><circle cx="430" cy="230" r="8"/></g>
+  </svg>
+  <img class="logo-capa" src="{{LOGO_BRANCO}}" alt="Quarks">
+  <aside class="notas"><p>Próxima parte: constelações, o Cruzeiro do Sul para achar o sul, mapas celestes e como diferentes culturas leram o céu.</p></aside>
+</section>

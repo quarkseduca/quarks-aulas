@@ -1,0 +1,552 @@
+<!--aula
+{"disciplina": "fisica", "curso": "IF", "assunto": "Máquinas simples", "parte": "Parte 1 de 2", "titulo": "Alavancas", "scripts": ["animacoes-maquinas.js"]}
+-->
+<!-- Fonte: apostila IF, Física, cap. 2 Mecânica, 2.1 Máquinas simples (definição e unidade de força do bloco "Máquinas simples ao longo da história"; blocos "Alavancas interfixa, interpotente e inter-resistente" e "Equilíbrio da alavanca: força vezes braço"). A história e o "não se ganha energia" ficam na Parte 2, com as roldanas. Questões: Modelo IF, lote if-fisica-equilibrio-do-corpo-extenso (hoje no subcapítulo Máquinas simples): m001 FIS-1347, m003 FIS-1349, m005 FIS-1351. As três oficiais do capítulo (2024-1 q29, 2014-1-extra q39, 2013-2 q39) ficam reservadas para o bloco "Questões do IF Sudeste". -->
+<style>
+  .caixa, .cartao, .linha-ex, .painel { box-sizing: border-box; }
+  .linha-ex { background: var(--branco); border: 2px solid var(--lilas-2); border-radius: 24px; padding: 14px 26px; font-size: 30px; line-height: 1.3; }
+  .linha-ex b { color: var(--roxo-titulo); }
+  .painel { background: var(--branco); border: 2px solid var(--lilas-2); border-radius: 30px; padding: 18px 22px; }
+  .painel h3 { margin: 0 0 6px; font: 800 32px var(--fonte-titulo); letter-spacing: -.02em; color: var(--roxo-titulo); }
+  .painel p { margin: 6px 0 0; font-size: 24px; line-height: 1.32; }
+  .painel b { color: var(--roxo-titulo); }
+  .rot-fig { font-family: Figtree, "Segoe UI", sans-serif; font-weight: 700; font-size: 24px; fill: #5E5A70; }
+  .fp { fill: #0B6B6D; } .fr { fill: #C2384F; }
+  .tag { display: inline-block; padding: 5px 18px; border-radius: 999px; font-weight: 800; font-size: 23px; white-space: nowrap; }
+  .t-fixa { background: #E0F4F4; color: #0B6B6D; } .t-res { background: #FCE8EC; color: #C2384F; } .t-pot { background: #EFEBFF; color: #4B39B3; }
+  .linha-tag { display: grid; grid-template-columns: 1fr auto; align-items: center; gap: 16px; }
+  /* a colher que abre a lata */
+  @keyframes alavanca-colher { 0%, 15% { transform: rotate(0deg); } 45%, 70% { transform: rotate(-14deg); } 100% { transform: rotate(0deg); } }
+  @keyframes tampa-sobe { 0%, 22% { transform: translateY(0) rotate(0); } 45%, 70% { transform: translateY(-26px) rotate(-8deg); } 100% { transform: translateY(0) rotate(0); } }
+  .colher { transform-box: view-box; transform-origin: 200px 128px; }
+  .tampa { transform-box: view-box; transform-origin: 330px 128px; }
+  .slide.ativo .mostra .colher { animation: alavanca-colher 6s ease-in-out infinite; }
+  .slide.ativo .mostra .tampa { animation: tampa-sobe 6s ease-in-out infinite; }
+  /* as três alavancas balançam de leve em volta do apoio */
+  @keyframes balanca { 0%, 100% { transform: rotate(-4deg); } 50% { transform: rotate(3deg); } }
+  .bal-meio { transform-box: view-box; transform-origin: 240px 150px; }
+  .bal-esq { transform-box: view-box; transform-origin: 50px 150px; }
+  .slide.ativo .mostra .bal-meio, .slide.ativo .mostra .bal-esq { animation: balanca 5.5s ease-in-out infinite; }
+</style>
+
+<svg width="0" height="0" style="position:absolute" aria-hidden="true">
+  <defs>
+    <marker id="msSetaP" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="5" markerHeight="5" orient="auto-start-reverse"><path d="M0 0 L10 5 L0 10 z" fill="#0B6B6D"/></marker>
+    <marker id="msSetaR" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="5" markerHeight="5" orient="auto-start-reverse"><path d="M0 0 L10 5 L0 10 z" fill="#C2384F"/></marker>
+    <marker id="msCota" viewBox="0 0 10 10" refX="5" refY="5" markerWidth="5" markerHeight="5" orient="auto-start-reverse"><path d="M0 0 L10 5 L0 10 z" fill="#5E5A70"/></marker>
+  </defs>
+</svg>
+
+<!-- 1. Capa -->
+<section class="slide capa" data-nome="Capa">
+  <div class="estrelas"></div>
+  <div class="texto-capa">
+    <span class="selo">Física · IF</span>
+    <p class="aula">Máquinas simples · Parte 1 de 2</p>
+    <h1>Alavancas</h1>
+    <p class="sub">Apoio, força potente, força resistente e braço</p>
+  </div>
+  <svg class="emblema" viewBox="0 0 640 640" aria-hidden="true">
+    <g class="gira-lento"><ellipse cx="320" cy="320" rx="300" ry="128" fill="none" stroke="#fff" stroke-opacity=".38" stroke-width="2" transform="rotate(-10 320 320)"/></g>
+    <path d="M270 470 L320 380 L370 470 Z" fill="#FFD10C"/>
+    <g transform="rotate(-10 320 380)"><rect x="40" y="366" width="560" height="28" rx="14" fill="#fff"/>
+      <rect x="70" y="270" width="110" height="96" rx="16" fill="#FFD10C"/>
+      <circle cx="540" cy="330" r="32" fill="#fff" fill-opacity=".85"/></g>
+  </svg>
+  <img class="logo-capa" src="{{LOGO_BRANCO}}" alt="Quarks">
+  <aside class="notas"><p>Começa o capítulo Mecânica, com o subcapítulo Máquinas simples. Nesta parte: o que é máquina simples, força em newtons, os três tipos de alavanca e a regra do equilíbrio, força vezes braço (a única conta de Mecânica que a matriz do IF pede).</p></aside>
+</section>
+
+<!-- 2. Gancho: a colher -->
+<section class="slide" data-nome="A colher e a tampa">
+  <div class="conteudo">
+    <p class="olho">Para começar</p>
+    <h2 class="titulo">Uma colher abre a lata</h2>
+    <svg viewBox="0 0 560 330" style="position:absolute;left:1140px;top:150px;width:620px;height:365px" aria-hidden="true" data-passo="1">
+      <rect x="220" y="140" width="240" height="170" rx="12" fill="#D9D6E3" stroke="#8E8AA0" stroke-width="4"/>
+      <g class="tampa"><rect x="210" y="122" width="260" height="20" rx="8" fill="#B5ADC9" stroke="#8E8AA0" stroke-width="3"/></g>
+      <g class="colher"><path d="M20 98 L232 132" stroke="#8C7BEA" stroke-width="14" stroke-linecap="round"/><ellipse cx="34" cy="100" rx="30" ry="18" fill="#8C7BEA" transform="rotate(9 34 100)"/></g>
+      <path d="M190 132 L200 112 L210 132 Z" fill="#FFD10C" stroke="#E0A100" stroke-width="2"/>
+      <path d="M40 30 V70" stroke="#0B6B6D" stroke-width="6" marker-end="url(#msSetaP)"/>
+      <text x="56" y="44" class="rot-fig" style="fill:#0B6B6D;font-weight:800">mão</text>
+      <text x="168" y="104" class="rot-fig" style="font-size:20px">apoio</text>
+    </svg>
+    <div style="position:absolute;left:0;width:1060px;top:160px;display:flex;flex-direction:column;gap:18px">
+      <div class="linha-ex">Tente tirar uma tampa de lata apertada <b>só com os dedos</b>.</div>
+      <div class="linha-ex" data-passo="1">Agora com a ponta de uma <b>colher apoiada na borda</b>: sai fácil.</div>
+      <div class="caixa caixa-fundamental" data-passo="2" style="padding:20px 30px">
+        <span class="rotulo">Máquina simples</span>
+        <div class="texto" style="font-size:30px">Dispositivo <b>sem motor</b> que facilita uma tarefa: <b>diminui a força</b>, <b>muda a direção</b> da força ou <b>aumenta o alcance</b> de um movimento.</div>
+      </div>
+    </div>
+    <div class="linha-ex" data-passo="3" style="position:absolute;left:600px;right:0;top:600px">As principais: <b>alavanca</b>, <b>roldana</b>, <b>plano inclinado</b> e <b>roda com eixo</b>.</div>
+  </div>
+  <aside class="notas">
+    <p>Gancho da apostila: a colher apoiada na borda vira uma máquina simples. Clique 1: a mão empurra o cabo da colher para baixo; a ponta, do outro lado do apoio, levanta a tampa.</p>
+    <p>Cliques 2 e 3: a caixa "fundamental" da apostila. As outras três máquinas simples vêm na Parte 2.</p>
+  </aside>
+</section>
+
+<!-- 3. Força em newtons -->
+<section class="slide" data-nome="Força em newtons">
+  <div class="conteudo">
+    <p class="olho">Unidade</p>
+    <h2 class="titulo">Força se mede em newtons</h2>
+    <div class="caixa caixa-fundamental" style="position:absolute;left:0;width:1060px;top:170px;padding:26px 36px">
+      <span class="rotulo">Força</span>
+      <div class="texto">Medida em <b>newtons</b>, símbolo <b>N</b>.</div>
+    </div>
+    <div style="position:absolute;left:0;width:1060px;top:360px;display:flex;flex-direction:column;gap:18px">
+      <div class="linha-ex" data-passo="1">Na Terra, um objeto de <b>1 kg</b> pesa cerca de <b>10 N</b>.</div>
+      <div class="linha-ex" data-passo="2">Um saco de <b>50 kg</b> pesa cerca de <b>500 N</b>.</div>
+    </div>
+    <svg viewBox="0 0 520 520" style="position:absolute;left:1220px;top:150px;width:520px;height:520px" aria-hidden="true">
+      <g data-passo="1"><rect x="40" y="300" width="120" height="120" rx="16" fill="#E8C27A" stroke="#B8893A" stroke-width="4"/><text x="100" y="372" text-anchor="middle" class="rot-fig" style="font-size:32px;fill:#6E4B12;font-weight:800">1 kg</text>
+        <path d="M100 430 V500" stroke="#C2384F" stroke-width="7" marker-end="url(#msSetaR)"/><text x="120" y="492" class="rot-fig" style="fill:#C2384F;font-weight:800">≈ 10 N</text></g>
+      <g data-passo="2"><path d="M260 180 Q250 140 300 130 L420 130 Q470 140 460 180 L470 420 H250 Z" fill="#E4DEFB" stroke="#8C7BEA" stroke-width="4"/><text x="360" y="300" text-anchor="middle" class="rot-fig" style="font-size:40px;fill:#3F2FA0;font-weight:800">50 kg</text>
+        <path d="M360 430 V500" stroke="#C2384F" stroke-width="7" marker-end="url(#msSetaR)"/><text x="380" y="492" class="rot-fig" style="fill:#C2384F;font-weight:800">≈ 500 N</text></g>
+    </svg>
+    <div class="caixa caixa-atencao" data-passo="3" style="position:absolute;left:600px;width:560px;top:600px;padding:18px 26px">
+      <div class="texto" style="font-size:27px">kg é <b>massa</b>; N é <b>força</b>. Nas contas de alavanca, use <b>newtons</b>.</div>
+    </div>
+  </div>
+  <aside class="notas">
+    <p>Caixa "unidades" da apostila. Clique 3: lembrete para as questões (um erro comum, que aparece numa questão oficial do bloco do IF, é dar força em kg).</p>
+  </aside>
+</section>
+
+<!-- 4. A alavanca e seus elementos -->
+<section class="slide" data-nome="Elementos da alavanca">
+  <div class="conteudo">
+    <p class="olho">Alavanca</p>
+    <h2 class="titulo">Uma barra rígida que gira em torno de um ponto</h2>
+    <svg viewBox="0 0 1160 380" style="position:absolute;left:600px;top:170px;width:1160px;height:380px" aria-hidden="true">
+      <path d="M560 300 L600 230 L640 300 Z" fill="#8C7BEA"/>
+      <rect x="80" y="210" width="1000" height="24" rx="12" fill="#C9A26B" stroke="#8A6A3E" stroke-width="3"/>
+      <rect x="110" y="110" width="150" height="100" rx="14" fill="#E8C27A" stroke="#B8893A" stroke-width="4"/>
+      <g data-passo="1"><text x="600" y="350" text-anchor="middle" class="rot-fig" style="fill:#4B39B3;font-weight:800;font-size:30px">A · ponto de apoio</text></g>
+      <g data-passo="2"><path d="M1040 70 V196" stroke="#0B6B6D" stroke-width="8" marker-end="url(#msSetaP)"/><text x="1020" y="56" text-anchor="end" class="rot-fig fp" style="font-weight:800;font-size:30px">F<tspan baseline-shift="sub" font-size="20">P</tspan> · força potente</text></g>
+      <g data-passo="3"><path d="M185 240 V350" stroke="#C2384F" stroke-width="8" marker-end="url(#msSetaR)"/><text x="210" y="340" class="rot-fig fr" style="font-weight:800;font-size:30px">F<tspan baseline-shift="sub" font-size="20">R</tspan> · força resistente</text></g>
+    </svg>
+    <div style="position:absolute;left:0;width:540px;top:170px;display:flex;flex-direction:column;gap:14px">
+      <div class="linha-ex" data-passo="1" style="font-size:27px"><b>Apoio (A):</b> o ponto em torno do qual a barra gira.</div>
+      <div class="linha-ex" data-passo="2" style="font-size:27px"><b>Força potente:</b> a força que <b>você aplica</b>.</div>
+      <div class="linha-ex" data-passo="3" style="font-size:27px"><b>Força resistente:</b> a que você quer <b>vencer</b>: o peso, a tampa, o papel.</div>
+    </div>
+    <div class="caixa caixa-fundamental" data-passo="4" style="position:absolute;left:600px;right:0;top:600px;padding:18px 28px">
+      <div class="texto" style="font-size:30px">O <b>tipo</b> da alavanca depende de qual dos três elementos fica <b>no meio</b>.</div>
+    </div>
+  </div>
+  <aside class="notas">
+    <p>Os três elementos, um por clique (definições da apostila). Gangorra, tesoura, carrinho de mão e pinça parecem diferentes, mas todos são alavancas.</p>
+    <p>No desenho: a mão empurra a ponta direita para baixo (F<sub>P</sub>) e levanta a caixa da esquerda, cujo peso é a F<sub>R</sub>.</p>
+  </aside>
+</section>
+
+<!-- 5. Três tipos -->
+<section class="slide" data-nome="Os três tipos">
+  <div class="conteudo">
+    <p class="olho">O que fica no meio?</p>
+    <h2 class="titulo">Interfixa, inter-resistente e interpotente</h2>
+    <div style="position:absolute;left:0;right:0;top:150px;display:grid;grid-template-columns:repeat(3,1fr);gap:24px">
+      <div class="painel" data-passo="1">
+        <svg viewBox="0 0 480 230" style="width:100%;height:auto;display:block" aria-hidden="true">
+          <path d="M215 200 L240 156 L265 200 Z" fill="#8C7BEA"/>
+          <g class="bal-meio"><rect x="20" y="140" width="440" height="18" rx="9" fill="#C9A26B"/>
+            <path d="M60 160 V220" stroke="#C2384F" stroke-width="7" marker-end="url(#msSetaR)"/><text x="78" y="214" class="rot-fig fr" style="font-weight:800">F<tspan baseline-shift="sub" font-size="16">R</tspan></text>
+            <path d="M420 70 V134" stroke="#0B6B6D" stroke-width="7" marker-end="url(#msSetaP)"/><text x="384" y="70" class="rot-fig fp" style="font-weight:800">F<tspan baseline-shift="sub" font-size="16">P</tspan></text></g>
+          <text x="240" y="40" text-anchor="middle" class="rot-fig" style="fill:#4B39B3;font-weight:800">apoio no meio</text>
+        </svg>
+        <h3>Interfixa</h3>
+        <p>Gangorra, tesoura, alicate, pé de cabra.</p>
+      </div>
+      <div class="painel" data-passo="2">
+        <svg viewBox="0 0 480 230" style="width:100%;height:auto;display:block" aria-hidden="true">
+          <path d="M25 200 L50 156 L75 200 Z" fill="#8C7BEA"/>
+          <g class="bal-esq"><rect x="40" y="140" width="420" height="18" rx="9" fill="#C9A26B"/>
+            <path d="M240 160 V220" stroke="#C2384F" stroke-width="7" marker-end="url(#msSetaR)"/><text x="258" y="214" class="rot-fig fr" style="font-weight:800">F<tspan baseline-shift="sub" font-size="16">R</tspan></text>
+            <path d="M430 134 V70" stroke="#0B6B6D" stroke-width="7" marker-end="url(#msSetaP)"/><text x="384" y="70" class="rot-fig fp" style="font-weight:800">F<tspan baseline-shift="sub" font-size="16">P</tspan></text></g>
+          <text x="240" y="40" text-anchor="middle" class="rot-fig" style="fill:#C2384F;font-weight:800">resistência no meio</text>
+        </svg>
+        <h3>Inter-resistente</h3>
+        <p>Carrinho de mão, quebra-nozes, abridor de garrafa.</p>
+      </div>
+      <div class="painel" data-passo="3">
+        <svg viewBox="0 0 480 230" style="width:100%;height:auto;display:block" aria-hidden="true">
+          <path d="M25 200 L50 156 L75 200 Z" fill="#8C7BEA"/>
+          <g class="bal-esq"><rect x="40" y="140" width="420" height="18" rx="9" fill="#C9A26B"/>
+            <path d="M200 134 V70" stroke="#0B6B6D" stroke-width="7" marker-end="url(#msSetaP)"/><text x="218" y="80" class="rot-fig fp" style="font-weight:800">F<tspan baseline-shift="sub" font-size="16">P</tspan></text>
+            <path d="M430 160 V220" stroke="#C2384F" stroke-width="7" marker-end="url(#msSetaR)"/><text x="384" y="214" class="rot-fig fr" style="font-weight:800">F<tspan baseline-shift="sub" font-size="16">R</tspan></text></g>
+          <text x="240" y="40" text-anchor="middle" class="rot-fig" style="fill:#0B6B6D;font-weight:800">potência no meio</text>
+        </svg>
+        <h3>Interpotente</h3>
+        <p>Pinça, vassoura, vara de pescar, antebraço humano.</p>
+      </div>
+    </div>
+    <div class="caixa" data-passo="4" style="position:absolute;left:600px;right:0;top:640px;padding:18px 28px">
+      <div class="texto" style="font-size:28px"><b>Inter</b> quer dizer "entre": interfixa tem o <b>ponto fixo</b> entre as forças; inter-resistente, a <b>resistência</b> entre apoio e potência; interpotente, a <b>potência</b> entre apoio e resistência.</div>
+    </div>
+  </div>
+  <aside class="notas">
+    <p>Um tipo por clique, com os exemplos da tabela da apostila. As barras balançam de leve em volta do apoio (o triângulo lilás). Força potente em verde-azulado, resistente em vermelho.</p>
+    <p>Clique 4: o truque do prefixo "inter", da apostila.</p>
+  </aside>
+</section>
+
+<!-- 6. Classifique -->
+<section class="slide" data-nome="Classifique">
+  <div class="conteudo">
+    <p class="olho">Pratique</p>
+    <h2 class="titulo">Que alavanca é?</h2>
+    <div style="position:absolute;left:0;right:0;top:160px;display:grid;grid-template-columns:1fr 1fr;gap:14px 34px">
+      <div class="linha-ex linha-tag" style="font-size:28px;padding:10px 22px"><span>Gangorra</span><span data-passo="1"><span class="tag t-fixa">interfixa</span></span></div>
+      <div class="linha-ex linha-tag" style="font-size:28px;padding:10px 22px"><span>Carrinho de mão</span><span data-passo="2"><span class="tag t-res">inter-resistente</span></span></div>
+      <div class="linha-ex linha-tag" style="font-size:28px;padding:10px 22px"><span>Pinça</span><span data-passo="3"><span class="tag t-pot">interpotente</span></span></div>
+      <div class="linha-ex linha-tag" style="font-size:28px;padding:10px 22px"><span>Alicate</span><span data-passo="4"><span class="tag t-fixa">interfixa</span></span></div>
+      <div class="linha-ex linha-tag" style="font-size:28px;padding:10px 22px"><span>Quebra-nozes</span><span data-passo="5"><span class="tag t-res">inter-resistente</span></span></div>
+      <div class="linha-ex linha-tag" style="font-size:28px;padding:10px 22px"><span>Vassoura</span><span data-passo="6"><span class="tag t-pot">interpotente</span></span></div>
+      <div class="linha-ex linha-tag" style="font-size:28px;padding:10px 22px"><span>Pé de cabra</span><span data-passo="7"><span class="tag t-fixa">interfixa</span></span></div>
+      <div class="linha-ex linha-tag" style="font-size:28px;padding:10px 22px"><span>Abridor de garrafa</span><span data-passo="8"><span class="tag t-res">inter-resistente</span></span></div>
+      <div class="linha-ex linha-tag" style="font-size:28px;padding:10px 22px"><span>Vara de pescar</span><span data-passo="9"><span class="tag t-pot">interpotente</span></span></div>
+      <div class="linha-ex linha-tag" style="font-size:28px;padding:10px 22px"><span>Antebraço humano</span><span data-passo="10"><span class="tag t-pot">interpotente</span></span></div>
+    </div>
+  </div>
+  <aside class="notas">
+    <p>Exemplos da tabela da apostila, misturados. Peça a resposta antes de cada clique, sempre com a pergunta "o que fica no meio?".</p>
+    <p>Abridor de garrafa: apoio na ponta que encosta na tampa por cima, tampa (resistência) no meio, mão no cabo. Antebraço: cotovelo é o apoio, o bíceps puxa perto dele (potência no meio) e a mão segura o peso na ponta.</p>
+  </aside>
+</section>
+
+<!-- 7. Exemplo: carrinho de mão -->
+<section class="slide" data-nome="Exemplo: carrinho de mão">
+  <div class="conteudo">
+    <p class="olho">Exemplo</p>
+    <h2 class="titulo">Classificando o carrinho de mão</h2>
+    <svg viewBox="0 0 700 400" style="position:absolute;left:1060px;top:150px;width:700px;height:400px" aria-hidden="true">
+      <circle cx="110" cy="300" r="60" fill="#fff" stroke="#292B2C" stroke-width="10"/><circle cx="110" cy="300" r="10" fill="#292B2C"/>
+      <path d="M110 300 L240 180 H500 L600 230" stroke="#5E5A70" stroke-width="12" fill="none" stroke-linecap="round" stroke-linejoin="round"/>
+      <path d="M200 180 L240 100 H470 L500 180 Z" fill="#8C7BEA" opacity=".85"/>
+      <rect x="270" y="60" width="160" height="70" rx="12" fill="#E8C27A" stroke="#B8893A" stroke-width="4"/>
+      <g data-passo="1"><text x="110" y="395" text-anchor="middle" class="rot-fig" style="fill:#4B39B3;font-weight:800">apoio: a roda</text></g>
+      <g data-passo="2"><path d="M350 200 V300" stroke="#C2384F" stroke-width="8" marker-end="url(#msSetaR)"/><text x="370" y="290" class="rot-fig fr" style="font-weight:800">peso da carga</text></g>
+      <g data-passo="3"><path d="M600 300 V244" stroke="#0B6B6D" stroke-width="8" marker-end="url(#msSetaP)"/><text x="600" y="340" text-anchor="middle" class="rot-fig fp" style="font-weight:800">mãos</text></g>
+    </svg>
+    <p class="texto" style="position:absolute;left:0;width:940px;top:150px;margin:0;font-size:30px">A roda fica na frente, a carga no meio e as mãos levantam os cabos atrás. Que tipo de alavanca é?</p>
+    <div style="position:absolute;left:0;width:940px;top:270px;display:flex;flex-direction:column;gap:10px">
+      <div class="linha-ex" data-passo="1"><b>Apoio:</b> a roda.</div>
+      <div class="linha-ex" data-passo="2"><b>Força resistente:</b> o peso da carga.</div>
+      <div class="linha-ex" data-passo="3"><b>Força potente:</b> as mãos.</div>
+      <div class="linha-ex" data-passo="4"><b>No meio:</b> a carga, que é a força resistente.</div>
+    </div>
+    <span class="pilula pilula-resposta" data-passo="5" style="position:absolute;left:1060px;top:640px">Resposta: alavanca inter-resistente</span>
+  </div>
+  <aside class="notas"><p>Exemplo da apostila ("Classificando o carrinho de mão"), um elemento por clique.</p></aside>
+</section>
+
+<!-- 8. Atenção: interpotente -->
+<section class="slide" data-nome="Atenção: interpotente">
+  <div class="conteudo">
+    <p class="olho">Atenção</p>
+    <h2 class="titulo">A interpotente não poupa força</h2>
+    <div class="caixa caixa-atencao" style="position:absolute;left:0;width:1060px;top:160px;padding:24px 34px">
+      <div class="texto">Na pinça e na vassoura, a mão fica <b>mais perto do apoio</b> que a resistência.</div>
+    </div>
+    <div style="position:absolute;left:0;width:1060px;top:360px;display:flex;flex-direction:column;gap:18px">
+      <div class="linha-ex" data-passo="1">Você faz <b>mais força</b> do que a resistência…</div>
+      <div class="linha-ex" data-passo="2">…em troca de <b>mais precisão</b> ou de um <b>movimento maior na ponta</b>.</div>
+    </div>
+    <svg viewBox="0 0 500 520" style="position:absolute;left:1240px;top:150px;width:500px;height:520px" aria-hidden="true">
+      <path d="M60 60 L440 440" stroke="#8C7BEA" stroke-width="16" stroke-linecap="round"/>
+      <path d="M60 60 L120 470" stroke="#8C7BEA" stroke-width="16" stroke-linecap="round"/>
+      <circle cx="60" cy="60" r="16" fill="#4B39B3"/><text x="90" y="54" class="rot-fig" style="fill:#4B39B3;font-weight:800">apoio</text>
+      <g data-passo="1"><path d="M250 250 L196 304" stroke="#0B6B6D" stroke-width="8" marker-end="url(#msSetaP)"/><text x="268" y="246" class="rot-fig fp" style="font-weight:800">mão: força maior</text></g>
+      <g data-passo="2"><circle cx="300" cy="470" r="16" fill="#E8C27A" stroke="#B8893A" stroke-width="3"/><text x="300" y="512" text-anchor="middle" class="rot-fig">ponta: precisão</text></g>
+    </svg>
+  </div>
+  <aside class="notas"><p>Da apostila (atenção "A interpotente não poupa força"). Desenho de uma pinça: o apoio na junta de cima, os dedos no meio, a ponta embaixo. Com a fórmula do equilíbrio, que vem a seguir, dá para ver o porquê: o braço da mão é menor que o braço da resistência.</p></aside>
+</section>
+
+<!-- 9. Braço e a gangorra -->
+<section class="slide" data-nome="O braço da força">
+  <div class="conteudo">
+    <p class="olho">Equilíbrio da alavanca</p>
+    <h2 class="titulo">A distância até o apoio conta</h2>
+    <div data-anima="gangorra" data-anima-passo="1" data-w="1000" data-h="440" style="position:absolute;left:760px;top:150px;width:1000px;height:440px"></div>
+    <div style="position:absolute;left:0;width:680px;top:160px;display:flex;flex-direction:column;gap:14px">
+      <div class="linha-ex" style="font-size:27px">Numa gangorra, uma criança leve equilibra um adulto: basta o mais pesado sentar <b>mais perto do meio</b>.</div>
+      <div class="caixa caixa-fundamental" data-passo="2" style="padding:18px 26px">
+        <span class="rotulo">Braço</span>
+        <div class="texto" style="font-size:27px">A distância de cada força até o <b>ponto de apoio</b>: \(b_P\) (potente) e \(b_R\) (resistente).</div>
+      </div>
+    </div>
+    <div class="linha-ex" data-passo="3" style="position:absolute;left:760px;right:0;top:640px;font-size:28px">A distância até o apoio conta <b>tanto quanto o peso</b>.</div>
+  </div>
+  <aside class="notas">
+    <p>Clique 1: Davi (400 N) começa a 2 m do apoio e a gangorra desce do lado dele (400 · 2 = 800 é maior que 300 · 2 = 600). Ele escorrega para perto do meio; em 1,5 m, os produtos ficam iguais (600 = 600) e a gangorra fica na horizontal. É o exemplo da apostila que vamos resolver daqui a pouco.</p>
+    <p>Clique 2: definição de braço (apostila).</p>
+  </aside>
+</section>
+
+<!-- 10. Fórmula -->
+<section class="slide" data-nome="Equilíbrio: força vezes braço">
+  <div class="conteudo">
+    <p class="olho">Fórmula</p>
+    <h2 class="titulo">Equilíbrio da alavanca</h2>
+    <div class="caixa caixa-fundamental" style="position:absolute;left:380px;right:380px;top:150px;text-align:center;font-size:90px;padding:14px">\(F_P \cdot b_P = F_R \cdot b_R\)</div>
+    <div class="letras" style="position:absolute;left:0;right:0;top:320px">
+      <div data-passo="1"><span class="simbolo">\(F_P\)</span>força potente<br><span class="unidade">newton (N)</span></div>
+      <div data-passo="2"><span class="simbolo">\(b_P\)</span>braço da força potente, até o apoio<br><span class="unidade">metro (m)</span></div>
+      <div data-passo="3"><span class="simbolo">\(F_R\)</span>força resistente<br><span class="unidade">newton (N)</span></div>
+      <div data-passo="4"><span class="simbolo">\(b_R\)</span>braço da força resistente, até o apoio<br><span class="unidade">metro (m)</span></div>
+    </div>
+    <div class="caixa" data-passo="5" style="position:absolute;left:600px;right:0;top:660px;padding:18px 28px">
+      <div class="texto" style="font-size:28px">Com um <b>braço potente grande</b>, uma <b>força pequena</b> equilibra uma força resistente grande.</div>
+    </div>
+  </div>
+  <aside class="notas">
+    <p>Fórmula da apostila, uma letra por clique, com a unidade. Os dois braços precisam estar na mesma unidade (podem ser os dois em cm, como na questão do pé de cabra).</p>
+  </aside>
+</section>
+
+<!-- 11. Exemplo: gangorra -->
+<section class="slide" data-nome="Exemplo: a gangorra">
+  <div class="conteudo">
+    <p class="olho">Exemplo</p>
+    <h2 class="titulo">Onde Davi deve sentar?</h2>
+    <p class="texto" style="position:absolute;left:0;width:800px;top:160px;margin:0;font-size:32px">Ana pesa 300 N e senta a 2 m do apoio. Davi pesa 400 N. A que distância do apoio ele deve sentar para a gangorra ficar em equilíbrio?</p>
+    <div class="caixa" style="position:absolute;left:0;width:800px;top:390px;padding:20px 30px">
+      <span class="rotulo">Dados</span>
+      <div class="texto" style="font-size:32px">\(F_P = 300\ \text{N}\) · \(b_P = 2\ \text{m}\) · \(F_R = 400\ \text{N}\)</div>
+    </div>
+    <div style="position:absolute;left:940px;right:0;top:150px">
+      <div class="contas" style="font-size:44px;row-gap:12px">
+        <div class="eq" data-passo="1"><span>\(F_P \cdot b_P\)</span><span>\(=\)</span><span>\(F_R \cdot b_R\)</span></div>
+        <div class="eq" data-passo="2"><span>\(300 \cdot 2\)</span><span>\(=\)</span><span>\(400 \cdot b_R\)</span></div>
+        <div class="eq" data-passo="3"><span>\(600\)</span><span>\(=\)</span><span>\(400 \cdot b_R\)</span></div>
+        <div class="eq" data-passo="4"><span>\(b_R\)</span><span>\(=\)</span><span>\(\dfrac{600}{400}\)</span></div>
+        <div class="eq final" data-passo="5"><span>\(b_R\)</span><span>\(=\)</span><span>\(1{,}5\ \text{m}\)</span></div>
+      </div>
+    </div>
+    <span class="pilula pilula-resposta" data-passo="6" style="position:absolute;left:940px;top:700px">A 1,5 m do apoio: o mais pesado senta mais perto</span>
+  </div>
+  <aside class="notas"><p>Exemplo da apostila ("A gangorra"), uma linha por clique. Conferência: 400 · 1,5 = 600 = 300 · 2.</p></aside>
+</section>
+
+<!-- 12. Exemplo: carrinho -->
+<section class="slide" data-nome="Exemplo: força no carrinho">
+  <div class="conteudo">
+    <p class="olho">Exemplo</p>
+    <h2 class="titulo">Que força as mãos fazem?</h2>
+    <p class="texto" style="position:absolute;left:0;width:800px;top:160px;margin:0;font-size:32px">Um carrinho leva uma carga de 600 N a 0,5 m da roda. As mãos seguram os cabos a 1,5 m da roda.</p>
+    <svg viewBox="0 0 800 220" style="position:absolute;left:0;top:270px;width:800px;height:220px" aria-hidden="true">
+      <circle cx="60" cy="150" r="40" fill="#fff" stroke="#292B2C" stroke-width="8"/><circle cx="60" cy="150" r="7" fill="#292B2C"/>
+      <line x1="60" y1="110" x2="720" y2="110" stroke="#5E5A70" stroke-width="10" stroke-linecap="round"/>
+      <path d="M280 110 V40" stroke="#C2384F" stroke-width="0"/><rect x="230" y="50" width="100" height="56" rx="10" fill="#E8C27A" stroke="#B8893A" stroke-width="3"/>
+      <path d="M720 170 V122" stroke="#0B6B6D" stroke-width="7" marker-end="url(#msSetaP)"/>
+      <line x1="60" y1="200" x2="280" y2="200" stroke="#5E5A70" stroke-width="3" marker-start="url(#msCota)" marker-end="url(#msCota)"/><text x="170" y="190" text-anchor="middle" class="rot-fig">0,5 m</text>
+      <line x1="60" y1="30" x2="720" y2="30" stroke="#5E5A70" stroke-width="3" marker-start="url(#msCota)" marker-end="url(#msCota)"/><text x="560" y="22" text-anchor="middle" class="rot-fig">1,5 m</text>
+    </svg>
+    <div class="caixa" style="position:absolute;left:0;width:800px;top:505px;padding:14px 28px">
+      <div class="texto" style="font-size:30px">\(F_R = 600\ \text{N}\) · \(b_R = 0{,}5\ \text{m}\) · \(b_P = 1{,}5\ \text{m}\)</div>
+    </div>
+    <div style="position:absolute;left:940px;right:0;top:150px">
+      <div class="contas" style="font-size:44px;row-gap:12px">
+        <div class="eq" data-passo="1"><span>\(F_P \cdot b_P\)</span><span>\(=\)</span><span>\(F_R \cdot b_R\)</span></div>
+        <div class="eq" data-passo="2"><span>\(F_P \cdot 1{,}5\)</span><span>\(=\)</span><span>\(600 \cdot 0{,}5\)</span></div>
+        <div class="eq" data-passo="3"><span>\(F_P \cdot 1{,}5\)</span><span>\(=\)</span><span>\(300\)</span></div>
+        <div class="eq" data-passo="4"><span>\(F_P\)</span><span>\(=\)</span><span>\(\dfrac{300}{1{,}5}\)</span></div>
+        <div class="eq final" data-passo="5"><span>\(F_P\)</span><span>\(=\)</span><span>\(200\ \text{N}\)</span></div>
+      </div>
+    </div>
+    <span class="pilula pilula-resposta" data-passo="6" style="position:absolute;left:940px;top:700px">200 N: um terço do peso da carga</span>
+  </div>
+  <aside class="notas"><p>Exemplo da apostila ("O carrinho de mão"). 300 ÷ 1,5 = 200 (multiplique os dois por 2: 600 ÷ 3). O braço das mãos é 3 vezes o da carga, então a força é 3 vezes menor.</p></aside>
+</section>
+
+<!-- 13. Atenção: braço até o apoio -->
+<section class="slide" data-nome="Atenção: braço até o apoio">
+  <div class="conteudo">
+    <p class="olho">Atenção</p>
+    <h2 class="titulo">O braço é medido até o apoio</h2>
+    <div class="caixa caixa-atencao" style="position:absolute;left:0;right:0;top:160px;padding:24px 34px">
+      <div class="texto">O braço é a distância de cada força até o <b>ponto de apoio</b>, não até a ponta da barra nem até a outra força.</div>
+    </div>
+    <svg viewBox="0 0 1160 260" style="position:absolute;left:600px;top:380px;width:1160px;height:260px" aria-hidden="true">
+      <circle cx="80" cy="150" r="40" fill="#fff" stroke="#292B2C" stroke-width="8"/><circle cx="80" cy="150" r="7" fill="#292B2C"/>
+      <line x1="80" y1="110" x2="1080" y2="110" stroke="#5E5A70" stroke-width="10" stroke-linecap="round"/>
+      <rect x="330" y="50" width="120" height="56" rx="10" fill="#E8C27A" stroke="#B8893A" stroke-width="3"/>
+      <g data-passo="1"><line x1="80" y1="210" x2="390" y2="210" stroke="#0F8B8D" stroke-width="4" marker-start="url(#msCota)" marker-end="url(#msCota)"/><text x="235" y="246" text-anchor="middle" class="rot-fig" style="fill:#0B6B6D;font-weight:800">✓ da roda até a carga</text></g>
+      <g data-passo="2"><line x1="390" y1="30" x2="1080" y2="30" stroke="#C2384F" stroke-width="4" stroke-dasharray="10 8"/><text x="735" y="22" text-anchor="middle" class="rot-fig fr" style="font-weight:800">✗ da carga até as mãos</text></g>
+    </svg>
+  </div>
+  <aside class="notas"><p>Da apostila: no carrinho, os 1,5 m são medidos a partir da roda. Clique 1: o braço certo da carga. Clique 2: o erro de medir entre as duas forças.</p></aside>
+</section>
+
+<!-- 14. Questão 1 -->
+<section class="slide questao" data-nome="Questão 1">
+  <div class="conteudo">
+    <div class="area-resolucao"></div>
+    <span class="pilula pilula-pausa" data-em="1:some">Pause o vídeo e tente</span>
+    <div class="painel-questao" style="gap:12px">
+      <p class="olho">Questão 1 · Modelo IF</p>
+      <p class="enunciado" style="font-size:23px">A tesoura é uma das máquinas simples mais usadas no dia a dia. As duas lâminas giram em torno do parafuso que as prende. Quando você corta uma folha de papel, a mão aperta os cabos de um lado do parafuso, e o papel, que resiste ao corte, fica entre as lâminas, do outro lado.</p>
+      <p class="enunciado" style="font-size:23px">Qual é o tipo de alavanca da tesoura e por quê?</p>
+      <ol class="alternativas" style="gap:7px">
+        <li data-em="2:apaga" style="font-size:20px;padding:5px 14px"><b>A</b><span>Interpotente, porque a mão fica entre o parafuso e o papel.</span></li>
+        <li data-em="2:apaga" style="font-size:20px;padding:5px 14px"><b>B</b><span>Inter-resistente, porque o papel fica entre o parafuso e a mão.</span></li>
+        <li data-em="2:certo" style="font-size:20px;padding:5px 14px"><b>C</b><span>Interfixa, porque o parafuso (ponto de apoio) fica entre a mão e o papel.</span></li>
+        <li data-em="2:apaga" style="font-size:20px;padding:5px 14px"><b>D</b><span>Interfixa, porque a mão fica entre o parafuso e o papel.</span></li>
+        <li data-em="2:apaga" style="font-size:20px;padding:5px 14px"><b>E</b><span>Inter-resistente, porque o parafuso fica entre a mão e o papel.</span></li>
+      </ol>
+    </div>
+  </div>
+  <aside class="resolucao">
+    <p class="dados"><b>Dados:</b> apoio: parafuso; potente: mão; resistente: papel.</p>
+    <ol class="passos">
+      <li>O tipo depende do que fica no meio.</li>
+      <li>Mão de um lado, papel do outro.</li>
+      <li>No meio: o parafuso (apoio): interfixa.</li>
+    </ol>
+    <p class="resposta"><b>Resposta:</b> interfixa, com o apoio no meio. <b>Gabarito C.</b></p>
+    <p class="atencao"><b>Destaque no quadro:</b> Confira o nome E o motivo.</p>
+    <ul class="erros">
+      <li><b>A</b> A mão está na ponta, não no meio.</li>
+      <li><b>B</b> O papel está do outro lado do parafuso.</li>
+      <li><b>D</b> Nome certo, motivo errado.</li>
+      <li><b>E</b> Motivo certo, nome errado.</li>
+    </ul>
+  </aside>
+  <aside class="notas">
+    <p>Clique 1 tira o aviso de pausa: resolva na área (D liga a caneta; E esconde o enunciado). Clique 2: gabarito C.</p>
+    <p>Modelo IF, lote if-fisica-equilibrio-do-corpo-extenso, m001, FIS-1347 (nível 1).</p>
+  </aside>
+</section>
+
+<!-- 15. Questão 2 -->
+<section class="slide questao" data-nome="Questão 2">
+  <div class="conteudo">
+    <div class="area-resolucao"></div>
+    <span class="pilula pilula-pausa" data-em="1:some">Pause o vídeo e tente</span>
+    <div class="painel-questao">
+      <p class="olho">Questão 2 · Modelo IF</p>
+      <p class="enunciado" style="font-size:25px">Numa praça, Lúcia, que pesa 200 N, senta numa ponta da gangorra, a 1,5 m do ponto de apoio. O pai dela, que pesa 600 N, quer sentar do outro lado de modo que a gangorra fique em equilíbrio na horizontal, com os dois sem tocar os pés no chão.</p>
+      <p class="enunciado" style="font-size:25px">A que distância do ponto de apoio o pai deve sentar?</p>
+      <ol class="alternativas curtas">
+        <li data-em="2:apaga"><b>A</b><span>4,5 m</span></li>
+        <li data-em="2:apaga"><b>B</b><span>1,5 m</span></li>
+        <li data-em="2:apaga"><b>C</b><span>3,0 m</span></li>
+        <li data-em="2:apaga"><b>D</b><span>0,75 m</span></li>
+        <li data-em="2:certo"><b>E</b><span>0,5 m</span></li>
+      </ol>
+    </div>
+  </div>
+  <aside class="resolucao">
+    <p class="dados"><b>Dados:</b> \(F_P = 200\ \text{N}\); \(b_P = 1{,}5\ \text{m}\); \(F_R = 600\ \text{N}\).</p>
+    <ol class="passos">
+      <li>\(F_P \cdot b_P = F_R \cdot b_R\)</li>
+      <li>\(200 \cdot 1{,}5 = 600 \cdot b_R\)</li>
+      <li>\(300 = 600 \cdot b_R\)</li>
+      <li>\(b_R = \dfrac{300}{600} = 0{,}5\ \text{m}\)</li>
+    </ol>
+    <p class="resposta"><b>Resposta:</b> a 0,5 m do apoio. <b>Gabarito E.</b></p>
+    <p class="atencao"><b>Destaque no quadro:</b> 3 vezes mais pesado, 3 vezes mais perto.</p>
+    <ul class="erros">
+      <li><b>A</b> Inverteu a proporção (600 · 1,5 ÷ 200).</li>
+      <li><b>B</b> Mesma distância: o lado do pai desce.</li>
+      <li><b>C</b> Usou 600 ÷ 200 = 3 como distância.</li>
+      <li><b>D</b> Usou a diferença de pesos (400).</li>
+    </ul>
+  </aside>
+  <aside class="notas">
+    <p>Clique 1 tira o aviso de pausa: resolva na área (D liga a caneta; E esconde o enunciado). Clique 2: gabarito E.</p>
+    <p>Modelo IF, lote if-fisica-equilibrio-do-corpo-extenso, m003, FIS-1349 (nível 2). Contas conferidas: 200 · 1,5 = 300; 300 ÷ 600 = 0,5.</p>
+  </aside>
+</section>
+
+<!-- 16. Questão 3 -->
+<section class="slide questao" data-nome="Questão 3">
+  <div class="conteudo">
+    <div class="area-resolucao"></div>
+    <span class="pilula pilula-pausa" data-em="1:some">Pause o vídeo e tente</span>
+    <div class="painel-questao" style="gap:12px">
+      <p class="olho">Questão 3 · Modelo IF</p>
+      <p class="enunciado" style="font-size:23px">Para arrancar um prego de uma tábua, Kauã usa um pé de cabra apoiado na madeira, como mostra a figura. Para o prego sair, a ponta do pé de cabra precisa puxá-lo com uma força de 600 N. Considere as distâncias indicadas na figura, medidas na horizontal a partir do ponto de apoio.</p>
+      <svg viewBox="0 0 520 200" style="width:520px;height:200px;display:block" aria-hidden="true">
+        <rect x="10" y="140" width="500" height="50" rx="6" fill="#E9DCC4" stroke="#8A869A" stroke-width="2"/>
+        <line x1="52" y1="130" x2="52" y2="180" stroke="#5E5A70" stroke-width="5"/><line x1="40" y1="130" x2="66" y2="130" stroke="#5E5A70" stroke-width="5"/>
+        <path d="M52 128 L110 140 L470 80" stroke="#0B3B3C" stroke-width="10" fill="none" stroke-linecap="round" stroke-linejoin="round"/>
+        <path d="M102 140 L110 126 L118 140 Z" fill="#8A869A"/>
+        <path d="M470 20 V64" stroke="#0F8B8D" stroke-width="5" marker-end="url(#msSetaP)"/>
+        <line x1="52" y1="104" x2="110" y2="104" stroke="#8A869A" stroke-width="2.5" marker-start="url(#msCota)" marker-end="url(#msCota)"/><text x="81" y="96" text-anchor="middle" class="rot-fig" style="font-size:18px">5 cm</text>
+        <line x1="110" y1="14" x2="470" y2="14" stroke="#8A869A" stroke-width="2.5" marker-start="url(#msCota)" marker-end="url(#msCota)"/><text x="283" y="34" text-anchor="middle" class="rot-fig" style="font-size:18px">30 cm</text>
+        <g font-family="Figtree,sans-serif" font-size="17" fill="#292B2C"><text x="16" y="122">prego</text><text x="92" y="166">apoio</text><text x="484" y="44">mão</text><text x="420" y="172">tábua</text></g>
+      </svg>
+      <p class="enunciado" style="font-size:23px">Qual é a menor força que a mão de Kauã deve fazer na outra ponta para arrancar o prego?</p>
+      <ol class="alternativas curtas">
+        <li data-em="2:apaga" style="font-size:21px"><b>A</b><span>20 N</span></li>
+        <li data-em="2:certo" style="font-size:21px"><b>B</b><span>100 N</span></li>
+        <li data-em="2:apaga" style="font-size:21px"><b>C</b><span>600 N</span></li>
+        <li data-em="2:apaga" style="font-size:21px"><b>D</b><span>3 600 N</span></li>
+        <li data-em="2:apaga" style="font-size:21px"><b>E</b><span>10 000 N</span></li>
+      </ol>
+    </div>
+  </div>
+  <aside class="resolucao">
+    <p class="dados"><b>Dados:</b> \(F_R = 600\ \text{N}\); \(b_R = 5\ \text{cm}\); \(b_P = 30\ \text{cm}\).</p>
+    <ol class="passos">
+      <li>Interfixa: apoio entre prego e mão.</li>
+      <li>\(F_P \cdot 30 = 600 \cdot 5\)</li>
+      <li>\(F_P \cdot 30 = 3\,000\)</li>
+      <li>\(F_P = \dfrac{3\,000}{30} = 100\ \text{N}\)</li>
+    </ol>
+    <p class="resposta"><b>Resposta:</b> 100 N. <b>Gabarito B.</b></p>
+    <p class="atencao"><b>Destaque no quadro:</b> Braços na mesma unidade (aqui, os dois em cm).</p>
+    <ul class="erros">
+      <li><b>A</b> 600 ÷ 30: esqueceu o braço de 5 cm.</li>
+      <li><b>C</b> Sem a vantagem da alavanca.</li>
+      <li><b>D</b> Inverteu a proporção (600 · 30 ÷ 5).</li>
+      <li><b>E</b> Misturou cm e m (600 · 5 ÷ 0,30).</li>
+    </ul>
+  </aside>
+  <aside class="notas">
+    <p>Clique 1 tira o aviso de pausa: resolva na área (D liga a caneta; E esconde o enunciado). Clique 2: gabarito B.</p>
+    <p>Modelo IF, lote if-fisica-equilibrio-do-corpo-extenso, m005, FIS-1351 (nível 3). Figura redesenhada a partir da do lote (if-fisica-equilibrio-do-corpo-extenso-m005.png), com as mesmas medidas. Contas conferidas: 600 · 5 = 3 000; 3 000 ÷ 30 = 100.</p>
+  </aside>
+</section>
+
+<!-- 17. Resumo -->
+<section class="slide" data-nome="Resumo">
+  <div class="conteudo">
+    <p class="olho">Resumo</p>
+    <h2 class="titulo">O essencial</h2>
+    <div class="resumo" style="position:absolute;left:0;right:0;top:150px">
+      <div><b>Máquina simples:</b> sem motor, diminui a força, muda a direção ou aumenta o alcance.</div>
+      <div><b>Força</b> em newtons (N): 1 kg pesa cerca de 10 N.</div>
+      <div><b>Alavanca:</b> apoio (A), força potente (\(F_P\)) e força resistente (\(F_R\)).</div>
+      <div><b>No meio:</b> apoio → interfixa; resistência → inter-resistente; potência → interpotente.</div>
+      <div><b>Equilíbrio:</b> \(F_P \cdot b_P = F_R \cdot b_R\), com os braços medidos <b>até o apoio</b>.</div>
+      <div>A <b>interpotente</b> não poupa força: troca força por precisão ou alcance.</div>
+    </div>
+  </div>
+  <aside class="notas"><p>Peça para tirarem um print desta tela.</p></aside>
+</section>
+
+<!-- 18. A seguir -->
+<section class="slide capa" data-nome="A seguir">
+  <div class="estrelas"></div>
+  <div class="texto-capa" style="top:200px">
+    <span class="selo">Física · IF</span>
+    <p class="aula" style="font-size:28px">A seguir · Máquinas simples · Parte 2 de 2</p>
+    <h1 style="font-size:116px">Roldanas, rampas e engrenagens</h1>
+    <p class="sub">O que se ganha em força se perde em distância</p>
+  </div>
+  <svg class="emblema" viewBox="0 0 640 640" aria-hidden="true">
+    <rect x="80" y="70" width="480" height="24" rx="8" fill="#fff" fill-opacity=".8"/>
+    <line x1="320" y1="94" x2="320" y2="170" stroke="#fff" stroke-width="10"/>
+    <circle cx="320" cy="220" r="60" fill="none" stroke="#FFD10C" stroke-width="16"/>
+    <path d="M260 220 V470 M380 220 V380" stroke="#fff" stroke-width="8"/>
+    <rect x="200" y="470" width="120" height="100" rx="16" fill="#FFD10C"/>
+  </svg>
+  <img class="logo-capa" src="{{LOGO_BRANCO}}" alt="Quarks">
+  <aside class="notas"><p>Próxima parte: roldanas fixa e móvel, plano inclinado, cunha e parafuso, roda com eixo, engrenagens e um pouco da história das máquinas simples.</p></aside>
+</section>

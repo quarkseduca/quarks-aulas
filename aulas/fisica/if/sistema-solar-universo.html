@@ -1,0 +1,435 @@
+<!--aula
+{"disciplina": "fisica", "curso": "IF", "assunto": "Astronomia", "parte": "Parte única", "titulo": "Sistema Solar e Universo", "scripts": ["animacoes-astronomia.js"]}
+-->
+<!-- Fonte: apostila IF, Física, cap. 1 Astronomia, 1.3 Sistema Solar e Universo (blocos "Sistema Solar" e "Galáxias e o lugar da Terra no Universo", e o resumo). Questões: Modelo IF, lote if-fisica-universo (m003 FIS-8733, m005 FIS-8735, m009 FIS-8739). A m001 (FIS-8731) fica reservada para o bloco "Questões do IF Sudeste" de Astronomia. -->
+<style>
+  .caixa, .cartao, .linha-ex, .painel { box-sizing: border-box; }
+  .linha-ex { background: var(--branco); border: 2px solid var(--lilas-2); border-radius: 24px; padding: 14px 26px; font-size: 30px; line-height: 1.3; }
+  .linha-ex b { color: var(--roxo-titulo); }
+  .painel { background: var(--branco); border: 2px solid var(--lilas-2); border-radius: 30px; padding: 18px 22px; }
+  .painel h3 { margin: 0 0 6px; font: 800 32px var(--fonte-titulo); letter-spacing: -.02em; color: var(--roxo-titulo); }
+  .painel p { margin: 6px 0 0; font-size: 24px; line-height: 1.32; }
+  .painel b { color: var(--roxo-titulo); }
+  .rot-fig { font-family: Figtree, "Segoe UI", sans-serif; font-weight: 700; font-size: 24px; fill: #5E5A70; }
+  .rot-claro { font-family: Figtree, "Segoe UI", sans-serif; font-weight: 700; font-size: 24px; fill: #E4DEFB; }
+  .noite { fill: #2B2357; }
+  .planetas { display: grid; grid-template-columns: repeat(4, 1fr); gap: 18px; }
+  .planetas > div { background: var(--branco); border: 2px solid var(--lilas-2); border-radius: 26px; padding: 14px 10px 16px; text-align: center; font-size: 26px; font-weight: 800; color: var(--roxo-titulo); }
+  .planetas svg { width: 150px; height: 150px; display: block; margin: 0 auto 6px; }
+  /* Sol: brilho que pulsa e manchas que giram devagar */
+  @keyframes pulsa { 0%, 100% { opacity: .25; transform: scale(1); } 50% { opacity: .45; transform: scale(1.06); } }
+  .halo { transform-box: fill-box; transform-origin: center; }
+  .slide.ativo .mostra .halo, .slide.ativo .halo.mostra { animation: pulsa 6s ease-in-out infinite; }
+  @keyframes gira { to { transform: rotate(360deg); } }
+  .manchas { transform-box: view-box; transform-origin: 300px 300px; }
+  .slide.ativo .manchas { animation: gira 30s linear infinite; }
+  .galaxia-gira { transform-box: view-box; transform-origin: 0 0; }
+  .slide.ativo .mostra .galaxia-gira, .slide.ativo.capa .galaxia-gira { animation: gira 40s linear infinite reverse; }
+  /* planetas que giram no próprio eixo (só os desenhos dos cartões) */
+  .faixas { transform-box: fill-box; }
+  @keyframes faixa { to { transform: translateX(-60px); } }
+  .slide.ativo .mostra .faixas { animation: faixa 8s linear infinite; }
+  @keyframes cintila { 0%, 100% { opacity: .35; } 50% { opacity: 1; } }
+  .slide.ativo .cint circle { animation: cintila 4.5s ease-in-out infinite; }
+  .cint circle:nth-child(2n) { animation-delay: -2s !important; }
+  /* endereço: os círculos se abrem um a um */
+  .endereco > div { display: grid; grid-template-columns: 90px 1fr; gap: 20px; align-items: center; }
+</style>
+
+<svg width="0" height="0" style="position:absolute" aria-hidden="true">
+  <defs>
+    <radialGradient id="ssSol" cx=".4" cy=".35" r=".7"><stop offset="0" stop-color="#FFF4C2"/><stop offset=".55" stop-color="#FFD10C"/><stop offset="1" stop-color="#F0A500"/></radialGradient>
+    <clipPath id="ssJup"><circle cx="75" cy="75" r="60"/></clipPath>
+    <clipPath id="ssSat"><circle cx="75" cy="75" r="44"/></clipPath>
+  </defs>
+</svg>
+
+<!-- 1. Capa -->
+<section class="slide capa" data-nome="Capa">
+  <div class="estrelas"></div>
+  <div class="texto-capa">
+    <span class="selo">Física · IF</span>
+    <p class="aula">Astronomia · Parte única</p>
+    <h1 style="font-size:130px">Sistema Solar e Universo</h1>
+    <p class="sub">Nosso endereço: uma galáxia entre bilhões</p>
+  </div>
+  <svg class="emblema" viewBox="-320 -320 640 640" aria-hidden="true" data-galaxia="520">
+  </svg>
+  <img class="logo-capa" src="{{LOGO_BRANCO}}" alt="Quarks">
+  <aside class="notas"><p>Último subcapítulo de Astronomia, em parte única: o Sol, os planetas rochosos e gigantes gasosos, os corpos menores, as distâncias (a luz do Sol leva cerca de 8 minutos para chegar), a Via Láctea, o ano-luz e as outras galáxias. Depois desta parte vem o bloco de questões do IF Sudeste do capítulo.</p></aside>
+</section>
+
+<!-- 2. O Sol é uma estrela -->
+<section class="slide" data-nome="O Sol é uma estrela">
+  <div class="conteudo">
+    <p class="olho">Para começar</p>
+    <h2 class="titulo">O Sol é uma estrela</h2>
+    <svg viewBox="0 0 600 600" style="position:absolute;left:1160px;top:130px;width:600px;height:600px" aria-hidden="true">
+      <circle class="halo" cx="300" cy="300" r="280" fill="#FFD10C" opacity=".25"/>
+      <circle cx="300" cy="300" r="220" fill="url(#ssSol)"/>
+      <g class="manchas" fill="#F0A500" opacity=".5"><circle cx="220" cy="240" r="18"/><circle cx="380" cy="330" r="12"/><circle cx="300" cy="420" r="16"/><circle cx="410" cy="210" r="9"/><circle cx="190" cy="360" r="10"/></g>
+    </svg>
+    <div style="position:absolute;left:0;width:1060px;top:170px;display:flex;flex-direction:column;gap:18px">
+      <div class="linha-ex">O Sol é uma <b>estrela</b>: uma enorme esfera de <b>gás muito quente</b>…</div>
+      <div class="linha-ex" data-passo="1">…que produz a <b>própria luz</b>.</div>
+      <div class="caixa caixa-fundamental" data-passo="2" style="padding:20px 30px">
+        <span class="rotulo">Sistema Solar</span>
+        <div class="texto" style="font-size:30px">O <b>Sol</b>, os <b>oito planetas</b> que giram em volta dele e muitos <b>corpos menores</b>.</div>
+      </div>
+    </div>
+  </div>
+  <aside class="notas"><p>Da apostila (1.3, bloco "Sistema Solar"). O brilho pulsa devagar e as manchas giram: é só para dar vida à figura (o Sol gira, mas o período não está na apostila).</p></aside>
+</section>
+
+<!-- 3. Os oito planetas -->
+<section class="slide" data-nome="Os oito planetas">
+  <div class="conteudo">
+    <p class="olho">Em ordem de distância ao Sol</p>
+    <h2 class="titulo">Os oito planetas</h2>
+    <div data-anima="sistema-solar" data-anima-passo="1" data-w="1160" data-h="440" style="position:absolute;left:600px;top:150px;width:1160px;height:440px"></div>
+    <div style="position:absolute;left:0;width:540px;top:170px;display:flex;flex-direction:column;gap:14px">
+      <div class="linha-ex" data-passo="2" style="font-size:27px"><b>Rochosos:</b> Mercúrio, Vênus, Terra e Marte.</div>
+      <div class="linha-ex" data-passo="3" style="font-size:27px"><b>Gigantes gasosos:</b> Júpiter, Saturno, Urano e Netuno.</div>
+    </div>
+    <div class="caixa caixa-atencao" data-passo="4" style="position:absolute;left:600px;right:0;top:640px;padding:16px 28px">
+      <div class="texto" style="font-size:27px">Tamanhos e distâncias <b>fora de escala</b>: as distâncias de verdade não caberiam na tela.</div>
+    </div>
+  </div>
+  <aside class="notas">
+    <p>Clique 1: os planetas giram em volta do Sol (os de fora mais devagar). Entre Marte e Júpiter, os pontinhos são o cinturão de asteroides. Cliques 2 e 3: os dois grupos, na ordem a partir do Sol.</p>
+    <p>Para lembrar a ordem, peça à turma uma frase com as iniciais M, V, T, M, J, S, U, N (a apostila não traz uma).</p>
+  </aside>
+</section>
+
+<!-- 4. Rochosos -->
+<section class="slide" data-nome="Planetas rochosos">
+  <div class="conteudo">
+    <p class="olho">Os quatro mais perto do Sol</p>
+    <h2 class="titulo">Planetas rochosos</h2>
+    <div class="planetas" style="position:absolute;left:0;right:0;top:160px">
+      <div data-passo="1"><svg viewBox="0 0 150 150" aria-hidden="true"><circle cx="75" cy="75" r="40" fill="#A9A3B8"/><circle cx="62" cy="64" r="7" fill="#8E889E"/><circle cx="88" cy="90" r="5" fill="#8E889E"/></svg>Mercúrio</div>
+      <div data-passo="2"><svg viewBox="0 0 150 150" aria-hidden="true"><circle cx="75" cy="75" r="52" fill="#E8C27A"/><path d="M30 70 Q75 56 120 70" stroke="#D6A85A" stroke-width="6" fill="none"/></svg>Vênus</div>
+      <div data-passo="3"><svg viewBox="0 0 150 150" aria-hidden="true"><circle cx="75" cy="75" r="54" fill="#4C9BE8"/><path d="M50 50 q20 -14 40 4 q6 24 -20 26 q-24 -6 -20 -30 z M86 92 q20 -4 24 14 q-10 16 -26 6 z" fill="#7CC67A"/></svg>Terra</div>
+      <div data-passo="4"><svg viewBox="0 0 150 150" aria-hidden="true"><circle cx="75" cy="75" r="44" fill="#D8644A"/><circle cx="60" cy="66" r="8" fill="#B84C36"/><circle cx="90" cy="88" r="6" fill="#B84C36"/></svg>Marte</div>
+    </div>
+    <div style="position:absolute;left:600px;right:0;top:500px;display:flex;flex-direction:column;gap:16px">
+      <div class="linha-ex" data-passo="5">São <b>menores</b> e têm <b>superfície sólida</b>.</div>
+      <div class="linha-ex" data-passo="6">Planetas e luas <b>não têm luz própria</b>: refletem a luz do Sol.</div>
+    </div>
+  </div>
+  <aside class="notas">
+    <p>Um planeta por clique, na ordem a partir do Sol. Desenhos esquemáticos; os tamanhos relativos entre os rochosos são aproximados (Terra e Vênus parecidos, Marte menor, Mercúrio o menor).</p>
+    <p>Clique 6: atenção da apostila "Planeta não brilha sozinho": só as estrelas, como o Sol, produzem luz.</p>
+  </aside>
+</section>
+
+<!-- 5. Gigantes gasosos -->
+<section class="slide" data-nome="Gigantes gasosos">
+  <div class="conteudo">
+    <p class="olho">Os quatro mais longe do Sol</p>
+    <h2 class="titulo">Planetas gigantes gasosos</h2>
+    <div class="planetas" style="position:absolute;left:0;right:0;top:160px">
+      <div data-passo="1"><svg viewBox="0 0 150 150" aria-hidden="true"><circle cx="75" cy="75" r="60" fill="#D9A774"/><g clip-path="url(#ssJup)"><g class="faixas"><path d="M0 50 H300 M0 72 H300 M0 96 H300" stroke="#B9824F" stroke-width="9" stroke-dasharray="40 20"/></g></g><ellipse cx="96" cy="96" rx="11" ry="7" fill="#C2384F" opacity=".8"/></svg>Júpiter</div>
+      <div data-passo="2"><svg viewBox="0 0 150 150" aria-hidden="true"><ellipse cx="75" cy="75" rx="72" ry="20" fill="none" stroke="#C9A866" stroke-width="7"/><circle cx="75" cy="75" r="44" fill="#E6CF8E"/><path d="M8 82 A72 20 0 0 0 142 82" fill="none" stroke="#C9A866" stroke-width="7"/></svg>Saturno</div>
+      <div data-passo="3"><svg viewBox="0 0 150 150" aria-hidden="true"><circle cx="75" cy="75" r="42" fill="#8FD3DD"/><ellipse cx="75" cy="75" rx="12" ry="56" fill="none" stroke="#6FB8C4" stroke-width="3" opacity=".7"/></svg>Urano</div>
+      <div data-passo="4"><svg viewBox="0 0 150 150" aria-hidden="true"><circle cx="75" cy="75" r="40" fill="#4D74D9"/><path d="M42 66 Q75 56 108 66" stroke="#3A5FC0" stroke-width="5" fill="none"/></svg>Netuno</div>
+    </div>
+    <div style="position:absolute;left:600px;right:0;top:500px;display:flex;flex-direction:column;gap:16px">
+      <div class="linha-ex" data-passo="5">São <b>enormes</b>, feitos principalmente de <b>gases</b>, <b>sem superfície sólida</b>.</div>
+      <div class="linha-ex" data-passo="6">Todos têm <b>anéis</b>, mas os de <b>Saturno</b> são os mais visíveis.</div>
+    </div>
+  </div>
+  <aside class="notas">
+    <p>Um planeta por clique. Júpiter é o maior planeta do Sistema Solar, mas é gasoso, não rochoso (cai na questão do bloco do IF). As faixas de Júpiter andam devagar só para dar vida ao desenho.</p>
+    <p>Os anéis de Urano estão desenhados bem fracos, para lembrar que existem; os de Júpiter e de Netuno não aparecem no desenho por serem muito tênues.</p>
+  </aside>
+</section>
+
+<!-- 6. Corpos menores -->
+<section class="slide" data-nome="Corpos menores">
+  <div class="conteudo">
+    <p class="olho">Além dos planetas</p>
+    <h2 class="titulo">Corpos menores</h2>
+    <div style="position:absolute;left:0;width:880px;top:160px;display:grid;grid-template-columns:1fr 1fr;gap:18px">
+      <div class="painel" data-passo="1"><h3>Planetas anões</h3><p>Como <b>Plutão</b>, assim classificado <b>desde 2006</b>.</p></div>
+      <div class="painel" data-passo="2"><h3>Asteroides</h3><p>Rochas que ficam, na maioria, no <b>cinturão entre Marte e Júpiter</b>.</p></div>
+      <div class="painel" data-passo="3"><h3>Cometas</h3><p>Blocos de <b>gelo e poeira</b> que formam uma <b>cauda</b> quando chegam perto do Sol.</p></div>
+      <div class="painel" data-passo="4"><h3>Satélites naturais</h3><p>Como a nossa <b>Lua</b>.</p></div>
+    </div>
+    <div data-anima="sistema-solar" data-modo="cometa" data-anima-passo="3" data-w="860" data-h="560" style="position:absolute;left:920px;top:140px;width:860px;height:560px"></div>
+  </div>
+  <aside class="notas">
+    <p>Um tipo por clique. No clique 3, o cometa percorre a sua órbita alongada: corre perto do Sol e fica lento longe dele; a cauda cresce perto do Sol e aponta sempre para longe dele. O círculo menor é a órbita da Terra, para comparar. Fora de escala.</p>
+    <p>Que a cauda aponta para longe do Sol não está escrito na apostila; é o que a animação mostra e pode ser comentado, sem cobrar.</p>
+  </aside>
+</section>
+
+<!-- 7. Distâncias gigantescas -->
+<section class="slide" data-nome="Exemplo: a luz do Sol">
+  <div class="conteudo">
+    <p class="olho">Exemplo · distâncias gigantescas</p>
+    <h2 class="titulo">Quanto tempo a luz do Sol leva até aqui?</h2>
+    <div data-anima="luz-sol" data-anima-passo="0" data-w="1760" data-h="200" style="position:absolute;left:0;top:150px;width:1760px;height:200px"></div>
+    <div class="caixa" style="position:absolute;left:0;width:760px;top:390px;padding:22px 32px">
+      <span class="rotulo">Dados</span>
+      <div class="texto" style="font-size:32px">Terra–Sol: \(d = 150\,000\,000\ \text{km}\)<br>Luz: \(v = 300\,000\ \text{km/s}\)</div>
+    </div>
+    <div style="position:absolute;left:900px;right:0;top:380px">
+      <div class="contas" style="font-size:44px;row-gap:12px">
+        <div class="eq" data-passo="1"><span>\(t\)</span><span>\(=\)</span><span>\(\dfrac{d}{v}\)</span></div>
+        <div class="eq" data-passo="2"><span>\(t\)</span><span>\(=\)</span><span>\(\dfrac{150\,000\,000}{300\,000}\)</span></div>
+        <div class="eq final" data-passo="3"><span>\(t\)</span><span>\(=\)</span><span>\(500\ \text{s}\)</span></div>
+      </div>
+    </div>
+    <span class="pilula pilula-resposta" data-passo="4" style="position:absolute;left:900px;top:760px">500 s: cerca de 8 minutos</span>
+  </div>
+  <aside class="notas">
+    <p>Exemplo da apostila ("A luz do Sol"). A animação mostra a luz saindo do Sol com o relógio acelerado até 500 s. Uma linha da conta por clique. Para dividir: corte os cinco zeros de baixo com cinco de cima: 1 500 ÷ 3 = 500. E 500 s ÷ 60 ≈ 8,3 min.</p>
+    <p>Frase da apostila para fechar: a luz que você vê agora saiu do Sol há 8 minutos.</p>
+  </aside>
+</section>
+
+<!-- 8. Via Láctea -->
+<section class="slide" data-nome="A Via Láctea">
+  <div class="conteudo">
+    <p class="olho">Galáxias</p>
+    <h2 class="titulo">A Via Láctea, vista por dentro</h2>
+    <svg viewBox="-260 -260 520 520" style="position:absolute;left:1200px;top:140px;width:560px;height:560px" aria-hidden="true" data-galaxia="900" data-passo="2">
+      <circle cx="0" cy="0" r="258" class="noite"/>
+    </svg>
+    <div style="position:absolute;left:0;width:1080px;top:160px;display:flex;flex-direction:column;gap:16px">
+      <div class="linha-ex">Longe das cidades, numa noite sem Lua, aparece uma <b>faixa esbranquiçada</b> no céu: a <b>Via Láctea</b>.</div>
+      <div class="caixa caixa-fundamental" data-passo="1" style="padding:20px 30px">
+        <span class="rotulo">Galáxia</span>
+        <div class="texto" style="font-size:30px">Conjunto enorme de <b>estrelas, gás e poeira</b>, mantidos juntos pela <b>gravidade</b>.</div>
+      </div>
+      <div class="linha-ex" data-passo="2">A Via Láctea é um <b>disco com braços em espiral</b>, com <b>centenas de bilhões</b> de estrelas. O Sol é só uma delas.</div>
+    </div>
+    <div class="linha-ex" data-passo="3" style="position:absolute;left:600px;width:560px;top:620px;font-size:27px">O Sistema Solar fica <b>num dos braços</b>, <b>longe do centro</b> (o anel amarelo).</div>
+  </div>
+  <aside class="notas">
+    <p>Clique 2: a Via Láctea vista de cima (esquema), girando bem devagar. O anel amarelo marca o lugar do Sistema Solar, num braço, longe do centro. A faixa que vemos no céu é esse disco visto de dentro.</p>
+    <p>Da apostila (bloco "Galáxias e o lugar da Terra no Universo").</p>
+  </aside>
+</section>
+
+<!-- 9. Ano-luz -->
+<section class="slide" data-nome="Ano-luz">
+  <div class="conteudo">
+    <p class="olho">Para medir distâncias enormes</p>
+    <h2 class="titulo">O ano-luz</h2>
+    <div class="caixa caixa-fundamental" style="position:absolute;left:0;width:1060px;top:160px;padding:24px 34px">
+      <span class="rotulo">Ano-luz</span>
+      <div class="texto">A <b>distância</b> que a luz percorre em <b>um ano</b>: cerca de <b>9,5 trilhões de quilômetros</b>.</div>
+    </div>
+    <div style="position:absolute;left:0;width:1060px;top:380px;display:flex;flex-direction:column;gap:16px">
+      <div class="linha-ex" data-passo="1">A Via Láctea mede cerca de <b>100 000 anos-luz</b> de um lado ao outro.</div>
+      <div class="linha-ex" data-passo="2">A galáxia grande mais próxima, <b>Andrômeda</b>, fica a cerca de <b>2,5 milhões de anos-luz</b>.</div>
+    </div>
+    <div class="caixa caixa-atencao" data-passo="4" style="position:absolute;left:600px;width:460px;top:620px;padding:18px 26px">
+      <div class="texto" style="font-size:28px">Ano-luz <b>não</b> é tempo: é <b>distância</b>.</div>
+    </div>
+    <svg viewBox="0 0 560 620" style="position:absolute;left:1160px;top:140px;width:560px;height:620px" aria-hidden="true" data-passo="3">
+      <rect width="560" height="620" rx="36" class="noite"/>
+      <g class="cint" fill="#fff"><circle cx="60" cy="60" r="2"/><circle cx="500" cy="100" r="2"/><circle cx="120" cy="560" r="2"/><circle cx="460" cy="520" r="2"/><circle cx="280" cy="40" r="2"/><circle cx="40" cy="330" r="2"/><circle cx="520" cy="320" r="2"/></g>
+      <g transform="translate(150 170) rotate(-20)" opacity=".9"><ellipse rx="90" ry="34" fill="#C9C0F0" opacity=".35"/><ellipse rx="50" ry="18" fill="#E4DEFB" opacity=".6"/><circle r="10" fill="#FFF4C2"/></g>
+      <g transform="translate(400 300) rotate(25)" opacity=".85"><ellipse rx="70" ry="26" fill="#C9C0F0" opacity=".35"/><ellipse rx="36" ry="13" fill="#E4DEFB" opacity=".6"/><circle r="8" fill="#FFF4C2"/></g>
+      <g transform="translate(200 450) rotate(10)" opacity=".8"><ellipse rx="60" ry="40" fill="#C9C0F0" opacity=".3"/><circle r="9" fill="#FFF4C2"/></g>
+      <g fill="#E4DEFB" opacity=".6"><ellipse cx="460" cy="160" rx="20" ry="8"/><ellipse cx="90" cy="400" rx="16" ry="7"/><ellipse cx="480" cy="460" rx="14" ry="10"/><ellipse cx="320" cy="560" rx="18" ry="7"/><ellipse cx="320" cy="110" rx="12" ry="6"/></g>
+      <text x="280" y="604" text-anchor="middle" class="rot-claro" style="font-size:22px">o Universo tem bilhões de galáxias</text>
+    </svg>
+  </div>
+  <aside class="notas">
+    <p>Da apostila. Clique 3: os telescópios mostram que o Universo tem bilhões de galáxias (desenho esquemático, cada mancha é uma galáxia). Clique 4: a atenção "Ano-luz mede distância".</p>
+    <p>Se perguntarem de onde vem o 9,5 trilhões: 300 000 km/s vezes os segundos de um ano (cerca de 31,5 milhões) dá cerca de 9,5 trilhões de km. A conta não está na apostila e não precisa ser feita.</p>
+  </aside>
+</section>
+
+<!-- 10. Nosso endereço -->
+<section class="slide" data-nome="Nosso endereço">
+  <div class="conteudo">
+    <p class="olho">O lugar da Terra no Universo</p>
+    <h2 class="titulo">Nosso endereço</h2>
+    <svg viewBox="0 0 700 700" style="position:absolute;left:1060px;top:130px;width:700px;height:700px" aria-hidden="true">
+      <g data-passo="4"><circle cx="350" cy="350" r="340" fill="#EFEBFF" stroke="#C9C0F0" stroke-width="3"/><text x="350" y="50" text-anchor="middle" class="rot-fig" style="fill:#3F2FA0;font-weight:800">Universo: bilhões de galáxias</text></g>
+      <g data-passo="3"><circle cx="350" cy="380" r="250" fill="#E0F4F4" stroke="#0F8B8D" stroke-width="3"/><text x="350" y="166" text-anchor="middle" class="rot-fig" style="fill:#0B6B6D;font-weight:800">Via Láctea (um braço)</text></g>
+      <g data-passo="2"><circle cx="350" cy="420" r="160" fill="#FFF4C2" stroke="#F0A500" stroke-width="3"/><text x="350" y="300" text-anchor="middle" class="rot-fig" style="fill:#8A6A00;font-weight:800">Sistema Solar</text></g>
+      <g data-passo="1"><circle cx="350" cy="450" r="60" fill="#4C9BE8" stroke="#292B2C" stroke-width="3"/><text x="350" y="458" text-anchor="middle" class="rot-fig" style="fill:#fff;font-weight:800">Terra</text></g>
+    </svg>
+    <div class="endereco" style="position:absolute;left:0;width:980px;top:170px;display:flex;flex-direction:column;gap:16px">
+      <div class="linha-ex" data-passo="1"><b>Planeta:</b> Terra</div>
+      <div class="linha-ex" data-passo="2"><b>Sistema:</b> Sistema Solar</div>
+      <div class="linha-ex" data-passo="3"><b>Galáxia:</b> um braço da Via Láctea, longe do centro</div>
+      <div class="linha-ex" data-passo="4"><b>Universo:</b> uma galáxia entre <b>bilhões</b></div>
+    </div>
+  </div>
+  <aside class="notas"><p>O "endereço" da apostila, um nível por clique. Os círculos são só de organização (fora de escala).</p></aside>
+</section>
+
+<!-- 11. Questão 1 -->
+<section class="slide questao" data-nome="Questão 1">
+  <div class="conteudo">
+    <div class="area-resolucao"></div>
+    <span class="pilula pilula-pausa" data-em="1:some">Pause o vídeo e tente</span>
+    <div class="painel-questao">
+      <p class="olho">Questão 1 · Modelo IF</p>
+      <p class="enunciado" style="font-size:25px">Para a feira de ciências de uma escola de Muriaé, na Zona da Mata mineira, os alunos vão pendurar no teto bolas de isopor que representam <b>só os planetas rochosos</b> do Sistema Solar. As bolas devem ficar em ordem de distância ao Sol, começando pelo planeta mais próximo dele.</p>
+      <p class="enunciado" style="font-size:25px">A sequência correta das bolas é</p>
+      <ol class="alternativas" style="gap:8px">
+        <li data-em="2:certo" style="font-size:23px;padding:6px 14px"><b>A</b><span>Mercúrio, Vênus, Terra e Marte.</span></li>
+        <li data-em="2:apaga" style="font-size:23px;padding:6px 14px"><b>B</b><span>Mercúrio, Terra, Vênus e Marte.</span></li>
+        <li data-em="2:apaga" style="font-size:23px;padding:6px 14px"><b>C</b><span>Vênus, Terra, Marte e Júpiter.</span></li>
+        <li data-em="2:apaga" style="font-size:23px;padding:6px 14px"><b>D</b><span>Marte, Terra, Vênus e Mercúrio.</span></li>
+        <li data-em="2:apaga" style="font-size:23px;padding:6px 14px"><b>E</b><span>Mercúrio, Vênus, Terra e Plutão.</span></li>
+      </ol>
+    </div>
+  </div>
+  <aside class="resolucao">
+    <p class="dados"><b>Dados:</b> só os rochosos, do mais perto ao mais longe do Sol.</p>
+    <ol class="passos">
+      <li>Ordem: Mercúrio, Vênus, Terra, Marte, Júpiter…</li>
+      <li>Rochosos: os quatro primeiros.</li>
+    </ol>
+    <p class="resposta"><b>Resposta:</b> Mercúrio, Vênus, Terra e Marte. <b>Gabarito A.</b></p>
+    <p class="atencao"><b>Destaque no quadro:</b> Plutão é planeta anão desde 2006.</p>
+    <ul class="erros">
+      <li><b>B</b> Troca Vênus e Terra.</li>
+      <li><b>C</b> Tira Mercúrio e põe Júpiter (gasoso).</li>
+      <li><b>D</b> Ordem invertida.</li>
+      <li><b>E</b> Plutão não é planeta rochoso.</li>
+    </ul>
+  </aside>
+  <aside class="notas">
+    <p>Clique 1 tira o aviso de pausa: resolva na área (D liga a caneta; E esconde o enunciado). Clique 2: gabarito A.</p>
+    <p>Modelo IF, lote if-fisica-universo, m003, FIS-8733 (nível 2).</p>
+  </aside>
+</section>
+
+<!-- 12. Questão 2 -->
+<section class="slide questao" data-nome="Questão 2">
+  <div class="conteudo">
+    <div class="area-resolucao"></div>
+    <span class="pilula pilula-pausa" data-em="1:some">Pause o vídeo e tente</span>
+    <div class="painel-questao" style="gap:12px">
+      <p class="olho">Questão 2 · Modelo IF</p>
+      <p class="enunciado" style="font-size:23px">A sonda Juno, da NASA, estuda Júpiter desde 2016 e funciona com painéis solares, que aproveitam a luz do Sol. A tabela mostra a distância média de dois planetas ao Sol.</p>
+      <table style="border-collapse:collapse;font-size:22px;background:#fff;border:2px solid var(--lilas-2)">
+        <tr style="background:var(--d-clara);color:var(--d-forte);font-weight:800"><td style="padding:6px 12px">Planeta</td><td style="padding:6px 12px">Distância média ao Sol</td></tr>
+        <tr><td style="padding:6px 12px;border-top:1px solid var(--lilas-2)">Terra</td><td style="padding:6px 12px;border-top:1px solid var(--lilas-2)">150 milhões de km</td></tr>
+        <tr><td style="padding:6px 12px;border-top:1px solid var(--lilas-2)">Júpiter</td><td style="padding:6px 12px;border-top:1px solid var(--lilas-2)">780 milhões de km</td></tr>
+      </table>
+      <p class="enunciado" style="font-size:23px">A luz percorre cerca de 300 000 km por segundo. O tempo que a luz do Sol leva para chegar a Júpiter é de cerca de</p>
+      <ol class="alternativas curtas">
+        <li data-em="2:apaga" style="font-size:21px"><b>A</b><span>8 minutos.</span></li>
+        <li data-em="2:certo" style="font-size:21px"><b>B</b><span>43 minutos.</span></li>
+        <li data-em="2:apaga" style="font-size:21px"><b>C</b><span>1,5 minuto.</span></li>
+        <li data-em="2:apaga" style="font-size:21px"><b>D</b><span>2,6 segundos.</span></li>
+        <li data-em="2:apaga" style="font-size:21px"><b>E</b><span>2 600 minutos.</span></li>
+      </ol>
+    </div>
+  </div>
+  <aside class="resolucao">
+    <p class="dados"><b>Dados:</b> \(d = 780\,000\,000\ \text{km}\); \(v = 300\,000\ \text{km/s}\).</p>
+    <ol class="passos">
+      <li>\(t = \dfrac{d}{v}\)</li>
+      <li>\(t = \dfrac{780\,000\,000}{300\,000} = 2\,600\ \text{s}\)</li>
+      <li>\(t = \dfrac{2\,600}{60} \approx 43\ \text{min}\)</li>
+    </ol>
+    <p class="resposta"><b>Resposta:</b> cerca de 43 minutos. <b>Gabarito B.</b></p>
+    <p class="atencao"><b>Destaque no quadro:</b> Segundos → minutos: divida por 60.</p>
+    <ul class="erros">
+      <li><b>A</b> 8 min é até a Terra.</li>
+      <li><b>C</b> Dividiu 8 min por 5,2: devia multiplicar.</li>
+      <li><b>D</b> Fez 780 ÷ 300, esquecendo milhões e milhares.</li>
+      <li><b>E</b> 2 600 está em segundos, não minutos.</li>
+    </ul>
+  </aside>
+  <aside class="notas">
+    <p>Clique 1 tira o aviso de pausa: resolva na área (D liga a caneta; E esconde o enunciado). Clique 2: gabarito B.</p>
+    <p>Modelo IF, lote if-fisica-universo, m005, FIS-8735 (nível 3). Contas conferidas: 780 000 000 ÷ 300 000 = 2 600 s; 2 600 ÷ 60 = 43,3 min. É o exemplo "A luz do Sol" da apostila com outra distância.</p>
+  </aside>
+</section>
+
+<!-- 13. Questão 3 -->
+<section class="slide questao" data-nome="Questão 3">
+  <div class="conteudo">
+    <div class="area-resolucao"></div>
+    <span class="pilula pilula-pausa" data-em="1:some">Pause o vídeo e tente</span>
+    <div class="painel-questao" style="gap:10px">
+      <p class="olho">Questão 3 · Modelo IF</p>
+      <p class="enunciado" style="font-size:21px">Numa noite sem Lua, na zona rural de Lima Duarte, na Zona da Mata mineira, um grupo de estudantes viu atravessar o céu uma faixa esbranquiçada, como um caminho de leite. O guia explicou que aquilo era a Via Láctea. Os estudantes, então, fizeram quatro afirmações:</p>
+      <p class="enunciado" style="font-size:21px">I. A faixa é a nossa galáxia vista por dentro, a partir de um dos seus braços.<br>II. A faixa é uma nuvem da atmosfera da Terra, iluminada pela luz das estrelas.<br>III. Como a Via Láctea mede cerca de 100 000 anos-luz, a luz leva cerca de 100 000 anos para atravessá-la de um lado ao outro.<br>IV. A faixa aparece no céu porque o Sistema Solar fica bem no centro da Via Láctea.</p>
+      <p class="enunciado" style="font-size:21px">Estão <b>CORRETAS</b> apenas as afirmativas</p>
+      <ol class="alternativas curtas">
+        <li data-em="2:apaga" style="font-size:21px"><b>A</b><span>I.</span></li>
+        <li data-em="2:certo" style="font-size:21px"><b>B</b><span>I e III.</span></li>
+        <li data-em="2:apaga" style="font-size:21px"><b>C</b><span>II e IV.</span></li>
+        <li data-em="2:apaga" style="font-size:21px"><b>D</b><span>I, III e IV.</span></li>
+        <li data-em="2:apaga" style="font-size:21px"><b>E</b><span>II e III.</span></li>
+      </ol>
+    </div>
+  </div>
+  <aside class="resolucao">
+    <p class="dados"><b>Dados:</b> a faixa da Via Láctea; quatro afirmações.</p>
+    <ol class="passos">
+      <li><b>I:</b> disco visto de dentro, de um braço (V).</li>
+      <li><b>II:</b> não é nuvem: são estrelas, gás e poeira (F).</li>
+      <li><b>III:</b> ano-luz = distância da luz em 1 ano (V).</li>
+      <li><b>IV:</b> Sistema Solar longe do centro (F).</li>
+    </ol>
+    <p class="resposta"><b>Resposta:</b> I e III. <b>Gabarito B.</b></p>
+    <p class="atencao"><b>Destaque no quadro:</b> 100 000 anos-luz: a luz leva 100 000 anos.</p>
+    <ul class="erros">
+      <li><b>A</b> A III também está correta.</li>
+      <li><b>C</b> II e IV são as duas falsas.</li>
+      <li><b>D</b> A IV é falsa.</li>
+      <li><b>E</b> A II é falsa e a I ficou de fora.</li>
+    </ul>
+  </aside>
+  <aside class="notas">
+    <p>Clique 1 tira o aviso de pausa: resolva na área (D liga a caneta; E esconde o enunciado). Clique 2: gabarito B.</p>
+    <p>Modelo IF, lote if-fisica-universo, m009, FIS-8739 (nível 4).</p>
+  </aside>
+</section>
+
+<!-- 14. Resumo -->
+<section class="slide" data-nome="Resumo">
+  <div class="conteudo">
+    <p class="olho">Resumo · Sistema Solar e Universo</p>
+    <h2 class="titulo">O essencial</h2>
+    <div class="resumo" style="position:absolute;left:0;right:0;top:150px">
+      <div><b>Sistema Solar:</b> o Sol, que é uma <b>estrela</b>, e <b>oito planetas</b>.</div>
+      <div><b>Rochosos:</b> Mercúrio, Vênus, Terra, Marte. <b>Gigantes gasosos:</b> Júpiter, Saturno, Urano, Netuno.</div>
+      <div><b>Corpos menores:</b> planetas anões, asteroides, cometas e satélites.</div>
+      <div>A luz do Sol leva cerca de <b>8 minutos</b> para chegar à Terra.</div>
+      <div><b>Via Láctea:</b> galáxia em espiral, centenas de bilhões de estrelas; Sistema Solar num braço, longe do centro.</div>
+      <div><b>Ano-luz</b> é distância. O Universo tem <b>bilhões</b> de galáxias.</div>
+    </div>
+  </div>
+  <aside class="notas"><p>Resumo do subcapítulo, igual ao "O essencial" da apostila. Peça para tirarem um print.</p></aside>
+</section>
+
+<!-- 15. A seguir -->
+<section class="slide capa" data-nome="A seguir">
+  <div class="estrelas"></div>
+  <div class="texto-capa" style="top:200px">
+    <span class="selo">Física · IF</span>
+    <p class="aula" style="font-size:28px">A seguir · Astronomia · Questões do IF Sudeste</p>
+    <h1>Questões do IF Sudeste</h1>
+    <p class="sub">Astronomia</p>
+  </div>
+  <svg class="emblema" viewBox="0 0 640 640" aria-hidden="true">
+    <rect x="150" y="80" width="340" height="460" rx="36" fill="#fff" opacity=".95"/>
+    <rect x="200" y="140" width="240" height="18" rx="9" fill="#C9C0F0"/><rect x="200" y="180" width="200" height="18" rx="9" fill="#C9C0F0"/>
+    <g font-family="Figtree,'Segoe UI',sans-serif" font-size="30" font-weight="800" text-anchor="middle">
+      <circle cx="225" cy="260" r="24" fill="#F1EEFD"/><text x="225" y="271" fill="#3F2FA0">A</text><rect x="265" y="252" width="160" height="16" rx="8" fill="#E4DEFB"/>
+      <circle cx="225" cy="320" r="24" fill="#F1EEFD"/><text x="225" y="331" fill="#3F2FA0">B</text><rect x="265" y="312" width="130" height="16" rx="8" fill="#E4DEFB"/>
+      <circle cx="225" cy="380" r="24" fill="#FFD10C"/><text x="225" y="391" fill="#292B2C">C</text><rect x="265" y="372" width="150" height="16" rx="8" fill="#E4DEFB"/>
+      <circle cx="225" cy="440" r="24" fill="#F1EEFD"/><text x="225" y="451" fill="#3F2FA0">D</text><rect x="265" y="432" width="110" height="16" rx="8" fill="#E4DEFB"/>
+    </g>
+    <circle cx="470" cy="470" r="86" fill="var(--d)" stroke="#fff" stroke-width="6"/>
+    <text x="470" y="490" text-anchor="middle" font-family="'Bricolage Grotesque',Figtree,sans-serif" font-size="58" font-weight="800" fill="#fff">IF</text>
+  </svg>
+  <img class="logo-capa" src="{{LOGO_BRANCO}}" alt="Quarks">
+  <aside class="notas"><p>Fim do conteúdo de Astronomia. A seguir, o bloco "Questões do IF Sudeste" do capítulo: uma questão oficial (Lua e gravidade) e duas Modelo (gnômon e Sistema Solar).</p></aside>
+</section>

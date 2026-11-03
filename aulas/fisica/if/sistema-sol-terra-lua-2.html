@@ -1,0 +1,506 @@
+<!--aula
+{"disciplina": "fisica", "curso": "IF", "assunto": "Sistema Sol, Terra e Lua", "parte": "Parte 2 de 2", "titulo": "Fases da Lua e eclipses", "scripts": ["animacoes-astronomia.js"]}
+-->
+<!-- Fonte: apostila IF, Física, cap. 1 Astronomia, 1.2 Sistema Sol, Terra e Lua (blocos "Fases da Lua" e "Eclipses", e o resumo do subcapítulo). Questões: Modelo IF, lote if-fisica-sistema-sol-terra-e-lua (m006 FIS-8746, m004 FIS-8744, m008 FIS-8748). -->
+<style>
+  .caixa, .cartao, .linha-ex, .painel { box-sizing: border-box; }
+  .linha-ex { background: var(--branco); border: 2px solid var(--lilas-2); border-radius: 24px; padding: 14px 26px; font-size: 30px; line-height: 1.3; }
+  .linha-ex b { color: var(--roxo-titulo); }
+  .painel { background: var(--branco); border: 2px solid var(--lilas-2); border-radius: 30px; padding: 18px 22px; }
+  .painel h3 { margin: 0 0 6px; font: 800 32px var(--fonte-titulo); letter-spacing: -.02em; color: var(--roxo-titulo); }
+  .painel p { margin: 6px 0 0; font-size: 24px; line-height: 1.32; }
+  .painel b { color: var(--roxo-titulo); }
+  .rot-fig { font-family: Figtree, "Segoe UI", sans-serif; font-weight: 700; font-size: 24px; fill: #5E5A70; }
+  .rot-claro { font-family: Figtree, "Segoe UI", sans-serif; font-weight: 700; font-size: 24px; fill: #E4DEFB; }
+  .noite { fill: #2B2357; }
+  /* a Lua mostra sempre a mesma face: gira em volta da Terra com a marca voltada para ela */
+  @keyframes gira-anti { to { transform: rotate(-360deg); } }
+  .lua-volta { transform-box: view-box; transform-origin: 260px 260px; }
+  .slide.ativo .mostra .lua-volta { animation: gira-anti 20s linear infinite; }
+  /* eclipse do Sol visto daqui: a Lua passa na frente do Sol */
+  @keyframes lua-passa { 0% { transform: translateX(-260px); } 42%, 58% { transform: translateX(0); } 100% { transform: translateX(260px); } }
+  @keyframes coroa { 0%, 36% { opacity: 0; } 44%, 56% { opacity: 1; } 64%, 100% { opacity: 0; } }
+  @keyframes escurece { 0%, 20% { opacity: 0; } 44%, 56% { opacity: .85; } 80%, 100% { opacity: 0; } }
+  .disco-lua { transform: translateX(-260px); }
+  .slide.ativo .mostra .disco-lua { animation: lua-passa 9s ease-in-out infinite; }
+  .coroa, .ceu-escuro { opacity: 0; }
+  .slide.ativo .mostra .coroa { animation: coroa 9s ease-in-out infinite; }
+  .slide.ativo .mostra .ceu-escuro { animation: escurece 9s ease-in-out infinite; }
+  /* eclipse da Lua: a Lua atravessa a sombra da Terra e fica avermelhada */
+  @keyframes lua-sombra { 0% { transform: translateX(-300px); } 45%, 55% { transform: translateX(0); } 100% { transform: translateX(300px); } }
+  @keyframes avermelha { 0%, 25% { opacity: 0; } 45%, 55% { opacity: .85; } 75%, 100% { opacity: 0; } }
+  .lua-ec { transform: translateX(-300px); }
+  .slide.ativo .mostra .lua-ec { animation: lua-sombra 10s ease-in-out infinite; }
+  .vermelho { opacity: 0; }
+  .slide.ativo .mostra .vermelho { animation: avermelha 10s ease-in-out infinite; }
+  @keyframes cintila { 0%, 100% { opacity: .35; } 50% { opacity: 1; } }
+  .slide.ativo .cint circle { animation: cintila 4.5s ease-in-out infinite; }
+  .cint circle:nth-child(2n) { animation-delay: -2s !important; }
+</style>
+
+<svg width="0" height="0" style="position:absolute" aria-hidden="true">
+  <defs>
+    <radialGradient id="st2Coroa" cx=".5" cy=".5" r=".5"><stop offset=".55" stop-color="#FFF4C2" stop-opacity="1"/><stop offset="1" stop-color="#FFF4C2" stop-opacity="0"/></radialGradient>
+    <clipPath id="st2Ceu"><rect width="700" height="420" rx="30"/></clipPath>
+    <linearGradient id="st2Umbra" x1="0" y1="0" x2="1" y2="0"><stop offset="0" stop-color="#2B2357" stop-opacity=".9"/><stop offset="1" stop-color="#2B2357" stop-opacity=".75"/></linearGradient>
+  </defs>
+</svg>
+
+<!-- 1. Capa -->
+<section class="slide capa" data-nome="Capa">
+  <div class="estrelas"></div>
+  <div class="texto-capa">
+    <span class="selo">Física · IF</span>
+    <p class="aula">Sistema Sol, Terra e Lua · Parte 2 de 2</p>
+    <h1>Fases da Lua e eclipses</h1>
+    <p class="sub">A Lua não muda de forma; muda o que vemos dela</p>
+  </div>
+  <svg class="emblema" viewBox="0 0 640 640" aria-hidden="true">
+    <g class="gira-lento"><ellipse cx="320" cy="320" rx="300" ry="128" fill="none" stroke="#fff" stroke-opacity=".38" stroke-width="2" transform="rotate(-10 320 320)"/></g>
+    <circle cx="320" cy="320" r="190" fill="#3A3550"/>
+    <path d="M320 130 A190 190 0 0 0 320 510 A80 190 0 0 0 320 130 Z" fill="#F3F1FA"/>
+    <circle cx="320" cy="320" r="190" fill="none" stroke="#FFD10C" stroke-width="4"/>
+  </svg>
+  <img class="logo-capa" src="{{LOGO_BRANCO}}" alt="Quarks">
+  <aside class="notas"><p>Parte 2 de Sistema Sol, Terra e Lua: por que vemos fases da Lua, a face que nunca muda, os eclipses do Sol e da Lua e por que eles não acontecem todo mês. No fim, o resumo do subcapítulo inteiro.</p></aside>
+</section>
+
+<!-- 2. A Lua muda de forma? -->
+<section class="slide" data-nome="A Lua muda de forma?">
+  <div class="conteudo">
+    <p class="olho">Para começar</p>
+    <h2 class="titulo">A Lua muda de forma?</h2>
+    <svg viewBox="0 0 1760 240" style="position:absolute;left:0;top:170px;width:1760px;height:240px" aria-hidden="true">
+      <g>
+        <circle cx="120" cy="120" r="90" fill="#3A3550"/><circle cx="120" cy="120" r="90" fill="none" stroke="#C9C0F0" stroke-width="3"/>
+        <circle cx="400" cy="120" r="90" fill="#3A3550"/><path d="M400 30 A90 90 0 0 0 400 210 A60 90 0 0 1 400 30 Z" fill="#F3F1FA"/><circle cx="400" cy="120" r="90" fill="none" stroke="#C9C0F0" stroke-width="3"/>
+        <circle cx="680" cy="120" r="90" fill="#3A3550"/><path d="M680 30 A90 90 0 0 0 680 210 Z" fill="#F3F1FA"/><circle cx="680" cy="120" r="90" fill="none" stroke="#C9C0F0" stroke-width="3"/>
+        <circle cx="960" cy="120" r="90" fill="#F3F1FA"/><circle cx="960" cy="120" r="90" fill="none" stroke="#C9C0F0" stroke-width="3"/>
+        <circle cx="1240" cy="120" r="90" fill="#3A3550"/><path d="M1240 30 A90 90 0 0 1 1240 210 Z" fill="#F3F1FA"/><circle cx="1240" cy="120" r="90" fill="none" stroke="#C9C0F0" stroke-width="3"/>
+        <circle cx="1520" cy="120" r="90" fill="#3A3550"/><path d="M1520 30 A90 90 0 0 1 1520 210 A60 90 0 0 0 1520 30 Z" fill="#F3F1FA"/><circle cx="1520" cy="120" r="90" fill="none" stroke="#C9C0F0" stroke-width="3"/>
+      </g>
+    </svg>
+    <div style="position:absolute;left:0;right:0;top:440px;display:flex;flex-direction:column;gap:18px">
+      <div class="linha-ex">Ao longo de um mês, a Lua <b>some</b>, vira um arco fino, <b>meia lua</b>, fica <b>redonda</b> e volta a diminuir.</div>
+    </div>
+    <span class="pilula pilula-resposta" data-passo="1" style="position:absolute;left:600px;top:600px">A Lua não muda de forma. Muda o que vemos dela.</span>
+  </div>
+  <aside class="notas"><p>Gancho da apostila. Pergunte: "a Lua muda de forma?". Os desenhos estão como a Lua aparece no céu do Brasil, crescendo da esquerda para a direita.</p></aside>
+</section>
+
+<!-- 3. Metade iluminada -->
+<section class="slide" data-nome="Fases: a metade iluminada">
+  <div class="conteudo">
+    <p class="olho">Fases da Lua</p>
+    <h2 class="titulo">Sempre há uma metade iluminada</h2>
+    <div data-anima="fases-lua" data-anima-passo="1" data-w="1100" data-h="560" style="position:absolute;left:660px;top:150px;width:1100px;height:560px"></div>
+    <div style="position:absolute;left:0;width:600px;top:160px;display:flex;flex-direction:column;gap:14px">
+      <div class="linha-ex" style="font-size:27px">A Lua <b>não tem luz própria</b>: ela reflete a luz do Sol.</div>
+      <div class="linha-ex" data-passo="1" style="font-size:27px">A metade voltada para o Sol está sempre <b>iluminada</b>.</div>
+      <div class="linha-ex" data-passo="2" style="font-size:27px">Na volta em torno da Terra, vemos daqui uma parte <b>maior ou menor</b> dessa metade.</div>
+    </div>
+    <div class="caixa caixa-fundamental" data-passo="3" style="position:absolute;left:600px;width:1160px;top:740px;padding:16px 28px">
+      <div class="texto" style="font-size:27px"><b>Fases da Lua:</b> as partes da metade iluminada que vemos da Terra, num ciclo de cerca de <b>29 dias e meio</b>.</div>
+    </div>
+  </div>
+  <aside class="notas">
+    <p>Clique 1: a Lua começa a dar a volta na Terra (vista de cima, com o Sol à esquerda). À direita, a mesma Lua como a vemos no céu do Brasil; o nome aparece quando ela passa por uma das quatro fases principais. Uma volta da animação dura 22 s; no céu, 29 dias e meio.</p>
+    <p>A linha pontilhada liga a Terra à Lua: é para lá que olhamos. A definição do clique 3 é a da apostila.</p>
+  </aside>
+</section>
+
+<!-- 4. As quatro fases -->
+<section class="slide" data-nome="As quatro fases principais">
+  <div class="conteudo">
+    <p class="olho">As fases principais</p>
+    <h2 class="titulo">Nova, crescente, cheia, minguante</h2>
+    <div style="position:absolute;left:0;right:0;top:160px;display:grid;grid-template-columns:repeat(4,1fr);gap:22px">
+      <div class="painel" data-passo="1">
+        <svg viewBox="0 0 200 130" style="width:100%;height:130px;display:block" aria-hidden="true"><circle cx="100" cy="65" r="56" fill="#3A3550"/><circle cx="100" cy="65" r="56" fill="none" stroke="#8C7BEA" stroke-width="3" stroke-dasharray="4 6"/></svg>
+        <h3>Lua nova</h3>
+        <p>A Lua está <b>entre a Terra e o Sol</b>. A face iluminada fica para o outro lado: <b>não a vemos</b>.</p>
+      </div>
+      <div class="painel" data-passo="2">
+        <svg viewBox="0 0 200 130" style="width:100%;height:130px;display:block" aria-hidden="true"><circle cx="100" cy="65" r="56" fill="#3A3550"/><path d="M100 9 A56 56 0 0 0 100 121 Z" fill="#F3F1FA"/><circle cx="100" cy="65" r="56" fill="none" stroke="#292B2C" stroke-width="3"/></svg>
+        <h3>Quarto crescente</h3>
+        <p>Vemos <b>metade</b> da face iluminada. Aparece <b>à tarde</b> e no começo da noite.</p>
+      </div>
+      <div class="painel" data-passo="3">
+        <svg viewBox="0 0 200 130" style="width:100%;height:130px;display:block" aria-hidden="true"><circle cx="100" cy="65" r="56" fill="#F3F1FA"/><circle cx="100" cy="65" r="56" fill="none" stroke="#292B2C" stroke-width="3"/></svg>
+        <h3>Lua cheia</h3>
+        <p>A <b>Terra está entre o Sol e a Lua</b>. Vemos toda a face iluminada. Nasce perto do pôr do sol e fica <b>a noite inteira</b>.</p>
+      </div>
+      <div class="painel" data-passo="4">
+        <svg viewBox="0 0 200 130" style="width:100%;height:130px;display:block" aria-hidden="true"><circle cx="100" cy="65" r="56" fill="#3A3550"/><path d="M100 9 A56 56 0 0 1 100 121 Z" fill="#F3F1FA"/><circle cx="100" cy="65" r="56" fill="none" stroke="#292B2C" stroke-width="3"/></svg>
+        <h3>Quarto minguante</h3>
+        <p>De novo metade, no <b>lado oposto</b>. Nasce por volta da <b>meia-noite</b>; aparece de madrugada e de manhã.</p>
+      </div>
+    </div>
+    <div class="caixa" data-passo="5" style="position:absolute;left:600px;right:0;top:660px;padding:16px 28px">
+      <div class="texto" style="font-size:28px">Cada fase principal fica a cerca de <b>uma semana</b> da seguinte (um quarto do ciclo).</div>
+    </div>
+  </div>
+  <aside class="notas">
+    <p>Uma fase por clique, como a apostila descreve, com o aspecto da Lua no céu do Brasil (crescente com o lado claro à esquerda; minguante à direita). Volte ao slide anterior se quiser mostrar a posição de cada fase na órbita.</p>
+    <p>Clique 5: o "um quarto do ciclo" liga com a semana, vista em Observação do céu.</p>
+  </aside>
+</section>
+
+<!-- 5. A mesma face -->
+<section class="slide" data-nome="Sempre a mesma face">
+  <div class="conteudo">
+    <p class="olho">Uma curiosidade que cai em prova</p>
+    <h2 class="titulo">A Lua mostra sempre a mesma face</h2>
+    <svg viewBox="0 0 520 520" style="position:absolute;left:1180px;top:150px;width:520px;height:520px" aria-hidden="true" data-passo="1">
+      <circle cx="260" cy="260" r="190" fill="none" stroke="#B9B0E0" stroke-width="3" stroke-dasharray="8 10"/>
+      <circle cx="260" cy="260" r="60" fill="#4C9BE8" stroke="#292B2C" stroke-width="3"/>
+      <text x="260" y="268" text-anchor="middle" class="rot-fig" style="fill:#fff;font-weight:800">Terra</text>
+      <g class="lua-volta">
+        <circle cx="450" cy="260" r="40" fill="#E4E1EE" stroke="#292B2C" stroke-width="3"/>
+        <circle cx="420" cy="260" r="11" fill="#0F8B8D"/>
+        <line x1="420" y1="260" x2="330" y2="260" stroke="#0F8B8D" stroke-width="3" stroke-dasharray="4 6"/>
+      </g>
+    </svg>
+    <div style="position:absolute;left:0;width:1060px;top:170px;display:flex;flex-direction:column;gap:18px">
+      <div class="linha-ex" data-passo="1">A Lua gira em torno de si mesma no <b>mesmo tempo</b> em que dá a volta em torno da Terra.</div>
+      <div class="linha-ex" data-passo="2">Por isso a marca verde fica <b>sempre voltada para a Terra</b>: vemos sempre a <b>mesma face</b>.</div>
+    </div>
+  </div>
+  <aside class="notas"><p>Clique 1: a Lua dá a volta na Terra com a marca (a "face" que vemos) sempre apontada para nós. Repare que, para isso, a própria Lua também precisa girar uma vez a cada volta. Da apostila. Esquema fora de escala, sem o Sol.</p></aside>
+</section>
+
+<!-- 6. Atenção -->
+<section class="slide" data-nome="Atenção: não é a sombra">
+  <div class="conteudo">
+    <p class="olho">Atenção</p>
+    <h2 class="titulo">A sombra da Terra não faz as fases</h2>
+    <div class="caixa caixa-atencao" style="position:absolute;left:0;right:0;top:160px;padding:24px 34px">
+      <div class="texto">As fases <b>não</b> são causadas pela sombra da Terra sobre a Lua. A sombra da Terra só atinge a Lua num <b>eclipse da Lua</b>, e isso é <b>raro</b>.</div>
+    </div>
+    <div style="position:absolute;left:600px;right:0;top:400px;display:grid;grid-template-columns:1fr 1fr;gap:30px">
+      <div class="painel" data-passo="1"><h3>Fase</h3><p>Vemos uma <b>parte maior ou menor</b> da metade que o Sol ilumina.</p></div>
+      <div class="painel" data-passo="2"><h3>Eclipse da Lua</h3><p>A <b>sombra da Terra</b> cobre a Lua. Só na lua cheia, e raramente.</p></div>
+    </div>
+  </div>
+  <aside class="notas"><p>Da apostila (atenção "A sombra da Terra não faz as fases"). Erro muito comum; está nas alternativas erradas da questão 1 desta parte.</p></aside>
+</section>
+
+<!-- 7. Exemplo: Lua de madrugada -->
+<section class="slide" data-nome="Exemplo: Lua de madrugada">
+  <div class="conteudo">
+    <p class="olho">Exemplo</p>
+    <h2 class="titulo">Meia lua às 5 h da manhã</h2>
+    <p class="texto" style="position:absolute;left:0;width:1040px;top:160px;margin:0">Rafael acordou às 5 h da manhã e viu uma <b>meia lua alta</b> no céu. Que fase é mais provável?</p>
+    <div style="position:absolute;left:0;width:1040px;top:320px;display:flex;flex-direction:column;gap:18px">
+      <div class="linha-ex" data-passo="1"><b>Raciocínio:</b> meia lua é quarto crescente ou quarto minguante.</div>
+      <div class="linha-ex" data-passo="2">A meia lua que aparece de <b>madrugada e de manhã</b> é a que nasce por volta da <b>meia-noite</b>.</div>
+    </div>
+    <svg viewBox="0 0 440 440" style="position:absolute;left:1260px;top:160px;width:440px;height:440px" aria-hidden="true">
+      <rect width="440" height="440" rx="40" class="noite"/>
+      <g class="cint" fill="#fff"><circle cx="60" cy="70" r="3"/><circle cx="380" cy="90" r="3"/><circle cx="320" cy="360" r="2"/><circle cx="90" cy="330" r="2.5"/><circle cx="200" cy="50" r="2"/></g>
+      <g data-passo="3"><circle cx="220" cy="210" r="110" fill="#3A3550"/><path d="M220 100 A110 110 0 0 1 220 320 Z" fill="#F3F1FA"/><circle cx="220" cy="210" r="110" fill="none" stroke="#C9C0F0" stroke-width="3"/></g>
+      <text x="220" y="400" text-anchor="middle" class="rot-claro">5 h da manhã</text>
+    </svg>
+    <span class="pilula pilula-resposta" data-passo="3" style="position:absolute;left:600px;top:620px">Resposta: quarto minguante</span>
+  </div>
+  <aside class="notas"><p>Exemplo da apostila ("Lua de madrugada"). O quarto crescente já se pôs perto da meia-noite; o minguante está alto de madrugada.</p></aside>
+</section>
+
+<!-- 8. Eclipses: alinhamento -->
+<section class="slide" data-nome="Eclipse do Sol">
+  <div class="conteudo">
+    <p class="olho">Eclipses: sombras gigantes</p>
+    <h2 class="titulo">Eclipse do Sol</h2>
+    <svg viewBox="0 0 1160 330" style="position:absolute;left:600px;top:130px;width:1160px;height:330px" aria-hidden="true">
+      <circle cx="90" cy="165" r="90" fill="#FFD10C" stroke="#F0A500" stroke-width="4"/>
+      <text x="90" y="174" text-anchor="middle" class="rot-fig" style="fill:#6E4B12;font-weight:800">Sol</text>
+      <g data-passo="2">
+        <path d="M600 140 L1030 112 L1030 218 L600 190 Z" fill="#C9C0F0" opacity=".55"/>
+        <path d="M600 146 L1030 158 L1030 172 L600 184 Z" fill="#2B2357" opacity=".9"/>
+        <text x="860" y="96" class="rot-fig" text-anchor="middle">penumbra: eclipse parcial</text>
+        <text x="860" y="262" class="rot-fig" text-anchor="middle" style="fill:#3F2FA0;font-weight:800">sombra: eclipse total</text>
+      </g>
+      <g data-passo="1"><circle cx="600" cy="165" r="22" fill="#3A3550"/><path d="M600 143 A22 22 0 0 0 600 187 Z" fill="#F3F1FA"/><circle cx="600" cy="165" r="22" fill="none" stroke="#292B2C" stroke-width="3"/><text x="600" y="226" text-anchor="middle" class="rot-fig">Lua</text></g>
+      <circle cx="1080" cy="165" r="56" fill="#4C9BE8" stroke="#292B2C" stroke-width="3"/>
+      <path d="M1080 109 A56 56 0 0 1 1080 221 Z" fill="#3B2A73" opacity=".8"/>
+      <text x="1080" y="250" text-anchor="middle" class="rot-fig">Terra</text>
+      <text x="580" y="320" text-anchor="middle" class="rot-fig" style="font-size:20px">fora de escala</text>
+    </svg>
+    <div style="position:absolute;left:0;width:520px;top:160px;display:flex;flex-direction:column;gap:14px">
+      <div class="linha-ex" data-passo="1" style="font-size:27px">A <b>Lua passa entre o Sol e a Terra</b>.</div>
+      <div class="linha-ex" data-passo="2" style="font-size:27px">A sombra da Lua cai sobre uma <b>faixa estreita</b> da Terra.</div>
+      <div class="linha-ex" data-passo="3" style="font-size:27px">Só acontece na <b>lua nova</b>.</div>
+    </div>
+    <svg viewBox="0 0 700 420" style="position:absolute;left:600px;top:480px;width:560px;height:336px" aria-hidden="true" data-passo="4">
+      <g clip-path="url(#st2Ceu)">
+        <rect width="700" height="420" fill="#BFE0F7"/>
+        <rect class="ceu-escuro" width="700" height="420" fill="#2B2357"/>
+        <circle class="coroa" cx="350" cy="210" r="150" fill="url(#st2Coroa)"/>
+        <circle cx="350" cy="210" r="90" fill="#FFD10C" stroke="#F0A500" stroke-width="4"/>
+        <circle class="disco-lua" cx="350" cy="210" r="92" fill="#3A3550"/>
+      </g>
+    </svg>
+    <div style="position:absolute;left:1200px;right:0;top:500px;display:flex;flex-direction:column;gap:14px">
+      <div class="linha-ex" data-passo="4" style="font-size:26px">Na <b>sombra</b>: eclipse <b>total</b>, o dia escurece por alguns minutos.</div>
+      <div class="linha-ex" data-passo="5" style="font-size:26px">Na <b>penumbra</b>, em volta: eclipse <b>parcial</b>, o Sol só "mordido".</div>
+    </div>
+  </div>
+  <aside class="notas">
+    <p>Clique 1: a Lua entre o Sol e a Terra (alinhados). Clique 2: a sombra (escura) e a penumbra (lilás) da Lua; só a faixa na sombra vê o eclipse total. Clique 3: só na lua nova.</p>
+    <p>Clique 4: como se vê daqui, de dentro da faixa: a Lua cobre o Sol, o céu escurece e aparece o brilho em volta (a coroa). Clique 5: quem está na penumbra vê o Sol só parcialmente coberto. Da apostila (bloco "Eclipses").</p>
+  </aside>
+</section>
+
+<!-- 9. Eclipse da Lua -->
+<section class="slide" data-nome="Eclipse da Lua">
+  <div class="conteudo">
+    <p class="olho">Eclipses</p>
+    <h2 class="titulo">Eclipse da Lua</h2>
+    <svg viewBox="0 0 1160 300" style="position:absolute;left:600px;top:130px;width:1160px;height:300px" aria-hidden="true">
+      <circle cx="90" cy="150" r="90" fill="#FFD10C" stroke="#F0A500" stroke-width="4"/>
+      <text x="90" y="159" text-anchor="middle" class="rot-fig" style="fill:#6E4B12;font-weight:800">Sol</text>
+      <circle cx="600" cy="150" r="56" fill="#4C9BE8" stroke="#292B2C" stroke-width="3"/>
+      <path d="M600 94 A56 56 0 0 1 600 206 Z" fill="#3B2A73" opacity=".8"/>
+      <text x="600" y="236" text-anchor="middle" class="rot-fig">Terra</text>
+      <g data-passo="1"><path d="M600 94 L1080 114 L1080 186 L600 206 Z" fill="#2B2357" opacity=".55"/></g>
+      <g data-passo="1"><circle cx="1050" cy="150" r="24" fill="#B8563E"/><circle cx="1050" cy="150" r="24" fill="none" stroke="#292B2C" stroke-width="3"/><text x="1050" y="210" text-anchor="middle" class="rot-fig">Lua</text></g>
+      <text x="580" y="290" text-anchor="middle" class="rot-fig" style="font-size:20px">fora de escala</text>
+    </svg>
+    <div style="position:absolute;left:0;width:520px;top:160px;display:flex;flex-direction:column;gap:14px">
+      <div class="linha-ex" data-passo="1" style="font-size:27px">A <b>Terra fica entre o Sol e a Lua</b>: a sombra da Terra cobre a Lua.</div>
+      <div class="linha-ex" data-passo="2" style="font-size:27px">Só acontece na <b>lua cheia</b>.</div>
+    </div>
+    <svg viewBox="0 0 700 380" style="position:absolute;left:600px;top:470px;width:560px;height:304px" aria-hidden="true" data-passo="3">
+      <rect width="700" height="380" rx="30" class="noite"/>
+      <circle cx="350" cy="190" r="150" fill="#1C1636" opacity=".85"/>
+      <text x="350" y="370" text-anchor="middle" class="rot-claro" style="font-size:20px">sombra da Terra</text>
+      <g class="lua-ec">
+        <circle cx="350" cy="190" r="60" fill="#F3F1FA"/>
+        <circle class="vermelho" cx="350" cy="190" r="60" fill="#B8563E"/>
+      </g>
+    </svg>
+    <div style="position:absolute;left:1200px;right:0;top:480px;display:flex;flex-direction:column;gap:14px">
+      <div class="linha-ex" data-passo="3" style="font-size:26px">Visto de <b>todo o lado da Terra onde é noite</b>.</div>
+      <div class="linha-ex" data-passo="4" style="font-size:26px">A Lua não some: fica <b>avermelhada</b>, porque um pouco da luz do Sol atravessa o <b>ar da Terra</b> e chega até ela.</div>
+    </div>
+  </div>
+  <aside class="notas">
+    <p>Clique 1: a Terra entre o Sol e a Lua; o cone escuro é a sombra da Terra. Clique 2: só na lua cheia. Clique 3: a Lua atravessa a sombra da Terra e fica avermelhada (animação de 10 s). Clique 4: a explicação da cor, da apostila.</p>
+  </aside>
+</section>
+
+<!-- 10. Por que não todo mês? -->
+<section class="slide" data-nome="Por que não todo mês">
+  <div class="conteudo">
+    <p class="olho">Eclipses</p>
+    <h2 class="titulo">Por que não há eclipse todo mês?</h2>
+    <svg viewBox="0 0 1160 420" style="position:absolute;left:600px;top:150px;width:1160px;height:420px" aria-hidden="true">
+      <circle cx="80" cy="210" r="70" fill="#FFD10C" stroke="#F0A500" stroke-width="4"/>
+      <line x1="150" y1="210" x2="1140" y2="210" stroke="#F0A500" stroke-width="3" stroke-dasharray="8 8"/>
+      <text x="600" y="400" text-anchor="middle" class="rot-fig">linha entre o Sol e a Terra (vista de lado, fora de escala)</text>
+      <circle cx="900" cy="210" r="40" fill="#4C9BE8" stroke="#292B2C" stroke-width="3"/>
+      <g data-passo="1" data-em="3:some"><line x1="652" y1="262" x2="1148" y2="158" stroke="#8C7BEA" stroke-width="4"/><text x="1080" y="120" class="rot-fig" text-anchor="middle" style="fill:#3F2FA0">órbita da Lua, inclinada</text>
+        <g data-passo="2"><circle cx="652" cy="262" r="16" fill="#E4E1EE" stroke="#292B2C" stroke-width="3"/><text x="652" y="312" text-anchor="middle" class="rot-fig">lua nova abaixo da linha: sem eclipse</text></g></g>
+      <g data-passo="3" data-em="4:some"><line x1="652" y1="158" x2="1148" y2="262" stroke="#8C7BEA" stroke-width="4"/><circle cx="652" cy="158" r="16" fill="#E4E1EE" stroke="#292B2C" stroke-width="3"/><text x="652" y="120" text-anchor="middle" class="rot-fig">outro mês: acima da linha, sem eclipse</text></g>
+      <g data-passo="4"><ellipse cx="900" cy="210" rx="248" ry="52" fill="none" stroke="#8C7BEA" stroke-width="4"/><circle cx="652" cy="210" r="16" fill="#3A3550" stroke="#FFD10C" stroke-width="4"/><text x="652" y="140" text-anchor="middle" class="rot-fig" style="fill:#3F2FA0;font-weight:800">alinhada: eclipse</text></g>
+    </svg>
+    <div style="position:absolute;left:0;width:540px;top:160px;display:flex;flex-direction:column;gap:14px">
+      <div class="linha-ex" data-passo="1" style="font-size:27px">A órbita da Lua é <b>um pouco inclinada</b> em relação à órbita da Terra.</div>
+      <div class="linha-ex" data-passo="2" style="font-size:27px">Na maioria dos meses, a Lua passa um pouco <b>acima ou abaixo</b> da linha Sol–Terra.</div>
+    </div>
+    <div class="caixa caixa-fundamental" data-passo="4" style="position:absolute;left:600px;right:0;top:600px;padding:18px 28px">
+      <div class="texto" style="font-size:29px">Só quando o Sol, a Terra e a Lua ficam <b>alinhados</b> acontece o eclipse.</div>
+    </div>
+  </div>
+  <aside class="notas"><p>Da apostila: "Por que não há eclipse em toda lua nova e em toda lua cheia? Porque a órbita da Lua é um pouco inclinada em relação à órbita da Terra." A inclinação está exagerada no desenho para dar para ver (na realidade, cerca de 5°, número que não está na apostila e não precisa ser dito).</p></aside>
+</section>
+
+<!-- 11. Proteja os olhos -->
+<section class="slide" data-nome="Atenção: proteja os olhos">
+  <div class="conteudo">
+    <p class="olho">Atenção</p>
+    <h2 class="titulo">Proteja os olhos no eclipse do Sol</h2>
+    <div class="caixa caixa-atencao" style="position:absolute;left:0;width:1040px;top:160px;padding:24px 34px">
+      <div class="texto"><b>Nunca</b> olhe diretamente para o Sol, nem com <b>óculos escuros</b>, binóculo ou radiografia.</div>
+    </div>
+    <div style="position:absolute;left:0;width:1040px;top:380px;display:flex;flex-direction:column;gap:18px">
+      <div class="linha-ex" data-passo="1">Use <b>filtros próprios</b> para observação do Sol ou <b>projete a imagem</b> num papel.</div>
+      <div class="linha-ex" data-passo="2">Olhar o <b>eclipse da Lua</b> não oferece risco.</div>
+    </div>
+    <svg viewBox="0 0 420 420" style="position:absolute;left:1260px;top:160px;width:420px;height:420px" aria-hidden="true">
+      <circle cx="210" cy="210" r="200" fill="#FFF8D6" stroke="#F5DD6B" stroke-width="4"/>
+      <path d="M70 210 Q210 90 350 210 Q210 330 70 210 Z" fill="#fff" stroke="#292B2C" stroke-width="8"/>
+      <circle cx="210" cy="210" r="48" fill="#0F8B8D"/><circle cx="210" cy="210" r="20" fill="#292B2C"/>
+      <line x1="80" y1="80" x2="340" y2="340" stroke="#C2384F" stroke-width="18" stroke-linecap="round"/>
+    </svg>
+  </div>
+  <aside class="notas"><p>Da apostila (atenção "Proteja os olhos no eclipse"). Vale reforçar: a radiografia e os óculos escuros comuns não protegem.</p></aside>
+</section>
+
+<!-- 12. Questão 1 -->
+<section class="slide questao" data-nome="Questão 1">
+  <div class="conteudo">
+    <div class="area-resolucao"></div>
+    <span class="pilula pilula-pausa" data-em="1:some">Pause o vídeo e tente</span>
+    <div class="painel-questao" style="gap:10px">
+      <p class="olho">Questão 1 · Modelo IF</p>
+      <p class="enunciado" style="font-size:23px">Numa segunda-feira, Júlia saiu às 6 h da manhã para a escola e viu uma meia lua alta no céu. A professora explicou que era a fase de quarto minguante. O ciclo completo das fases da Lua dura cerca de 29 dias e meio.</p>
+      <p class="enunciado" style="font-size:23px">Cerca de uma semana depois, na segunda-feira seguinte, a Lua estará na fase</p>
+      <ol class="alternativas" style="gap:7px">
+        <li data-em="2:certo" style="font-size:20px;padding:5px 14px"><b>A</b><span>nova, com a Lua entre a Terra e o Sol e a face iluminada voltada para o lado oposto ao da Terra, por isso praticamente não será vista.</span></li>
+        <li data-em="2:apaga" style="font-size:20px;padding:5px 14px"><b>B</b><span>cheia, porque depois do quarto minguante a Lua volta a ficar redonda.</span></li>
+        <li data-em="2:apaga" style="font-size:20px;padding:5px 14px"><b>C</b><span>quarto crescente, porque depois do quarto minguante vem de novo uma meia lua.</span></li>
+        <li data-em="2:apaga" style="font-size:20px;padding:5px 14px"><b>D</b><span>nova, porque a sombra da Terra passará a cobrir a Lua inteira.</span></li>
+        <li data-em="2:apaga" style="font-size:20px;padding:5px 14px"><b>E</b><span>quarto minguante de novo, porque as fases só mudam a cada mês.</span></li>
+      </ol>
+    </div>
+  </div>
+  <aside class="resolucao">
+    <p class="dados"><b>Dados:</b> hoje: quarto minguante; ciclo de 29,5 dias.</p>
+    <ol class="passos">
+      <li>Ordem: nova → crescente → cheia → minguante.</li>
+      <li>Cada fase: cerca de 1 semana da seguinte.</li>
+      <li>Depois do minguante: lua nova.</li>
+      <li>Nova: Lua entre Terra e Sol, face clara para lá.</li>
+    </ol>
+    <p class="resposta"><b>Resposta:</b> lua nova, praticamente invisível. <b>Gabarito A.</b></p>
+    <p class="atencao"><b>Destaque no quadro:</b> Lua nova não é sombra da Terra.</p>
+    <ul class="erros">
+      <li><b>B</b> A cheia vem antes do minguante.</li>
+      <li><b>C</b> Pula a lua nova.</li>
+      <li><b>D</b> Fase certa, causa errada (sombra).</li>
+      <li><b>E</b> Cada fase dura cerca de uma semana.</li>
+    </ul>
+  </aside>
+  <aside class="notas">
+    <p>Clique 1 tira o aviso de pausa: resolva na área (D liga a caneta; E esconde o enunciado). Clique 2: gabarito A.</p>
+    <p>Modelo IF, lote if-fisica-sistema-sol-terra-e-lua, m006, FIS-8746 (nível 3).</p>
+  </aside>
+</section>
+
+<!-- 13. Questão 2 -->
+<section class="slide questao" data-nome="Questão 2">
+  <div class="conteudo">
+    <div class="area-resolucao"></div>
+    <span class="pilula pilula-pausa" data-em="1:some">Pause o vídeo e tente</span>
+    <div class="painel-questao" style="gap:10px">
+      <p class="olho">Questão 2 · Modelo IF</p>
+      <p class="enunciado" style="font-size:21px">Numa aula de Ciências, a professora mostrou um esquema do Sol, da Terra e da Lua vistos de cima. A Lua aparece em quatro posições da sua volta em torno da Terra, numeradas de 1 a 4. Em cada astro, a parte clara é a metade iluminada pelo Sol.</p>
+      <svg viewBox="0 0 520 280" style="width:500px;height:270px;display:block" aria-hidden="true">
+        <circle cx="50" cy="140" r="44" fill="#FFD10C" stroke="#F0A500" stroke-width="3"/><text x="50" y="215" text-anchor="middle" class="rot-fig" style="font-size:18px">Sol</text>
+        <g stroke="#F0A500" stroke-width="3" fill="none"><path d="M110 110 H160 M150 102 L162 110 L150 118"/><path d="M110 140 H160 M150 132 L162 140 L150 148"/><path d="M110 170 H160 M150 162 L162 170 L150 178"/></g>
+        <circle cx="360" cy="140" r="110" fill="none" stroke="#8A869A" stroke-width="2" stroke-dasharray="6 6"/>
+        <g transform="translate(360 140)"><circle r="30" fill="#F1EFFC"/><path d="M0 -30 A30 30 0 0 1 0 30 Z" fill="#535160"/><circle r="30" fill="none" stroke="#292B2C" stroke-width="2.5"/></g>
+        <text x="360" y="192" text-anchor="middle" class="rot-fig" style="font-size:18px">Terra</text>
+        <g stroke="#292B2C" stroke-width="2"><g transform="translate(250 140)"><circle r="15" fill="#F1EFFC"/><path d="M0 -15 A15 15 0 0 1 0 15 Z" fill="#535160"/><circle r="15" fill="none"/></g>
+        <g transform="translate(360 30)"><circle r="15" fill="#F1EFFC"/><path d="M0 -15 A15 15 0 0 1 0 15 Z" fill="#535160"/><circle r="15" fill="none"/></g>
+        <g transform="translate(470 140)"><circle r="15" fill="#F1EFFC"/><path d="M0 -15 A15 15 0 0 1 0 15 Z" fill="#535160"/><circle r="15" fill="none"/></g>
+        <g transform="translate(360 250)"><circle r="15" fill="#F1EFFC"/><path d="M0 -15 A15 15 0 0 1 0 15 Z" fill="#535160"/><circle r="15" fill="none"/></g></g>
+        <g font-family="Figtree,sans-serif" font-size="22" font-weight="800" fill="#292B2C"><text x="244" y="112">1</text><text x="384" y="26">2</text><text x="482" y="112">3</text><text x="384" y="270">4</text></g>
+      </svg>
+      <p class="enunciado" style="font-size:21px">Para que ocorra um <b>eclipse do Sol</b>, a Lua deve estar na posição</p>
+      <ol class="alternativas" style="gap:6px">
+        <li data-em="2:apaga" style="font-size:19px;padding:4px 12px"><b>A</b><span>3, na fase de lua cheia.</span></li>
+        <li data-em="2:apaga" style="font-size:19px;padding:4px 12px"><b>B</b><span>1, na fase de lua cheia.</span></li>
+        <li data-em="2:apaga" style="font-size:19px;padding:4px 12px"><b>C</b><span>3, na fase de lua nova.</span></li>
+        <li data-em="2:certo" style="font-size:19px;padding:4px 12px"><b>D</b><span>1, na fase de lua nova.</span></li>
+        <li data-em="2:apaga" style="font-size:19px;padding:4px 12px"><b>E</b><span>2 ou 4, numa das fases de quarto, quando a Lua fica de lado.</span></li>
+      </ol>
+    </div>
+  </div>
+  <aside class="resolucao">
+    <p class="dados"><b>Dados:</b> eclipse do Sol; Lua nas posições 1 a 4.</p>
+    <ol class="passos">
+      <li>Eclipse do Sol: Lua entre o Sol e a Terra.</li>
+      <li>Entre o Sol e a Terra: posição 1.</li>
+      <li>Face clara virada para o Sol: lua nova.</li>
+    </ol>
+    <p class="resposta"><b>Resposta:</b> posição 1, lua nova. <b>Gabarito D.</b></p>
+    <p class="atencao"><b>Destaque no quadro:</b> Sol: lua nova. Lua: lua cheia.</p>
+    <ul class="erros">
+      <li><b>A</b> Posição 3, cheia: é o eclipse da Lua.</li>
+      <li><b>B</b> Posição certa, mas a fase ali é nova.</li>
+      <li><b>C</b> Na posição 3 a Lua está cheia.</li>
+      <li><b>E</b> Em 2 e 4 não há alinhamento.</li>
+    </ul>
+  </aside>
+  <aside class="notas">
+    <p>Clique 1 tira o aviso de pausa: resolva na área (D liga a caneta; E esconde o enunciado). Clique 2: gabarito D.</p>
+    <p>Modelo IF, lote if-fisica-sistema-sol-terra-e-lua, m004, FIS-8744 (nível 3). A figura foi redesenhada a partir da figura do lote (if-fisica-sistema-sol-terra-e-lua-m004.png), com as mesmas posições.</p>
+  </aside>
+</section>
+
+<!-- 14. Questão 3 -->
+<section class="slide questao" data-nome="Questão 3">
+  <div class="conteudo">
+    <div class="area-resolucao"></div>
+    <span class="pilula pilula-pausa" data-em="1:some">Pause o vídeo e tente</span>
+    <div class="painel-questao" style="gap:10px">
+      <p class="olho">Questão 3 · Modelo IF</p>
+      <p class="enunciado" style="font-size:22px">Depois de aprender que o eclipse do Sol acontece na lua nova, um estudante de Juiz de Fora fez as contas: num ano há 12 ou 13 luas novas, mas em todo o planeta acontecem só de 2 a 5 eclipses do Sol por ano, e cada um é visto apenas de algumas regiões da Terra.</p>
+      <p class="enunciado" style="font-size:22px">Não há um eclipse do Sol em toda lua nova porque</p>
+      <ol class="alternativas" style="gap:6px">
+        <li data-em="2:apaga" style="font-size:19px;padding:4px 12px"><b>A</b><span>na lua nova a Lua fica atrás da Terra, escondida na sombra dela, e só às vezes sai dessa sombra.</span></li>
+        <li data-em="2:apaga" style="font-size:19px;padding:4px 12px"><b>B</b><span>a Lua passa entre o Sol e a Terra apenas uma vez por ano, e não todo mês.</span></li>
+        <li data-em="2:certo" style="font-size:19px;padding:4px 12px"><b>C</b><span>a órbita da Lua é um pouco inclinada em relação à órbita da Terra, e na maioria das luas novas a Lua passa um pouco acima ou um pouco abaixo da linha entre o Sol e a Terra.</span></li>
+        <li data-em="2:apaga" style="font-size:19px;padding:4px 12px"><b>D</b><span>a sombra da Lua é pequena demais para alcançar a Terra, e o escurecimento visto num eclipse é causado pela sombra da própria Terra.</span></li>
+        <li data-em="2:apaga" style="font-size:19px;padding:4px 12px"><b>E</b><span>os eclipses do Sol acontecem em toda lua nova, mas só podem ser vistos do hemisfério norte.</span></li>
+      </ol>
+    </div>
+  </div>
+  <aside class="resolucao">
+    <p class="dados"><b>Dados:</b> 12 ou 13 luas novas; só 2 a 5 eclipses do Sol por ano.</p>
+    <ol class="passos">
+      <li>Eclipse: Sol, Terra e Lua alinhados.</li>
+      <li>Órbita da Lua: um pouco inclinada.</li>
+      <li>Quase sempre a Lua passa acima ou abaixo.</li>
+    </ol>
+    <p class="resposta"><b>Resposta:</b> a inclinação da órbita da Lua. <b>Gabarito C.</b></p>
+    <p class="atencao"><b>Destaque no quadro:</b> Sem alinhamento exato, a sombra da Lua não cai na Terra.</p>
+    <ul class="erros">
+      <li><b>A</b> Lua atrás da Terra é lua cheia.</li>
+      <li><b>B</b> A Lua passa pelo lado do Sol todo mês.</li>
+      <li><b>D</b> No eclipse do Sol, a sombra é da Lua.</li>
+      <li><b>E</b> Pode ser visto dos dois hemisférios.</li>
+    </ul>
+  </aside>
+  <aside class="notas">
+    <p>Clique 1 tira o aviso de pausa: resolva na área (D liga a caneta; E esconde o enunciado). Clique 2: gabarito C.</p>
+    <p>Modelo IF, lote if-fisica-sistema-sol-terra-e-lua, m008, FIS-8748 (nível 4).</p>
+  </aside>
+</section>
+
+<!-- 15. Resumo -->
+<section class="slide" data-nome="Resumo">
+  <div class="conteudo">
+    <p class="olho">Resumo · Sistema Sol, Terra e Lua</p>
+    <h2 class="titulo">O essencial</h2>
+    <div class="resumo" style="position:absolute;left:0;right:0;top:150px">
+      <div><b>Rotação</b> (cerca de 24 h): dia e noite. <b>Translação</b> (cerca de 365 dias e 6 h): o ano.</div>
+      <div>As <b>estações</b> vêm da inclinação do eixo, não da distância; são <b>opostas</b> nos dois hemisférios.</div>
+      <div><b>Fases:</b> partes diferentes da metade iluminada da Lua; nova, quarto crescente, cheia, quarto minguante, em cerca de <b>29 dias e meio</b>.</div>
+      <div>A Lua mostra sempre a <b>mesma face</b>. As fases <b>não</b> vêm da sombra da Terra.</div>
+      <div><b>Eclipse do Sol:</b> Lua entre o Sol e a Terra, na <b>lua nova</b>.</div>
+      <div><b>Eclipse da Lua:</b> Terra entre o Sol e a Lua, na <b>lua cheia</b>.</div>
+    </div>
+  </div>
+  <aside class="notas"><p>Resumo do subcapítulo inteiro (as duas partes), igual ao "O essencial" da apostila. Peça para tirarem um print.</p></aside>
+</section>
+
+<!-- 16. A seguir -->
+<section class="slide capa" data-nome="A seguir">
+  <div class="estrelas"></div>
+  <div class="texto-capa" style="top:220px">
+    <span class="selo">Física · IF</span>
+    <p class="aula" style="font-size:28px">A seguir · Astronomia · Parte única</p>
+    <h1 style="font-size:124px">Sistema Solar e Universo</h1>
+    <p class="sub">Do nosso planeta às bilhões de galáxias</p>
+  </div>
+  <svg class="emblema" viewBox="0 0 640 640" aria-hidden="true">
+    <g fill="none" stroke="#fff" stroke-opacity=".45" stroke-width="2"><ellipse cx="320" cy="320" rx="120" ry="44"/><ellipse cx="320" cy="320" rx="200" ry="74"/><ellipse cx="320" cy="320" rx="290" ry="108"/></g>
+    <circle cx="320" cy="320" r="54" fill="#FFD10C"/>
+    <circle cx="440" cy="320" r="12" fill="#4C9BE8"/><circle cx="140" cy="290" r="26" fill="#D9A774"/><ellipse cx="140" cy="290" rx="46" ry="12" fill="none" stroke="#E6CF8E" stroke-width="4"/><circle cx="560" cy="350" r="16" fill="#8FD3DD"/>
+  </svg>
+  <img class="logo-capa" src="{{LOGO_BRANCO}}" alt="Quarks">
+  <aside class="notas"><p>Próximo subcapítulo (parte única): o Sol, os planetas, os corpos menores, a Via Láctea e as outras galáxias.</p></aside>
+</section>

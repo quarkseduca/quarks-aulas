@@ -1,0 +1,484 @@
+<!--aula
+{"disciplina": "fisica", "curso": "IF", "assunto": "Observação do céu", "parte": "Parte 2 de 2", "titulo": "Constelações e leituras do céu"}
+-->
+<!-- Fonte: apostila IF, Física, cap. 1 Astronomia, 1.1 Observação do céu (blocos "Constelações e mapas celestes" e "O céu nas diferentes culturas", e o resumo do subcapítulo). Questões: Modelo IF, lote if-fisica-observacao-do-ceu (m004 FIS-8724, m007 FIS-8727, m009 FIS-8729). -->
+<style>
+  .caixa, .cartao, .linha-ex, .painel { box-sizing: border-box; }
+  .linha-ex { background: var(--branco); border: 2px solid var(--lilas-2); border-radius: 24px; padding: 14px 26px; font-size: 30px; line-height: 1.3; }
+  .linha-ex b { color: var(--roxo-titulo); }
+  .painel { background: var(--branco); border: 2px solid var(--lilas-2); border-radius: 30px; padding: 18px 26px; }
+  .painel h3 { margin: 0 0 6px; font: 800 34px var(--fonte-titulo); letter-spacing: -.02em; color: var(--roxo-titulo); }
+  .painel p { margin: 6px 0 0; font-size: 25px; line-height: 1.32; }
+  .painel b { color: var(--roxo-titulo); }
+  .rot-fig { font-family: Figtree, "Segoe UI", sans-serif; font-weight: 700; font-size: 24px; fill: #5E5A70; }
+  .rot-claro { font-family: Figtree, "Segoe UI", sans-serif; font-weight: 700; font-size: 24px; fill: #E4DEFB; }
+  .noite { fill: #2B2357; }
+  @keyframes cintila { 0%, 100% { opacity: .35; } 50% { opacity: 1; } }
+  .slide.ativo .cint circle { animation: cintila 4.5s ease-in-out infinite; }
+  .cint circle:nth-child(3n) { animation-delay: -1.5s !important; } .cint circle:nth-child(3n+1) { animation-delay: -3s !important; }
+  /* linhas da constelação que se desenham */
+  .traco { stroke-dasharray: 600; stroke-dashoffset: 600; transition: stroke-dashoffset 2.6s ease-in-out; }
+  .mostra .traco, .traco.mostra { stroke-dashoffset: 0; }
+  /* a Terra muda de lugar na órbita (dezembro -> junho) */
+  .terra-orbita { transform-box: view-box; transform-origin: 380px 300px; transition: transform 3.2s ease-in-out; }
+  .terra-orbita.junho { transform: rotate(180deg); }
+  .destaca { transition: opacity .8s; opacity: .35; }
+  .destaca.on { opacity: 1; }
+  .destaca.on.apag { opacity: .3; }
+  /* nuvem de gás e poeira que gira e se achata */
+  @keyframes gira { to { transform: rotate(360deg); } }
+  .nuvem { transform-box: view-box; transform-origin: 300px 230px; }
+  .slide.ativo .mostra .nuvem { animation: gira 30s linear infinite; }
+  @keyframes brilho { 0%, 100% { opacity: .55; } 50% { opacity: .95; } }
+  .slide.ativo .mostra .brilho { animation: brilho 5s ease-in-out infinite; }
+  .resumo.menor > div { font-size: 27px; padding: 18px 24px; }
+  .tag { display: inline-block; padding: 5px 18px; border-radius: 999px; font-weight: 800; font-size: 24px; background: var(--d-clara); color: var(--d-forte); }
+</style>
+
+<!-- 1. Capa -->
+<section class="slide capa" data-nome="Capa">
+  <div class="estrelas"></div>
+  <div class="texto-capa">
+    <span class="selo">Física · IF</span>
+    <p class="aula">Observação do céu · Parte 2 de 2</p>
+    <h1 style="font-size:124px">Constelações e leituras do céu</h1>
+    <p class="sub">Figuras no céu, o sul pelo Cruzeiro e o céu de cada povo</p>
+  </div>
+  <svg class="emblema" viewBox="0 0 640 640" aria-hidden="true">
+    <g class="gira-lento"><ellipse cx="320" cy="320" rx="300" ry="128" fill="none" stroke="#fff" stroke-opacity=".38" stroke-width="2" transform="rotate(-10 320 320)"/></g>
+    <g stroke="#fff" stroke-opacity=".7" stroke-width="4" stroke-linecap="round"><line x1="300" y1="120" x2="330" y2="420"/><line x1="200" y1="250" x2="440" y2="280"/></g>
+    <g fill="#FFD10C"><circle cx="300" cy="120" r="18"/><circle cx="330" cy="420" r="22"/><circle cx="200" cy="250" r="18"/><circle cx="440" cy="280" r="14"/></g>
+    <circle cx="380" cy="350" r="7" fill="#fff"/>
+  </svg>
+  <img class="logo-capa" src="{{LOGO_BRANCO}}" alt="Quarks">
+  <aside class="notas"><p>Segunda parte de Observação do céu: constelações, o céu que muda ao longo do ano, como achar o sul pelo Cruzeiro do Sul, mapas celestes e as leituras do céu em diferentes culturas. No fim, o resumo do subcapítulo inteiro.</p></aside>
+</section>
+
+<!-- 2. Milhares de estrelas -->
+<section class="slide" data-nome="Milhares de estrelas">
+  <div class="conteudo">
+    <p class="olho">Para começar</p>
+    <h2 class="titulo">Milhares de estrelas. Como se orientar?</h2>
+    <svg viewBox="0 0 1100 470" style="position:absolute;left:0;top:150px;width:1100px;height:450px" aria-hidden="true">
+      <rect width="1100" height="470" rx="34" class="noite"/>
+      <g class="cint" fill="#fff">
+        <circle cx="60" cy="60" r="2"/><circle cx="140" cy="300" r="2.5"/><circle cx="210" cy="120" r="2"/><circle cx="260" cy="400" r="2"/><circle cx="320" cy="60" r="2.5"/><circle cx="360" cy="260" r="2"/><circle cx="420" cy="420" r="2"/><circle cx="470" cy="180" r="2"/><circle cx="700" cy="60" r="2"/><circle cx="760" cy="420" r="2.5"/><circle cx="820" cy="200" r="2"/><circle cx="880" cy="340" r="2"/><circle cx="940" cy="90" r="2.5"/><circle cx="1000" cy="260" r="2"/><circle cx="1050" cy="420" r="2"/><circle cx="90" cy="200" r="1.8"/><circle cx="180" cy="440" r="1.8"/><circle cx="300" cy="330" r="1.8"/><circle cx="640" cy="440" r="1.8"/><circle cx="980" cy="180" r="1.8"/><circle cx="1060" cy="60" r="1.8"/><circle cx="430" cy="90" r="1.8"/><circle cx="160" cy="80" r="1.6"/><circle cx="890" cy="440" r="1.6"/>
+      </g>
+      <g stroke="#8C7BEA" stroke-width="3" fill="none" data-passo="1">
+        <path class="traco" d="M560 110 L600 230 L660 250 L720 270 L780 110"/>
+        <path class="traco" d="M600 230 L540 400 M720 270 L800 390"/>
+      </g>
+      <g fill="#fff">
+        <circle cx="560" cy="110" r="8" fill="#FFB38A"/><circle cx="780" cy="110" r="6"/><circle cx="600" cy="230" r="0" /><circle cx="620" cy="238" r="6"/><circle cx="660" cy="250" r="6"/><circle cx="700" cy="262" r="6"/><circle cx="540" cy="400" r="6"/><circle cx="800" cy="390" r="8" fill="#BFE0FF"/>
+      </g>
+      <g data-passo="2"><text x="660" y="310" class="rot-claro" text-anchor="middle" style="font-size:24px">Três Marias</text><text x="900" y="160" class="rot-claro" style="font-size:30px;font-weight:800;fill:#FFD10C">Órion</text></g>
+    </svg>
+    <div style="position:absolute;left:1160px;right:0;top:160px;display:flex;flex-direction:column;gap:18px">
+      <div class="linha-ex">Longe das luzes da cidade, dá para ver <b>milhares</b> de estrelas.</div>
+      <div class="linha-ex" data-passo="1">Os povos antigos ligaram estrelas com <b>linhas imaginárias</b>…</div>
+      <div class="linha-ex" data-passo="2">…e formaram <b>figuras</b>: as constelações.</div>
+    </div>
+  </div>
+  <aside class="notas">
+    <p>Clique 1: as linhas imaginárias se desenham e aparece uma figura. Clique 2: é Órion, com as Três Marias (as três estrelas alinhadas no meio).</p>
+    <p>O desenho é um esquema: as posições das estrelas não são as de uma carta celeste. Da apostila (1.1, "Constelações e mapas celestes").</p>
+  </aside>
+</section>
+
+<!-- 3. Constelação -->
+<section class="slide" data-nome="Constelação">
+  <div class="conteudo">
+    <p class="olho">Definição</p>
+    <h2 class="titulo">Constelação</h2>
+    <div class="caixa caixa-fundamental" style="position:absolute;left:0;width:1040px;top:170px;padding:26px 36px">
+      <span class="rotulo">Constelação</span>
+      <div class="texto">É um <b>grupo de estrelas</b> que, visto da Terra, <b>parece formar uma figura</b>.</div>
+    </div>
+    <div class="caixa" data-passo="1" style="position:absolute;left:0;width:1040px;top:400px;padding:26px 36px">
+      <span class="rotulo">Hoje</span>
+      <div class="texto">A <b>União Astronômica Internacional</b> divide o céu em <b>88 regiões</b>, cada uma com uma constelação.</div>
+    </div>
+    <svg viewBox="0 0 560 560" style="position:absolute;left:1140px;top:150px;width:560px;height:560px" aria-hidden="true" data-passo="1">
+      <circle cx="280" cy="280" r="270" class="noite"/>
+      <g stroke="#8C7BEA" stroke-width="2" fill="none" opacity=".75">
+        <path d="M280 10 V550 M10 280 H550 M90 90 L470 470 M470 90 L90 470"/>
+        <circle cx="280" cy="280" r="90"/><circle cx="280" cy="280" r="180"/>
+      </g>
+      <g class="cint" fill="#fff"><circle cx="200" cy="120" r="3"/><circle cx="360" cy="150" r="3"/><circle cx="420" cy="300" r="3"/><circle cx="330" cy="420" r="3"/><circle cx="150" cy="380" r="3"/><circle cx="120" cy="240" r="3"/><circle cx="250" cy="230" r="3"/><circle cx="300" cy="330" r="3"/><circle cx="460" cy="200" r="2"/><circle cx="220" cy="470" r="2"/><circle cx="80" cy="160" r="2"/><circle cx="480" cy="400" r="2"/></g>
+      <text x="280" y="290" text-anchor="middle" class="rot-claro" style="font-size:44px;font-weight:800;fill:#FFD10C">88</text>
+    </svg>
+  </div>
+  <aside class="notas">
+    <p>Definição da apostila. Clique 1: a divisão oficial em 88 regiões (o desenho só sugere a ideia de "fatias" do céu; as regiões de verdade têm formatos irregulares).</p>
+  </aside>
+</section>
+
+<!-- 4. Só parecem próximas -->
+<section class="slide" data-nome="Estrelas a distâncias diferentes">
+  <div class="conteudo">
+    <p class="olho">Atenção</p>
+    <h2 class="titulo">Constelação não é vizinhança</h2>
+    <svg viewBox="0 0 1760 440" style="position:absolute;left:0;top:150px;width:1760px;height:440px" aria-hidden="true">
+      <g transform="translate(70 220)"><ellipse cx="0" cy="0" rx="40" ry="26" fill="#fff" stroke="#3F2FA0" stroke-width="4"/><circle cx="6" cy="0" r="13" fill="#3F2FA0"/></g>
+      <text x="70" y="290" class="rot-fig" text-anchor="middle">nós, na Terra</text>
+      <line x1="420" y1="20" x2="420" y2="420" stroke="#C9C0F0" stroke-width="4" stroke-dasharray="10 10"/>
+      <text x="430" y="30" class="rot-fig" style="fill:#3F2FA0">o que vemos: uma figura</text>
+      <g stroke="#8C7BEA" stroke-width="2.5" stroke-dasharray="3 8" data-passo="1">
+        <line x1="110" y1="220" x2="760" y2="60"/><line x1="110" y1="220" x2="1640" y2="160"/><line x1="110" y1="220" x2="1040" y2="300"/><line x1="110" y1="220" x2="1380" y2="420"/>
+      </g>
+      <g data-passo="1" fill="#FFD10C" stroke="#E0A100" stroke-width="3">
+        <circle cx="760" cy="60" r="16"/><circle cx="1640" cy="160" r="22"/><circle cx="1040" cy="300" r="14"/><circle cx="1380" cy="420" r="18"/>
+      </g>
+      <g fill="#3F2FA0"><circle cx="420" cy="134" r="9"/><circle cx="420" cy="206" r="9"/><circle cx="420" cy="245" r="9"/><circle cx="420" cy="290" r="9"/></g>
+      <path d="M420 134 L420 206 L420 245" stroke="#3F2FA0" stroke-width="3" fill="none"/>
+      <g data-passo="2"><text x="760" y="30" class="rot-fig" text-anchor="middle">perto</text><text x="1640" y="120" class="rot-fig" text-anchor="middle">muito mais longe</text><text x="1040" y="350" class="rot-fig" text-anchor="middle">longe</text></g>
+    </svg>
+    <div class="caixa caixa-atencao" data-passo="3" style="position:absolute;left:600px;right:0;top:620px;padding:22px 32px">
+      <div class="texto" style="font-size:31px">As estrelas de uma constelação <b>só parecem próximas</b>: podem estar a distâncias muito diferentes. A figura só existe <b>do nosso ponto de vista</b>, aqui da Terra.</div>
+    </div>
+  </div>
+  <aside class="notas">
+    <p>Clique 1: as estrelas "de verdade", espalhadas a distâncias diferentes, e as linhas de visada até o nosso olho. No plano pontilhado, elas aparecem juntas, formando a figura. Clique 2: uma pode estar perto e a vizinha na figura, muito mais longe. Clique 3: a atenção da apostila.</p>
+    <p>Esquema fora de escala.</p>
+  </aside>
+</section>
+
+<!-- 5. O céu muda ao longo do ano -->
+<section class="slide" data-nome="O céu muda no ano">
+  <div class="conteudo">
+    <p class="olho">Por que o céu muda ao longo do ano</p>
+    <h2 class="titulo">Cada época, outras constelações</h2>
+    <svg viewBox="0 0 760 600" style="position:absolute;left:1000px;top:130px;width:760px;height:600px" aria-hidden="true">
+      <circle cx="380" cy="300" r="150" fill="none" stroke="#B9B0E0" stroke-width="3" stroke-dasharray="8 10"/>
+      <circle cx="380" cy="300" r="56" fill="#FFD10C" stroke="#F0A500" stroke-width="4"/>
+      <text x="380" y="308" text-anchor="middle" class="rot-fig" style="fill:#6E4B12;font-weight:800">Sol</text>
+      <g class="destaca" data-em="1:on 2:apag"><g stroke="#8C7BEA" stroke-width="2.5" fill="none"><path d="M650 220 L670 290 L690 300 L710 310 L710 220 M670 290 L650 380 M710 310 L710 380"/></g><g fill="#3F2FA0"><circle cx="650" cy="220" r="7"/><circle cx="710" cy="220" r="6"/><circle cx="678" cy="294" r="6"/><circle cx="692" cy="300" r="6"/><circle cx="706" cy="306" r="6"/><circle cx="650" cy="380" r="6"/><circle cx="710" cy="380" r="7"/></g><text x="680" y="420" text-anchor="middle" class="rot-fig" style="fill:#3F2FA0;font-weight:800">Órion</text></g>
+      <g class="destaca" data-em="2:on"><g stroke="#8C7BEA" stroke-width="2.5" fill="none"><path d="M90 200 L70 250 L66 300 L80 350 L110 380 L130 370"/></g><g fill="#3F2FA0"><circle cx="90" cy="200" r="6"/><circle cx="70" cy="250" r="8" fill="#C2384F"/><circle cx="66" cy="300" r="6"/><circle cx="80" cy="350" r="6"/><circle cx="110" cy="380" r="6"/><circle cx="130" cy="370" r="6"/></g><text x="90" y="180" text-anchor="middle" class="rot-fig" style="fill:#3F2FA0;font-weight:800">Escorpião</text></g>
+      <g class="terra-orbita" data-em="2:junho">
+        <g transform="translate(530 300)">
+          <circle r="28" fill="#4C9BE8"/><path d="M0 -28 A28 28 0 0 1 0 28 Z" fill="#3B2A73" opacity=".8"/><circle r="28" fill="none" stroke="#292B2C" stroke-width="3"/>
+          <path d="M34 0 H78 M64 -12 L80 0 L64 12" stroke="#3F2FA0" stroke-width="5" fill="none" stroke-linecap="round" stroke-linejoin="round"/>
+        </g>
+      </g>
+      <g data-passo="1"><text x="380" y="560" text-anchor="middle" class="rot-fig" data-em="2:some">dezembro: a noite olha para Órion</text></g>
+      <g data-passo="2"><text x="380" y="560" text-anchor="middle" class="rot-fig">junho: a noite olha para o Escorpião</text></g>
+    </svg>
+    <div style="position:absolute;left:0;width:940px;top:160px;display:flex;flex-direction:column;gap:14px;font-size:27px">
+      <div class="linha-ex" style="font-size:27px">A Terra dá <b>uma volta em torno do Sol por ano</b>.</div>
+      <div class="linha-ex" data-passo="1" style="font-size:27px">À noite, olhamos para o lado <b>oposto ao Sol</b>. Em dezembro, esse lado mostra <b>Órion</b>.</div>
+      <div class="linha-ex" data-passo="2" style="font-size:27px">Seis meses depois, a Terra está do outro lado: a noite mostra o <b>Escorpião</b>.</div>
+      <div class="caixa caixa-fundamental" data-passo="3" style="padding:18px 28px">
+        <div class="texto" style="font-size:27px">As constelações vistas <b>no início da noite</b> mudam ao longo do ano.</div>
+      </div>
+    </div>
+  </div>
+  <aside class="notas">
+    <p>Vista de cima, fora de escala. A seta sai do lado noturno da Terra: é para lá que olhamos à noite. Clique 1: dezembro, Órion em destaque. Clique 2: a Terra anda meia volta na órbita (seis meses) e o lado noturno passa a olhar para o Escorpião.</p>
+    <p>Da apostila: "Como a Terra dá uma volta em torno do Sol por ano, as constelações vistas no início da noite mudam ao longo do ano."</p>
+  </aside>
+</section>
+
+<!-- 6. No céu de Minas Gerais -->
+<section class="slide" data-nome="No céu de Minas Gerais">
+  <div class="conteudo">
+    <p class="olho">No céu de Minas Gerais, ao anoitecer</p>
+    <h2 class="titulo">Três constelações para reconhecer</h2>
+    <div style="position:absolute;left:0;right:0;top:160px;display:grid;grid-template-columns:repeat(3,1fr);gap:30px">
+      <div class="painel" data-passo="1">
+        <svg viewBox="0 0 300 220" style="width:100%;height:220px;display:block" aria-hidden="true"><rect width="300" height="220" rx="20" class="noite"/><g stroke="#8C7BEA" stroke-width="2.5" fill="none"><path d="M100 40 L120 110 L150 120 L180 130 L200 40 M120 110 L100 190 M180 130 L210 190"/></g><g fill="#fff"><circle cx="100" cy="40" r="7" fill="#FFB38A"/><circle cx="200" cy="40" r="5"/><circle cx="122" cy="112" r="5"/><circle cx="150" cy="120" r="5"/><circle cx="178" cy="128" r="5"/><circle cx="100" cy="190" r="5"/><circle cx="210" cy="190" r="7" fill="#BFE0FF"/></g></svg>
+        <h3 style="margin-top:12px">Órion</h3>
+        <p>Com as <b>Três Marias</b>. Bem no início da noite no <b>verão</b> (dezembro a março).</p>
+      </div>
+      <div class="painel" data-passo="2">
+        <svg viewBox="0 0 300 220" style="width:100%;height:220px;display:block" aria-hidden="true"><rect width="300" height="220" rx="20" class="noite"/><g stroke="#8C7BEA" stroke-width="2.5" fill="none"><path d="M70 40 L110 60 L130 90 L140 130 L150 170 L190 190 L230 180 L250 150 L240 130"/><path d="M110 60 L80 80 M110 60 L120 30"/></g><g fill="#fff"><circle cx="70" cy="40" r="4"/><circle cx="120" cy="30" r="4"/><circle cx="80" cy="80" r="4"/><circle cx="110" cy="60" r="4"/><circle cx="130" cy="90" r="7" fill="#FF7A6B"/><circle cx="140" cy="130" r="4"/><circle cx="150" cy="170" r="4"/><circle cx="190" cy="190" r="4"/><circle cx="230" cy="180" r="4"/><circle cx="250" cy="150" r="5"/><circle cx="240" cy="130" r="4"/></g></svg>
+        <h3 style="margin-top:12px">Escorpião</h3>
+        <p>Destaca-se no início da noite no <b>inverno</b> (junho a agosto).</p>
+      </div>
+      <div class="painel" data-passo="3">
+        <svg viewBox="0 0 300 220" style="width:100%;height:220px;display:block" aria-hidden="true"><rect width="300" height="220" rx="20" class="noite"/><g stroke="#8C7BEA" stroke-width="2.5"><line x1="145" y1="30" x2="160" y2="190"/><line x1="90" y1="100" x2="205" y2="115"/></g><g fill="#fff"><circle cx="145" cy="30" r="7" fill="#FFB38A"/><circle cx="160" cy="190" r="8"/><circle cx="90" cy="100" r="7"/><circle cx="205" cy="115" r="5"/><circle cx="180" cy="145" r="3"/></g></svg>
+        <h3 style="margin-top:12px">Cruzeiro do Sul</h3>
+        <p>Visto em boa parte do ano; <b>bem alto</b> ao anoitecer no <b>outono</b> (abril a junho).</p>
+      </div>
+    </div>
+    <div class="linha-ex" data-passo="4" style="position:absolute;left:600px;right:0;top:700px">Para reconhecer: <b>mapas celestes</b> (cartas celestes) e <b>aplicativos</b> de celular.</div>
+  </div>
+  <aside class="notas">
+    <p>Uma constelação por clique, com a época da apostila (céu de Minas Gerais, no início da noite). Desenhos esquemáticos.</p>
+    <p>Clique 4: mapas celestes mostram as estrelas visíveis em cada mês e horário; aplicativos identificam o céu para onde a câmera aponta.</p>
+  </aside>
+</section>
+
+<!-- 7. O sul pelo Cruzeiro -->
+<section class="slide" data-nome="Achar o sul pelo Cruzeiro">
+  <div class="conteudo">
+    <p class="olho">Orientação</p>
+    <h2 class="titulo">Como achar o sul pelo Cruzeiro</h2>
+    <div style="position:absolute;left:0;width:860px;top:170px;display:flex;flex-direction:column;gap:18px">
+      <div class="linha-ex" data-passo="1"><b>1.</b> Ache o <b>braço maior</b> da cruz.</div>
+      <div class="linha-ex" data-passo="2"><b>2.</b> A partir do <b>pé da cruz</b>, prolongue esse braço cerca de <b>quatro vezes e meia</b>.</div>
+      <div class="linha-ex" data-passo="3"><b>3.</b> Daí, desça uma <b>linha reta até o horizonte</b>: ali fica o <b>sul</b>.</div>
+    </div>
+    <svg viewBox="0 0 700 740" style="position:absolute;left:1060px;top:150px;width:620px;height:655px" aria-hidden="true">
+      <rect x="0" y="0" width="700" height="690" rx="30" class="noite"/>
+      <g class="cint" fill="#fff"><circle cx="560" cy="80" r="2"/><circle cx="620" cy="300" r="2"/><circle cx="80" cy="420" r="2"/><circle cx="480" cy="520" r="2"/><circle cx="600" cy="600" r="2"/><circle cx="60" cy="200" r="2"/></g>
+      <g stroke="#8C7BEA" stroke-width="3"><line x1="200" y1="50" x2="215" y2="150"/><line x1="160" y1="98" x2="252" y2="108"/></g>
+      <g fill="#fff"><circle cx="200" cy="50" r="9" fill="#FFB38A"/><circle cx="215" cy="150" r="10"/><circle cx="160" cy="98" r="9"/><circle cx="252" cy="108" r="7"/><circle cx="232" cy="124" r="4"/></g>
+      <g data-passo="1"><line x1="200" y1="50" x2="215" y2="150" stroke="#FFD10C" stroke-width="7" stroke-linecap="round"/><text x="240" y="60" class="rot-claro" style="fill:#FFD10C">braço maior</text></g>
+      <g data-passo="2">
+        <line class="traco" x1="215" y1="150" x2="282" y2="595" stroke="#FFD10C" stroke-width="4" stroke-dasharray="12 10" style="stroke-dasharray:600"/>
+        <g fill="#FFD10C" opacity=".85"><circle cx="230" cy="250" r="4"/><circle cx="245" cy="350" r="4"/><circle cx="260" cy="450" r="4"/><circle cx="275" cy="550" r="4"/></g>
+        <text x="300" y="380" class="rot-claro">≈ 4,5 vezes o braço</text>
+        <text x="236" y="168" class="rot-claro" style="font-size:20px">pé da cruz</text>
+      </g>
+      <g data-passo="3">
+        <line x1="282" y1="595" x2="282" y2="690" stroke="#FFD10C" stroke-width="5"/>
+        <circle cx="282" cy="595" r="8" fill="#FFD10C"/>
+      </g>
+      <rect x="0" y="690" width="700" height="50" rx="0" fill="#CFE5C0"/>
+      <g data-passo="3"><circle cx="282" cy="715" r="22" fill="#3F2FA0"/><text x="282" y="724" text-anchor="middle" font-family="'Bricolage Grotesque',Figtree,sans-serif" font-size="26" font-weight="800" fill="#fff">S</text></g>
+    </svg>
+    <div class="caixa caixa-fundamental" data-passo="4" style="position:absolute;left:0;width:940px;top:450px;padding:18px 26px">
+      <div class="texto" style="font-size:28px">Por isso os <b>navegadores</b> usavam o Cruzeiro para achar o <b>sul</b>.</div>
+    </div>
+  </div>
+  <aside class="notas">
+    <p>Um passo por clique, com a figura. Esquema fora de escala: o desenho é para entender o procedimento, não para medir no céu.</p>
+    <p>Da apostila (figura "Como achar o sul pelo Cruzeiro do Sul"). Vale para o hemisfério sul. O clique 4 já liga com as leituras do céu em diferentes culturas.</p>
+  </aside>
+</section>
+
+<!-- 8. Culturas -->
+<section class="slide" data-nome="O céu nas culturas">
+  <div class="conteudo">
+    <p class="olho">O céu nas diferentes culturas</p>
+    <h2 class="titulo">Cada povo leu o céu para uma necessidade</h2>
+    <div style="position:absolute;left:0;right:0;top:160px;display:grid;grid-template-columns:1fr 1fr;gap:22px 30px">
+      <div class="painel" data-passo="1" style="display:grid;grid-template-columns:110px 1fr;gap:18px;align-items:center">
+        <svg viewBox="0 0 110 110" aria-hidden="true"><path d="M10 96 Q55 60 100 96 Z" fill="#7CC67A"/><path d="M10 90 Q55 80 100 90" stroke="#4C9BE8" stroke-width="8" fill="none"/><circle cx="80" cy="26" r="7" fill="#FFD10C"/><path d="M80 10v32M64 26h32" stroke="#FFD10C" stroke-width="2"/></svg>
+        <div><h3>Agricultura</h3><p>No antigo Egito, <b>Sírius</b> reaparecendo antes do amanhecer coincidia com as <b>cheias do Nilo</b>, que fertilizavam as margens para o plantio.</p></div>
+      </div>
+      <div class="painel" data-passo="2" style="display:grid;grid-template-columns:110px 1fr;gap:18px;align-items:center">
+        <svg viewBox="0 0 110 110" aria-hidden="true"><rect width="110" height="110" rx="20" class="noite"/><g stroke="#8C7BEA" stroke-width="2.5" fill="none"><path d="M30 80 Q40 40 60 30 L80 24 M60 30 L70 60 L84 86 M70 60 L56 88"/></g><g fill="#fff"><circle cx="30" cy="80" r="3"/><circle cx="60" cy="30" r="3"/><circle cx="80" cy="24" r="4"/><circle cx="70" cy="60" r="3"/><circle cx="84" cy="86" r="3"/><circle cx="56" cy="88" r="3"/></g></svg>
+        <div><h3>Povos indígenas do Brasil</h3><p>Para povos guaranis, a <b>Ema</b>, perto do Cruzeiro do Sul, aparece ao anoitecer em <b>junho</b> e anuncia o <b>tempo frio</b>. As estações marcavam plantar, colher e caçar.</p></div>
+      </div>
+      <div class="painel" data-passo="3" style="display:grid;grid-template-columns:110px 1fr;gap:18px;align-items:center">
+        <svg viewBox="0 0 110 110" aria-hidden="true"><path d="M20 70 H90 L78 90 H32 Z" fill="#C9A26B"/><path d="M55 70 V18 L82 58 Z" fill="#fff" stroke="#8C7BEA" stroke-width="3"/><path d="M10 96 Q30 88 50 96 T90 96 T110 96" stroke="#4C9BE8" stroke-width="4" fill="none"/></svg>
+        <div><h3>Orientação</h3><p>Navegadores usavam as estrelas no mar. No hemisfério sul, o <b>Cruzeiro do Sul</b> indicava o <b>sul</b>.</p></div>
+      </div>
+      <div class="painel" data-passo="4" style="display:grid;grid-template-columns:110px 1fr;gap:18px;align-items:center">
+        <svg viewBox="0 0 110 110" aria-hidden="true"><circle cx="55" cy="55" r="40" fill="#FFF4C2"/><path d="M30 60 Q55 20 80 60" stroke="#E0A100" stroke-width="4" fill="none"/><circle cx="55" cy="40" r="10" fill="#FFD10C"/><circle cx="34" cy="72" r="4" fill="#8C7BEA"/><circle cx="76" cy="72" r="4" fill="#8C7BEA"/></svg>
+        <div><h3>Mitos e explicações</h3><p>Muitas culturas criaram narrativas sobre a <b>origem</b> da Terra, do Sol e das estrelas, ligadas às suas crenças.</p></div>
+      </div>
+    </div>
+  </div>
+  <aside class="notas">
+    <p>Um cartão por clique, todos da apostila (1.1, "O céu nas diferentes culturas"). Destaque: não existe leitura "errada" do céu entre essas; cada povo formou as suas figuras conforme as suas necessidades (isso cai na questão 3 desta parte).</p>
+  </aside>
+</section>
+
+<!-- 9. E a Ciência? -->
+<section class="slide" data-nome="A Ciência e a origem">
+  <div class="conteudo">
+    <p class="olho">E a Ciência?</p>
+    <h2 class="titulo">Outro método: observar, medir, testar</h2>
+    <svg viewBox="0 0 600 460" style="position:absolute;left:0;top:140px;width:600px;height:460px" aria-hidden="true" data-passo="2">
+      <rect width="600" height="460" rx="30" class="noite"/>
+      <g class="nuvem">
+        <g fill="#C9C0F0" opacity=".75">
+          <circle cx="160" cy="200" r="5"/><circle cx="440" cy="260" r="5"/><circle cx="220" cy="300" r="4"/><circle cx="380" cy="160" r="4"/><circle cx="130" cy="260" r="3"/><circle cx="470" cy="200" r="3"/><circle cx="260" cy="150" r="3"/><circle cx="340" cy="310" r="3"/><circle cx="200" cy="240" r="4"/><circle cx="400" cy="220" r="4"/><circle cx="300" cy="120" r="3"/><circle cx="300" cy="340" r="3"/><circle cx="100" cy="230" r="2"/><circle cx="500" cy="230" r="2"/>
+        </g>
+        <ellipse cx="300" cy="230" rx="220" ry="70" fill="none" stroke="#8C7BEA" stroke-width="3" stroke-dasharray="4 10" opacity=".7"/>
+        <ellipse cx="300" cy="230" rx="140" ry="44" fill="none" stroke="#8C7BEA" stroke-width="3" stroke-dasharray="4 10" opacity=".7"/>
+        <circle cx="420" cy="214" r="9" fill="#D8644A"/><circle cx="196" cy="250" r="7" fill="#4C9BE8"/><circle cx="510" cy="248" r="14" fill="#D9A774"/>
+      </g>
+      <circle class="brilho" cx="300" cy="230" r="70" fill="#FFD10C" opacity=".5"/>
+      <circle cx="300" cy="230" r="40" fill="#FFD10C" stroke="#F0A500" stroke-width="4"/>
+      <text x="300" y="420" text-anchor="middle" class="rot-claro">nuvem de gás e poeira → Sol e planetas</text>
+    </svg>
+    <div style="position:absolute;left:680px;right:0;top:170px;display:flex;flex-direction:column;gap:18px">
+      <div class="linha-ex" data-passo="1">A Ciência também procura explicar a origem do Sistema Solar, com outro método: <b>observação, medidas e teste das ideias</b>.</div>
+      <div class="caixa caixa-fundamental" data-passo="2" style="padding:20px 30px">
+        <span class="rotulo">Pelas evidências atuais</span>
+        <div class="texto" style="font-size:30px">O Sol e os planetas se formaram há cerca de <b>4,6 bilhões de anos</b>, a partir de uma enorme <b>nuvem de gás e poeira</b>.</div>
+      </div>
+    </div>
+    <div class="linha-ex" data-passo="3" style="position:absolute;left:680px;right:0;top:600px">Cada leitura do céu responde a uma <b>necessidade</b>: plantar, navegar, marcar o tempo, explicar o mundo.</div>
+  </div>
+  <aside class="notas">
+    <p>Clique 2: a nuvem gira devagar, com o Sol no centro e os planetas se formando no disco (esquema, fora de escala). Da apostila (fim do bloco "O céu nas diferentes culturas").</p>
+  </aside>
+</section>
+
+<!-- 10. Exemplo -->
+<section class="slide" data-nome="Exemplo: para que servia?">
+  <div class="conteudo">
+    <p class="olho">Exemplo</p>
+    <h2 class="titulo">Para que servia?</h2>
+    <p class="texto" style="position:absolute;left:0;right:0;top:160px;margin:0">Associe cada uso do céu a uma necessidade.</p>
+    <div style="position:absolute;left:0;right:0;top:250px;display:flex;flex-direction:column;gap:22px">
+      <div class="linha-ex" style="display:grid;grid-template-columns:1fr auto;gap:20px;align-items:center"><span><b>(a)</b> Os egípcios esperavam Sírius aparecer antes do amanhecer.</span><span data-passo="1" class="tag">agricultura</span></div>
+      <div class="linha-ex" data-passo="1" style="font-size:27px;color:var(--cinza)">Era o aviso da cheia do Nilo e da época de plantar.</div>
+      <div class="linha-ex" style="display:grid;grid-template-columns:1fr auto;gap:20px;align-items:center"><span><b>(b)</b> Um navegador observava o Cruzeiro do Sul à noite.</span><span data-passo="2" class="tag">orientação</span></div>
+      <div class="linha-ex" data-passo="2" style="font-size:27px;color:var(--cinza)">O Cruzeiro do Sul indica o ponto cardeal sul.</div>
+    </div>
+  </div>
+  <aside class="notas"><p>Exemplo da apostila ("Para que servia?"). Peça a resposta antes de cada clique.</p></aside>
+</section>
+
+<!-- 11. Questão 1 -->
+<section class="slide questao" data-nome="Questão 1">
+  <div class="conteudo">
+    <div class="area-resolucao"></div>
+    <span class="pilula pilula-pausa" data-em="1:some">Pause o vídeo e tente</span>
+    <div class="painel-questao" style="gap:12px">
+      <p class="olho">Questão 1 · Modelo IF</p>
+      <p class="enunciado" style="font-size:23px">Um grupo de escoteiros acampou na zona rural de Juiz de Fora numa noite de maio. Sem bússola e sem sinal de celular, eles precisavam descobrir para que lado ficava o ponto cardeal sul. O monitor mostrou o Cruzeiro do Sul, bem alto no céu.</p>
+      <p class="enunciado" style="font-size:23px">Para achar o sul com essa constelação, os escoteiros devem</p>
+      <ol class="alternativas" style="gap:7px">
+        <li data-em="2:apaga" style="font-size:21px;padding:5px 14px"><b>A</b><span>seguir a direção em que o Sol nasceu naquela manhã.</span></li>
+        <li data-em="2:apaga" style="font-size:21px;padding:5px 14px"><b>B</b><span>prolongar o braço menor da cruz duas vezes e descer uma linha até o horizonte.</span></li>
+        <li data-em="2:apaga" style="font-size:21px;padding:5px 14px"><b>C</b><span>olhar para a estrela mais brilhante da cruz, que fica sempre exatamente sobre o sul.</span></li>
+        <li data-em="2:certo" style="font-size:21px;padding:5px 14px"><b>D</b><span>prolongar o braço maior da cruz cerca de quatro vezes e meia, a partir do pé, e descer uma linha reta até o horizonte.</span></li>
+        <li data-em="2:apaga" style="font-size:21px;padding:5px 14px"><b>E</b><span>caminhar para o lado oposto ao da cruz, porque o Cruzeiro do Sul aponta para o norte.</span></li>
+      </ol>
+    </div>
+  </div>
+  <aside class="resolucao">
+    <p class="dados"><b>Dados:</b> hemisfério sul; Cruzeiro do Sul alto no céu.</p>
+    <ol class="passos">
+      <li>Braço maior da cruz.</li>
+      <li>Prolongar ≈ 4,5 vezes, a partir do pé.</li>
+      <li>Descer reta até o horizonte: sul.</li>
+    </ol>
+    <p class="resposta"><b>Resposta:</b> braço maior, 4,5 vezes, linha até o horizonte. <b>Gabarito D.</b></p>
+    <p class="atencao"><b>Destaque no quadro:</b> Braço maior × 4,5 a partir do pé ↓ horizonte = sul.</p>
+    <ul class="erros">
+      <li><b>A</b> O Sol nasce a leste: levaria ao leste.</li>
+      <li><b>B</b> É o braço maior, cerca de 4,5 vezes.</li>
+      <li><b>C</b> A cruz se move no céu durante a noite.</li>
+      <li><b>E</b> O Cruzeiro indica o sul, não o norte.</li>
+    </ul>
+  </aside>
+  <aside class="notas">
+    <p>Clique 1 tira o aviso de pausa: resolva na área (D liga a caneta; E esconde o enunciado). Clique 2: gabarito D.</p>
+    <p>Modelo IF, lote if-fisica-observacao-do-ceu, m004, FIS-8724 (nível 2).</p>
+  </aside>
+</section>
+
+<!-- 12. Questão 2 -->
+<section class="slide questao" data-nome="Questão 2">
+  <div class="conteudo">
+    <div class="area-resolucao"></div>
+    <span class="pilula pilula-pausa" data-em="1:some">Pause o vídeo e tente</span>
+    <div class="painel-questao" style="gap:10px">
+      <p class="olho">Questão 2 · Modelo IF</p>
+      <p class="enunciado" style="font-size:21px">Numa noite de janeiro, uma professora de Ciências de Juiz de Fora levou a turma ao pátio da escola. Com um aplicativo de celular que mostra o nome das estrelas para onde a câmera aponta, os alunos acharam, no início da noite, a constelação de Órion, com as Três Marias. Depois, eles anotaram três conclusões:</p>
+      <p class="enunciado" style="font-size:21px">I. As estrelas de Órion estão todas à mesma distância da Terra; por isso formam uma figura.<br>II. Em julho, no início da noite, a constelação que se destaca no céu de Minas Gerais é o Escorpião, e não Órion.<br>III. As constelações vistas no início da noite mudam ao longo do ano porque a Terra dá uma volta em torno do Sol.</p>
+      <p class="enunciado" style="font-size:21px">Está <b>CORRETO</b> o que se afirma em</p>
+      <ol class="alternativas curtas">
+        <li data-em="2:apaga" style="font-size:21px"><b>A</b><span>I, apenas.</span></li>
+        <li data-em="2:certo" style="font-size:21px"><b>B</b><span>II e III, apenas.</span></li>
+        <li data-em="2:apaga" style="font-size:21px"><b>C</b><span>I e II, apenas.</span></li>
+        <li data-em="2:apaga" style="font-size:21px"><b>D</b><span>I e III, apenas.</span></li>
+        <li data-em="2:apaga" style="font-size:21px"><b>E</b><span>I, II e III.</span></li>
+      </ol>
+    </div>
+  </div>
+  <aside class="resolucao">
+    <p class="dados"><b>Dados:</b> Órion em janeiro, início da noite; três conclusões.</p>
+    <ol class="passos">
+      <li><b>I:</b> estrelas a distâncias diferentes (F).</li>
+      <li><b>II:</b> inverno (jun a ago): Escorpião (V).</li>
+      <li><b>III:</b> translação muda o céu da noite (V).</li>
+    </ol>
+    <p class="resposta"><b>Resposta:</b> II e III. <b>Gabarito B.</b></p>
+    <p class="atencao"><b>Destaque no quadro:</b> Constelação: figura vista daqui, não vizinhança.</p>
+    <ul class="erros">
+      <li><b>A</b> I é falsa; II e III ficaram de fora.</li>
+      <li><b>C</b> I é falsa; III ficou de fora.</li>
+      <li><b>D</b> I é falsa; II ficou de fora.</li>
+      <li><b>E</b> I é falsa.</li>
+    </ul>
+  </aside>
+  <aside class="notas">
+    <p>Clique 1 tira o aviso de pausa: resolva na área (D liga a caneta; E esconde o enunciado). Clique 2: gabarito B.</p>
+    <p>Modelo IF, lote if-fisica-observacao-do-ceu, m007, FIS-8727 (nível 3).</p>
+  </aside>
+</section>
+
+<!-- 13. Questão 3 -->
+<section class="slide questao" data-nome="Questão 3">
+  <div class="conteudo">
+    <div class="area-resolucao"></div>
+    <span class="pilula pilula-pausa" data-em="1:some">Pause o vídeo e tente</span>
+    <div class="painel-questao" style="gap:10px">
+      <p class="olho">Questão 3 · Modelo IF</p>
+      <p class="enunciado" style="font-size:21px">Para muitos povos guaranis, a constelação da Ema, formada por estrelas perto do Cruzeiro do Sul, aparece ao anoitecer em junho e anuncia a chegada do tempo frio. Os egípcios antigos, os navegadores e a Ciência atual também leram o céu, cada um conforme as suas necessidades e com os seus métodos.</p>
+      <p class="enunciado" style="font-size:21px">Sobre essas leituras do céu, marque a alternativa <b>INCORRETA</b>.</p>
+      <ol class="alternativas" style="gap:6px">
+        <li data-em="2:certo" style="font-size:19px;padding:4px 12px"><b>A</b><span>A constelação da Ema é um erro dos povos guaranis, porque as únicas constelações verdadeiras são as 88 definidas pela União Astronômica Internacional.</span></li>
+        <li data-em="2:apaga" style="font-size:19px;padding:4px 12px"><b>B</b><span>Para os guaranis, o aparecimento da Ema ao anoitecer funcionava como um calendário, ligado ao momento de plantar, colher e caçar.</span></li>
+        <li data-em="2:apaga" style="font-size:19px;padding:4px 12px"><b>C</b><span>Os navegadores usavam o Cruzeiro do Sul para achar o ponto cardeal sul no mar.</span></li>
+        <li data-em="2:apaga" style="font-size:19px;padding:4px 12px"><b>D</b><span>As narrativas sobre a origem da Terra, do Sol e das estrelas variam de uma cultura para outra, ligadas às crenças de cada povo.</span></li>
+        <li data-em="2:apaga" style="font-size:19px;padding:4px 12px"><b>E</b><span>A Ciência explica a origem do Sistema Solar por observação, medidas e teste das ideias; pelas evidências atuais, o Sol e os planetas se formaram há cerca de 4,6 bilhões de anos.</span></li>
+      </ol>
+    </div>
+  </div>
+  <aside class="resolucao">
+    <p class="dados"><b>Dados:</b> pede a INCORRETA.</p>
+    <ol class="passos">
+      <li>Constelação: figura vista da Terra.</li>
+      <li>Cada povo pode formar as suas figuras.</li>
+      <li>88 da UAI: convenção atual, não "única verdade".</li>
+      <li>B, C, D e E: usos corretos do céu.</li>
+    </ol>
+    <p class="resposta"><b>Resposta:</b> a Ema não é um "erro". <b>Gabarito A.</b></p>
+    <p class="atencao"><b>Destaque no quadro:</b> Pediu INCORRETA: sublinhe no enunciado.</p>
+    <ul class="erros">
+      <li><b>B</b> Correta: a Ema marcava o frio e o calendário.</li>
+      <li><b>C</b> Correta: o Cruzeiro indica o sul.</li>
+      <li><b>D</b> Correta: cada cultura tem as suas narrativas.</li>
+      <li><b>E</b> Correta: método e idade da Ciência.</li>
+    </ul>
+  </aside>
+  <aside class="notas">
+    <p>Clique 1 tira o aviso de pausa: resolva na área (D liga a caneta; E esconde o enunciado). Clique 2: gabarito A (a alternativa marcada em verde é a INCORRETA, pedida pela questão).</p>
+    <p>Modelo IF, lote if-fisica-observacao-do-ceu, m009, FIS-8729 (nível 3).</p>
+  </aside>
+</section>
+
+<!-- 14. Resumo -->
+<section class="slide" data-nome="Resumo">
+  <div class="conteudo">
+    <p class="olho">Resumo · Observação do céu</p>
+    <h2 class="titulo">O essencial</h2>
+    <div class="resumo menor" style="position:absolute;left:0;right:0;top:150px">
+      <div>O Sol nasce a leste e se põe a oeste; o movimento é <b>aparente</b> e vem da <b>rotação</b> da Terra.</div>
+      <div><b>Gnômon:</b> a sombra muda ao longo do dia (rotação) e a do meio-dia muda ao longo do ano (translação e eixo inclinado).</div>
+      <div><b>Constelações</b> são figuras vistas da Terra; as do início da noite mudam ao longo do ano.</div>
+      <div>O <b>Cruzeiro do Sul</b> indica o sul: braço maior × 4,5 a partir do pé, depois até o horizonte.</div>
+      <div><b>Dia</b> (rotação), <b>mês</b> (fases da Lua), <b>ano</b> (translação); <b>bissexto</b> a cada 4 anos.</div>
+      <div>Cada cultura leu o céu para <b>plantar, navegar, marcar o tempo</b> e explicar a origem do mundo.</div>
+    </div>
+  </div>
+  <aside class="notas"><p>Resumo do subcapítulo inteiro (as duas partes), igual ao "O essencial" da apostila. Peça para tirarem um print.</p></aside>
+</section>
+
+<!-- 15. A seguir -->
+<section class="slide capa" data-nome="A seguir">
+  <div class="estrelas"></div>
+  <div class="texto-capa" style="top:200px">
+    <span class="selo">Física · IF</span>
+    <p class="aula" style="font-size:28px">A seguir · Sistema Sol, Terra e Lua · Parte 1 de 2</p>
+    <h1 style="font-size:116px">Rotação, translação e estações</h1>
+    <p class="sub">Por que é verão aqui e inverno em Portugal</p>
+  </div>
+  <svg class="emblema" viewBox="0 0 640 640" aria-hidden="true">
+    <ellipse cx="320" cy="330" rx="270" ry="130" fill="none" stroke="#fff" stroke-opacity=".5" stroke-width="3" stroke-dasharray="6 12"/>
+    <circle cx="320" cy="330" r="74" fill="#FFD10C"/>
+    <g transform="translate(560 360)"><circle r="40" fill="#4C9BE8"/><path d="M0 -40 A40 40 0 0 1 0 40 Z" fill="#3B2A73" opacity=".8"/><line x1="-22" y1="52" x2="22" y2="-52" stroke="#fff" stroke-width="5" stroke-linecap="round"/></g>
+    <g transform="translate(80 300)"><circle r="40" fill="#4C9BE8"/><path d="M0 -40 A40 40 0 0 0 0 40 Z" fill="#3B2A73" opacity=".8"/><line x1="-22" y1="52" x2="22" y2="-52" stroke="#fff" stroke-width="5" stroke-linecap="round"/></g>
+  </svg>
+  <img class="logo-capa" src="{{LOGO_BRANCO}}" alt="Quarks">
+  <aside class="notas"><p>Próximo subcapítulo: Sistema Sol, Terra e Lua. Na Parte 1, a rotação, a translação e a causa das estações do ano.</p></aside>
+</section>
