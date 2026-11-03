@@ -1,0 +1,489 @@
+<!--aula
+{"disciplina": "matematica", "curso": "IF", "assunto": "Polinômios", "parte": "Parte 2 de 2", "titulo": "Fatoração e frações algébricas"}
+-->
+<!-- Fonte: apostila IF/Sudeste, Matemática, cap. 3 (3.1 Polinômios: Fator comum e agrupamento; Diferença de quadrados e trinômio quadrado perfeito; Frações algébricas; resumo do 3.1). Questões: oficiais do IF Sudeste MG que sobraram do bloco do capítulo (2013-1-extra q15, 2014-1 q22, 2023-1 q17). -->
+<style>
+  .caixa { box-sizing: border-box; }
+  .contas.c4 { grid-template-columns: auto auto auto 1fr; }
+  .ag-anot { font-size: 26px; font-weight: 800; color: var(--d-forte); background: var(--d-clara); border-radius: 999px; padding: 2px 16px; justify-self: start; white-space: nowrap; }
+  .ag-certo { color: var(--certo); font-weight: 800; }
+  .ag-erro { color: var(--erro); font-weight: 800; }
+  .ag-lista { margin: 0; padding: 0; list-style: none; display: flex; flex-direction: column; gap: 22px; }
+  .ag-lista li { display: flex; align-items: baseline; gap: 18px; font-size: 36px; line-height: 1.3; }
+  .ag-lista li b.n { flex: none; width: 52px; height: 52px; border-radius: 50%; display: grid; place-items: center; background: var(--d); color: #fff; font: 800 28px var(--fonte-titulo); transform: translateY(8px); }
+  .ag-cartao { background: var(--branco); border: 2px solid var(--lilas-2); border-radius: 26px; padding: 20px 28px; box-sizing: border-box; }
+  .ag-cartao h3 { margin: 0 0 10px; font: 800 34px var(--fonte-titulo); color: var(--roxo-titulo); letter-spacing: -.01em; }
+  /* peças que se arrumam num retângulo: 6x² + 9x = 3x(2x + 3) */
+  .ag-pecas .pc { transform-box: view-box; transform: translate(var(--dx), var(--dy)); transition: none; }
+  .slide.ativo .mostra .ag-pecas .pc { animation: ag-arruma 2.6s cubic-bezier(.5,0,.3,1) forwards; animation-delay: var(--atraso, 0s); }
+  @keyframes ag-arruma { from { transform: translate(var(--dx), var(--dy)); } to { transform: none; } }
+  .ag-pecas .lado { opacity: 0; }
+  .slide.ativo .mostra .ag-pecas .lado { animation: ag-aparece .8s ease 3.4s forwards; }
+  @keyframes ag-aparece { to { opacity: 1; } }
+  @keyframes ag-pulsa { 0%, 100% { opacity: 1; } 50% { opacity: .55; } }
+  .slide.ativo .mostra .ag-pecas .pc rect { animation: ag-pulsa 5s ease-in-out 4.4s infinite; }
+  /* setas do trinômio */
+  .ag-arco { stroke-dasharray: 1; stroke-dashoffset: 1; }
+  .mostra .ag-arco { animation: ag-traca 1.2s ease-in-out forwards; }
+  @keyframes ag-traca { to { stroke-dashoffset: 0; } }
+  @media (prefers-reduced-motion: reduce) { .ag-pecas .pc { transform: none; } .ag-pecas .lado { opacity: 1; } .ag-arco { stroke-dasharray: none; stroke-dashoffset: 0; } }
+</style>
+
+<!-- 1. Capa -->
+<section class="slide capa" data-nome="Capa">
+  <div class="estrelas"></div>
+  <div class="texto-capa">
+    <span class="selo">Matemática · IF</span>
+    <p class="aula">Polinômios · Parte 2 de 2</p>
+    <h1 style="font-size:128px">Fatoração e frações algébricas</h1>
+    <p class="sub">A soma vira produto</p>
+  </div>
+  <svg class="emblema" viewBox="0 0 640 640" aria-hidden="true">
+    <g class="gira-lento"><ellipse cx="320" cy="320" rx="300" ry="128" fill="none" stroke="#fff" stroke-opacity=".38" stroke-width="2" transform="rotate(-10 320 320)"/></g>
+    <g class="gira"><ellipse cx="320" cy="320" rx="236" ry="196" fill="none" stroke="#FFD10C" stroke-opacity=".75" stroke-width="2.5" stroke-dasharray="3 14" stroke-linecap="round" transform="rotate(-8 320 320)"/>
+      <circle cx="84" cy="300" r="13" fill="var(--d)" stroke="#fff" stroke-width="3"/></g>
+    <g transform="translate(150 190)" stroke="#fff" stroke-width="3">
+      <rect x="0" y="0" width="100" height="100" rx="8" fill="#fff" fill-opacity=".25"/><rect x="104" y="0" width="100" height="100" rx="8" fill="#fff" fill-opacity=".25"/>
+      <rect x="208" y="0" width="34" height="100" rx="6" fill="#FFD10C"/><rect x="246" y="0" width="34" height="100" rx="6" fill="#FFD10C"/><rect x="284" y="0" width="34" height="100" rx="6" fill="#FFD10C"/>
+      <rect x="0" y="104" width="100" height="100" rx="8" fill="#fff" fill-opacity=".25"/><rect x="104" y="104" width="100" height="100" rx="8" fill="#fff" fill-opacity=".25"/>
+      <rect x="208" y="104" width="34" height="100" rx="6" fill="#FFD10C"/><rect x="246" y="104" width="34" height="100" rx="6" fill="#FFD10C"/><rect x="284" y="104" width="34" height="100" rx="6" fill="#FFD10C"/>
+    </g>
+  </svg>
+  <img class="logo-capa" src="{{LOGO_BRANCO}}" alt="Quarks">
+  <aside class="notas">
+    <p>Segunda parte de Polinômios: fatorar (o caminho de volta da distributiva) e simplificar frações algébricas.</p>
+  </aside>
+</section>
+
+<!-- 2. Fatorar é voltar -->
+<section class="slide" data-nome="Fatorar é voltar">
+  <div class="conteudo">
+    <p class="olho">Fatoração</p>
+    <h2 class="titulo">O caminho de volta da distributiva</h2>
+    <svg viewBox="0 0 1500 380" width="1500" height="380" style="position:absolute;left:130px;top:170px;overflow:visible;font-family:Figtree,'Segoe UI',sans-serif" aria-hidden="true">
+      <rect x="0" y="120" width="520" height="140" rx="70" fill="#fff" stroke="var(--lilas-2)" stroke-width="3"/>
+      <text x="260" y="212" text-anchor="middle" font-size="72" font-weight="800" fill="#3F2FA0">3x(2x + 3)</text>
+      <rect x="980" y="120" width="520" height="140" rx="70" fill="#fff" stroke="var(--lilas-2)" stroke-width="3"/>
+      <text x="1240" y="212" text-anchor="middle" font-size="72" font-weight="800" fill="#3F2FA0">6x² + 9x</text>
+      <text x="260" y="320" text-anchor="middle" font-size="30" font-weight="800" fill="#5E5A70">produto</text>
+      <text x="1240" y="320" text-anchor="middle" font-size="30" font-weight="800" fill="#5E5A70">soma</text>
+      <g data-passo="1"><path d="M560 140 Q750 40 940 140" fill="none" stroke="var(--d)" stroke-width="6" class="ag-arco" pathLength="1"/><path d="M916 118 L944 142 L908 150" fill="none" stroke="var(--d)" stroke-width="6" stroke-linecap="round" stroke-linejoin="round"/><text x="750" y="60" text-anchor="middle" font-size="36" font-weight="800" fill="#1E4FD8">distributiva</text></g>
+      <g data-passo="2"><path d="M940 240 Q750 340 560 240" fill="none" stroke="#C9A400" stroke-width="6" class="ag-arco" pathLength="1"/><path d="M584 262 L556 238 L592 230" fill="none" stroke="#C9A400" stroke-width="6" stroke-linecap="round" stroke-linejoin="round"/><text x="750" y="350" text-anchor="middle" font-size="40" font-weight="800" fill="#8A6A00">fatorar</text></g>
+    </svg>
+    <div class="caixa caixa-fundamental" data-passo="3" style="position:absolute;left:640px;right:0;top:600px;padding:22px 32px">
+      <span class="rotulo">Fatorar</span>
+      <div class="texto" style="font-size:34px">Transformar uma soma num <b>produto</b>: descobrir quais fatores foram multiplicados.</div>
+    </div>
+  </div>
+  <aside class="notas">
+    <p>Clique 1: a distributiva leva do produto à soma. Clique 2: fatorar é o caminho de volta.</p>
+    <p>A pergunta é: a partir de 6x² + 9x, quais fatores foram multiplicados?</p>
+  </aside>
+</section>
+
+<!-- 3. Fator comum com peças -->
+<section class="slide" data-nome="Fator comum">
+  <div class="conteudo">
+    <p class="olho">Fator comum</p>
+    <h2 class="titulo">O que aparece em todos os termos</h2>
+    <div data-passo="1" style="position:absolute;left:0;top:150px;width:700px;height:450px">
+      <svg class="ag-pecas" viewBox="-60 -20 640 420" width="700" height="460" style="overflow:visible;font-family:Figtree,'Segoe UI',sans-serif" aria-hidden="true">
+        <!-- retângulo final: 3 linhas de (2 quadrados x² + 3 tiras x); x = 90 px, 1 = 30 px -->
+        <g class="pc" style="--dx:-20px;--dy:-10px;--atraso:0s"><rect x="0" y="0" width="90" height="90" rx="8" fill="var(--d-clara)" stroke="var(--d)" stroke-width="3"/><text x="45" y="56" text-anchor="middle" font-size="30" font-weight="800" fill="#1E4FD8">x²</text></g>
+        <g class="pc" style="--dx:10px;--dy:-10px;--atraso:.1s"><rect x="90" y="0" width="90" height="90" rx="8" fill="var(--d-clara)" stroke="var(--d)" stroke-width="3"/><text x="135" y="56" text-anchor="middle" font-size="30" font-weight="800" fill="#1E4FD8">x²</text></g>
+        <g class="pc" style="--dx:-20px;--dy:20px;--atraso:.2s"><rect x="0" y="90" width="90" height="90" rx="8" fill="var(--d-clara)" stroke="var(--d)" stroke-width="3"/><text x="45" y="146" text-anchor="middle" font-size="30" font-weight="800" fill="#1E4FD8">x²</text></g>
+        <g class="pc" style="--dx:10px;--dy:20px;--atraso:.3s"><rect x="90" y="90" width="90" height="90" rx="8" fill="var(--d-clara)" stroke="var(--d)" stroke-width="3"/><text x="135" y="146" text-anchor="middle" font-size="30" font-weight="800" fill="#1E4FD8">x²</text></g>
+        <g class="pc" style="--dx:-20px;--dy:50px;--atraso:.4s"><rect x="0" y="180" width="90" height="90" rx="8" fill="var(--d-clara)" stroke="var(--d)" stroke-width="3"/><text x="45" y="236" text-anchor="middle" font-size="30" font-weight="800" fill="#1E4FD8">x²</text></g>
+        <g class="pc" style="--dx:10px;--dy:50px;--atraso:.5s"><rect x="90" y="180" width="90" height="90" rx="8" fill="var(--d-clara)" stroke="var(--d)" stroke-width="3"/><text x="135" y="236" text-anchor="middle" font-size="30" font-weight="800" fill="#1E4FD8">x²</text></g>
+        <g class="pc" style="--dx:130px;--dy:-10px;--atraso:.6s"><rect x="180" y="0" width="30" height="90" rx="6" fill="#FFF4C2" stroke="#C9A400" stroke-width="3"/><text x="195" y="54" text-anchor="middle" font-size="22" font-weight="800" fill="#8A6A00">x</text></g>
+        <g class="pc" style="--dx:150px;--dy:-10px;--atraso:.65s"><rect x="210" y="0" width="30" height="90" rx="6" fill="#FFF4C2" stroke="#C9A400" stroke-width="3"/><text x="225" y="54" text-anchor="middle" font-size="22" font-weight="800" fill="#8A6A00">x</text></g>
+        <g class="pc" style="--dx:170px;--dy:-10px;--atraso:.7s"><rect x="240" y="0" width="30" height="90" rx="6" fill="#FFF4C2" stroke="#C9A400" stroke-width="3"/><text x="255" y="54" text-anchor="middle" font-size="22" font-weight="800" fill="#8A6A00">x</text></g>
+        <g class="pc" style="--dx:130px;--dy:20px;--atraso:.75s"><rect x="180" y="90" width="30" height="90" rx="6" fill="#FFF4C2" stroke="#C9A400" stroke-width="3"/><text x="195" y="144" text-anchor="middle" font-size="22" font-weight="800" fill="#8A6A00">x</text></g>
+        <g class="pc" style="--dx:150px;--dy:20px;--atraso:.8s"><rect x="210" y="90" width="30" height="90" rx="6" fill="#FFF4C2" stroke="#C9A400" stroke-width="3"/><text x="225" y="144" text-anchor="middle" font-size="22" font-weight="800" fill="#8A6A00">x</text></g>
+        <g class="pc" style="--dx:170px;--dy:20px;--atraso:.85s"><rect x="240" y="90" width="30" height="90" rx="6" fill="#FFF4C2" stroke="#C9A400" stroke-width="3"/><text x="255" y="144" text-anchor="middle" font-size="22" font-weight="800" fill="#8A6A00">x</text></g>
+        <g class="pc" style="--dx:130px;--dy:50px;--atraso:.9s"><rect x="180" y="180" width="30" height="90" rx="6" fill="#FFF4C2" stroke="#C9A400" stroke-width="3"/><text x="195" y="234" text-anchor="middle" font-size="22" font-weight="800" fill="#8A6A00">x</text></g>
+        <g class="pc" style="--dx:150px;--dy:50px;--atraso:.95s"><rect x="210" y="180" width="30" height="90" rx="6" fill="#FFF4C2" stroke="#C9A400" stroke-width="3"/><text x="225" y="234" text-anchor="middle" font-size="22" font-weight="800" fill="#8A6A00">x</text></g>
+        <g class="pc" style="--dx:170px;--dy:50px;--atraso:1s"><rect x="240" y="180" width="30" height="90" rx="6" fill="#FFF4C2" stroke="#C9A400" stroke-width="3"/><text x="255" y="234" text-anchor="middle" font-size="22" font-weight="800" fill="#8A6A00">x</text></g>
+        <g class="lado" font-size="34" font-weight="800">
+          <path d="M-18 0 V270" stroke="#3F2FA0" stroke-width="4"/><text x="-30" y="148" text-anchor="end" fill="#3F2FA0">3x</text>
+          <path d="M0 296 H270" stroke="#3F2FA0" stroke-width="4"/><text x="135" y="342" text-anchor="middle" fill="#3F2FA0">2x + 3</text>
+        </g>
+      </svg>
+    </div>
+    <div style="position:absolute;left:760px;right:0;top:160px">
+      <p class="texto" style="margin:0 0 18px;font-size:32px">Em \(6x^2 + 9x\): os números têm <b>3</b> em comum; as letras, <b>\(x\)</b>.</p>
+      <div class="contas" style="font-size:54px;row-gap:22px">
+        <div class="eq" data-passo="2"><span>\(E\)</span><span>\(=\)</span><span>\(6x^2 + 9x\)</span></div>
+        <div class="eq" data-passo="3"><span>\(E\)</span><span>\(=\)</span><span>\(\textcolor{#1E4FD8}{3x} \cdot 2x + \textcolor{#1E4FD8}{3x} \cdot 3\)</span></div>
+        <div class="eq final" data-passo="4"><span>\(E\)</span><span>\(=\)</span><span>\(\textcolor{#1E4FD8}{3x}(2x + 3)\)</span></div>
+      </div>
+      <p class="texto" data-passo="5" style="margin:30px 0 0;font-size:32px"><b>Confira:</b> a distributiva tem que voltar a \(6x^2 + 9x\).</p>
+    </div>
+  </div>
+  <aside class="notas">
+    <p>Clique 1: seis quadrados x² e nove tiras x (área 6x² + 9x) se arrumam num retângulo de lados 3x e 2x + 3. A área virou produto: isso é fatorar.</p>
+    <p>Cliques 2 a 4: 3x vai para fora do parêntese; dentro fica o que sobra de cada termo. Clique 5: confira pela distributiva.</p>
+  </aside>
+</section>
+
+<!-- 4. Agrupamento -->
+<section class="slide" data-nome="Agrupamento">
+  <div class="conteudo">
+    <p class="olho">Exemplo</p>
+    <h2 class="titulo">Agrupamento</h2>
+    <p class="texto" style="position:absolute;left:0;right:0;top:150px;margin:0;font-size:34px">Sem fator comum a todos os termos? Agrupe <b>dois a dois</b>.</p>
+    <div class="contas c4" style="position:absolute;left:0;top:250px;font-size:56px;row-gap:26px">
+      <div class="eq" data-passo="1"><span>\(E\)</span><span>\(=\)</span><span>\(\underbrace{x^3 + 2x^2}_{\text{comum: } x^2} + \underbrace{3x + 6}_{\text{comum: } 3}\)</span><span></span></div>
+      <div class="eq" data-passo="2"><span>\(E\)</span><span>\(=\)</span><span>\(x^2\textcolor{#1E4FD8}{(x + 2)} + 3\textcolor{#1E4FD8}{(x + 2)}\)</span><span class="ag-anot">parênteses iguais</span></div>
+      <div class="eq final" data-passo="3"><span>\(E\)</span><span>\(=\)</span><span>\(\textcolor{#1E4FD8}{(x + 2)}(x^2 + 3)\)</span><span></span></div>
+    </div>
+  </div>
+  <aside class="notas">
+    <p>Nos dois primeiros termos, o comum é x²; nos dois últimos, é 3. Os parênteses que sobram ficam iguais (clique 2) e viram o fator comum dos grupos (clique 3).</p>
+  </aside>
+</section>
+
+<!-- 5. Produtos notáveis ao contrário -->
+<section class="slide" data-nome="Duas fatorações">
+  <div class="conteudo">
+    <p class="olho">Produtos notáveis de trás para a frente</p>
+    <h2 class="titulo">Fatorações prontas</h2>
+    <div style="position:absolute;left:0;right:0;top:160px;display:grid;grid-template-columns:1fr 1fr;gap:36px">
+      <div class="ag-cartao" data-passo="1">
+        <h3>Diferença de quadrados</h3>
+        <div style="font-size:54px;text-align:center;margin:10px 0">\(a^2 - b^2 = (a + b)(a - b)\)</div>
+      </div>
+      <div class="ag-cartao" data-passo="2">
+        <h3>Trinômio quadrado perfeito</h3>
+        <div style="font-size:46px;text-align:center;margin:6px 0">\(a^2 + 2ab + b^2 = (a + b)^2\)</div>
+        <div style="font-size:46px;text-align:center;margin:6px 0">\(a^2 - 2ab + b^2 = (a - b)^2\)</div>
+      </div>
+    </div>
+    <span class="pilula pilula-resposta" data-passo="3" style="position:absolute;right:0;top:560px">Quem reconhece a forma fatora em uma linha</span>
+  </div>
+  <aside class="notas">
+    <p>São os produtos notáveis da parte 1, lidos da direita para a esquerda.</p>
+  </aside>
+</section>
+
+<!-- 6. Como reconhecer o trinômio -->
+<section class="slide" data-nome="Reconhecer o trinômio">
+  <div class="conteudo">
+    <p class="olho">Trinômio quadrado perfeito</p>
+    <h2 class="titulo">Como reconhecer</h2>
+    <svg viewBox="0 0 1100 400" width="1100" height="400" style="position:absolute;left:0;top:150px;overflow:visible;font-family:Figtree,'Segoe UI',sans-serif" aria-hidden="true">
+      <text x="550" y="150" text-anchor="middle" font-size="110" font-weight="800" fill="#3F2FA0"><tspan fill="#1E4FD8">9x²</tspan> + <tspan fill="#8A6A00">12x</tspan> + <tspan fill="#1E4FD8">4</tspan></text>
+      <g data-passo="1"><path d="M235 175 Q235 230 235 250" stroke="var(--d)" stroke-width="5" fill="none" class="ag-arco" pathLength="1"/><text x="235" y="300" text-anchor="middle" font-size="44" font-weight="800" fill="#1E4FD8">√ = 3x</text></g>
+      <g data-passo="2"><path d="M850 175 Q850 230 850 250" stroke="var(--d)" stroke-width="5" fill="none" class="ag-arco" pathLength="1"/><text x="850" y="300" text-anchor="middle" font-size="44" font-weight="800" fill="#1E4FD8">√ = 2</text></g>
+      <g data-passo="3"><path d="M330 290 Q550 400 760 290" stroke="#C9A400" stroke-width="5" fill="none" class="ag-arco" pathLength="1"/><text x="550" y="392" text-anchor="middle" font-size="40" font-weight="800" fill="#8A6A00">2 · 3x · 2 = 12x ✓</text></g>
+    </svg>
+    <div class="caixa caixa-fundamental" data-passo="4" style="position:absolute;left:1160px;right:0;top:170px;padding:22px 30px">
+      <span class="rotulo">Teste</span>
+      <div class="texto" style="font-size:31px">As <b>pontas</b> são quadrados, e o <b>meio</b> é o dobro do produto das raízes delas.</div>
+    </div>
+    <div class="contas" data-passo="5" style="position:absolute;left:1000px;top:480px;font-size:50px">
+      <div class="eq final"><span>\(9x^2 + 12x + 4\)</span><span>\(=\)</span><span>\((3x + 2)^2\)</span></div>
+    </div>
+  </div>
+  <aside class="notas">
+    <p>Cliques 1 e 2: as raízes das pontas, 3x e 2. Clique 3: o dobro do produto dá 12x, igual ao termo do meio. Confere: é quadrado perfeito.</p>
+  </aside>
+</section>
+
+<!-- 7. Exemplo: reconhecer e fatorar -->
+<section class="slide" data-nome="Exemplo: fatorar">
+  <div class="conteudo">
+    <p class="olho">Exemplo</p>
+    <h2 class="titulo">Reconhecer e fatorar</h2>
+    <div style="position:absolute;left:0;right:0;top:170px;display:grid;grid-template-columns:1fr 1.15fr;gap:60px">
+      <div class="contas" style="font-size:52px;row-gap:24px">
+        <div class="eq" data-passo="1"><span>\(A\)</span><span>\(=\)</span><span>\(x^2 - 49\)</span></div>
+        <div class="eq" data-passo="2"><span>\(A\)</span><span>\(=\)</span><span>\(x^2 - 7^2\)</span></div>
+        <div class="eq final" data-passo="3"><span>\(A\)</span><span>\(=\)</span><span>\((x + 7)(x - 7)\)</span></div>
+      </div>
+      <div class="contas" style="font-size:52px;row-gap:24px">
+        <div class="eq" data-passo="4"><span>\(B\)</span><span>\(=\)</span><span>\(x^2 - 10x + 25\)</span></div>
+        <div class="eq" data-passo="5"><span>\(B\)</span><span>\(=\)</span><span>\(x^2 - 2 \cdot x \cdot 5 + 5^2\)</span></div>
+        <div class="eq final" data-passo="6"><span>\(B\)</span><span>\(=\)</span><span>\((x - 5)^2\)</span></div>
+      </div>
+    </div>
+  </div>
+  <aside class="notas">
+    <p>A: dois quadrados com sinal de menos entre eles, diferença de quadrados.</p>
+    <p>B: pontas x² e 25 (raízes x e 5); dobro do produto 10x; o sinal do meio é menos, então (x − 5)².</p>
+  </aside>
+</section>
+
+<!-- 8. Contas grandes e atenção -->
+<section class="slide" data-nome="Contas grandes">
+  <div class="conteudo">
+    <p class="olho">Diferença de quadrados</p>
+    <h2 class="titulo">Contas grandes ficam pequenas</h2>
+    <div class="contas" style="position:absolute;left:0;top:170px;font-size:54px;row-gap:24px">
+      <div class="eq" data-passo="1"><span>\(C\)</span><span>\(=\)</span><span>\(103^2 - 97^2\)</span></div>
+      <div class="eq" data-passo="2"><span>\(C\)</span><span>\(=\)</span><span>\((103 + 97)(103 - 97)\)</span></div>
+      <div class="eq" data-passo="3"><span>\(C\)</span><span>\(=\)</span><span>\(200 \cdot 6\)</span></div>
+      <div class="eq final" data-passo="4"><span>\(C\)</span><span>\(=\)</span><span>\(1200\)</span></div>
+    </div>
+    <div class="caixa caixa-atencao" data-passo="5" style="position:absolute;left:940px;right:0;top:190px;padding:24px 32px">
+      <span class="rotulo">Atenção</span>
+      <div style="font-size:50px;margin:8px 0">\(x^2 + 49 \ne (x + 7)(x - 7)\)</div>
+      <div class="texto" style="font-size:31px">A regra vale só para a <b>diferença</b> de quadrados. Soma de quadrados não fatora assim.</div>
+    </div>
+  </div>
+  <aside class="notas">
+    <p>Sem calcular 103² e 97²: soma vezes diferença, 200 · 6 = 1200.</p>
+    <p>Clique 5: (x + 7)(x − 7) dá x² − 49, não x² + 49.</p>
+  </aside>
+</section>
+
+<!-- 9. Frações algébricas -->
+<section class="slide" data-nome="Frações algébricas">
+  <div class="conteudo">
+    <p class="olho">Frações algébricas</p>
+    <h2 class="titulo">Letras no denominador</h2>
+    <div style="position:absolute;left:0;width:780px;top:160px">
+      <div style="font-size:84px">\(\dfrac{x^2 - 9}{x + 3}\)</div>
+      <div class="caixa caixa-atencao" data-passo="1" style="margin-top:26px;padding:20px 30px">
+        <div class="texto" style="font-size:32px">Só existe se o denominador não for zero: <b>\(x \ne -3\)</b>.</div>
+      </div>
+    </div>
+    <div style="position:absolute;left:900px;right:0;top:160px">
+      <p class="texto" style="margin:0 0 20px;font-size:32px" data-passo="2">Simplificar é igual a simplificar \(\dfrac{6}{8}\):</p>
+      <div class="contas" data-passo="2" style="font-size:54px">
+        <div class="eq final"><span>\(\dfrac{6}{8}\)</span><span>\(=\)</span><span>\(\dfrac{\textcolor{#C2384F}{2} \cdot 3}{\textcolor{#C2384F}{2} \cdot 4} = \dfrac{3}{4}\)</span></div>
+      </div>
+      <span class="pilula pilula-resposta" data-passo="3" style="margin-top:40px">Antes de simplificar, fatore</span>
+    </div>
+  </div>
+  <aside class="notas">
+    <p>Fração algébrica: letras no denominador. Primeiro, o valor proibido.</p>
+    <p>Cliques 2 e 3: em 6/8 cortamos o fator comum 2. Na fração algébrica é igual, mas o fator comum só aparece depois de fatorar.</p>
+  </aside>
+</section>
+
+<!-- 10. Passo a passo -->
+<section class="slide" data-nome="Passo a passo">
+  <div class="conteudo">
+    <p class="olho">Passo a passo</p>
+    <h2 class="titulo">Simplificar a fração</h2>
+    <ol class="ag-lista" style="position:absolute;left:0;right:0;top:170px">
+      <li data-passo="1"><b class="n">1</b><span><b>Fatore</b> o numerador e o denominador.</span></li>
+      <li data-passo="2"><b class="n">2</b><span>Anote os valores que <b>zeram o denominador</b> (ficam proibidos).</span></li>
+      <li data-passo="3"><b class="n">3</b><span>Corte só os <b>fatores</b> iguais, nunca pedaços de uma soma.</span></li>
+    </ol>
+  </div>
+  <aside class="notas">
+    <p>Um passo por clique. O passo 3 é onde mais se erra: cortar parcela.</p>
+  </aside>
+</section>
+
+<!-- 11. Exemplo: simplificar -->
+<section class="slide" data-nome="Exemplo: simplificar">
+  <div class="conteudo">
+    <p class="olho">Exemplo · \(x \ne -3\)</p>
+    <h2 class="titulo">Fatorar para simplificar</h2>
+    <div style="position:absolute;left:0;right:0;top:150px;display:grid;grid-template-columns:1fr 1fr;gap:60px">
+      <div class="contas" style="font-size:46px;row-gap:14px">
+        <div class="eq" data-passo="1"><span>\(A\)</span><span>\(=\)</span><span>\(\dfrac{x^2 - 9}{x + 3}\)</span></div>
+        <div class="eq" data-passo="2"><span>\(A\)</span><span>\(=\)</span><span>\(\dfrac{\textcolor{#C2384F}{\cancel{\textcolor{#292B2C}{(x + 3)}}}(x - 3)}{\textcolor{#C2384F}{\cancel{\textcolor{#292B2C}{x + 3}}}}\)</span></div>
+        <div class="eq final" data-passo="3"><span>\(A\)</span><span>\(=\)</span><span>\(x - 3\)</span></div>
+      </div>
+      <div class="contas" style="font-size:46px;row-gap:14px">
+        <div class="eq" data-passo="4"><span>\(B\)</span><span>\(=\)</span><span>\(\dfrac{x^2 + 6x + 9}{2x + 6}\)</span></div>
+        <div class="eq" data-passo="5"><span>\(B\)</span><span>\(=\)</span><span>\(\dfrac{(x + 3)\textcolor{#C2384F}{\cancel{\textcolor{#292B2C}{(x + 3)}}}}{2\textcolor{#C2384F}{\cancel{\textcolor{#292B2C}{(x + 3)}}}}\)</span></div>
+        <div class="eq final" data-passo="6"><span>\(B\)</span><span>\(=\)</span><span>\(\dfrac{x + 3}{2}\)</span></div>
+      </div>
+    </div>
+  </div>
+  <aside class="notas">
+    <p>A: diferença de quadrados em cima; corta o fator x + 3. B: trinômio quadrado perfeito em cima e fator comum 2 embaixo; corta um x + 3.</p>
+    <p>O x ≠ −3 é o valor proibido nos dois casos.</p>
+  </aside>
+</section>
+
+<!-- 12. Atenção: não corte termos -->
+<section class="slide" data-nome="Atenção: não corte termos">
+  <div class="conteudo">
+    <p class="olho">Atenção</p>
+    <h2 class="titulo">Não corte termos de uma soma</h2>
+    <div style="position:absolute;left:0;width:800px;top:170px;display:flex;align-items:center;gap:40px">
+      <div style="font-size:90px">\(\dfrac{x + 3}{3}\)</div>
+      <div style="font-size:70px">\(\ne\ x\)</div>
+    </div>
+    <p class="texto" style="position:absolute;left:0;width:760px;top:420px;margin:0;font-size:32px">O 3 de cima é uma <b>parcela</b>, não um fator.</p>
+    <div style="position:absolute;left:940px;right:0;top:170px">
+      <p class="texto" style="margin:0 0 20px;font-size:32px" data-passo="1"><b>Teste com \(x = 3\):</b></p>
+      <div class="contas" style="font-size:52px;row-gap:22px">
+        <div class="eq final" data-passo="2"><span>\(\dfrac{3 + 3}{3}\)</span><span>\(=\)</span><span>\(2\)</span></div>
+        <div class="eq" data-passo="3"><span>\(x\)</span><span>\(=\)</span><span>\(3\) <span class="ag-erro">✗</span></span></div>
+      </div>
+    </div>
+  </div>
+  <aside class="notas">
+    <p>Cortar o 3 daria x. Com x = 3, a fração vale 2, e não 3: o corte está errado. Só se corta o que multiplica o numerador inteiro e o denominador inteiro.</p>
+  </aside>
+</section>
+
+<!-- 13. Questão 1 -->
+<section class="slide questao" data-nome="Questão 1">
+  <div class="conteudo">
+    <div class="area-resolucao"></div>
+    <span class="pilula pilula-pausa" data-em="1:some">Pause o vídeo e tente</span>
+    <div class="painel-questao">
+      <p class="olho">Questão 1 · IF Sudeste MG 2013</p>
+      <p class="enunciado" style="font-size:34px">Se \(x \cdot y = 40\) e \(x + 2y = 55\), então o valor de \(x^2y + 2xy^2\) é:</p>
+      <ol class="alternativas">
+        <li data-em="2:apaga"><b>A</b><span>990</span></li>
+        <li data-em="2:apaga"><b>B</b><span>1100</span></li>
+        <li data-em="2:certo"><b>C</b><span>2200</span></li>
+        <li data-em="2:apaga"><b>D</b><span>3300</span></li>
+        <li data-em="2:apaga"><b>E</b><span>4400</span></li>
+      </ol>
+      <p class="fonte">IF Sudeste MG 2013 (prova extra) · questão 15</p>
+    </div>
+  </div>
+  <aside class="resolucao">
+    <p class="dados"><b>Dados:</b> \(xy = 40\); \(x + 2y = 55\).</p>
+    <ol class="passos">
+      <li>\(x^2y + 2xy^2 = xy \cdot x + xy \cdot 2y\)</li>
+      <li>\(= xy\,(x + 2y)\)</li>
+      <li>\(= 40 \cdot 55\)</li>
+      <li>\(= 2200\)</li>
+    </ol>
+    <p class="resposta"><b>Resposta:</b> 2200. <b>Gabarito C.</b></p>
+    <p class="atencao"><b>Destaque no quadro:</b> Não precisa achar x nem y: fatore e use os dados prontos.</p>
+    <ul class="erros">
+      <li><b>A</b> 990 = 18 · 55: não usa xy = 40.</li>
+      <li><b>B</b> Metade do certo: esquece um fator 2.</li>
+      <li><b>D</b> Não sai de nenhuma fatoração correta.</li>
+      <li><b>E</b> Dobro do certo: deixa o 2 de 2xy² fora da fatoração.</li>
+    </ul>
+  </aside>
+  <aside class="notas">
+    <p>Clique 1 tira o aviso de pausa: resolva na área (D liga a caneta; E esconde o enunciado). Clique 2: gabarito C.</p>
+    <p>Questão oficial do IF Sudeste MG 2013-1-extra, q15, MAT-0457 (sobra do bloco, usada aqui). Na prova o enunciado tem uma vírgula dobrada ("55, , então"); aqui ela foi tirada.</p>
+  </aside>
+</section>
+
+<!-- 14. Questão 2 -->
+<section class="slide questao" data-nome="Questão 2">
+  <div class="conteudo">
+    <div class="area-resolucao"></div>
+    <span class="pilula pilula-pausa" data-em="1:some">Pause o vídeo e tente</span>
+    <div class="painel-questao">
+      <p class="olho">Questão 2 · IF Sudeste MG 2014</p>
+      <p class="enunciado" style="font-size:34px">Calcule e assinale o valor da diferença: \(|1000^2 - 1001^2|\).</p>
+      <ol class="alternativas">
+        <li data-em="2:certo"><b>A</b><span>2001</span></li>
+        <li data-em="2:apaga"><b>B</b><span>2002</span></li>
+        <li data-em="2:apaga"><b>C</b><span>2003</span></li>
+        <li data-em="2:apaga"><b>D</b><span>2004</span></li>
+        <li data-em="2:apaga"><b>E</b><span>2005</span></li>
+      </ol>
+      <p class="fonte">IF Sudeste MG 2014 · questão 22</p>
+    </div>
+  </div>
+  <aside class="resolucao">
+    <p class="dados"><b>Dados:</b> \(|1000^2 - 1001^2|\); as barras pedem o valor sem sinal.</p>
+    <ol class="passos">
+      <li>\(a^2 - b^2 = (a - b)(a + b)\)</li>
+      <li>\(1000^2 - 1001^2 = (1000 - 1001)(1000 + 1001)\)</li>
+      <li>\(= (-1) \cdot 2001 = -2001\)</li>
+      <li>\(|-2001| = 2001\)</li>
+    </ol>
+    <p class="resposta"><b>Resposta:</b> 2001. <b>Gabarito A.</b></p>
+    <p class="atencao"><b>Destaque no quadro:</b> Números consecutivos: a diferença dos quadrados é a soma deles.</p>
+    <ul class="erros">
+      <li><b>B</b> 2002 = 2 · 1001: esquece de somar o 1000.</li>
+      <li><b>C</b> Não sai da diferença de quadrados.</li>
+      <li><b>D</b> Não sai da diferença de quadrados.</li>
+      <li><b>E</b> Não sai da diferença de quadrados.</li>
+    </ul>
+  </aside>
+  <aside class="notas">
+    <p>Clique 1 tira o aviso de pausa: resolva na área (D liga a caneta; E esconde o enunciado). Clique 2: gabarito A.</p>
+    <p>Questão oficial do IF Sudeste MG 2014-1, q22, MAT-0350. Não aparece na lista curta de sobras de questoes-if.md (que termina em "…"), mas é oficial do subcapítulo e não está reservada para o bloco. As barras | | são o módulo: o valor sem sinal.</p>
+  </aside>
+</section>
+
+<!-- 15. Questão 3 -->
+<section class="slide questao" data-nome="Questão 3">
+  <div class="conteudo">
+    <div class="area-resolucao"></div>
+    <span class="pilula pilula-pausa" data-em="1:some">Pause o vídeo e tente</span>
+    <div class="painel-questao">
+      <p class="olho">Questão 3 · IF Sudeste MG 2023</p>
+      <p class="enunciado" style="font-size:30px">Sendo \(a, b \in \mathbb{R}\), com \(a \neq b\) e \(b \neq 0\), a expressão \(\dfrac{a^2 - b^2}{ab - b^2}\) é igual a:</p>
+      <ol class="alternativas">
+        <li data-em="2:apaga"><b>A</b><span>\(\dfrac{a^2 - 1}{ab - 1}\)</span></li>
+        <li data-em="2:apaga"><b>B</b><span>\(\dfrac{a - 1}{b - 1}\)</span></li>
+        <li data-em="2:apaga"><b>C</b><span>\(a + 1\)</span></li>
+        <li data-em="2:certo"><b>D</b><span>\(\dfrac{a}{b} + 1\)</span></li>
+        <li data-em="2:apaga"><b>E</b><span>\(\dfrac{a}{b} - 1\)</span></li>
+      </ol>
+      <p class="fonte">IF Sudeste MG 2023 · questão 17</p>
+    </div>
+  </div>
+  <aside class="resolucao">
+    <p class="dados"><b>Dados:</b> \(\dfrac{a^2 - b^2}{ab - b^2}\), com \(a \ne b\) e \(b \ne 0\).</p>
+    <ol class="passos">
+      <li>Em cima: \(a^2 - b^2 = (a + b)(a - b)\)</li>
+      <li>Embaixo: \(ab - b^2 = b\,(a - b)\)</li>
+      <li>\(\dfrac{(a + b)(a - b)}{b\,(a - b)} = \dfrac{a + b}{b}\)</li>
+      <li>\(\dfrac{a + b}{b} = \dfrac{a}{b} + \dfrac{b}{b} = \dfrac{a}{b} + 1\)</li>
+    </ol>
+    <p class="resposta"><b>Resposta:</b> \(\dfrac{a}{b} + 1\). <b>Gabarito D.</b></p>
+    <p class="atencao"><b>Destaque no quadro:</b> Pode cortar \((a - b)\) porque \(a \ne b\).</p>
+    <ul class="erros">
+      <li><b>A</b> Corta o b² de cima com o de baixo: b² é parcela, não fator.</li>
+      <li><b>B</b> Corta parcelas em vez de fatores.</li>
+      <li><b>C</b> Corta o b de uma parcela só do numerador.</li>
+      <li><b>E</b> Erra o sinal: a/b − 1 = (a − b)/b.</li>
+    </ul>
+  </aside>
+  <aside class="notas">
+    <p>Clique 1 tira o aviso de pausa: resolva na área (D liga a caneta; E esconde o enunciado). Clique 2: gabarito D.</p>
+    <p>Questão oficial do IF Sudeste MG 2023-1, q17, MAT-0449 (sobra do bloco, usada aqui). Os três passos da fração: fatorar, ver o proibido, cortar fator.</p>
+  </aside>
+</section>
+
+<!-- 16. Resumo -->
+<section class="slide" data-nome="Resumo">
+  <div class="conteudo">
+    <p class="olho">Resumo de Polinômios</p>
+    <h2 class="titulo">O essencial</h2>
+    <div class="resumo" style="position:absolute;left:0;right:0;top:150px">
+      <div><b>Valor numérico:</b> parênteses nos negativos. <b>Semelhantes:</b> só eles se somam; <b>grau:</b> o maior expoente.</div>
+      <div><b>Multiplicar:</b> distributiva, termo a termo; menos antes do parêntese troca todos os sinais.</div>
+      <div>\((a \pm b)^2 = a^2 \pm 2ab + b^2\)<br>\((a + b)(a - b) = a^2 - b^2\)</div>
+      <div><b>Fatorar</b> é transformar soma em produto: fator comum, agrupamento, diferença de quadrados, trinômio quadrado perfeito.</div>
+      <div style="grid-column:2"><b>Frações algébricas:</b> fatore antes e corte só fatores; o denominador nunca pode ser zero.</div>
+    </div>
+  </div>
+  <aside class="notas">
+    <p>Resumo do subcapítulo inteiro de Polinômios (as duas partes). Peça para tirarem um print.</p>
+  </aside>
+</section>
+
+<!-- 17. A seguir -->
+<section class="slide capa" data-nome="A seguir">
+  <div class="estrelas"></div>
+  <div class="texto-capa" style="top:220px">
+    <span class="selo">Matemática · IF</span>
+    <p class="aula">A seguir · Equações do 1º grau · Parte 1 de 2</p>
+    <h1>Equações e problemas</h1>
+    <p class="sub">O princípio da balança</p>
+  </div>
+  <svg class="emblema" viewBox="0 0 640 640" aria-hidden="true">
+    <path d="M240 540 L400 540 L320 250 Z" fill="#fff" fill-opacity=".2" stroke="#fff" stroke-width="4" stroke-linejoin="round"/>
+    <rect x="100" y="238" width="440" height="20" rx="10" fill="#fff"/>
+    <circle cx="320" cy="248" r="20" fill="#FFD10C"/>
+    <path d="M70 380 Q150 420 230 380 Z M410 380 Q490 420 570 380 Z" fill="#fff" fill-opacity=".85"/>
+    <path d="M150 258 L80 380 M150 258 L220 380 M490 258 L420 380 M490 258 L560 380" stroke="#fff" stroke-opacity=".6" stroke-width="3"/>
+    <rect x="96" y="320" width="54" height="54" rx="10" fill="#FFD10C"/><rect x="156" y="320" width="54" height="54" rx="10" fill="#FFD10C"/>
+    <rect x="440" y="336" width="36" height="38" rx="8" fill="#fff"/><rect x="482" y="336" width="36" height="38" rx="8" fill="#fff"/><rect x="524" y="336" width="36" height="38" rx="8" fill="#fff"/>
+  </svg>
+  <img class="logo-capa" src="{{LOGO_BRANCO}}" alt="Quarks">
+  <aside class="notas"><p>Fim de Polinômios. A seguir, Equações do 1º grau: resolver pelo princípio da balança e traduzir problemas.</p></aside>
+</section>

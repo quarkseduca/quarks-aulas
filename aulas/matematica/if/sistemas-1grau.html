@@ -1,0 +1,537 @@
+<!--aula
+{"disciplina": "matematica", "curso": "IF", "assunto": "Álgebra", "parte": "Parte única", "titulo": "Sistemas do 1º grau"}
+-->
+<!-- Fonte: apostila IF/Sudeste, Matemática, cap. 3 (3.3 Sistemas do 1º grau: Método da substituição; Método da adição; Problemas com sistemas; dica "Como cai no IF"; resumo do 3.3). Questões: oficiais do IF Sudeste MG que sobraram do bloco do capítulo (2015-2 q22, 2013-1-extra q22, 2016-1-extra q22). -->
+<style>
+  .caixa { box-sizing: border-box; }
+  .contas.c4 { grid-template-columns: auto auto auto 1fr; }
+  .ag-anot { font-size: 26px; font-weight: 800; color: var(--d-forte); background: var(--d-clara); border-radius: 999px; padding: 2px 16px; justify-self: start; white-space: nowrap; }
+  .ag-certo { color: var(--certo); font-weight: 800; }
+  .ag-sist { font-size: 56px; }
+  .ag-rot { font-size: 28px; font-weight: 800; color: var(--d-forte); margin: 0 0 8px; }
+  /* retas que se desenham e o ponto de encontro que pulsa */
+  .ag-reta { stroke-dasharray: 1; stroke-dashoffset: 1; }
+  .mostra .ag-reta, .mostra.ag-reta { animation: ag-traca 2.2s ease-in-out forwards; }
+  @keyframes ag-traca { to { stroke-dashoffset: 0; } }
+  @keyframes ag-pulsa { 0%, 100% { r: 14px; } 50% { r: 19px; } }
+  .slide.ativo .mostra .ag-ponto { animation: ag-pulsa 4s ease-in-out infinite; }
+  /* bichos que respiram de leve */
+  @keyframes ag-respira { 0%, 100% { transform: translateY(0); } 50% { transform: translateY(-2px); } }
+  .ag-bichos > g { transform-box: view-box; }
+  .slide.ativo .ag-bichos > g:nth-child(odd) { animation: ag-respira 4s ease-in-out infinite; }
+  .slide.ativo .ag-bichos > g:nth-child(even) { animation: ag-respira 5s ease-in-out -1.5s infinite; }
+  @media (prefers-reduced-motion: reduce) { .ag-reta { stroke-dasharray: none; stroke-dashoffset: 0; } }
+</style>
+
+<!-- 1. Capa -->
+<section class="slide capa" data-nome="Capa">
+  <div class="estrelas"></div>
+  <div class="texto-capa">
+    <span class="selo">Matemática · IF</span>
+    <p class="aula">Álgebra</p>
+    <h1>Sistemas do 1º grau</h1>
+    <p class="sub">Duas incógnitas, duas informações</p>
+  </div>
+  <svg class="emblema" viewBox="0 0 640 640" aria-hidden="true">
+    <g class="gira-lento"><ellipse cx="320" cy="320" rx="300" ry="128" fill="none" stroke="#fff" stroke-opacity=".38" stroke-width="2" transform="rotate(-10 320 320)"/></g>
+    <path d="M90 560 V90 M90 560 H580" stroke="#fff" stroke-opacity=".8" stroke-width="5" stroke-linecap="round" fill="none"/>
+    <line x1="110" y1="140" x2="540" y2="520" stroke="#fff" stroke-width="9" stroke-linecap="round"/>
+    <line x1="110" y1="470" x2="560" y2="200" stroke="#FFD10C" stroke-width="9" stroke-linecap="round"/>
+    <circle cx="338" cy="342" r="24" fill="#FFD10C" stroke="#fff" stroke-width="6"/>
+  </svg>
+  <img class="logo-capa" src="{{LOGO_BRANCO}}" alt="Quarks">
+  <aside class="notas">
+    <p>Parte única do subcapítulo Sistemas do 1º grau: os métodos da substituição e da adição, a solução no gráfico e os problemas com duas incógnitas.</p>
+  </aside>
+</section>
+
+<!-- 2. Gancho: galinhas e coelhos -->
+<section class="slide" data-nome="Galinhas e coelhos">
+  <div class="conteudo">
+    <p class="olho">Para começar</p>
+    <h2 class="titulo">20 cabeças e 56 patas</h2>
+    <svg class="ag-bichos" viewBox="0 -30 740 260" width="1110" height="390" style="position:absolute;left:640px;top:150px;overflow:visible;font-family:Figtree,'Segoe UI',sans-serif" aria-hidden="true">
+      <g><circle cx="40" cy="50" r="24" fill="#fff" stroke="#BFB6E6" stroke-width="3"/><text x="40" y="60" text-anchor="middle" font-size="28" font-weight="800" fill="#8C7BEA">?</text></g>
+      <g><circle cx="112" cy="50" r="24" fill="#fff" stroke="#BFB6E6" stroke-width="3"/><text x="112" y="60" text-anchor="middle" font-size="28" font-weight="800" fill="#8C7BEA">?</text></g>
+      <g><circle cx="184" cy="50" r="24" fill="#fff" stroke="#BFB6E6" stroke-width="3"/><text x="184" y="60" text-anchor="middle" font-size="28" font-weight="800" fill="#8C7BEA">?</text></g>
+      <g><circle cx="256" cy="50" r="24" fill="#fff" stroke="#BFB6E6" stroke-width="3"/><text x="256" y="60" text-anchor="middle" font-size="28" font-weight="800" fill="#8C7BEA">?</text></g>
+      <g><circle cx="328" cy="50" r="24" fill="#fff" stroke="#BFB6E6" stroke-width="3"/><text x="328" y="60" text-anchor="middle" font-size="28" font-weight="800" fill="#8C7BEA">?</text></g>
+      <g><circle cx="400" cy="50" r="24" fill="#fff" stroke="#BFB6E6" stroke-width="3"/><text x="400" y="60" text-anchor="middle" font-size="28" font-weight="800" fill="#8C7BEA">?</text></g>
+      <g><circle cx="472" cy="50" r="24" fill="#fff" stroke="#BFB6E6" stroke-width="3"/><text x="472" y="60" text-anchor="middle" font-size="28" font-weight="800" fill="#8C7BEA">?</text></g>
+      <g><circle cx="544" cy="50" r="24" fill="#fff" stroke="#BFB6E6" stroke-width="3"/><text x="544" y="60" text-anchor="middle" font-size="28" font-weight="800" fill="#8C7BEA">?</text></g>
+      <g><circle cx="616" cy="50" r="24" fill="#fff" stroke="#BFB6E6" stroke-width="3"/><text x="616" y="60" text-anchor="middle" font-size="28" font-weight="800" fill="#8C7BEA">?</text></g>
+      <g><circle cx="688" cy="50" r="24" fill="#fff" stroke="#BFB6E6" stroke-width="3"/><text x="688" y="60" text-anchor="middle" font-size="28" font-weight="800" fill="#8C7BEA">?</text></g>
+      <g><circle cx="40" cy="160" r="24" fill="#fff" stroke="#BFB6E6" stroke-width="3"/><text x="40" y="170" text-anchor="middle" font-size="28" font-weight="800" fill="#8C7BEA">?</text></g>
+      <g><circle cx="112" cy="160" r="24" fill="#fff" stroke="#BFB6E6" stroke-width="3"/><text x="112" y="170" text-anchor="middle" font-size="28" font-weight="800" fill="#8C7BEA">?</text></g>
+      <g><circle cx="184" cy="160" r="24" fill="#fff" stroke="#BFB6E6" stroke-width="3"/><text x="184" y="170" text-anchor="middle" font-size="28" font-weight="800" fill="#8C7BEA">?</text></g>
+      <g><circle cx="256" cy="160" r="24" fill="#fff" stroke="#BFB6E6" stroke-width="3"/><text x="256" y="170" text-anchor="middle" font-size="28" font-weight="800" fill="#8C7BEA">?</text></g>
+      <g><circle cx="328" cy="160" r="24" fill="#fff" stroke="#BFB6E6" stroke-width="3"/><text x="328" y="170" text-anchor="middle" font-size="28" font-weight="800" fill="#8C7BEA">?</text></g>
+      <g><circle cx="400" cy="160" r="24" fill="#fff" stroke="#BFB6E6" stroke-width="3"/><text x="400" y="170" text-anchor="middle" font-size="28" font-weight="800" fill="#8C7BEA">?</text></g>
+      <g><circle cx="472" cy="160" r="24" fill="#fff" stroke="#BFB6E6" stroke-width="3"/><text x="472" y="170" text-anchor="middle" font-size="28" font-weight="800" fill="#8C7BEA">?</text></g>
+      <g><circle cx="544" cy="160" r="24" fill="#fff" stroke="#BFB6E6" stroke-width="3"/><text x="544" y="170" text-anchor="middle" font-size="28" font-weight="800" fill="#8C7BEA">?</text></g>
+      <g><circle cx="616" cy="160" r="24" fill="#fff" stroke="#BFB6E6" stroke-width="3"/><text x="616" y="170" text-anchor="middle" font-size="28" font-weight="800" fill="#8C7BEA">?</text></g>
+      <g><circle cx="688" cy="160" r="24" fill="#fff" stroke="#BFB6E6" stroke-width="3"/><text x="688" y="170" text-anchor="middle" font-size="28" font-weight="800" fill="#8C7BEA">?</text></g>
+    </svg>
+    <p class="texto" style="position:absolute;left:0;width:560px;top:160px;margin:0;font-size:34px">Num sítio há galinhas e coelhos. Quantos são de cada tipo?</p>
+    <div class="caixa caixa-fundamental" data-passo="1" style="position:absolute;left:0;width:540px;top:380px;padding:20px 28px">
+      <div class="texto" style="font-size:31px"><b>Duas incógnitas</b> e <b>duas informações</b>: cada informação vira uma equação.</div>
+    </div>
+    <div class="caixa" data-passo="2" style="position:absolute;left:640px;right:0;top:600px;padding:20px 30px;display:flex;gap:46px;align-items:center">
+      <span class="ag-sist">\(\begin{cases} g + c = 20 \\ 2g + 4c = 56 \end{cases}\)</span>
+      <span class="texto" style="font-size:30px">cabeças<br>patas: galinha tem 2, coelho tem 4</span>
+    </div>
+  </div>
+  <aside class="notas">
+    <p>Deixe a turma chutar. Clique 1: são duas coisas desconhecidas e duas informações. Clique 2: g galinhas e c coelhos; cabeças dão g + c = 20; patas, 2g + 4c = 56.</p>
+    <p>A resposta sai mais à frente, depois dos dois métodos.</p>
+  </aside>
+</section>
+
+<!-- 3. O que é a solução -->
+<section class="slide" data-nome="Solução do sistema">
+  <div class="conteudo">
+    <p class="olho">Sistema 2 × 2</p>
+    <h2 class="titulo">Um par que serve nas duas</h2>
+    <div class="caixa" style="position:absolute;left:0;width:540px;top:170px;padding:24px 30px;text-align:center">
+      <div class="ag-sist">\(\begin{cases} 2x + y = 11 \\ x + 3y = 13 \end{cases}\)</div>
+    </div>
+    <div class="caixa caixa-fundamental" style="position:absolute;left:640px;right:0;top:170px;padding:22px 32px">
+      <div class="texto" style="font-size:33px">Resolver o sistema é achar o par \((x;\ y)\) que torna as <b>duas</b> equações verdadeiras <b>ao mesmo tempo</b>.</div>
+    </div>
+    <div style="position:absolute;left:640px;right:0;top:400px" data-passo="1">
+      <p class="ag-rot">Teste o par \((4;\ 3)\):</p>
+      <div class="contas" style="font-size:48px;grid-template-columns:auto auto auto 1fr;row-gap:16px">
+        <div class="eq" data-passo="2"><span>\(2 \cdot 4 + 3\)</span><span>\(=\)</span><span>\(11\)</span><span class="ag-certo" style="justify-self:start">✓</span></div>
+        <div class="eq" data-passo="3"><span>\(4 + 3 \cdot 3\)</span><span>\(=\)</span><span>\(13\)</span><span class="ag-certo" style="justify-self:start">✓</span></div>
+      </div>
+    </div>
+  </div>
+  <aside class="notas">
+    <p>A chave junta as duas equações: valem juntas. Cliques 2 e 3: (4; 3) serve nas duas. Agora, como achar esse par sem chutar?</p>
+  </aside>
+</section>
+
+<!-- 4. Substituição (1) -->
+<section class="slide" data-nome="Substituição">
+  <div class="conteudo">
+    <p class="olho">Método da substituição</p>
+    <h2 class="titulo">Isolar e trocar</h2>
+    <div class="caixa caixa-fundamental" style="position:absolute;left:0;width:540px;top:160px;padding:20px 28px">
+      <span class="rotulo">A ideia</span>
+      <div class="texto" style="font-size:30px">Isole uma incógnita numa equação e <b>substitua</b> na outra. Sobra uma equação com uma incógnita só.</div>
+    </div>
+    <div class="caixa" style="position:absolute;left:0;width:540px;top:420px;padding:16px 28px;text-align:center">
+      <div style="font-size:46px">\(\begin{cases} 2x + y = 11 \\ x + 3y = 13 \end{cases}\)</div>
+    </div>
+    <div style="position:absolute;left:640px;right:0;top:150px;display:grid;grid-template-columns:1fr 1.5fr;gap:40px">
+      <div>
+        <p class="ag-rot" data-passo="1">Isolando \(x\) na 2ª:</p>
+        <div class="contas" style="font-size:46px;row-gap:14px">
+          <div class="eq" data-passo="1"><span>\(x + 3y\)</span><span>\(=\)</span><span>\(13\)</span></div>
+          <div class="eq final" data-passo="2"><span>\(x\)</span><span>\(=\)</span><span>\(13 - 3y\)</span></div>
+        </div>
+      </div>
+      <div>
+        <p class="ag-rot" data-passo="3">Substituindo na 1ª:</p>
+        <div class="contas" style="font-size:46px;row-gap:14px">
+          <div class="eq" data-passo="3"><span>\(2x + y\)</span><span>\(=\)</span><span>\(11\)</span></div>
+          <div class="eq" data-passo="4"><span>\(2(13 - 3y) + y\)</span><span>\(=\)</span><span>\(11\)</span></div>
+          <div class="eq" data-passo="5"><span>\(26 - 6y + y\)</span><span>\(=\)</span><span>\(11\)</span></div>
+          <div class="eq" data-passo="6"><span>\(-5y\)</span><span>\(=\)</span><span>\(-15\)</span></div>
+          <div class="eq final" data-passo="7"><span>\(y\)</span><span>\(=\)</span><span>\(3\)</span></div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <aside class="notas">
+    <p>Cliques 1 e 2: x fica sozinho na 2ª equação. Cliques 3 a 7: no lugar do x da 1ª, entra 13 − 3y (com parênteses). 26 − 11 = 15, então −5y = −15.</p>
+  </aside>
+</section>
+
+<!-- 5. Substituição (2) e o gráfico -->
+<section class="slide" data-nome="Voltando e o gráfico">
+  <div class="conteudo">
+    <p class="olho">Método da substituição</p>
+    <h2 class="titulo">Voltando e desenhando</h2>
+    <svg viewBox="-50 -20 460 470" width="460" height="470" style="position:absolute;left:0;top:130px;overflow:visible;font-family:Figtree,'Segoe UI',sans-serif" aria-hidden="true">
+      <g stroke="#E2DCF7" stroke-width="2">
+        <line x1="40" y1="0" x2="40" y2="400"/><line x1="80" y1="0" x2="80" y2="400"/><line x1="120" y1="0" x2="120" y2="400"/><line x1="160" y1="0" x2="160" y2="400"/><line x1="200" y1="0" x2="200" y2="400"/><line x1="240" y1="0" x2="240" y2="400"/><line x1="280" y1="0" x2="280" y2="400"/><line x1="320" y1="0" x2="320" y2="400"/>
+        <line x1="0" y1="40" x2="340" y2="40"/><line x1="0" y1="80" x2="340" y2="80"/><line x1="0" y1="120" x2="340" y2="120"/><line x1="0" y1="160" x2="340" y2="160"/><line x1="0" y1="200" x2="340" y2="200"/><line x1="0" y1="240" x2="340" y2="240"/><line x1="0" y1="280" x2="340" y2="280"/><line x1="0" y1="320" x2="340" y2="320"/><line x1="0" y1="360" x2="340" y2="360"/>
+      </g>
+      <path d="M0 400 H350 M0 400 V-10" stroke="#5E5A70" stroke-width="3" fill="none"/>
+      <text x="356" y="410" font-size="24" font-weight="800" fill="#5E5A70">x</text><text x="12" y="-2" font-size="24" font-weight="800" fill="#5E5A70">y</text>
+      <g font-size="20" font-weight="700" fill="#5E5A70" text-anchor="middle"><text x="80" y="428">2</text><text x="160" y="428">4</text><text x="240" y="428">6</text><text x="320" y="428">8</text><text x="-14" y="326" text-anchor="end">2</text><text x="-14" y="246" text-anchor="end">4</text><text x="-14" y="166" text-anchor="end">6</text><text x="-14" y="86" text-anchor="end">8</text><text x="-14" y="6" text-anchor="end">10</text></g>
+      <!-- 2x + y = 11: de (0,5; 10) a (5,5; 0) -->
+      <line x1="20" y1="0" x2="220" y2="400" stroke="var(--d)" stroke-width="6" stroke-linecap="round" class="ag-reta" pathLength="1" data-passo="5"/>
+      <!-- x + 3y = 13: de (0; 13/3) a (8,5; 1,5) -->
+      <line x1="0" y1="226.7" x2="340" y2="340" stroke="#C9A400" stroke-width="6" stroke-linecap="round" class="ag-reta" pathLength="1" data-passo="6"/>
+      <g data-passo="7"><circle class="ag-ponto" cx="160" cy="280" r="14" fill="#FFD10C" stroke="#3F2FA0" stroke-width="4"/><text x="186" y="268" font-size="28" font-weight="800" fill="#3F2FA0">(4; 3)</text></g>
+    </svg>
+    <div style="position:absolute;left:640px;right:0;top:160px">
+      <p class="ag-rot" data-passo="1">Voltando à equação isolada:</p>
+      <div class="contas" style="font-size:48px;row-gap:14px">
+        <div class="eq" data-passo="1"><span>\(x\)</span><span>\(=\)</span><span>\(13 - 3y\)</span></div>
+        <div class="eq" data-passo="2"><span>\(x\)</span><span>\(=\)</span><span>\(13 - 3 \cdot 3\)</span></div>
+        <div class="eq final" data-passo="3"><span>\(x\)</span><span>\(=\)</span><span>\(4\)</span></div>
+      </div>
+      <span class="pilula pilula-resposta" data-passo="4" style="margin-top:26px">Resposta: \((4;\ 3)\)</span>
+      <div class="caixa caixa-fundamental" data-passo="7" style="margin-top:34px;padding:20px 30px">
+        <div class="texto" style="font-size:31px">Cada equação é uma <b>reta</b> no plano cartesiano (você vai estudar em <b>Conceito de função</b>). A solução é o ponto onde as retas <b>se cruzam</b>.</div>
+      </div>
+    </div>
+  </div>
+  <aside class="notas">
+    <p>Cliques 1 a 4: y = 3 volta em x = 13 − 3y e dá x = 4.</p>
+    <p>Cliques 5 a 7: as duas retas se desenham e se cruzam no ponto (4; 3). O plano cartesiano aparece em Conceito de função; aqui é só a ideia.</p>
+  </aside>
+</section>
+
+<!-- 6. Método da adição -->
+<section class="slide" data-nome="Método da adição">
+  <div class="conteudo">
+    <p class="olho">Método da adição</p>
+    <h2 class="titulo">Somar para sumir uma letra</h2>
+    <div style="position:absolute;left:0;width:760px;top:160px">
+      <div class="contas" style="font-size:56px;row-gap:12px">
+        <div class="eq"><span>\(x \textcolor{#C2384F}{\,+\,y}\)</span><span>\(=\)</span><span>\(10\)</span></div>
+        <div class="eq"><span>\(x \textcolor{#C2384F}{\,-\,y}\)</span><span>\(=\)</span><span>\(4\)</span></div>
+      </div>
+      <div data-passo="1" style="border-top:4px solid var(--roxo-titulo);margin:14px 0 0;width:440px"></div>
+      <div class="contas" style="font-size:56px;row-gap:12px;margin-top:14px">
+        <div class="eq" data-passo="1"><span>\((x + \cancel{y}) + (x - \cancel{y})\)</span><span>\(=\)</span><span>\(10 + 4\)</span></div>
+        <div class="eq" data-passo="2"><span>\(2x\)</span><span>\(=\)</span><span>\(14\)</span></div>
+        <div class="eq final" data-passo="3"><span>\(x\)</span><span>\(=\)</span><span>\(7\)</span></div>
+      </div>
+    </div>
+    <div style="position:absolute;left:940px;right:0;top:160px">
+      <p class="ag-rot" data-passo="4">Voltando à 1ª equação:</p>
+      <div class="contas" style="font-size:52px;row-gap:14px">
+        <div class="eq" data-passo="4"><span>\(x + y\)</span><span>\(=\)</span><span>\(10\)</span></div>
+        <div class="eq" data-passo="5"><span>\(7 + y\)</span><span>\(=\)</span><span>\(10\)</span></div>
+        <div class="eq final" data-passo="6"><span>\(y\)</span><span>\(=\)</span><span>\(3\)</span></div>
+      </div>
+      <div class="caixa caixa-fundamental" data-passo="7" style="margin-top:34px;padding:20px 30px">
+        <div class="texto" style="font-size:30px">Se nenhuma letra some logo, multiplique uma equação por um número que deixe os coeficientes de uma letra <b>opostos</b>.</div>
+      </div>
+    </div>
+  </div>
+  <aside class="notas">
+    <p>+y numa equação e −y na outra: somando membro a membro, o y some (clique 1). Solução (7; 3).</p>
+    <p>Clique 7: e quando não há opostos prontos? Multiplicamos antes, no próximo exemplo.</p>
+  </aside>
+</section>
+
+<!-- 7. Exemplo: multiplicar antes de somar -->
+<section class="slide" data-nome="Exemplo: multiplicar antes">
+  <div class="conteudo">
+    <p class="olho">Exemplo</p>
+    <h2 class="titulo">Multiplicar antes de somar</h2>
+    <div class="caixa" style="position:absolute;left:0;width:540px;top:160px;padding:18px 28px;text-align:center">
+      <div style="font-size:50px">\(\begin{cases} 3x + 2y = 16 \\ x - y = 2 \end{cases}\)</div>
+    </div>
+    <div class="contas c4" data-passo="1" style="position:absolute;left:0;top:420px;font-size:44px">
+      <div class="eq"><span>\(2x - 2y\)</span><span>\(=\)</span><span>\(4\)</span><span class="ag-anot">2ª × 2</span></div>
+    </div>
+    <div style="position:absolute;left:640px;right:0;top:160px">
+      <p class="ag-rot" data-passo="2">Somando com a 1ª:</p>
+      <div class="contas" style="font-size:48px;row-gap:14px">
+        <div class="eq" data-passo="2"><span>\((3x + \cancel{2y}) + (2x - \cancel{2y})\)</span><span>\(=\)</span><span>\(16 + 4\)</span></div>
+        <div class="eq" data-passo="3"><span>\(5x\)</span><span>\(=\)</span><span>\(20\)</span></div>
+        <div class="eq final" data-passo="4"><span>\(x\)</span><span>\(=\)</span><span>\(4\)</span></div>
+      </div>
+      <p class="ag-rot" data-passo="5" style="margin-top:26px">Voltando à 2ª original:</p>
+      <div style="display:grid;grid-template-columns:auto auto;gap:50px;align-items:center">
+        <div class="contas" style="font-size:48px;row-gap:14px">
+          <div class="eq" data-passo="5"><span>\(4 - y\)</span><span>\(=\)</span><span>\(2\)</span></div>
+          <div class="eq final" data-passo="6"><span>\(y\)</span><span>\(=\)</span><span>\(2\)</span></div>
+        </div>
+        <span class="pilula pilula-resposta" data-passo="7">\((4;\ 2)\) · \(3 \cdot 4 + 2 \cdot 2 = 16\) ✓</span>
+      </div>
+    </div>
+  </div>
+  <aside class="notas">
+    <p>Clique 1: multiplicando a 2ª por 2, aparece −2y, oposto do +2y da 1ª. Todos os termos, inclusive o 2 do lado direito, viram o dobro.</p>
+    <p>Clique 7: conferência na 1ª equação.</p>
+  </aside>
+</section>
+
+<!-- 8. Atenção -->
+<section class="slide" data-nome="Atenção: a equação inteira">
+  <div class="conteudo">
+    <p class="olho">Atenção</p>
+    <h2 class="titulo">Multiplique a equação inteira</h2>
+    <div class="caixa caixa-atencao" style="position:absolute;left:0;right:0;top:160px;padding:24px 34px">
+      <div class="texto" style="font-size:36px">Ao multiplicar uma equação, multiplique <b>todos</b> os termos, inclusive o do outro lado do igual. Esquecer o lado direito é o erro mais comum.</div>
+    </div>
+    <div style="position:absolute;left:640px;right:0;top:420px;display:grid;grid-template-columns:1fr 1fr;gap:40px">
+      <div class="caixa" data-passo="1" style="padding:18px 26px;border-color:#9ED9BB">
+        <span class="rotulo" style="color:var(--certo)">Certo</span>
+        <div style="font-size:42px">\(2x - 2y = \textcolor{#1F9D62}{4}\)</div>
+      </div>
+      <div class="caixa" data-passo="2" style="padding:18px 26px;border-color:#F3B6C1">
+        <span class="rotulo" style="color:var(--erro)">Errado</span>
+        <div style="font-size:42px">\(2x - 2y = \textcolor{#C2384F}{2}\)</div>
+      </div>
+    </div>
+    <p class="texto" data-passo="1" style="position:absolute;left:640px;right:0;top:340px;margin:0;font-size:32px">\(x - y = 2\) multiplicada por 2:</p>
+  </div>
+  <aside class="notas">
+    <p>A balança de novo: se só um lado dobra, ela desequilibra.</p>
+  </aside>
+</section>
+
+<!-- 9. Galinhas e coelhos resolvido -->
+<section class="slide" data-nome="Galinhas e coelhos: resposta">
+  <div class="conteudo">
+    <p class="olho">Problemas com sistemas</p>
+    <h2 class="titulo">De volta ao sítio</h2>
+    <div style="position:absolute;left:0;width:520px;top:150px">
+      <div class="ag-sist" style="font-size:46px">\(\begin{cases} g + c = 20 \\ 2g + 4c = 56 \end{cases}\)</div>
+      <p class="texto" style="margin:20px 0 0;font-size:30px"><b>Substituição:</b> da 1ª, \(g = 20 - c\).</p>
+    </div>
+    <div class="contas" style="position:absolute;left:640px;top:150px;font-size:46px;row-gap:12px">
+      <div class="eq" data-passo="1"><span>\(2(20 - c) + 4c\)</span><span>\(=\)</span><span>\(56\)</span></div>
+      <div class="eq" data-passo="2"><span>\(40 - 2c + 4c\)</span><span>\(=\)</span><span>\(56\)</span></div>
+      <div class="eq" data-passo="3"><span>\(2c\)</span><span>\(=\)</span><span>\(16\)</span></div>
+      <div class="eq final" data-passo="4"><span>\(c\)</span><span>\(=\)</span><span>\(8\)</span></div>
+    </div>
+    <div class="contas" style="position:absolute;left:1260px;top:150px;font-size:46px;row-gap:12px">
+      <div class="eq" data-passo="5"><span>\(g\)</span><span>\(=\)</span><span>\(20 - 8\)</span></div>
+      <div class="eq final" data-passo="6"><span>\(g\)</span><span>\(=\)</span><span>\(12\)</span></div>
+    </div>
+    <svg class="ag-bichos" data-passo="7" viewBox="0 -30 740 260" width="740" height="260" style="position:absolute;left:640px;top:470px;overflow:visible;font-family:Figtree,'Segoe UI',sans-serif" aria-hidden="true">
+      <g><path d="M34 28 l6 -12 l6 12 z" fill="#C2384F"/><circle cx="40" cy="50" r="24" fill="#FFD10C" stroke="#C9A400" stroke-width="3"/><path d="M60 48 l12 5 l-12 5 z" fill="#E07A1F"/><line x1="32" y1="74" x2="32" y2="94" stroke="#E07A1F" stroke-width="4" stroke-linecap="round"/><line x1="48" y1="74" x2="48" y2="94" stroke="#E07A1F" stroke-width="4" stroke-linecap="round"/></g>
+      <g><path d="M106 28 l6 -12 l6 12 z" fill="#C2384F"/><circle cx="112" cy="50" r="24" fill="#FFD10C" stroke="#C9A400" stroke-width="3"/><path d="M132 48 l12 5 l-12 5 z" fill="#E07A1F"/><line x1="104" y1="74" x2="104" y2="94" stroke="#E07A1F" stroke-width="4" stroke-linecap="round"/><line x1="120" y1="74" x2="120" y2="94" stroke="#E07A1F" stroke-width="4" stroke-linecap="round"/></g>
+      <g><path d="M178 28 l6 -12 l6 12 z" fill="#C2384F"/><circle cx="184" cy="50" r="24" fill="#FFD10C" stroke="#C9A400" stroke-width="3"/><path d="M204 48 l12 5 l-12 5 z" fill="#E07A1F"/><line x1="176" y1="74" x2="176" y2="94" stroke="#E07A1F" stroke-width="4" stroke-linecap="round"/><line x1="192" y1="74" x2="192" y2="94" stroke="#E07A1F" stroke-width="4" stroke-linecap="round"/></g>
+      <g><path d="M250 28 l6 -12 l6 12 z" fill="#C2384F"/><circle cx="256" cy="50" r="24" fill="#FFD10C" stroke="#C9A400" stroke-width="3"/><path d="M276 48 l12 5 l-12 5 z" fill="#E07A1F"/><line x1="248" y1="74" x2="248" y2="94" stroke="#E07A1F" stroke-width="4" stroke-linecap="round"/><line x1="264" y1="74" x2="264" y2="94" stroke="#E07A1F" stroke-width="4" stroke-linecap="round"/></g>
+      <g><path d="M322 28 l6 -12 l6 12 z" fill="#C2384F"/><circle cx="328" cy="50" r="24" fill="#FFD10C" stroke="#C9A400" stroke-width="3"/><path d="M348 48 l12 5 l-12 5 z" fill="#E07A1F"/><line x1="320" y1="74" x2="320" y2="94" stroke="#E07A1F" stroke-width="4" stroke-linecap="round"/><line x1="336" y1="74" x2="336" y2="94" stroke="#E07A1F" stroke-width="4" stroke-linecap="round"/></g>
+      <g><path d="M394 28 l6 -12 l6 12 z" fill="#C2384F"/><circle cx="400" cy="50" r="24" fill="#FFD10C" stroke="#C9A400" stroke-width="3"/><path d="M420 48 l12 5 l-12 5 z" fill="#E07A1F"/><line x1="392" y1="74" x2="392" y2="94" stroke="#E07A1F" stroke-width="4" stroke-linecap="round"/><line x1="408" y1="74" x2="408" y2="94" stroke="#E07A1F" stroke-width="4" stroke-linecap="round"/></g>
+      <g><path d="M466 28 l6 -12 l6 12 z" fill="#C2384F"/><circle cx="472" cy="50" r="24" fill="#FFD10C" stroke="#C9A400" stroke-width="3"/><path d="M492 48 l12 5 l-12 5 z" fill="#E07A1F"/><line x1="464" y1="74" x2="464" y2="94" stroke="#E07A1F" stroke-width="4" stroke-linecap="round"/><line x1="480" y1="74" x2="480" y2="94" stroke="#E07A1F" stroke-width="4" stroke-linecap="round"/></g>
+      <g><path d="M538 28 l6 -12 l6 12 z" fill="#C2384F"/><circle cx="544" cy="50" r="24" fill="#FFD10C" stroke="#C9A400" stroke-width="3"/><path d="M564 48 l12 5 l-12 5 z" fill="#E07A1F"/><line x1="536" y1="74" x2="536" y2="94" stroke="#E07A1F" stroke-width="4" stroke-linecap="round"/><line x1="552" y1="74" x2="552" y2="94" stroke="#E07A1F" stroke-width="4" stroke-linecap="round"/></g>
+      <g><path d="M610 28 l6 -12 l6 12 z" fill="#C2384F"/><circle cx="616" cy="50" r="24" fill="#FFD10C" stroke="#C9A400" stroke-width="3"/><path d="M636 48 l12 5 l-12 5 z" fill="#E07A1F"/><line x1="608" y1="74" x2="608" y2="94" stroke="#E07A1F" stroke-width="4" stroke-linecap="round"/><line x1="624" y1="74" x2="624" y2="94" stroke="#E07A1F" stroke-width="4" stroke-linecap="round"/></g>
+      <g><path d="M682 28 l6 -12 l6 12 z" fill="#C2384F"/><circle cx="688" cy="50" r="24" fill="#FFD10C" stroke="#C9A400" stroke-width="3"/><path d="M708 48 l12 5 l-12 5 z" fill="#E07A1F"/><line x1="680" y1="74" x2="680" y2="94" stroke="#E07A1F" stroke-width="4" stroke-linecap="round"/><line x1="696" y1="74" x2="696" y2="94" stroke="#E07A1F" stroke-width="4" stroke-linecap="round"/></g>
+      <g><path d="M34 138 l6 -12 l6 12 z" fill="#C2384F"/><circle cx="40" cy="160" r="24" fill="#FFD10C" stroke="#C9A400" stroke-width="3"/><path d="M60 158 l12 5 l-12 5 z" fill="#E07A1F"/><line x1="32" y1="184" x2="32" y2="204" stroke="#E07A1F" stroke-width="4" stroke-linecap="round"/><line x1="48" y1="184" x2="48" y2="204" stroke="#E07A1F" stroke-width="4" stroke-linecap="round"/></g>
+      <g><path d="M106 138 l6 -12 l6 12 z" fill="#C2384F"/><circle cx="112" cy="160" r="24" fill="#FFD10C" stroke="#C9A400" stroke-width="3"/><path d="M132 158 l12 5 l-12 5 z" fill="#E07A1F"/><line x1="104" y1="184" x2="104" y2="204" stroke="#E07A1F" stroke-width="4" stroke-linecap="round"/><line x1="120" y1="184" x2="120" y2="204" stroke="#E07A1F" stroke-width="4" stroke-linecap="round"/></g>
+      <g><ellipse cx="175" cy="130" rx="7" ry="16" fill="#E4DEFB" stroke="#8C7BEA" stroke-width="3"/><ellipse cx="193" cy="130" rx="7" ry="16" fill="#E4DEFB" stroke="#8C7BEA" stroke-width="3"/><circle cx="184" cy="160" r="24" fill="#E4DEFB" stroke="#8C7BEA" stroke-width="3"/><line x1="169" y1="182" x2="169" y2="202" stroke="#6551D1" stroke-width="4" stroke-linecap="round"/><line x1="179" y1="182" x2="179" y2="202" stroke="#6551D1" stroke-width="4" stroke-linecap="round"/><line x1="189" y1="182" x2="189" y2="202" stroke="#6551D1" stroke-width="4" stroke-linecap="round"/><line x1="199" y1="182" x2="199" y2="202" stroke="#6551D1" stroke-width="4" stroke-linecap="round"/></g>
+      <g><ellipse cx="247" cy="130" rx="7" ry="16" fill="#E4DEFB" stroke="#8C7BEA" stroke-width="3"/><ellipse cx="265" cy="130" rx="7" ry="16" fill="#E4DEFB" stroke="#8C7BEA" stroke-width="3"/><circle cx="256" cy="160" r="24" fill="#E4DEFB" stroke="#8C7BEA" stroke-width="3"/><line x1="241" y1="182" x2="241" y2="202" stroke="#6551D1" stroke-width="4" stroke-linecap="round"/><line x1="251" y1="182" x2="251" y2="202" stroke="#6551D1" stroke-width="4" stroke-linecap="round"/><line x1="261" y1="182" x2="261" y2="202" stroke="#6551D1" stroke-width="4" stroke-linecap="round"/><line x1="271" y1="182" x2="271" y2="202" stroke="#6551D1" stroke-width="4" stroke-linecap="round"/></g>
+      <g><ellipse cx="319" cy="130" rx="7" ry="16" fill="#E4DEFB" stroke="#8C7BEA" stroke-width="3"/><ellipse cx="337" cy="130" rx="7" ry="16" fill="#E4DEFB" stroke="#8C7BEA" stroke-width="3"/><circle cx="328" cy="160" r="24" fill="#E4DEFB" stroke="#8C7BEA" stroke-width="3"/><line x1="313" y1="182" x2="313" y2="202" stroke="#6551D1" stroke-width="4" stroke-linecap="round"/><line x1="323" y1="182" x2="323" y2="202" stroke="#6551D1" stroke-width="4" stroke-linecap="round"/><line x1="333" y1="182" x2="333" y2="202" stroke="#6551D1" stroke-width="4" stroke-linecap="round"/><line x1="343" y1="182" x2="343" y2="202" stroke="#6551D1" stroke-width="4" stroke-linecap="round"/></g>
+      <g><ellipse cx="391" cy="130" rx="7" ry="16" fill="#E4DEFB" stroke="#8C7BEA" stroke-width="3"/><ellipse cx="409" cy="130" rx="7" ry="16" fill="#E4DEFB" stroke="#8C7BEA" stroke-width="3"/><circle cx="400" cy="160" r="24" fill="#E4DEFB" stroke="#8C7BEA" stroke-width="3"/><line x1="385" y1="182" x2="385" y2="202" stroke="#6551D1" stroke-width="4" stroke-linecap="round"/><line x1="395" y1="182" x2="395" y2="202" stroke="#6551D1" stroke-width="4" stroke-linecap="round"/><line x1="405" y1="182" x2="405" y2="202" stroke="#6551D1" stroke-width="4" stroke-linecap="round"/><line x1="415" y1="182" x2="415" y2="202" stroke="#6551D1" stroke-width="4" stroke-linecap="round"/></g>
+      <g><ellipse cx="463" cy="130" rx="7" ry="16" fill="#E4DEFB" stroke="#8C7BEA" stroke-width="3"/><ellipse cx="481" cy="130" rx="7" ry="16" fill="#E4DEFB" stroke="#8C7BEA" stroke-width="3"/><circle cx="472" cy="160" r="24" fill="#E4DEFB" stroke="#8C7BEA" stroke-width="3"/><line x1="457" y1="182" x2="457" y2="202" stroke="#6551D1" stroke-width="4" stroke-linecap="round"/><line x1="467" y1="182" x2="467" y2="202" stroke="#6551D1" stroke-width="4" stroke-linecap="round"/><line x1="477" y1="182" x2="477" y2="202" stroke="#6551D1" stroke-width="4" stroke-linecap="round"/><line x1="487" y1="182" x2="487" y2="202" stroke="#6551D1" stroke-width="4" stroke-linecap="round"/></g>
+      <g><ellipse cx="535" cy="130" rx="7" ry="16" fill="#E4DEFB" stroke="#8C7BEA" stroke-width="3"/><ellipse cx="553" cy="130" rx="7" ry="16" fill="#E4DEFB" stroke="#8C7BEA" stroke-width="3"/><circle cx="544" cy="160" r="24" fill="#E4DEFB" stroke="#8C7BEA" stroke-width="3"/><line x1="529" y1="182" x2="529" y2="202" stroke="#6551D1" stroke-width="4" stroke-linecap="round"/><line x1="539" y1="182" x2="539" y2="202" stroke="#6551D1" stroke-width="4" stroke-linecap="round"/><line x1="549" y1="182" x2="549" y2="202" stroke="#6551D1" stroke-width="4" stroke-linecap="round"/><line x1="559" y1="182" x2="559" y2="202" stroke="#6551D1" stroke-width="4" stroke-linecap="round"/></g>
+      <g><ellipse cx="607" cy="130" rx="7" ry="16" fill="#E4DEFB" stroke="#8C7BEA" stroke-width="3"/><ellipse cx="625" cy="130" rx="7" ry="16" fill="#E4DEFB" stroke="#8C7BEA" stroke-width="3"/><circle cx="616" cy="160" r="24" fill="#E4DEFB" stroke="#8C7BEA" stroke-width="3"/><line x1="601" y1="182" x2="601" y2="202" stroke="#6551D1" stroke-width="4" stroke-linecap="round"/><line x1="611" y1="182" x2="611" y2="202" stroke="#6551D1" stroke-width="4" stroke-linecap="round"/><line x1="621" y1="182" x2="621" y2="202" stroke="#6551D1" stroke-width="4" stroke-linecap="round"/><line x1="631" y1="182" x2="631" y2="202" stroke="#6551D1" stroke-width="4" stroke-linecap="round"/></g>
+      <g><ellipse cx="679" cy="130" rx="7" ry="16" fill="#E4DEFB" stroke="#8C7BEA" stroke-width="3"/><ellipse cx="697" cy="130" rx="7" ry="16" fill="#E4DEFB" stroke="#8C7BEA" stroke-width="3"/><circle cx="688" cy="160" r="24" fill="#E4DEFB" stroke="#8C7BEA" stroke-width="3"/><line x1="673" y1="182" x2="673" y2="202" stroke="#6551D1" stroke-width="4" stroke-linecap="round"/><line x1="683" y1="182" x2="683" y2="202" stroke="#6551D1" stroke-width="4" stroke-linecap="round"/><line x1="693" y1="182" x2="693" y2="202" stroke="#6551D1" stroke-width="4" stroke-linecap="round"/><line x1="703" y1="182" x2="703" y2="202" stroke="#6551D1" stroke-width="4" stroke-linecap="round"/></g>
+    </svg>
+    <p class="texto" data-passo="7" style="position:absolute;left:1400px;right:0;top:500px;margin:0;font-size:28px;line-height:1.4"><b>12 galinhas</b> e <b>8 coelhos</b>.<br>24 + 32 = 56 patas ✓</p>
+  </div>
+  <aside class="notas">
+    <p>Tradução: g galinhas, c coelhos. Cabeças: g + c = 20. Patas: 2g + 4c = 56. Substituindo g = 20 − c na 2ª: c = 8; voltando, g = 12.</p>
+    <p>Clique 7: 12 galinhas (24 patas) e 8 coelhos (32 patas), 56 patas.</p>
+  </aside>
+</section>
+
+<!-- 10. Exemplo: ingressos -->
+<section class="slide" data-nome="Exemplo: ingressos">
+  <div class="conteudo">
+    <p class="olho">Exemplo</p>
+    <h2 class="titulo">Ingressos do teatro</h2>
+    <p class="texto" style="position:absolute;left:0;width:540px;top:150px;margin:0;font-size:29px">50 ingressos, uns de R$ 20,00 (inteira) e outros de R$ 10,00 (meia). A bilheteria fez R$ 700,00. Quantas inteiras?</p>
+    <div class="caixa" data-passo="1" style="position:absolute;left:0;width:540px;top:370px;padding:16px 26px">
+      <div style="font-size:42px">\(\begin{cases} x + y = 50 \\ 20x + 10y = 700 \end{cases}\)</div>
+      <div class="texto" style="font-size:24px;color:var(--cinza)">\(x\) inteiras, \(y\) meias</div>
+    </div>
+    <div style="position:absolute;left:640px;right:0;top:150px">
+      <div class="contas c4" style="font-size:44px;row-gap:14px">
+        <div class="eq" data-passo="2"><span>\(-10x - 10y\)</span><span>\(=\)</span><span>\(-500\)</span><span class="ag-anot">1ª × (−10)</span></div>
+        <div class="eq" data-passo="3"><span>\((20x + \cancel{10y}) + (-10x - \cancel{10y})\)</span><span>\(=\)</span><span>\(700 - 500\)</span><span></span></div>
+        <div class="eq" data-passo="4"><span>\(10x\)</span><span>\(=\)</span><span>\(200\)</span><span></span></div>
+        <div class="eq final" data-passo="5"><span>\(x\)</span><span>\(=\)</span><span>\(20\)</span><span></span></div>
+      </div>
+      <span class="pilula pilula-resposta" data-passo="6" style="margin-top:30px">20 inteiras (e 30 meias)</span>
+    </div>
+  </div>
+  <aside class="notas">
+    <p>Quantidade: x + y = 50. Dinheiro: 20x + 10y = 700. Clique 2: multiplicando a 1ª por −10, o 10y vira −10y, oposto ao da 2ª.</p>
+    <p>Confira: 20 · 20 + 30 · 10 = 400 + 300 = 700.</p>
+  </aside>
+</section>
+
+<!-- 11. Como cai no IF -->
+<section class="slide" data-nome="Como cai no IF">
+  <div class="conteudo">
+    <p class="olho">Dica</p>
+    <h2 class="titulo">Como cai no IF</h2>
+    <div class="caixa caixa-fundamental" style="position:absolute;left:0;right:0;top:160px;padding:26px 36px">
+      <div class="texto" style="font-size:38px">Muitas questões não pedem para resolver: pedem para <b>escolher o sistema</b> que representa o problema.</div>
+    </div>
+    <div style="position:absolute;left:640px;right:0;top:420px;display:flex;flex-direction:column;gap:16px">
+      <div class="caixa" data-passo="1" style="padding:16px 28px"><div class="texto" style="font-size:32px"><b>1.</b> Traduza cada frase numa equação.</div></div>
+      <div class="caixa" data-passo="2" style="padding:16px 28px"><div class="texto" style="font-size:32px"><b>2.</b> Compare com as alternativas: <b>as unidades</b> também precisam bater.</div></div>
+    </div>
+  </div>
+  <aside class="notas">
+    <p>A observação das unidades vem das questões de escolher o sistema: tempo em minutos de um lado e em horas do outro é a pegadinha clássica.</p>
+  </aside>
+</section>
+
+<!-- 12. Questão 1 -->
+<section class="slide questao" data-nome="Questão 1">
+  <div class="conteudo">
+    <div class="area-resolucao"></div>
+    <span class="pilula pilula-pausa" data-em="1:some">Pause o vídeo e tente</span>
+    <div class="painel-questao">
+      <p class="olho">Questão 1 · IF Sudeste MG 2015</p>
+      <p class="enunciado" style="font-size:33px">No caixa eletrônico, Vilma sacou R$ 1.300,00 em notas de R$ 10,00 e R$ 50,00. Quantas notas de R$ 50,00 Vilma sacou se o saque continha 30 notas?</p>
+      <ol class="alternativas curtas">
+        <li data-em="2:apaga"><b>A</b><span>5</span></li>
+        <li data-em="2:apaga"><b>B</b><span>10</span></li>
+        <li data-em="2:apaga"><b>C</b><span>15</span></li>
+        <li data-em="2:apaga"><b>D</b><span>20</span></li>
+        <li data-em="2:certo"><b>E</b><span>25</span></li>
+      </ol>
+      <p class="fonte">IF Sudeste MG 2015 (segunda prova) · questão 22</p>
+    </div>
+  </div>
+  <aside class="resolucao">
+    <p class="dados"><b>Dados:</b> \(x\) notas de R$ 10; \(y\) notas de R$ 50; 30 notas; R$ 1.300.</p>
+    <ol class="passos">
+      <li>\(x + y = 30\) e \(10x + 50y = 1300\)</li>
+      <li>\(x = 30 - y\)</li>
+      <li>\(10(30 - y) + 50y = 1300\)</li>
+      <li>\(300 + 40y = 1300 \Rightarrow 40y = 1000\)</li>
+      <li>\(y = 25\) (e \(x = 5\))</li>
+    </ol>
+    <p class="resposta"><b>Resposta:</b> 25 notas de R$ 50. <b>Gabarito E.</b></p>
+    <p class="atencao"><b>Destaque no quadro:</b> Confira: 5 · 10 + 25 · 50 = 50 + 1250 = 1300.</p>
+    <ul class="erros">
+      <li><b>A</b> 5 é o número de notas de R$ 10.</li>
+      <li><b>B</b> 10 de R$ 50 e 20 de R$ 10 dariam R$ 700.</li>
+      <li><b>C</b> 15 de cada dariam R$ 900.</li>
+      <li><b>D</b> 20 de R$ 50 e 10 de R$ 10 dariam R$ 1.100.</li>
+    </ul>
+  </aside>
+  <aside class="notas">
+    <p>Clique 1 tira o aviso de pausa: resolva na área (D liga a caneta; E esconde o enunciado). Clique 2: gabarito E.</p>
+    <p>Questão oficial do IF Sudeste MG 2015-2, q22, MAT-0317. Não aparece na lista curta de sobras (que termina em "…"), mas é oficial do subcapítulo e não está reservada para o bloco.</p>
+  </aside>
+</section>
+
+<!-- 13. Questão 2 -->
+<section class="slide questao" data-nome="Questão 2">
+  <div class="conteudo">
+    <div class="area-resolucao"></div>
+    <span class="pilula pilula-pausa" data-em="1:some">Pause o vídeo e tente</span>
+    <div class="painel-questao">
+      <p class="olho">Questão 2 · IF Sudeste MG 2013</p>
+      <p class="enunciado" style="font-size:32px">A soma das idades de Carlos e seu filho é hoje igual a 69 anos. Daqui a 18 anos, a idade do pai será o dobro da idade do filho. Quando o filho de Carlos nasceu, qual era sua idade?</p>
+      <ol class="alternativas" style="gap:8px">
+        <li data-em="2:apaga"><b>A</b><span>25 anos</span></li>
+        <li data-em="2:apaga"><b>B</b><span>30 anos</span></li>
+        <li data-em="2:certo"><b>C</b><span>35 anos</span></li>
+        <li data-em="2:apaga"><b>D</b><span>40 anos</span></li>
+        <li data-em="2:apaga"><b>E</b><span>45 anos</span></li>
+      </ol>
+      <p class="fonte">IF Sudeste MG 2013 (prova extra) · questão 22</p>
+    </div>
+  </div>
+  <aside class="resolucao">
+    <p class="dados"><b>Dados:</b> Carlos hoje \(c\); filho hoje \(f\); \(c + f = 69\); daqui a 18 anos, \(c + 18 = 2(f + 18)\).</p>
+    <ol class="passos">
+      <li>\(c + 18 = 2f + 36 \Rightarrow c = 2f + 18\)</li>
+      <li>\((2f + 18) + f = 69\)</li>
+      <li>\(3f = 51 \Rightarrow f = 17\)</li>
+      <li>\(c = 69 - 17 = 52\)</li>
+      <li>Quando o filho nasceu: \(c - f = 52 - 17 = 35\)</li>
+    </ol>
+    <p class="resposta"><b>Resposta:</b> 35 anos. <b>Gabarito C.</b></p>
+    <p class="atencao"><b>Destaque no quadro:</b> A pergunta não é a idade de hoje: é a diferença \(c - f\), que nunca muda.</p>
+    <ul class="erros">
+      <li><b>A</b> Não sai do sistema.</li>
+      <li><b>B</b> Não sai do sistema.</li>
+      <li><b>D</b> Não sai do sistema.</li>
+      <li><b>E</b> Não sai do sistema (52 e 17 são as idades de hoje).</li>
+    </ul>
+  </aside>
+  <aside class="notas">
+    <p>Clique 1 tira o aviso de pausa: resolva na área (D liga a caneta; E esconde o enunciado). Clique 2: gabarito C.</p>
+    <p>Questão oficial do IF Sudeste MG 2013-1-extra, q22, MAT-0464. Não aparece na lista curta de sobras (que termina em "…"), mas é oficial do subcapítulo e não está reservada para o bloco. Confira: daqui a 18 anos, 70 e 35.</p>
+  </aside>
+</section>
+
+<!-- 14. Questão 3 -->
+<section class="slide questao" data-nome="Questão 3">
+  <div class="conteudo">
+    <div class="area-resolucao"></div>
+    <span class="pilula pilula-pausa" data-em="1:some">Pause o vídeo e tente</span>
+    <div class="painel-questao">
+      <p class="olho">Questão 3 · IF Sudeste MG 2016</p>
+      <p class="enunciado" style="font-size:31px">Numa seção de cinema, a renda foi de R$ 3.840,00, sabendo-se que compareceram na seção 300 pessoas entre adultos e crianças. Se cada criança pagou R$ 8,00 e cada adulto pagou R$ 16,00, podemos afirmar que o número de crianças presentes na seção de cinema é:</p>
+      <ol class="alternativas curtas">
+        <li data-em="2:apaga"><b>A</b><span>84</span></li>
+        <li data-em="2:apaga"><b>B</b><span>96</span></li>
+        <li data-em="2:apaga"><b>C</b><span>110</span></li>
+        <li data-em="2:certo"><b>D</b><span>120</span></li>
+        <li data-em="2:apaga"><b>E</b><span>180</span></li>
+      </ol>
+      <p class="fonte">IF Sudeste MG 2016 (prova extra) · questão 22</p>
+    </div>
+  </div>
+  <aside class="resolucao">
+    <p class="dados"><b>Dados:</b> \(c\) crianças; \(a\) adultos; \(c + a = 300\); \(8c + 16a = 3840\).</p>
+    <ol class="passos">
+      <li>2ª ÷ 8: \(c + 2a = 480\)</li>
+      <li>Menos a 1ª: \((c + 2a) - (c + a) = 480 - 300\)</li>
+      <li>\(a = 180\)</li>
+      <li>\(c = 300 - 180 = 120\)</li>
+      <li>Confira: \(8 \cdot 120 + 16 \cdot 180 = 960 + 2880 = 3840\)</li>
+    </ol>
+    <p class="resposta"><b>Resposta:</b> 120 crianças. <b>Gabarito D.</b></p>
+    <p class="atencao"><b>Destaque no quadro:</b> A pergunta é o número de crianças, não de adultos.</p>
+    <ul class="erros">
+      <li><b>A</b> Com 84 crianças, a renda daria R$ 4.128.</li>
+      <li><b>B</b> Com 96 crianças, a renda daria R$ 4.032.</li>
+      <li><b>C</b> Com 110 crianças, a renda daria R$ 3.920.</li>
+      <li><b>E</b> 180 é o número de adultos.</li>
+    </ul>
+  </aside>
+  <aside class="notas">
+    <p>Clique 1 tira o aviso de pausa: resolva na área (D liga a caneta; E esconde o enunciado). Clique 2: gabarito D.</p>
+    <p>Questão oficial do IF Sudeste MG 2016-1-extra, q22, MAT-0409 (sobra do bloco, usada aqui). "Seção de cinema" está assim na prova (o certo seria "sessão").</p>
+  </aside>
+</section>
+
+<!-- 15. Resumo -->
+<section class="slide" data-nome="Resumo">
+  <div class="conteudo">
+    <p class="olho">Resumo</p>
+    <h2 class="titulo">O essencial</h2>
+    <div class="resumo" style="position:absolute;left:0;right:0;top:150px">
+      <div><b>Sistema 2 × 2:</b> duas equações, duas incógnitas; a solução é o <b>par</b> que satisfaz as duas.</div>
+      <div><b>Substituição:</b> isole uma letra e troque na outra equação.</div>
+      <div><b>Adição:</b> some as equações para eliminar uma letra (multiplique antes, se precisar, a equação inteira).</div>
+      <div><b>No gráfico:</b> a solução é o ponto onde as retas se cruzam.</div>
+    </div>
+  </div>
+  <aside class="notas">
+    <p>Peça para tirarem um print desta tela.</p>
+  </aside>
+</section>
+
+<!-- 16. A seguir -->
+<section class="slide capa" data-nome="A seguir">
+  <div class="estrelas"></div>
+  <div class="texto-capa" style="top:220px">
+    <span class="selo">Matemática · IF</span>
+    <p class="aula">A seguir · Equações do 2º grau · Parte 1 de 2</p>
+    <h1>A fórmula de Bhaskara</h1>
+    <p class="sub">Incompletas, Bhaskara e o delta</p>
+  </div>
+  <svg class="emblema" viewBox="0 0 640 640" aria-hidden="true">
+    <g font-family="Figtree,'Segoe UI',sans-serif" font-weight="800" text-anchor="middle">
+      <circle cx="320" cy="320" r="190" fill="#FFD10C"/>
+      <text x="320" y="370" font-size="170" fill="#3F2FA0">Δ</text>
+      <text x="320" y="120" font-size="54" fill="#fff">b² − 4ac</text>
+    </g>
+  </svg>
+  <img class="logo-capa" src="{{LOGO_BRANCO}}" alt="Quarks">
+  <aside class="notas"><p>Fim de Sistemas do 1º grau. A seguir, Equações do 2º grau: incompletas, fórmula de Bhaskara e o discriminante.</p></aside>
+</section>

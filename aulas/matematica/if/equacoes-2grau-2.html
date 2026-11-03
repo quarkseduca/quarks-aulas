@@ -1,0 +1,469 @@
+<!--aula
+{"disciplina": "matematica", "curso": "IF", "assunto": "Equações do 2º grau", "parte": "Parte 2 de 2", "titulo": "Soma, produto e problemas", "scripts": ["animacoes-algebra.js"]}
+-->
+<!-- Fonte: apostila IF/Sudeste, Matemática, cap. 3 (3.4 Equações do 2º grau: Soma e produto das raízes; Equações biquadradas e irracionais; Problemas com equações do 2º grau; resumo do 3.4). Questões: oficiais do IF Sudeste MG que sobraram do bloco do capítulo (2013-1 q17, 2014-1 q24, 2015-2 q23). -->
+<style>
+  .caixa { box-sizing: border-box; }
+  .contas.c4 { grid-template-columns: auto auto auto 1fr; }
+  .ag-anot { font-size: 26px; font-weight: 800; color: var(--d-forte); background: var(--d-clara); border-radius: 999px; padding: 2px 16px; justify-self: start; white-space: nowrap; }
+  .ag-certo { color: var(--certo); font-weight: 800; }
+  .ag-erro { color: var(--erro); font-weight: 800; }
+  .ag-rot { font-size: 28px; font-weight: 800; color: var(--d-forte); margin: 0 0 8px; }
+  .ag-pares { border-collapse: separate; border-spacing: 0; font-size: 40px; background: var(--branco); border: 2px solid var(--lilas-2); border-radius: 24px; overflow: hidden; }
+  .ag-pares th { background: var(--d-clara); color: var(--d-forte); padding: 10px 40px; font-weight: 800; }
+  .ag-pares td { padding: 10px 40px; text-align: center; border-top: 2px solid var(--lilas); }
+  .ag-pares tr.ok td { background: #E3F6EC; font-weight: 800; color: var(--certo); }
+  /* setas da volta para x na biquadrada */
+  .ag-arco { stroke-dasharray: 1; stroke-dashoffset: 1; }
+  .mostra .ag-arco { animation: ag-traca 1.3s ease-in-out forwards; }
+  @keyframes ag-traca { to { stroke-dashoffset: 0; } }
+  @media (prefers-reduced-motion: reduce) { .ag-arco { stroke-dasharray: none; stroke-dashoffset: 0; } }
+</style>
+
+<!-- 1. Capa -->
+<section class="slide capa" data-nome="Capa">
+  <div class="estrelas"></div>
+  <div class="texto-capa">
+    <span class="selo">Matemática · IF</span>
+    <p class="aula">Equações do 2º grau · Parte 2 de 2</p>
+    <h1>Soma, produto e problemas</h1>
+    <p class="sub">Raízes de cabeça</p>
+  </div>
+  <svg class="emblema" viewBox="0 0 640 640" aria-hidden="true">
+    <g class="gira-lento"><ellipse cx="320" cy="320" rx="300" ry="128" fill="none" stroke="#fff" stroke-opacity=".38" stroke-width="2" transform="rotate(-10 320 320)"/></g>
+    <g font-family="Figtree,'Segoe UI',sans-serif" font-weight="800" text-anchor="middle">
+      <rect x="110" y="140" width="420" height="150" rx="75" fill="#fff" fill-opacity=".18" stroke="#fff" stroke-width="4"/>
+      <text x="320" y="240" font-size="72" fill="#fff">S = −b/a</text>
+      <rect x="110" y="350" width="420" height="150" rx="75" fill="#FFD10C"/>
+      <text x="320" y="450" font-size="72" fill="#3F2FA0">P = c/a</text>
+    </g>
+  </svg>
+  <img class="logo-capa" src="{{LOGO_BRANCO}}" alt="Quarks">
+  <aside class="notas">
+    <p>Segunda parte de Equações do 2º grau: soma e produto das raízes, equações que viram do 2º grau (biquadradas e irracionais) e problemas.</p>
+  </aside>
+</section>
+
+<!-- 2. De onde vêm S e P -->
+<section class="slide" data-nome="De onde vêm S e P">
+  <div class="conteudo">
+    <p class="olho">Soma e produto das raízes</p>
+    <h2 class="titulo">As raízes quadradas se cancelam</h2>
+    <div style="position:absolute;left:0;right:0;top:160px;display:grid;grid-template-columns:1fr 1fr;gap:50px">
+      <div>
+        <p class="ag-rot">Somando as duas raízes:</p>
+        <div class="contas" style="font-size:40px;row-gap:20px">
+          <div class="eq" data-passo="1"><span>\(S\)</span><span>\(=\)</span><span>\(\dfrac{-b + \cancel{\sqrt{\Delta}}}{2a} + \dfrac{-b - \cancel{\sqrt{\Delta}}}{2a}\)</span></div>
+          <div class="eq" data-passo="2"><span>\(S\)</span><span>\(=\)</span><span>\(\dfrac{-2b}{2a}\)</span></div>
+          <div class="eq final" data-passo="3"><span>\(S\)</span><span>\(=\)</span><span>\(-\dfrac{b}{a}\)</span></div>
+        </div>
+      </div>
+      <div>
+        <p class="ag-rot">Multiplicando (soma pela diferença):</p>
+        <div class="contas" style="font-size:40px;row-gap:20px">
+          <div class="eq" data-passo="4"><span>\(P\)</span><span>\(=\)</span><span>\(\dfrac{(-b)^2 - (\sqrt{\Delta})^2}{4a^2}\)</span></div>
+          <div class="eq" data-passo="5"><span>\(P\)</span><span>\(=\)</span><span>\(\dfrac{b^2 - (b^2 - 4ac)}{4a^2}\)</span></div>
+          <div class="eq" data-passo="6"><span>\(P\)</span><span>\(=\)</span><span>\(\dfrac{4ac}{4a^2}\)</span></div>
+          <div class="eq final" data-passo="7"><span>\(P\)</span><span>\(=\)</span><span>\(\dfrac{c}{a}\)</span></div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <aside class="notas">
+    <p>A apostila só diz que, somando e multiplicando as raízes de Bhaskara, as raízes quadradas se cancelam. Aqui está a conta, para quem quiser ver: na soma, +√Δ e −√Δ se anulam; no produto, é o produto da soma pela diferença (parte 1 de Polinômios).</p>
+    <p>Se a turma for mais lenta, mostre só os resultados (cliques 3 e 7).</p>
+  </aside>
+</section>
+
+<!-- 3. Fórmula -->
+<section class="slide" data-nome="Soma e produto">
+  <div class="conteudo">
+    <p class="olho">Fórmula</p>
+    <h2 class="titulo">Soma e produto</h2>
+    <div style="position:absolute;left:0;right:0;top:170px;display:grid;grid-template-columns:1fr 1fr;gap:40px">
+      <div class="caixa caixa-fundamental" style="text-align:center;padding:24px"><span class="rotulo">Soma</span><div style="font-size:80px">\(S = x_1 + x_2 = -\dfrac{b}{a}\)</div></div>
+      <div class="caixa caixa-fundamental" style="text-align:center;padding:24px"><span class="rotulo">Produto</span><div style="font-size:80px">\(P = x_1 \cdot x_2 = \dfrac{c}{a}\)</div></div>
+    </div>
+    <div class="caixa" data-passo="1" style="position:absolute;left:640px;right:0;top:520px;padding:22px 32px">
+      <span class="rotulo">Quando \(a = 1\)</span>
+      <div style="font-size:60px">\(x^2 - Sx + P = 0\)</div>
+      <div class="texto" style="font-size:30px">Ache dois números com a soma e o produto certos.</div>
+    </div>
+  </div>
+  <aside class="notas">
+    <p>Clique 1: com a = 1, a equação é x² − Sx + P = 0. Isso permite achar raízes inteiras de cabeça.</p>
+  </aside>
+</section>
+
+<!-- 4. Exemplo: de cabeça -->
+<section class="slide" data-nome="Exemplo: raízes de cabeça">
+  <div class="conteudo">
+    <p class="olho">Exemplo</p>
+    <h2 class="titulo">\(x^2 - 7x + 10 = 0\) de cabeça</h2>
+    <div style="position:absolute;left:0;width:540px;top:170px;display:flex;flex-direction:column;gap:20px">
+      <div class="caixa" style="padding:16px 26px"><div style="font-size:48px">\(S = 7\)</div></div>
+      <div class="caixa" style="padding:16px 26px"><div style="font-size:48px">\(P = 10\)</div></div>
+    </div>
+    <div style="position:absolute;left:640px;top:170px">
+      <p class="ag-rot">Pares com produto 10:</p>
+      <table class="ag-pares">
+        <tr><th>números</th><th>produto</th><th>soma</th></tr>
+        <tr data-passo="1"><td>1 e 10</td><td>10</td><td>11</td></tr>
+        <tr data-passo="2" class="ok"><td>2 e 5</td><td>10</td><td>7 ✓</td></tr>
+      </table>
+    </div>
+    <span class="pilula pilula-resposta" data-passo="3" style="position:absolute;right:0;top:620px">Raízes: 2 e 5</span>
+  </div>
+  <aside class="notas">
+    <p>a = 1: S = 7 e P = 10. Procure dois números com produto 10 e soma 7. Clique 2: 2 e 5.</p>
+  </aside>
+</section>
+
+<!-- 5. Exemplo: montar a equação -->
+<section class="slide" data-nome="Exemplo: montar a equação">
+  <div class="conteudo">
+    <p class="olho">Exemplo</p>
+    <h2 class="titulo">Uma equação com raízes 3 e −4</h2>
+    <div style="position:absolute;left:0;right:0;top:170px;display:grid;grid-template-columns:1fr 1fr;gap:60px">
+      <div class="contas" style="font-size:50px;row-gap:14px">
+        <div class="eq" data-passo="1"><span>\(S\)</span><span>\(=\)</span><span>\(3 + (-4)\)</span></div>
+        <div class="eq final" data-passo="2"><span>\(S\)</span><span>\(=\)</span><span>\(-1\)</span></div>
+      </div>
+      <div class="contas" style="font-size:50px;row-gap:14px">
+        <div class="eq" data-passo="3"><span>\(P\)</span><span>\(=\)</span><span>\(3 \cdot (-4)\)</span></div>
+        <div class="eq final" data-passo="4"><span>\(P\)</span><span>\(=\)</span><span>\(-12\)</span></div>
+      </div>
+    </div>
+    <div class="contas" style="position:absolute;left:640px;top:420px;font-size:50px;row-gap:14px">
+      <div class="eq" data-passo="5"><span>\(x^2 - Sx + P\)</span><span>\(=\)</span><span>\(0\)</span></div>
+      <div class="eq" data-passo="6"><span>\(x^2 - (-1)x + (-12)\)</span><span>\(=\)</span><span>\(0\)</span></div>
+      <div class="eq final" data-passo="7"><span>\(x^2 + x - 12\)</span><span>\(=\)</span><span>\(0\)</span></div>
+    </div>
+  </div>
+  <aside class="notas">
+    <p>O caminho de volta: das raízes para a equação. Cuidado com os parênteses nos sinais (clique 6).</p>
+    <p>Confira: 3² + 3 − 12 = 0 e (−4)² − 4 − 12 = 0.</p>
+  </aside>
+</section>
+
+<!-- 6. Biquadrada -->
+<section class="slide" data-nome="Biquadrada">
+  <div class="conteudo">
+    <p class="olho">Equações biquadradas</p>
+    <h2 class="titulo">Troque \(x^2\) por \(y\)</h2>
+    <div class="contas c4" style="position:absolute;left:0;top:160px;font-size:50px;row-gap:14px">
+      <div class="eq" data-passo="1"><span>\(x^4 - 13x^2 + 36\)</span><span>\(=\)</span><span>\(0\)</span><span class="ag-anot">\(x^4 = (x^2)^2\)</span></div>
+      <div class="eq" data-passo="2"><span>\(y^2 - 13y + 36\)</span><span>\(=\)</span><span>\(0\)</span><span class="ag-anot">\(y = x^2\)</span></div>
+    </div>
+    <p class="texto" data-passo="3" style="position:absolute;left:0;width:620px;top:380px;margin:0;font-size:32px">Soma 13 e produto 36: <b>\(y = 4\)</b> ou <b>\(y = 9\)</b>.</p>
+    <svg viewBox="0 0 860 340" width="860" height="340" style="position:absolute;left:900px;top:300px;overflow:visible;font-family:Figtree,'Segoe UI',sans-serif" aria-hidden="true">
+      <g data-passo="3" font-size="44" font-weight="800" text-anchor="middle">
+        <rect x="120" y="0" width="200" height="80" rx="40" fill="var(--d-clara)" stroke="var(--d)" stroke-width="3"/><text x="220" y="56" fill="#1E4FD8">y = 4</text>
+        <rect x="540" y="0" width="200" height="80" rx="40" fill="var(--d-clara)" stroke="var(--d)" stroke-width="3"/><text x="640" y="56" fill="#1E4FD8">y = 9</text>
+      </g>
+      <g data-passo="4" font-size="44" font-weight="800" text-anchor="middle">
+        <path d="M190 84 Q130 160 90 230" fill="none" stroke="#C9A400" stroke-width="5" class="ag-arco" pathLength="1"/>
+        <path d="M250 84 Q310 160 350 230" fill="none" stroke="#C9A400" stroke-width="5" class="ag-arco" pathLength="1"/>
+        <text x="80" y="290" fill="#3F2FA0">−2</text><text x="360" y="290" fill="#3F2FA0">2</text>
+        <text x="220" y="200" font-size="28" fill="#5E5A70">x² = 4</text>
+      </g>
+      <g data-passo="5" font-size="44" font-weight="800" text-anchor="middle">
+        <path d="M610 84 Q550 160 510 230" fill="none" stroke="#C9A400" stroke-width="5" class="ag-arco" pathLength="1"/>
+        <path d="M670 84 Q730 160 770 230" fill="none" stroke="#C9A400" stroke-width="5" class="ag-arco" pathLength="1"/>
+        <text x="500" y="290" fill="#3F2FA0">−3</text><text x="780" y="290" fill="#3F2FA0">3</text>
+        <text x="640" y="200" font-size="28" fill="#5E5A70">x² = 9</text>
+      </g>
+    </svg>
+    <span class="pilula pilula-resposta" data-passo="6" style="position:absolute;left:640px;top:700px">Quatro raízes: −3, −2, 2 e 3</span>
+  </div>
+  <aside class="notas">
+    <p>Biquadrada: x⁴, x² e um número. Como x⁴ é (x²)², chamamos x² de y e resolvemos em y (soma 13, produto 36: 4 e 9).</p>
+    <p>Cliques 4 e 5: de volta para x, cada y positivo dá duas raízes. São quatro raízes.</p>
+  </aside>
+</section>
+
+<!-- 7. Irracional -->
+<section class="slide" data-nome="Equação irracional">
+  <div class="conteudo">
+    <p class="olho">Equações irracionais</p>
+    <h2 class="titulo">\(\sqrt{x + 7} = x - 5\)</h2>
+    <p class="texto" style="position:absolute;left:0;width:560px;top:150px;margin:0;font-size:30px">Incógnita dentro da raiz: isole a raiz e <b>eleve os dois lados ao quadrado</b>.</p>
+    <div class="contas" style="position:absolute;left:640px;top:150px;font-size:46px;row-gap:12px">
+      <div class="eq" data-passo="1"><span>\(\sqrt{x + 7}\)</span><span>\(=\)</span><span>\(x - 5\)</span></div>
+      <div class="eq" data-passo="2"><span>\(x + 7\)</span><span>\(=\)</span><span>\((x - 5)^2\)</span></div>
+      <div class="eq" data-passo="3"><span>\(x + 7\)</span><span>\(=\)</span><span>\(x^2 - 10x + 25\)</span></div>
+      <div class="eq" data-passo="4"><span>\(x^2 - 11x + 18\)</span><span>\(=\)</span><span>\(0\)</span></div>
+    </div>
+    <p class="texto" data-passo="5" style="position:absolute;left:640px;right:0;top:470px;margin:0;font-size:31px">Soma 11 e produto 18: \(x = 9\) ou \(x = 2\). <b>Teste na original:</b></p>
+    <div style="position:absolute;left:640px;right:0;top:540px;display:grid;grid-template-columns:1fr 1fr;gap:30px">
+      <div class="caixa" data-passo="6" style="padding:14px 24px;border-color:#9ED9BB"><div style="font-size:38px">\(x = 9:\ \sqrt{16} = 4\) e \(9 - 5 = 4\)</div><div class="ag-certo" style="font-size:28px">serve ✓</div></div>
+      <div class="caixa" data-passo="7" style="padding:14px 24px;border-color:#F3B6C1"><div style="font-size:38px">\(x = 2:\ \sqrt{9} = 3\) e \(2 - 5 = -3\)</div><div class="ag-erro" style="font-size:28px">não serve ✗</div></div>
+    </div>
+    <span class="pilula pilula-resposta" data-passo="8" style="position:absolute;left:0;top:300px">Resposta: só \(x = 9\)</span>
+  </div>
+  <aside class="notas">
+    <p>Ao elevar ao quadrado, aparecem raízes falsas. Por isso sempre teste na equação original.</p>
+    <p>x = 2 dá 3 de um lado e −3 do outro: não serve.</p>
+  </aside>
+</section>
+
+<!-- 8. Atenção: raízes falsas -->
+<section class="slide" data-nome="Atenção: raízes falsas">
+  <div class="conteudo">
+    <p class="olho">Atenção</p>
+    <h2 class="titulo">Ao quadrado surgem raízes falsas</h2>
+    <div class="caixa caixa-atencao" style="position:absolute;left:0;right:0;top:160px;padding:24px 34px">
+      <div class="texto" style="font-size:36px">Em equação irracional, <b>sempre</b> teste cada raiz na equação original.</div>
+    </div>
+    <div style="position:absolute;left:640px;right:0;top:360px;display:flex;align-items:center;gap:36px;font-size:66px">
+      <span data-passo="1">\(3 = -3\)</span>
+      <span data-passo="2" style="font-size:40px;font-weight:800;color:var(--d-forte)">ao quadrado →</span>
+      <span data-passo="2">\(9 = 9\)</span>
+    </div>
+    <p class="texto" data-passo="3" style="position:absolute;left:640px;right:0;top:500px;margin:0;font-size:32px">Uma igualdade <b>falsa</b> virou <b>verdadeira</b>: o quadrado esconde o sinal.</p>
+  </div>
+  <aside class="notas">
+    <p>É exatamente o que aconteceu com x = 2 no exemplo: 3 = −3 virou 9 = 9.</p>
+  </aside>
+</section>
+
+<!-- 9. O terreno retangular -->
+<section class="slide" data-nome="Terreno retangular">
+  <div class="conteudo">
+    <p class="olho">Problemas com equações do 2º grau</p>
+    <h2 class="titulo">O terreno retangular</h2>
+    <div data-anima="alg-terreno" data-anima-passo="1" data-w="800" data-h="470" style="position:absolute;left:0;top:130px;width:800px;height:470px"></div>
+    <div style="position:absolute;left:1000px;right:0;top:160px">
+      <p class="texto" style="margin:0;font-size:31px">Área de <b>40 m²</b>; o comprimento tem <b>3 m a mais</b> que a largura. Medidas?</p>
+      <div class="caixa" data-passo="2" style="margin-top:24px;padding:16px 26px">
+        <div class="texto" style="font-size:30px">largura \(x\) · comprimento \(x + 3\)</div>
+        <div style="font-size:48px;margin-top:6px">\(x(x + 3) = 40\)</div>
+      </div>
+    </div>
+  </div>
+  <aside class="notas">
+    <p>Clique 1: o terreno cresce, largura 1, 2, 3, 4, 5. A área bate com 40 m² em x = 5 (5 por 8). Testar valores funciona aqui, mas a equação resolve qualquer caso.</p>
+    <p>Clique 2: a tradução. A conta vem no próximo slide.</p>
+  </aside>
+</section>
+
+<!-- 10. Terreno: a conta -->
+<section class="slide" data-nome="Terreno: a conta">
+  <div class="conteudo">
+    <p class="olho">Exemplo</p>
+    <h2 class="titulo">\(x(x + 3) = 40\)</h2>
+    <div class="contas" style="position:absolute;left:0;top:150px;font-size:44px;row-gap:12px">
+      <div class="eq" data-passo="1"><span>\(x^2 + 3x - 40\)</span><span>\(=\)</span><span>\(0\)</span></div>
+      <div class="eq" data-passo="2"><span>\(\Delta\)</span><span>\(=\)</span><span>\(3^2 - 4 \cdot 1 \cdot (-40)\)</span></div>
+      <div class="eq" data-passo="3"><span>\(\Delta\)</span><span>\(=\)</span><span>\(9 + 160\)</span></div>
+      <div class="eq final" data-passo="4"><span>\(\Delta\)</span><span>\(=\)</span><span>\(169\)</span></div>
+    </div>
+    <div style="position:absolute;left:840px;right:0;top:150px;display:grid;grid-template-columns:1fr 1fr;gap:30px">
+      <div class="contas" style="font-size:44px;row-gap:12px">
+        <div class="eq" data-passo="5"><span>\(x_1\)</span><span>\(=\)</span><span>\(\dfrac{-3 + 13}{2}\)</span></div>
+        <div class="eq final" data-passo="6"><span>\(x_1\)</span><span>\(=\)</span><span>\(5\)</span></div>
+      </div>
+      <div class="contas" style="font-size:44px;row-gap:12px">
+        <div class="eq" data-passo="5"><span>\(x_2\)</span><span>\(=\)</span><span>\(\dfrac{-3 - 13}{2}\)</span></div>
+        <div class="eq" data-passo="6"><span>\(x_2\)</span><span>\(=\)</span><span>\(-8\) <span class="ag-erro" style="font-size:30px">✗</span></span></div>
+      </div>
+    </div>
+    <div class="caixa caixa-fundamental" data-passo="7" style="position:absolute;left:840px;right:0;top:470px;padding:20px 30px">
+      <div class="texto" style="font-size:31px">−8 não serve: medida negativa. O terreno tem <b>5 m por 8 m</b>.</div>
+    </div>
+  </div>
+  <aside class="notas">
+    <p>√169 = 13. Num problema, a equação costuma dar duas raízes, mas nem sempre as duas servem.</p>
+  </aside>
+</section>
+
+<!-- 11. Atenção: às vezes as duas servem -->
+<section class="slide" data-nome="Atenção: as duas servem">
+  <div class="conteudo">
+    <p class="olho">Atenção</p>
+    <h2 class="titulo">Às vezes as duas servem</h2>
+    <p class="texto" style="position:absolute;left:0;right:0;top:150px;margin:0;font-size:34px">"O quadrado de um número menos o seu dobro é 15."</p>
+    <div class="contas" style="position:absolute;left:640px;top:250px;font-size:50px;row-gap:14px">
+      <div class="eq" data-passo="1"><span>\(x^2 - 2x\)</span><span>\(=\)</span><span>\(15\)</span></div>
+      <div class="eq" data-passo="2"><span>\(x^2 - 2x - 15\)</span><span>\(=\)</span><span>\(0\)</span></div>
+      <div class="eq final" data-passo="3"><span>\(x\)</span><span>\(=\)</span><span>\(5\ \text{ ou }\ x = -3\)</span></div>
+    </div>
+    <div class="caixa caixa-atencao" data-passo="4" style="position:absolute;left:640px;right:0;top:540px;padding:20px 30px">
+      <div class="texto" style="font-size:31px">Aqui o número pode ser negativo: <b>as duas</b> são respostas. Descarte uma raiz só quando o problema proibir.</div>
+    </div>
+  </div>
+  <aside class="notas">
+    <p>Soma 2 e produto −15: 5 e −3. Confira: 25 − 10 = 15 e 9 + 6 = 15.</p>
+  </aside>
+</section>
+
+<!-- 12. Questão 1 -->
+<section class="slide questao" data-nome="Questão 1">
+  <div class="conteudo">
+    <div class="area-resolucao"></div>
+    <span class="pilula pilula-pausa" data-em="1:some">Pause o vídeo e tente</span>
+    <div class="painel-questao">
+      <p class="olho">Questão 1 · IF Sudeste MG 2013</p>
+      <p class="enunciado" style="font-size:34px">A equação \(ax^2 + 5x - 4 = 0\) tem uma raiz cujo valor é 1. A outra raiz é:</p>
+      <ol class="alternativas curtas">
+        <li data-em="2:apaga"><b>A</b><span>1</span></li>
+        <li data-em="2:apaga"><b>B</b><span>2</span></li>
+        <li data-em="2:apaga"><b>C</b><span>3</span></li>
+        <li data-em="2:certo"><b>D</b><span>4</span></li>
+        <li data-em="2:apaga"><b>E</b><span>5</span></li>
+      </ol>
+      <p class="fonte">IF Sudeste MG 2013 · questão 17</p>
+    </div>
+  </div>
+  <aside class="resolucao">
+    <p class="dados"><b>Dados:</b> \(ax^2 + 5x - 4 = 0\); \(x_1 = 1\).</p>
+    <ol class="passos">
+      <li>1 é raiz: \(a \cdot 1^2 + 5 \cdot 1 - 4 = 0\)</li>
+      <li>\(a + 1 = 0 \Rightarrow a = -1\)</li>
+      <li>Produto: \(1 \cdot x_2 = \dfrac{c}{a} = \dfrac{-4}{-1} = 4\)</li>
+      <li>Confira pela soma: \(1 + 4 = -\dfrac{5}{-1} = 5\) ✓</li>
+    </ol>
+    <p class="resposta"><b>Resposta:</b> a outra raiz é 4. <b>Gabarito D.</b></p>
+    <p class="atencao"><b>Destaque no quadro:</b> Raiz é número que torna a equação verdadeira: use isso para achar \(a\).</p>
+    <ul class="erros">
+      <li><b>A</b> 1 é a raiz dada.</li>
+      <li><b>B</b> −2² + 5 · 2 − 4 = 2, não zero.</li>
+      <li><b>C</b> −3² + 5 · 3 − 4 = 2, não zero.</li>
+      <li><b>E</b> 5 é a soma das raízes.</li>
+    </ul>
+  </aside>
+  <aside class="notas">
+    <p>Clique 1 tira o aviso de pausa: resolva na área (D liga a caneta; E esconde o enunciado). Clique 2: gabarito D.</p>
+    <p>Questão oficial do IF Sudeste MG 2013-1, q17, MAT-0368. Não aparece na lista curta de sobras (que termina em "…"), mas é oficial do subcapítulo e não está reservada para o bloco.</p>
+  </aside>
+</section>
+
+<!-- 13. Questão 2 -->
+<section class="slide questao" data-nome="Questão 2">
+  <div class="conteudo">
+    <div class="area-resolucao"></div>
+    <span class="pilula pilula-pausa" data-em="1:some">Pause o vídeo e tente</span>
+    <div class="painel-questao">
+      <p class="olho">Questão 2 · IF Sudeste MG 2014</p>
+      <p class="enunciado" style="font-size:34px">Indique a soma das raízes da equação \(x^4 - 11x^2 + 18 = 0\).</p>
+      <ol class="alternativas curtas">
+        <li data-em="2:certo"><b>A</b><span>0</span></li>
+        <li data-em="2:apaga"><b>B</b><span>3</span></li>
+        <li data-em="2:apaga"><b>C</b><span>6</span></li>
+        <li data-em="2:apaga"><b>D</b><span>11</span></li>
+        <li data-em="2:apaga"><b>E</b><span>18</span></li>
+      </ol>
+      <p class="fonte">IF Sudeste MG 2014 · questão 24</p>
+    </div>
+  </div>
+  <aside class="resolucao">
+    <p class="dados"><b>Dados:</b> biquadrada; \(y = x^2\).</p>
+    <ol class="passos">
+      <li>\(y^2 - 11y + 18 = 0\)</li>
+      <li>Soma 11 e produto 18: \(y = 9\) ou \(y = 2\)</li>
+      <li>\(x^2 = 9 \Rightarrow x = \pm 3\)</li>
+      <li>\(x^2 = 2 \Rightarrow x = \pm\sqrt{2}\)</li>
+      <li>\(S = 3 + (-3) + \sqrt{2} + (-\sqrt{2}) = 0\)</li>
+    </ol>
+    <p class="resposta"><b>Resposta:</b> 0. <b>Gabarito A.</b></p>
+    <p class="atencao"><b>Destaque no quadro:</b> As raízes da biquadrada vêm aos pares opostos: a soma é sempre 0.</p>
+    <ul class="erros">
+      <li><b>B</b> Só a raiz positiva de x² = 9.</li>
+      <li><b>C</b> 3 + 3: troca −3 por 3 e esquece ±√2.</li>
+      <li><b>D</b> Soma das raízes em y: esquece de voltar para x.</li>
+      <li><b>E</b> Produto das raízes em y.</li>
+    </ul>
+  </aside>
+  <aside class="notas">
+    <p>Clique 1 tira o aviso de pausa: resolva na área (D liga a caneta; E esconde o enunciado). Clique 2: gabarito A.</p>
+    <p>Questão oficial do IF Sudeste MG 2014-1, q24, MAT-0352. Não aparece na lista curta de sobras (que termina em "…"), mas é oficial do subcapítulo e não está reservada para o bloco. A resolução do banco usa Bhaskara em y (Δ = 49); aqui, soma e produto (mesmo resultado).</p>
+  </aside>
+</section>
+
+<!-- 14. Questão 3 -->
+<section class="slide questao" data-nome="Questão 3">
+  <div class="conteudo">
+    <div class="area-resolucao"></div>
+    <span class="pilula pilula-pausa" data-em="1:some">Pause o vídeo e tente</span>
+    <div class="painel-questao">
+      <p class="olho">Questão 3 · IF Sudeste MG 2015</p>
+      <p class="enunciado" style="font-size:31px">Uma quadro de pintura tem uma tela de 12 cm de largura por 20 cm de comprimento e uma moldura com certa largura. A área total do quadro é \(468\ \text{cm}^2\), então a largura da moldura é:</p>
+      <svg viewBox="0 0 300 200" width="300" height="200" class="figura" style="display:block;margin:0 auto;overflow:visible;font-family:Figtree,'Segoe UI',sans-serif" aria-hidden="true">
+        <rect x="40" y="10" width="220" height="170" rx="6" fill="#D9CBB0" stroke="#8A6A00" stroke-width="3"/>
+        <rect x="70" y="40" width="160" height="110" fill="#fff" stroke="#8A6A00" stroke-width="2"/>
+        <text x="150" y="102" text-anchor="middle" font-size="20" font-weight="700" fill="#5E5A70">tela 12 × 20</text>
+        <text x="55" y="100" text-anchor="middle" font-size="18" font-weight="800" fill="#3F2FA0">m</text><text x="245" y="100" text-anchor="middle" font-size="18" font-weight="800" fill="#3F2FA0">m</text>
+      </svg>
+      <ol class="alternativas curtas">
+        <li data-em="2:apaga"><b>A</b><span>2 cm</span></li>
+        <li data-em="2:certo"><b>B</b><span>3 cm</span></li>
+        <li data-em="2:apaga"><b>C</b><span>5 cm</span></li>
+        <li data-em="2:apaga"><b>D</b><span>6 cm</span></li>
+        <li data-em="2:apaga"><b>E</b><span>7 cm</span></li>
+      </ol>
+      <p class="fonte">IF Sudeste MG 2015 (segunda prova) · questão 23</p>
+    </div>
+  </div>
+  <aside class="resolucao">
+    <p class="dados"><b>Dados:</b> tela 12 cm × 20 cm; moldura de largura \(m\) dos dois lados; área total 468 cm².</p>
+    <ol class="passos">
+      <li>\((12 + 2m)(20 + 2m) = 468\)</li>
+      <li>\(4m^2 + 64m + 240 = 468\)</li>
+      <li>\(4m^2 + 64m - 228 = 0\) ÷ 4: \(m^2 + 16m - 57 = 0\)</li>
+      <li>\(\Delta = 256 + 228 = 484\); \(\sqrt{484} = 22\)</li>
+      <li>\(m = \dfrac{-16 \pm 22}{2}\): \(3\) ou \(-19\)</li>
+    </ol>
+    <p class="resposta"><b>Resposta:</b> 3 cm (−19 não serve). <b>Gabarito B.</b></p>
+    <p class="atencao"><b>Destaque no quadro:</b> A moldura entra duas vezes em cada medida. Confira: 18 · 26 = 468.</p>
+    <ul class="erros">
+      <li><b>A</b> 16 · 24 = 384 cm².</li>
+      <li><b>C</b> 22 · 30 = 660 cm².</li>
+      <li><b>D</b> Põe a moldura de um lado só: (12 + m)(20 + m) = 468.</li>
+      <li><b>E</b> 26 · 34 = 884 cm².</li>
+    </ul>
+  </aside>
+  <aside class="notas">
+    <p>Clique 1 tira o aviso de pausa: resolva na área (D liga a caneta; E esconde o enunciado). Clique 2: gabarito B.</p>
+    <p>Questão oficial do IF Sudeste MG 2015-2, q23, MAT-0318. Não aparece na lista curta de sobras (que termina em "…"), mas é oficial do subcapítulo e não está reservada para o bloco. "Uma quadro" está assim na prova. A prova não tem figura: o desenho da moldura é do Quarks.</p>
+  </aside>
+</section>
+
+<!-- 15. Resumo -->
+<section class="slide" data-nome="Resumo">
+  <div class="conteudo">
+    <p class="olho">Resumo de Equações do 2º grau</p>
+    <h2 class="titulo">O essencial</h2>
+    <div class="resumo" style="position:absolute;left:0;right:0;top:150px">
+      <div>\(ax^2 + bx + c = 0\) com \(a \ne 0\); incompletas por raiz (sem \(b\)) ou por fator comum (sem \(c\)).</div>
+      <div><b>Bhaskara:</b> \(\Delta = b^2 - 4ac\) e \(x = \dfrac{-b \pm \sqrt{\Delta}}{2a}\).</div>
+      <div>\(\Delta &gt; 0\): duas raízes; \(\Delta = 0\): uma; \(\Delta &lt; 0\): nenhuma real.</div>
+      <div>\(S = -\dfrac{b}{a}\) e \(P = \dfrac{c}{a}\).</div>
+      <div><b>Problemas:</b> descarte raízes sem sentido. <b>Biquadradas:</b> troque \(x^2\) por \(y\). <b>Irracionais:</b> teste na original.</div>
+    </div>
+  </div>
+  <aside class="notas">
+    <p>Resumo do subcapítulo inteiro (as duas partes). Peça para tirarem um print.</p>
+  </aside>
+</section>
+
+<!-- 16. A seguir -->
+<section class="slide capa" data-nome="A seguir">
+  <div class="estrelas"></div>
+  <div class="texto-capa" style="top:170px">
+    <span class="selo">Matemática · IF</span>
+    <p class="aula" style="font-size:26px">A seguir · Álgebra · Questões do IF Sudeste</p>
+    <h1>Questões do IF Sudeste</h1>
+    <p class="sub">O capítulo Álgebra nas provas oficiais</p>
+  </div>
+  <svg class="emblema" viewBox="0 0 640 640" aria-hidden="true">
+    <rect x="150" y="110" width="340" height="430" rx="34" fill="#fff" fill-opacity=".12" stroke="#fff" stroke-opacity=".6" stroke-width="4"/>
+    <g fill="#fff" fill-opacity=".7"><rect x="200" y="170" width="240" height="18" rx="9"/><rect x="200" y="210" width="200" height="18" rx="9"/><rect x="200" y="250" width="220" height="18" rx="9"/></g>
+    <g fill="none" stroke="#fff" stroke-opacity=".75" stroke-width="4"><circle cx="216" cy="330" r="16"/><circle cx="216" cy="390" r="16"/><circle cx="216" cy="450" r="16"/></g>
+    <circle cx="216" cy="390" r="16" fill="#FFD10C"/>
+    <g fill="#fff" fill-opacity=".55"><rect x="250" y="321" width="150" height="16" rx="8"/><rect x="250" y="381" width="170" height="16" rx="8"/><rect x="250" y="441" width="130" height="16" rx="8"/></g>
+    <circle cx="470" cy="130" r="54" fill="#FFD10C"/>
+    <path d="M446 132 L464 150 L496 112" fill="none" stroke="#292B2C" stroke-width="10" stroke-linecap="round" stroke-linejoin="round"/>
+  </svg>
+  <img class="logo-capa" src="{{LOGO_BRANCO}}" alt="Quarks">
+  <aside class="notas"><p>Fim do conteúdo de Álgebra. A seguir, o bloco Questões do IF Sudeste do capítulo: oito questões oficiais, duas de cada subcapítulo (Polinômios, Equações do 1º grau, Sistemas do 1º grau, Equações do 2º grau).</p></aside>
+</section>

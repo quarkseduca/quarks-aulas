@@ -1,0 +1,408 @@
+<!--aula
+{"disciplina": "matematica", "curso": "IF", "assunto": "Álgebra", "parte": "Questões do IF Sudeste", "titulo": "Questões do IF Sudeste"}
+-->
+<!-- Fonte: questões oficiais do IF Sudeste MG do capítulo Álgebra (apostilas/questoes/oficiais/if no cérebro), exatamente as reservadas em planejamento/questoes-if.md e no campo "questoes" do cronograma: 2026-1 q22 (MAT-0554), 2024-1 q23 (MAT-0307), 2025-1 q15 (MAT-0536), 2019-2 q17 (MAT-0516), 2026-1 q16 (MAT-0548), 2024-1 q16 (MAT-0300), 2020-1 q22 (MAT-0532), 2019-2 q15 (MAT-0514). Nenhuma delas aparece nas partes do capítulo. -->
+<style>
+  .caixa { box-sizing: border-box; }
+  .ag-errata { font-size: 19px; line-height: 1.35; background: #FFF8D6; border: 2px solid #F5DD6B; border-radius: 16px; padding: 8px 14px; color: #5E4A00; }
+  .alternativas.ag-duas { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; }
+  .painel-questao .alternativas.ag-duas li { grid-template-columns: 32px 1fr; column-gap: 6px; padding: 4px 8px; font-size: 18px; min-width: 0; }
+  .painel-questao .alternativas.ag-duas li > b { width: 32px; height: 32px; font-size: 18px; }
+  .painel-questao > .olho { font-size: 23px; letter-spacing: .1em; }
+  .ag-texto-apoio { font-size: 18.5px; line-height: 1.33; background: var(--branco); border: 2px solid var(--lilas-2); border-radius: 16px; padding: 8px 14px; }
+  .ag-texto-apoio b { color: var(--roxo-titulo); }
+</style>
+
+<!-- Capa -->
+<section class="slide capa" data-nome="Capa">
+  <div class="estrelas"></div>
+  <div class="texto-capa" style="top:150px">
+    <span class="selo">Matemática · IF</span>
+    <p class="aula">Álgebra</p>
+    <h1>Questões do IF Sudeste</h1>
+    <p class="sub">Provas oficiais, uma por tela</p>
+  </div>
+  <svg class="emblema" viewBox="0 0 640 640" aria-hidden="true">
+    <rect x="150" y="110" width="340" height="430" rx="34" fill="#fff" fill-opacity=".12" stroke="#fff" stroke-opacity=".6" stroke-width="4"/>
+    <g fill="#fff" fill-opacity=".7"><rect x="200" y="170" width="240" height="18" rx="9"/><rect x="200" y="210" width="200" height="18" rx="9"/><rect x="200" y="250" width="220" height="18" rx="9"/></g>
+    <g fill="none" stroke="#fff" stroke-opacity=".75" stroke-width="4"><circle cx="216" cy="330" r="16"/><circle cx="216" cy="390" r="16"/><circle cx="216" cy="450" r="16"/></g>
+    <circle cx="216" cy="390" r="16" fill="#FFD10C"/>
+    <g fill="#fff" fill-opacity=".55"><rect x="250" y="321" width="150" height="16" rx="8"/><rect x="250" y="381" width="170" height="16" rx="8"/><rect x="250" y="441" width="130" height="16" rx="8"/></g>
+    <circle cx="470" cy="130" r="54" fill="#FFD10C"/>
+    <path d="M446 132 L464 150 L496 112" fill="none" stroke="#292B2C" stroke-width="10" stroke-linecap="round" stroke-linejoin="round"/>
+  </svg>
+  <img class="logo-capa" src="{{LOGO_BRANCO}}" alt="Quarks">
+  <aside class="notas"><p>Fechamento de Álgebra: oito questões que caíram no IF Sudeste MG, duas de cada subcapítulo, na ordem Polinômios, Equações do 1º grau, Sistemas do 1º grau e Equações do 2º grau. Em cada uma, pause, tente e depois confira a resolução.</p></aside>
+</section>
+
+<!-- IF 2026 · fração algébrica -->
+<section class="slide questao" data-nome="IF 2026 · fração algébrica">
+  <div class="conteudo">
+    <div class="area-resolucao"></div>
+    <span class="pilula pilula-pausa" data-em="1:some">Pause o vídeo e tente</span>
+    <div class="painel-questao" style="gap:12px">
+      <p class="olho">IF Sudeste MG 2026 · Questão 22</p>
+      <p class="enunciado" style="font-size:28px">Para \(x \neq -\frac{1}{2}\) e \(x \neq y\), a expressão \(\dfrac{x^2 - 2xy + x^2}{2x^2 + x - 2xy - y}\) é igual a:</p>
+      <p class="ag-errata"><b>Atenção:</b> assim saiu na prova. Pelas alternativas, o numerador pretendido é \(x^2 - 2xy + y^2\).</p>
+      <ol class="alternativas" style="gap:8px">
+        <li data-em="2:certo"><b>A</b><span>\(\dfrac{x - y}{2x + 1}\)</span></li>
+        <li data-em="2:apaga"><b>B</b><span>\(\dfrac{1 - y}{x}\)</span></li>
+        <li data-em="2:apaga"><b>C</b><span>\(\dfrac{x^2 - y^2}{(x - y)(2x + 1)}\)</span></li>
+        <li data-em="2:apaga"><b>D</b><span>\(\dfrac{x}{y}\)</span></li>
+        <li data-em="2:apaga"><b>E</b><span>\(\dfrac{(x + y)^2}{(x - y)(2x + 1)}\)</span></li>
+      </ol>
+      <p class="fonte">IF Sudeste MG 2026 · questão 22</p>
+    </div>
+  </div>
+  <aside class="resolucao">
+    <p class="dados"><b>Dados:</b> numerador \(x^2 - 2xy + y^2\) (o pretendido); \(x \ne -\frac{1}{2}\), \(x \ne y\).</p>
+    <ol class="passos">
+      <li>Em cima: \(x^2 - 2xy + y^2 = (x - y)^2\)</li>
+      <li>Embaixo, agrupando: \(x(2x + 1) - y(2x + 1)\)</li>
+      <li>\(= (2x + 1)(x - y)\)</li>
+      <li>\(\dfrac{(x - y)^2}{(x - y)(2x + 1)} = \dfrac{x - y}{2x + 1}\)</li>
+    </ol>
+    <p class="resposta"><b>Resposta:</b> \(\dfrac{x - y}{2x + 1}\). <b>Gabarito A.</b></p>
+    <p class="atencao"><b>Destaque no quadro:</b> Fatore em cima e embaixo; corte só o fator \((x - y)\).</p>
+    <ul class="erros">
+      <li><b>B</b> Corta parcelas soltas, não fatores.</li>
+      <li><b>C</b> Troca (x − y)² por x² − y², e nem simplifica.</li>
+      <li><b>D</b> Corta termos de somas (x² com x², 2xy com 2xy).</li>
+      <li><b>E</b> Troca (x − y)² por (x + y)².</li>
+    </ul>
+  </aside>
+  <aside class="notas">
+    <p>Clique 1 tira o aviso de pausa: resolva na área (D liga a caneta; E esconde o enunciado). Clique 2: gabarito A.</p>
+    <p>Questão oficial do IF Sudeste MG 2026-1, q22, MAT-0554 (reservada para este bloco). Erro de impressão na prova: o numerador saiu x² − 2xy + x²; ao pé da letra a fração daria 2x/(2x + 1), que não está nas alternativas. No banco: etiqueta "gabarito do Quarks"; a conta com y² confere A.</p>
+  </aside>
+</section>
+
+<!-- IF 2024 · fração com produtos notáveis -->
+<section class="slide questao" data-nome="IF 2024 · produtos notáveis">
+  <div class="conteudo">
+    <div class="area-resolucao"></div>
+    <span class="pilula pilula-pausa" data-em="1:some">Pause o vídeo e tente</span>
+    <div class="painel-questao">
+      <p class="olho">IF Sudeste MG 2024 · Questão 23</p>
+      <p class="enunciado" style="font-size:28px">A expressão \(\dfrac{(a - b)^2 - (a + b)^2}{(a - b)(a + b) + (a + b)^2}\), onde \(a \neq 0\) e \(a \neq -b\), é igual a:</p>
+      <ol class="alternativas" style="gap:8px">
+        <li data-em="2:certo"><b>A</b><span>\(\dfrac{-2b}{a + b}\)</span></li>
+        <li data-em="2:apaga"><b>B</b><span>\(\dfrac{a - b}{a + b}\)</span></li>
+        <li data-em="2:apaga"><b>C</b><span>\(\dfrac{a - b - 1}{a + b + 1}\)</span></li>
+        <li data-em="2:apaga"><b>D</b><span>1</span></li>
+        <li data-em="2:apaga"><b>E</b><span>2</span></li>
+      </ol>
+      <p class="fonte">IF Sudeste MG 2024 · questão 23</p>
+    </div>
+  </div>
+  <aside class="resolucao">
+    <p class="dados"><b>Dados:</b> \(a \ne 0\) e \(a \ne -b\) (denominador não zera).</p>
+    <ol class="passos">
+      <li>Em cima: \((a^2 - 2ab + b^2) - (a^2 + 2ab + b^2) = -4ab\)</li>
+      <li>Embaixo, fator comum \((a + b)\): \((a + b)[(a - b) + (a + b)]\)</li>
+      <li>\(= (a + b) \cdot 2a\)</li>
+      <li>\(\dfrac{-4ab}{2a(a + b)} = \dfrac{-2b}{a + b}\)</li>
+    </ol>
+    <p class="resposta"><b>Resposta:</b> \(\dfrac{-2b}{a + b}\). <b>Gabarito A.</b></p>
+    <p class="atencao"><b>Destaque no quadro:</b> Pode cortar \(2a\) porque \(a \ne 0\).</p>
+    <ul class="erros">
+      <li><b>B</b> Corta (a − b) e (a + b) como se fossem fatores; em cima eles estão subtraídos.</li>
+      <li><b>C</b> Corta parcelas em vez de fatores.</li>
+      <li><b>D</b> Supõe numerador igual ao denominador.</li>
+      <li><b>E</b> Com a = b = 1 a expressão vale −1, não 2.</li>
+    </ul>
+  </aside>
+  <aside class="notas">
+    <p>Clique 1 tira o aviso de pausa: resolva na área (D liga a caneta; E esconde o enunciado). Clique 2: gabarito A.</p>
+    <p>Questão oficial do IF Sudeste MG 2024-1, q23, MAT-0307 (reservada para este bloco). O numerador é o mesmo da questão 1 da parte 1 de Polinômios: dá −4ab.</p>
+  </aside>
+</section>
+
+<!-- IF 2025 · questionário -->
+<section class="slide questao" data-nome="IF 2025 · questionário">
+  <div class="conteudo">
+    <div class="area-resolucao"></div>
+    <span class="pilula pilula-pausa" data-em="1:some">Pause o vídeo e tente</span>
+    <div class="painel-questao">
+      <p class="olho">IF Sudeste MG 2025 · Questão 15</p>
+      <p class="enunciado" style="font-size:28px">Um questionário sobre a preferência entre três marcas de um produto foi aplicado às pessoas em um supermercado. Do total de pessoas que responderam ao questionário, \(\frac{2}{5}\) preferem o produto A, \(\frac{2}{7}\) preferem o B, \(\frac{1}{6}\) preferem o C, e 93 não gostam de nenhum dos três. Qual foi a quantidade de pessoas que responderam ao questionário?</p>
+      <ol class="alternativas curtas">
+        <li data-em="2:apaga"><b>A</b><span>315</span></li>
+        <li data-em="2:apaga"><b>B</b><span>414</span></li>
+        <li data-em="2:apaga"><b>C</b><span>444</span></li>
+        <li data-em="2:apaga"><b>D</b><span>537</span></li>
+        <li data-em="2:certo"><b>E</b><span>630</span></li>
+      </ol>
+      <p class="fonte">IF Sudeste MG 2025 · questão 15</p>
+    </div>
+  </div>
+  <aside class="resolucao">
+    <p class="dados"><b>Dados:</b> total \(x\); A: \(\frac{2}{5}x\); B: \(\frac{2}{7}x\); C: \(\frac{1}{6}x\); nenhum: 93.</p>
+    <ol class="passos">
+      <li>\(\dfrac{2}{5}x + \dfrac{2}{7}x + \dfrac{1}{6}x + 93 = x\)</li>
+      <li>MMC(5, 7, 6) = 210; × 210: \(84x + 60x + 35x + 19530 = 210x\)</li>
+      <li>\(179x + 19530 = 210x\)</li>
+      <li>\(31x = 19530 \Rightarrow x = 630\)</li>
+      <li>Confira: \(252 + 180 + 105 + 93 = 630\)</li>
+    </ol>
+    <p class="resposta"><b>Resposta:</b> 630 pessoas. <b>Gabarito E.</b></p>
+    <p class="atencao"><b>Destaque no quadro:</b> As 93 pessoas são a fração que sobra: \(\frac{31}{210}\) do total.</p>
+    <ul class="erros">
+      <li><b>A</b> 315 é a metade; 1/6 de 315 não é inteiro.</li>
+      <li><b>B</b> 414 não é múltiplo de 5 nem de 7.</li>
+      <li><b>C</b> 444 não é múltiplo de 5 nem de 7.</li>
+      <li><b>D</b> 537 = 630 − 93: só quem prefere alguma marca.</li>
+    </ul>
+  </aside>
+  <aside class="notas">
+    <p>Clique 1 tira o aviso de pausa: resolva na área (D liga a caneta; E esconde o enunciado). Clique 2: gabarito E.</p>
+    <p>Questão oficial do IF Sudeste MG 2025-1, q15, MAT-0536 (reservada para este bloco). Equação fracionária com MMC 210; 93 · 210 = 19530 e 19530 ÷ 31 = 630. No banco: etiqueta "gabarito do Quarks"; a conta confere E.</p>
+  </aside>
+</section>
+
+<!-- IF 2019 · enigma -->
+<section class="slide questao" data-nome="IF 2019 · enigma das figuras">
+  <div class="conteudo">
+    <div class="area-resolucao"></div>
+    <span class="pilula pilula-pausa" data-em="1:some">Pause o vídeo e tente</span>
+    <div class="painel-questao">
+      <p class="olho">IF Sudeste MG 2019 · Questão 17</p>
+      <p class="enunciado" style="font-size:27px">Letícia compartilhou em sua rede social o seguinte enigma matemático:</p>
+      <svg viewBox="0 0 400 260" width="400" height="260" class="figura" style="display:block;margin:0 auto;overflow:visible;font-family:'Times New Roman',serif" aria-hidden="true">
+        <g fill="#C9C9C9" stroke="#292B2C" stroke-width="2.5">
+          <circle cx="40" cy="30" r="20"/><rect x="104" y="12" width="36" height="36" rx="3"/><path d="M196 48 L216 12 L236 48 Z" stroke-linejoin="round"/>
+          <rect x="106" y="80" width="36" height="36" rx="3"/><circle cx="208" cy="98" r="20"/>
+          <circle cx="40" cy="166" r="20"/><circle cx="124" cy="166" r="20"/><circle cx="208" cy="166" r="20"/>
+          <circle cx="40" cy="232" r="20"/><rect x="104" y="214" width="36" height="36" rx="3"/><path d="M196 250 L216 214 L236 250 Z" stroke-linejoin="round"/>
+        </g>
+        <g font-size="34" fill="#292B2C">
+          <text x="70" y="42">+</text><text x="154" y="42">×</text><text x="262" y="42">= 45</text>
+          <text x="20" y="110">15 −</text><text x="158" y="110">=</text>
+          <text x="70" y="178">+</text><text x="154" y="178">+</text><text x="262" y="178">= 30</text>
+          <text x="70" y="244">×</text><text x="154" y="244">−</text><text x="262" y="244">= <tspan font-style="italic">m</tspan></text>
+        </g>
+      </svg>
+      <p class="enunciado" style="font-size:27px">Vários de seus amigos tentaram resolvê-lo, apontando diferentes resultados para \(m\). Qual é o valor correto de \(m\)?</p>
+      <ol class="alternativas curtas">
+        <li data-em="2:apaga"><b>A</b><span>60</span></li>
+        <li data-em="2:apaga"><b>B</b><span>47</span></li>
+        <li data-em="2:certo"><b>C</b><span>43</span></li>
+        <li data-em="2:apaga"><b>D</b><span>29</span></li>
+        <li data-em="2:apaga"><b>E</b><span>20</span></li>
+      </ol>
+      <p class="fonte">IF Sudeste MG 2019 (segunda prova) · questão 17</p>
+    </div>
+  </div>
+  <aside class="resolucao">
+    <p class="dados"><b>Dados:</b> círculo \(c\), quadrado \(q\), triângulo \(t\); a multiplicação vem antes da soma.</p>
+    <ol class="passos">
+      <li>3ª linha: \(3c = 30 \Rightarrow c = 10\)</li>
+      <li>2ª linha: \(15 - q = 10 \Rightarrow q = 5\)</li>
+      <li>1ª linha: \(10 + 5t = 45 \Rightarrow t = 7\)</li>
+      <li>Última: \(m = 10 \cdot 5 - 7 = 43\)</li>
+    </ol>
+    <p class="resposta"><b>Resposta:</b> \(m = 43\). <b>Gabarito C.</b></p>
+    <p class="atencao"><b>Destaque no quadro:</b> Comece pela linha com uma figura só, e respeite a ordem das operações.</p>
+    <ul class="erros">
+      <li><b>A</b> Não respeita a ordem das operações.</li>
+      <li><b>B</b> Soma antes de multiplicar na 1ª linha: (10 + 5)t = 45 dá t = 3.</li>
+      <li><b>D</b> Erra o valor de uma figura no caminho.</li>
+      <li><b>E</b> Erra a ordem na última linha.</li>
+    </ul>
+  </aside>
+  <aside class="notas">
+    <p>Clique 1 tira o aviso de pausa: resolva na área (D liga a caneta; E esconde o enunciado). Clique 2: gabarito C.</p>
+    <p>Questão oficial do IF Sudeste MG 2019-2, q17, MAT-0516 (reservada para este bloco). O enigma foi redesenhado igual ao da prova (figuras cinza). No banco: etiqueta "gabarito do Quarks"; a conta confere C.</p>
+  </aside>
+</section>
+
+<!-- IF 2026 · traje espacial -->
+<section class="slide questao" data-nome="IF 2026 · traje espacial">
+  <div class="conteudo">
+    <div class="area-resolucao"></div>
+    <span class="pilula pilula-pausa" data-em="1:some">Pause o vídeo e tente</span>
+    <div class="painel-questao" style="gap:8px">
+      <p class="olho">IF Sudeste MG 2026 · Questão 16</p>
+      <div class="ag-texto-apoio">
+        <p style="margin:0 0 4px"><b>TEXTO I · Especificações do traje espacial “Feitian”</b></p>
+        <p style="margin:0 0 4px">O traje Feitian, na sua segunda geração, foi projetado para resistir a até três anos de armazenamento em órbita e 15 saídas espaciais nesse período. Ele é considerado o principal recurso de proteção à vida dos astronautas e de suporte às operações fora da estação.</p>
+        <p style="margin:0 0 4px">No início de 2024, os trajes estavam próximos do limite de uso previsto. Para avaliar a vida útil restante, as equipes científicas elaboraram planos de monitoramento, métodos de verificação em órbita e testes em solo, confirmando que o traje pode ser utilizado com segurança por mais tempo.</p>
+        <p style="margin:0;font-size:14px;color:var(--cinza)">Disponível em: exame.com (China testa limite de uso de trajes espaciais após 20 atividades extraveiculares). Acesso em: 26 set. 2025.</p>
+      </div>
+      <p class="enunciado" style="font-size:20.5px;line-height:1.36">Dois astronautas dividiram o mesmo traje durante uma viagem espacial. O astronauta \(A\) ficava em expedição extraveicular sempre por 5 horas, e o astronauta \(B\) utilizava 6 horas e 20 minutos para realizar seu trabalho fora da nave. O traje foi usado por 5220 minutos no total das 15 saídas que os dois realizaram. Qual sistema pode ser usado para determinar o número de expedições de cada astronauta?</p>
+      <ol class="alternativas ag-duas">
+        <li data-em="2:certo"><b>A</b><span>\(\begin{cases} a + b = 15 \\ 300a + 380b = 5220 \end{cases}\)</span></li>
+        <li data-em="2:apaga"><b>B</b><span>\(\begin{cases} 5a + 6{,}2b = 15 \\ 300a + 380b = 5220 \end{cases}\)</span></li>
+        <li data-em="2:apaga"><b>C</b><span>\(\begin{cases} a + b = 15 \\ 5a + 6{,}2b = 5220 \end{cases}\)</span></li>
+        <li data-em="2:apaga"><b>D</b><span>\(\begin{cases} a + b = 15 \\ 15a + 15b = 5220 \end{cases}\)</span></li>
+        <li data-em="2:apaga"><b>E</b><span>\(\begin{cases} 5a + 6{,}2b = 11{,}2 \\ 300a + 380b = 5220 \end{cases}\)</span></li>
+      </ol>
+    </div>
+  </div>
+  <aside class="resolucao">
+    <p class="dados"><b>Dados:</b> 15 saídas; 5220 min de uso; A: 5 h por saída; B: 6 h 20 min por saída.</p>
+    <ol class="passos">
+      <li>Tudo em minutos: \(t_A = 5 \cdot 60 = 300\)</li>
+      <li>\(t_B = 6 \cdot 60 + 20 = 380\)</li>
+      <li>Número de saídas: \(a + b = 15\)</li>
+      <li>Tempo total: \(300a + 380b = 5220\)</li>
+    </ol>
+    <p class="resposta"><b>Resposta:</b> \(a + b = 15\) e \(300a + 380b = 5220\). <b>Gabarito A.</b></p>
+    <p class="atencao"><b>Destaque no quadro:</b> 20 min não é 0,2 h: é \(\frac{1}{3}\) h. Por isso, tudo em minutos. (Resolvendo: 6 saídas de A e 9 de B.)</p>
+    <ul class="erros">
+      <li><b>B</b> A 1ª equação iguala um tempo ao número de saídas.</li>
+      <li><b>C</b> Mistura horas e minutos, e 6 h 20 min não é 6,2 h.</li>
+      <li><b>D</b> Usa 15 como tempo de cada saída.</li>
+      <li><b>E</b> A 1ª equação não conta as 15 saídas; e 6,2 h está errado.</li>
+    </ul>
+  </aside>
+  <aside class="notas">
+    <p>Clique 1 tira o aviso de pausa: resolva na área (D liga a caneta; E esconde o enunciado). Clique 2: gabarito A.</p>
+    <p>Questão oficial do IF Sudeste MG 2026-1, q16, MAT-0548 (reservada para este bloco). É o "escolher o sistema" da dica de Sistemas. O endereço completo da fonte do texto, longo demais para a tela, foi resumido; o texto e o enunciado estão iguais aos da prova. Conferência: 300 · 6 + 380 · 9 = 1800 + 3420 = 5220. No banco: etiqueta "gabarito do Quarks"; confere A.</p>
+  </aside>
+</section>
+
+<!-- IF 2024 · arroz e feijão -->
+<section class="slide questao" data-nome="IF 2024 · arroz e feijão">
+  <div class="conteudo">
+    <div class="area-resolucao"></div>
+    <span class="pilula pilula-pausa" data-em="1:some">Pause o vídeo e tente</span>
+    <div class="painel-questao">
+      <p class="olho">IF Sudeste MG 2024 · Questão 16</p>
+      <p class="enunciado" style="font-size:26px">Muitos donos de mercearias recorrem a grandes redes de supermercado para comprar produtos para revenda. Para revender em sua mercearia, Maria Clara foi a uma rede de supermercados comprar pacotes de arroz de 5 kg e pacotes de feijão de 1 kg, com valores de R$ 20,00 e R$ 7,00, respectivamente. Sabendo que ela comprou 500 kg, e o valor gasto foi de R$ 2.300,00, quantos pacotes de arroz e de feijão foram comprados?</p>
+      <ol class="alternativas" style="gap:8px">
+        <li data-em="2:apaga"><b>A</b><span>50 pacotes de arroz e 250 de feijão.</span></li>
+        <li data-em="2:certo"><b>B</b><span>80 pacotes de arroz e 100 de feijão.</span></li>
+        <li data-em="2:apaga"><b>C</b><span>90 pacotes de arroz e 50 de feijão.</span></li>
+        <li data-em="2:apaga"><b>D</b><span>94 pacotes de arroz e 60 de feijão.</span></li>
+        <li data-em="2:apaga"><b>E</b><span>100 pacotes de arroz e 80 de feijão.</span></li>
+      </ol>
+      <p class="fonte">IF Sudeste MG 2024 · questão 16</p>
+    </div>
+  </div>
+  <aside class="resolucao">
+    <p class="dados"><b>Dados:</b> \(a\) pacotes de arroz (5 kg, R$ 20); \(f\) de feijão (1 kg, R$ 7); 500 kg; R$ 2.300.</p>
+    <ol class="passos">
+      <li>\(5a + f = 500\) e \(20a + 7f = 2300\)</li>
+      <li>\(f = 500 - 5a\)</li>
+      <li>\(20a + 7(500 - 5a) = 2300\)</li>
+      <li>\(20a + 3500 - 35a = 2300 \Rightarrow -15a = -1200\)</li>
+      <li>\(a = 80\); \(f = 500 - 400 = 100\)</li>
+    </ol>
+    <p class="resposta"><b>Resposta:</b> 80 de arroz e 100 de feijão. <b>Gabarito B.</b></p>
+    <p class="atencao"><b>Destaque no quadro:</b> A 1ª equação é de massa (kg), não de número de pacotes.</p>
+    <ul class="erros">
+      <li><b>A</b> Massa certa, mas gasto de R$ 2.750.</li>
+      <li><b>C</b> Massa certa, mas gasto de R$ 2.150.</li>
+      <li><b>D</b> Gasto certo, mas 530 kg.</li>
+      <li><b>E</b> 580 kg e R$ 2.560.</li>
+    </ul>
+  </aside>
+  <aside class="notas">
+    <p>Clique 1 tira o aviso de pausa: resolva na área (D liga a caneta; E esconde o enunciado). Clique 2: gabarito B.</p>
+    <p>Questão oficial do IF Sudeste MG 2024-1, q16, MAT-0300 (reservada para este bloco). Confira: 5 · 80 + 100 = 500 kg e 20 · 80 + 7 · 100 = 1600 + 700 = 2300. Na prova está "500 Kg"; aqui, "kg".</p>
+  </aside>
+</section>
+
+<!-- IF 2020 · uma única solução -->
+<section class="slide questao" data-nome="IF 2020 · uma única solução">
+  <div class="conteudo">
+    <div class="area-resolucao"></div>
+    <span class="pilula pilula-pausa" data-em="1:some">Pause o vídeo e tente</span>
+    <div class="painel-questao">
+      <p class="olho">IF Sudeste MG 2020 · Questão 22</p>
+      <p class="enunciado" style="font-size:32px">Para quais valores de \(a\) a equação \(\dfrac{1}{x} + x = a\) possui uma única solução real?</p>
+      <ol class="alternativas">
+        <li data-em="2:apaga"><b>A</b><span>\(a = 1\) ou \(a = -1\)</span></li>
+        <li data-em="2:apaga"><b>B</b><span>\(a = 0\) ou \(a = -2\)</span></li>
+        <li data-em="2:apaga"><b>C</b><span>\(a = 3\) ou \(a = -4\)</span></li>
+        <li data-em="2:apaga"><b>D</b><span>\(a = 3\) ou \(a = 4\)</span></li>
+        <li data-em="2:certo"><b>E</b><span>\(a = 2\) ou \(a = -2\)</span></li>
+      </ol>
+      <p class="fonte">IF Sudeste MG 2020 · questão 22</p>
+    </div>
+  </div>
+  <aside class="resolucao">
+    <p class="dados"><b>Dados:</b> \(x \ne 0\); uma única solução real: \(\Delta = 0\).</p>
+    <ol class="passos">
+      <li>× \(x\): \(1 + x^2 = ax\)</li>
+      <li>\(x^2 - ax + 1 = 0\)</li>
+      <li>\(\Delta = (-a)^2 - 4 \cdot 1 \cdot 1 = a^2 - 4\)</li>
+      <li>\(a^2 - 4 = 0 \Rightarrow a = 2\) ou \(a = -2\)</li>
+      <li>Raiz dupla \(x = \frac{a}{2} = \pm 1\), que não é 0 ✓</li>
+    </ol>
+    <p class="resposta"><b>Resposta:</b> \(a = 2\) ou \(a = -2\). <b>Gabarito E.</b></p>
+    <p class="atencao"><b>Destaque no quadro:</b> Equação fracionária que vira do 2º grau: tire a fração e use o delta.</p>
+    <ul class="erros">
+      <li><b>A</b> Com a = 1, Δ = −3: nenhuma solução.</li>
+      <li><b>B</b> Com a = 0, x² + 1 = 0: nenhuma solução real.</li>
+      <li><b>C</b> Com a = 3 ou −4, Δ &gt; 0: duas soluções.</li>
+      <li><b>D</b> Com a = 3 ou 4, Δ &gt; 0: duas soluções.</li>
+    </ul>
+  </aside>
+  <aside class="notas">
+    <p>Clique 1 tira o aviso de pausa: resolva na área (D liga a caneta; E esconde o enunciado). Clique 2: gabarito E.</p>
+    <p>Questão oficial do IF Sudeste MG 2020-1, q22, MAT-0532 (reservada para este bloco). Junta equação fracionária (1º grau, parte 2) com o delta. No banco: etiqueta "gabarito do Quarks"; a conta confere E.</p>
+  </aside>
+</section>
+
+<!-- IF 2019 · biquadrada -->
+<section class="slide questao" data-nome="IF 2019 · biquadrada">
+  <div class="conteudo">
+    <div class="area-resolucao"></div>
+    <span class="pilula pilula-pausa" data-em="1:some">Pause o vídeo e tente</span>
+    <div class="painel-questao">
+      <p class="olho">IF Sudeste MG 2019 · Questão 15</p>
+      <p class="enunciado" style="font-size:34px">O produto das raízes da equação \(x^4 - 6x^2 + 8 = 0\) equivale a:</p>
+      <ol class="alternativas curtas">
+        <li data-em="2:apaga"><b>A</b><span>\(16\)</span></li>
+        <li data-em="2:certo"><b>B</b><span>\(8\)</span></li>
+        <li data-em="2:apaga"><b>C</b><span>\(8\sqrt{2}\)</span></li>
+        <li data-em="2:apaga"><b>D</b><span>\(-8\)</span></li>
+        <li data-em="2:apaga"><b>E</b><span>\(-16\)</span></li>
+      </ol>
+      <p class="fonte">IF Sudeste MG 2019 (segunda prova) · questão 15</p>
+    </div>
+  </div>
+  <aside class="resolucao">
+    <p class="dados"><b>Dados:</b> biquadrada; \(y = x^2\).</p>
+    <ol class="passos">
+      <li>\(y^2 - 6y + 8 = 0\)</li>
+      <li>Soma 6 e produto 8: \(y = 2\) ou \(y = 4\)</li>
+      <li>\(x = \pm\sqrt{2}\) e \(x = \pm 2\)</li>
+      <li>\(P = (-2) \cdot (-\sqrt{2}) \cdot \sqrt{2} \cdot 2\)</li>
+      <li>\(P = (-4) \cdot (-2) = 8\)</li>
+    </ol>
+    <p class="resposta"><b>Resposta:</b> 8. <b>Gabarito B.</b></p>
+    <p class="atencao"><b>Destaque no quadro:</b> Dois fatores negativos: menos com menos dá mais.</p>
+    <ul class="erros">
+      <li><b>A</b> Multiplica 2 · 2 · 2 · 2, sem ±√2 e sem sinais.</li>
+      <li><b>C</b> Repete uma raiz positiva no lugar de −√2.</li>
+      <li><b>D</b> Erra o sinal.</li>
+      <li><b>E</b> Erra o sinal e dobra o valor.</li>
+    </ul>
+  </aside>
+  <aside class="notas">
+    <p>Clique 1 tira o aviso de pausa: resolva na área (D liga a caneta; E esconde o enunciado). Clique 2: gabarito B.</p>
+    <p>Questão oficial do IF Sudeste MG 2019-2, q15, MAT-0514 (reservada para este bloco). Na biquadrada a soma das raízes é 0; o produto, não. No banco: etiqueta "gabarito do Quarks"; a conta confere B.</p>
+  </aside>
+</section>
+
+<!-- A seguir -->
+<section class="slide capa" data-nome="A seguir">
+  <div class="estrelas"></div>
+  <div class="texto-capa" style="top:170px">
+    <span class="selo">Matemática · IF</span>
+    <p class="aula" style="font-size:26px">A seguir · Conceito de função · Parte 1 de 2</p>
+    <h1>Conceito de função</h1>
+    <p class="sub">Começa o capítulo Funções</p>
+  </div>
+  <svg class="emblema" viewBox="0 0 640 640" aria-hidden="true">
+    <path d="M90 560 V90 M90 560 H580" stroke="#fff" stroke-opacity=".8" stroke-width="5" stroke-linecap="round" fill="none"/>
+    <path d="M78 110 L90 86 L102 110 M556 548 L580 560 L556 572" stroke="#fff" stroke-opacity=".8" stroke-width="5" stroke-linecap="round" stroke-linejoin="round" fill="none"/>
+    <g fill="#FFD10C"><circle cx="170" cy="470" r="16"/><circle cx="250" cy="400" r="16"/><circle cx="330" cy="330" r="16"/><circle cx="410" cy="260" r="16"/><circle cx="490" cy="190" r="16"/></g>
+    <line x1="130" y1="505" x2="530" y2="155" stroke="#fff" stroke-opacity=".5" stroke-width="5" stroke-dasharray="4 14" stroke-linecap="round"/>
+  </svg>
+  <img class="logo-capa" src="{{LOGO_BRANCO}}" alt="Quarks">
+  <aside class="notas"><p>Fim de Álgebra. A seguir, o capítulo Funções, começando por Conceito de função: o plano cartesiano, a lei da função e padrões em sequências.</p></aside>
+</section>

@@ -1,0 +1,386 @@
+<!--aula
+{"disciplina": "matematica", "curso": "IF", "assunto": "Equações do 1º grau", "parte": "Parte 1 de 2", "titulo": "Equações e problemas", "scripts": ["animacoes-algebra.js"]}
+-->
+<!-- Fonte: apostila IF/Sudeste, Matemática, cap. 3 (3.2 Equações do 1º grau: Resolução; Problemas com equações do 1º grau). A equação literal, que a apostila põe no fim de "Resolução", ficou na parte 2, como pede o cronograma. Questões: oficiais do IF Sudeste MG que sobraram do bloco do capítulo (2018-1 q17, 2017-1-extra q17, 2018-2 q18). -->
+<style>
+  .caixa { box-sizing: border-box; }
+  .contas.c4 { grid-template-columns: auto auto auto 1fr; }
+  .ag-anot { font-size: 26px; font-weight: 800; color: var(--d-forte); background: var(--d-clara); border-radius: 999px; padding: 2px 16px; justify-self: start; white-space: nowrap; }
+  .ag-certo { color: var(--certo); font-weight: 800; }
+  .ag-lista { margin: 0; padding: 0; list-style: none; display: flex; flex-direction: column; gap: 20px; }
+  .ag-lista li { display: flex; align-items: baseline; gap: 18px; font-size: 36px; line-height: 1.3; }
+  .ag-lista li b.n { flex: none; width: 52px; height: 52px; border-radius: 50%; display: grid; place-items: center; background: var(--d); color: #fff; font: 800 28px var(--fonte-titulo); transform: translateY(8px); }
+  .ag-traduz { display: grid; grid-template-columns: 1fr 70px 420px; align-items: center; gap: 16px; background: var(--branco); border: 2px solid var(--lilas-2); border-radius: 26px; padding: 14px 28px; font-size: 34px; }
+  .ag-traduz .seta { color: var(--d); font-weight: 800; font-size: 40px; text-align: center; }
+  .ag-traduz .mat { font-size: 44px; }
+  .ag-caixinhas { display: flex; gap: 22px; }
+  .ag-caixinhas > div { width: 230px; height: 150px; border-radius: 26px; background: var(--d-clara); border: 3px solid var(--d); display: grid; place-items: center; font-size: 46px; }
+  .ag-caixinhas > div b { font: 800 30px var(--fonte-titulo); color: var(--roxo-titulo); }
+</style>
+
+<!-- 1. Capa -->
+<section class="slide capa" data-nome="Capa">
+  <div class="estrelas"></div>
+  <div class="texto-capa">
+    <span class="selo">Matemática · IF</span>
+    <p class="aula">Equações do 1º grau · Parte 1 de 2</p>
+    <h1>Equações e problemas</h1>
+    <p class="sub">O princípio da balança</p>
+  </div>
+  <svg class="emblema" viewBox="0 0 640 640" aria-hidden="true">
+    <g class="gira-lento"><ellipse cx="320" cy="320" rx="300" ry="128" fill="none" stroke="#fff" stroke-opacity=".38" stroke-width="2" transform="rotate(-10 320 320)"/></g>
+    <path d="M240 540 L400 540 L320 250 Z" fill="#fff" fill-opacity=".2" stroke="#fff" stroke-width="4" stroke-linejoin="round"/>
+    <rect x="100" y="238" width="440" height="20" rx="10" fill="#fff"/>
+    <circle cx="320" cy="248" r="20" fill="#FFD10C"/>
+    <path d="M70 380 Q150 420 230 380 Z M410 380 Q490 420 570 380 Z" fill="#fff" fill-opacity=".85"/>
+    <path d="M150 258 L80 380 M150 258 L220 380 M490 258 L420 380 M490 258 L560 380" stroke="#fff" stroke-opacity=".6" stroke-width="3"/>
+    <rect x="96" y="320" width="54" height="54" rx="10" fill="#FFD10C"/><rect x="156" y="320" width="54" height="54" rx="10" fill="#FFD10C"/>
+    <rect x="440" y="336" width="36" height="38" rx="8" fill="#fff"/><rect x="482" y="336" width="36" height="38" rx="8" fill="#fff"/><rect x="524" y="336" width="36" height="38" rx="8" fill="#fff"/>
+  </svg>
+  <img class="logo-capa" src="{{LOGO_BRANCO}}" alt="Quarks">
+  <aside class="notas">
+    <p>Primeira parte de Equações do 1º grau: resolver pelo princípio da balança e transformar problemas em equações. Na parte 2: frações e equações literais.</p>
+  </aside>
+</section>
+
+<!-- 2. A balança -->
+<section class="slide" data-nome="A balança">
+  <div class="conteudo">
+    <p class="olho">Para começar</p>
+    <h2 class="titulo">Quanto pesa cada caixa?</h2>
+    <div data-anima="alg-balanca" data-anima-passo="1" data-w="900" data-h="450" style="position:absolute;left:0;top:130px;width:900px;height:450px"></div>
+    <div style="position:absolute;left:1000px;right:0;top:170px">
+      <p class="texto" style="margin:0;font-size:32px">Duas caixas iguais e 3 pesos de 1 kg equilibram 11 pesos de 1 kg.</p>
+      <div class="contas c4" style="margin-top:34px;font-size:52px;row-gap:22px">
+        <div class="eq" data-passo="2"><span>\(2x + 3\)</span><span>\(=\)</span><span>\(11\)</span><span></span></div>
+        <div class="eq" data-passo="3"><span>\(2x\)</span><span>\(=\)</span><span>\(8\)</span><span class="ag-anot">− 3 dos dois lados</span></div>
+        <div class="eq final" data-passo="4"><span>\(x\)</span><span>\(=\)</span><span>\(4\)</span><span class="ag-anot">÷ 2 dos dois lados</span></div>
+      </div>
+    </div>
+    <div class="caixa caixa-fundamental" data-passo="5" style="position:absolute;left:640px;right:0;top:640px;padding:20px 32px">
+      <div class="texto" style="font-size:32px"><b>Equação:</b> uma igualdade com um valor desconhecido, a <b>incógnita</b>.</div>
+    </div>
+  </div>
+  <aside class="notas">
+    <p>Clique 1: a balança. Ela tira 3 kg de cada prato e continua equilibrada; depois divide os pesos em dois grupos, um para cada caixa.</p>
+    <p>Cliques 2 a 4: a mesma coisa em linguagem de equação. Cada caixa pesa 4 kg.</p>
+  </aside>
+</section>
+
+<!-- 3. Princípio da balança -->
+<section class="slide" data-nome="Princípio da balança">
+  <div class="conteudo">
+    <p class="olho">A regra</p>
+    <h2 class="titulo">Princípio da balança</h2>
+    <div class="caixa caixa-fundamental" style="position:absolute;left:0;right:0;top:160px;padding:26px 36px">
+      <span class="rotulo">Fundamental</span>
+      <div class="texto" style="font-size:38px">Uma igualdade continua verdadeira quando fazemos <b>a mesma operação dos dois lados</b>: somar, subtrair, multiplicar ou dividir pelo mesmo número (diferente de zero, na divisão).</div>
+    </div>
+    <div style="position:absolute;left:0;right:0;top:450px;display:grid;grid-template-columns:1fr 1fr;gap:50px">
+      <div class="caixa" data-passo="1" style="padding:22px 32px">
+        <span class="rotulo">Equação do 1º grau</span>
+        <div style="font-size:64px;text-align:center">\(ax + b = 0,\ \ a \ne 0\)</div>
+      </div>
+      <div data-passo="2" style="display:flex;align-items:center"><span class="pilula pilula-resposta" style="font-size:40px">Resolver é isolar o \(x\)</span></div>
+    </div>
+  </div>
+  <aside class="notas">
+    <p>É a balança em palavras. Toda a resolução de equações se apoia nisso.</p>
+  </aside>
+</section>
+
+<!-- 4. Exemplo: com parênteses -->
+<section class="slide" data-nome="Exemplo: parênteses">
+  <div class="conteudo">
+    <p class="olho">Exemplo</p>
+    <h2 class="titulo">Com parênteses</h2>
+    <div class="contas c4" style="position:absolute;left:0;top:160px;font-size:52px;row-gap:18px">
+      <div class="eq" data-passo="1"><span>\(3(x + 2)\)</span><span>\(=\)</span><span>\(x + 14\)</span><span></span></div>
+      <div class="eq" data-passo="2"><span>\(3x + 6\)</span><span>\(=\)</span><span>\(x + 14\)</span><span class="ag-anot">distributiva</span></div>
+      <div class="eq" data-passo="3"><span>\(3x - x\)</span><span>\(=\)</span><span>\(14 - 6\)</span><span class="ag-anot">− x e − 6 dos dois lados</span></div>
+      <div class="eq" data-passo="4"><span>\(2x\)</span><span>\(=\)</span><span>\(8\)</span><span></span></div>
+      <div class="eq final" data-passo="5"><span>\(x\)</span><span>\(=\)</span><span>\(4\)</span><span></span></div>
+    </div>
+    <div class="caixa" data-passo="6" style="position:absolute;left:1060px;right:0;top:170px;padding:22px 30px">
+      <span class="rotulo">Conferência: \(x = 4\)</span>
+      <div class="contas" style="font-size:42px;margin-top:6px">
+        <div class="eq"><span>\(3 \cdot (4 + 2)\)</span><span>\(=\)</span><span>\(18\)</span></div>
+        <div class="eq"><span>\(4 + 14\)</span><span>\(=\)</span><span>\(18\) <span class="ag-certo">✓</span></span></div>
+      </div>
+    </div>
+  </div>
+  <aside class="notas">
+    <p>Uma linha por clique. Clique 3: subtrair x e subtrair 6 dos dois lados.</p>
+    <p>Clique 6: confira na equação original. Os dois lados dão 18.</p>
+  </aside>
+</section>
+
+<!-- 5. Passar para o outro lado -->
+<section class="slide" data-nome="Passar para o outro lado">
+  <div class="conteudo">
+    <p class="olho">Atalho</p>
+    <h2 class="titulo">“Passar trocando o sinal”</h2>
+    <div class="contas c4" style="position:absolute;left:0;top:170px;font-size:56px;row-gap:24px">
+      <div class="eq"><span>\(3x + 6\)</span><span>\(=\)</span><span>\(x + 14\)</span><span></span></div>
+      <div class="eq" data-passo="1"><span>\(3x + 6 \textcolor{#1E4FD8}{\,-\,6}\)</span><span>\(=\)</span><span>\(x + 14 \textcolor{#1E4FD8}{\,-\,6}\)</span><span class="ag-anot">balança: − 6 dos dois lados</span></div>
+      <div class="eq final" data-passo="2"><span>\(3x\)</span><span>\(=\)</span><span>\(x + 14 \textcolor{#1E4FD8}{\,-\,6}\)</span><span class="ag-anot">o + 6 "passou" como − 6</span></div>
+    </div>
+    <div class="caixa caixa-fundamental" data-passo="3" style="position:absolute;left:640px;right:0;top:520px;padding:22px 32px">
+      <div class="texto" style="font-size:33px">É a balança: <b>subtrair 6 dos dois lados</b> faz o 6 sumir da esquerda e aparecer como −6 na direita.</div>
+    </div>
+  </div>
+  <aside class="notas">
+    <p>Clique 1: subtraímos 6 dos dois lados. Clique 2: à esquerda, 6 − 6 some; à direita, fica o −6. Parece que o 6 "passou trocando o sinal".</p>
+    <p>Clique 3: não é mágica; é o princípio da balança encurtado.</p>
+  </aside>
+</section>
+
+<!-- 6. Do português para a Matemática -->
+<section class="slide" data-nome="Traduzir">
+  <div class="conteudo">
+    <p class="olho">Problemas</p>
+    <h2 class="titulo">Do português para a Matemática</h2>
+    <p class="texto" style="position:absolute;left:0;right:0;top:140px;margin:0;font-size:32px">O difícil não é a conta: é <b>traduzir</b>.</p>
+    <div style="position:absolute;left:0;right:0;top:220px;display:flex;flex-direction:column;gap:16px">
+      <div class="ag-traduz" data-passo="1"><span>o triplo de um número</span><span class="seta">→</span><span class="mat">\(3x\)</span></div>
+      <div class="ag-traduz" data-passo="2"><span>o consecutivo de \(x\)</span><span class="seta">→</span><span class="mat">\(x + 1\)</span></div>
+      <div class="ag-traduz" data-passo="3"><span>a idade daqui a 10 anos</span><span class="seta">→</span><span class="mat">\(x + 10\)</span></div>
+      <div class="ag-traduz" data-passo="4"><span>o dobro da idade do filho</span><span class="seta">→</span><span class="mat">\(2 \cdot (\ldots)\)</span></div>
+    </div>
+  </div>
+  <aside class="notas">
+    <p>Um por clique. "Daqui a 10 anos" soma 10 à idade de todo mundo. O dobro de alguma coisa multiplica essa coisa inteira por 2: use parênteses.</p>
+  </aside>
+</section>
+
+<!-- 7. Passo a passo -->
+<section class="slide" data-nome="Passo a passo">
+  <div class="conteudo">
+    <p class="olho">Passo a passo</p>
+    <h2 class="titulo">Do texto para a equação</h2>
+    <ol class="ag-lista" style="position:absolute;left:0;right:0;top:160px">
+      <li data-passo="1"><b class="n">1</b><span>Chame de \(x\) o que o problema <b>pergunta</b>.</span></li>
+      <li data-passo="2"><b class="n">2</b><span>Escreva as outras quantidades <b>usando \(x\)</b>.</span></li>
+      <li data-passo="3"><b class="n">3</b><span>Traduza a frase principal numa <b>equação</b>.</span></li>
+      <li data-passo="4"><b class="n">4</b><span><b>Resolva.</b></span></li>
+      <li data-passo="5"><b class="n">5</b><span><b>Responda</b> o que foi perguntado e <b>confira</b> no enunciado.</span></li>
+    </ol>
+  </div>
+  <aside class="notas">
+    <p>O passo 5 é o que mais se esquece: às vezes o x não é a resposta final (veja a idade do pai, a seguir).</p>
+  </aside>
+</section>
+
+<!-- 8. Exemplo: três consecutivos -->
+<section class="slide" data-nome="Exemplo: consecutivos">
+  <div class="conteudo">
+    <p class="olho">Exemplo</p>
+    <h2 class="titulo">Três consecutivos somam 72</h2>
+    <div class="ag-caixinhas" style="position:absolute;left:0;top:160px">
+      <div data-passo="1">\(x\)</div><div data-passo="1">\(x + 1\)</div><div data-passo="1">\(x + 2\)</div>
+    </div>
+    <div class="ag-caixinhas" data-passo="6" style="position:absolute;left:0;top:340px">
+      <div style="background:#E3F6EC;border-color:#1F9D62"><b>23</b></div><div style="background:#E3F6EC;border-color:#1F9D62"><b>24</b></div><div style="background:#E3F6EC;border-color:#1F9D62"><b>25</b></div>
+    </div>
+    <div class="contas" style="position:absolute;left:880px;top:160px;font-size:50px;row-gap:22px">
+      <div class="eq" data-passo="2"><span>\(x + (x + 1) + (x + 2)\)</span><span>\(=\)</span><span>\(72\)</span></div>
+      <div class="eq" data-passo="3"><span>\(3x + 3\)</span><span>\(=\)</span><span>\(72\)</span></div>
+      <div class="eq" data-passo="4"><span>\(3x\)</span><span>\(=\)</span><span>\(69\)</span></div>
+      <div class="eq final" data-passo="5"><span>\(x\)</span><span>\(=\)</span><span>\(23\)</span></div>
+    </div>
+    <span class="pilula pilula-resposta" data-passo="7" style="position:absolute;right:0;top:640px">23 + 24 + 25 = 72 ✓</span>
+  </div>
+  <aside class="notas">
+    <p>Tradução: os números são x, x + 1 e x + 2. Clique 6: a resposta são os três números, não só o x.</p>
+  </aside>
+</section>
+
+<!-- 9. Exemplo: idade -->
+<section class="slide" data-nome="Exemplo: idades">
+  <div class="conteudo">
+    <p class="olho">Exemplo</p>
+    <h2 class="titulo">Idade do pai e do filho</h2>
+    <p class="texto" style="position:absolute;left:0;width:880px;top:140px;margin:0;font-size:31px">Rafael tem o triplo da idade do filho. Daqui a 10 anos, terá o dobro. Quantos anos cada um tem hoje?</p>
+    <table class="tabela" style="position:absolute;left:0;top:290px;font-size:38px">
+      <tr><th></th><th>hoje</th><th>daqui a 10 anos</th></tr>
+      <tr data-passo="1"><td style="font-weight:800;color:var(--d-forte)">filho</td><td>\(x\)</td><td>\(x + 10\)</td></tr>
+      <tr data-passo="2"><td style="font-weight:800;color:var(--d-forte)">Rafael</td><td>\(3x\)</td><td>\(3x + 10\)</td></tr>
+    </table>
+    <div class="contas" style="position:absolute;left:1000px;top:170px;font-size:50px;row-gap:22px">
+      <div class="eq" data-passo="3"><span>\(3x + 10\)</span><span>\(=\)</span><span>\(2(x + 10)\)</span></div>
+      <div class="eq" data-passo="4"><span>\(3x + 10\)</span><span>\(=\)</span><span>\(2x + 20\)</span></div>
+      <div class="eq" data-passo="5"><span>\(3x - 2x\)</span><span>\(=\)</span><span>\(20 - 10\)</span></div>
+      <div class="eq final" data-passo="6"><span>\(x\)</span><span>\(=\)</span><span>\(10\)</span></div>
+    </div>
+    <div class="caixa caixa-fundamental" data-passo="7" style="position:absolute;left:640px;right:0;top:620px;padding:20px 32px">
+      <div class="texto" style="font-size:32px"><b>Filho: 10 anos. Rafael: 30.</b> Daqui a 10 anos, 40 é o dobro de 20 <span class="ag-certo">✓</span></div>
+    </div>
+  </div>
+  <aside class="notas">
+    <p>Cliques 1 e 2: a tabela de hoje e de daqui a 10 anos. Os dois envelhecem 10 anos.</p>
+    <p>Clique 3: a idade de Rafael daqui a 10 anos é o dobro da do filho daqui a 10 anos. Clique 7: o x é a idade do filho; a pergunta pede as duas.</p>
+  </aside>
+</section>
+
+<!-- 10. Questão 1 -->
+<section class="slide questao" data-nome="Questão 1">
+  <div class="conteudo">
+    <div class="area-resolucao"></div>
+    <span class="pilula pilula-pausa" data-em="1:some">Pause o vídeo e tente</span>
+    <div class="painel-questao">
+      <p class="olho">Questão 1 · IF Sudeste MG 2018</p>
+      <p class="enunciado" style="font-size:34px">O dobro de um número aumentado de 5 é igual a 49. Qual das alternativas expressa esse número?</p>
+      <ol class="alternativas">
+        <li data-em="2:apaga"><b>A</b><span>21</span></li>
+        <li data-em="2:certo"><b>B</b><span>22</span></li>
+        <li data-em="2:apaga"><b>C</b><span>23</span></li>
+        <li data-em="2:apaga"><b>D</b><span>24</span></li>
+        <li data-em="2:apaga"><b>E</b><span>25</span></li>
+      </ol>
+      <p class="fonte">IF Sudeste MG 2018 · questão 17</p>
+    </div>
+  </div>
+  <aside class="resolucao">
+    <p class="dados"><b>Dados:</b> o número é \(x\); "o dobro" é \(2x\); "aumentado de 5" soma 5.</p>
+    <ol class="passos">
+      <li>\(2x + 5 = 49\)</li>
+      <li>\(2x = 49 - 5 = 44\)</li>
+      <li>\(x = 22\)</li>
+      <li>Confira: \(2 \cdot 22 + 5 = 49\) ✓</li>
+    </ol>
+    <p class="resposta"><b>Resposta:</b> 22. <b>Gabarito B.</b></p>
+    <p class="atencao"><b>Destaque no quadro:</b> "O dobro de um número aumentado de 5": primeiro o dobro, depois soma 5.</p>
+    <ul class="erros">
+      <li><b>A</b> 2 · 21 + 5 = 47.</li>
+      <li><b>C</b> 2 · 23 + 5 = 51: faz (49 − 3) ÷ 2.</li>
+      <li><b>D</b> 2 · 24 + 5 = 53: faz (49 − 1) ÷ 2.</li>
+      <li><b>E</b> Divide 49 por 2 e arredonda, sem tirar o 5.</li>
+    </ul>
+  </aside>
+  <aside class="notas">
+    <p>Clique 1 tira o aviso de pausa: resolva na área (D liga a caneta; E esconde o enunciado). Clique 2: gabarito B.</p>
+    <p>Questão oficial do IF Sudeste MG 2018-1, q17, MAT-0358 (sobra do bloco, usada aqui).</p>
+  </aside>
+</section>
+
+<!-- 11. Questão 2 -->
+<section class="slide questao" data-nome="Questão 2">
+  <div class="conteudo">
+    <div class="area-resolucao"></div>
+    <span class="pilula pilula-pausa" data-em="1:some">Pause o vídeo e tente</span>
+    <div class="painel-questao">
+      <p class="olho">Questão 2 · IF Sudeste MG 2017</p>
+      <p class="enunciado" style="font-size:31px">Uma locadora de carros cobra R$ 90,00 a diária de aluguel e mais R$ 0,45 por km rodado. Sabendo que um condutor pagou R$ 324,00 por dois dias, quantos quilômetros ele dirigiu com o carro?</p>
+      <ol class="alternativas">
+        <li data-em="2:apaga"><b>A</b><span>80</span></li>
+        <li data-em="2:apaga"><b>B</b><span>160</span></li>
+        <li data-em="2:certo"><b>C</b><span>320</span></li>
+        <li data-em="2:apaga"><b>D</b><span>450</span></li>
+        <li data-em="2:apaga"><b>E</b><span>520</span></li>
+      </ol>
+      <p class="fonte">IF Sudeste MG 2017 (prova extra) · questão 17</p>
+    </div>
+  </div>
+  <aside class="resolucao">
+    <p class="dados"><b>Dados:</b> diária R$ 90; 2 dias; R$ 0,45 por km; total R$ 324; km = \(x\).</p>
+    <ol class="passos">
+      <li>\(324 = 2 \cdot 90 + 0{,}45x\)</li>
+      <li>\(324 = 180 + 0{,}45x\)</li>
+      <li>\(144 = 0{,}45x\)</li>
+      <li>\(x = \dfrac{144}{0{,}45} = 320\)</li>
+      <li>Confira: \(180 + 0{,}45 \cdot 320 = 180 + 144 = 324\) ✓</li>
+    </ol>
+    <p class="resposta"><b>Resposta:</b> 320 km. <b>Gabarito C.</b></p>
+    <p class="atencao"><b>Destaque no quadro:</b> São duas diárias: 180 reais fixos.</p>
+    <ul class="erros">
+      <li><b>A</b> Com 80 km, o total seria 216 reais.</li>
+      <li><b>B</b> Divide os 320 km pelos dois dias.</li>
+      <li><b>D</b> Com 450 km, o total seria 382,50 reais.</li>
+      <li><b>E</b> Desconta só uma diária: (324 − 90) ÷ 0,45.</li>
+    </ul>
+  </aside>
+  <aside class="notas">
+    <p>Clique 1 tira o aviso de pausa: resolva na área (D liga a caneta; E esconde o enunciado). Clique 2: gabarito C.</p>
+    <p>Questão oficial do IF Sudeste MG 2017-1-extra, q17, MAT-0381 (sobra do bloco, usada aqui). 144 ÷ 0,45 = 14400 ÷ 45 = 320.</p>
+  </aside>
+</section>
+
+<!-- 12. Questão 3 -->
+<section class="slide questao" data-nome="Questão 3">
+  <div class="conteudo">
+    <div class="area-resolucao"></div>
+    <span class="pilula pilula-pausa" data-em="1:some">Pause o vídeo e tente</span>
+    <div class="painel-questao">
+      <p class="olho">Questão 3 · IF Sudeste MG 2018</p>
+      <p class="enunciado" style="font-size:31px">Lucas é irmão mais velho de Miguel. A diferença de idade entre eles é de 20 anos. Daqui a 8 anos Lucas terá o dobro da idade de Miguel. A idade atual de Miguel é:</p>
+      <ol class="alternativas">
+        <li data-em="2:apaga"><b>A</b><span>48</span></li>
+        <li data-em="2:apaga"><b>B</b><span>40</span></li>
+        <li data-em="2:apaga"><b>C</b><span>28</span></li>
+        <li data-em="2:apaga"><b>D</b><span>20</span></li>
+        <li data-em="2:certo"><b>E</b><span>12</span></li>
+      </ol>
+      <p class="fonte">IF Sudeste MG 2018 (segunda prova) · questão 18</p>
+    </div>
+  </div>
+  <aside class="resolucao">
+    <p class="dados"><b>Dados:</b> Miguel hoje \(x\); Lucas hoje \(x + 20\); daqui a 8 anos: \(x + 8\) e \(x + 28\).</p>
+    <ol class="passos">
+      <li>\(x + 28 = 2(x + 8)\)</li>
+      <li>\(x + 28 = 2x + 16\)</li>
+      <li>\(28 - 16 = 2x - x\)</li>
+      <li>\(x = 12\)</li>
+      <li>Confira: hoje 12 e 32; daqui a 8 anos, 20 e 40 ✓</li>
+    </ol>
+    <p class="resposta"><b>Resposta:</b> Miguel tem 12 anos. <b>Gabarito E.</b></p>
+    <p class="atencao"><b>Destaque no quadro:</b> Daqui a 8 anos, os dois ficam 8 anos mais velhos.</p>
+    <ul class="erros">
+      <li><b>A</b> Seria a idade de Lucas se Miguel tivesse 28.</li>
+      <li><b>B</b> 40 é a idade de Lucas daqui a 8 anos.</li>
+      <li><b>C</b> Soma os 8 anos só para Lucas: x + 28 = 2x.</li>
+      <li><b>D</b> 20 é a idade de Miguel daqui a 8 anos.</li>
+    </ul>
+  </aside>
+  <aside class="notas">
+    <p>Clique 1 tira o aviso de pausa: resolva na área (D liga a caneta; E esconde o enunciado). Clique 2: gabarito E.</p>
+    <p>Questão oficial do IF Sudeste MG 2018-2, q18, MAT-0506 (sobra do bloco, usada aqui). No banco ela tem a etiqueta "gabarito do Quarks"; a conta confere: 12.</p>
+  </aside>
+</section>
+
+<!-- 13. Resumo -->
+<section class="slide" data-nome="Resumo">
+  <div class="conteudo">
+    <p class="olho">Resumo</p>
+    <h2 class="titulo">O essencial</h2>
+    <div class="resumo" style="position:absolute;left:0;right:0;top:150px">
+      <div><b>Princípio da balança:</b> a mesma operação dos dois lados da igualdade.</div>
+      <div><b>1º grau:</b> \(ax + b = 0\), com \(a \ne 0\). Resolver é isolar o \(x\).</div>
+      <div><b>"Passar trocando o sinal"</b> é a balança encurtada.</div>
+      <div><b>Problema:</b> dê nome à incógnita, traduza, resolva e <b>confira no enunciado</b>.</div>
+    </div>
+  </div>
+  <aside class="notas">
+    <p>Peça para tirarem um print desta tela.</p>
+  </aside>
+</section>
+
+<!-- 14. A seguir -->
+<section class="slide capa" data-nome="A seguir">
+  <div class="estrelas"></div>
+  <div class="texto-capa" style="top:220px">
+    <span class="selo">Matemática · IF</span>
+    <p class="aula">A seguir · Equações do 1º grau · Parte 2 de 2</p>
+    <h1 style="font-size:128px">Frações e equações literais</h1>
+    <p class="sub">Multiplique tudo pelo MMC</p>
+  </div>
+  <svg class="emblema" viewBox="0 0 640 640" aria-hidden="true">
+    <g font-family="Figtree,'Segoe UI',sans-serif" font-weight="800" text-anchor="middle" fill="#fff">
+      <text x="200" y="250" font-size="90">x</text><line x1="150" y1="280" x2="250" y2="280" stroke="#fff" stroke-width="8" stroke-linecap="round"/><text x="200" y="370" font-size="90">2</text>
+      <text x="320" y="310" font-size="80">+</text>
+      <text x="440" y="250" font-size="90">x</text><line x1="390" y1="280" x2="490" y2="280" stroke="#fff" stroke-width="8" stroke-linecap="round"/><text x="440" y="370" font-size="90">3</text>
+      <text x="320" y="500" font-size="76" fill="#FFD10C">× 6</text>
+    </g>
+  </svg>
+  <img class="logo-capa" src="{{LOGO_BRANCO}}" alt="Quarks">
+  <aside class="notas"><p>Próxima parte: equações com frações (multiplicar pelo MMC, incógnita no denominador) e equações literais.</p></aside>
+</section>
