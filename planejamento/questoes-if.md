@@ -430,4 +430,4 @@ Sobras para as partes: Ligação iônica: 2018-1 q34, 2014-1-extra q43, 2013-2 q
 | Subcapítulo | Fonte | Lote e questão | Código | Assunto |
 |---|---|---|---|---|
 | Sais | Modelo IF | if-quimica-sais m007 | QUI-1016 | Ácido muriático e cal hidratada: o sal formado |
-| Indicadores e pH | Modelo PISM | pism3-quimica-indicadores-acido-base m002 | QUI-1331 | Repolho roxo no vinagre e no leite de magnésia |
+| Indicadores e pH | Modelo IF | if-quimica-indicadores-e-ph m004 | QUI-7824 | Repolho roxo no vinagre e no sabão em pó |
