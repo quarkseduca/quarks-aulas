@@ -1,0 +1,551 @@
+<!--aula
+{"disciplina": "fisica", "curso": "IF", "assunto": "Propagação do calor", "parte": "Parte 2 de 2", "titulo": "Garrafa térmica, Sol e efeito estufa"}
+-->
+<!-- Fonte: apostila IF, Física, cap. 3 Termologia, 3.2 Propagação do calor (fim de "Irradiação" com a tabela das superfícies ao Sol e a praia; teorias "Garrafa térmica e coletor solar", com o exemplo "Qual forma de propagação?", e "O equilíbrio térmico da Terra e o efeito estufa"; figuras da garrafa térmica e do efeito estufa; resumo do subcapítulo). Questões: Modelo IF da apostila (lote if-fisica-propagacao-do-calor): m003 FIS-0974 e m009 FIS-0980; oficiais IF Sudeste MG 2014-1 q34 (FIS-0527) e 2013-1 q35 (FIS-0539), sobras do capítulo. As oficiais FIS-0616, FIS-0534 e FIS-0546 ficam reservadas para o bloco do fim do capítulo. -->
+<style>
+  .caixa, .painel, .linha-ex { box-sizing: border-box; }
+  .linha-ex { background: var(--branco); border: 2px solid var(--lilas-2); border-radius: 24px; padding: 14px 26px; font-size: 30px; line-height: 1.3; }
+  .linha-ex b { color: var(--roxo-titulo); }
+  .painel { background: var(--branco); border: 2px solid var(--lilas-2); border-radius: 30px; padding: 18px 26px; }
+  .painel h3 { margin: 0 0 6px; font: 800 36px var(--fonte-titulo); letter-spacing: -.02em; color: var(--roxo-titulo); }
+  .painel p { margin: 8px 0 0; font-size: 26px; line-height: 1.3; }
+  .rot-fig { font-family: Figtree, "Segoe UI", sans-serif; font-weight: 700; font-size: 24px; fill: #5E5A70; }
+  .rot-forte { font-family: Figtree, "Segoe UI", sans-serif; font-weight: 800; font-size: 26px; fill: #3F2FA0; }
+  .tabela.sol th, .tabela.sol td { padding: 11px 30px; font-size: 32px; text-align: left; }
+  .tag { display: inline-block; padding: 5px 20px; border-radius: 999px; font-weight: 800; font-size: 24px; white-space: nowrap; }
+  .tag-q { background: #FFE9DF; color: #A8431B; }
+  .tag-f { background: #E3F0FB; color: #1F5F99; }
+  .tag-p { background: var(--d-clara); color: var(--d-forte); }
+  /* raios que entram, são absorvidos ou refletidos */
+  @keyframes flui { to { stroke-dashoffset: -64; } }
+  .raio { stroke-dasharray: 22 10; }
+  .slide.ativo .mostra .raio, .slide.ativo .raio.sempre { animation: flui 1.8s linear infinite; }
+  .raio.lento { animation-duration: 3s !important; }
+  @keyframes aquece { 0%, 100% { opacity: .25; } 50% { opacity: .75; } }
+  .brasa { opacity: 0; }
+  .slide.ativo .mostra .brasa { animation: aquece 4s ease-in-out infinite; }
+  /* praia: dia e noite */
+  .ceu { transition: fill 1.2s; }
+  .noite .ceu { fill: #3A2C7A; }
+  .sol-dia, .lua { transition: opacity 1.2s; }
+  .lua { opacity: 0; }
+  .noite .sol-dia { opacity: 0; }
+  .noite .lua { opacity: 1; }
+  .areia { transition: fill 1.6s; fill: #F08C2E; }
+  .noite .areia { fill: #9CB8E8; }
+  .mar { transition: fill 1.6s; fill: #7FB4E0; }
+  .noite .mar { fill: #B59AD8; }
+  .dia-txt, .noite-txt { transition: opacity .8s; }
+  .noite-txt { opacity: 0; }
+  .noite .dia-txt { opacity: 0; }
+  .noite .noite-txt { opacity: 1; }
+  /* garrafa: radiação infravermelha batendo no espelho e voltando */
+  @keyframes vaivem { 0% { stroke-dashoffset: 0; } 100% { stroke-dashoffset: -160; } }
+  .ir { stroke-dasharray: 40 120; }
+  .slide.ativo .mostra .ir { animation: vaivem 2.6s linear infinite; }
+  .ir:nth-of-type(2) { animation-delay: -1.3s !important; }
+  @keyframes vapor { 0% { transform: translateY(0); opacity: 0; } 30% { opacity: .8; } 100% { transform: translateY(-40px); opacity: 0; } }
+  .vapor path { opacity: 0; }
+  .slide.ativo .vapor path { animation: vapor 3.6s ease-out infinite; }
+  .vapor path:nth-child(2) { animation-delay: -1.8s !important; }
+  .rotulo-g { opacity: 0; transition: opacity .5s; }
+  .mostra.rotulo-g, .mostra .rotulo-g { opacity: 1; }
+</style>
+
+<svg width="0" height="0" style="position:absolute" aria-hidden="true">
+  <defs>
+    <radialGradient id="p2Sol" cx=".5" cy=".5" r=".5"><stop offset="0" stop-color="#FFF4C2"/><stop offset=".55" stop-color="#FFD10C"/><stop offset="1" stop-color="#FFB627"/></radialGradient>
+    <radialGradient id="p2Terra" cx=".35" cy=".3" r=".8"><stop offset="0" stop-color="#9CCBF2"/><stop offset="1" stop-color="#3C7BC4"/></radialGradient>
+    <linearGradient id="p2Espelho" x1="0" y1="0" x2="1" y2="0"><stop offset="0" stop-color="#B9B4CC"/><stop offset=".5" stop-color="#FFFFFF"/><stop offset="1" stop-color="#B9B4CC"/></linearGradient>
+    <marker id="p2Pta" viewBox="0 0 10 10" refX="7" refY="5" markerWidth="5" markerHeight="5" orient="auto-start-reverse"><path d="M0 0 L10 5 L0 10 z" fill="#E8590C"/></marker>
+    <marker id="p2PtaS" viewBox="0 0 10 10" refX="7" refY="5" markerWidth="5" markerHeight="5" orient="auto-start-reverse"><path d="M0 0 L10 5 L0 10 z" fill="#E0A800"/></marker>
+    <marker id="p2PtaA" viewBox="0 0 10 10" refX="7" refY="5" markerWidth="5" markerHeight="5" orient="auto-start-reverse"><path d="M0 0 L10 5 L0 10 z" fill="#4A90E2"/></marker>
+  </defs>
+</svg>
+
+<!-- 1. Capa -->
+<section class="slide capa" data-nome="Capa">
+  <div class="estrelas"></div>
+  <div class="texto-capa">
+    <span class="selo">Física · IF</span>
+    <p class="aula">Propagação do calor · Parte 2 de 2</p>
+    <h1 style="font-size:120px">Garrafa térmica, Sol e efeito estufa</h1>
+    <p class="sub">O calor no dia a dia e no planeta</p>
+  </div>
+  <svg class="emblema" viewBox="0 0 640 640" aria-hidden="true">
+    <g class="gira-lento"><ellipse cx="320" cy="320" rx="300" ry="128" fill="none" stroke="#fff" stroke-opacity=".38" stroke-width="2" transform="rotate(-10 320 320)"/></g>
+    <g class="gira"><ellipse cx="320" cy="320" rx="236" ry="196" fill="none" stroke="#FFD10C" stroke-opacity=".75" stroke-width="2.5" stroke-dasharray="3 14" stroke-linecap="round" transform="rotate(-8 320 320)"/>
+      <circle cx="84" cy="300" r="13" fill="var(--d)" stroke="#fff" stroke-width="3"/></g>
+    <circle cx="320" cy="320" r="132" fill="#FFD10C"/>
+    <image href="{{SYM_ROXO}}" x="238" y="238" width="164" height="164"/>
+  </svg>
+  <img class="logo-capa" src="{{LOGO_BRANCO}}" alt="Quarks">
+  <aside class="notas"><p>Nesta parte: as três formas de propagação em ação. Superfícies diferentes ao Sol, a praia, a garrafa térmica, o coletor solar, o equilíbrio térmico da Terra e o efeito estufa. Fecha o subcapítulo Propagação do calor.</p></aside>
+</section>
+
+<!-- 2. Relembrando -->
+<section class="slide" data-nome="Relembrando">
+  <div class="conteudo">
+    <p class="olho">Relembrando</p>
+    <h2 class="titulo">Os três caminhos do calor</h2>
+    <div style="position:absolute;left:0;right:0;top:160px;display:grid;grid-template-columns:repeat(3,1fr);gap:28px">
+      <div class="painel"><h3>Condução</h3><p>De partícula em partícula. Metais conduzem; ar parado isola.</p><p><span class="tag tag-p">precisa de matéria</span></p></div>
+      <div class="painel"><h3>Convecção</h3><p>O material circula: quente sobe, frio desce. Líquidos e gases.</p><p><span class="tag tag-p">precisa de matéria</span></p></div>
+      <div class="painel"><h3>Irradiação</h3><p>Ondas eletromagnéticas (infravermelho).</p><p><span class="tag tag-q">também no vácuo</span></p></div>
+    </div>
+    <div class="caixa caixa-fundamental" data-passo="1" style="position:absolute;left:580px;right:0;top:500px;padding:22px 32px">
+      <div class="texto" style="font-size:31px">Hoje: a <b>irradiação do Sol</b> em superfícies diferentes e objetos que <b>barram</b> ou <b>aproveitam</b> o calor.</div>
+    </div>
+  </div>
+  <aside class="notas"><p>Revisão rápida da Parte 1. Pergunte a turma antes de mostrar: qual delas funciona no vácuo?</p></aside>
+</section>
+
+<!-- 3. Superfícies ao Sol -->
+<section class="slide" data-nome="Refletir ou absorver">
+  <div class="conteudo">
+    <p class="olho">A radiação do Sol numa superfície</p>
+    <h2 class="titulo">Uma parte reflete, outra é absorvida</h2>
+    <svg viewBox="0 0 1100 440" style="position:absolute;left:0;top:150px;width:1100px;height:440px" aria-hidden="true">
+      <circle cx="550" cy="60" r="54" fill="url(#p2Sol)"/>
+      <!-- superfície escura -->
+      <g data-passo="1">
+        <rect x="40" y="330" width="440" height="90" rx="16" fill="#3A3640"/>
+        <rect class="brasa" x="40" y="330" width="440" height="90" rx="16" fill="#E8590C"/>
+        <g fill="none" stroke="#E0A800" stroke-width="7" stroke-linecap="round">
+          <path class="raio" d="M500 110 L300 326" marker-end="url(#p2PtaS)"/>
+          <path class="raio" d="M470 100 L210 326" marker-end="url(#p2PtaS)"/>
+        </g>
+        <path class="raio lento" d="M230 326 L200 280" fill="none" stroke="#E0A800" stroke-width="4" stroke-linecap="round" opacity=".5"/>
+        <text x="260" y="400" text-anchor="middle" class="rot-forte" style="fill:#fff">escura: absorve muito</text>
+      </g>
+      <!-- superfície clara -->
+      <g data-passo="2">
+        <rect x="620" y="330" width="440" height="90" rx="16" fill="#FFFFFF" stroke="#DCD6F3" stroke-width="4"/>
+        <g fill="none" stroke="#E0A800" stroke-width="7" stroke-linecap="round">
+          <path class="raio" d="M600 110 L780 326 L960 110" marker-end="url(#p2PtaS)"/>
+          <path class="raio" d="M630 100 L870 326 L1060 150" marker-end="url(#p2PtaS)"/>
+        </g>
+        <text x="840" y="400" text-anchor="middle" class="rot-forte">clara: reflete muito</text>
+      </g>
+    </svg>
+    <div style="position:absolute;left:1160px;right:0;top:160px;display:flex;flex-direction:column;gap:18px">
+      <div class="linha-ex" data-passo="1" style="font-size:28px">A parte <b>absorvida</b> aquece o material.</div>
+      <div class="linha-ex" data-passo="2" style="font-size:28px">A parte <b>refletida</b> volta e não aquece.</div>
+    </div>
+    <div class="caixa caixa-fundamental" data-passo="3" style="position:absolute;left:580px;right:0;top:620px;padding:20px 30px">
+      <div class="texto" style="font-size:30px">Superfície <b>escura</b> absorve muito e esquenta rápido. Superfície <b>clara</b> reflete muito e esquenta pouco.</div>
+    </div>
+  </div>
+  <aside class="notas">
+    <p>Clique 1: a superfície escura (asfalto, tecido preto) absorve quase toda a radiação e esquenta (o brilho laranja). Clique 2: a clara (parede branca) devolve boa parte. Clique 3: a regra.</p>
+  </aside>
+</section>
+
+<!-- 4. Tabela das superfícies -->
+<section class="slide" data-nome="Superfícies ao Sol">
+  <div class="conteudo">
+    <p class="olho">Cada superfície reage de um jeito</p>
+    <h2 class="titulo">Superfícies ao Sol</h2>
+    <table class="tabela sol" style="position:absolute;left:0;top:160px">
+      <tr><th>Superfície ao Sol</th><th>O que acontece</th></tr>
+      <tr data-passo="1"><td><b>Escura</b> (asfalto, tecido preto)</td><td>absorve muito e esquenta rápido</td></tr>
+      <tr data-passo="2"><td><b>Clara</b> (parede branca)</td><td>reflete muito e esquenta pouco</td></tr>
+      <tr data-passo="3"><td><b>Metálica polida</b></td><td>reflete quase tudo</td></tr>
+      <tr data-passo="4"><td><b>Areia e solo</b></td><td>esquentam e esfriam rápido</td></tr>
+      <tr data-passo="5"><td><b>Água</b></td><td>esquenta e esfria devagar</td></tr>
+    </table>
+  </div>
+  <aside class="notas">
+    <p>A tabela da apostila, uma linha por clique. Pergunte antes de cada uma. A metálica polida é a chave da garrafa térmica e da manta do SAMU. As duas últimas linhas são a praia, no próximo slide.</p>
+  </aside>
+</section>
+
+<!-- 5. A praia -->
+<section class="slide" data-nome="A praia">
+  <div class="conteudo">
+    <p class="olho">Areia e água</p>
+    <h2 class="titulo">Na praia, de dia e de noite</h2>
+    <svg viewBox="0 0 1000 440" style="position:absolute;left:0;top:150px;width:1000px;height:440px" aria-hidden="true" data-em="2:noite">
+      <rect class="ceu" x="0" y="0" width="1000" height="440" rx="30" fill="#E3F0FB"/>
+      <circle class="sol-dia" cx="500" cy="90" r="56" fill="url(#p2Sol)"/>
+      <g class="lua"><circle cx="500" cy="90" r="48" fill="#FFF4C2"/><circle cx="522" cy="76" r="44" fill="#3A2C7A"/></g>
+      <path class="areia" d="M0 300 Q250 270 500 300 L500 440 L30 440 Q0 440 0 410 Z"/>
+      <path class="mar" d="M500 300 Q750 280 1000 300 L1000 410 Q1000 440 970 440 L500 440 Z"/>
+      <g data-passo="1">
+        <g class="dia-txt"><rect x="70" y="330" width="360" height="58" rx="29" fill="#fff"/><text x="250" y="368" text-anchor="middle" class="rot-forte" style="fill:#A8431B">areia queima o pé</text>
+          <rect x="570" y="330" width="360" height="58" rx="29" fill="#fff"/><text x="750" y="368" text-anchor="middle" class="rot-forte" style="fill:#1F5F99">água continua fresca</text></g>
+        <g class="noite-txt"><rect x="70" y="330" width="360" height="58" rx="29" fill="#fff"/><text x="250" y="368" text-anchor="middle" class="rot-forte" style="fill:#1F5F99">areia esfria depressa</text>
+          <rect x="570" y="330" width="360" height="58" rx="29" fill="#fff"/><text x="750" y="368" text-anchor="middle" class="rot-forte" style="fill:#A8431B">água continua morna</text></g>
+      </g>
+    </svg>
+    <div style="position:absolute;left:1060px;right:0;top:160px;display:flex;flex-direction:column;gap:18px">
+      <div class="linha-ex" data-passo="1" style="font-size:28px"><b>Meio-dia:</b> a areia queima o pé e a água continua fresca.</div>
+      <div class="linha-ex" data-passo="2" style="font-size:28px"><b>Noite:</b> o contrário. A areia esfria depressa e a água continua morna.</div>
+    </div>
+    <div class="caixa caixa-fundamental" data-passo="3" style="position:absolute;left:580px;right:0;top:640px;padding:20px 30px">
+      <div class="texto" style="font-size:30px">A água precisa de <b>muito mais energia</b> que a areia para subir a mesma temperatura.</div>
+    </div>
+  </div>
+  <aside class="notas">
+    <p>A praia da apostila. Clique 1: meio-dia (areia laranja, quente; água fresca). Clique 2: vira noite (areia esfria, água continua morna). Clique 3: o motivo.</p>
+  </aside>
+</section>
+
+<!-- 6. Garrafa térmica -->
+<section class="slide" data-nome="Garrafa térmica">
+  <div class="conteudo">
+    <p class="olho">Barrar o calor</p>
+    <h2 class="titulo">A garrafa térmica</h2>
+    <svg viewBox="0 0 520 470" style="position:absolute;left:40px;top:130px;width:500px;height:452px" aria-hidden="true">
+      <g class="vapor" fill="none" stroke="#C9C1F2" stroke-width="5" stroke-linecap="round"><path d="M230 40 q10 -10 0 -20 q-10 -10 0 -20" transform="translate(0 10)"/><path d="M290 40 q10 -10 0 -20 q-10 -10 0 -20" transform="translate(0 10)"/></g>
+      <rect x="110" y="110" width="300" height="350" rx="44" fill="#ECEAF4" stroke="#292B2C" stroke-width="5"/>
+      <rect x="138" y="138" width="244" height="296" rx="30" fill="#fff" stroke="url(#p2Espelho)" stroke-width="10"/>
+      <rect x="164" y="164" width="192" height="244" rx="20" fill="#B8774A" stroke="#B9B4CC" stroke-width="8"/>
+      <rect x="180" y="58" width="160" height="64" rx="18" fill="var(--d)" stroke="#292B2C" stroke-width="5"/>
+      <g data-passo="2" fill="none" stroke="#FF8A3D" stroke-width="9" stroke-linecap="round">
+        <path class="ir" d="M256 250 L372 250 L256 250"/>
+        <path class="ir" d="M264 330 L148 330 L264 330"/>
+      </g>
+    </svg>
+    <div style="position:absolute;left:600px;right:0;top:150px;display:flex;flex-direction:column;gap:14px">
+      <p class="texto" style="margin:0;font-size:31px">Ela <b>não aquece nem esfria</b> nada: atrapalha as <b>três</b> formas de propagação ao mesmo tempo.</p>
+      <div class="linha-ex" data-passo="1" style="font-size:28px"><b>Vácuo</b> entre as duas paredes da ampola: sem partículas, não há <b>condução</b> nem <b>convecção</b>.</div>
+      <div class="linha-ex" data-passo="2" style="font-size:28px">Paredes <b>espelhadas</b>: refletem a radiação infravermelha de volta e reduzem a <b>irradiação</b>.</div>
+      <div class="linha-ex" data-passo="3" style="font-size:28px">A <b>tampa</b> impede o ar quente de sair por cima: barra a <b>convecção</b>.</div>
+    </div>
+  </div>
+  <aside class="notas">
+    <p>Corte da garrafa térmica (esquema fora de escala), como na apostila: o café no meio, a ampola de parede dupla com vácuo entre as paredes, as paredes espelhadas e a tampa. Clique 1: o vácuo. Clique 2: o espelho; as setinhas laranja são o infravermelho do café batendo na parede espelhada e voltando. Clique 3: a tampa.</p>
+    <p>Ela também mantém o suco gelado: o calor de fora tem a mesma dificuldade para entrar.</p>
+  </aside>
+</section>
+
+<!-- 7. Exemplo: qual forma? -->
+<section class="slide" data-nome="Exemplo: qual forma?">
+  <div class="conteudo">
+    <p class="olho">Exemplo</p>
+    <h2 class="titulo">Qual forma de propagação?</h2>
+    <p class="texto" style="position:absolute;left:0;right:0;top:150px;margin:0">Diga qual forma de propagação a garrafa térmica barra em cada parte.</p>
+    <div style="position:absolute;left:0;width:1200px;top:250px;display:flex;flex-direction:column;gap:18px">
+      <div class="linha-ex" style="display:grid;grid-template-columns:260px 1fr;align-items:center"><span><b>(a)</b> o vácuo</span><span data-passo="1">barra a <b>condução</b> e a <b>convecção</b>, que precisam de matéria</span></div>
+      <div class="linha-ex" style="display:grid;grid-template-columns:260px 1fr;align-items:center"><span><b>(b)</b> o espelho</span><span data-passo="2">barra a <b>irradiação</b>, refletindo-a</span></div>
+      <div class="linha-ex" style="display:grid;grid-template-columns:260px 1fr;align-items:center"><span><b>(c)</b> a tampa</span><span data-passo="3">barra a <b>convecção</b>, impedindo o ar quente de escapar</span></div>
+    </div>
+  </div>
+  <aside class="notas">
+    <p>Exemplo da apostila. Peça a resposta antes de cada clique. Se alguém disser que o vácuo barra tudo, lembre: a irradiação passa pelo vácuo (é assim que o calor do Sol chega). Por isso o espelho é necessário.</p>
+  </aside>
+</section>
+
+<!-- 8. Coletor solar -->
+<section class="slide" data-nome="Coletor solar">
+  <div class="conteudo">
+    <p class="olho">Aproveitar o calor</p>
+    <h2 class="titulo">O coletor solar faz o contrário</h2>
+    <svg viewBox="0 0 980 470" style="position:absolute;left:0;top:130px;width:980px;height:470px" aria-hidden="true">
+      <circle cx="90" cy="70" r="50" fill="url(#p2Sol)"/>
+      <g fill="none" stroke="#E0A800" stroke-width="6" stroke-linecap="round"><path class="raio sempre" d="M140 110 L260 230"/><path class="raio sempre" d="M120 130 L220 290"/></g>
+      <!-- telhado e placa -->
+      <path d="M150 440 L520 200 L580 240 L210 470 Z" fill="#C9B8F2"/>
+      <g transform="rotate(-33 360 330)">
+        <rect x="200" y="300" width="330" height="70" rx="10" fill="#292B2C" stroke="#4B4760" stroke-width="4"/>
+        <g stroke="#C87533" stroke-width="7"><line x1="230" y1="306" x2="230" y2="364"/><line x1="290" y1="306" x2="290" y2="364"/><line x1="350" y1="306" x2="350" y2="364"/><line x1="410" y1="306" x2="410" y2="364"/><line x1="470" y1="306" x2="470" y2="364"/></g>
+        <rect x="200" y="292" width="330" height="10" rx="5" fill="#CFE6FA" opacity=".9"/>
+      </g>
+      <!-- reservatório (boiler) -->
+      <rect x="640" y="90" width="300" height="130" rx="60" fill="#fff" stroke="#4B4760" stroke-width="5"/>
+      <rect x="656" y="106" width="268" height="98" rx="48" fill="#E3F0FB"/>
+      <rect x="656" y="106" width="268" height="44" rx="22" fill="#F7A27A"/>
+      <!-- canos: água quente sobe, fria desce -->
+      <path class="raio sempre" d="M495 205 Q560 150 650 140" fill="none" stroke="#E8590C" stroke-width="9" stroke-linecap="round"/>
+      <path class="raio sempre" d="M660 200 Q600 330 300 430" fill="none" stroke="#4A90E2" stroke-width="9" stroke-linecap="round"/>
+      <g data-passo="1"><text x="700" y="300" class="rot-forte" style="font-size:24px">placa escura</text><text x="700" y="330" class="rot-fig" style="font-size:22px">absorve a radiação</text></g>
+      <g data-passo="2"><text x="400" y="460" class="rot-forte" style="font-size:24px">tubos de cobre, com água</text></g>
+      <g data-passo="3"><text x="690" y="60" class="rot-forte" style="font-size:24px;fill:#A8431B">boiler (isolado)</text></g>
+    </svg>
+    <div style="position:absolute;left:1040px;right:0;top:150px;display:flex;flex-direction:column;gap:14px">
+      <div class="linha-ex" data-passo="1" style="font-size:27px"><b>Placa escura</b>, coberta por um vidro: absorve bem a radiação do Sol.</div>
+      <div class="linha-ex" data-passo="2" style="font-size:27px">Sob a placa, <b>tubos de cobre</b> (bons condutores) cheios de água.</div>
+      <div class="linha-ex" data-passo="3" style="font-size:27px">A água aquecida <b>sobe por convecção</b> até o <b>boiler</b>, um reservatório isolado que a guarda até a hora do banho.</div>
+    </div>
+  </div>
+  <aside class="notas">
+    <p>O coletor solar quer ganhar calor, o contrário da garrafa térmica. As três formas aparecem: irradiação (o Sol na placa escura), condução (placa e tubos de cobre) e convecção (a água quente sobe até o boiler; a fria desce e volta para a placa). Um item por clique.</p>
+  </aside>
+</section>
+
+<!-- 9. O equilíbrio térmico da Terra -->
+<section class="slide" data-nome="O equilíbrio térmico da Terra">
+  <div class="conteudo">
+    <p class="olho">O planeta também troca calor</p>
+    <h2 class="titulo">O equilíbrio térmico da Terra</h2>
+    <svg viewBox="0 0 900 440" style="position:absolute;left:0;top:150px;width:900px;height:440px" aria-hidden="true">
+      <circle cx="80" cy="220" r="70" fill="url(#p2Sol)"/>
+      <g fill="none" stroke="#E0A800" stroke-width="8" stroke-linecap="round"><path class="raio sempre" d="M170 160 L520 160" marker-end="url(#p2PtaS)"/><path class="raio sempre" d="M170 220 L500 220" marker-end="url(#p2PtaS)"/><path class="raio sempre" d="M170 280 L520 280" marker-end="url(#p2PtaS)"/></g>
+      <circle cx="660" cy="220" r="130" fill="url(#p2Terra)"/>
+      <path d="M600 150 q40 -30 70 10 q30 40 -10 70 q-40 14 -54 -26 z M700 250 q30 -14 44 14 q-14 40 -44 26 z" fill="#5DAE7A"/>
+      <g data-passo="1" fill="none" stroke="#E8590C" stroke-width="7" stroke-linecap="round"><path class="raio sempre" d="M760 110 L850 40" marker-end="url(#p2Pta)"/><path class="raio sempre" d="M800 220 L890 220" marker-end="url(#p2Pta)"/><path class="raio sempre" d="M760 330 L850 400" marker-end="url(#p2Pta)"/></g>
+      <text x="340" y="130" text-anchor="middle" class="rot-forte" style="fill:#8A6A00">chega do Sol</text>
+      <text x="830" y="140" text-anchor="middle" class="rot-forte" style="fill:#A8431B" data-passo="1">sai: infravermelho</text>
+    </svg>
+    <div style="position:absolute;left:960px;right:0;top:160px;display:flex;flex-direction:column;gap:16px">
+      <p class="texto" style="margin:0;font-size:31px">De dia, a Terra recebe energia do Sol o tempo todo. Por que não esquenta sem parar?</p>
+      <div class="linha-ex" data-passo="1" style="font-size:28px">Ela também <b>devolve energia</b> para o espaço, como radiação infravermelha.</div>
+      <div class="linha-ex" data-passo="2" style="font-size:28px">Quando o que <b>chega</b> e o que <b>sai</b> se equilibram, a temperatura média fica <b>estável</b>.</div>
+    </div>
+    <div class="caixa caixa-fundamental" data-passo="3" style="position:absolute;left:580px;right:0;top:650px;padding:20px 30px">
+      <div class="texto" style="font-size:30px">É esse equilíbrio que mantém a <b>água líquida</b> e permite a <b>vida</b> na Terra.</div>
+    </div>
+  </div>
+  <aside class="notas">
+    <p>Pergunta da apostila. Clique 1: a Terra devolve energia (setas laranja). Clique 2: o equilíbrio entre o que chega e o que sai. Clique 3: por que isso importa.</p>
+  </aside>
+</section>
+
+<!-- 10. Efeito estufa -->
+<section class="slide" data-nome="Efeito estufa">
+  <div class="conteudo">
+    <p class="olho">A atmosfera segura parte do calor</p>
+    <h2 class="titulo">O efeito estufa</h2>
+    <svg viewBox="0 0 1000 470" style="position:absolute;left:0;top:130px;width:1000px;height:470px" aria-hidden="true">
+      <circle cx="90" cy="70" r="56" fill="url(#p2Sol)"/>
+      <rect x="0" y="190" width="1000" height="70" fill="#E0F4F4"/>
+      <text x="980" y="235" text-anchor="end" class="rot-forte" style="fill:var(--d-forte)">gases de efeito estufa</text>
+      <rect x="0" y="400" width="1000" height="70" rx="12" fill="#9CC48B"/>
+      <text x="980" y="445" text-anchor="end" class="rot-forte" style="fill:#2E5A2A">superfície</text>
+      <g data-passo="1"><path class="raio" d="M120 120 L210 392" fill="none" stroke="#E0A800" stroke-width="8" stroke-linecap="round" marker-end="url(#p2PtaS)"/><text x="190" y="110" class="rot-forte" style="fill:#8A6A00">luz do Sol atravessa</text></g>
+      <g data-passo="2"><path class="raio" d="M440 395 L540 250" fill="none" stroke="#E8590C" stroke-width="8" stroke-linecap="round" marker-end="url(#p2Pta)"/><text x="226" y="356" class="rot-forte" style="fill:#A8431B;font-size:22px">calor (infravermelho)</text></g>
+      <g data-passo="3"><path class="raio" d="M560 205 L640 40" fill="none" stroke="#E8590C" stroke-width="8" stroke-linecap="round" marker-end="url(#p2Pta)"/><text x="660" y="60" class="rot-forte" style="fill:#A8431B">parte escapa para o espaço</text></g>
+      <g data-passo="4"><path class="raio" d="M600 260 L700 392" fill="none" stroke="#E8590C" stroke-width="8" stroke-linecap="round" marker-end="url(#p2Pta)"/><text x="720" y="320" class="rot-forte" style="fill:#A8431B">parte volta</text><text x="720" y="350" class="rot-forte" style="fill:#A8431B">para a superfície</text></g>
+    </svg>
+    <div class="caixa caixa-fundamental" data-passo="5" style="position:absolute;left:1060px;right:0;top:160px;padding:22px 28px">
+      <span class="rotulo">Efeito estufa</span>
+      <div class="texto" style="font-size:28px">Alguns gases da atmosfera, os <b>gases de efeito estufa</b> (vapor d'água, gás carbônico e metano), deixam a luz do Sol passar, mas <b>seguram parte do calor</b> que a superfície devolve.</div>
+    </div>
+  </div>
+  <aside class="notas">
+    <p>A figura da apostila (esquema fora de escala), uma seta por clique: a luz atravessa a atmosfera; a superfície aquece e devolve calor como infravermelho; parte escapa; parte volta, segurada pelos gases. Clique 5: a definição.</p>
+  </aside>
+</section>
+
+<!-- 11. Natural x intensificado -->
+<section class="slide" data-nome="Aquecimento global">
+  <div class="conteudo">
+    <p class="olho">Necessário, mas sem exagero</p>
+    <h2 class="titulo">Do efeito estufa ao aquecimento global</h2>
+    <svg viewBox="0 0 560 440" style="position:absolute;left:0;top:150px;width:520px;height:409px" aria-hidden="true">
+      <g font-family="Figtree,'Segoe UI',sans-serif" font-weight="800" text-anchor="middle">
+        <g data-passo="1"><rect x="90" y="40" width="60" height="320" rx="30" fill="#fff" stroke="#4B4760" stroke-width="5"/><circle cx="120" cy="380" r="42" fill="#4A90E2" stroke="#4B4760" stroke-width="5"/><rect x="108" y="270" width="24" height="110" rx="10" fill="#4A90E2"/><text x="120" y="20" font-size="32" fill="#1F5F99">≈ −18 °C</text><text x="120" y="440" font-size="22" fill="#5E5A70">sem efeito estufa</text></g>
+        <g data-passo="2"><rect x="380" y="40" width="60" height="320" rx="30" fill="#fff" stroke="#4B4760" stroke-width="5"/><circle cx="410" cy="380" r="42" fill="#5DAE7A" stroke="#4B4760" stroke-width="5"/><rect x="398" y="160" width="24" height="220" rx="10" fill="#5DAE7A"/><text x="410" y="20" font-size="32" fill="#2E7A4A">≈ 15 °C</text><text x="410" y="440" font-size="22" fill="#5E5A70">hoje</text></g>
+      </g>
+    </svg>
+    <div style="position:absolute;left:600px;right:0;top:160px;display:flex;flex-direction:column;gap:16px">
+      <p class="texto" style="margin:0;font-size:31px">O efeito estufa natural é <b>necessário</b>: sem ele, a temperatura média da Terra seria de cerca de <b>−18 °C</b>, e não os cerca de <b>15 °C</b> de hoje.</p>
+      <div class="linha-ex" data-passo="3" style="font-size:28px">O problema é a <b>intensificação</b>: a queima de carvão, petróleo e gás natural e as queimadas lançam muito <b>gás carbônico</b> no ar.</div>
+      <div class="linha-ex" data-passo="4" style="font-size:28px">Mais gás retém mais calor, e a temperatura média do planeta sobe.</div>
+    </div>
+    <span class="pilula pilula-resposta" data-passo="5" style="position:absolute;left:600px;top:700px">Isso é o aquecimento global</span>
+  </div>
+  <aside class="notas">
+    <p>Os números são da apostila (médias aproximadas). Cliques 1 e 2: a Terra com e sem efeito estufa. Cliques 3 e 4: o excesso. Clique 5: o nome. Os combustíveis e os impactos voltam no próximo subcapítulo.</p>
+  </aside>
+</section>
+
+<!-- 12. Questão 1 -->
+<section class="slide questao" data-nome="Questão 1">
+  <div class="conteudo">
+    <div class="area-resolucao"></div>
+    <span class="pilula pilula-pausa" data-em="1:some">Pause o vídeo e tente</span>
+    <div class="painel-questao">
+      <p class="olho">Questão 1 · Modelo IF</p>
+      <p class="enunciado" style="font-size:24px">Numa manhã de sol em Juiz de Fora, Lúcia estende no varal duas camisetas iguais, do mesmo tecido: uma preta e uma branca. Na hora de recolher, ela percebe que a camiseta preta está bem mais quente que a branca.</p>
+      <p class="enunciado" style="font-size:24px">Isso acontece porque</p>
+      <ol class="alternativas" style="gap:8px">
+        <li data-em="2:certo" style="font-size:21px;padding:6px 14px"><b>A</b><span>a camiseta preta absorve mais a radiação do Sol, enquanto a branca reflete boa parte dela.</span></li>
+        <li data-em="2:apaga" style="font-size:21px;padding:6px 14px"><b>B</b><span>a camiseta preta reflete mais a radiação do Sol, e essa radiação refletida fica presa no tecido.</span></li>
+        <li data-em="2:apaga" style="font-size:21px;padding:6px 14px"><b>C</b><span>a camiseta preta recebe o calor do Sol por condução, e a branca recebe por irradiação.</span></li>
+        <li data-em="2:apaga" style="font-size:21px;padding:6px 14px"><b>D</b><span>a cor preta tem uma temperatura própria maior que a da cor branca, mesmo longe do Sol.</span></li>
+        <li data-em="2:apaga" style="font-size:21px;padding:6px 14px"><b>E</b><span>a camiseta branca refrata a luz do Sol, desviando o calor para o varal.</span></li>
+      </ol>
+    </div>
+  </div>
+  <aside class="resolucao">
+    <p class="dados"><b>Dados:</b> mesmo tecido, mesmo sol; cores diferentes.</p>
+    <ol class="passos">
+      <li>O calor do Sol chega por irradiação.</li>
+      <li>Só a parte absorvida aquece.</li>
+      <li>Preta absorve muito; branca reflete muito.</li>
+    </ol>
+    <p class="resposta"><b>Resposta:</b> a preta absorve mais a radiação. <b>Gabarito A.</b></p>
+    <p class="atencao"><b>Destaque no quadro:</b> Escura absorve; clara reflete.</p>
+    <ul class="erros">
+      <li><b>B</b> Troca refletir por absorver.</li>
+      <li><b>C</b> O Sol não toca o tecido: as duas recebem por irradiação.</li>
+      <li><b>D</b> Cor não dá temperatura ao corpo.</li>
+      <li><b>E</b> Não é refração; a branca reflete.</li>
+    </ul>
+  </aside>
+  <aside class="notas">
+    <p>Clique 1 tira o aviso de pausa: resolva na área (D liga a caneta; E esconde o enunciado). Clique 2: gabarito A.</p>
+    <p>Questão Modelo IF da apostila: lote if-fisica-propagacao-do-calor, m003, FIS-0974.</p>
+  </aside>
+</section>
+
+<!-- 13. Questão 2 -->
+<section class="slide questao" data-nome="Questão 2">
+  <div class="conteudo">
+    <div class="area-resolucao"></div>
+    <span class="pilula pilula-pausa" data-em="1:some">Pause o vídeo e tente</span>
+    <div class="painel-questao">
+      <p class="olho">Questão 2 · Modelo IF</p>
+      <p class="enunciado" style="font-size:21px">Uma estudante projetou uma marmita térmica para manter o almoço quente até a hora de comer. A marmita tem duas paredes de metal com <b>vácuo</b> entre elas; as faces das paredes voltadas para o vácuo são <b>espelhadas</b>; e a tampa tem uma borracha que a deixa bem fechada.</p>
+      <p class="enunciado" style="font-size:21px">Para baratear a marmita, ela pensou em trocar as faces espelhadas por uma pintura <b>preta fosca</b>, mantendo o vácuo e a tampa. Com essa troca, a comida</p>
+      <ol class="alternativas" style="gap:7px">
+        <li data-em="2:apaga" style="font-size:19px;padding:5px 12px"><b>A</b><span>esfriaria no mesmo ritmo, porque o vácuo já impede todas as formas de propagação do calor.</span></li>
+        <li data-em="2:apaga" style="font-size:19px;padding:5px 12px"><b>B</b><span>esfriaria mais depressa por condução, porque a tinta preta é um bom condutor de calor.</span></li>
+        <li data-em="2:apaga" style="font-size:19px;padding:5px 12px"><b>C</b><span>esfriaria mais devagar, porque a cor preta absorve e guarda o calor da comida.</span></li>
+        <li data-em="2:certo" style="font-size:19px;padding:5px 12px"><b>D</b><span>esfriaria mais depressa por irradiação, porque a superfície escura deixa de refletir a radiação infravermelha, enquanto o vácuo continua barrando a condução e a convecção.</span></li>
+        <li data-em="2:apaga" style="font-size:19px;padding:5px 12px"><b>E</b><span>esfriaria mais depressa por convecção, porque a pintura preta aquece o vácuo entre as paredes.</span></li>
+      </ol>
+    </div>
+  </div>
+  <aside class="resolucao">
+    <p class="dados"><b>Dados:</b> vácuo e tampa mantidos; espelho trocado por preto.</p>
+    <ol class="passos">
+      <li>Vácuo: barra condução e convecção.</li>
+      <li>Espelho: barrava a irradiação.</li>
+      <li>Preto absorve em vez de refletir.</li>
+      <li>Perde mais calor por irradiação.</li>
+    </ol>
+    <p class="resposta"><b>Resposta:</b> esfria mais depressa, por irradiação. <b>Gabarito D.</b></p>
+    <p class="atencao"><b>Destaque no quadro:</b> A irradiação passa pelo vácuo: só o espelho a barra.</p>
+    <ul class="erros">
+      <li><b>A</b> O vácuo não barra a irradiação.</li>
+      <li><b>B</b> No vácuo não há condução; muda a irradiação.</li>
+      <li><b>C</b> O preto leva embora mais calor da comida.</li>
+      <li><b>E</b> Não há convecção no vácuo.</li>
+    </ul>
+  </aside>
+  <aside class="notas">
+    <p>Clique 1 tira o aviso de pausa. Clique 2: gabarito D.</p>
+    <p>Questão Modelo IF da apostila: lote if-fisica-propagacao-do-calor, m009, FIS-0980. É a garrafa térmica com uma peça trocada.</p>
+  </aside>
+</section>
+
+<!-- 14. Questão 3 -->
+<section class="slide questao" data-nome="Questão 3">
+  <div class="conteudo">
+    <div class="area-resolucao"></div>
+    <span class="pilula pilula-pausa" data-em="1:some">Pause o vídeo e tente</span>
+    <div class="painel-questao">
+      <p class="olho">Questão 3 · IF Sudeste MG 2014</p>
+      <p class="enunciado" style="font-size:22px">Sobre a transferência de calor entre os corpos, marque a opção cuja afirmativa está <b>INCORRETA</b>.</p>
+      <ol class="alternativas" style="gap:7px">
+        <li data-em="2:apaga" style="font-size:18.5px;padding:5px 12px"><b>A</b><span>Os iglus, embora feitos de gelo, impedem a transferência de calor para o meio externo, ajudando a manter o interior com a temperatura mais elevada.</span></li>
+        <li data-em="2:apaga" style="font-size:18.5px;padding:5px 12px"><b>B</b><span>O forno micro-ondas aquece os alimentos pelo processo de radiação.</span></li>
+        <li data-em="2:apaga" style="font-size:18.5px;padding:5px 12px"><b>C</b><span>Ao colocarmos uma colher de madeira, juntamente com uma colher de alumínio, em uma mesma panela aquecida, o alumínio se aquece mais rapidamente do que a madeira, por ser um bom condutor de calor.</span></li>
+        <li data-em="2:apaga" style="font-size:18.5px;padding:5px 12px"><b>D</b><span>O ar condicionado deve ser instalado na parte superior do ambiente a ser refrigerado, uma vez que o ar frio, mais denso, desce enquanto o ar quente sobe, gerando as correntes de convecção.</span></li>
+        <li data-em="2:certo" style="font-size:18.5px;padding:5px 12px"><b>E</b><span>Nos aquecedores solares, parte dos tanques é pintada de preto, para que a água aquecida não perca calor por condução.</span></li>
+      </ol>
+    </div>
+  </div>
+  <aside class="resolucao">
+    <p class="dados"><b>Dados:</b> procurar a afirmativa errada.</p>
+    <ol class="passos">
+      <li>A: gelo isola; o iglu segura o calor (certa).</li>
+      <li>B: micro-ondas: ondas eletromagnéticas (certa).</li>
+      <li>C: alumínio conduz, madeira isola (certa).</li>
+      <li>D: ar frio desce: aparelho no alto (certa).</li>
+      <li>E: o preto serve para absorver radiação (errada).</li>
+    </ol>
+    <p class="resposta"><b>Resposta:</b> a dos aquecedores solares. <b>Gabarito E.</b></p>
+    <p class="atencao"><b>Destaque no quadro:</b> Preto no coletor: absorver a radiação do Sol.</p>
+    <ul class="erros">
+      <li><b>A</b> Correta: gelo e neve compactada isolam.</li>
+      <li><b>B</b> Correta: o micro-ondas emite ondas eletromagnéticas.</li>
+      <li><b>C</b> Correta: metal conduz bem.</li>
+      <li><b>D</b> Correta: convecção.</li>
+    </ul>
+  </aside>
+  <aside class="notas">
+    <p>Clique 1 tira o aviso de pausa. Clique 2: gabarito E (a única INCORRETA).</p>
+    <p>Questão oficial do IF Sudeste MG 2014-1, q34, FIS-0527 (sobra do capítulo para as partes). O isolamento do boiler é feito com isolante (lã de vidro, isopor), não com tinta preta.</p>
+  </aside>
+</section>
+
+<!-- 15. Questão 4 -->
+<section class="slide questao" data-nome="Questão 4">
+  <div class="conteudo">
+    <div class="area-resolucao"></div>
+    <span class="pilula pilula-pausa" data-em="1:some">Pause o vídeo e tente</span>
+    <div class="painel-questao">
+      <p class="olho">Questão 4 · IF Sudeste MG 2013</p>
+      <p class="enunciado" style="font-size:22px">Leia, atentamente, as afirmativas abaixo, e marque a única que está <b>CORRETA</b>.</p>
+      <ol class="alternativas" style="gap:7px">
+        <li data-em="2:apaga" style="font-size:18.5px;padding:5px 12px"><b>A</b><span>Corpos de diferentes temperaturas, quando colocados em contato, atingem o equilíbrio térmico no momento em que ocorre o contato.</span></li>
+        <li data-em="2:apaga" style="font-size:18.5px;padding:5px 12px"><b>B</b><span>O Sol aquece a Terra pelo processo de irradiação, por sua vez, a Terra aquece a Lua pelo mesmo processo.</span></li>
+        <li data-em="2:apaga" style="font-size:18.5px;padding:5px 12px"><b>C</b><span>O congelador, nas geladeiras, deve sempre ficar na parte inferior, pois assim contribui na eficiência do processo de convecção que resulta no resfriamento dos alimentos.</span></li>
+        <li data-em="2:apaga" style="font-size:18.5px;padding:5px 12px"><b>D</b><span>No frio, devemos utilizar roupas feitas de materiais que facilitam a condução térmica.</span></li>
+        <li data-em="2:certo" style="font-size:18.5px;padding:5px 12px"><b>E</b><span>Nos atendimentos de emergência do SAMU (Serviço de Atendimento Municipal de Urgência), os socorristas utilizam mantas aluminizadas para que a vítima não troque calor com o ar atmosférico por irradiação e condução térmica, evitando a hipotermia.</span></li>
+      </ol>
+    </div>
+  </div>
+  <aside class="resolucao">
+    <p class="dados"><b>Dados:</b> procurar a única afirmativa certa.</p>
+    <ol class="passos">
+      <li>A: o equilíbrio leva tempo (errada).</li>
+      <li>B: quem aquece a Lua é o Sol (errada).</li>
+      <li>C: o congelador fica em cima (errada).</li>
+      <li>D: no frio, roupa isolante (errada).</li>
+      <li>E: manta brilhante reflete o infravermelho e isola (certa).</li>
+    </ol>
+    <p class="resposta"><b>Resposta:</b> a da manta aluminizada. <b>Gabarito E.</b></p>
+    <p class="atencao"><b>Destaque no quadro:</b> Metal polido reflete quase tudo: é o espelho da garrafa térmica.</p>
+    <ul class="erros">
+      <li><b>A</b> O calor passa aos poucos até as temperaturas se igualarem.</li>
+      <li><b>B</b> A Terra não é a fonte de calor da Lua.</li>
+      <li><b>C</b> Embaixo, a convecção não aconteceria.</li>
+      <li><b>D</b> Roupa que conduz faria o corpo perder calor.</li>
+    </ul>
+  </aside>
+  <aside class="notas">
+    <p>Clique 1 tira o aviso de pausa. Clique 2: gabarito E.</p>
+    <p>Questão oficial do IF Sudeste MG 2013-1, q35, FIS-0539 (sobra do capítulo para as partes). A sigla do SAMU está como na prova; o nome oficial é Serviço de Atendimento Móvel de Urgência.</p>
+  </aside>
+</section>
+
+<!-- 16. Resumo -->
+<section class="slide" data-nome="Resumo">
+  <div class="conteudo">
+    <p class="olho">Resumo de Propagação do calor</p>
+    <h2 class="titulo">O essencial</h2>
+    <div class="resumo" style="position:absolute;left:0;right:0;top:150px">
+      <div><b>Condução:</b> de partícula em partícula; metais conduzem; madeira, plástico, isopor, lã e ar parado isolam.</div>
+      <div><b>Convecção:</b> só em líquidos e gases; o quente, menos denso, sobe, e o frio desce.</div>
+      <div><b>Irradiação:</b> ondas eletromagnéticas, também no vácuo. Escura absorve; clara e metálica refletem.</div>
+      <div><b>Garrafa térmica</b> barra as três: vácuo, paredes espelhadas e tampa.</div>
+      <div><b>Coletor solar:</b> placa escura, tubos de cobre e água que sobe por convecção até o boiler.</div>
+      <div>A Terra fica em <b>equilíbrio térmico</b> ao devolver calor; os gases de efeito estufa seguram parte dele, e o excesso causa o <b>aquecimento global</b>.</div>
+    </div>
+  </div>
+  <aside class="notas"><p>Resumo do subcapítulo inteiro (Partes 1 e 2). Peça para tirarem um print desta tela.</p></aside>
+</section>
+
+<!-- 17. A seguir -->
+<section class="slide capa" data-nome="A seguir">
+  <div class="estrelas"></div>
+  <div class="texto-capa" style="top:200px">
+    <span class="selo">Física · IF</span>
+    <p class="aula">A seguir · Termologia · Parte única</p>
+    <h1 style="font-size:120px">Combustíveis e máquinas térmicas</h1>
+    <p class="sub">Do vapor ao motor</p>
+  </div>
+  <svg class="emblema" viewBox="0 0 640 640" aria-hidden="true">
+    <g transform="translate(400 330)"><g class="gira"><circle r="170" fill="none" stroke="#fff" stroke-width="22"/><g stroke="#fff" stroke-opacity=".7" stroke-width="12"><line x1="-160" y1="0" x2="160" y2="0"/><line x1="0" y1="-160" x2="0" y2="160"/><line x1="-113" y1="-113" x2="113" y2="113"/><line x1="-113" y1="113" x2="113" y2="-113"/></g></g><circle r="34" fill="#FFD10C"/></g>
+    <rect x="40" y="290" width="200" height="80" rx="14" fill="#fff" fill-opacity=".2" stroke="#fff" stroke-width="5"/>
+    <rect x="160" y="298" width="40" height="64" rx="8" fill="#FFD10C"/>
+    <line x1="200" y1="330" x2="400" y2="330" stroke="#FFD10C" stroke-width="14" stroke-linecap="round"/>
+  </svg>
+  <img class="logo-capa" src="{{LOGO_BRANCO}}" alt="Quarks">
+  <aside class="notas"><p>Próxima parte, a última do capítulo: os combustíveis na história, como funciona uma máquina térmica e os impactos dos combustíveis.</p></aside>
+</section>
