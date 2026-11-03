@@ -23,7 +23,7 @@ MOTOR = RAIZ / "motor"
 MARCA = RAIZ / "marca"
 VENDOR = RAIZ / "vendor"
 
-DISCIPLINAS = {"fisica": "Física", "quimica": "Química", "matematica": "Matemática", "portugues": "Português"}
+DISCIPLINAS = {"fisica": "Física", "quimica": "Química", "matematica": "Matemática", "portugues": "Português", "literatura": "Literatura"}
 
 FONTES = ('<link rel="preconnect" href="https://fonts.googleapis.com">'
           '<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>'
