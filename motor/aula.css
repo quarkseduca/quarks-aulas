@@ -96,7 +96,7 @@ body {
 .capa .texto-capa { position: absolute; left: 120px; top: 190px; width: 980px; color: #fff; }
 .capa .selo { background: var(--d); color: #fff; }
 .capa .selo::before { background: var(--amarelo); }
-.capa .aula { margin: 44px 0 6px; font-weight: 800; font-size: 32px; letter-spacing: .16em; text-transform: uppercase; color: var(--amarelo); }
+.capa .aula { text-wrap: balance; margin: 44px 0 6px; font-weight: 800; font-size: 32px; letter-spacing: .16em; text-transform: uppercase; color: var(--amarelo); }
 .capa h1 { font-family: var(--fonte-titulo); font-weight: 800; font-size: 150px; line-height: .94; letter-spacing: -.03em; margin: 0; text-wrap: balance; }
 .capa .sub { margin-top: 26px; font-size: 52px; font-weight: 600; color: var(--lilas-2); }
 .capa .emblema { position: absolute; left: 1180px; top: 150px; width: 640px; height: 640px; }

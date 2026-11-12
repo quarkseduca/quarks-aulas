@@ -161,7 +161,7 @@ def roteiro(caminho, meta, slides, modo="offline"):
         return None
     cartoes, gabaritos = [], []
     for i, q in enumerate(questoes, 1):
-        painel = re.search(r'<div class="painel-questao">(.*?)</div>\s*</div>\s*(?:<aside|</section)', q, re.S)
+        painel = re.search(r'<div class="painel-questao"[^>]*>(.*?)</div>\s*</div>\s*(?:<aside|</section)', q, re.S)
         painel = painel.group(1) if painel else ""
         painel = re.sub(r'data-em="\d+:certo"', 'class="certo"', painel)
         painel = re.sub(r'\s*data-(?:em|passo)="[^"]*"', "", painel)
@@ -169,7 +169,8 @@ def roteiro(caminho, meta, slides, modo="offline"):
         olho = re.search(r'<p class="olho">(.*?)</p>', painel, re.S)
         painel = painel.replace(olho.group(0), "", 1) if olho else painel
         res = re.search(r'<aside class="resolucao">(.*?)</aside>', q, re.S)
-        gab = re.search(r'class="certo"><b>(\w)</b>', painel)
+        gab = (re.search(r'class="certo"><b>(\w)</b>', painel)
+               or re.search(r'<li[^>]*data-em="[^"]*\bcerto\b[^"]*"[^>]*><b>([A-E])</b>', q))  # li com style ou com mais de um passo
         rotulo = olho.group(1) if olho else f"Questão {i}"
         gabaritos.append(f"<li>{rotulo}: <b>{gab.group(1) if gab else '?'}</b></li>")
         corpo = res.group(1) if res else "<p><i>Resolução ainda não escrita.</i></p>"
