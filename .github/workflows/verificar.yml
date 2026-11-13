@@ -1,0 +1,25 @@
+# Verificação automática dos slides (scripts/verificar_tudo.py). Só confere; não publica nada.
+# Só no main, em pull request e sob demanda (poupa os minutos do GitHub Actions); nas branches, rode o script antes de juntar.
+# Aqui a pasta da gestão não está ao lado: a comparação com ../quarks-gestao/slides fica "pulada" (ela roda na máquina de quem publica, pela trava do push).
+name: Verificar
+on:
+  push:
+    branches: [main]
+  pull_request:
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  verificar:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - name: Verificar tudo
+        run: python3 scripts/verificar_tudo.py

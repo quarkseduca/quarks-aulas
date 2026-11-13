@@ -5,6 +5,7 @@ Uso:
   python3 build.py                 # monta todas as aulas em saida/
   python3 build.py aulas/fisica/pism1/mu-1.html
   python3 build.py --previa ...    # versão para a prévia no claude.ai (sem <html>/<head>/<body>)
+  python3 build.py --check        # não grava nada: confere se saida/ e ../quarks-gestao/slides batem com o que o build geraria
   python3 build.py --sistema ../quarks-gestao/slides
                                    # versão para a aba Slides do sistema: partes, roteiros, catalogo.json e vendor/
                                    # (fontes e MathJax ficam num arquivo só, servido pelo sistema; o sistema embute
@@ -16,6 +17,7 @@ import json
 import random
 import re
 import sys
+import tempfile
 from pathlib import Path
 
 RAIZ = Path(__file__).resolve().parent
@@ -337,27 +339,96 @@ def sistema(destino):
     print("ok: catalogo.json", versao, f"({len(partes)} partes)")
 
 
-def main():
-    args = sys.argv[1:]
-    if "--sistema" in args:
-        i = args.index("--sistema")
-        return sistema(args[i + 1] if i + 1 < len(args) else RAIZ.parent / "quarks-gestao" / "slides")
-    previa = "--previa" in args
-    args = [a for a in args if a != "--previa"]
-    aulas = [Path(a) for a in args] or sorted((RAIZ / "aulas").rglob("*.html"))
+def gera_saida(aulas, previa=False, base=None):
+    base = Path(base) if base else RAIZ / "saida"
     for a in aulas:
         rel = Path(a).resolve().relative_to(RAIZ / "aulas")
-        destino = RAIZ / "saida" / (rel.with_name(rel.stem + "-previa.html") if previa else rel)
+        destino = base / (rel.with_name(rel.stem + "-previa.html") if previa else rel)
         destino.parent.mkdir(parents=True, exist_ok=True)
         destino.write_text(monta(a, "previa" if previa else "offline"), encoding="utf-8")
-        print("ok:", destino.relative_to(RAIZ))
+        print("ok:", Path("saida") / destino.relative_to(base))
         if not previa:
             meta, slides = ler(a)
             doc = roteiro(a, meta, slides)
             if doc:
                 rot = destino.with_name(destino.stem + "-professor.html")
                 rot.write_text(doc, encoding="utf-8")
-                print("ok:", rot.relative_to(RAIZ))
+                print("ok:", Path("saida") / rot.relative_to(base))
+
+
+def compara(novo, atual, quais, ignora=lambda rel: False):
+    """Diferenças entre o que o build gerou agora (novo) e o que está gravado (atual), só nos caminhos de `quais`."""
+    dif = []
+    gerados = {}
+    for q in quais:
+        alvo = novo / q
+        for f in ([alvo] if alvo.is_file() else sorted(alvo.rglob("*")) if alvo.is_dir() else []):
+            if f.is_file():
+                gerados[f.relative_to(novo).as_posix()] = f
+    for rel, f in gerados.items():
+        g = atual / rel
+        if not g.is_file():
+            dif.append(f"falta: {rel}")
+        elif g.read_bytes() != f.read_bytes():
+            dif.append(f"diferente: {rel}")
+    for q in quais:
+        alvo = atual / q
+        if alvo.is_dir():
+            for g in sorted(alvo.rglob("*")):
+                rel = g.relative_to(atual).as_posix()
+                if g.is_file() and rel not in gerados and not ignora(rel):
+                    dif.append(f"sobrando (o build não gera mais): {rel}")
+    return dif
+
+
+def check(gestao=None):
+    """Não grava nada no repositório: monta tudo numa pasta temporária e compara. Sai com 1 se algo estiver diferente."""
+    import contextlib
+    import io
+    gestao = Path(gestao) if gestao else RAIZ.parent / "quarks-gestao" / "slides"
+    erros = 0
+    with tempfile.TemporaryDirectory() as tmp:
+        tmp = Path(tmp)
+        with contextlib.redirect_stdout(io.StringIO()):
+            gera_saida(sorted((RAIZ / "aulas").rglob("*.html")), base=tmp / "saida")
+        dif = compara(tmp, RAIZ, ["saida"], ignora=lambda rel: rel.endswith("-previa.html"))
+        if dif:
+            erros += 1
+            print(f"FALHA: saida/ não bate com o build ({len(dif)} arquivo(s)). Rode: python3 build.py")
+            print("\n".join("  " + d for d in dif))
+        else:
+            print("ok: saida/ bate com o build")
+        if not (gestao / "catalogo.json").is_file():
+            print(f"pulado: a pasta de slides da gestão não está em {gestao} (a comparação com o sistema não foi feita)")
+        else:
+            avisos = io.StringIO()
+            with contextlib.redirect_stdout(avisos):
+                sistema(tmp / "slides")
+            for linha in avisos.getvalue().splitlines():
+                if linha.startswith("aviso"):
+                    print(linha)
+            dif = compara(tmp / "slides", gestao, ["partes", "catalogo.json", "vendor/fontes.css", "vendor/tex-svg-full.js"])
+            if dif:
+                erros += 1
+                print(f"FALHA: {gestao} não bate com o build ({len(dif)} arquivo(s)). Rode: python3 build.py --sistema ../quarks-gestao/slides")
+                print("\n".join("  " + d for d in dif))
+            else:
+                print("ok: os slides da gestão batem com o build")
+    sys.exit(1 if erros else 0)
+
+
+def main():
+    args = sys.argv[1:]
+    if "--check" in args:
+        i = args.index("--check")
+        return check(args[i + 1] if i + 1 < len(args) else None)
+    if "--sistema" in args:
+        i = args.index("--sistema")
+        return sistema(args[i + 1] if i + 1 < len(args) else RAIZ.parent / "quarks-gestao" / "slides")
+    previa = "--previa" in args
+    args = [a for a in args if a != "--previa"]
+    aulas = [Path(a) for a in args] or sorted((RAIZ / "aulas").rglob("*.html"))
+    gera_saida(aulas, previa)
 
 
 if __name__ == "__main__":
