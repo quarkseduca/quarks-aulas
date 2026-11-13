@@ -1,0 +1,513 @@
+<!--aula
+{"disciplina": "fisica", "curso": "IF", "assunto": "Temperatura e calor", "parte": "Parte 1 de 2", "titulo": "Temperatura não é calor", "scripts": ["animacoes-termologia.js"]}
+-->
+<!-- Fonte: apostila IF, Física, cap. 3 Termologia, 3.1 Temperatura e calor (teorias "Temperatura, calor e sensação térmica" e "Equilíbrio térmico", com o exemplo "Água morna" e o resumo). Questões Modelo IF da apostila (lote if-fisica-termometria): m002 FIS-1318, m008 FIS-1324, m006 FIS-1322. As oficiais FIS-0604 e FIS-0595 ficam reservadas para o bloco do fim do capítulo. -->
+<style>
+  .caixa, .painel, .linha-ex { box-sizing: border-box; }
+  .linha-ex { background: var(--branco); border: 2px solid var(--lilas-2); border-radius: 24px; padding: 14px 26px; font-size: 30px; line-height: 1.3; }
+  .linha-ex b { color: var(--roxo-titulo); }
+  .painel { background: var(--branco); border: 2px solid var(--lilas-2); border-radius: 30px; padding: 18px 26px; }
+  .painel h3 { margin: 0 0 6px; font: 800 38px var(--fonte-titulo); letter-spacing: -.02em; color: var(--roxo-titulo); }
+  .painel p { margin: 8px 0 0; font-size: 27px; line-height: 1.3; }
+  .tag { display: inline-block; padding: 5px 20px; border-radius: 999px; font-weight: 800; font-size: 24px; white-space: nowrap; }
+  .tag-q { background: #FFE9DF; color: #A8431B; }
+  .tag-f { background: #E3F0FB; color: #1F5F99; }
+  .tag-x { background: var(--erro-claro); color: var(--erro); }
+  .tag-v { background: var(--certo-claro); color: var(--certo); }
+  .rot-fig { font-family: Figtree, "Segoe UI", sans-serif; font-weight: 700; font-size: 24px; fill: #5E5A70; }
+  .rot-forte { font-family: Figtree, "Segoe UI", sans-serif; font-weight: 800; font-size: 26px; fill: #3F2FA0; }
+  .frase { display: grid; grid-template-columns: 1fr 60px 1fr; align-items: center; gap: 14px; }
+  .frase .seta { font: 800 40px var(--fonte-titulo); color: var(--d); text-align: center; }
+  /* pacotes de calor saindo do pé: rápido na cerâmica, devagar no tapete */
+  @keyframes desce { 0% { transform: translateY(0); opacity: 0; } 15% { opacity: 1; } 80% { opacity: 1; } 100% { transform: translateY(70px); opacity: 0; } }
+  .fluxo circle { opacity: 0; transform-box: fill-box; }
+  .slide.ativo .mostra .fluxo.rapido circle { animation: desce 1.3s linear infinite; }
+  .slide.ativo .mostra .fluxo.lento circle { animation: desce 4.2s linear infinite; }
+  .fluxo circle:nth-child(2) { animation-delay: -.45s !important; } .fluxo circle:nth-child(3) { animation-delay: -.9s !important; }
+  .fluxo.lento circle:nth-child(2) { animation-delay: -2.1s !important; }
+  /* calor indo do quente para o frio */
+  @keyframes vai { 0% { transform: translateX(0); opacity: 0; } 15% { opacity: 1; } 85% { opacity: 1; } 100% { transform: translateX(220px); opacity: 0; } }
+  .pacotes circle { opacity: 0; transform-box: fill-box; }
+  .slide.ativo .mostra .pacotes circle { animation: vai 3s linear infinite; }
+  .pacotes circle:nth-child(2) { animation-delay: -1s !important; } .pacotes circle:nth-child(3) { animation-delay: -2s !important; }
+  /* termômetro que sobe até a temperatura do corpo */
+  .coluna { transform-box: fill-box; transform-origin: 50% 100%; transform: scaleY(.35); transition: transform 4.5s cubic-bezier(.2,.7,.3,1); }
+  .mostra .coluna { transform: scaleY(1); }
+  /* gotas de suor e tremor */
+  @keyframes gota { 0%, 20% { transform: translateY(0); opacity: 0; } 35% { opacity: 1; } 100% { transform: translateY(40px); opacity: 0; } }
+  .gota { opacity: 0; transform-box: fill-box; }
+  .slide.ativo .mostra .gota { animation: gota 3.6s ease-in infinite; }
+  .gota:nth-of-type(2) { animation-delay: -1.8s !important; }
+  @keyframes treme { 0%, 100% { transform: translateX(0); } 25% { transform: translateX(-1.5px); } 75% { transform: translateX(1.5px); } }
+  .slide.ativo .mostra .treme { animation: treme .5s linear infinite; }
+  /* exemplo da água morna: as duas marcas andam para o meio */
+  .marca-q, .marca-f { transition: transform 3s cubic-bezier(.5,0,.3,1); transform-box: view-box; }
+  .junta .marca-q { transform: translateX(-210px); }
+  .junta .marca-f { transform: translateX(210px); }
+  .faixa { opacity: 0; transition: opacity .6s; }
+  .mostra.faixa { opacity: 1; }
+  @keyframes chama { 0%,100% { transform: scaleY(1) scaleX(1); } 50% { transform: scaleY(.9) scaleX(1.04); } }
+  .chama { transform-box: fill-box; transform-origin: 50% 100%; }
+  .slide.ativo .chama { animation: chama 1.6s ease-in-out infinite; }
+  @keyframes vapor { 0% { transform: translateY(0); opacity: 0; } 30% { opacity: .8; } 100% { transform: translateY(-40px); opacity: 0; } }
+  .vapor path { opacity: 0; }
+  .slide.ativo .vapor path { animation: vapor 3.6s ease-out infinite; }
+  .vapor path:nth-child(2) { animation-delay: -1.8s !important; }
+</style>
+
+<svg width="0" height="0" style="position:absolute" aria-hidden="true">
+  <defs>
+    <linearGradient id="t1Cafe" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#A9744A"/><stop offset="1" stop-color="#6E4325"/></linearGradient>
+    <linearGradient id="t1Suco" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#FFE27A"/><stop offset="1" stop-color="#FFB627"/></linearGradient>
+    <pattern id="t1Piso" width="80" height="80" patternUnits="userSpaceOnUse"><rect width="80" height="80" fill="#E9EEF5"/><rect x="2" y="2" width="76" height="76" rx="6" fill="#F7F9FC" stroke="#C9D3E3" stroke-width="2"/></pattern>
+    <pattern id="t1Tapete" width="24" height="24" patternUnits="userSpaceOnUse"><rect width="24" height="24" fill="#C9B8F2"/><path d="M0 12 h24 M12 0 v24" stroke="#B3A0EA" stroke-width="3"/></pattern>
+    <symbol id="t1Pe" viewBox="0 0 120 170">
+      <path d="M30 160 C8 150 6 110 14 80 C22 48 34 38 58 38 C84 38 100 54 102 88 C104 122 90 160 60 166 C48 168 38 164 30 160 Z" fill="#F2C7A5" stroke="#B9835F" stroke-width="3"/>
+      <g fill="#F2C7A5" stroke="#B9835F" stroke-width="3"><ellipse cx="86" cy="26" rx="15" ry="18"/><ellipse cx="62" cy="18" rx="10" ry="12"/><ellipse cx="44" cy="20" rx="9" ry="11"/><ellipse cx="29" cy="27" rx="8" ry="10"/><ellipse cx="17" cy="38" rx="7" ry="9"/></g>
+    </symbol>
+  </defs>
+</svg>
+
+<!-- 1. Capa -->
+<section class="slide capa" data-nome="Capa">
+  <div class="estrelas"></div>
+  <div class="texto-capa">
+    <span class="selo">Física · IF</span>
+    <p class="aula">Temperatura e calor · Parte 1 de 2</p>
+    <h1>Temperatura não é calor</h1>
+    <p class="sub">Agitação, energia que passa e equilíbrio</p>
+  </div>
+  <svg class="emblema" viewBox="0 0 640 640" aria-hidden="true">
+    <g class="gira-lento"><ellipse cx="320" cy="320" rx="300" ry="128" fill="none" stroke="#fff" stroke-opacity=".38" stroke-width="2" transform="rotate(-10 320 320)"/></g>
+    <g class="gira"><ellipse cx="320" cy="320" rx="236" ry="196" fill="none" stroke="#FFD10C" stroke-opacity=".75" stroke-width="2.5" stroke-dasharray="3 14" stroke-linecap="round" transform="rotate(-8 320 320)"/>
+      <circle cx="84" cy="300" r="13" fill="var(--d)" stroke="#fff" stroke-width="3"/></g>
+    <circle cx="320" cy="320" r="132" fill="#FFD10C"/>
+    <image href="{{SYM_ROXO}}" x="238" y="238" width="164" height="164"/>
+  </svg>
+  <img class="logo-capa" src="{{LOGO_BRANCO}}" alt="Quarks">
+  <aside class="notas"><p>Começa o capítulo Termologia. Nesta parte: o que é temperatura, o que é calor, por que a pele engana (sensação térmica) e o equilíbrio térmico. Na Parte 2: termômetros, escalas e conversão.</p></aside>
+</section>
+
+<!-- 2. Piso ou tapete? -->
+<section class="slide" data-nome="Piso ou tapete?">
+  <div class="conteudo">
+    <p class="olho">Para começar</p>
+    <h2 class="titulo">O piso gelado e o tapete</h2>
+    <svg viewBox="0 0 1080 440" style="position:absolute;left:0;top:150px;width:1080px;height:440px" aria-hidden="true">
+      <rect x="0" y="210" width="540" height="200" rx="24" fill="url(#t1Piso)"/>
+      <rect x="560" y="210" width="520" height="200" rx="24" fill="url(#t1Tapete)"/>
+      <text x="270" y="436" text-anchor="middle" class="rot-fig">piso de cerâmica</text>
+      <text x="820" y="436" text-anchor="middle" class="rot-fig">tapete</text>
+      <use href="#t1Pe" x="200" y="150" width="120" height="170" transform="rotate(-8 260 235)"/>
+      <use href="#t1Pe" x="760" y="150" width="120" height="170" transform="rotate(6 820 235)"/>
+      <g data-passo="1">
+        <g transform="translate(440 40)"><rect x="-14" y="0" width="28" height="150" rx="14" fill="#fff" stroke="#4B4760" stroke-width="4"/><circle cx="0" cy="168" r="24" fill="#E8590C" stroke="#4B4760" stroke-width="4"/><rect x="-6" y="70" width="12" height="90" rx="5" fill="#E8590C"/></g>
+        <g transform="translate(990 40)"><rect x="-14" y="0" width="28" height="150" rx="14" fill="#fff" stroke="#4B4760" stroke-width="4"/><circle cx="0" cy="168" r="24" fill="#E8590C" stroke="#4B4760" stroke-width="4"/><rect x="-6" y="70" width="12" height="90" rx="5" fill="#E8590C"/></g>
+        <line x1="440" y1="110" x2="990" y2="110" stroke="#FFD10C" stroke-width="5" stroke-dasharray="12 10"/>
+        <rect x="560" y="80" width="300" height="56" rx="28" fill="#FFD10C"/><text x="710" y="117" text-anchor="middle" class="rot-forte" style="fill:#292B2C">mesma temperatura</text>
+      </g>
+      <g font-family="'Bricolage Grotesque',Figtree,sans-serif" font-weight="800" font-size="40" text-anchor="middle">
+        <text x="160" y="120" fill="#1F5F99">brrr!</text>
+      </g>
+    </svg>
+    <div style="position:absolute;left:1160px;right:0;top:170px;display:flex;flex-direction:column;gap:22px">
+      <p class="texto" style="margin:0">De manhã, o pé descalço no <b>piso</b> sente frio. No <b>tapete</b>, ao lado, não.</p>
+      <p class="texto" data-passo="1" style="margin:0">Os dois estão no mesmo cômodo há horas e têm a <b>mesma temperatura</b>.</p>
+    </div>
+    <span class="pilula pilula-pausa" data-passo="2" style="position:absolute;left:580px;top:640px">Por que a sensação é tão diferente?</span>
+  </div>
+  <aside class="notas">
+    <p>Gancho da apostila. Pergunte antes de clicar: qual está mais frio? Muitos vão dizer o piso. Clique 1: os dois estão na mesma temperatura (mesmo cômodo, há horas). Clique 2: a pergunta que a parte responde.</p>
+    <p>Para responder, é preciso separar três ideias que no dia a dia se misturam: temperatura, calor e sensação térmica. A resposta vem no slide "Sensação térmica".</p>
+  </aside>
+</section>
+
+<!-- 3. Temperatura -->
+<section class="slide" data-nome="Temperatura">
+  <div class="conteudo">
+    <p class="olho">Temperatura</p>
+    <h2 class="titulo">Partículas que nunca param</h2>
+    <div style="position:absolute;left:0;right:0;top:150px;display:grid;grid-template-columns:1fr 1fr;gap:40px">
+      <div class="painel" data-passo="1">
+        <h3>Água fria <span class="tag tag-f">pouca agitação</span></h3>
+        <div data-anima="termo-agitacao" data-nivel="frio" data-anima-passo="1" data-w="800" data-h="250" data-cols="9" data-linhas="4" style="width:800px;height:250px"></div>
+      </div>
+      <div class="painel" data-passo="2">
+        <h3>Água quente <span class="tag tag-q">muita agitação</span></h3>
+        <div data-anima="termo-agitacao" data-nivel="quente" data-anima-passo="2" data-w="800" data-h="250" data-cols="9" data-linhas="4" style="width:800px;height:250px"></div>
+      </div>
+    </div>
+    <div class="caixa caixa-fundamental" data-passo="3" style="position:absolute;left:580px;right:0;top:560px;padding:22px 32px">
+      <span class="rotulo">Temperatura</span>
+      <div class="texto" style="font-size:32px">Mede o <b>grau de agitação</b> das partículas. Quanto mais agitadas, <b>maior a temperatura</b> do corpo.</div>
+    </div>
+  </div>
+  <aside class="notas">
+    <p>Toda matéria é feita de partículas muito pequenas que estão sempre se agitando. Clique 1: água fria, partículas tremendo pouco. Clique 2: água quente, tremendo muito mais. Clique 3: a definição.</p>
+    <p>O desenho é um modelo: as partículas reais são pequenas demais para ver.</p>
+  </aside>
+</section>
+
+<!-- 4. Calor -->
+<section class="slide" data-nome="Calor">
+  <div class="conteudo">
+    <p class="olho">Calor</p>
+    <h2 class="titulo">Energia que passa de um corpo a outro</h2>
+    <svg viewBox="0 0 900 300" style="position:absolute;left:0;top:160px;width:900px;height:300px" aria-hidden="true" data-passo="1">
+      <rect x="10" y="60" width="280" height="200" rx="34" fill="#FFE9DF" stroke="#E8590C" stroke-width="5"/>
+      <text x="150" y="150" text-anchor="middle" class="rot-forte" style="fill:#A8431B;font-size:34px">mais quente</text>
+      <text x="150" y="196" text-anchor="middle" class="rot-fig">cede calor</text>
+      <rect x="610" y="60" width="280" height="200" rx="34" fill="#E3F0FB" stroke="#4A90E2" stroke-width="5"/>
+      <text x="750" y="150" text-anchor="middle" class="rot-forte" style="fill:#1F5F99;font-size:34px">mais frio</text>
+      <text x="750" y="196" text-anchor="middle" class="rot-fig">recebe calor</text>
+      <path d="M320 160 H570" stroke="#FFD10C" stroke-width="10" stroke-linecap="round"/>
+      <path d="M548 138 L578 160 L548 182" fill="none" stroke="#FFD10C" stroke-width="10" stroke-linecap="round" stroke-linejoin="round"/>
+      <g class="pacotes" fill="#E8590C"><circle cx="330" cy="160" r="10"/><circle cx="330" cy="160" r="10"/><circle cx="330" cy="160" r="10"/></g>
+      <text x="450" y="120" text-anchor="middle" class="rot-forte" style="font-size:32px">calor</text>
+    </svg>
+    <div style="position:absolute;left:960px;right:0;top:170px;display:flex;flex-direction:column;gap:20px">
+      <p class="texto" style="margin:0">O <b>calor</b> passa de um corpo para outro por causa da <b>diferença de temperatura</b>.</p>
+      <p class="texto" data-passo="2" style="margin:0">Sozinho, ele vai <b>sempre do mais quente para o mais frio</b>.</p>
+    </div>
+    <div class="caixa caixa-fundamental" data-passo="3" style="position:absolute;left:580px;right:0;top:500px;padding:22px 32px">
+      <span class="rotulo">Temperatura não é calor</span>
+      <div class="texto" style="font-size:31px"><b>Temperatura</b> é o estado do corpo: o grau de agitação das partículas. <b>Calor</b> é energia em trânsito. Um corpo <b>tem temperatura</b>, mas não "tem calor": ele <b>recebe</b> ou <b>cede</b> calor.</div>
+    </div>
+  </div>
+  <aside class="notas">
+    <p>Clique 1: o calor saindo do corpo mais quente e chegando ao mais frio. Clique 2: o sentido é sempre esse, quando nada força o contrário. Clique 3: a caixa mais importante da parte; peça para copiarem.</p>
+  </aside>
+</section>
+
+<!-- 5. Do jeito certo -->
+<section class="slide" data-nome="Do jeito certo">
+  <div class="conteudo">
+    <p class="olho">Cuidado com as palavras</p>
+    <h2 class="titulo">Como dizer do jeito certo</h2>
+    <div style="position:absolute;left:0;right:0;top:160px;display:flex;flex-direction:column;gap:20px">
+      <div class="frase">
+        <div class="linha-ex"><span class="tag tag-x">✗</span> "Este corpo <b>tem muito calor</b>."</div>
+        <span class="seta" data-passo="1">→</span>
+        <div class="linha-ex" data-passo="1"><span class="tag tag-v">✓</span> "Este corpo está a uma <b>temperatura alta</b>."</div>
+      </div>
+      <div class="frase">
+        <div class="linha-ex"><span class="tag tag-x">✗</span> "O <b>frio entrou</b> pela janela."</div>
+        <span class="seta" data-passo="2">→</span>
+        <div class="linha-ex" data-passo="2"><span class="tag tag-v">✓</span> "O <b>calor saiu</b> da casa pela janela."</div>
+      </div>
+    </div>
+    <div class="caixa caixa-atencao" data-passo="3" style="position:absolute;left:580px;right:0;top:440px;padding:22px 32px">
+      <span class="rotulo">O casaco não esquenta</span>
+      <div class="texto" style="font-size:31px">O casaco não produz calor: ele só <b>dificulta a saída</b> do calor que o seu corpo produz. Por isso, um cobertor em volta de uma pedra de gelo faz o gelo <b>demorar mais</b> para derreter.</div>
+    </div>
+  </div>
+  <aside class="notas">
+    <p>Cliques 1 e 2: a frase do dia a dia e a frase da Física. "Frio" não é uma coisa que passa: o que passa é calor, do mais quente para o mais frio. As provas do IF usam muito esse erro nas alternativas ("o frio passa", "o corpo tem calor").</p>
+    <p>Clique 3: a atenção da apostila. Pergunte antes: o cobertor faz o gelo derreter mais rápido ou mais devagar? Ele atrapalha a chegada do calor do ar até o gelo.</p>
+  </aside>
+</section>
+
+<!-- 6. Sensação térmica -->
+<section class="slide" data-nome="Sensação térmica">
+  <div class="conteudo">
+    <p class="olho">Sensação térmica</p>
+    <h2 class="titulo">A pele engana</h2>
+    <svg viewBox="0 0 1080 420" style="position:absolute;left:0;top:150px;width:1080px;height:420px" aria-hidden="true">
+      <rect x="0" y="200" width="520" height="190" rx="24" fill="url(#t1Piso)"/>
+      <rect x="560" y="200" width="520" height="190" rx="24" fill="url(#t1Tapete)"/>
+      <use href="#t1Pe" x="200" y="40" width="120" height="170"/>
+      <use href="#t1Pe" x="760" y="40" width="120" height="170"/>
+      <g data-passo="1">
+        <g class="fluxo rapido" fill="#E8590C"><circle cx="230" cy="215" r="10"/><circle cx="262" cy="215" r="10"/><circle cx="294" cy="215" r="10"/></g>
+        <text x="260" y="370" text-anchor="middle" class="rot-forte" style="fill:#A8431B">tira calor depressa</text>
+      </g>
+      <g data-passo="2">
+        <g class="fluxo lento" fill="#E8590C"><circle cx="805" cy="215" r="10"/><circle cx="845" cy="215" r="10"/></g>
+        <text x="820" y="370" text-anchor="middle" class="rot-forte" style="fill:#1F5F99">tira calor devagar</text>
+      </g>
+    </svg>
+    <div style="position:absolute;left:1140px;right:0;top:160px;display:flex;flex-direction:column;gap:20px">
+      <p class="texto" style="margin:0;font-size:34px">A pele <b>não mede temperatura</b>: ela sente a <b>rapidez</b> com que perde ou ganha calor.</p>
+      <p class="texto" data-passo="1" style="margin:0;font-size:34px">A cerâmica tira calor do pé <b>muito mais depressa</b> que o tapete.</p>
+      <p class="texto" data-passo="2" style="margin:0;font-size:34px">Por isso ela <b>parece</b> mais fria.</p>
+    </div>
+    <div class="caixa caixa-fundamental" data-passo="3" style="position:absolute;left:580px;right:0;top:620px;padding:20px 32px">
+      <span class="rotulo">Vento e umidade também contam</span>
+      <div class="texto" style="font-size:30px">Num dia de vento, <b>15 °C</b> parecem bem menos. A sensação térmica é o que o corpo percebe, não a temperatura do ar.</div>
+    </div>
+  </div>
+  <aside class="notas">
+    <p>A resposta do gancho. Clique 1: na cerâmica, o calor sai do pé depressa (muitos pacotes, rápidos). Clique 2: no tapete, sai devagar. Clique 3: o vento e a umidade do ar também mudam a sensação.</p>
+    <p>A palavra "condutor" vem na Propagação do calor; aqui basta a ideia de rapidez da troca.</p>
+  </aside>
+</section>
+
+<!-- 7. Equilíbrio térmico -->
+<section class="slide" data-nome="Equilíbrio térmico">
+  <div class="conteudo">
+    <p class="olho">Equilíbrio térmico</p>
+    <h2 class="titulo">Até as temperaturas ficarem iguais</h2>
+    <div data-anima="termo-equilibrio" data-anima-passo="1" data-w="900" data-h="400" style="position:absolute;left:0;top:150px;width:900px;height:400px"></div>
+    <div style="position:absolute;left:980px;right:0;top:160px;display:flex;flex-direction:column;gap:18px">
+      <p class="texto" style="margin:0;font-size:33px">Dois corpos com temperaturas diferentes, <b>em contato</b>.</p>
+      <p class="texto" data-passo="1" style="margin:0;font-size:33px">O calor passa do mais quente para o mais frio: um <b>esfria</b>, o outro <b>esquenta</b>.</p>
+      <p class="texto" data-passo="2" style="margin:0;font-size:33px">A troca continua <b>até as temperaturas ficarem iguais</b>. E para aí.</p>
+    </div>
+    <div class="caixa caixa-fundamental" data-passo="3" style="position:absolute;left:580px;right:0;top:640px;padding:20px 32px">
+      <span class="rotulo">Equilíbrio térmico</span>
+      <div class="texto" style="font-size:31px">Dois corpos estão em equilíbrio térmico quando têm a <b>mesma temperatura</b>. Aí não há mais passagem de calor entre eles.</div>
+    </div>
+  </div>
+  <aside class="notas">
+    <p>Clique 1: o corpo da esquerda (quente) e o da direita (frio) se tocam. As partículas da esquerda vão se acalmando, as da direita vão se agitando, e os pacotes amarelos (calor) atravessam a divisa. As barrinhas no alto são termômetros. Quando as temperaturas ficam iguais, os pacotes param.</p>
+    <p>Exemplo da apostila: um café quente esquecido na mesa esfria; um suco gelado na mesma mesa esquenta; os dois param na temperatura da sala. O café não continua esfriando até virar gelo.</p>
+  </aside>
+</section>
+
+<!-- 8. O termômetro e o corpo -->
+<section class="slide" data-nome="O termômetro e o corpo">
+  <div class="conteudo">
+    <p class="olho">Equilíbrio térmico no dia a dia</p>
+    <h2 class="titulo">O termômetro e o nosso corpo</h2>
+    <div style="position:absolute;left:0;right:0;top:150px;display:grid;grid-template-columns:1fr 1fr;gap:40px">
+      <div class="painel" data-passo="1" style="display:grid;grid-template-columns:170px 1fr;gap:20px;align-items:center">
+        <svg viewBox="0 0 170 330" style="width:170px;height:330px" aria-hidden="true">
+          <rect x="66" y="20" width="38" height="250" rx="19" fill="#fff" stroke="#4B4760" stroke-width="4"/>
+          <circle cx="85" cy="290" r="30" fill="#E8590C" stroke="#4B4760" stroke-width="4"/>
+          <rect class="coluna" x="77" y="60" width="16" height="220" rx="7" fill="#E8590C"/>
+          <g stroke="#4B4760" stroke-width="3"><line x1="104" y1="80" x2="120" y2="80"/><line x1="104" y1="130" x2="120" y2="130"/><line x1="104" y1="180" x2="120" y2="180"/><line x1="104" y1="230" x2="120" y2="230"/></g>
+        </svg>
+        <div><h3>Termômetro</h3><p>Debaixo do braço, ele precisa de <b>alguns minutos</b> para chegar à temperatura do corpo.</p><p>Só então o valor marcado é a <b>sua</b> temperatura.</p></div>
+      </div>
+      <div class="painel" data-passo="2">
+        <h3>Corpo humano</h3>
+        <p>Ao contrário do café, <b>não entra em equilíbrio</b> com o ambiente: fica perto de <b>36,5 °C</b>.</p>
+        <div style="display:grid;grid-template-columns:1fr 1fr;gap:16px;margin-top:16px">
+          <div class="linha-ex" data-passo="3" style="font-size:25px;padding:12px 18px">
+            <svg viewBox="0 0 200 110" style="width:200px;height:110px;display:block" aria-hidden="true"><circle cx="40" cy="40" r="26" fill="#FFD10C"/><g stroke="#FFD10C" stroke-width="5" stroke-linecap="round"><line x1="40" y1="2" x2="40" y2="8"/><line x1="78" y1="40" x2="72" y2="40"/><line x1="67" y1="13" x2="62" y2="18"/></g><circle cx="130" cy="58" r="40" fill="#F2C7A5" stroke="#B9835F" stroke-width="3"/><g fill="#292B2C"><circle cx="116" cy="52" r="4"/><circle cx="144" cy="52" r="4"/></g><path d="M118 76 q12 8 24 0" fill="none" stroke="#292B2C" stroke-width="3" stroke-linecap="round"/><g fill="#7FB4E0"><path class="gota" d="M168 30 q-9 14 0 18 q9 -4 0 -18z"/><path class="gota" d="M96 40 q-9 14 0 18 q9 -4 0 -18z"/></g></svg>
+            <b>Dia quente:</b> o suor evapora e leva calor da pele.</div>
+          <div class="linha-ex" data-passo="4" style="font-size:25px;padding:12px 18px">
+            <svg viewBox="0 0 200 110" style="width:200px;height:110px;display:block" aria-hidden="true"><g class="treme"><circle cx="100" cy="58" r="40" fill="#F2C7A5" stroke="#B9835F" stroke-width="3"/><g fill="#292B2C"><circle cx="86" cy="52" r="4"/><circle cx="114" cy="52" r="4"/></g><path d="M84 78 l6 -4 l6 4 l6 -4 l6 4 l6 -4" fill="none" stroke="#292B2C" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/></g><g stroke="#4A90E2" stroke-width="4" stroke-linecap="round"><path d="M40 40 q6 6 0 12 q-6 6 0 12" fill="none"/><path d="M160 40 q6 6 0 12 q-6 6 0 12" fill="none"/></g></svg>
+            <b>Dia frio:</b> o arrepio e o tremor ajudam a produzir calor.</div>
+      </div>
+    </div>
+  </div>
+  <aside class="notas">
+    <p>Clique 1: o termômetro funciona por equilíbrio térmico; a coluna sobe devagar até parar. Clique 2: o corpo é diferente do café: ele se mantém perto de 36,5 °C. Cliques 3 e 4: como ele faz isso.</p>
+    <p>Este é o assunto de uma questão oficial do IF (o termômetro na axila), que aparece no bloco de questões do fim do capítulo.</p>
+  </aside>
+</section>
+
+<!-- 9. Exemplo: água morna -->
+<section class="slide" data-nome="Exemplo: água morna">
+  <div class="conteudo">
+    <p class="olho">Exemplo</p>
+    <h2 class="titulo">Água morna</h2>
+    <p class="texto" style="position:absolute;left:0;width:1000px;top:150px;margin:0">Ana mistura, numa garrafa térmica fechada, água a <b>20 °C</b> com água a <b>80 °C</b>. A temperatura final pode ser <b>90 °C</b>? E <b>10 °C</b>?</p>
+    <svg viewBox="0 0 1100 260" style="position:absolute;left:0;top:330px;width:1100px;height:260px;overflow:visible" aria-hidden="true">
+      <rect class="faixa" data-passo="3" x="270" y="92" width="560" height="56" rx="14" fill="#FFF4C2"/>
+      <line x1="40" y1="120" x2="1060" y2="120" stroke="#BFB6E6" stroke-width="6" stroke-linecap="round"/>
+      <g font-family="Figtree,'Segoe UI',sans-serif" font-size="26" font-weight="700" fill="#5E5A70" text-anchor="middle">
+        <g stroke="#BFB6E6" stroke-width="4"><line x1="130" y1="106" x2="130" y2="134"/><line x1="270" y1="106" x2="270" y2="134"/><line x1="550" y1="106" x2="550" y2="134"/><line x1="830" y1="106" x2="830" y2="134"/><line x1="970" y1="106" x2="970" y2="134"/></g>
+        <text x="130" y="176">10</text><text x="270" y="176">20</text><text x="550" y="176">50</text><text x="830" y="176">80</text><text x="970" y="176">90</text><text x="1060" y="176">°C</text>
+      </g>
+      <g data-em="2:junta">
+        <g class="marca-f"><circle cx="270" cy="120" r="20" fill="#4A90E2" stroke="#fff" stroke-width="4"/><text x="270" y="225" text-anchor="middle" class="rot-forte" style="fill:#1F5F99">fria esquenta</text></g>
+        <g class="marca-q"><circle cx="830" cy="120" r="20" fill="#E8590C" stroke="#fff" stroke-width="4"/><text x="830" y="70" text-anchor="middle" class="rot-forte" style="fill:#A8431B">quente esfria</text></g>
+      </g>
+      <g data-passo="4" font-family="'Bricolage Grotesque',Figtree,sans-serif" font-weight="800" font-size="56" fill="#C2384F" text-anchor="middle"><text x="130" y="138">✗</text><text x="970" y="138">✗</text></g>
+    </svg>
+    <div style="position:absolute;left:1160px;right:0;top:330px;display:flex;flex-direction:column;gap:18px">
+      <div class="linha-ex" data-passo="1" style="font-size:28px"><b>Raciocínio:</b> o calor passa da água quente para a fria.</div>
+      <div class="linha-ex" data-passo="2" style="font-size:28px">A quente <b>esfria</b>, a fria <b>esquenta</b>, até se encontrarem.</div>
+    </div>
+    <span class="pilula pilula-resposta" data-passo="5" style="position:absolute;left:580px;top:680px">Não: a final fica entre 20 °C e 80 °C</span>
+  </div>
+  <aside class="notas">
+    <p>Exemplo da apostila. Pergunte antes de clicar. Clique 1: o sentido do calor. Clique 2: as duas temperaturas andam uma para a outra. Clique 3: a faixa possível, de 20 °C a 80 °C. Clique 4: 90 °C e 10 °C estão fora. Clique 5: a resposta.</p>
+    <p>O valor exato no meio da faixa depende das quantidades de cada água; o IF não pede essa conta. A garrafa fechada só garante que a troca é entre as duas águas.</p>
+  </aside>
+</section>
+
+<!-- 10. Questão 1 -->
+<section class="slide questao" data-nome="Questão 1">
+  <div class="conteudo">
+    <div class="area-resolucao"></div>
+    <span class="pilula pilula-pausa" data-em="1:some">Pause o vídeo e tente</span>
+    <div class="painel-questao">
+      <p class="olho">Questão 1 · Modelo IF</p>
+      <p class="enunciado" style="font-size:23px">Numa manhã fria de julho, numa praça de Juiz de Fora, um corrimão de metal e um banco de madeira passaram a noite inteira ao ar livre, um ao lado do outro. Ao encostar a mão no corrimão, Lucas sente que ele está bem mais frio que o banco.</p>
+      <p class="enunciado" style="font-size:23px">Marque a alternativa que explica <b>CORRETAMENTE</b> a sensação de Lucas.</p>
+      <ol class="alternativas" style="gap:7px">
+        <li data-em="2:apaga" style="font-size:19px;padding:5px 12px"><b>A</b><span>O metal está a uma temperatura mais baixa que a madeira, porque os metais sempre ficam mais frios que o ambiente.</span></li>
+        <li data-em="2:apaga" style="font-size:19px;padding:5px 12px"><b>B</b><span>A madeira produz calor e, por isso, fica mais quente que o metal.</span></li>
+        <li data-em="2:apaga" style="font-size:19px;padding:5px 12px"><b>C</b><span>O metal passa frio para a mão de Lucas, e a madeira não passa.</span></li>
+        <li data-em="2:certo" style="font-size:19px;padding:5px 12px"><b>D</b><span>O metal e a madeira estão à mesma temperatura, mas o metal tira calor da mão mais depressa, por isso parece mais frio.</span></li>
+        <li data-em="2:apaga" style="font-size:19px;padding:5px 12px"><b>E</b><span>A madeira está em equilíbrio térmico com o ar da praça, e o metal ainda não chegou a esse equilíbrio.</span></li>
+      </ol>
+    </div>
+  </div>
+  <aside class="resolucao">
+    <p class="dados"><b>Dados:</b> metal e madeira a noite toda no mesmo lugar.</p>
+    <ol class="passos">
+      <li>Horas no mesmo ar: equilíbrio térmico.</li>
+      <li>Metal e madeira: mesma temperatura.</li>
+      <li>A pele sente a rapidez da perda de calor.</li>
+      <li>O metal tira calor da mão mais depressa.</li>
+    </ol>
+    <p class="resposta"><b>Resposta:</b> mesma temperatura; o metal tira calor mais rápido. <b>Gabarito D.</b></p>
+    <p class="atencao"><b>Destaque no quadro:</b> Sensação térmica não é temperatura.</p>
+    <ul class="erros">
+      <li><b>A</b> Depois de horas, os dois estão à temperatura do ar.</li>
+      <li><b>B</b> A madeira não produz calor; só tira calor mais devagar.</li>
+      <li><b>C</b> "Frio" não passa: o calor sai da mão para o corrimão.</li>
+      <li><b>E</b> Os dois estão em equilíbrio com o ar.</li>
+    </ul>
+  </aside>
+  <aside class="notas">
+    <p>Clique 1 tira o aviso de pausa: resolva na área (D liga a caneta; E esconde o enunciado). Clique 2: gabarito D.</p>
+    <p>Questão Modelo IF da apostila: lote if-fisica-termometria, m002, FIS-1318.</p>
+  </aside>
+</section>
+
+<!-- 11. Questão 2 -->
+<section class="slide questao" data-nome="Questão 2">
+  <div class="conteudo">
+    <div class="area-resolucao"></div>
+    <span class="pilula pilula-pausa" data-em="1:some">Pause o vídeo e tente</span>
+    <div class="painel-questao">
+      <p class="olho">Questão 2 · Modelo IF</p>
+      <p class="enunciado" style="font-size:24px">Para a feira de Ciências, um grupo escreveu três frases num cartaz sobre temperatura e calor:</p>
+      <p class="enunciado" style="font-size:23px">I. A temperatura de um corpo mede o grau de agitação das partículas que o formam.<br>II. Calor é energia que passa, sozinha, do corpo mais quente para o corpo mais frio.<br>III. Num cubo de gelo a 0 °C, as partículas estão completamente paradas.</p>
+      <p class="enunciado" style="font-size:24px">Está(ão) <b>CORRETA(S)</b> apenas:</p>
+      <ol class="alternativas curtas">
+        <li data-em="2:apaga"><b>A</b><span>I.</span></li>
+        <li data-em="2:apaga"><b>B</b><span>II.</span></li>
+        <li data-em="2:certo"><b>C</b><span>I e II.</span></li>
+        <li data-em="2:apaga"><b>D</b><span>II e III.</span></li>
+        <li data-em="2:apaga"><b>E</b><span>I, II e III.</span></li>
+      </ol>
+    </div>
+  </div>
+  <aside class="resolucao">
+    <p class="dados"><b>Dados:</b> três frases sobre temperatura e calor.</p>
+    <ol class="passos">
+      <li><b>I:</b> temperatura = agitação (V).</li>
+      <li><b>II:</b> calor vai do quente para o frio (V).</li>
+      <li><b>III:</b> a 0 °C as partículas ainda se agitam (F).</li>
+      <li>Zero absoluto: perto de −273 °C.</li>
+    </ol>
+    <p class="resposta"><b>Resposta:</b> só I e II. <b>Gabarito C.</b></p>
+    <p class="atencao"><b>Destaque no quadro:</b> 0 °C não é o zero absoluto.</p>
+    <ul class="erros">
+      <li><b>A</b> Deixa de fora a II, que é verdadeira.</li>
+      <li><b>B</b> Deixa de fora a I, que é verdadeira.</li>
+      <li><b>D</b> Aceita a III, que é falsa.</li>
+      <li><b>E</b> A III é falsa.</li>
+    </ul>
+  </aside>
+  <aside class="notas">
+    <p>Clique 1 tira o aviso de pausa: resolva na área. Clique 2: gabarito C.</p>
+    <p>Questão Modelo IF da apostila: lote if-fisica-termometria, m008, FIS-1324. O zero absoluto entra na Parte 2 (escala Kelvin); aqui basta dizer que o gelo a 0 °C ainda tem partículas se agitando.</p>
+  </aside>
+</section>
+
+<!-- 12. Questão 3 -->
+<section class="slide questao" data-nome="Questão 3">
+  <div class="conteudo">
+    <div class="area-resolucao"></div>
+    <span class="pilula pilula-pausa" data-em="1:some">Pause o vídeo e tente</span>
+    <div class="painel-questao" style="gap:10px">
+      <p class="olho">Questão 3 · Modelo IF</p>
+      <p class="enunciado" style="font-size:20px">Uma xícara de café quente e um copo de suco gelado foram esquecidos sobre a mesa de uma sala, afastados um do outro. O gráfico mostra como a temperatura de cada um mudou com o tempo.</p>
+      <svg viewBox="0 0 520 250" style="width:520px;height:220px;flex:none" aria-hidden="true" font-family="Figtree,'Segoe UI',sans-serif">
+        <g stroke="#EAE6F8" stroke-width="1.5"><line x1="60" y1="42" x2="510" y2="42"/><line x1="60" y1="84" x2="510" y2="84"/><line x1="60" y1="126" x2="510" y2="126"/><line x1="60" y1="168" x2="510" y2="168"/></g>
+        <g stroke="#EAE6F8" stroke-width="1.5"><line x1="132" y1="20" x2="132" y2="210"/><line x1="204" y1="20" x2="204" y2="210"/><line x1="276" y1="20" x2="276" y2="210"/><line x1="348" y1="20" x2="348" y2="210"/><line x1="420" y1="20" x2="420" y2="210"/><line x1="492" y1="20" x2="492" y2="210"/></g>
+        <path d="M60 210 H512 M60 210 V14" stroke="#4B4760" stroke-width="2.5" fill="none"/>
+        <g font-size="15" fill="#5E5A70" text-anchor="end"><text x="54" y="215">0</text><text x="54" y="173">20</text><text x="54" y="131">40</text><text x="54" y="89">60</text><text x="54" y="47">80</text></g>
+        <g font-size="15" fill="#5E5A70" text-anchor="middle"><text x="132" y="230">20</text><text x="204" y="230">40</text><text x="276" y="230">60</text><text x="348" y="230">80</text><text x="420" y="230">100</text><text x="492" y="230">120</text></g>
+        <text x="66" y="12" font-size="15" font-weight="700" fill="#4B4760">T (°C)</text><text x="512" y="248" font-size="15" font-weight="700" fill="#4B4760" text-anchor="end">t (min)</text>
+        <path id="t1curvaCafe" d="" fill="none" stroke="#4B39B3" stroke-width="3.5"/>
+        <path id="t1curvaSuco" d="" fill="none" stroke="#6551D1" stroke-width="3.5" stroke-dasharray="9 6"/>
+        <text x="110" y="80" font-size="17" fill="#292B2C">café</text><text x="150" y="203" font-size="17" fill="#292B2C">suco</text>
+      </svg>
+      <p class="enunciado" style="font-size:20px">Com base no gráfico, é <b>CORRETO</b> afirmar que</p>
+      <ol class="alternativas" style="gap:5px">
+        <li data-em="2:apaga" style="font-size:18px;padding:4px 10px"><b>A</b><span>depois de 120 minutos, o café continua esfriando e vai chegar a 5 °C, a temperatura inicial do suco.</span></li>
+        <li data-em="2:apaga" style="font-size:18px;padding:4px 10px"><b>B</b><span>o suco esquenta porque o frio sai dele e passa para o ar da sala.</span></li>
+        <li data-em="2:apaga" style="font-size:18px;padding:4px 10px"><b>C</b><span>a temperatura da sala é de cerca de 42 °C, a média entre as temperaturas iniciais do café e do suco.</span></li>
+        <li data-em="2:apaga" style="font-size:18px;padding:4px 10px"><b>D</b><span>o café perde temperatura mais devagar nos primeiros 20 minutos do que entre 80 e 100 minutos.</span></li>
+        <li data-em="2:certo" style="font-size:18px;padding:4px 10px"><b>E</b><span>a temperatura da sala é de cerca de 25 °C e, depois de uns 100 minutos, o café e o suco praticamente não trocam mais calor com o ar.</span></li>
+      </ol>
+    </div>
+  </div>
+  <aside class="resolucao">
+    <p class="dados"><b>Dados:</b> café começa em 80 °C; suco, em 5 °C.</p>
+    <ol class="passos">
+      <li>Café mais quente que o ar: cede calor, esfria.</li>
+      <li>Suco mais frio que o ar: recebe calor, esquenta.</li>
+      <li>As duas curvas param em cerca de 25 °C: a sala.</li>
+      <li>Depois de uns 100 min: equilíbrio, sem troca.</li>
+    </ol>
+    <p class="resposta"><b>Resposta:</b> sala a cerca de 25 °C; depois de uns 100 min quase não há troca. <b>Gabarito E.</b></p>
+    <p class="atencao"><b>Destaque no quadro:</b> A curva fica horizontal no equilíbrio térmico.</p>
+    <ul class="erros">
+      <li><b>A</b> O café para em cerca de 25 °C, não desce até 5 °C.</li>
+      <li><b>B</b> "Frio" não sai: o suco recebe calor do ar.</li>
+      <li><b>C</b> As bebidas nem se tocam; cada uma vai para a temperatura da sala.</li>
+      <li><b>D</b> Inverte: no começo a curva cai mais depressa.</li>
+    </ul>
+  </aside>
+  <aside class="notas">
+    <p>Clique 1 tira o aviso de pausa: resolva na área. Clique 2: gabarito E.</p>
+    <p>Questão Modelo IF da apostila: lote if-fisica-termometria, m006, FIS-1322. Gráfico refeito com as mesmas curvas da figura do banco (café: 25 + 55·e<sup>−t/22</sup>; suco: 25 − 20·e<sup>−t/18</sup>; t em minutos).</p>
+  </aside>
+</section>
+
+<!-- 13. Resumo -->
+<section class="slide" data-nome="Resumo">
+  <div class="conteudo">
+    <p class="olho">Resumo</p>
+    <h2 class="titulo">O essencial</h2>
+    <div class="resumo" style="position:absolute;left:0;right:0;top:150px">
+      <div><b>Temperatura</b> mede a agitação das partículas.</div>
+      <div><b>Calor</b> é energia que passa, sozinha, do corpo mais quente para o mais frio.</div>
+      <div>Um corpo <b>tem temperatura</b>; ele <b>recebe</b> ou <b>cede</b> calor. "Frio" não passa.</div>
+      <div><b>Sensação térmica</b> depende da rapidez da troca de calor e engana: o piso parece mais frio que o tapete.</div>
+      <div>O casaco <b>não produz</b> calor: ele dificulta a saída do calor do corpo.</div>
+      <div><b>Equilíbrio térmico:</b> temperaturas iguais e nenhuma troca de calor.</div>
+    </div>
+  </div>
+  <aside class="notas"><p>Peça para tirarem um print desta tela.</p></aside>
+</section>
+
+<!-- 14. A seguir -->
+<section class="slide capa" data-nome="A seguir">
+  <div class="estrelas"></div>
+  <div class="texto-capa" style="top:230px">
+    <span class="selo">Física · IF</span>
+    <p class="aula">A seguir · Temperatura e calor · Parte 2 de 2</p>
+    <h1>Escalas termométricas</h1>
+    <p class="sub">Celsius, Fahrenheit e Kelvin</p>
+  </div>
+  <svg class="emblema" viewBox="0 0 640 640" aria-hidden="true">
+    <g font-family="Figtree,'Segoe UI',sans-serif" font-weight="800" font-size="34" fill="#fff">
+      <g transform="translate(150 70)"><rect x="-26" y="0" width="52" height="400" rx="26" fill="#fff" fill-opacity=".14" stroke="#fff" stroke-width="5"/><circle cx="0" cy="440" r="50" fill="#FFD10C" stroke="#fff" stroke-width="5"/><rect x="-11" y="150" width="22" height="300" rx="10" fill="#FFD10C"/><text x="0" y="530" text-anchor="middle">°C</text></g>
+      <g transform="translate(320 70)"><rect x="-26" y="0" width="52" height="400" rx="26" fill="#fff" fill-opacity=".14" stroke="#fff" stroke-width="5"/><circle cx="0" cy="440" r="50" fill="#FFD10C" stroke="#fff" stroke-width="5"/><rect x="-11" y="150" width="22" height="300" rx="10" fill="#FFD10C"/><text x="0" y="530" text-anchor="middle">°F</text></g>
+      <g transform="translate(490 70)"><rect x="-26" y="0" width="52" height="400" rx="26" fill="#fff" fill-opacity=".14" stroke="#fff" stroke-width="5"/><circle cx="0" cy="440" r="50" fill="#FFD10C" stroke="#fff" stroke-width="5"/><rect x="-11" y="150" width="22" height="300" rx="10" fill="#FFD10C"/><text x="0" y="530" text-anchor="middle">K</text></g>
+    </g>
+    <line x1="100" y1="220" x2="560" y2="220" stroke="#fff" stroke-opacity=".7" stroke-width="3" stroke-dasharray="10 10"/>
+  </svg>
+  <img class="logo-capa" src="{{LOGO_BRANCO}}" alt="Quarks">
+  <aside class="notas"><p>Próxima parte: como o termômetro funciona, as escalas Celsius, Fahrenheit e Kelvin e como passar de uma para outra.</p></aside>
+</section>
+
+<script>
+/* curvas do gráfico da questão 3 (as mesmas da figura do banco): café 25 + 55·e^(−t/22); suco 25 − 20·e^(−t/18) */
+(function () {
+  function curva(f) { var d = ""; for (var t = 0; t <= 120; t += 2) { var x = 60 + t * 3.6, y = 210 - f(t) * 2.1; d += (t ? " L" : "M") + x.toFixed(1) + " " + y.toFixed(1); } return d; }
+  var c = document.getElementById("t1curvaCafe"), s = document.getElementById("t1curvaSuco");
+  if (c) c.setAttribute("d", curva(function (t) { return 25 + 55 * Math.exp(-t / 22); }));
+  if (s) s.setAttribute("d", curva(function (t) { return 25 - 20 * Math.exp(-t / 18); }));
+})();
+</script>

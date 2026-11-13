@@ -1,0 +1,497 @@
+<!--aula
+{"disciplina": "fisica", "curso": "IF", "assunto": "Sistema Sol, Terra e Lua", "parte": "Parte 1 de 2", "titulo": "Rotação, translação e estações", "scripts": ["animacoes-astronomia.js"]}
+-->
+<!-- Fonte: apostila IF, Física, cap. 1 Astronomia, 1.2 Sistema Sol, Terra e Lua (blocos "Rotação e translação" e "Estações do ano"). Questões: Modelo IF, lote if-fisica-sistema-sol-terra-e-lua (m005 FIS-8745, m002 FIS-8742, m007 FIS-8747). A oficial do subcapítulo (2013-1-extra q34, FIS-0579) fica reservada para o bloco "Questões do IF Sudeste". -->
+<style>
+  .caixa, .cartao, .linha-ex, .painel { box-sizing: border-box; }
+  .linha-ex { background: var(--branco); border: 2px solid var(--lilas-2); border-radius: 24px; padding: 14px 26px; font-size: 30px; line-height: 1.3; }
+  .linha-ex b { color: var(--roxo-titulo); }
+  .painel { background: var(--branco); border: 2px solid var(--lilas-2); border-radius: 30px; padding: 18px 26px; }
+  .painel h3 { margin: 0 0 6px; font: 800 36px var(--fonte-titulo); letter-spacing: -.02em; color: var(--roxo-titulo); }
+  .painel p { margin: 6px 0 0; font-size: 26px; line-height: 1.32; }
+  .painel b { color: var(--roxo-titulo); }
+  .rot-fig { font-family: Figtree, "Segoe UI", sans-serif; font-weight: 700; font-size: 24px; fill: #5E5A70; }
+  .est-tab { border-collapse: separate; border-spacing: 0; background: var(--branco); border: 2px solid var(--lilas-2); border-radius: 26px; overflow: hidden; font-size: 32px; }
+  .est-tab th { background: var(--d-clara); color: var(--d-forte); font-weight: 800; padding: 12px 34px; text-align: left; }
+  .est-tab td { padding: 12px 34px; border-top: 2px solid var(--lilas); }
+  .est-tab td:nth-child(2) { font-weight: 800; color: var(--roxo-titulo); }
+  .resp { display: inline-block; padding: 6px 22px; border-radius: 999px; background: var(--d); color: #fff; font-weight: 800; font-size: 30px; }
+  /* Terra girando (continentes passam) e Terra em volta do Sol */
+  @keyframes passa { to { transform: translateX(-340px); } }
+  .slide.ativo .mostra .continentes { animation: passa 12s linear infinite; }
+  @keyframes gira { to { transform: rotate(360deg); } }
+  @keyframes gira-anti { to { transform: rotate(-360deg); } }
+  .orbita-terra { transform-box: view-box; transform-origin: 170px 130px; }
+  .slide.ativo .mostra .orbita-terra { animation: gira-anti 24s linear infinite; }
+  .terra-gira { transform-box: view-box; transform-origin: 300px 280px; }
+  .slide.ativo .mostra .terra-gira { animation: gira-anti 24s linear infinite; }
+  /* caminho do Sol no verão e no inverno: mesma velocidade, arcos diferentes */
+  @keyframes arco { from { transform: rotate(-112deg); } to { transform: rotate(112deg); } }
+  .sol-v { transform-box: view-box; transform-origin: 300px 400px; transform: rotate(-30deg); }
+  .sol-i { transform-box: view-box; transform-origin: 300px 560px; transform: rotate(-30deg); }
+  .slide.ativo .mostra .sol-v, .slide.ativo .mostra .sol-i { animation: arco 11s linear infinite; }
+  /* feixe de luz: de frente e de lado */
+  @keyframes pulsa { 0%, 100% { opacity: .55; } 50% { opacity: .9; } }
+  .slide.ativo .mostra .feixe { animation: pulsa 5s ease-in-out infinite; }
+</style>
+
+<svg width="0" height="0" style="position:absolute" aria-hidden="true">
+  <defs>
+    <clipPath id="st1Globo"><circle cx="170" cy="130" r="100"/></clipPath>
+    <clipPath id="st1Globo2"><circle cx="300" cy="280" r="170"/></clipPath>
+    <clipPath id="st1Ceu"><rect x="0" y="0" width="600" height="400"/></clipPath>
+    <linearGradient id="st1Dia" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#BFE0F7"/><stop offset="1" stop-color="#F4F9FD"/></linearGradient>
+    <g id="st1Cont"><path d="M20 80 q30 -40 70 -10 q20 30 -10 60 q-40 20 -60 -10 z M120 140 q40 -10 60 20 q0 40 -40 40 q-30 -20 -20 -60 z M210 60 q30 -10 50 20 q-10 30 -40 20 z M270 150 q30 0 40 30 q-20 30 -40 10 z" fill="#7CC67A"/></g>
+  </defs>
+</svg>
+
+<!-- 1. Capa -->
+<section class="slide capa" data-nome="Capa">
+  <div class="estrelas"></div>
+  <div class="texto-capa">
+    <span class="selo">Física · IF</span>
+    <p class="aula">Sistema Sol, Terra e Lua · Parte 1 de 2</p>
+    <h1 style="font-size:122px">Rotação, translação e estações</h1>
+    <p class="sub">Por que é verão aqui e inverno em Portugal</p>
+  </div>
+  <svg class="emblema" viewBox="0 0 640 640" aria-hidden="true">
+    <g class="gira-lento"><ellipse cx="320" cy="320" rx="300" ry="128" fill="none" stroke="#fff" stroke-opacity=".38" stroke-width="2" transform="rotate(-10 320 320)"/></g>
+    <circle cx="320" cy="320" r="120" fill="#FFD10C"/>
+    <g class="gira"><g transform="translate(320 320)"><g transform="translate(250 0)"><circle r="44" fill="#4C9BE8"/><line x1="-24" y1="56" x2="24" y2="-56" stroke="#fff" stroke-width="5" stroke-linecap="round"/></g></g></g>
+  </svg>
+  <img class="logo-capa" src="{{LOGO_BRANCO}}" alt="Quarks">
+  <aside class="notas"><p>Subcapítulo Sistema Sol, Terra e Lua, Parte 1: os dois movimentos da Terra, o eixo inclinado e a verdadeira causa das estações do ano (não é a distância ao Sol).</p></aside>
+</section>
+
+<!-- 2. Os dois movimentos -->
+<section class="slide" data-nome="Os dois movimentos">
+  <div class="conteudo">
+    <p class="olho">A Terra não está parada</p>
+    <h2 class="titulo">Dois movimentos ao mesmo tempo</h2>
+    <div style="position:absolute;left:0;right:0;top:160px;display:grid;grid-template-columns:1fr 1fr;gap:40px">
+      <div class="painel" data-passo="1" style="display:grid;grid-template-columns:340px 1fr;gap:20px;align-items:center">
+        <svg viewBox="0 0 340 260" style="width:340px;height:260px" aria-hidden="true">
+          <circle cx="170" cy="130" r="100" fill="#4C9BE8"/>
+          <g clip-path="url(#st1Globo)"><g class="continentes"><use href="#st1Cont" x="60" y="40"/><use href="#st1Cont" x="400" y="40"/></g></g>
+          <circle cx="170" cy="130" r="100" fill="none" stroke="#292B2C" stroke-width="4"/>
+          <line x1="170" y1="14" x2="170" y2="246" stroke="#292B2C" stroke-width="4" stroke-dasharray="8 6"/>
+          <path d="M80 40 Q170 0 260 40" fill="none" stroke="#3F2FA0" stroke-width="5"/><path d="M246 26 L262 42 L242 48" fill="none" stroke="#3F2FA0" stroke-width="5" stroke-linecap="round"/>
+        </svg>
+        <div><h3>Rotação</h3><p>O giro em torno do <b>próprio eixo</b>, em cerca de <b>24 horas</b>.</p><p>Produz o <b>dia e a noite</b>.</p></div>
+      </div>
+      <div class="painel" data-passo="2" style="display:grid;grid-template-columns:340px 1fr;gap:20px;align-items:center">
+        <svg viewBox="0 0 340 260" style="width:340px;height:260px" aria-hidden="true">
+          <circle cx="170" cy="130" r="110" fill="none" stroke="#B9B0E0" stroke-width="3" stroke-dasharray="6 9"/>
+          <circle cx="170" cy="130" r="40" fill="#FFD10C" stroke="#F0A500" stroke-width="4"/>
+          <g class="orbita-terra"><circle cx="280" cy="130" r="17" fill="#4C9BE8" stroke="#292B2C" stroke-width="3"/></g>
+        </svg>
+        <div><h3>Translação</h3><p>A volta em torno do <b>Sol</b>, em cerca de <b>365 dias e 6 horas</b>.</p><p>Marca o <b>ano</b>.</p></div>
+      </div>
+    </div>
+    <div class="caixa caixa-fundamental" data-passo="3" style="position:absolute;left:600px;right:0;top:560px;padding:20px 30px">
+      <span class="rotulo">Os dois movimentos da Terra</span>
+      <div class="texto" style="font-size:30px"><b>Rotação</b> (cerca de 24 h): dia e noite. <b>Translação</b> (cerca de 365 dias e 6 h): o ano.</div>
+    </div>
+  </div>
+  <aside class="notas">
+    <p>Clique 1: a rotação (os continentes passam). Clique 2: a translação (a Terra dá a volta no Sol; na animação, uma volta em 24 s). Clique 3: a caixa "fundamental" da apostila.</p>
+    <p>Gancho da apostila: "Neste exato momento, ela gira em torno de si mesma e viaja em volta do Sol, ao mesmo tempo." Esquemas fora de escala.</p>
+  </aside>
+</section>
+
+<!-- 3. Dia e noite -->
+<section class="slide" data-nome="Dia e noite">
+  <div class="conteudo">
+    <p class="olho">Rotação</p>
+    <h2 class="titulo">Metade iluminada, metade no escuro</h2>
+    <svg viewBox="0 0 640 540" style="position:absolute;left:0;top:130px;width:557px;height:470px" aria-hidden="true" data-passo="0">
+      <g stroke="#F0A500" stroke-width="5" stroke-linecap="round" fill="none">
+        <path d="M10 190 H80 M66 178 L82 190 L66 202"/><path d="M10 280 H80 M66 268 L82 280 L66 292"/><path d="M10 370 H80 M66 358 L82 370 L66 382"/>
+      </g>
+      <text x="10" y="150" class="rot-fig" style="fill:#B07A00">luz do Sol</text>
+      <circle cx="300" cy="280" r="170" fill="#4C9BE8"/>
+      <g clip-path="url(#st1Globo2)"><g class="terra-gira">
+        <path d="M220 160 q40 -40 90 -10 q30 30 -10 70 q-40 20 -70 -10 z M330 300 q60 -20 90 30 q10 60 -50 70 q-50 -20 -40 -100 z M170 300 q40 10 30 60 q-20 40 -60 10 q-10 -40 30 -70 z M380 170 q30 -10 40 20 q-10 30 -40 10 z" fill="#7CC67A" opacity=".9"/>
+        <g transform="translate(300 110)"><circle cx="0" cy="-14" r="10" fill="#FFD10C" stroke="#292B2C" stroke-width="3"/><path d="M0 -4 V22" stroke="#292B2C" stroke-width="5" stroke-linecap="round"/></g>
+      </g></g>
+      <path d="M300 110 A170 170 0 0 1 300 450 Z" fill="#3B2A73" opacity=".78"/>
+      <circle cx="300" cy="280" r="170" fill="none" stroke="#292B2C" stroke-width="4"/>
+      <circle cx="300" cy="280" r="9" fill="#292B2C"/>
+      <text x="190" y="500" class="rot-fig">dia</text><text x="370" y="500" class="rot-fig">noite</text>
+      <text x="300" y="530" class="rot-fig" text-anchor="middle" style="font-size:20px">vista de cima do polo norte, fora de escala</text>
+    </svg>
+    <div style="position:absolute;left:700px;right:0;top:160px;display:flex;flex-direction:column;gap:18px">
+      <div class="linha-ex" data-passo="1">A metade voltada para o Sol está <b>iluminada</b>: lá é <b>dia</b>.</div>
+      <div class="linha-ex" data-passo="2">A outra metade fica no escuro: lá é <b>noite</b>.</div>
+      <div class="linha-ex" data-passo="3">A Terra gira de <b>oeste para leste</b>: por isso o Sol parece <b>nascer a leste</b>.</div>
+    </div>
+  </div>
+  <aside class="notas">
+    <p>A Terra gira o tempo todo (sentido anti-horário, vista de cima do polo norte). O bonequinho amarelo entra no dia pela parte de cima do desenho (amanhecer) e sai embaixo (anoitecer).</p>
+    <p>Da apostila (bloco "Rotação e translação").</p>
+  </aside>
+</section>
+
+<!-- 4. Exemplo: dia e noite no mundo -->
+<section class="slide" data-nome="Exemplo: Japão">
+  <div class="conteudo">
+    <p class="olho">Exemplo</p>
+    <h2 class="titulo">Meio-dia aqui, noite no Japão</h2>
+    <p class="texto" style="position:absolute;left:0;width:1000px;top:160px;margin:0">Quando é meio-dia em Juiz de Fora, é noite no Japão, do outro lado do planeta. Qual movimento da Terra explica isso?</p>
+    <svg viewBox="0 0 520 520" style="position:absolute;left:1180px;top:140px;width:520px;height:520px" aria-hidden="true">
+      <g stroke="#F0A500" stroke-width="5" stroke-linecap="round" fill="none"><path d="M0 200 H60 M48 188 L62 200 L48 212"/><path d="M0 320 H60 M48 308 L62 320 L48 332"/></g>
+      <circle cx="290" cy="260" r="190" fill="#4C9BE8"/>
+      <path d="M290 70 A190 190 0 0 1 290 450 Z" fill="#3B2A73" opacity=".8"/>
+      <circle cx="290" cy="260" r="190" fill="none" stroke="#292B2C" stroke-width="4"/>
+      <g data-passo="1"><circle cx="112" cy="250" r="14" fill="#FFD10C" stroke="#292B2C" stroke-width="3"/><text x="150" y="240" class="rot-fig" style="fill:#3F2FA0;font-weight:800">Juiz de Fora</text></g>
+      <g data-passo="1"><circle cx="468" cy="270" r="14" fill="#C9C0F0" stroke="#fff" stroke-width="3"/><text x="452" y="310" class="rot-fig" text-anchor="end" style="fill:#fff;font-weight:800">Japão</text></g>
+    </svg>
+    <div style="position:absolute;left:0;width:1060px;top:330px;display:flex;flex-direction:column;gap:18px">
+      <div class="linha-ex" data-passo="1"><b>Raciocínio:</b> a cada instante, só a metade da Terra voltada para o Sol está iluminada.</div>
+      <div class="linha-ex" data-passo="2">O Japão fica, aproximadamente, do <b>lado oposto</b> ao Brasil.</div>
+    </div>
+    <span class="pilula pilula-resposta" data-passo="3" style="position:absolute;left:600px;top:640px">Resposta: a rotação</span>
+  </div>
+  <aside class="notas"><p>Exemplo da apostila ("Dia e noite no mundo"). Desenho esquemático: as posições dos dois lugares são aproximadas.</p></aside>
+</section>
+
+<!-- 5. Translação e o eixo -->
+<section class="slide" data-nome="Translação e eixo inclinado">
+  <div class="conteudo">
+    <p class="olho">Translação</p>
+    <h2 class="titulo">O eixo inclinado não muda de direção</h2>
+    <div style="position:absolute;left:0;width:620px;top:160px;display:flex;flex-direction:column;gap:14px">
+      <div class="linha-ex" style="font-size:27px">A órbita da Terra é <b>quase circular</b>.</div>
+      <div class="linha-ex" data-passo="1" style="font-size:27px">O eixo de rotação é <b>inclinado</b> cerca de <b>23,5°</b>…</div>
+      <div class="linha-ex" data-passo="2" style="font-size:27px">…e aponta <b>sempre para a mesma direção</b> no espaço, durante a volta toda.</div>
+    </div>
+    <div data-anima="estacoes" data-anima-passo="1" data-w="1060" data-h="600" style="position:absolute;left:700px;top:150px;width:1060px;height:600px"></div>
+    <div class="caixa caixa-fundamental" data-passo="3" style="position:absolute;left:0;width:620px;top:480px;padding:16px 26px">
+      <div class="texto" style="font-size:27px">Essa inclinação é a <b>chave das estações</b> do ano.</div>
+    </div>
+  </div>
+  <aside class="notas">
+    <p>Clique 1: a Terra começa a dar a volta (uma volta em 24 s). Repare que o eixo, com o N no alto, continua inclinado para o mesmo lado em todas as posições. A etiqueta mostra a estação no hemisfério sul; ela será explicada nos próximos slides.</p>
+    <p>A órbita aparece achatada porque está em perspectiva; na verdade ela é quase um círculo. Esquema fora de escala (da apostila, figura das estações).</p>
+  </aside>
+</section>
+
+<!-- 6. Gancho das estações -->
+<section class="slide" data-nome="Verão aqui, inverno lá">
+  <div class="conteudo">
+    <p class="olho">Estações do ano</p>
+    <h2 class="titulo">Dezembro: verão em Minas, inverno em Portugal</h2>
+    <div style="position:absolute;left:0;right:0;top:250px;display:grid;grid-template-columns:1fr 1fr;gap:40px">
+      <div class="painel" style="display:grid;grid-template-columns:150px 1fr;gap:20px;align-items:center">
+        <svg viewBox="0 0 150 150" aria-hidden="true"><circle cx="75" cy="75" r="46" fill="#FFD10C" stroke="#F0A500" stroke-width="4"/><g stroke="#F0A500" stroke-width="6" stroke-linecap="round"><path d="M75 8v14M75 128v14M8 75h14M128 75h14M27 27l10 10M113 113l10 10M27 123l10-10M113 37l10-10"/></g></svg>
+        <div><h3>Minas Gerais</h3><p>Hemisfério <b>sul</b>: <b>verão</b>, calor, dias longos.</p></div>
+      </div>
+      <div class="painel" style="display:grid;grid-template-columns:150px 1fr;gap:20px;align-items:center">
+        <svg viewBox="0 0 150 150" aria-hidden="true"><g stroke="#4C9BE8" stroke-width="7" stroke-linecap="round"><path d="M75 15v120M23 45l104 60M23 105l104-60"/><path d="M60 22l15 12l15-12M60 128l15-12l15 12"/></g></svg>
+        <div><h3>Portugal</h3><p>Hemisfério <b>norte</b>: <b>inverno</b>, frio, dias curtos.</p></div>
+      </div>
+    </div>
+    <div class="caixa caixa-atencao" data-passo="1" style="position:absolute;left:600px;right:0;top:560px;padding:22px 32px">
+      <div class="texto" style="font-size:31px">Se a causa fosse a <b>distância até o Sol</b>, os dois países teriam a <b>mesma estação</b> ao mesmo tempo.</div>
+    </div>
+  </div>
+  <aside class="notas"><p>Gancho da apostila. Pergunte antes do clique: "o que causa as estações?". A resposta mais comum (a distância) cai aqui mesmo.</p></aside>
+</section>
+
+<!-- 7. A causa das estações -->
+<section class="slide" data-nome="A causa das estações">
+  <div class="conteudo">
+    <p class="olho">A causa das estações</p>
+    <h2 class="titulo">Luz de frente ou luz de lado</h2>
+    <svg viewBox="0 0 1160 420" style="position:absolute;left:600px;top:150px;width:1160px;height:420px" aria-hidden="true">
+      <g data-passo="1">
+        <path class="feixe" d="M120 20 H280 L280 300 H120 Z" fill="#FFD10C" opacity=".7"/>
+        <rect x="80" y="300" width="240" height="30" rx="8" fill="#7CC67A"/>
+        <rect x="120" y="296" width="160" height="10" rx="4" fill="#F0A500"/>
+        <text x="200" y="380" class="rot-fig" text-anchor="middle" style="fill:#3F2FA0;font-weight:800;font-size:28px">de frente</text>
+        <text x="200" y="410" class="rot-fig" text-anchor="middle">luz concentrada: esquenta mais</text>
+      </g>
+      <g data-passo="2">
+        <path class="feixe" d="M330 20 L609 20 L879 300 L600 300 Z" fill="#FFD10C" opacity=".7" transform="translate(40 0)"/>
+        <rect x="480" y="300" width="620" height="30" rx="8" fill="#7CC67A"/>
+        <rect x="640" y="296" width="279" height="10" rx="4" fill="#F0A500" opacity=".55"/>
+        <text x="780" y="380" class="rot-fig" text-anchor="middle" style="fill:#3F2FA0;font-weight:800;font-size:28px">de lado</text>
+        <text x="780" y="410" class="rot-fig" text-anchor="middle">a mesma luz espalhada: esquenta menos</text>
+      </g>
+    </svg>
+    <div class="caixa caixa-fundamental" data-passo="3" style="position:absolute;left:0;width:520px;top:160px;padding:22px 30px">
+      <span class="rotulo">A causa das estações</span>
+      <div class="texto" style="font-size:29px">A <b>inclinação do eixo</b> da Terra durante a translação.</div>
+    </div>
+    <div style="position:absolute;left:600px;right:0;top:600px;display:flex;flex-direction:column;gap:14px">
+      <div class="linha-ex" data-passo="4">Hemisfério <b>inclinado para o Sol</b>: luz mais de frente e <b>por mais horas</b>. É <b>verão</b> nele.</div>
+      <div class="linha-ex" data-passo="5">O outro recebe a luz mais de lado e por menos horas: é <b>inverno</b>.</div>
+    </div>
+  </div>
+  <aside class="notas">
+    <p>Cliques 1 e 2: o mesmo feixe de luz (mesma largura) chega de frente e de lado; de lado, ele se espalha numa área maior e cada pedaço do chão recebe menos energia. Esta comparação ilustra a frase da apostila "recebe a luz mais de frente".</p>
+    <p>Cliques 3 a 5: a caixa "fundamental" da apostila. Além de mais de frente, o hemisfério de verão recebe luz por mais horas (dias mais longos).</p>
+  </aside>
+</section>
+
+<!-- 8. As estações nos dois hemisférios -->
+<section class="slide" data-nome="Estações opostas">
+  <div class="conteudo">
+    <p class="olho">Estações opostas nos dois hemisférios</p>
+    <h2 class="titulo">Quando começa cada estação</h2>
+    <table class="est-tab" style="position:absolute;left:0;top:170px;width:900px">
+      <tr><th>Começo (aprox.)</th><th>No Sul (Brasil)</th><th>No Norte</th></tr>
+      <tr data-passo="1"><td>21 de dezembro</td><td>verão</td><td>inverno</td></tr>
+      <tr data-passo="2"><td>20 de março</td><td>outono</td><td>primavera</td></tr>
+      <tr data-passo="3"><td>21 de junho</td><td>inverno</td><td>verão</td></tr>
+      <tr data-passo="4"><td>22 de setembro</td><td>primavera</td><td>outono</td></tr>
+    </table>
+    <div data-anima="estacoes" data-anima-passo="1" data-w="820" data-h="520" style="position:absolute;left:960px;top:150px;width:820px;height:520px"></div>
+  </div>
+  <aside class="notas">
+    <p>Uma linha por clique; a Terra gira em volta do Sol ao lado, com a estação do hemisfério sul na etiqueta. Datas aproximadas, da tabela da apostila (o dia exato varia um pouco de ano para ano).</p>
+    <p>Em dezembro (Terra à direita do Sol, no desenho), o polo sul está voltado para o Sol: verão no Sul. Em junho, o contrário.</p>
+  </aside>
+</section>
+
+<!-- 9. Verão e inverno no céu -->
+<section class="slide" data-nome="O Sol no verão e no inverno">
+  <div class="conteudo">
+    <p class="olho">Verão e inverno no céu</p>
+    <h2 class="titulo">Dia mais longo, Sol mais alto</h2>
+    <svg viewBox="0 0 600 460" style="position:absolute;left:640px;top:150px;width:540px;height:414px" aria-hidden="true" data-passo="1">
+      <g clip-path="url(#st1Ceu)"><rect width="600" height="400" fill="url(#st1Dia)"/>
+        <circle cx="300" cy="400" r="300" fill="none" stroke="#E0A100" stroke-width="3" stroke-dasharray="4 10"/>
+        <g class="sol-v"><circle cx="300" cy="100" r="30" fill="#FFD10C" stroke="#F0A500" stroke-width="4"/></g>
+      </g>
+      <rect x="0" y="396" width="600" height="20" rx="10" fill="#CFE5C0"/>
+      <text x="300" y="456" class="rot-fig" text-anchor="middle" style="fill:#3F2FA0;font-weight:800;font-size:30px">verão</text>
+    </svg>
+    <svg viewBox="0 0 600 460" style="position:absolute;left:1220px;top:150px;width:540px;height:414px" aria-hidden="true" data-passo="2">
+      <g clip-path="url(#st1Ceu)"><rect width="600" height="400" fill="url(#st1Dia)"/>
+        <circle cx="300" cy="560" r="300" fill="none" stroke="#E0A100" stroke-width="3" stroke-dasharray="4 10"/>
+        <g class="sol-i"><circle cx="300" cy="260" r="30" fill="#FFD10C" stroke="#F0A500" stroke-width="4"/></g>
+      </g>
+      <rect x="0" y="396" width="600" height="20" rx="10" fill="#CFE5C0"/>
+      <text x="300" y="456" class="rot-fig" text-anchor="middle" style="fill:#3F2FA0;font-weight:800;font-size:30px">inverno</text>
+    </svg>
+    <div style="position:absolute;left:0;width:560px;top:170px;display:flex;flex-direction:column;gap:16px">
+      <div class="linha-ex" data-passo="1" style="font-size:27px"><b>Verão:</b> dias mais longos; Sol do meio-dia <b>mais alto</b>; sombra do gnômon <b>curta</b>.</div>
+      <div class="linha-ex" data-passo="2" style="font-size:27px"><b>Inverno:</b> dias mais curtos; Sol do meio-dia <b>mais baixo</b>; sombra <b>longa</b>.</div>
+    </div>
+    <div class="caixa" data-passo="3" style="position:absolute;left:640px;right:0;top:620px;padding:18px 28px">
+      <div class="texto" style="font-size:29px">Perto da <b>linha do Equador</b>, a luz chega quase igual o ano todo: as estações são <b>pouco marcadas</b>.</div>
+    </div>
+  </div>
+  <aside class="notas">
+    <p>O Sol anda no mesmo ritmo nos dois desenhos. No verão, o caminho dele acima do horizonte é maior e mais alto: fica mais tempo no céu. No inverno, o caminho é baixo e curto: o dia claro é menor. Esquema, fora de escala.</p>
+    <p>Da apostila (bloco "Estações do ano"). A sombra do gnômon foi vista na Parte 1 de Observação do céu.</p>
+  </aside>
+</section>
+
+<!-- 10. Atenção: não é a distância -->
+<section class="slide" data-nome="Atenção: não é a distância">
+  <div class="conteudo">
+    <p class="olho">Atenção</p>
+    <h2 class="titulo">Não é a distância ao Sol</h2>
+    <div class="caixa caixa-atencao" style="position:absolute;left:0;right:0;top:160px;padding:24px 34px">
+      <div class="texto">A órbita da Terra é <b>quase um círculo</b>, e a distância até o Sol <b>muda pouco</b>.</div>
+    </div>
+    <svg viewBox="0 0 900 340" style="position:absolute;left:700px;top:330px;width:900px;height:340px" aria-hidden="true" data-passo="1">
+      <circle cx="450" cy="170" r="150" fill="none" stroke="#B9B0E0" stroke-width="4" stroke-dasharray="8 10"/>
+      <circle cx="456" cy="170" r="42" fill="#FFD10C" stroke="#F0A500" stroke-width="4"/>
+      <g transform="translate(300 170)"><circle r="20" fill="#4C9BE8" stroke="#292B2C" stroke-width="3"/></g>
+      <text x="300" y="130" class="rot-fig" text-anchor="middle" style="fill:#3F2FA0;font-weight:800">começo de janeiro</text>
+      <text x="300" y="232" class="rot-fig" text-anchor="middle">um pouco mais perto</text>
+      <text x="700" y="320" class="rot-fig" text-anchor="middle">órbita quase circular (fora de escala)</text>
+    </svg>
+    <div style="position:absolute;left:0;width:640px;top:340px;display:flex;flex-direction:column;gap:18px">
+      <div class="linha-ex" data-passo="1">A Terra fica até um pouco <b>mais perto</b> do Sol no <b>começo de janeiro</b>…</div>
+      <div class="linha-ex" data-passo="2">…quando é <b>inverno no hemisfério norte</b>.</div>
+    </div>
+  </div>
+  <aside class="notas"><p>Da apostila (atenção "Não é a distância"). O Sol foi desenhado só um pouquinho fora do centro, para lembrar que a diferença de distância ao longo do ano é pequena.</p></aside>
+</section>
+
+<!-- 11. Exemplo: férias em julho -->
+<section class="slide" data-nome="Exemplo: férias em julho">
+  <div class="conteudo">
+    <p class="olho">Exemplo</p>
+    <h2 class="titulo">Férias em julho no Canadá</h2>
+    <p class="texto" style="position:absolute;left:0;width:1000px;top:160px;margin:0">Bia vai viajar para o Canadá, no hemisfério norte, em <b>julho</b>. Que roupa levar?</p>
+    <div style="position:absolute;left:0;width:1000px;top:300px;display:flex;flex-direction:column;gap:18px">
+      <div class="linha-ex" data-passo="1"><b>Raciocínio:</b> em julho, o hemisfério sul está no <b>inverno</b>.</div>
+      <div class="linha-ex" data-passo="2">As estações são <b>opostas</b>: o hemisfério norte está no <b>verão</b>.</div>
+    </div>
+    <svg viewBox="0 0 400 400" style="position:absolute;left:1240px;top:180px;width:400px;height:400px" aria-hidden="true" data-passo="3">
+      <circle cx="200" cy="200" r="190" fill="#FFF4C2"/>
+      <path d="M130 120 L170 100 Q200 120 230 100 L270 120 L300 170 L262 186 L262 300 H138 V186 L100 170 Z" fill="#0F8B8D"/>
+      <circle cx="320" cy="90" r="34" fill="#FFD10C" stroke="#F0A500" stroke-width="4"/>
+    </svg>
+    <span class="pilula pilula-resposta" data-passo="3" style="position:absolute;left:600px;top:620px">Resposta: roupas de verão</span>
+  </div>
+  <aside class="notas"><p>Exemplo da apostila ("Férias em julho"). Peça a resposta antes de abrir o raciocínio.</p></aside>
+</section>
+
+<!-- 12. Questão 1 -->
+<section class="slide questao" data-nome="Questão 1">
+  <div class="conteudo">
+    <div class="area-resolucao"></div>
+    <span class="pilula pilula-pausa" data-em="1:some">Pause o vídeo e tente</span>
+    <div class="painel-questao" style="gap:10px">
+      <p class="olho">Questão 1 · Modelo IF</p>
+      <p class="enunciado" style="font-size:22px">Para estudar os movimentos da Terra, uma turma usou uma lanterna fixa no centro da mesa, representando o Sol, e um globo terrestre com o eixo inclinado, que era girado e levado em volta da lanterna. Depois da atividade, os estudantes escreveram:</p>
+      <p class="enunciado" style="font-size:22px">I. O Sol parece nascer a leste porque a Terra gira em torno do próprio eixo de oeste para leste.<br>II. A volta do globo em torno da lanterna representa o movimento que produz o dia e a noite.<br>III. Durante a volta em torno da lanterna, o eixo do globo deve ficar sempre inclinado para a mesma direção.</p>
+      <p class="enunciado" style="font-size:22px">Está <b>CORRETO</b> o que se afirma em</p>
+      <ol class="alternativas curtas">
+        <li data-em="2:apaga" style="font-size:21px"><b>A</b><span>I, apenas.</span></li>
+        <li data-em="2:certo" style="font-size:21px"><b>B</b><span>I e III, apenas.</span></li>
+        <li data-em="2:apaga" style="font-size:21px"><b>C</b><span>II, apenas.</span></li>
+        <li data-em="2:apaga" style="font-size:21px"><b>D</b><span>II e III, apenas.</span></li>
+        <li data-em="2:apaga" style="font-size:21px"><b>E</b><span>I, II e III.</span></li>
+      </ol>
+    </div>
+  </div>
+  <aside class="resolucao">
+    <p class="dados"><b>Dados:</b> lanterna = Sol; globo com eixo inclinado.</p>
+    <ol class="passos">
+      <li><b>I:</b> rotação de oeste para leste (V).</li>
+      <li><b>II:</b> volta na lanterna = translação = ano (F).</li>
+      <li><b>III:</b> eixo sempre na mesma direção (V).</li>
+    </ol>
+    <p class="resposta"><b>Resposta:</b> I e III. <b>Gabarito B.</b></p>
+    <p class="atencao"><b>Destaque no quadro:</b> Dia e noite: rotação. Ano: translação.</p>
+    <ul class="erros">
+      <li><b>A</b> Esquece a III, também verdadeira.</li>
+      <li><b>C</b> A II é justamente a falsa.</li>
+      <li><b>D</b> Aceita a II e deixa a I de fora.</li>
+      <li><b>E</b> Aceita a II, que é falsa.</li>
+    </ul>
+  </aside>
+  <aside class="notas">
+    <p>Clique 1 tira o aviso de pausa: resolva na área (D liga a caneta; E esconde o enunciado). Clique 2: gabarito B.</p>
+    <p>Modelo IF, lote if-fisica-sistema-sol-terra-e-lua, m005, FIS-8745 (nível 3).</p>
+  </aside>
+</section>
+
+<!-- 13. Questão 2 -->
+<section class="slide questao" data-nome="Questão 2">
+  <div class="conteudo">
+    <div class="area-resolucao"></div>
+    <span class="pilula pilula-pausa" data-em="1:some">Pause o vídeo e tente</span>
+    <div class="painel-questao" style="gap:10px">
+      <p class="olho">Questão 2 · Modelo IF</p>
+      <p class="enunciado" style="font-size:23px">Em dezembro, uma estudante de Juiz de Fora conversa por vídeo com uma prima que mora em Portugal, no hemisfério norte. Enquanto em Minas Gerais é verão, com calor e dias longos, a prima conta que lá é inverno, com frio e dias curtos.</p>
+      <p class="enunciado" style="font-size:23px">A explicação <b>CORRETA</b> para as estações serem diferentes nos dois países no mesmo mês é que</p>
+      <ol class="alternativas" style="gap:7px">
+        <li data-em="2:certo" style="font-size:20px;padding:5px 14px"><b>A</b><span>o eixo da Terra é inclinado, e em dezembro o hemisfério sul está voltado para o Sol, recebendo a luz mais de frente e por mais horas.</span></li>
+        <li data-em="2:apaga" style="font-size:20px;padding:5px 14px"><b>B</b><span>em dezembro a Terra passa mais perto do Sol, e por isso é verão no Brasil.</span></li>
+        <li data-em="2:apaga" style="font-size:20px;padding:5px 14px"><b>C</b><span>o Brasil fica mais perto do Sol que Portugal durante todo o ano.</span></li>
+        <li data-em="2:apaga" style="font-size:20px;padding:5px 14px"><b>D</b><span>em dezembro a rotação da Terra fica mais rápida no hemisfério sul.</span></li>
+        <li data-em="2:apaga" style="font-size:20px;padding:5px 14px"><b>E</b><span>em dezembro o Sol produz mais calor e luz do que em junho.</span></li>
+      </ol>
+    </div>
+  </div>
+  <aside class="resolucao">
+    <p class="dados"><b>Dados:</b> dezembro: verão no Sul, inverno no Norte.</p>
+    <ol class="passos">
+      <li>Causa das estações: eixo inclinado.</li>
+      <li>Dezembro: hemisfério sul voltado para o Sol.</li>
+      <li>Luz mais de frente e por mais horas: verão.</li>
+      <li>Norte: luz de lado, menos horas: inverno.</li>
+    </ol>
+    <p class="resposta"><b>Resposta:</b> a inclinação do eixo. <b>Gabarito A.</b></p>
+    <p class="atencao"><b>Destaque no quadro:</b> Se fosse a distância, a estação seria a mesma nos dois.</p>
+    <ul class="erros">
+      <li><b>B</b> A distância ao Sol muda pouco.</li>
+      <li><b>C</b> A diferença de distância entre os países é desprezível.</li>
+      <li><b>D</b> A rotação dura 24 h o ano todo.</li>
+      <li><b>E</b> O Sol não muda a luz que emite de um mês para outro.</li>
+    </ul>
+  </aside>
+  <aside class="notas">
+    <p>Clique 1 tira o aviso de pausa: resolva na área (D liga a caneta; E esconde o enunciado). Clique 2: gabarito A.</p>
+    <p>Modelo IF, lote if-fisica-sistema-sol-terra-e-lua, m002, FIS-8742 (nível 2).</p>
+  </aside>
+</section>
+
+<!-- 14. Questão 3 -->
+<section class="slide questao" data-nome="Questão 3">
+  <div class="conteudo">
+    <div class="area-resolucao"></div>
+    <span class="pilula pilula-pausa" data-em="1:some">Pause o vídeo e tente</span>
+    <div class="painel-questao" style="gap:10px">
+      <p class="olho">Questão 3 · Modelo IF</p>
+      <p class="enunciado" style="font-size:22px">A tabela mostra os horários aproximados do nascer e do pôr do sol em Juiz de Fora no começo do inverno e no começo do verão.</p>
+      <table style="border-collapse:collapse;font-size:21px;background:#fff;border:2px solid var(--lilas-2)">
+        <tr style="background:var(--d-clara);color:var(--d-forte);font-weight:800"><td style="padding:6px 10px">Data</td><td style="padding:6px 10px">Nascer do sol</td><td style="padding:6px 10px">Pôr do sol</td></tr>
+        <tr><td style="padding:6px 10px;border-top:1px solid var(--lilas-2)">21 de junho</td><td style="padding:6px 10px;border-top:1px solid var(--lilas-2)">6 h 31 min</td><td style="padding:6px 10px;border-top:1px solid var(--lilas-2)">17 h 19 min</td></tr>
+        <tr><td style="padding:6px 10px;border-top:1px solid var(--lilas-2)">21 de dezembro</td><td style="padding:6px 10px;border-top:1px solid var(--lilas-2)">5 h 08 min</td><td style="padding:6px 10px;border-top:1px solid var(--lilas-2)">18 h 35 min</td></tr>
+      </table>
+      <p class="enunciado" style="font-size:22px">Comparando os dois dias, é <b>CORRETO</b> afirmar que o tempo entre o nascer e o pôr do sol é</p>
+      <ol class="alternativas" style="gap:6px">
+        <li data-em="2:apaga" style="font-size:19px;padding:4px 12px"><b>A</b><span>cerca de 1 h 23 min maior em dezembro, porque o Sol nasce mais cedo nesse mês.</span></li>
+        <li data-em="2:apaga" style="font-size:19px;padding:4px 12px"><b>B</b><span>cerca de 2 h 39 min maior em dezembro, porque nesse mês a Terra está mais perto do Sol.</span></li>
+        <li data-em="2:apaga" style="font-size:19px;padding:4px 12px"><b>C</b><span>cerca de 2 h 39 min maior em junho, porque em junho é verão no hemisfério sul.</span></li>
+        <li data-em="2:apaga" style="font-size:19px;padding:4px 12px"><b>D</b><span>cerca de 1 h 16 min maior em dezembro, porque o hemisfério sul está inclinado para o Sol.</span></li>
+        <li data-em="2:certo" style="font-size:19px;padding:4px 12px"><b>E</b><span>cerca de 2 h 39 min maior em dezembro, porque nesse mês o hemisfério sul está inclinado para o Sol e é verão nele.</span></li>
+      </ol>
+    </div>
+  </div>
+  <aside class="resolucao">
+    <p class="dados"><b>Dados:</b> jun: 6 h 31 → 17 h 19; dez: 5 h 08 → 18 h 35.</p>
+    <ol class="passos">
+      <li>Junho: 17 h 19 − 6 h 31 = 10 h 48 min.</li>
+      <li>Dezembro: 18 h 35 − 5 h 08 = 13 h 27 min.</li>
+      <li>Diferença: 13 h 27 − 10 h 48 = 2 h 39 min.</li>
+      <li>Dezembro: Sul inclinado para o Sol: verão.</li>
+    </ol>
+    <p class="resposta"><b>Resposta:</b> 2 h 39 min maior em dezembro, pela inclinação. <b>Gabarito E.</b></p>
+    <p class="atencao"><b>Destaque no quadro:</b> Na subtração de horas, "empreste" 60 min: 17 h 19 = 16 h 79.</p>
+    <ul class="erros">
+      <li><b>A</b> Compara só o nascer do sol.</li>
+      <li><b>B</b> Diferença certa, causa errada (distância).</li>
+      <li><b>C</b> Inverte o mês: junho é inverno no Sul.</li>
+      <li><b>D</b> Compara só o pôr do sol.</li>
+    </ul>
+  </aside>
+  <aside class="notas">
+    <p>Clique 1 tira o aviso de pausa: resolva na área (D liga a caneta; E esconde o enunciado). Clique 2: gabarito E.</p>
+    <p>Modelo IF, lote if-fisica-sistema-sol-terra-e-lua, m007, FIS-8747 (nível 3). Contas conferidas em minutos: junho 1039 − 391 = 648 min = 10 h 48; dezembro 1115 − 308 = 807 min = 13 h 27; diferença 159 min = 2 h 39. Horários calculados pelo lote com o algoritmo da NOAA.</p>
+  </aside>
+</section>
+
+<!-- 15. Resumo -->
+<section class="slide" data-nome="Resumo">
+  <div class="conteudo">
+    <p class="olho">Resumo</p>
+    <h2 class="titulo">O essencial</h2>
+    <div class="resumo" style="position:absolute;left:0;right:0;top:150px">
+      <div><b>Rotação</b> (cerca de 24 h): o giro no próprio eixo, de oeste para leste. Produz o <b>dia e a noite</b>.</div>
+      <div><b>Translação</b> (cerca de 365 dias e 6 h): a volta no Sol. Marca o <b>ano</b>.</div>
+      <div>Eixo inclinado cerca de <b>23,5°</b>, sempre para a <b>mesma direção</b>.</div>
+      <div>Estações: pela <b>inclinação do eixo</b>, <b>não pela distância</b> ao Sol.</div>
+      <div>Estações <b>opostas</b> nos dois hemisférios: dezembro é verão no Sul e inverno no Norte.</div>
+      <div><b>Verão:</b> dias longos, Sol alto, sombra curta. <b>Inverno:</b> o contrário.</div>
+    </div>
+  </div>
+  <aside class="notas"><p>Peça para tirarem um print desta tela.</p></aside>
+</section>
+
+<!-- 16. A seguir -->
+<section class="slide capa" data-nome="A seguir">
+  <div class="estrelas"></div>
+  <div class="texto-capa" style="top:220px">
+    <span class="selo">Física · IF</span>
+    <p class="aula" style="font-size:28px">A seguir · Sistema Sol, Terra e Lua · Parte 2 de 2</p>
+    <h1 style="font-size:124px">Fases da Lua e eclipses</h1>
+    <p class="sub">A Lua não muda de forma</p>
+  </div>
+  <svg class="emblema" viewBox="0 0 640 640" aria-hidden="true">
+    <circle cx="320" cy="320" r="200" fill="#3A3550"/>
+    <path d="M320 120 A200 200 0 0 0 320 520 A90 200 0 0 0 320 120 Z" fill="#F3F1FA"/>
+    <circle cx="320" cy="320" r="200" fill="none" stroke="#fff" stroke-opacity=".6" stroke-width="4"/>
+  </svg>
+  <img class="logo-capa" src="{{LOGO_BRANCO}}" alt="Quarks">
+  <aside class="notas"><p>Próxima parte: por que a Lua parece mudar de forma e como acontecem os eclipses do Sol e da Lua.</p></aside>
+</section>

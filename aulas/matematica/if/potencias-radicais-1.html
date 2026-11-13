@@ -1,0 +1,557 @@
+<!--aula
+{"disciplina": "matematica", "curso": "IF", "assunto": "Potências e radicais", "parte": "Parte 1 de 2", "titulo": "Potências e notação científica", "scripts": ["animacoes-potencias.js"]}
+-->
+<!-- Fonte: apostila IF, Matemática, cap. 1 (1.4 Potências e radicais: "Potenciação e propriedades", "Notação científica" e "Expressões numéricas", e o resumo do 1.4).
+     Questões (nenhuma reservada para o bloco do fim do capítulo): IF Sudeste MG 2020-1 q16 (MAT-0526) e 2023-1 q14 (MAT-0446), sobras de Potências e radicais em planejamento/questoes-if.md;
+     Modelo IF, lote if-matematica-operacoes-e-expressoes-numericas, m029 (MAT-0624). -->
+<style>
+  .caixa { box-sizing: border-box; }
+  .pr-lado { font-size: 34px; line-height: 1.38; margin: 0; }
+  .pr-lado b { color: var(--roxo-titulo); }
+  .pr-cartao { box-sizing: border-box; background: var(--branco); border: 2px solid var(--lilas-2); border-radius: 26px; padding: 20px 28px; font-size: 32px; line-height: 1.35; }
+  .pr-cartao b { color: var(--roxo-titulo); }
+  .pr-cartao .grande { display: block; font: 800 46px var(--fonte-titulo); color: var(--d-forte); margin-bottom: 6px; }
+  /* fichas de fatores que se juntam (produto de mesma base) */
+  .pr-fatores { position: relative; height: 200px; }
+  .pr-fatores .grupo { position: absolute; top: 20px; display: flex; gap: 14px; transition: transform 1.8s ease-in-out; }
+  .pr-fatores .ficha { width: 92px; height: 92px; border-radius: 24px; display: grid; place-items: center; font: 800 52px var(--fonte-titulo); }
+  .pr-fatores .gA .ficha { background: var(--d); color: #fff; }
+  .pr-fatores .gB .ficha { background: #FFD10C; color: var(--carvao); }
+  .pr-fatores .vezes { position: absolute; top: 40px; font: 800 52px var(--fonte-titulo); color: var(--cinza); transition: opacity .8s; }
+  .pr-fatores .leg { position: absolute; top: 130px; font: 800 40px var(--fonte-titulo); transition: opacity .8s; }
+  .pr-fatores .chave { position: absolute; top: 122px; height: 22px; border: 4px solid var(--roxo-titulo); border-top: 0; border-radius: 0 0 18px 18px; opacity: 0; transition: opacity .8s 1.4s; }
+  .pr-fatores .soma { position: absolute; top: 150px; font: 800 40px var(--fonte-titulo); color: var(--roxo-titulo); opacity: 0; transition: opacity .8s 1.6s; }
+  .pr-fatores.junta .gB { transform: translateX(-80px); }
+  .pr-fatores.junta .vezes, .pr-fatores.junta .leg { opacity: 0; }
+  .pr-fatores.junta .chave, .pr-fatores.junta .soma { opacity: 1; }
+  /* escada das potências de 2: cada barra é a metade da anterior */
+  .pr-barras rect.b { transform-box: fill-box; transform-origin: 50% 100%; transform: scaleY(0); transition: transform 1.1s ease-out; }
+  .pr-barras.mostra rect.b { transform: scaleY(1); }
+  .pr-barras.mostra rect.b:nth-of-type(2) { transition-delay: .5s; } .pr-barras.mostra rect.b:nth-of-type(3) { transition-delay: 1s; }
+  .pr-barras.mostra rect.b:nth-of-type(4) { transition-delay: 1.5s; } .pr-barras.mostra rect.b:nth-of-type(5) { transition-delay: 2s; }
+  .pr-barras.mostra rect.b:nth-of-type(6) { transition-delay: 2.5s; }
+  .pr-barras .r { opacity: 0; transition: opacity .6s; }
+  .pr-barras.mostra .r { opacity: 1; }
+  .pr-barras.mostra .r1 { transition-delay: .4s; } .pr-barras.mostra .r2 { transition-delay: .9s; } .pr-barras.mostra .r3 { transition-delay: 1.4s; }
+  .pr-barras.mostra .r4 { transition-delay: 1.9s; } .pr-barras.mostra .r5 { transition-delay: 2.4s; } .pr-barras.mostra .r6 { transition-delay: 2.9s; }
+  /* lista numerada da ordem das operações */
+  .pr-lista { margin: 0; padding: 0; list-style: none; display: flex; flex-direction: column; gap: 18px; }
+  .pr-lista li { display: flex; align-items: center; gap: 20px; font-size: 34px; line-height: 1.3; background: var(--branco); border: 2px solid var(--lilas-2); border-radius: 24px; padding: 14px 24px; }
+  .pr-lista li b.n { flex: none; width: 52px; height: 52px; border-radius: 50%; display: grid; place-items: center; background: var(--d); color: #fff; font: 800 28px var(--fonte-titulo); }
+  .pr-lista li b { color: var(--roxo-titulo); }
+  /* contas com o "porquê" de cada linha */
+  .contas.com-nota { grid-template-columns: auto auto auto 1fr; }
+  .contas .nota-l { font-size: 26px; font-weight: 700; color: var(--cinza); padding-left: 26px; }
+  .pr-resp { display: inline-block; font: 800 52px var(--fonte-titulo); padding: 6px 30px; border-radius: 22px; }
+  .pr-resp.pr-escolha { background: var(--branco); border: 3px solid var(--lilas-2); color: var(--carvao); transition: all .5s; }
+  .pr-resp.certo { background: var(--certo-claro); color: var(--certo); border: 3px solid var(--certo); }
+  .pr-resp.errado { background: var(--erro-claro); color: var(--erro); border: 3px solid var(--erro); text-decoration: line-through; text-decoration-thickness: 4px; }
+  .painel-questao .enunciado.menor { font-size: 25px; }
+</style>
+
+<!-- 1. Capa -->
+<section class="slide capa" data-nome="Capa">
+  <div class="estrelas"></div>
+  <div class="texto-capa">
+    <span class="selo">Matemática · IF</span>
+    <p class="aula">Potências e radicais · Parte 1 de 2</p>
+    <h1 style="font-size:118px">Potências e notação científica</h1>
+    <p class="sub">Multiplicar muitas vezes, escrever com poucos algarismos</p>
+  </div>
+  <svg class="emblema" viewBox="0 0 640 640" aria-hidden="true">
+    <g class="gira-lento"><ellipse cx="320" cy="320" rx="300" ry="128" fill="none" stroke="#fff" stroke-opacity=".38" stroke-width="2" transform="rotate(-10 320 320)"/></g>
+    <g class="gira"><ellipse cx="320" cy="320" rx="236" ry="196" fill="none" stroke="#FFD10C" stroke-opacity=".75" stroke-width="2.5" stroke-dasharray="3 14" stroke-linecap="round" transform="rotate(-8 320 320)"/>
+      <circle cx="84" cy="300" r="13" fill="var(--d)" stroke="#fff" stroke-width="3"/></g>
+    <circle cx="320" cy="320" r="150" fill="#FFD10C"/>
+    <text x="300" y="392" text-anchor="middle" font-family="'Bricolage Grotesque',Figtree,sans-serif" font-size="190" font-weight="800" fill="#3F2FA0">2</text>
+    <text x="388" y="282" text-anchor="middle" font-family="'Bricolage Grotesque',Figtree,sans-serif" font-size="104" font-weight="800" fill="var(--d)">n</text>
+  </svg>
+  <img class="logo-capa" src="{{LOGO_BRANCO}}" alt="Quarks">
+  <aside class="notas">
+    <p>Primeira das duas partes de Potências e radicais: potência, propriedades, expoente zero e negativo, notação científica e a ordem das operações nas expressões.</p>
+    <p>Decisão de montagem: a apostila põe "Expressões numéricas" no fim de Potências e radicais; ela ficou nesta parte, porque usa potências e não usa raízes. Expoente fracionário, raiz de raiz e conjugado ficaram na Parte 2, com os radicais.</p>
+  </aside>
+</section>
+
+<!-- 2. A mensagem que dobra -->
+<section class="slide" data-nome="A mensagem que dobra">
+  <div class="conteudo">
+    <p class="olho">Para começar</p>
+    <h2 class="titulo">Uma mensagem que dobra</h2>
+    <p class="pr-lado" style="position:absolute;left:0;width:540px;top:160px">Uma mensagem vai para <b>2 pessoas</b>. Cada uma repassa para <b>outras 2</b>, e assim por diante.</p>
+    <div class="caixa caixa-fundamental" data-passo="2" style="position:absolute;left:0;width:540px;top:380px;padding:20px 28px">
+      <span class="rotulo">Na 5ª rodada</span>
+      <div style="font-size:42px">\(2 \cdot 2 \cdot 2 \cdot 2 \cdot 2\)</div>
+      <div data-passo="3" style="font-size:48px;margin-top:8px;color:var(--roxo-titulo)">\(= 2^5 = 32\)</div>
+    </div>
+    <div data-anima="pr-dobra" data-anima-passo="1" style="position:absolute;left:620px;top:140px;width:1120px;height:470px"></div>
+  </div>
+  <aside class="notas">
+    <p>Clique 1: a mensagem se espalha, uma rodada a cada segundo e pouco: 2, 4, 8, 16, 32.</p>
+    <p>Clique 2: na quinta rodada, são cinco fatores 2. Clique 3: escrevemos \(2^5\), que dá 32. O número pequeno conta os fatores.</p>
+  </aside>
+</section>
+
+<!-- 3. Base e expoente -->
+<section class="slide" data-nome="Base e expoente">
+  <div class="conteudo">
+    <p class="olho">Definição</p>
+    <h2 class="titulo">Potência: base e expoente</h2>
+    <div class="caixa caixa-fundamental" style="position:absolute;left:0;width:1060px;top:160px;padding:26px 34px;text-align:center;font-size:66px">\(a^n = \underbrace{a \cdot a \cdot \ldots \cdot a}_{n\ \text{fatores}}\)</div>
+    <div style="position:absolute;left:1120px;right:0;top:160px;display:flex;flex-direction:column;gap:22px">
+      <div class="pr-cartao" data-passo="1"><span class="grande">\(a\): base</span>o fator que se repete</div>
+      <div class="pr-cartao" data-passo="2"><span class="grande">\(n\): expoente</span>conta quantas vezes ele aparece</div>
+    </div>
+    <div class="contas" style="position:absolute;left:640px;top:520px;font-size:54px">
+      <div class="eq" data-passo="3"><span>\(3^4\)</span><span>\(=\)</span><span>\(3 \cdot 3 \cdot 3 \cdot 3\)</span></div>
+      <div class="eq final" data-passo="4"><span>\(3^4\)</span><span>\(=\)</span><span>\(81\)</span></div>
+    </div>
+  </div>
+  <aside class="notas">
+    <p>Cliques 1 e 2: base e expoente. Cliques 3 e 4: \(3^4 = 3 \cdot 3 \cdot 3 \cdot 3 = 81\) (9, 27, 81).</p>
+    <p>Pergunte antes do clique 4: quanto dá? Quem disser 12 multiplicou a base pelo expoente: é a atenção que vem daqui a pouco.</p>
+  </aside>
+</section>
+
+<!-- 4. Mesma base -->
+<section class="slide" data-nome="Propriedades">
+  <div class="conteudo">
+    <p class="olho">Propriedades das potências</p>
+    <h2 class="titulo">Mesma base: os fatores se juntam</h2>
+    <div class="pr-fatores" data-passo="1" data-em="2:junta" style="position:absolute;left:0;width:900px;top:170px">
+      <div class="grupo gA" style="left:0"><span class="ficha">2</span><span class="ficha">2</span><span class="ficha">2</span></div>
+      <span class="vezes" style="left:330px">·</span>
+      <div class="grupo gB" style="left:400px"><span class="ficha">2</span><span class="ficha">2</span></div>
+      <span class="leg" style="left:110px;color:var(--d-forte)">\(2^3\)</span>
+      <span class="leg" style="left:470px;color:#8A6A00">\(2^2\)</span>
+      <span class="chave" style="left:0;width:518px"></span>
+      <span class="soma" style="left:160px">5 fatores: \(2^5\)</span>
+    </div>
+    <div class="contas" data-passo="2" style="position:absolute;left:0;top:430px;font-size:48px">
+      <div class="eq"><span>\(2^3 \cdot 2^2\)</span><span>\(=\)</span><span>\(2^{3+2} = 2^5\)</span></div>
+    </div>
+    <div class="caixa caixa-fundamental" style="position:absolute;left:1000px;right:0;top:150px;padding:24px 34px">
+      <span class="rotulo">Propriedades</span>
+      <div class="contas" style="font-size:50px;row-gap:22px">
+        <div class="eq" data-passo="3"><span>\(a^m \cdot a^n\)</span><span>\(=\)</span><span>\(a^{m+n}\)</span></div>
+        <div class="eq" data-passo="4"><span>\(a^m : a^n\)</span><span>\(=\)</span><span>\(a^{m-n}\)</span></div>
+        <div class="eq" data-passo="5"><span>\((a^m)^n\)</span><span>\(=\)</span><span>\(a^{m \cdot n}\)</span></div>
+      </div>
+    </div>
+    <div class="pr-cartao" data-passo="5" style="position:absolute;left:1000px;right:0;top:600px;font-size:28px">Produto: <b>soma</b> os expoentes. Divisão: <b>subtrai</b>. Potência de potência: <b>multiplica</b>.</div>
+  </div>
+  <aside class="notas">
+    <p>Clique 1: três fatores 2 vezes dois fatores 2. Clique 2: as fichas se juntam, são 5 fatores: \(2^3 \cdot 2^2 = 2^5\).</p>
+    <p>Cliques 3 a 5: as três regras, sempre com a <b>mesma base</b>. Na divisão, \(a^5 : a^2\): cortam-se dois fatores e sobram três. Na potência de potência, \((a^2)^3 = a^2 \cdot a^2 \cdot a^2 = a^6\).</p>
+  </aside>
+</section>
+
+<!-- 5. Expoente zero e negativo -->
+<section class="slide" data-nome="Expoente zero e negativo">
+  <div class="conteudo">
+    <p class="olho">Propriedades das potências</p>
+    <h2 class="titulo">De onde vêm o zero e o negativo</h2>
+    <div class="contas com-nota" style="position:absolute;left:0;top:170px;font-size:46px;row-gap:20px">
+      <div class="eq" data-passo="1"><span>\(2^3 : 2^3\)</span><span>\(=\)</span><span>\(8 : 8 = 1\)</span><span class="nota-l">ele por ele mesmo</span></div>
+      <div class="eq final" data-passo="2"><span>\(2^3 : 2^3\)</span><span>\(=\)</span><span>\(2^{3-3} = 2^0\)</span><span class="nota-l">pela regra</span></div>
+      <div class="eq" data-passo="3"><span>\(2^3 : 2^5\)</span><span>\(=\)</span><span>\(\dfrac{8}{32} = \dfrac{1}{4}\)</span><span class="nota-l">simplificando</span></div>
+      <div class="eq final" data-passo="4"><span>\(2^3 : 2^5\)</span><span>\(=\)</span><span>\(2^{3-5} = 2^{-2}\)</span><span class="nota-l">pela regra</span></div>
+    </div>
+    <svg class="pr-barras" data-passo="5" viewBox="0 0 700 420" width="700" height="420" style="position:absolute;left:1060px;top:150px;overflow:visible;font-family:Figtree,'Segoe UI',sans-serif" aria-hidden="true">
+      <line x1="0" y1="340" x2="690" y2="340" stroke="#C9D5F8" stroke-width="4" stroke-linecap="round"/>
+      <rect class="b" x="20" y="20" width="80" height="320" rx="12" fill="var(--d)"/>
+      <rect class="b" x="135" y="180" width="80" height="160" rx="12" fill="var(--d)"/>
+      <rect class="b" x="250" y="260" width="80" height="80" rx="12" fill="var(--d)"/>
+      <rect class="b" x="365" y="300" width="80" height="40" rx="10" fill="#FFD10C"/>
+      <rect class="b" x="480" y="320" width="80" height="20" rx="8" fill="#8C7BEA"/>
+      <rect class="b" x="595" y="330" width="80" height="10" rx="5" fill="#8C7BEA"/>
+      <g font-size="30" font-weight="800" text-anchor="middle" fill="#3F2FA0">
+        <text class="r r1" x="60" y="380">2³</text><text class="r r1" x="60" y="416">= 8</text>
+        <text class="r r2" x="175" y="380">2²</text><text class="r r2" x="175" y="416">= 4</text>
+        <text class="r r3" x="290" y="380">2¹</text><text class="r r3" x="290" y="416">= 2</text>
+        <text class="r r4" x="405" y="380" fill="#8A6A00">2⁰</text><text class="r r4" x="405" y="416" fill="#8A6A00">= 1</text>
+        <text class="r r5" x="520" y="380">2⁻¹</text><text class="r r5" x="520" y="416">= ½</text>
+        <text class="r r6" x="635" y="380">2⁻²</text><text class="r r6" x="635" y="416">= ¼</text>
+      </g>
+      <g font-size="24" font-weight="800" text-anchor="middle" fill="var(--d-forte)">
+        <text class="r r2" x="118" y="170">: 2</text><text class="r r3" x="233" y="250">: 2</text><text class="r r4" x="348" y="290">: 2</text>
+        <text class="r r5" x="463" y="310">: 2</text><text class="r r6" x="578" y="320">: 2</text>
+      </g>
+    </svg>
+    <div class="caixa caixa-fundamental" data-passo="6" style="position:absolute;left:640px;right:0;top:640px;padding:16px 30px;font-size:46px;text-align:center">\(a^0 = 1 \qquad a^{-n} = \dfrac{1}{a^n}\) <span style="font-size:30px;color:var(--cinza)">(para \(a \neq 0\))</span></div>
+  </div>
+  <aside class="notas">
+    <p>Cliques 1 e 2: um número dividido por ele mesmo dá 1; pela regra, dá \(2^0\). Então \(2^0 = 1\).</p>
+    <p>Cliques 3 e 4: \(\dfrac{8}{32}\) simplificada dá \(\dfrac{1}{4}\); pela regra, \(2^{-2}\). Então \(2^{-2} = \dfrac{1}{4} = \dfrac{1}{2^2}\).</p>
+    <p>Clique 5: as barras mostram a mesma coisa. Descendo o expoente de 1 em 1, o valor cai à metade: 8, 4, 2, 1, ½, ¼. O zero dá 1 e os negativos viram frações, nunca números negativos. Clique 6: as duas regras.</p>
+  </aside>
+</section>
+
+<!-- 6. Exemplo -->
+<section class="slide" data-nome="Exemplo: simplificar">
+  <div class="conteudo">
+    <p class="olho">Exemplo</p>
+    <h2 class="titulo">Simplificar antes de calcular</h2>
+    <div style="position:absolute;left:0;width:500px;top:160px">
+      <p class="pr-lado">Calcule</p>
+      <p style="margin:12px 0 0;font-size:46px">\(E = \dfrac{2^5 \cdot 2^3}{2^6}\)</p>
+      <p style="margin:24px 0 0;font-size:46px">\(F = 10^{-3}\)</p>
+    </div>
+    <div class="contas" style="position:absolute;left:620px;top:160px;font-size:50px;row-gap:24px">
+      <div class="eq" data-passo="1"><span>\(E\)</span><span>\(=\)</span><span>\(\dfrac{2^5 \cdot 2^3}{2^6}\)</span></div>
+      <div class="eq" data-passo="2"><span>\(E\)</span><span>\(=\)</span><span>\(\dfrac{2^8}{2^6}\)</span></div>
+      <div class="eq" data-passo="3"><span>\(E\)</span><span>\(=\)</span><span>\(2^2\)</span></div>
+      <div class="eq final" data-passo="4"><span>\(E\)</span><span>\(=\)</span><span>\(4\)</span></div>
+    </div>
+    <div class="contas" style="position:absolute;left:1220px;top:160px;font-size:50px;row-gap:24px">
+      <div class="eq" data-passo="5"><span>\(F\)</span><span>\(=\)</span><span>\(10^{-3}\)</span></div>
+      <div class="eq" data-passo="6"><span>\(F\)</span><span>\(=\)</span><span>\(\dfrac{1}{10^3}\)</span></div>
+      <div class="eq" data-passo="7"><span>\(F\)</span><span>\(=\)</span><span>\(\dfrac{1}{1000}\)</span></div>
+      <div class="eq final" data-passo="8"><span>\(F\)</span><span>\(=\)</span><span>\(0{,}001\)</span></div>
+    </div>
+  </div>
+  <aside class="notas">
+    <p>E: no numerador, mesma base, soma os expoentes (5 + 3 = 8); na divisão, subtrai (8 − 6 = 2); \(2^2 = 4\). Não precisa calcular \(2^8 = 256\).</p>
+    <p>F: expoente negativo inverte: \(\dfrac{1}{10^3} = \dfrac{1}{1000} = 0{,}001\). Repare: três zeros no 1000, três casas no 0,001.</p>
+  </aside>
+</section>
+
+<!-- 7. Atenção -->
+<section class="slide" data-nome="Atenção: o expoente">
+  <div class="conteudo">
+    <p class="olho">Atenção</p>
+    <h2 class="titulo">Expoente não multiplica a base</h2>
+    <div style="position:absolute;left:0;right:0;top:170px;display:grid;grid-template-columns:1fr 1fr;gap:34px">
+      <div class="caixa caixa-atencao" data-passo="1" style="padding:24px 34px">
+        <span class="rotulo">Potência</span>
+        <div style="font-size:48px;margin:6px 0 18px">\(2^3 = 2 \cdot 2 \cdot 2 = 8\)</div>
+        <span class="pr-resp errado">2 · 3 = 6</span>
+      </div>
+      <div class="caixa caixa-atencao" data-passo="2" style="padding:24px 34px">
+        <span class="rotulo">Expoente negativo</span>
+        <div style="font-size:48px;margin:6px 0 18px">\(2^{-2} = \dfrac{1}{4}\), positivo</div>
+        <span class="pr-resp errado">−4</span>
+      </div>
+    </div>
+    <span class="pilula pilula-resposta" data-passo="3" style="position:absolute;left:640px;top:640px">O negativo no expoente inverte; não deixa negativo</span>
+  </div>
+  <aside class="notas">
+    <p>Os dois erros mais comuns em potência. Clique 1: \(2^3\) é 8, não 6. Clique 2: \(2^{-2}\) é \(\dfrac14\), um número positivo.</p>
+  </aside>
+</section>
+
+<!-- 8. Notação científica -->
+<section class="slide" data-nome="Notação científica">
+  <div class="conteudo">
+    <p class="olho">Notação científica</p>
+    <h2 class="titulo">Zeros demais</h2>
+    <div style="position:absolute;left:0;right:0;top:160px;display:grid;grid-template-columns:1fr 1fr;gap:34px">
+      <div class="pr-cartao" style="display:grid;grid-template-columns:200px 1fr;gap:20px;align-items:center">
+        <svg viewBox="0 0 200 140" width="200" height="140" aria-hidden="true"><circle cx="46" cy="70" r="40" fill="#FFD10C"/><g stroke="#FFD10C" stroke-width="5" stroke-linecap="round"><path d="M46 14v-10M46 126v10M0 70h-0M100 70h10M8 32l-6-6M84 108l6 6M84 32l6-6M8 108l-6 6"/></g><path d="M100 70 H166" stroke="#C9D5F8" stroke-width="4" stroke-dasharray="7 7"/><circle cx="178" cy="70" r="16" fill="var(--d)"/></svg>
+        <div>Da Terra ao Sol, cerca de<br><b style="font:800 48px var(--fonte-titulo);color:var(--roxo-titulo)">150 000 000 km</b></div>
+      </div>
+      <div class="pr-cartao" style="display:grid;grid-template-columns:200px 1fr;gap:20px;align-items:center">
+        <svg viewBox="0 0 200 140" width="200" height="140" aria-hidden="true"><circle cx="100" cy="70" r="34" fill="#E8F0FF" stroke="var(--d)" stroke-width="5"/><g stroke="var(--d)" stroke-width="5" stroke-linecap="round"><path d="M100 36v-18M100 104v18M66 70h-18M134 70h18M76 46l-12-12M124 94l12 12M124 46l12-12M76 94l-12 12"/></g><g fill="var(--d)"><circle cx="100" cy="16" r="6"/><circle cx="100" cy="124" r="6"/><circle cx="46" cy="70" r="6"/><circle cx="154" cy="70" r="6"/></g></svg>
+        <div>Um vírus mede cerca de<br><b style="font:800 48px var(--fonte-titulo);color:var(--roxo-titulo)">0,0000001 m</b></div>
+      </div>
+    </div>
+    <div class="caixa caixa-fundamental" data-passo="1" style="position:absolute;left:600px;right:0;top:470px;padding:24px 34px">
+      <span class="rotulo">Notação científica</span>
+      <div style="font-size:54px">\(a \times 10^n\), com \(1 \leq a \lt 10\) e \(n\) inteiro</div>
+    </div>
+  </div>
+  <aside class="notas">
+    <p>Escrever tantos zeros cansa e abre espaço para erro. A notação científica usa potências de 10.</p>
+    <p>Clique 1: o número da frente tem um só algarismo antes da vírgula (de 1 até 9,99…).</p>
+  </aside>
+</section>
+
+<!-- 9. A vírgula anda -->
+<section class="slide" data-nome="A vírgula anda">
+  <div class="conteudo">
+    <p class="olho">Notação científica</p>
+    <h2 class="titulo">Conte as casas que a vírgula anda</h2>
+    <p class="pr-lado" style="position:absolute;left:0;top:150px;font-size:30px"><b>Número grande:</b> a vírgula vai para a <b>esquerda</b>, até sobrar um algarismo antes dela.</p>
+    <div data-anima="pr-virgula" data-anima-passo="1" data-digitos="150000000" data-de="9" data-ate="1" data-base="1,5 × 10" data-exp="8" style="position:absolute;left:0;top:192px;height:170px"></div>
+    <p class="pr-lado" data-passo="2" style="position:absolute;left:0;top:372px;font-size:30px"><b>Número pequeno:</b> a vírgula vai para a <b>direita</b>, até passar do primeiro algarismo que não é zero.</p>
+    <div data-anima="pr-virgula" data-anima-passo="2" data-digitos="00000001" data-de="1" data-ate="8" data-base="1 × 10" data-exp="−7" style="position:absolute;left:0;top:416px;height:170px"></div>
+    <div class="caixa caixa-fundamental" data-passo="3" style="position:absolute;left:640px;right:0;top:660px;padding:16px 30px;font-size:34px">Para a esquerda: expoente <b>positivo</b>. Para a direita: expoente <b>negativo</b>.</div>
+  </div>
+  <aside class="notas">
+    <p>Clique 1: em 150 000 000, a vírgula (que fica escondida no fim) anda 8 casas para a esquerda: \(1{,}5 \times 10^8\) km.</p>
+    <p>Clique 2: em 0,0000001, ela anda 7 casas para a direita até o 1: \(1 \times 10^{-7}\) m.</p>
+    <p>Clique 3: o sentido da vírgula dá o sinal do expoente. Número grande, expoente positivo; número pequeno, negativo.</p>
+  </aside>
+</section>
+
+<!-- 10. Exemplo: multiplicar e dividir -->
+<section class="slide" data-nome="Exemplo: notação científica">
+  <div class="conteudo">
+    <p class="olho">Exemplo</p>
+    <h2 class="titulo">Multiplicar e dividir</h2>
+    <div style="position:absolute;left:0;width:520px;top:160px">
+      <p style="margin:0;font-size:42px">\(P = (3 \times 10^5) \cdot (2 \times 10^3)\)</p>
+      <p style="margin:18px 0 0;font-size:42px">\(Q = (8 \times 10^6) : (4 \times 10^2)\)</p>
+      <div class="caixa" data-passo="1" style="margin-top:30px;padding:18px 26px;font-size:30px;line-height:1.35">Números da frente entre si; potências de 10 pelas <b style="color:var(--roxo-titulo)">propriedades</b>.</div>
+    </div>
+    <div class="contas" style="position:absolute;left:640px;top:200px;font-size:50px;row-gap:28px">
+      <div class="eq" data-passo="2"><span>\(P\)</span><span>\(=\)</span><span>\(3 \cdot 2 \times 10^{5+3}\)</span></div>
+      <div class="eq final" data-passo="3"><span>\(P\)</span><span>\(=\)</span><span>\(6 \times 10^8\)</span></div>
+    </div>
+    <div class="contas" style="position:absolute;left:640px;top:440px;font-size:50px;row-gap:28px">
+      <div class="eq" data-passo="4"><span>\(Q\)</span><span>\(=\)</span><span>\((8 : 4) \times 10^{6-2}\)</span></div>
+      <div class="eq final" data-passo="5"><span>\(Q\)</span><span>\(=\)</span><span>\(2 \times 10^4\)</span></div>
+    </div>
+  </div>
+  <aside class="notas">
+    <p>Clique 1: a estratégia. Cliques 2 e 3: 3 · 2 = 6 e \(10^5 \cdot 10^3 = 10^8\). Cliques 4 e 5: 8 : 4 = 2 e \(10^6 : 10^2 = 10^4\).</p>
+    <p>Os dois resultados já estão em notação científica (6 e 2 estão entre 1 e 10).</p>
+  </aside>
+</section>
+
+<!-- 11. Atenção: entre 1 e 10 -->
+<section class="slide" data-nome="Atenção: entre 1 e 10">
+  <div class="conteudo">
+    <p class="olho">Atenção</p>
+    <h2 class="titulo">O da frente fica entre 1 e 10</h2>
+    <div class="caixa caixa-atencao" style="position:absolute;left:0;right:0;top:160px;padding:22px 34px">
+      <div class="texto" style="font-size:34px">\(25 \times 10^3\) <b>não</b> está em notação científica: o 25 passa de 10. Ande uma casa com a vírgula e <b>some 1</b> ao expoente.</div>
+    </div>
+    <div class="contas" style="position:absolute;left:640px;top:380px;font-size:56px;row-gap:26px">
+      <div class="eq" data-passo="1"><span>\(25 \times 10^3\)</span><span>\(=\)</span><span>\(2{,}5 \times 10^1 \times 10^3\)</span></div>
+      <div class="eq final" data-passo="2"><span>\(25 \times 10^3\)</span><span>\(=\)</span><span>\(2{,}5 \times 10^4\)</span></div>
+    </div>
+  </div>
+  <aside class="notas">
+    <p>Clique 1: 25 é 2,5 vezes 10. Clique 2: junta \(10^1 \cdot 10^3 = 10^4\). Confira: \(2{,}5 \times 10^4 = 25\,000\), e \(25 \times 10^3 = 25\,000\) também.</p>
+  </aside>
+</section>
+
+<!-- 12. Ordem das operações -->
+<section class="slide" data-nome="Ordem das operações">
+  <div class="conteudo">
+    <p class="olho">Expressões numéricas</p>
+    <h2 class="titulo">Quem vem primeiro?</h2>
+    <div style="position:absolute;left:0;width:540px;top:160px">
+      <p style="margin:0;font:800 84px var(--fonte-titulo);color:var(--roxo-titulo)">2 + 3 · 4</p>
+      <p class="pr-lado" style="margin-top:10px;font-size:30px">Duas pessoas fizeram a conta e acharam resultados diferentes.</p>
+      <div style="display:flex;gap:24px;margin-top:22px">
+        <span class="pr-resp pr-escolha" data-em="6:errado">20</span>
+        <span class="pr-resp pr-escolha" data-em="6:certo">14</span>
+      </div>
+    </div>
+    <ol class="pr-lista" style="position:absolute;left:640px;right:0;top:160px">
+      <li data-passo="1"><b class="n">1</b><span>Parênteses ( ), depois colchetes [ ], depois chaves { }</span></li>
+      <li data-passo="2"><b class="n">2</b><span><b>Potências</b> e <b>raízes</b></span></li>
+      <li data-passo="3"><b class="n">3</b><span><b>Multiplicações</b> e <b>divisões</b>, na ordem em que aparecem</span></li>
+      <li data-passo="4"><b class="n">4</b><span><b>Somas</b> e <b>subtrações</b>, na ordem em que aparecem</span></li>
+    </ol>
+    <div class="contas" data-passo="5" style="position:absolute;left:640px;top:660px;font-size:46px"><div class="eq"><span>\(2 + 3 \cdot 4\)</span><span>\(=\)</span><span>\(2 + 12 = 14\)</span></div></div>
+  </div>
+  <aside class="notas">
+    <p>Pergunte quem acha 20 e quem acha 14. Só um acertou: o que decide é a ordem das operações, combinada para todo mundo chegar ao mesmo resultado.</p>
+    <p>Cliques 1 a 4: a ordem. Clique 5: a multiplicação vem antes da soma, 3 · 4 = 12 e 2 + 12 = 14. Clique 6: 14 é o certo; 20 somou primeiro.</p>
+  </aside>
+</section>
+
+<!-- 13. Exemplo: expressão completa -->
+<section class="slide" data-nome="Exemplo: expressão">
+  <div class="conteudo">
+    <p class="olho">Exemplo</p>
+    <h2 class="titulo">Uma expressão completa</h2>
+    <p style="position:absolute;left:0;width:540px;top:170px;margin:0;font-size:44px">\(E = 20 - 3 \cdot (8 - 2)^2 : 12\)</p>
+    <div class="contas com-nota" style="position:absolute;left:640px;top:160px;font-size:46px;row-gap:16px">
+      <div class="eq" data-passo="1"><span>\(E\)</span><span>\(=\)</span><span>\(20 - 3 \cdot (8 - 2)^2 : 12\)</span><span class="nota-l">parênteses</span></div>
+      <div class="eq" data-passo="2"><span>\(E\)</span><span>\(=\)</span><span>\(20 - 3 \cdot 6^2 : 12\)</span><span class="nota-l">potência</span></div>
+      <div class="eq" data-passo="3"><span>\(E\)</span><span>\(=\)</span><span>\(20 - 3 \cdot 36 : 12\)</span><span class="nota-l">multiplicação</span></div>
+      <div class="eq" data-passo="4"><span>\(E\)</span><span>\(=\)</span><span>\(20 - 108 : 12\)</span><span class="nota-l">divisão</span></div>
+      <div class="eq" data-passo="5"><span>\(E\)</span><span>\(=\)</span><span>\(20 - 9\)</span><span class="nota-l">subtração</span></div>
+      <div class="eq final" data-passo="6"><span>\(E\)</span><span>\(=\)</span><span>\(11\)</span></div>
+    </div>
+  </div>
+  <aside class="notas">
+    <p>Uma operação por linha, na ordem: parênteses (8 − 2 = 6), potência (\(6^2 = 36\)), multiplicação (3 · 36 = 108), divisão (108 : 12 = 9), subtração (20 − 9 = 11).</p>
+    <p>Na linha 3, multiplicação e divisão estão lado a lado: vão na ordem em que aparecem, da esquerda para a direita.</p>
+  </aside>
+</section>
+
+<!-- 14. Exemplo: colchetes e chaves -->
+<section class="slide" data-nome="Exemplo: colchetes e chaves">
+  <div class="conteudo">
+    <p class="olho">Exemplo</p>
+    <h2 class="titulo">De dentro para fora</h2>
+    <p style="position:absolute;left:0;width:540px;top:170px;margin:0;font-size:40px">\(E = \{2 + [3 \cdot (5 - 1) - 4]\} : 5\)</p>
+    <div class="contas com-nota" style="position:absolute;left:640px;top:160px;font-size:46px;row-gap:16px">
+      <div class="eq" data-passo="1"><span>\(E\)</span><span>\(=\)</span><span>\(\{2 + [3 \cdot (5 - 1) - 4]\} : 5\)</span><span class="nota-l">( )</span></div>
+      <div class="eq" data-passo="2"><span>\(E\)</span><span>\(=\)</span><span>\(\{2 + [3 \cdot 4 - 4]\} : 5\)</span><span class="nota-l">[ ]: vezes</span></div>
+      <div class="eq" data-passo="3"><span>\(E\)</span><span>\(=\)</span><span>\(\{2 + [12 - 4]\} : 5\)</span><span class="nota-l">[ ]: menos</span></div>
+      <div class="eq" data-passo="4"><span>\(E\)</span><span>\(=\)</span><span>\(\{2 + 8\} : 5\)</span><span class="nota-l">{ }</span></div>
+      <div class="eq" data-passo="5"><span>\(E\)</span><span>\(=\)</span><span>\(10 : 5\)</span><span class="nota-l">divisão</span></div>
+      <div class="eq final" data-passo="6"><span>\(E\)</span><span>\(=\)</span><span>\(2\)</span></div>
+    </div>
+  </div>
+  <aside class="notas">
+    <p>Parênteses, depois colchetes, depois chaves. Dentro do colchete, a multiplicação vem antes da subtração: 3 · 4 = 12 e 12 − 4 = 8. Depois 2 + 8 = 10 e 10 : 5 = 2.</p>
+  </aside>
+</section>
+
+<!-- 15. Questão 1 (IF 2020-1 q16) -->
+<section class="slide questao" data-nome="Questão 1 · IF 2020">
+  <div class="conteudo">
+    <div class="area-resolucao"></div>
+    <span class="pilula pilula-pausa" data-em="1:some">Pause o vídeo e tente</span>
+    <div class="painel-questao">
+      <p class="olho">Questão 1 · IF Sudeste MG 2020</p>
+      <p class="enunciado" style="font-size:32px">Se \(a = 3^{-5}\), \(b = 3^{-3}\) e \(c = 3^{-7}\), o valor de \(\dfrac{a \cdot b^3}{c^2}\) é:</p>
+      <ol class="alternativas curtas">
+        <li data-em="2:apaga"><b>A</b><span>\(0\)</span></li>
+        <li data-em="2:apaga"><b>B</b><span>\(\tfrac{1}{3}\)</span></li>
+        <li data-em="2:certo"><b>C</b><span>\(1\)</span></li>
+        <li data-em="2:apaga"><b>D</b><span>\(3\)</span></li>
+        <li data-em="2:apaga"><b>E</b><span>\(5\)</span></li>
+      </ol>
+      <p class="fonte">IF Sudeste MG, prova de 2020 (1º semestre), questão 16</p>
+    </div>
+  </div>
+  <aside class="resolucao">
+    <p class="dados"><b>Dados:</b> \(a = 3^{-5}\), \(b = 3^{-3}\), \(c = 3^{-7}\): tudo na base 3.</p>
+    <ol class="passos">
+      <li><b>Potência de potência</b> \(b^3 = (3^{-3})^3 = 3^{-9}\)</li>
+      <li><b>Potência de potência</b> \(c^2 = (3^{-7})^2 = 3^{-14}\)</li>
+      <li><b>Numerador: soma os expoentes</b> \(3^{-5} \cdot 3^{-9} = 3^{-14}\)</li>
+      <li><b>Divisão: subtrai</b> \(3^{-14} : 3^{-14} = 3^{-14-(-14)} = 3^0\)</li>
+      <li><b>Expoente zero</b> \(3^0 = 1\)</li>
+    </ol>
+    <p class="resposta"><b>Resposta:</b> \(\dfrac{a \cdot b^3}{c^2} = 1\). <b>Gabarito C.</b></p>
+    <p class="atencao"><b>Destaque no quadro:</b> \(a^0 = 1\), e não 0.</p>
+    <ul class="erros">
+      <li><b>A</b> Chega a \(3^0\) e acha que vale 0.</li>
+      <li><b>B</b> Erra um sinal nos expoentes e chega a \(3^{-1}\).</li>
+      <li><b>D</b> Erra um sinal nos expoentes e chega a \(3^1\).</li>
+      <li><b>E</b> Não sai de nenhuma propriedade.</li>
+    </ul>
+  </aside>
+  <aside class="notas">
+    <p>Clique 1 tira o aviso de pausa: resolva na área (D liga a caneta; E esconde o enunciado). Clique 2: gabarito C.</p>
+    <p>Questão oficial do IF Sudeste MG 2020-1, q16, MAT-0526 (sobra de Potências e radicais; não está reservada para o bloco do capítulo). Conferido: −5 + (−9) = −14; −14 − (−14) = 0.</p>
+  </aside>
+</section>
+
+<!-- 16. Questão 2 (IF 2023-1 q14) -->
+<section class="slide questao" data-nome="Questão 2 · IF 2023">
+  <div class="conteudo">
+    <div class="area-resolucao"></div>
+    <span class="pilula pilula-pausa" data-em="1:some">Pause o vídeo e tente</span>
+    <div class="painel-questao">
+      <p class="olho">Questão 2 · IF Sudeste MG 2023</p>
+      <p class="enunciado">As células procariontes têm diâmetro entre \(0{,}1\) e \(0{,}5\) micrômetros (\(\mu\text{m}\)). Sabendo que \(1\ \mu\text{m}\) é equivalente a \(1{,}0 \times 10^{-6}\) metros, qual é a medida, em metros, do diâmetro de uma célula procarionte?</p>
+      <ol class="alternativas">
+        <li data-em="2:apaga"><b>A</b><span>De \(0{,}1 \times 10^{-7}\) a \(0{,}5 \times 10^{-7}\).</span></li>
+        <li data-em="2:certo"><b>B</b><span>De \(1{,}0 \times 10^{-7}\) a \(5{,}0 \times 10^{-7}\).</span></li>
+        <li data-em="2:apaga"><b>C</b><span>De \(1{,}0 \times 10^{-6}\) a \(5{,}0 \times 10^{-6}\).</span></li>
+        <li data-em="2:apaga"><b>D</b><span>De \(0{,}1 \times 10^{-5}\) a \(0{,}5 \times 10^{-5}\).</span></li>
+        <li data-em="2:apaga"><b>E</b><span>De \(1{,}0 \times 10^{-5}\) a \(5{,}0 \times 10^{-5}\).</span></li>
+      </ol>
+      <p class="fonte">IF Sudeste MG, prova de 2023 (1º semestre), questão 14</p>
+    </div>
+  </div>
+  <aside class="resolucao">
+    <p class="dados"><b>Dados:</b> \(1\ \mu\text{m} = 10^{-6}\ \text{m}\); diâmetros de \(0{,}1\) a \(0{,}5\ \mu\text{m}\).</p>
+    <ol class="passos">
+      <li><b>Menor, em metros</b> \(d_1 = 0{,}1 \cdot 10^{-6}\)</li>
+      <li><b>0,1 em notação científica</b> \(0{,}1 = 1{,}0 \times 10^{-1}\)</li>
+      <li><b>Soma os expoentes</b> \(d_1 = 1{,}0 \times 10^{-7}\ \text{m}\)</li>
+      <li><b>Maior, do mesmo jeito</b> \(d_2 = 0{,}5 \cdot 10^{-6} = 5{,}0 \times 10^{-7}\ \text{m}\)</li>
+    </ol>
+    <p class="resposta"><b>Resposta:</b> de \(1{,}0 \times 10^{-7}\) m a \(5{,}0 \times 10^{-7}\) m. <b>Gabarito B.</b></p>
+    <p class="atencao"><b>Destaque no quadro:</b> Vírgula uma casa para a direita: o expoente diminui 1.</p>
+    <ul class="erros">
+      <li><b>A</b> Muda o expoente e não a vírgula: 10 vezes menor.</li>
+      <li><b>C</b> Troca 0,1 por 1,0 sem mexer no expoente.</li>
+      <li><b>D</b> Ajusta o expoente no sentido errado.</li>
+      <li><b>E</b> Erra duas vezes: 100 vezes maior.</li>
+    </ul>
+  </aside>
+  <aside class="notas">
+    <p>Clique 1 tira o aviso de pausa. Clique 2: gabarito B.</p>
+    <p>Questão oficial do IF Sudeste MG 2023-1, q14, MAT-0446 (sobra de Potências e radicais). Conferido: \(0{,}1 \cdot 10^{-6} = 10^{-7}\) e \(0{,}5 \cdot 10^{-6} = 5 \cdot 10^{-7}\). A teve \(0{,}1 \times 10^{-7} = 10^{-8}\); C é 1 µm; D é \(10^{-6}\); E é \(10^{-5}\).</p>
+  </aside>
+</section>
+
+<!-- 17. Questão 3 (Modelo m029) -->
+<section class="slide questao" data-nome="Questão 3 · Modelo IF">
+  <div class="conteudo">
+    <div class="area-resolucao"></div>
+    <span class="pilula pilula-pausa" data-em="1:some">Pause o vídeo e tente</span>
+    <div class="painel-questao">
+      <p class="olho">Questão 3 · Modelo IF</p>
+      <p class="enunciado" style="font-size:32px">O valor da expressão \(50 - [4 + 3 \cdot (6 - 4)^2] : 2\) é:</p>
+      <ol class="alternativas curtas">
+        <li data-em="2:certo"><b>A</b><span>\(42\)</span></li>
+        <li data-em="2:apaga"><b>B</b><span>\(17\)</span></li>
+        <li data-em="2:apaga"><b>C</b><span>\(36\)</span></li>
+        <li data-em="2:apaga"><b>D</b><span>\(30\)</span></li>
+        <li data-em="2:apaga"><b>E</b><span>\(18\)</span></li>
+      </ol>
+      <p class="fonte">Questão Modelo IF (lote if-matematica-operacoes-e-expressoes-numericas, m029)</p>
+    </div>
+  </div>
+  <aside class="resolucao">
+    <p class="dados"><b>Dados:</b> ordem: ( ), [ ]; em cada um, potência, vezes e dividir, mais e menos.</p>
+    <ol class="passos">
+      <li><b>Parênteses</b> \(6 - 4 = 2\)</li>
+      <li><b>Potência</b> \(2^2 = 4\)</li>
+      <li><b>No colchete, vezes antes do mais</b> \(4 + 3 \cdot 4 = 4 + 12 = 16\)</li>
+      <li><b>Divisão antes da subtração</b> \(16 : 2 = 8\)</li>
+      <li><b>Por último</b> \(50 - 8 = 42\)</li>
+    </ol>
+    <p class="resposta"><b>Resposta:</b> 42. <b>Gabarito A.</b></p>
+    <p class="atencao"><b>Destaque no quadro:</b> A divisão vem antes da subtração.</p>
+    <ul class="erros">
+      <li><b>B</b> Subtrai antes de dividir: \((50 - 16) : 2\).</li>
+      <li><b>C</b> Soma antes de multiplicar: \((4 + 3) \cdot 4\).</li>
+      <li><b>D</b> Multiplica antes da potência: \((3 \cdot 2)^2\).</li>
+      <li><b>E</b> Distribui o quadrado: \(6^2 - 4^2\).</li>
+    </ul>
+  </aside>
+  <aside class="notas">
+    <p>Clique 1 tira o aviso de pausa. Clique 2: gabarito A.</p>
+    <p>Modelo IF, lote if-matematica-operacoes-e-expressoes-numericas, m029, MAT-0624. Conferido: 6 − 4 = 2; 2² = 4; 3 · 4 = 12; 4 + 12 = 16; 16 : 2 = 8; 50 − 8 = 42. Erros: B (50 − 16) : 2 = 17; C (4 + 3) · 4 = 28 e 50 − 14 = 36; D 36 + 4 = 40, 50 − 20 = 30; E 36 − 16 = 20, 4 + 60 = 64, 50 − 32 = 18.</p>
+  </aside>
+</section>
+
+<!-- 18. Resumo -->
+<section class="slide" data-nome="Resumo">
+  <div class="conteudo">
+    <p class="olho">Resumo · Parte 1</p>
+    <h2 class="titulo">O essencial</h2>
+    <div class="resumo" style="position:absolute;left:0;right:0;top:150px">
+      <div><b>Potência:</b> \(a^n\) é o produto de \(n\) fatores iguais a \(a\).</div>
+      <div><b>Mesma base:</b> \(a^m \cdot a^n = a^{m+n}\); \(a^m : a^n = a^{m-n}\); \((a^m)^n = a^{m \cdot n}\).</div>
+      <div><b>Zero e negativo:</b> \(a^0 = 1\) e \(a^{-n} = \dfrac{1}{a^n}\) (\(a \neq 0\)). O negativo não deixa negativo.</div>
+      <div><b>Notação científica:</b> \(a \times 10^n\) com \(1 \leq a \lt 10\). Vírgula para a esquerda, expoente positivo.</div>
+      <div style="grid-column:1 / -1"><b>Ordem:</b> parênteses, potências e raízes, multiplicação e divisão, soma e subtração.</div>
+    </div>
+  </div>
+  <aside class="notas">
+    <p>Resumo desta parte. Na Parte 2: raízes, expoente fracionário e racionalização.</p>
+  </aside>
+</section>
+
+<!-- 19. A seguir -->
+<section class="slide capa" data-nome="A seguir">
+  <div class="estrelas"></div>
+  <div class="texto-capa" style="top:200px">
+    <span class="selo">Matemática · IF</span>
+    <p class="aula" style="font-size:28px">A seguir · Potências e radicais · Parte 2 de 2</p>
+    <h1>Radicais e racionalização</h1>
+    <p class="sub">Raiz, expoente fracionário e conjugado</p>
+  </div>
+  <svg class="emblema" viewBox="0 0 640 640" aria-hidden="true">
+    <circle cx="320" cy="320" r="190" fill="#FFD10C"/>
+    <path d="M150 330 L200 300 L250 430 L320 190 H500" fill="none" stroke="#3F2FA0" stroke-width="22" stroke-linecap="round" stroke-linejoin="round"/>
+    <text x="410" y="360" text-anchor="middle" font-family="'Bricolage Grotesque',Figtree,sans-serif" font-size="130" font-weight="800" fill="#3F2FA0">a</text>
+  </svg>
+  <img class="logo-capa" src="{{LOGO_BRANCO}}" alt="Quarks">
+  <aside class="notas"><p>A seguir, a Parte 2: a operação inversa da potência, a raiz.</p></aside>
+</section>

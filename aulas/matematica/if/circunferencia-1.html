@@ -1,0 +1,493 @@
+<!--aula
+{"disciplina": "matematica", "curso": "IF", "assunto": "Circunferência e círculo", "parte": "Parte 1 de 2", "titulo": "Raio, cordas e posições", "scripts": ["animacoes-geometria-b.js"]}
+-->
+<!-- Fonte: apostila IF, Matemática, cap. 5 (5.6 Circunferência e círculo: Elementos e propriedades das cordas; Posições relativas; Potência de ponto; resumo). A potência de ponto vem aqui, junto das propriedades das cordas (no .md ela vem depois dos ângulos; a dedução por semelhança fica citada). Questões: Modelo IF, lote if-matematica-circunferencia-e-circulo (m001 MAT-0931, m007 MAT-0937, m010 MAT-0940). As oficiais deste subcapítulo (2026-1 q15 e 2025-1 q16) estão reservadas para o bloco; as sobras oficiais (todas de comprimento) ficaram para a Parte 2. -->
+<style>
+  .caixa { box-sizing: border-box; }
+  .rot { font-family: Figtree, "Segoe UI", sans-serif; font-weight: 800; fill: #3F2FA0; }
+  .rot-c { font-family: Figtree, "Segoe UI", sans-serif; font-weight: 700; fill: #5E5A70; }
+  .pequeno { font-size: 30px; line-height: 1.35; }
+  .linha-pos { display: grid; grid-template-columns: 330px 1fr; align-items: center; gap: 14px; background: var(--branco); border: 2px solid var(--lilas-2); border-radius: 20px; padding: 8px 22px; font-size: 27px; }
+  .linha-pos b { color: var(--roxo-titulo); }
+  /* barbante, prego e lápis: o raio gira e a circunferência se desenha */
+  .traco { stroke-dasharray: 1; stroke-dashoffset: 1; }
+  .slide.ativo .traco { animation: traca 7s linear infinite; }
+  .slide.ativo .barbante { animation: barbante 7s linear infinite; transform-origin: 230px 230px; }
+  @keyframes traca { 0% { stroke-dashoffset: 1; opacity: 1; } 70% { stroke-dashoffset: 0; } 92% { stroke-dashoffset: 0; opacity: 1; } 100% { stroke-dashoffset: 0; opacity: 0; } }
+  @keyframes barbante { 0% { transform: rotate(0); } 70%, 100% { transform: rotate(360deg); } }
+  /* a roda anda: o ponto de contato fica sempre embaixo do eixo */
+  .slide.ativo .mostra .anda { animation: anda 8s ease-in-out infinite alternate; }
+  .slide.ativo .mostra .raios-roda { animation: rola 8s ease-in-out infinite alternate; transform-box: fill-box; transform-origin: center; }
+  @keyframes anda { from { transform: translateX(0); } to { transform: translateX(360px); } }
+  @keyframes rola { from { transform: rotate(0); } to { transform: rotate(229deg); } }
+</style>
+
+<!-- 1. Capa -->
+<section class="slide capa" data-nome="Capa">
+  <div class="estrelas"></div>
+  <div class="texto-capa" style="top:170px">
+    <span class="selo">Matemática · IF</span>
+    <p class="aula">Circunferência e círculo · Parte 1 de 2</p>
+    <h1 style="font-size:128px">Raio, cordas e posições</h1>
+    <p class="sub">A linha, a região e as retas que a cortam</p>
+  </div>
+  <svg class="emblema" viewBox="0 0 640 640" aria-hidden="true">
+    <g class="gira-lento"><ellipse cx="320" cy="320" rx="300" ry="128" fill="none" stroke="#fff" stroke-opacity=".38" stroke-width="2" transform="rotate(-10 320 320)"/></g>
+    <circle cx="320" cy="320" r="236" fill="none" stroke="#fff" stroke-opacity=".75" stroke-width="4"/>
+    <g class="gira"><line x1="320" y1="320" x2="556" y2="320" stroke="#FFD10C" stroke-width="5" stroke-linecap="round"/><circle cx="556" cy="320" r="13" fill="#FFD10C" stroke="#fff" stroke-width="3"/></g>
+    <circle cx="320" cy="320" r="132" fill="#FFD10C"/>
+    <image href="{{SYM_ROXO}}" x="238" y="238" width="164" height="164"/>
+  </svg>
+  <img class="logo-capa" src="{{LOGO_BRANCO}}" alt="Quarks">
+  <aside class="notas"><p>Circunferência e círculo, primeira parte: o que é, os elementos (raio, corda, diâmetro, arco), a propriedade das cordas, as posições de retas e de circunferências e a potência de ponto. Na Parte 2: ângulos e comprimento.</p></aside>
+</section>
+
+<!-- 2. Barbante e prego -->
+<section class="slide" data-nome="Circunferência e círculo">
+  <div class="conteudo">
+    <p class="olho">Barbante, prego e lápis</p>
+    <h2 class="titulo">Todos os pontos à mesma distância</h2>
+    <svg viewBox="0 0 460 460" style="position:absolute;left:0;top:140px;width:460px;height:460px" aria-hidden="true">
+      <path class="traco" pathLength="1" d="M410 230 A180 180 0 1 1 50 230 A180 180 0 1 1 410 230" fill="none" stroke="var(--d)" stroke-width="7" stroke-linecap="round"/>
+      <g class="barbante"><line x1="230" y1="230" x2="410" y2="230" stroke="#B5731A" stroke-width="4"/>
+        <g transform="translate(410 230) rotate(90)"><path d="M-9 -60 h18 v46 l-9 14 l-9 -14 z" fill="#FFD10C" stroke="#292B2C" stroke-width="3"/></g></g>
+      <circle cx="230" cy="230" r="10" fill="#292B2C"/>
+      <text x="222" y="270" text-anchor="end" class="rot" font-size="28">centro</text>
+    </svg>
+    <div style="position:absolute;left:560px;right:0;top:160px;display:flex;flex-direction:column;gap:20px">
+      <div class="caixa caixa-fundamental" data-passo="1" style="padding:18px 30px"><span class="rotulo">Circunferência</span><div class="texto pequeno">A <b>linha</b> de todos os pontos à mesma distância de um ponto fixo, o <b>centro</b>. Essa distância é o <b>raio</b> \(r\).</div></div>
+      <div class="caixa" data-passo="2" style="padding:18px 30px;display:grid;grid-template-columns:150px 1fr;gap:24px;align-items:center">
+        <svg viewBox="0 0 150 150" width="150" height="150" aria-hidden="true"><circle cx="75" cy="75" r="66" fill="none" stroke="var(--d)" stroke-width="6"/></svg>
+        <div class="texto pequeno"><b>Circunferência:</b> só a linha (o contorno do anel).</div>
+      </div>
+      <div class="caixa" data-passo="3" style="padding:18px 30px;display:grid;grid-template-columns:150px 1fr;gap:24px;align-items:center">
+        <svg viewBox="0 0 150 150" width="150" height="150" aria-hidden="true"><circle cx="75" cy="75" r="66" fill="#CFE0FF" stroke="var(--d)" stroke-width="6"/></svg>
+        <div class="texto pequeno"><b>Círculo:</b> a região cercada, com a linha (a moeda inteira).</div>
+      </div>
+    </div>
+  </div>
+  <aside class="notas">
+    <p>A animação mostra a ideia da apostila: barbante preso num prego, lápis na outra ponta. O lápis fica sempre à mesma distância do prego.</p>
+    <p>Cliques 2 e 3: circunferência é a linha; círculo é a região com a linha. Comprimento é da circunferência; área é do círculo.</p>
+  </aside>
+</section>
+
+<!-- 3. Elementos -->
+<section class="slide" data-nome="Elementos">
+  <div class="conteudo">
+    <p class="olho">Elementos</p>
+    <h2 class="titulo">Raio, corda, diâmetro e arco</h2>
+    <svg viewBox="0 0 460 460" style="position:absolute;left:0;top:140px;width:460px;height:460px" aria-hidden="true">
+      <circle cx="230" cy="240" r="190" fill="#fff" stroke="#BFB6E6" stroke-width="5"/>
+      <g data-passo="1"><line x1="230" y1="240" x2="420" y2="240" stroke="#6551D1" stroke-width="6"/><text x="325" y="228" text-anchor="middle" class="rot" font-size="28" fill="#6551D1">raio</text></g>
+      <g data-passo="2"><line x1="104.7" y1="97.6" x2="374.4" y2="116.9" stroke="var(--d)" stroke-width="6"/><text x="240" y="96" text-anchor="middle" class="rot" font-size="28" fill="#1E4FD8">corda</text></g>
+      <g data-passo="3"><line x1="51.5" y1="175" x2="408.5" y2="305" stroke="#E8A33A" stroke-width="6"/><text x="66" y="160" class="rot" font-size="28" fill="#B5731A" transform="rotate(20 66 160)">diâmetro</text></g>
+      <g data-passo="4"><path d="M104.7 97.6 A190 190 0 0 1 374.4 116.9" fill="none" stroke="#FFD10C" stroke-width="12" stroke-linecap="round"/><text x="250" y="38" text-anchor="middle" class="rot" font-size="28" fill="#B5731A">arco</text></g>
+      <circle cx="230" cy="240" r="8" fill="#292B2C"/><text x="236" y="286" class="rot" font-size="28">O</text>
+    </svg>
+    <div style="position:absolute;left:560px;right:0;top:160px;display:flex;flex-direction:column;gap:18px">
+      <div class="caixa" data-passo="1" style="padding:16px 30px"><span class="rotulo">Raio</span><div class="texto pequeno">do centro até a circunferência</div></div>
+      <div class="caixa" data-passo="2" style="padding:16px 30px"><span class="rotulo">Corda</span><div class="texto pequeno">segmento que liga dois pontos da circunferência</div></div>
+      <div class="caixa" data-passo="3" style="padding:16px 30px"><span class="rotulo">Diâmetro</span><div class="texto pequeno">corda que passa pelo centro: mede \(2r\) e é a <b>maior corda</b></div></div>
+      <div class="caixa" data-passo="4" style="padding:16px 30px"><span class="rotulo">Arco</span><div class="texto pequeno">parte da <b>própria circunferência</b> entre dois de seus pontos</div></div>
+    </div>
+  </div>
+  <aside class="notas">
+    <p>Um elemento por clique, como na figura da apostila. Insista: a corda é um segmento (reto); o arco é um pedaço da curva.</p>
+  </aside>
+</section>
+
+<!-- 4. Propriedade das cordas -->
+<section class="slide" data-nome="Propriedade das cordas">
+  <div class="conteudo">
+    <p class="olho">Propriedade das cordas</p>
+    <h2 class="titulo">A perpendicular do centro corta a corda ao meio</h2>
+    <div data-anima="geob-corda" data-anima-passo="0" style="position:absolute;left:0;top:150px;width:560px;height:520px;transform:scale(.86);transform-origin:0 0"></div>
+    <div style="position:absolute;left:600px;right:0;top:170px;display:flex;flex-direction:column;gap:22px">
+      <div class="caixa caixa-fundamental" style="padding:18px 30px"><div class="texto pequeno">A perpendicular traçada do centro até uma corda <b>divide a corda ao meio</b>.</div></div>
+      <div class="caixa" data-passo="1" style="padding:18px 30px"><div class="texto pequeno">O <b>raio</b>, a <b>metade da corda</b> e a <b>distância</b> \(d\) do centro à corda formam um <b>triângulo retângulo</b>. O raio é a hipotenusa.</div></div>
+      <div data-passo="2" style="font-size:64px;text-align:center">\(r^2 = \left(\dfrac{c}{2}\right)^2 + d^2\)</div>
+    </div>
+  </div>
+  <aside class="notas">
+    <p>A corda sobe e desce: a perpendicular sempre cai no meio dela (ponto amarelo). Quanto mais perto do centro, maior a corda; passando pelo centro, ela vira o diâmetro.</p>
+    <p>Clique 2: o Teorema de Pitágoras no triângulo amarelo (c é a corda). A apostila diz em palavras; a fórmula é só Pitágoras escrito.</p>
+  </aside>
+</section>
+
+<!-- 5. Exemplo: o raio pela corda -->
+<section class="slide" data-nome="Exemplo: o raio pela corda">
+  <div class="conteudo">
+    <p class="olho">Exemplo</p>
+    <h2 class="titulo">O raio pela corda</h2>
+    <svg viewBox="0 0 440 420" style="position:absolute;left:0;top:150px;width:460px;height:439px" aria-hidden="true">
+      <circle cx="220" cy="230" r="180" fill="#fff" stroke="#BFB6E6" stroke-width="5"/>
+      <path d="M220 230 L220 122 L364 122 Z" fill="#FFF4C2"/>
+      <line x1="76" y1="122" x2="364" y2="122" stroke="var(--d)" stroke-width="7" stroke-linecap="round"/>
+      <line x1="220" y1="230" x2="220" y2="122" stroke="#5E5A70" stroke-width="4" stroke-dasharray="10 8"/>
+      <path d="M220 140 h18 v-18" fill="none" stroke="#5E5A70" stroke-width="3"/>
+      <line data-passo="2" x1="220" y1="230" x2="364" y2="122" stroke="#6551D1" stroke-width="6"/>
+      <text x="148" y="108" text-anchor="middle" class="rot" font-size="26" fill="#1E4FD8">8</text><text x="292" y="108" text-anchor="middle" class="rot" font-size="26" fill="#1E4FD8">8</text>
+      <text x="206" y="184" text-anchor="end" class="rot" font-size="26" fill="#5E5A70">6</text>
+      <text data-passo="2" x="306" y="196" class="rot" font-size="28" fill="#6551D1">r</text>
+      <circle cx="220" cy="230" r="7" fill="#292B2C"/>
+    </svg>
+    <p class="texto" style="position:absolute;left:560px;right:0;top:150px;margin:0">Uma corda de <b>16 cm</b> está a <b>6 cm</b> do centro. Quanto mede o raio?</p>
+    <p class="texto pequeno" data-passo="1" style="position:absolute;left:560px;right:0;top:260px;margin:0;color:var(--cinza)">A perpendicular divide a corda em duas partes de 8 cm.</p>
+    <div class="contas" style="position:absolute;left:560px;top:340px">
+      <div class="eq" data-passo="2"><span>\(r^2\)</span><span>\(=\)</span><span>\(8^2 + 6^2\)</span></div>
+      <div class="eq" data-passo="3"><span>\(r^2\)</span><span>\(=\)</span><span>\(64 + 36\)</span></div>
+      <div class="eq" data-passo="4"><span>\(r^2\)</span><span>\(=\)</span><span>\(100\)</span></div>
+      <div class="eq final" data-passo="5"><span>\(r\)</span><span>\(=\)</span><span>\(10\ \text{cm}\)</span></div>
+    </div>
+  </div>
+  <aside class="notas">
+    <p>Exemplo da apostila. Raciocínio: a perpendicular divide a corda em 8 + 8; o raio é a hipotenusa. 64 + 36 = 100; r = 10 cm.</p>
+  </aside>
+</section>
+
+<!-- 6. Reta e circunferência -->
+<section class="slide" data-nome="Reta e circunferência">
+  <div class="conteudo">
+    <p class="olho">Posições relativas</p>
+    <h2 class="titulo">Reta e circunferência</h2>
+    <div data-anima="geob-reta" data-anima-passo="0" style="position:absolute;left:0;top:130px;width:760px;height:520px;transform:scale(.88);transform-origin:0 0"></div>
+    <div style="position:absolute;left:720px;right:0;top:160px;display:flex;flex-direction:column;gap:18px">
+      <p class="texto pequeno" style="margin:0">Quem decide é a distância \(d\) do centro até a reta, comparada com o raio.</p>
+      <div class="caixa" data-passo="1" style="padding:14px 28px"><span class="rotulo">Secante</span><div class="texto pequeno">\(d &lt; r\): dois pontos comuns</div></div>
+      <div class="caixa" data-passo="2" style="padding:14px 28px"><span class="rotulo">Tangente</span><div class="texto pequeno">\(d = r\): um ponto comum</div></div>
+      <div class="caixa" data-passo="3" style="padding:14px 28px"><span class="rotulo">Externa</span><div class="texto pequeno">\(d &gt; r\): nenhum ponto comum</div></div>
+    </div>
+  </div>
+  <aside class="notas">
+    <p>A reta para em três posições: secante (corta em 2 pontos), tangente (encosta em 1) e externa (não toca). A linha tracejada é a distância d do centro à reta.</p>
+    <p>Um clique para cada definição da apostila.</p>
+  </aside>
+</section>
+
+<!-- 7. Tangente e raio -->
+<section class="slide" data-nome="Tangente e raio">
+  <div class="conteudo">
+    <p class="olho">Reta tangente</p>
+    <h2 class="titulo">A tangente é perpendicular ao raio</h2>
+    <svg viewBox="0 0 1100 340" style="position:absolute;left:0;top:150px;width:1100px;height:340px" aria-hidden="true">
+      <line x1="20" y1="300" x2="1080" y2="300" stroke="#292B2C" stroke-width="6" stroke-linecap="round"/>
+      <g data-passo="1"><g class="anda">
+        <circle cx="200" cy="190" r="110" fill="#E8F0FF" stroke="var(--d)" stroke-width="10"/>
+        <g class="raios-roda" stroke="#8C7BEA" stroke-width="4"><line x1="200" y1="88" x2="200" y2="292"/><line x1="98" y1="190" x2="302" y2="190"/><line x1="128" y1="118" x2="272" y2="262"/><line x1="128" y1="262" x2="272" y2="118"/></g>
+        <line x1="200" y1="190" x2="200" y2="300" stroke="#6551D1" stroke-width="7"/>
+        <path d="M200 276 h24 v24" fill="none" stroke="#292B2C" stroke-width="4"/>
+        <circle cx="200" cy="190" r="12" fill="#292B2C"/><circle cx="200" cy="300" r="11" fill="#FFD10C" stroke="#292B2C" stroke-width="3"/>
+      </g></g>
+    </svg>
+    <div class="caixa caixa-fundamental" data-passo="2" style="position:absolute;left:580px;right:0;top:560px;padding:20px 32px">
+      <div class="texto" style="font-size:31px">A reta tangente faz <b>90° com o raio</b> no ponto de contato. Por isso a roda toca o chão num ponto só, <b>bem embaixo do eixo</b>.</div>
+    </div>
+  </div>
+  <aside class="notas">
+    <p>Clique 1: a roda anda pelo chão (o chão é uma reta tangente à roda). O ponto de contato (amarelo) está sempre embaixo do eixo, e o raio até ele faz ângulo reto com o chão. Exemplo da apostila.</p>
+  </aside>
+</section>
+
+<!-- 8. Duas circunferências -->
+<section class="slide" data-nome="Duas circunferências">
+  <div class="conteudo">
+    <p class="olho">Posições relativas · compare d com R + r e R − r</p>
+    <h2 class="titulo">Duas circunferências</h2>
+    <div data-anima="geob-duas" data-anima-passo="0" style="position:absolute;left:0;top:150px;width:860px;height:400px;transform:scale(.88);transform-origin:0 0"></div>
+    <div style="position:absolute;left:800px;right:0;top:160px;display:flex;flex-direction:column;gap:10px">
+      <div class="linha-pos" data-passo="1"><span>\(d &gt; R + r\)</span><b>externas</b></div>
+      <div class="linha-pos" data-passo="1"><span>\(d = R + r\)</span><b>tangentes externas</b></div>
+      <div class="linha-pos" data-passo="2"><span>\(R - r &lt; d &lt; R + r\)</span><b>secantes (2 pontos)</b></div>
+      <div class="linha-pos" data-passo="3"><span>\(d = R - r\)</span><b>tangentes internas</b></div>
+      <div class="linha-pos" data-passo="3"><span>\(d &lt; R - r\)</span><b>uma dentro da outra</b></div>
+      <div class="linha-pos" data-passo="4"><span>\(d = 0\)</span><b>concêntricas</b></div>
+    </div>
+  </div>
+  <aside class="notas">
+    <p>R e r são os raios; d é a distância entre os centros (o traço preto). A pequena se aproxima e para em cada posição, com o nome. Cliques: a tabela da apostila em quatro partes.</p>
+  </aside>
+</section>
+
+<!-- 9. Exemplo: duas circunferências -->
+<section class="slide" data-nome="Exemplo: duas circunferências">
+  <div class="conteudo">
+    <p class="olho">Exemplo</p>
+    <h2 class="titulo">Raios de 5 cm e 3 cm</h2>
+    <p class="texto" style="position:absolute;left:0;right:0;top:150px;margin:0">Qual a posição se a distância entre os centros for <b>8 cm</b>? E se for <b>2 cm</b>?</p>
+    <div class="contas" style="position:absolute;left:0;top:270px">
+      <div class="eq" data-passo="1"><span>\(R + r\)</span><span>\(=\)</span><span>\(5 + 3\)</span></div>
+      <div class="eq final" data-passo="2"><span>\(R + r\)</span><span>\(=\)</span><span>\(8\)</span></div>
+    </div>
+    <div class="contas" style="position:absolute;left:640px;top:270px">
+      <div class="eq" data-passo="3"><span>\(R - r\)</span><span>\(=\)</span><span>\(5 - 3\)</span></div>
+      <div class="eq final" data-passo="4"><span>\(R - r\)</span><span>\(=\)</span><span>\(2\)</span></div>
+    </div>
+    <svg viewBox="0 0 520 300" data-passo="2" style="position:absolute;right:0;top:250px;width:520px;height:300px" aria-hidden="true">
+      <circle cx="160" cy="150" r="125" fill="none" stroke="var(--d)" stroke-width="6"/><circle cx="360" cy="150" r="75" fill="rgba(101,81,209,.12)" stroke="#6551D1" stroke-width="6"/>
+      <circle cx="285" cy="150" r="9" fill="#FFD10C" stroke="#292B2C" stroke-width="2"/>
+      <line x1="160" y1="150" x2="360" y2="150" stroke="#292B2C" stroke-width="3"/><text x="215" y="138" text-anchor="middle" class="rot" font-size="24">d = 8</text>
+    </svg>
+    <div data-passo="5" style="position:absolute;left:580px;right:0;top:600px;display:flex;gap:24px">
+      <span class="pilula pilula-resposta">8 cm: tangentes externas</span>
+      <span class="pilula pilula-resposta">2 cm: tangentes internas</span>
+    </div>
+  </div>
+  <aside class="notas">
+    <p>Exemplo da apostila. d = 8 = R + r: tangentes externas (a figura, em escala, mostra o ponto de contato). d = 2 = R − r: tangentes internas.</p>
+  </aside>
+</section>
+
+<!-- 10. Potência de ponto: duas cordas -->
+<section class="slide" data-nome="Potência de ponto: cordas">
+  <div class="conteudo">
+    <p class="olho">Potência de ponto</p>
+    <h2 class="titulo">Duas cordas que se cruzam</h2>
+    <svg viewBox="0 0 400 400" style="position:absolute;left:0;top:140px;width:450px;height:450px" aria-hidden="true">
+      <circle cx="200" cy="200" r="160" fill="#fff" stroke="#BFB6E6" stroke-width="5"/>
+      <line x1="51.5" y1="259.5" x2="352" y2="150.1" stroke="var(--d)" stroke-width="6"/>
+      <line x1="224.4" y1="358.1" x2="94.6" y2="79.7" stroke="#6551D1" stroke-width="6"/>
+      <g class="rot" font-size="26"><text x="30" y="282">A</text><text x="360" y="146">B</text><text x="228" y="390" fill="#6551D1">C</text><text x="72" y="72" fill="#6551D1">D</text><text x="176" y="250">P</text></g>
+      <g class="rot" font-size="24" fill="#1E4FD8"><text x="98" y="226">4</text><text x="262" y="166">6</text></g>
+      <g class="rot" font-size="24" fill="#6551D1"><text x="204" y="300">3</text><text x="104" y="160" data-passo="4">8</text></g>
+      <circle cx="160" cy="220" r="8" fill="#FFD10C" stroke="#292B2C" stroke-width="2"/>
+    </svg>
+    <div style="position:absolute;left:560px;right:0;top:150px">
+      <div class="caixa caixa-fundamental" style="padding:16px 30px;display:flex;align-items:center;gap:34px">
+        <span style="font-size:58px">\(PA \cdot PB = PC \cdot PD\)</span>
+        <span class="texto pequeno">o produto dos pedaços é <b>o mesmo</b> nas duas</span>
+      </div>
+      <div class="contas" style="margin-top:30px">
+        <div class="eq" data-passo="1"><span>\(PA \cdot PB\)</span><span>\(=\)</span><span>\(PC \cdot PD\)</span></div>
+        <div class="eq" data-passo="2"><span>\(4 \cdot 6\)</span><span>\(=\)</span><span>\(3 \cdot PD\)</span></div>
+        <div class="eq" data-passo="3"><span>\(24\)</span><span>\(=\)</span><span>\(3 \cdot PD\)</span></div>
+        <div class="eq final" data-passo="4"><span>\(PD\)</span><span>\(=\)</span><span>\(8\ \text{cm}\)</span></div>
+      </div>
+    </div>
+    <p class="texto pequeno" data-passo="5" style="position:absolute;left:600px;right:0;top:700px;margin:0;color:var(--cinza)">Vem da semelhança: ligando as pontas, surgem dois triângulos com os mesmos ângulos.</p>
+  </div>
+  <aside class="notas">
+    <p>Pergunta da apostila: uma corda dividida em 4 cm e 6 cm, a outra em 3 cm e um pedaço desconhecido. 4 · 6 = 24 = 3 · PD; PD = 8 cm. Figura fora de escala.</p>
+    <p>Clique 5: de onde vem. Os ângulos inscritos que enxergam o mesmo arco são iguais (Parte 2), os triângulos são semelhantes e a proporção, multiplicada em cruz, vira a igualdade dos produtos.</p>
+  </aside>
+</section>
+
+<!-- 11. Potência de ponto: secantes e tangente -->
+<section class="slide" data-nome="Potência de ponto: P fora">
+  <div class="conteudo">
+    <p class="olho">Potência de ponto</p>
+    <h2 class="titulo">Com P fora: use o segmento inteiro</h2>
+    <svg viewBox="0 0 400 330" style="position:absolute;left:0;top:140px;width:470px;height:388px" aria-hidden="true">
+      <circle cx="250" cy="180" r="120" fill="#fff" stroke="#BFB6E6" stroke-width="5"/>
+      <line x1="20" y1="300" x2="325.1" y2="86.4" stroke="var(--d)" stroke-width="5"/>
+      <line x1="20" y1="300" x2="344.1" y2="254.4" stroke="#6551D1" stroke-width="5"/>
+      <g fill="#292B2C"><circle cx="136.4" cy="218.5" r="6"/><circle cx="325.1" cy="86.4" r="6"/><circle cx="180.1" cy="277.5" r="6"/><circle cx="344.1" cy="254.4" r="6"/></g>
+      <g class="rot" font-size="24"><text x="2" y="322">P</text><text x="122" y="206">A</text><text x="330" y="78">B</text><text x="176" y="304" fill="#6551D1">C</text><text x="352" y="270" fill="#6551D1">D</text></g>
+      <g class="rot" font-size="22" fill="#1E4FD8"><text x="66" y="250">3</text><text x="232" y="138">9</text></g>
+      <text x="100" y="312" class="rot" font-size="22" fill="#6551D1">4</text>
+    </svg>
+    <div style="position:absolute;left:520px;width:620px;top:150px">
+      <div class="contas" style="font-size:40px;row-gap:10px">
+        <div class="eq" data-passo="1"><span>\(PB\)</span><span>\(=\)</span><span>\(3 + 9 = 12\)</span></div>
+        <div class="eq" data-passo="2"><span>\(3 \cdot 12\)</span><span>\(=\)</span><span>\(4 \cdot PD\)</span></div>
+        <div class="eq" data-passo="3"><span>\(PD\)</span><span>\(=\)</span><span>\(9\)</span></div>
+        <div class="eq final" data-passo="4"><span>\(CD\)</span><span>\(=\)</span><span>\(9 - 4 = 5\ \text{cm}\)</span></div>
+      </div>
+    </div>
+    <div style="position:absolute;left:1180px;right:0;top:140px">
+      <svg viewBox="0 0 400 330" width="560" height="300" aria-hidden="true" data-passo="5">
+        <circle cx="250" cy="180" r="120" fill="#fff" stroke="#BFB6E6" stroke-width="5"/>
+        <line x1="20" y1="300" x2="250" y2="300" stroke="#E8A33A" stroke-width="6"/>
+        <line x1="20" y1="300" x2="325.1" y2="86.4" stroke="var(--d)" stroke-width="5"/>
+        <g fill="#292B2C"><circle cx="136.4" cy="218.5" r="6"/><circle cx="325.1" cy="86.4" r="6"/><circle cx="250" cy="300" r="6"/></g>
+        <g class="rot" font-size="24"><text x="2" y="322">P</text><text x="122" y="206">A</text><text x="330" y="78">B</text><text x="246" y="328" fill="#B5731A">T</text></g>
+      </svg>
+      <div class="contas" style="font-size:38px;row-gap:8px;margin-top:6px">
+        <div class="eq" data-passo="5"><span>\(PT^2\)</span><span>\(=\)</span><span>\(PA \cdot PB\)</span></div>
+        <div class="eq" data-passo="6"><span>\(PT^2\)</span><span>\(=\)</span><span>\(4 \cdot 9 = 36\)</span></div>
+        <div class="eq final" data-passo="7"><span>\(PT\)</span><span>\(=\)</span><span>\(6\ \text{cm}\)</span></div>
+      </div>
+    </div>
+    <div class="caixa caixa-atencao" data-passo="8" style="position:absolute;left:580px;width:560px;top:560px;padding:16px 26px">
+      <div class="texto" style="font-size:27px">Parte de fora vezes o segmento <b>inteiro</b>. Fazer \(3 \cdot 9\) (fora vezes a corda) dá errado.</div>
+    </div>
+  </div>
+  <aside class="notas">
+    <p>Exemplos da apostila. Duas secantes: PA = 3 e AB = 9, então PB = 12 (o segmento inteiro); 3 · 12 = 36 = 4 · PD; PD = 9; a corda CD = 9 − 4 = 5 cm.</p>
+    <p>Tangente (cliques 5 a 7): os dois pontos de corte viram um só, T. Com PA = 4 e PB = 9: PT² = 36, PT = 6 cm. Figuras fora de escala.</p>
+  </aside>
+</section>
+
+<!-- 12. Questão 1 -->
+<section class="slide questao" data-nome="Questão 1">
+  <div class="conteudo">
+    <div class="area-resolucao"></div>
+    <span class="pilula pilula-pausa" data-em="1:some">Pause o vídeo e tente</span>
+    <div class="painel-questao" style="gap:12px">
+      <p class="olho">Questão 1 · Modelo IF</p>
+      <p class="enunciado" style="font-size:25px">A figura mostra uma circunferência de centro O e raio 5 cm. Sobre essa circunferência, é correto afirmar que</p>
+      <svg viewBox="0 0 300 200" style="width:270px;height:180px;display:block;margin:0 auto" aria-hidden="true">
+        <circle cx="150" cy="100" r="90" fill="#fff" stroke="#292B2C" stroke-width="4"/>
+        <line x1="150" y1="100" x2="240" y2="100" stroke="#2F6BFF" stroke-width="4"/>
+        <circle cx="150" cy="100" r="5" fill="#292B2C"/><text x="140" y="94" text-anchor="end" class="rot" font-size="20" fill="#292B2C">O</text>
+        <text x="195" y="92" text-anchor="middle" class="rot" font-size="18" fill="#1E4FD8">5 cm</text>
+      </svg>
+      <ol class="alternativas" style="gap:8px">
+        <li data-em="2:apaga" style="font-size:21px;padding:5px 14px"><b>A</b><span>todas as suas cordas medem 5 cm.</span></li>
+        <li data-em="2:apaga" style="font-size:21px;padding:5px 14px"><b>B</b><span>o seu diâmetro mede 2,5 cm.</span></li>
+        <li data-em="2:apaga" style="font-size:21px;padding:5px 14px"><b>C</b><span>a maior corda que se pode traçar nela mede 5 cm.</span></li>
+        <li data-em="2:apaga" style="font-size:21px;padding:5px 14px"><b>D</b><span>um arco é o segmento de reta que liga dois pontos da circunferência.</span></li>
+        <li data-em="2:certo" style="font-size:21px;padding:5px 14px"><b>E</b><span>a maior corda que se pode traçar nela mede 10 cm e passa pelo centro O.</span></li>
+      </ol>
+    </div>
+  </div>
+  <aside class="resolucao">
+    <p class="dados"><b>Dados:</b> \(r = 5\ \text{cm}\).</p>
+    <ol class="passos">
+      <li>Maior corda: o diâmetro, que passa por O.</li>
+      <li>\(d = 2r = 2 \cdot 5 = 10\ \text{cm}\)</li>
+    </ol>
+    <p class="resposta"><b>Resposta:</b> a maior corda mede 10 cm e passa por O. <b>Gabarito E.</b></p>
+    <p class="atencao"><b>Destaque no quadro:</b> Corda é segmento; arco é pedaço da curva. Diâmetro = 2r = maior corda.</p>
+    <ul class="erros">
+      <li><b>A</b> Só o raio mede sempre 5 cm.</li>
+      <li><b>B</b> Dividiu o raio por 2.</li>
+      <li><b>C</b> Confunde maior corda com raio.</li>
+      <li><b>D</b> Isso é a corda, não o arco.</li>
+    </ul>
+  </aside>
+  <aside class="notas">
+    <p>Clique 1 tira o aviso de pausa. Clique 2: gabarito E.</p>
+    <p>Modelo IF, lote if-matematica-circunferencia-e-circulo, m001, MAT-0931. Figura do banco redesenhada.</p>
+  </aside>
+</section>
+
+<!-- 13. Questão 2 -->
+<section class="slide questao" data-nome="Questão 2">
+  <div class="conteudo">
+    <div class="area-resolucao"></div>
+    <span class="pilula pilula-pausa" data-em="1:some">Pause o vídeo e tente</span>
+    <div class="painel-questao" style="gap:12px">
+      <p class="olho">Questão 2 · Modelo IF</p>
+      <p class="enunciado" style="font-size:24px">Um bolo redondo tem 26 cm de diâmetro. Com uma faca, foi feito um corte reto de uma borda à outra, e o corte ficou com 24 cm de comprimento, como mostra a figura, vista de cima. A que distância \(d\) do centro O do bolo passou o corte?</p>
+      <svg viewBox="0 0 300 220" style="width:290px;height:212px;display:block;margin:0 auto" aria-hidden="true">
+        <circle cx="150" cy="115" r="100" fill="#FCE6C8" stroke="#B5731A" stroke-width="4"/>
+        <line x1="57.7" y1="76.5" x2="242.3" y2="76.5" stroke="#292B2C" stroke-width="4"/>
+        <line x1="150" y1="115" x2="150" y2="76.5" stroke="#2F6BFF" stroke-width="3" stroke-dasharray="6 5"/>
+        <circle cx="150" cy="115" r="5" fill="#292B2C"/><text x="140" y="134" text-anchor="end" class="rot" font-size="20" fill="#292B2C">O</text>
+        <text x="160" y="104" class="rot" font-size="20" fill="#1E4FD8">d</text><text x="150" y="66" text-anchor="middle" class="rot" font-size="18" fill="#292B2C">24 cm</text>
+      </svg>
+      <ol class="alternativas curtas">
+        <li data-em="2:certo"><b>A</b><span>5 cm</span></li>
+        <li data-em="2:apaga"><b>B</b><span>6,5 cm</span></li>
+        <li data-em="2:apaga"><b>C</b><span>12 cm</span></li>
+        <li data-em="2:apaga"><b>D</b><span>13 cm</span></li>
+        <li data-em="2:apaga"><b>E</b><span>25 cm</span></li>
+      </ol>
+    </div>
+  </div>
+  <aside class="resolucao">
+    <p class="dados"><b>Dados:</b> diâmetro 26, então \(r = 13\); corda 24, metade 12.</p>
+    <ol class="passos">
+      <li>\(r^2 = 12^2 + d^2\)</li>
+      <li>\(169 = 144 + d^2\)</li>
+      <li>\(d^2 = 25\)</li>
+      <li>\(d = 5\ \text{cm}\)</li>
+    </ol>
+    <p class="resposta"><b>Resposta:</b> 5 cm do centro. <b>Gabarito A.</b></p>
+    <p class="atencao"><b>Destaque no quadro:</b> Perpendicular do centro: metade da corda. O raio é a hipotenusa.</p>
+    <ul class="erros">
+      <li><b>B</b> Metade do raio.</li>
+      <li><b>C</b> É a metade da corda.</li>
+      <li><b>D</b> É o raio.</li>
+      <li><b>E</b> Esqueceu a raiz: 25 é \(d^2\).</li>
+    </ul>
+  </aside>
+  <aside class="notas">
+    <p>Clique 1 tira o aviso de pausa. Clique 2: gabarito A.</p>
+    <p>Modelo IF, lote if-matematica-circunferencia-e-circulo, m007, MAT-0937. Conferido: 13² = 169; 169 − 144 = 25; √25 = 5. Figura redesenhada em escala (r = 100, d = 38,5).</p>
+  </aside>
+</section>
+
+<!-- 14. Questão 3 -->
+<section class="slide questao" data-nome="Questão 3">
+  <div class="conteudo">
+    <div class="area-resolucao"></div>
+    <span class="pilula pilula-pausa" data-em="1:some">Pause o vídeo e tente</span>
+    <div class="painel-questao" style="gap:12px">
+      <p class="olho">Questão 3 · Modelo IF</p>
+      <p class="enunciado" style="font-size:22px">Numa obra, três canos iguais, de 20 cm de diâmetro, foram empilhados: dois apoiados no chão, encostados um no outro, e o terceiro em cima, encostado nos dois de baixo. A figura mostra os canos vistos de frente. Qual é, aproximadamente, a altura \(h\) do chão até o ponto mais alto do cano de cima? (Use \(\sqrt{3} \approx 1{,}7\).)</p>
+      <svg viewBox="0 0 300 220" style="width:280px;height:205px;display:block;margin:0 auto" aria-hidden="true">
+        <line x1="20" y1="205" x2="270" y2="205" stroke="#292B2C" stroke-width="4"/>
+        <g fill="#E8F0FF" stroke="#2C2A9E" stroke-width="4"><circle cx="85" cy="155" r="50"/><circle cx="185" cy="155" r="50"/><circle cx="135" cy="68.4" r="50"/></g>
+        <line x1="35" y1="155" x2="135" y2="155" stroke="#2F6BFF" stroke-width="3"/><text x="85" y="145" text-anchor="middle" class="rot" font-size="16" fill="#292B2C">20 cm</text>
+        <line x1="135" y1="18.4" x2="270" y2="18.4" stroke="#2F6BFF" stroke-width="2" stroke-dasharray="4 4"/>
+        <line x1="260" y1="22" x2="260" y2="201" stroke="#2F6BFF" stroke-width="3"/><text x="270" y="115" class="rot" font-size="20" fill="#292B2C">h</text>
+      </svg>
+      <ol class="alternativas curtas">
+        <li data-em="2:apaga"><b>A</b><span>27 cm</span></li>
+        <li data-em="2:apaga"><b>B</b><span>30 cm</span></li>
+        <li data-em="2:certo"><b>C</b><span>37 cm</span></li>
+        <li data-em="2:apaga"><b>D</b><span>40 cm</span></li>
+        <li data-em="2:apaga"><b>E</b><span>54 cm</span></li>
+      </ol>
+    </div>
+  </div>
+  <aside class="resolucao">
+    <p class="dados"><b>Dados:</b> \(r = 10\ \text{cm}\); \(\sqrt{3} \approx 1{,}7\).</p>
+    <ol class="passos">
+      <li>Tangentes externas: centros a \(10 + 10 = 20\)</li>
+      <li>Centros: equilátero de lado 20</li>
+      <li>\(t = \dfrac{20\sqrt{3}}{2} \approx 17\ \text{cm}\)</li>
+      <li>\(h = 10 + 17 + 10 = 37\ \text{cm}\)</li>
+    </ol>
+    <p class="resposta"><b>Resposta:</b> cerca de 37 cm. <b>Gabarito C.</b></p>
+    <p class="atencao"><b>Destaque no quadro:</b> Encostadas = tangentes externas: distância dos centros = R + r.</p>
+    <ul class="erros">
+      <li><b>A</b> Esqueceu um raio (só até o centro de cima).</li>
+      <li><b>B</b> Centro de cima a um diâmetro do chão.</li>
+      <li><b>D</b> Dois diâmetros: cano em cima de um só.</li>
+      <li><b>E</b> Altura do triângulo sem dividir por 2.</li>
+    </ul>
+  </aside>
+  <aside class="notas">
+    <p>Clique 1 tira o aviso de pausa. Clique 2: gabarito C.</p>
+    <p>Modelo IF, lote if-matematica-circunferencia-e-circulo, m010, MAT-0940 (nível 5, a mais difícil da parte). Conferido: 20 · 1,7 / 2 = 17; 10 + 17 + 10 = 37. Liga as posições relativas com a altura do triângulo equilátero.</p>
+  </aside>
+</section>
+
+<!-- 15. Resumo -->
+<section class="slide" data-nome="Resumo">
+  <div class="conteudo">
+    <p class="olho">Resumo</p>
+    <h2 class="titulo">O essencial</h2>
+    <div class="resumo" style="position:absolute;left:0;right:0;top:150px">
+      <div><b>Circunferência:</b> a linha; <b>círculo:</b> a região. Raio \(r\); diâmetro \(2r\), a maior corda.</div>
+      <div><b>Cordas:</b> a perpendicular do centro divide a corda ao meio (triângulo retângulo com o raio).</div>
+      <div><b>Reta:</b> secante (\(d &lt; r\)), tangente (\(d = r\), perpendicular ao raio), externa (\(d &gt; r\)).</div>
+      <div><b>Duas circunferências:</b> tangentes externas \(d = R + r\); internas \(d = R - r\); entre elas, secantes.</div>
+      <div><b>Potência de ponto:</b> \(PA \cdot PB = PC \cdot PD\); com tangente, \(PT^2 = PA \cdot PB\).</div>
+      <div><b>P fora:</b> parte de fora vezes o segmento <b>inteiro</b>.</div>
+    </div>
+  </div>
+  <aside class="notas"><p>Resumo da apostila (parte de elementos, posições e potência de ponto). Peça para tirarem um print desta tela.</p></aside>
+</section>
+
+<!-- 16. A seguir -->
+<section class="slide capa" data-nome="A seguir">
+  <div class="estrelas"></div>
+  <div class="texto-capa" style="top:200px">
+    <span class="selo">Matemática · IF</span>
+    <p class="aula" style="font-size:28px">A seguir · Circunferência e círculo · Parte 2 de 2</p>
+    <h1 style="font-size:120px">Ângulos e comprimento</h1>
+    <p class="sub">Inscrito vale metade; uma volta vale 2πr</p>
+  </div>
+  <svg class="emblema" viewBox="0 0 640 640" aria-hidden="true">
+    <circle cx="320" cy="320" r="220" fill="none" stroke="#fff" stroke-width="6" stroke-opacity=".85"/>
+    <path d="M151.5 461.4 L320 100 L488.5 461.4" fill="none" stroke="#FFD10C" stroke-width="8" stroke-linejoin="round"/>
+    <path d="M151.5 461.4 L320 320 L488.5 461.4" fill="none" stroke="#fff" stroke-width="5" stroke-dasharray="10 8"/>
+    <circle cx="320" cy="100" r="13" fill="#FFD10C"/><circle cx="320" cy="320" r="10" fill="#fff"/>
+  </svg>
+  <img class="logo-capa" src="{{LOGO_BRANCO}}" alt="Quarks">
+  <aside class="notas"><p>Na Parte 2: ângulo central, inscrito, de vértice dentro e fora, e o comprimento da circunferência e de um arco.</p></aside>
+</section>

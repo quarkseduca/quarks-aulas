@@ -1,0 +1,665 @@
+<!--aula
+{"disciplina": "matematica", "curso": "IF", "assunto": "Polinômios", "parte": "Parte 1 de 2", "titulo": "Expressões e produtos notáveis"}
+-->
+<!-- Fonte: apostila IF/Sudeste, Matemática, cap. 3 (3.1 Polinômios: Valor numérico; Monômios e polinômios; Operações com polinômios; Quadrado da soma e da diferença; Produto da soma pela diferença). Questões: oficiais do IF Sudeste MG que sobraram do bloco do capítulo (2020-1 q14, 2014-1 q21, 2014-1-extra q24). -->
+<style>
+  .caixa { box-sizing: border-box; }
+  .contas.c4 { grid-template-columns: auto auto auto 1fr; }
+  .ag-anot { font-size: 26px; font-weight: 800; color: var(--d-forte); background: var(--d-clara); border-radius: 999px; padding: 2px 16px; justify-self: start; white-space: nowrap; }
+  .ag-tag { display: inline-block; padding: 4px 18px; border-radius: 999px; background: var(--d-clara); color: var(--d-forte); font-weight: 800; font-size: 26px; }
+  .ag-certo { color: var(--certo); font-weight: 800; }
+  .ag-erro { color: var(--erro); font-weight: 800; }
+  .ag-rotulo-svg { font-family: Figtree, 'Segoe UI', sans-serif; font-weight: 800; }
+  .ag-cartao { background: var(--branco); border: 2px solid var(--lilas-2); border-radius: 26px; padding: 18px 26px; font-size: 30px; line-height: 1.35; box-sizing: border-box; }
+  .ag-cartao b { color: var(--roxo-titulo); }
+  /* táxi que anda */
+  @keyframes ag-taxi { 0% { transform: translateX(0); } 70%, 100% { transform: translateX(980px); } }
+  .slide.ativo .ag-taxi { animation: ag-taxi 7s ease-in-out infinite; }
+  /* (a + b)²: as quatro peças se afastam e voltam */
+  .ag-qs > g { transform-box: view-box; }
+  @keyframes ag-qs1 { 0%, 18% { transform: none; } 42%, 72% { transform: translate(-16px, -16px); } 94%, 100% { transform: none; } }
+  @keyframes ag-qs2 { 0%, 18% { transform: none; } 42%, 72% { transform: translate(16px, -16px); } 94%, 100% { transform: none; } }
+  @keyframes ag-qs3 { 0%, 18% { transform: none; } 42%, 72% { transform: translate(-16px, 16px); } 94%, 100% { transform: none; } }
+  @keyframes ag-qs4 { 0%, 18% { transform: none; } 42%, 72% { transform: translate(16px, 16px); } 94%, 100% { transform: none; } }
+  .slide.ativo .ag-qs .p1 { animation: ag-qs1 6s ease-in-out infinite; }
+  .slide.ativo .ag-qs .p2 { animation: ag-qs2 6s ease-in-out infinite; }
+  .slide.ativo .ag-qs .p3 { animation: ag-qs3 6s ease-in-out infinite; }
+  .slide.ativo .ag-qs .p4 { animation: ag-qs4 6s ease-in-out infinite; }
+  /* (a + b)(a − b): tira o canto b², a tira de baixo gira e encosta do lado */
+  .ag-sd .peca { transform-box: view-box; transform-origin: 0px 190px; }
+  @keyframes ag-sd-gira { 0%, 22% { transform: none; } 48%, 80% { transform: translate(410px, -190px) rotate(90deg); } 100% { transform: none; } }
+  @keyframes ag-sd-canto { 0%, 8% { opacity: 1; } 20%, 88% { opacity: 0; } 100% { opacity: 1; } }
+  @keyframes ag-sd-ra { 0%, 20% { opacity: 1; } 30%, 90% { opacity: 0; } 100% { opacity: 1; } }
+  @keyframes ag-sd-rb { 0%, 46% { opacity: 0; } 54%, 80% { opacity: 1; } 88%, 100% { opacity: 0; } }
+  .ag-sd .rb { opacity: 0; }
+  .slide.ativo .mostra .ag-sd .peca { animation: ag-sd-gira 8s ease-in-out infinite; }
+  .slide.ativo .mostra .ag-sd .canto { animation: ag-sd-canto 8s ease-in-out infinite; }
+  .slide.ativo .mostra .ag-sd .ra { animation: ag-sd-ra 8s ease-in-out infinite; }
+  .slide.ativo .mostra .ag-sd .rb { animation: ag-sd-rb 8s ease-in-out infinite; }
+  /* setas da distributiva que se desenham */
+  .ag-arco { stroke-dasharray: 1; stroke-dashoffset: 1; }
+  .mostra .ag-arco, .mostra.ag-arco { animation: ag-traca 1.2s ease-in-out forwards; }
+  @keyframes ag-traca { to { stroke-dashoffset: 0; } }
+  /* termos do meio que se cancelam */
+  .ag-corta { position: relative; display: inline-block; }
+  .ag-corta::after { content: ""; position: absolute; left: -4px; right: -4px; top: 50%; height: 5px; border-radius: 3px; background: var(--erro); transform: scaleX(0); transform-origin: left; transition: transform .8s ease .2s; }
+  .ag-corta.risca::after { transform: scaleX(1); }
+  @media (prefers-reduced-motion: reduce) { .ag-arco { stroke-dasharray: none; stroke-dashoffset: 0; } }
+</style>
+
+<!-- 1. Capa -->
+<section class="slide capa" data-nome="Capa">
+  <div class="estrelas"></div>
+  <div class="texto-capa">
+    <span class="selo">Matemática · IF</span>
+    <p class="aula">Polinômios · Parte 1 de 2</p>
+    <h1 style="font-size:128px">Expressões e produtos notáveis</h1>
+    <p class="sub">Letras no lugar dos números</p>
+  </div>
+  <svg class="emblema" viewBox="0 0 640 640" aria-hidden="true">
+    <g class="gira-lento"><ellipse cx="320" cy="320" rx="300" ry="128" fill="none" stroke="#fff" stroke-opacity=".38" stroke-width="2" transform="rotate(-10 320 320)"/></g>
+    <g class="gira"><ellipse cx="320" cy="320" rx="236" ry="196" fill="none" stroke="#FFD10C" stroke-opacity=".75" stroke-width="2.5" stroke-dasharray="3 14" stroke-linecap="round" transform="rotate(-8 320 320)"/>
+      <circle cx="84" cy="300" r="13" fill="var(--d)" stroke="#fff" stroke-width="3"/></g>
+    <g transform="translate(160 160)" font-family="Figtree,'Segoe UI',sans-serif" font-weight="800" text-anchor="middle">
+      <rect x="0" y="0" width="200" height="200" rx="14" fill="#fff" fill-opacity=".2" stroke="#fff" stroke-width="4"/>
+      <rect x="210" y="0" width="110" height="200" rx="14" fill="#fff" fill-opacity=".1" stroke="#fff" stroke-width="4"/>
+      <rect x="0" y="210" width="200" height="110" rx="14" fill="#fff" fill-opacity=".1" stroke="#fff" stroke-width="4"/>
+      <rect x="210" y="210" width="110" height="110" rx="14" fill="#FFD10C"/>
+      <text x="100" y="118" font-size="56" fill="#fff">a²</text>
+      <text x="265" y="114" font-size="40" fill="#fff">ab</text>
+      <text x="100" y="279" font-size="40" fill="#fff">ab</text>
+      <text x="265" y="279" font-size="44" fill="#3F2FA0">b²</text>
+    </g>
+  </svg>
+  <img class="logo-capa" src="{{LOGO_BRANCO}}" alt="Quarks">
+  <aside class="notas">
+    <p>Primeira de duas partes de Polinômios: expressões algébricas, valor numérico, operações e os produtos notáveis. Na parte 2: fatoração e frações algébricas.</p>
+  </aside>
+</section>
+
+<!-- 2. Gancho: o táxi -->
+<section class="slide" data-nome="A corrida de táxi">
+  <div class="conteudo">
+    <p class="olho">Para começar</p>
+    <h2 class="titulo">Quanto custa a corrida?</h2>
+    <svg viewBox="0 0 1760 170" width="1760" height="170" style="position:absolute;left:0;top:130px;overflow:visible;font-family:Figtree,'Segoe UI',sans-serif" aria-hidden="true">
+      <line x1="40" y1="140" x2="1720" y2="140" stroke="#DCD6F3" stroke-width="12" stroke-linecap="round"/>
+      <g stroke="#fff" stroke-width="4" stroke-dasharray="26 22"><line x1="60" y1="140" x2="1700" y2="140"/></g>
+      <g class="ag-taxi">
+        <rect x="60" y="72" width="150" height="50" rx="20" fill="#FFD10C"/>
+        <path d="M86 72 Q98 36 130 36 L150 36 Q176 36 186 72 Z" fill="#FFD10C"/>
+        <path d="M100 70 Q108 46 128 46 L136 46 L136 70 Z M144 70 L144 46 L150 46 Q166 46 172 70 Z" fill="#fff" opacity=".9"/>
+        <rect x="118" y="20" width="36" height="16" rx="6" fill="#3F2FA0"/>
+        <circle cx="94" cy="124" r="17" fill="#292B2C"/><circle cx="178" cy="124" r="17" fill="#292B2C"/>
+        <circle cx="94" cy="124" r="6" fill="#fff"/><circle cx="178" cy="124" r="6" fill="#fff"/>
+      </g>
+    </svg>
+    <div class="caixa" style="position:absolute;left:0;width:520px;top:330px;padding:22px 30px">
+      <div class="texto" style="font-size:34px">Bandeirada: <b>R$ 5,00</b><br>Por quilômetro: <b>R$ 3,00</b></div>
+    </div>
+    <div style="position:absolute;left:640px;right:0;top:330px">
+      <div class="contas c4" style="font-size:48px;row-gap:18px">
+        <div class="eq" data-passo="1"><span>\(8\ \text{km}\)</span><span>\(\rightarrow\)</span><span>\(5 + 3 \cdot 8 = 29\)</span><span class="ag-anot">R$ 29,00</span></div>
+        <div class="eq" data-passo="2"><span>\(10\ \text{km}\)</span><span>\(\rightarrow\)</span><span>\(5 + 3 \cdot 10 = 35\)</span><span class="ag-anot">R$ 35,00</span></div>
+        <div class="eq final" data-passo="3"><span>\(\textcolor{#1E4FD8}{x}\ \text{km}\)</span><span>\(\rightarrow\)</span><span>\(5 + 3\textcolor{#1E4FD8}{x}\)</span><span></span></div>
+      </div>
+      <span class="pilula pilula-resposta" data-passo="4" style="margin-top:40px">Uma conta só serve para qualquer corrida</span>
+    </div>
+  </div>
+  <aside class="notas">
+    <p>Pergunte quanto custa a corrida de 8 km antes do clique 1: 5 + 3 · 8 = 29 reais. Clique 2: 10 km.</p>
+    <p>Clique 3: em vez de refazer o raciocínio, trocamos os quilômetros por uma letra. O preço fica 5 + 3x.</p>
+  </aside>
+</section>
+
+<!-- 3. Expressão algébrica e valor numérico -->
+<section class="slide" data-nome="Expressão algébrica">
+  <div class="conteudo">
+    <p class="olho">Expressão algébrica</p>
+    <h2 class="titulo">Números, letras e operações</h2>
+    <svg viewBox="0 0 900 360" width="900" height="360" style="position:absolute;left:0;top:150px;overflow:visible;font-family:Figtree,'Segoe UI',sans-serif" aria-hidden="true">
+      <text x="450" y="200" text-anchor="middle" font-size="150" font-weight="800" fill="#3F2FA0">5 + 3<tspan fill="#1E4FD8" font-style="italic">x</tspan></text>
+      <g data-passo="1">
+        <path d="M640 80 Q680 30 740 30" fill="none" stroke="var(--d)" stroke-width="4" class="ag-arco" pathLength="1"/>
+        <text x="752" y="40" font-size="32" fill="#1E4FD8" class="ag-rotulo-svg">variável</text>
+        <text x="752" y="76" font-size="26" fill="#5E5A70" font-weight="700">um número que pode mudar</text>
+      </g>
+      <g data-passo="2">
+        <path d="M520 225 Q540 300 600 310" fill="none" stroke="var(--d)" stroke-width="4" class="ag-arco" pathLength="1"/>
+        <text x="612" y="320" font-size="32" fill="#1E4FD8" class="ag-rotulo-svg">3x quer dizer 3 · x</text>
+      </g>
+    </svg>
+    <div class="caixa caixa-fundamental" data-passo="3" style="position:absolute;left:1020px;right:0;top:250px;padding:22px 32px">
+      <span class="rotulo">Valor numérico</span>
+      <div class="texto" style="font-size:34px">É o número que a expressão dá quando trocamos cada letra por um valor.</div>
+    </div>
+    <div style="position:absolute;left:1020px;right:0;top:470px" data-passo="4">
+      <div class="contas" style="font-size:44px">
+        <div class="eq final"><span>\(x = 8:\)</span><span></span><span>\(5 + 3 \cdot 8 = 29\)</span></div>
+      </div>
+    </div>
+  </div>
+  <aside class="notas">
+    <p>Expressão algébrica: mistura números, letras e operações. As letras são as variáveis. Entre número e letra, a multiplicação fica subentendida.</p>
+    <p>Cliques 3 e 4: valor numérico. O 29 da corrida de 8 km é o valor numérico de 5 + 3x para x = 8.</p>
+  </aside>
+</section>
+
+<!-- 4. Exemplo: valor numérico -->
+<section class="slide" data-nome="Exemplo: valor numérico">
+  <div class="conteudo">
+    <p class="olho">Exemplo</p>
+    <h2 class="titulo">Trocar letras por números</h2>
+    <div style="position:absolute;left:0;width:880px;top:150px">
+      <p class="texto" style="margin:0 0 22px">\(2a^2 - 3b\) para \(a = -2\) e \(b = 4\)</p>
+      <div class="contas c4" style="font-size:46px;row-gap:14px">
+        <div class="eq" data-passo="1"><span>\(E\)</span><span>\(=\)</span><span>\(2a^2 - 3b\)</span><span></span></div>
+        <div class="eq" data-passo="2"><span>\(E\)</span><span>\(=\)</span><span>\(2 \cdot \textcolor{#1E4FD8}{(-2)}^2 - 3 \cdot \textcolor{#1E4FD8}{4}\)</span><span class="ag-anot">parênteses!</span></div>
+        <div class="eq" data-passo="3"><span>\(E\)</span><span>\(=\)</span><span>\(2 \cdot 4 - 12\)</span><span></span></div>
+        <div class="eq" data-passo="4"><span>\(E\)</span><span>\(=\)</span><span>\(8 - 12\)</span><span></span></div>
+        <div class="eq final" data-passo="5"><span>\(E\)</span><span>\(=\)</span><span>\(-4\)</span><span></span></div>
+      </div>
+    </div>
+    <div class="caixa caixa-atencao" data-passo="6" style="position:absolute;left:980px;right:0;top:170px;padding:24px 32px">
+      <span class="rotulo">Atenção</span>
+      <div class="contas" style="font-size:46px;margin-top:6px">
+        <div class="eq"><span>\((-2)^2\)</span><span>\(=\)</span><span>\(4\) <span class="ag-certo">✓</span></span></div>
+        <div class="eq"><span>\(-2^2\)</span><span>\(=\)</span><span>\(-4\) <span class="ag-erro">✗</span></span></div>
+      </div>
+      <div class="texto" style="font-size:30px;margin-top:14px">Número negativo no lugar da letra: <b>sempre com parênteses</b>.</div>
+    </div>
+  </div>
+  <aside class="notas">
+    <p>Troque cada letra pelo seu valor, com parênteses nos negativos, e siga a ordem das operações: potência, depois multiplicação, depois subtração.</p>
+    <p>Clique 6: sem parêntese, −2² vira −4 (o expoente pega só o 2), e a conta dá errado.</p>
+  </aside>
+</section>
+
+<!-- 5. Monômios -->
+<section class="slide" data-nome="Monômios">
+  <div class="conteudo">
+    <p class="olho">Monômios</p>
+    <h2 class="titulo">Coeficiente e parte literal</h2>
+    <svg viewBox="0 0 700 330" width="700" height="330" style="position:absolute;left:0;top:140px;overflow:visible;font-family:Figtree,'Segoe UI',sans-serif" aria-hidden="true">
+      <text x="300" y="200" text-anchor="middle" font-size="160" font-weight="800"><tspan fill="#8A6A00">−7</tspan><tspan fill="#1E4FD8" font-style="italic">a</tspan><tspan fill="#1E4FD8" dy="-60" font-size="90">2</tspan></text>
+      <g data-passo="1"><path d="M210 230 Q200 290 150 300" fill="none" stroke="#C9A400" stroke-width="4" class="ag-arco" pathLength="1"/><text x="20" y="312" font-size="32" fill="#8A6A00" class="ag-rotulo-svg">coeficiente</text></g>
+      <g data-passo="2"><path d="M390 230 Q410 290 460 300" fill="none" stroke="var(--d)" stroke-width="4" class="ag-arco" pathLength="1"/><text x="470" y="312" font-size="32" fill="#1E4FD8" class="ag-rotulo-svg">parte literal</text></g>
+    </svg>
+    <div style="position:absolute;left:800px;right:0;top:160px;display:flex;flex-direction:column;gap:20px">
+      <p class="texto" style="margin:0">Monômio: só produto de números e letras.</p>
+      <div style="display:flex;gap:18px;font-size:46px"><span class="ag-cartao">\(3x\)</span><span class="ag-cartao">\(-7a^2\)</span><span class="ag-cartao">\(\tfrac{1}{2}xy\)</span></div>
+      <div class="caixa caixa-fundamental" data-passo="3" style="padding:20px 30px">
+        <span class="rotulo">Semelhantes</span>
+        <div class="texto" style="font-size:32px">Mesma parte literal. <b>Só eles se juntam</b> numa soma.</div>
+      </div>
+      <div class="contas" data-passo="4" style="font-size:52px">
+        <div class="eq final"><span>\(3x^2 - 5x^2\)</span><span>\(=\)</span><span>\(-2x^2\)</span></div>
+      </div>
+      <p class="texto" data-passo="5" style="margin:0;font-size:30px;color:var(--cinza)">Como 3 cadernos menos 5 cadernos dá −2 cadernos.</p>
+    </div>
+  </div>
+  <aside class="notas">
+    <p>Em 5 + 3x, cada parte separada por + ou − é um termo. 3x, −7a² e ½xy são monômios: o número é o coeficiente; as letras, a parte literal.</p>
+    <p>Cliques 3 a 5: 3x² e −5x² são semelhantes (mesmo x²), então se juntam: −2x².</p>
+  </aside>
+</section>
+
+<!-- 6. Polinômio, grau e redução -->
+<section class="slide" data-nome="Polinômio e grau">
+  <div class="conteudo">
+    <p class="olho">Polinômio</p>
+    <h2 class="titulo">Soma de monômios</h2>
+    <div class="caixa caixa-fundamental" style="position:absolute;left:0;width:820px;top:160px;padding:24px 34px">
+      <span class="rotulo">Polinômio</span>
+      <div style="font-size:72px;text-align:center;margin:6px 0">\(4x^{\textcolor{#1E4FD8}{2}} - 3x + 7\)</div>
+      <div class="texto" style="font-size:32px" data-passo="1"><b>Grau:</b> o maior expoente da variável. Este tem <b>grau 2</b>.</div>
+    </div>
+    <div style="position:absolute;left:940px;right:0;top:160px">
+      <p class="texto" style="margin:0 0 20px"><b>Reduzir:</b> juntar os semelhantes.</p>
+      <div class="contas" style="font-size:50px;row-gap:20px">
+        <div class="eq" data-passo="2"><span>\(R\)</span><span>\(=\)</span><span>\(\textcolor{#1E4FD8}{3x} + \textcolor{#8A6A00}{5y} \textcolor{#1E4FD8}{- x} + \textcolor{#8A6A00}{2y}\)</span></div>
+        <div class="eq" data-passo="3"><span>\(R\)</span><span>\(=\)</span><span>\(\textcolor{#1E4FD8}{3x - x} + \textcolor{#8A6A00}{5y + 2y}\)</span></div>
+        <div class="eq final" data-passo="4"><span>\(R\)</span><span>\(=\)</span><span>\(2x + 7y\)</span></div>
+      </div>
+    </div>
+  </div>
+  <aside class="notas">
+    <p>Clique 1: o grau de um polinômio de uma variável é o maior expoente dela.</p>
+    <p>Cliques 2 a 4: os termos com x dão 2x; os termos com y dão 7y. x com y não se junta.</p>
+  </aside>
+</section>
+
+<!-- 7. Exemplo: perímetro -->
+<section class="slide" data-nome="Exemplo: perímetro">
+  <div class="conteudo">
+    <p class="olho">Exemplo</p>
+    <h2 class="titulo">Perímetro com letras</h2>
+    <svg viewBox="0 0 520 330" width="520" height="330" style="position:absolute;left:0;top:160px;overflow:visible;font-family:Figtree,'Segoe UI',sans-serif" aria-hidden="true">
+      <rect x="60" y="40" width="380" height="220" rx="10" fill="var(--d-clara)" stroke="var(--d)" stroke-width="5"/>
+      <text x="250" y="22" text-anchor="middle" font-size="36" font-weight="800" fill="#3F2FA0">3x</text>
+      <text x="250" y="304" text-anchor="middle" font-size="36" font-weight="800" fill="#3F2FA0">3x</text>
+      <text x="40" y="162" text-anchor="end" font-size="36" font-weight="800" fill="#8A6A00">x + 2</text>
+      <text x="460" y="162" text-anchor="start" font-size="36" font-weight="800" fill="#8A6A00">x + 2</text>
+    </svg>
+    <p class="texto" style="position:absolute;left:0;width:540px;top:500px;margin:0;font-size:30px;color:var(--cinza)">Lados em metros. Perímetro: soma dos quatro lados.</p>
+    <div style="position:absolute;left:720px;right:0;top:160px">
+      <div class="contas" style="font-size:52px;row-gap:20px">
+        <div class="eq" data-passo="1"><span>\(P\)</span><span>\(=\)</span><span>\(2 \cdot (x + 2) + 2 \cdot 3x\)</span></div>
+        <div class="eq" data-passo="2"><span>\(P\)</span><span>\(=\)</span><span>\(2x + 4 + 6x\)</span></div>
+        <div class="eq final" data-passo="3"><span>\(P\)</span><span>\(=\)</span><span>\(8x + 4\)</span></div>
+      </div>
+      <div class="caixa" data-passo="4" style="margin-top:40px;padding:20px 30px">
+        <span class="rotulo">Repare: \(x = 1\)</span>
+        <div class="texto" style="font-size:32px">Lados de 3 m e 3 m: perímetro 12 m. A expressão confere: \(8 \cdot 1 + 4 = 12\) <span class="ag-certo">✓</span></div>
+      </div>
+    </div>
+  </div>
+  <aside class="notas">
+    <p>Dois lados de cada medida. Cliques 1 a 3: distributiva e redução, 8x + 4.</p>
+    <p>Clique 4: teste com um número. Com x = 1, x + 2 = 3 e 3x = 3; perímetro 12. Testar com número é a melhor conferência em álgebra.</p>
+  </aside>
+</section>
+
+<!-- 8. Distributiva -->
+<section class="slide" data-nome="Distributiva">
+  <div class="conteudo">
+    <p class="olho">Operações com polinômios</p>
+    <h2 class="titulo">Cada termo multiplica cada termo</h2>
+    <svg viewBox="0 0 760 330" width="760" height="330" style="position:absolute;left:0;top:150px;overflow:visible;font-family:Figtree,'Segoe UI',sans-serif" aria-hidden="true">
+      <g font-size="76" font-weight="800" fill="#3F2FA0" text-anchor="middle">
+        <text x="40" y="200">(</text><text x="90" y="200" fill="#1E4FD8" font-style="italic">a</text><text x="150" y="200">+</text><text x="210" y="200" fill="#8A6A00" font-style="italic">b</text><text x="255" y="200">)</text>
+        <text x="300" y="200">(</text><text x="350" y="200" font-style="italic">c</text><text x="410" y="200">+</text><text x="470" y="200" font-style="italic">d</text><text x="515" y="200">)</text>
+      </g>
+      <g data-passo="1"><path d="M90 130 Q220 30 350 130" fill="none" stroke="var(--d)" stroke-width="5" class="ag-arco" pathLength="1"/></g>
+      <g data-passo="2"><path d="M90 130 Q280 -20 470 130" fill="none" stroke="var(--d)" stroke-width="5" class="ag-arco" pathLength="1"/></g>
+      <g data-passo="3"><path d="M210 222 Q280 300 350 222" fill="none" stroke="#C9A400" stroke-width="5" class="ag-arco" pathLength="1"/></g>
+      <g data-passo="4"><path d="M210 222 Q340 330 470 222" fill="none" stroke="#C9A400" stroke-width="5" class="ag-arco" pathLength="1"/></g>
+    </svg>
+    <div style="position:absolute;left:820px;right:0;top:170px;font-size:56px;line-height:1.5">
+      <div>\((a + b)(c + d) =\)</div>
+      <div>\(\phantom{=}\ \ \)<span data-passo="1">\(\textcolor{#1E4FD8}{ac}\)</span> <span data-passo="2">\(+\ \textcolor{#1E4FD8}{ad}\)</span> <span data-passo="3">\(+\ \textcolor{#8A6A00}{bc}\)</span> <span data-passo="4">\(+\ \textcolor{#8A6A00}{bd}\)</span></div>
+    </div>
+    <div class="caixa caixa-fundamental" data-passo="5" style="position:absolute;left:820px;right:0;top:450px;padding:22px 32px">
+      <span class="rotulo">Distributiva</span>
+      <div style="font-size:48px">\(a \cdot (b + c) = ab + ac\)</div>
+      <div class="texto" style="font-size:30px;margin-top:8px">Nas letras, as potências: \(x \cdot x = x^2\) e \(x^2 \cdot x^3 = x^5\).</div>
+    </div>
+  </div>
+  <aside class="notas">
+    <p>Somar e subtrair polinômios é reduzir semelhantes. Para multiplicar, a propriedade distributiva: cada termo do primeiro fator multiplica cada termo do segundo.</p>
+    <p>Cliques 1 a 4: as quatro setas, os quatro produtos. Clique 5: a forma curta e as potências (expoentes se somam).</p>
+  </aside>
+</section>
+
+<!-- 9. Exemplo: multiplicar e dividir -->
+<section class="slide" data-nome="Exemplo: multiplicar e dividir">
+  <div class="conteudo">
+    <p class="olho">Exemplo</p>
+    <h2 class="titulo">Multiplicar e dividir</h2>
+    <div style="position:absolute;left:0;right:0;top:160px;display:grid;grid-template-columns:1fr 1fr;gap:60px">
+      <div class="contas" style="font-size:50px;row-gap:22px">
+        <div class="eq" data-passo="1"><span>\(M\)</span><span>\(=\)</span><span>\((x + 3)(x - 2)\)</span></div>
+        <div class="eq" data-passo="2"><span>\(M\)</span><span>\(=\)</span><span>\(x^2 - 2x + 3x - 6\)</span></div>
+        <div class="eq final" data-passo="3"><span>\(M\)</span><span>\(=\)</span><span>\(x^2 + x - 6\)</span></div>
+      </div>
+      <div class="contas" style="font-size:50px;row-gap:22px">
+        <div class="eq" data-passo="4"><span>\(D\)</span><span>\(=\)</span><span>\((6x^3 - 4x^2) : 2x\)</span></div>
+        <div class="eq" data-passo="5"><span>\(D\)</span><span>\(=\)</span><span>\(\dfrac{6x^3}{2x} - \dfrac{4x^2}{2x}\)</span></div>
+        <div class="eq final" data-passo="6"><span>\(D\)</span><span>\(=\)</span><span>\(3x^2 - 2x\)</span></div>
+      </div>
+    </div>
+    <div class="caixa caixa-fundamental" data-passo="7" style="position:absolute;left:600px;right:0;top:600px;padding:20px 32px">
+      <span class="rotulo">Repare</span>
+      <div class="texto" style="font-size:32px">Na divisão por um monômio, cada termo é dividido separadamente: os coeficientes se dividem e os <b>expoentes se subtraem</b>.</div>
+    </div>
+  </div>
+  <aside class="notas">
+    <p>À esquerda, distributiva: x · x, x · (−2), 3 · x, 3 · (−2); depois −2x + 3x = x.</p>
+    <p>À direita: 6 ÷ 2 = 3 e x³ ÷ x = x²; 4 ÷ 2 = 2 e x² ÷ x = x.</p>
+  </aside>
+</section>
+
+<!-- 10. Atenção: o menos antes do parêntese -->
+<section class="slide" data-nome="Atenção: o menos">
+  <div class="conteudo">
+    <p class="olho">Atenção</p>
+    <h2 class="titulo">O menos antes do parêntese</h2>
+    <div class="caixa caixa-atencao" style="position:absolute;left:0;right:0;top:150px;padding:22px 34px">
+      <div class="texto" style="font-size:34px">Antes de um parêntese com sinal de menos, troque o sinal de <b>todos</b> os termos de dentro.</div>
+    </div>
+    <div style="position:absolute;left:0;width:820px;top:340px">
+      <div class="contas" style="font-size:54px;row-gap:22px">
+        <div class="eq" data-passo="1"><span>\(5x - (2x - 3)\)</span><span>\(=\)</span><span>\(5x - 2x \textcolor{#1F9D62}{+ 3}\)</span></div>
+        <div class="eq final" data-passo="2"><span></span><span>\(=\)</span><span>\(3x + 3\)</span></div>
+      </div>
+    </div>
+    <div class="caixa" data-passo="3" style="position:absolute;left:940px;right:0;top:340px;padding:22px 32px;border-color:#F3B6C1">
+      <span class="rotulo" style="color:var(--erro)">O erro comum</span>
+      <div style="font-size:48px">\(5x - 2x \textcolor{#C2384F}{- 3}\)</div>
+      <div class="texto" style="font-size:30px;margin-top:8px">Trocou só o primeiro sinal.</div>
+    </div>
+  </div>
+  <aside class="notas">
+    <p>O menos vale para o parêntese inteiro: −(2x − 3) = −2x + 3.</p>
+    <p>Clique 3: quem troca só o primeiro sinal escreve −2x − 3 e erra.</p>
+  </aside>
+</section>
+
+<!-- 11. Quadrado da soma: a figura -->
+<section class="slide" data-nome="Quadrado da soma">
+  <div class="conteudo">
+    <p class="olho">Produtos notáveis</p>
+    <h2 class="titulo">Quanto dá \((a + b)^2\)?</h2>
+    <svg class="ag-qs" viewBox="-70 -60 500 500" width="460" height="460" style="position:absolute;left:0;top:140px;overflow:visible;font-family:Figtree,'Segoe UI',sans-serif" aria-hidden="true">
+      <text x="140" y="-22" text-anchor="middle" font-size="34" font-weight="800" fill="#1E4FD8">a</text><text x="350" y="-22" text-anchor="middle" font-size="34" font-weight="800" fill="#8A6A00">b</text>
+      <text x="-26" y="152" text-anchor="middle" font-size="34" font-weight="800" fill="#1E4FD8">a</text><text x="-26" y="352" text-anchor="middle" font-size="34" font-weight="800" fill="#8A6A00">b</text>
+      <g class="p1"><rect x="0" y="0" width="280" height="280" rx="8" fill="var(--d-clara)" stroke="var(--d)" stroke-width="4"/><text x="140" y="160" text-anchor="middle" font-size="64" font-weight="800" fill="#1E4FD8">a²</text></g>
+      <g class="p2"><rect x="280" y="0" width="140" height="280" rx="8" fill="#fff" stroke="#8C7BEA" stroke-width="4"/><text x="350" y="155" text-anchor="middle" font-size="48" font-weight="800" fill="#3F2FA0">ab</text></g>
+      <g class="p3"><rect x="0" y="280" width="280" height="140" rx="8" fill="#fff" stroke="#8C7BEA" stroke-width="4"/><text x="140" y="365" text-anchor="middle" font-size="48" font-weight="800" fill="#3F2FA0">ab</text></g>
+      <g class="p4"><rect x="280" y="280" width="140" height="140" rx="8" fill="#FFF4C2" stroke="#C9A400" stroke-width="4"/><text x="350" y="367" text-anchor="middle" font-size="52" font-weight="800" fill="#8A6A00">b²</text></g>
+    </svg>
+    <div style="position:absolute;left:660px;right:0;top:170px">
+      <p class="texto" style="margin:0 0 18px;font-size:32px">Um quadrado de lado \(a + b\) se divide em <b>quatro partes</b>.</p>
+      <div class="contas" style="font-size:52px;row-gap:22px">
+        <div class="eq" data-passo="1"><span>\((a + b)^2\)</span><span>\(=\)</span><span>\(a^2 + ab + ab + b^2\)</span></div>
+        <div class="eq final" data-passo="2"><span>\((a + b)^2\)</span><span>\(=\)</span><span>\(a^2 + 2ab + b^2\)</span></div>
+      </div>
+      <p class="texto" data-passo="3" style="margin:34px 0 14px;font-size:32px"><b>Pela distributiva</b>, o mesmo resultado:</p>
+      <div class="contas" data-passo="3" style="font-size:46px">
+        <div class="eq"><span>\((a + b)(a + b)\)</span><span>\(=\)</span><span>\(a^2 + ab + ba + b^2\)</span></div>
+      </div>
+    </div>
+  </div>
+  <aside class="notas">
+    <p>A figura se abre sozinha: um quadrado a², um quadrado b² e dois retângulos a por b. Somando as áreas das partes, temos o quadrado da soma.</p>
+    <p>Clique 3: a distributiva confirma. Produtos que aparecem tanto ganharam nome: produtos notáveis.</p>
+  </aside>
+</section>
+
+<!-- 12. Fórmulas -->
+<section class="slide" data-nome="Quadrado da soma e da diferença">
+  <div class="conteudo">
+    <p class="olho">Fórmula</p>
+    <h2 class="titulo">Quadrado da soma e da diferença</h2>
+    <div class="caixa caixa-fundamental" style="position:absolute;left:180px;right:180px;top:160px;text-align:center;padding:22px">
+      <div style="font-size:76px">\((a + b)^2 = a^2 + 2ab + b^2\)</div>
+      <div data-passo="1" style="font-size:76px;margin-top:10px">\((a - b)^2 = a^2 - 2ab + b^2\)</div>
+    </div>
+    <div class="letras" data-passo="2" style="position:absolute;left:640px;right:0;top:560px;grid-template-columns:repeat(3,1fr)">
+      <div><span class="simbolo">\(a^2\)</span>quadrado do primeiro</div>
+      <div><span class="simbolo">\(\pm 2ab\)</span>duas vezes o primeiro pelo segundo</div>
+      <div><span class="simbolo">\(b^2\)</span>quadrado do segundo</div>
+    </div>
+  </div>
+  <aside class="notas">
+    <p>O mesmo raciocínio vale para a diferença: muda só o sinal do termo do meio.</p>
+    <p>Clique 2: a frase para lembrar. O quadrado do primeiro, mais (ou menos) duas vezes o primeiro pelo segundo, mais o quadrado do segundo.</p>
+  </aside>
+</section>
+
+<!-- 13. Exemplo: desenvolver -->
+<section class="slide" data-nome="Exemplo: desenvolver">
+  <div class="conteudo">
+    <p class="olho">Exemplo</p>
+    <h2 class="titulo">Desenvolver</h2>
+    <div style="position:absolute;left:0;right:0;top:160px;display:grid;grid-template-columns:1fr 1.25fr;gap:50px">
+      <div class="contas" style="font-size:48px;row-gap:22px">
+        <div class="eq" data-passo="1"><span>\(A\)</span><span>\(=\)</span><span>\((x + 3)^2\)</span></div>
+        <div class="eq" data-passo="2"><span>\(A\)</span><span>\(=\)</span><span>\(x^2 + 2 \cdot x \cdot 3 + 3^2\)</span></div>
+        <div class="eq final" data-passo="3"><span>\(A\)</span><span>\(=\)</span><span>\(x^2 + 6x + 9\)</span></div>
+      </div>
+      <div class="contas" style="font-size:48px;row-gap:22px">
+        <div class="eq" data-passo="4"><span>\(B\)</span><span>\(=\)</span><span>\((2x - 5)^2\)</span></div>
+        <div class="eq" data-passo="5"><span>\(B\)</span><span>\(=\)</span><span>\((2x)^2 - 2 \cdot 2x \cdot 5 + 5^2\)</span></div>
+        <div class="eq final" data-passo="6"><span>\(B\)</span><span>\(=\)</span><span>\(4x^2 - 20x + 25\)</span></div>
+      </div>
+    </div>
+    <div class="caixa" data-passo="7" style="position:absolute;left:640px;right:0;top:520px;padding:20px 32px">
+      <span class="rotulo">De cabeça: \(51^2\)</span>
+      <div class="contas" style="font-size:44px;grid-template-columns:auto auto auto auto auto 1fr;column-gap:16px">
+        <div class="eq"><span>\(51^2 = (50 + 1)^2\)</span><span>\(=\)</span><span>\(2500 + 100 + 1\)</span><span>\(=\)</span><span style="background:var(--d-clara);border-radius:16px;padding:0 14px">\(2601\)</span><span></span></div>
+      </div>
+    </div>
+  </div>
+  <aside class="notas">
+    <p>Em B, o primeiro termo é 2x: o quadrado dele é 4x² (o 2 também vai ao quadrado).</p>
+    <p>Clique 7: o produto notável no cálculo mental. 50² = 2500, 2 · 50 · 1 = 100, 1² = 1.</p>
+  </aside>
+</section>
+
+<!-- 14. Atenção: o termo do meio -->
+<section class="slide" data-nome="Atenção: termo do meio">
+  <div class="conteudo">
+    <p class="olho">Atenção</p>
+    <h2 class="titulo">O termo do meio não some</h2>
+    <div class="caixa caixa-atencao" style="position:absolute;left:0;right:0;top:150px;padding:22px 34px">
+      <div style="font-size:56px;text-align:center">\((a + b)^2 \ne a^2 + b^2\)</div>
+    </div>
+    <div style="position:absolute;left:0;right:0;top:360px">
+      <p class="texto" style="margin:0 0 20px;font-size:34px" data-passo="1">Teste com \(a = 1\) e \(b = 2\):</p>
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:60px">
+        <div class="contas" data-passo="2" style="font-size:52px"><div class="eq final"><span>\((1 + 2)^2\)</span><span>\(=\)</span><span>\(9\)</span></div></div>
+        <div class="contas" data-passo="3" style="font-size:52px"><div class="eq"><span>\(1^2 + 2^2\)</span><span>\(=\)</span><span>\(5\) <span class="ag-erro">✗</span></span></div></div>
+      </div>
+    </div>
+    <span class="pilula pilula-resposta" data-passo="4" style="position:absolute;right:0;top:650px">Falta o \(2ab = 2 \cdot 1 \cdot 2 = 4\)</span>
+  </div>
+  <aside class="notas">
+    <p>O erro mais comum do capítulo. O teste com números mostra na hora: 9 de um lado, 5 do outro. A diferença, 4, é exatamente o 2ab.</p>
+  </aside>
+</section>
+
+<!-- 15. Produto da soma pela diferença -->
+<section class="slide" data-nome="Soma pela diferença">
+  <div class="conteudo">
+    <p class="olho">Produtos notáveis</p>
+    <h2 class="titulo">Produto da soma pela diferença</h2>
+    <div style="position:absolute;left:0;width:960px;top:170px">
+      <div class="contas" style="font-size:44px;row-gap:26px">
+        <div class="eq" data-passo="1"><span>\((a + b)(a - b)\)</span><span>\(=\)</span><span>\(a^2\ \) <span class="ag-corta" data-em="2:risca">\(-\,ab\)</span> \(\ \) <span class="ag-corta" data-em="2:risca">\(+\,ab\)</span> \(\ - b^2\)</span></div>
+        <div class="eq final" data-passo="3"><span>\((a + b)(a - b)\)</span><span>\(=\)</span><span>\(a^2 - b^2\)</span></div>
+      </div>
+      <p class="texto" data-passo="3" style="margin:26px 0 0;font-size:32px">O quadrado do primeiro <b>menos</b> o quadrado do segundo.</p>
+    </div>
+    <div data-passo="4" style="position:absolute;left:1060px;top:170px;width:700px">
+      <svg class="ag-sd" viewBox="-70 -70 560 450" width="620" height="498" style="display:block;overflow:visible;font-family:Figtree,'Segoe UI',sans-serif" aria-hidden="true">
+        <rect x="0" y="0" width="300" height="190" fill="var(--d-clara)" stroke="var(--d)" stroke-width="4"/>
+        <g class="peca"><rect x="0" y="190" width="190" height="110" fill="var(--d-clara)" stroke="var(--d)" stroke-width="4"/></g>
+        <g class="canto"><rect x="190" y="190" width="110" height="110" fill="#FFF4C2" stroke="#C9A400" stroke-width="4" stroke-dasharray="10 8"/><text x="245" y="258" text-anchor="middle" font-size="40" font-weight="800" fill="#8A6A00">b²</text></g>
+        <g class="ra" font-size="34" font-weight="800" text-anchor="middle"><text x="150" y="-22" fill="#1E4FD8">a</text><text x="-30" y="160" fill="#1E4FD8">a</text></g>
+        <g class="rb" font-size="34" font-weight="800" text-anchor="middle"><text x="205" y="-22" fill="#1E4FD8">a + b</text><text x="-40" y="106" fill="#8A6A00">a − b</text></g>
+      </svg>
+    </div>
+  </div>
+  <aside class="notas">
+    <p>Pela distributiva, os termos do meio se cancelam (clique 2). Sobra a² − b².</p>
+    <p>Clique 4, a figura: tirando o canto b² do quadrado a², o que sobra se rearruma num retângulo de lados a + b e a − b. Mesma área: a² − b².</p>
+  </aside>
+</section>
+
+<!-- 16. Exemplo: duas aplicações -->
+<section class="slide" data-nome="Exemplo: soma pela diferença">
+  <div class="conteudo">
+    <p class="olho">Exemplo</p>
+    <h2 class="titulo">\(21 \cdot 19\) de cabeça</h2>
+    <div style="position:absolute;left:0;right:0;top:170px;display:grid;grid-template-columns:1fr 1fr;gap:60px">
+      <div class="contas" style="font-size:52px;row-gap:22px">
+        <div class="eq" data-passo="1"><span>\(P\)</span><span>\(=\)</span><span>\((20 + 1)(20 - 1)\)</span></div>
+        <div class="eq" data-passo="2"><span>\(P\)</span><span>\(=\)</span><span>\(20^2 - 1^2\)</span></div>
+        <div class="eq" data-passo="3"><span>\(P\)</span><span>\(=\)</span><span>\(400 - 1\)</span></div>
+        <div class="eq final" data-passo="4"><span>\(P\)</span><span>\(=\)</span><span>\(399\)</span></div>
+      </div>
+      <div class="contas" style="font-size:52px;row-gap:22px">
+        <div class="eq" data-passo="5"><span>\(Q\)</span><span>\(=\)</span><span>\((x + 4)(x - 4)\)</span></div>
+        <div class="eq" data-passo="6"><span>\(Q\)</span><span>\(=\)</span><span>\(x^2 - 4^2\)</span></div>
+        <div class="eq final" data-passo="7"><span>\(Q\)</span><span>\(=\)</span><span>\(x^2 - 16\)</span></div>
+      </div>
+    </div>
+  </div>
+  <aside class="notas">
+    <p>21 é 20 + 1 e 19 é 20 − 1: soma pela diferença. 400 − 1 = 399, sem armar a conta.</p>
+    <p>À direita, a mesma regra com letra: x² − 16.</p>
+  </aside>
+</section>
+
+<!-- 17. Questão 1 -->
+<section class="slide questao" data-nome="Questão 1">
+  <div class="conteudo">
+    <div class="area-resolucao"></div>
+    <span class="pilula pilula-pausa" data-em="1:some">Pause o vídeo e tente</span>
+    <div class="painel-questao">
+      <p class="olho">Questão 1 · IF Sudeste MG 2020</p>
+      <p class="enunciado" style="font-size:34px">Se \((x - y)^2 - (x + y)^2 = -20\), então \(x \cdot y\) é igual a:</p>
+      <ol class="alternativas">
+        <li data-em="2:apaga"><b>A</b><span>\(-4\)</span></li>
+        <li data-em="2:apaga"><b>B</b><span>\(-1\)</span></li>
+        <li data-em="2:apaga"><b>C</b><span>\(0\)</span></li>
+        <li data-em="2:certo"><b>D</b><span>\(5\)</span></li>
+        <li data-em="2:apaga"><b>E</b><span>\(10\)</span></li>
+      </ol>
+      <p class="fonte">IF Sudeste MG 2020 · questão 14</p>
+    </div>
+  </div>
+  <aside class="resolucao">
+    <p class="dados"><b>Dados:</b> \((x - y)^2 - (x + y)^2 = -20\); pede \(xy\).</p>
+    <ol class="passos">
+      <li>\((x^2 - 2xy + y^2) - (x^2 + 2xy + y^2) = -20\)</li>
+      <li>\(x^2 - 2xy + y^2 - x^2 - 2xy - y^2 = -20\)</li>
+      <li>\(-4xy = -20\)</li>
+      <li>\(xy = \dfrac{-20}{-4} = 5\)</li>
+    </ol>
+    <p class="resposta"><b>Resposta:</b> \(xy = 5\). <b>Gabarito D.</b></p>
+    <p class="atencao"><b>Destaque no quadro:</b> O menos antes do parêntese troca todos os sinais: \(x^2\) e \(y^2\) se cancelam.</p>
+    <ul class="erros">
+      <li><b>A</b> Responde o coeficiente −4 de −4xy, sem dividir −20 por −4.</li>
+      <li><b>B</b> Com xy = −1, a expressão daria 4, e não −20.</li>
+      <li><b>C</b> Acha que tudo se cancela, como se (x − y)² fosse x² − y².</li>
+      <li><b>E</b> Esquece o 2 do termo do meio: chega a −2xy = −20.</li>
+    </ul>
+  </aside>
+  <aside class="notas">
+    <p>Clique 1 tira o aviso de pausa: resolva na área (D liga a caneta; E esconde o enunciado). Clique 2: gabarito D.</p>
+    <p>Questão oficial do IF Sudeste MG 2020-1, q14, MAT-0524 (sobra do bloco, usada aqui).</p>
+  </aside>
+</section>
+
+<!-- 18. Questão 2 -->
+<section class="slide questao" data-nome="Questão 2">
+  <div class="conteudo">
+    <div class="area-resolucao"></div>
+    <span class="pilula pilula-pausa" data-em="1:some">Pause o vídeo e tente</span>
+    <div class="painel-questao">
+      <p class="olho">Questão 2 · IF Sudeste MG 2014</p>
+      <p class="enunciado" style="font-size:32px">Sejam \(x\) e \(y\) números reais positivos, tais que \(x^2 + y^2 = 73\) e \(x \cdot y = 24\), então \(x + y\) é igual a:</p>
+      <ol class="alternativas">
+        <li data-em="2:apaga"><b>A</b><span>10</span></li>
+        <li data-em="2:certo"><b>B</b><span>11</span></li>
+        <li data-em="2:apaga"><b>C</b><span>12</span></li>
+        <li data-em="2:apaga"><b>D</b><span>13</span></li>
+        <li data-em="2:apaga"><b>E</b><span>14</span></li>
+      </ol>
+      <p class="fonte">IF Sudeste MG 2014 · questão 21</p>
+    </div>
+  </div>
+  <aside class="resolucao">
+    <p class="dados"><b>Dados:</b> \(x^2 + y^2 = 73\); \(xy = 24\); \(x, y > 0\).</p>
+    <ol class="passos">
+      <li>\((x + y)^2 = x^2 + 2xy + y^2\)</li>
+      <li>\((x + y)^2 = 73 + 2 \cdot 24\)</li>
+      <li>\((x + y)^2 = 121\)</li>
+      <li>\(x + y = 11\) (positivo)</li>
+    </ol>
+    <p class="resposta"><b>Resposta:</b> \(x + y = 11\). <b>Gabarito B.</b></p>
+    <p class="atencao"><b>Destaque no quadro:</b> Não precisa achar x e y: o quadrado da soma já liga os dados. (São 8 e 3.)</p>
+    <ul class="erros">
+      <li><b>A</b> 10² = 100, não 121.</li>
+      <li><b>C</b> 12² = 144, não 121.</li>
+      <li><b>D</b> 13² = 169, não 121.</li>
+      <li><b>E</b> 14² = 196, não 121.</li>
+    </ul>
+  </aside>
+  <aside class="notas">
+    <p>Clique 1 tira o aviso de pausa: resolva na área (D liga a caneta; E esconde o enunciado). Clique 2: gabarito B.</p>
+    <p>Questão oficial do IF Sudeste MG 2014-1, q21, MAT-0349 (sobra do bloco, usada aqui). (x + y)² poderia dar 11 ou −11; positivos, fica 11.</p>
+  </aside>
+</section>
+
+<!-- 19. Questão 3 -->
+<section class="slide questao" data-nome="Questão 3">
+  <div class="conteudo">
+    <div class="area-resolucao"></div>
+    <span class="pilula pilula-pausa" data-em="1:some">Pause o vídeo e tente</span>
+    <div class="painel-questao">
+      <p class="olho">Questão 3 · IF Sudeste MG 2014</p>
+      <p class="enunciado" style="font-size:32px">Sendo \(x + \dfrac{1}{x} = 3\), com \(x \neq 0\), o valor de \(x^2 + \dfrac{1}{x^2}\) é:</p>
+      <ol class="alternativas">
+        <li data-em="2:certo"><b>A</b><span>7</span></li>
+        <li data-em="2:apaga"><b>B</b><span>8</span></li>
+        <li data-em="2:apaga"><b>C</b><span>9</span></li>
+        <li data-em="2:apaga"><b>D</b><span>10</span></li>
+        <li data-em="2:apaga"><b>E</b><span>11</span></li>
+      </ol>
+      <p class="fonte">IF Sudeste MG 2014 (prova extra) · questão 24</p>
+    </div>
+  </div>
+  <aside class="resolucao">
+    <p class="dados"><b>Dados:</b> \(x + \frac{1}{x} = 3\); pede \(x^2 + \frac{1}{x^2}\).</p>
+    <ol class="passos">
+      <li>\(\left(x + \frac{1}{x}\right)^2 = 3^2\)</li>
+      <li>\(x^2 + 2 \cdot x \cdot \frac{1}{x} + \frac{1}{x^2} = 9\)</li>
+      <li>\(x^2 + 2 + \frac{1}{x^2} = 9\)</li>
+      <li>\(x^2 + \frac{1}{x^2} = 7\)</li>
+    </ol>
+    <p class="resposta"><b>Resposta:</b> 7. <b>Gabarito A.</b></p>
+    <p class="atencao"><b>Destaque no quadro:</b> O termo do meio vale 2, porque \(x \cdot \frac{1}{x} = 1\).</p>
+    <ul class="erros">
+      <li><b>B</b> Termo do meio valendo 1: esquece o fator 2.</li>
+      <li><b>C</b> Faz (a + b)² = a² + b²: esquece o termo do meio.</li>
+      <li><b>D</b> Faz 9 + 1.</li>
+      <li><b>E</b> Soma o termo do meio em vez de subtrair: 9 + 2.</li>
+    </ul>
+  </aside>
+  <aside class="notas">
+    <p>Clique 1 tira o aviso de pausa: resolva na área (D liga a caneta; E esconde o enunciado). Clique 2: gabarito A.</p>
+    <p>Questão oficial do IF Sudeste MG 2014-1-extra, q24, MAT-0432. Não está na lista de sobras de questoes-if.md (que termina em "…"), mas é oficial do subcapítulo Polinômios e não está reservada para o bloco.</p>
+  </aside>
+</section>
+
+<!-- 20. Resumo -->
+<section class="slide" data-nome="Resumo">
+  <div class="conteudo">
+    <p class="olho">Resumo</p>
+    <h2 class="titulo">O essencial</h2>
+    <div class="resumo" style="position:absolute;left:0;right:0;top:150px">
+      <div><b>Valor numérico:</b> troque as letras pelos números, com parênteses nos negativos.</div>
+      <div><b>Semelhantes:</b> só eles se somam. <b>Grau:</b> o maior expoente.</div>
+      <div><b>Multiplicação:</b> distributiva, termo a termo.</div>
+      <div><b>Menos antes do parêntese:</b> troque todos os sinais de dentro.</div>
+      <div>\((a + b)^2 = a^2 + 2ab + b^2\)<br>\((a - b)^2 = a^2 - 2ab + b^2\)</div>
+      <div>\((a + b)(a - b) = a^2 - b^2\)</div>
+    </div>
+  </div>
+  <aside class="notas">
+    <p>Peça para tirarem um print desta tela. Na parte 2, os produtos notáveis são lidos de trás para a frente: fatoração.</p>
+  </aside>
+</section>
+
+<!-- 21. A seguir -->
+<section class="slide capa" data-nome="A seguir">
+  <div class="estrelas"></div>
+  <div class="texto-capa" style="top:220px">
+    <span class="selo">Matemática · IF</span>
+    <p class="aula">A seguir · Polinômios · Parte 2 de 2</p>
+    <h1 style="font-size:128px">Fatoração e frações algébricas</h1>
+    <p class="sub">A soma vira produto</p>
+  </div>
+  <svg class="emblema" viewBox="0 0 640 640" aria-hidden="true">
+    <g font-family="Figtree,'Segoe UI',sans-serif" font-weight="800" text-anchor="middle">
+      <text x="320" y="230" font-size="76" fill="#fff">6x² + 9x</text>
+      <path d="M320 270 V360" stroke="#FFD10C" stroke-width="10" stroke-linecap="round"/><path d="M292 336 L320 368 L348 336" fill="none" stroke="#FFD10C" stroke-width="10" stroke-linecap="round" stroke-linejoin="round"/>
+      <text x="320" y="460" font-size="76" fill="#FFD10C">3x(2x + 3)</text>
+    </g>
+  </svg>
+  <img class="logo-capa" src="{{LOGO_BRANCO}}" alt="Quarks">
+  <aside class="notas"><p>Próxima parte: fator comum, agrupamento, diferença de quadrados, trinômio quadrado perfeito e frações algébricas.</p></aside>
+</section>

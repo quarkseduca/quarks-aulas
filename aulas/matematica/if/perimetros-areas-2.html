@@ -1,0 +1,600 @@
+<!--aula
+{"disciplina": "matematica", "curso": "IF", "assunto": "Perímetros e áreas", "parte": "Parte 2 de 2", "titulo": "Polígonos regulares, círculo e planificações", "scripts": ["animacoes-geometria-b.js"]}
+-->
+<!-- Fonte: apostila IF, Matemática, cap. 5 (5.7 Perímetros e áreas: Área de triângulos e de polígonos regulares, a parte dos polígonos regulares; Área do círculo e de suas partes; Áreas de figuras compostas; Figuras planas e sólidos; Planificações; resumo). Questões: oficiais IF Sudeste MG 2013-1 q18 (MAT-0369, sobra de Polígonos regulares) e 2018-1 q13 (MAT-0354, sobra de Perímetros e áreas); Modelo IF, lote if-matematica-areas, m008 (MAT-0768); Modelo IF, lote if-matematica-geometria-espacial, m003 (MAT-13310, classificada em Perímetros e áreas > Planificações). As oficiais 2025-1 q18 e 2024-1 q18 estão reservadas para o bloco. -->
+<style>
+  .caixa { box-sizing: border-box; }
+  .rot { font-family: Figtree, "Segoe UI", sans-serif; font-weight: 800; fill: #3F2FA0; }
+  .rot-c { font-family: Figtree, "Segoe UI", sans-serif; font-weight: 700; fill: #5E5A70; }
+  .pequeno { font-size: 30px; line-height: 1.35; }
+  .passos-lista { margin: 0; padding: 0; list-style: none; display: flex; flex-direction: column; gap: 12px; counter-reset: p; }
+  .passos-lista li { counter-increment: p; display: grid; grid-template-columns: 52px 1fr; gap: 16px; align-items: center; background: var(--branco); border: 2px solid var(--lilas-2); border-radius: 20px; padding: 10px 20px; font-size: 28px; line-height: 1.3; }
+  .passos-lista li::before { content: counter(p); width: 46px; height: 46px; border-radius: 50%; display: grid; place-items: center; background: var(--d-clara); color: var(--d-forte); font: 800 26px var(--fonte-titulo); }
+  .solidos { display: grid; grid-template-columns: repeat(3, 1fr); gap: 24px; }
+  .solidos > div { background: var(--branco); border: 2px solid var(--lilas-2); border-radius: 26px; padding: 12px 18px 16px; text-align: center; font-size: 26px; line-height: 1.3; }
+  .solidos b { display: block; font: 800 30px var(--fonte-titulo); color: var(--roxo-titulo); }
+  /* os 6 triângulos do hexágono acendem um de cada vez */
+  .tri6 path { fill: #E8F0FF; stroke: #fff; stroke-width: 2; }
+  .slide.ativo .mostra .tri6 path { animation: acende 7.2s ease-in-out infinite; }
+  .tri6 path:nth-child(2) { animation-delay: 1.2s !important; } .tri6 path:nth-child(3) { animation-delay: 2.4s !important; }
+  .tri6 path:nth-child(4) { animation-delay: 3.6s !important; } .tri6 path:nth-child(5) { animation-delay: 4.8s !important; } .tri6 path:nth-child(6) { animation-delay: 6s !important; }
+  @keyframes acende { 0%, 30%, 100% { fill: #E8F0FF; } 12%, 18% { fill: #FFE58A; } }
+  /* a água da piscina ondula devagar */
+  .slide.ativo .mostra .onda { animation: onda 5s ease-in-out infinite; transform-box: fill-box; transform-origin: center; }
+  @keyframes onda { 0% { transform: scale(.3); opacity: .9; } 100% { transform: scale(1); opacity: 0; } }
+  /* cubo girando devagar */
+  .cena { perspective: 1100px; }
+  .cubo { position: relative; width: 150px; height: 150px; transform-style: preserve-3d; transform: rotateX(-24deg) rotateY(30deg); }
+  .slide.ativo .cubo { animation: gira-cubo 26s linear infinite; }
+  @keyframes gira-cubo { from { transform: rotateX(-24deg) rotateY(0); } to { transform: rotateX(-24deg) rotateY(360deg); } }
+  .cubo i { position: absolute; inset: 0; background: rgba(47, 107, 255, .16); border: 4px solid #2C2A9E; box-sizing: border-box; }
+  .cubo i:nth-child(1) { transform: translateZ(75px); } .cubo i:nth-child(2) { transform: rotateY(180deg) translateZ(75px); }
+  .cubo i:nth-child(3) { transform: rotateY(90deg) translateZ(75px); } .cubo i:nth-child(4) { transform: rotateY(-90deg) translateZ(75px); }
+  .cubo i:nth-child(5) { transform: rotateX(90deg) translateZ(75px); } .cubo i:nth-child(6) { transform: rotateX(-90deg) translateZ(75px); }
+  /* planificação do cubo que se fecha e se abre */
+  .rede { position: absolute; left: 0; top: 0; width: 440px; height: 330px; transform-style: preserve-3d; transform: scale(1.15) rotateX(56deg) rotateZ(-24deg); }
+  .face { position: absolute; width: 110px; height: 110px; box-sizing: border-box; border: 4px solid #2C2A9E; background: rgba(232, 240, 255, .92); transform-style: preserve-3d; font: 800 44px var(--fonte-titulo); color: #1E4FD8; display: grid; place-items: center; }
+  .face.base { left: 110px; top: 110px; }
+  .f1 { left: -114px; top: -4px; transform-origin: 100% 50%; }
+  .f3 { left: 106px; top: -4px; transform-origin: 0 50%; }
+  .f4 { left: 106px; top: -4px; transform-origin: 0 50%; }
+  .f5 { left: -4px; top: -114px; transform-origin: 50% 100%; }
+  .f6 { left: -4px; top: 106px; transform-origin: 50% 0; }
+  .slide.ativo .mostra .f1 { animation: dobra-ya 9s ease-in-out infinite; }
+  .slide.ativo .mostra .f3, .slide.ativo .mostra .f4 { animation: dobra-yb 9s ease-in-out infinite; }
+  .slide.ativo .mostra .f5 { animation: dobra-xa 9s ease-in-out infinite; }
+  .slide.ativo .mostra .f6 { animation: dobra-xb 9s ease-in-out infinite; }
+  @keyframes dobra-ya { 0%, 12%, 100% { transform: rotateY(0); } 45%, 75% { transform: rotateY(90deg); } }
+  @keyframes dobra-yb { 0%, 12%, 100% { transform: rotateY(0); } 45%, 75% { transform: rotateY(-90deg); } }
+  @keyframes dobra-xa { 0%, 12%, 100% { transform: rotateX(0); } 45%, 75% { transform: rotateX(-90deg); } }
+  @keyframes dobra-xb { 0%, 12%, 100% { transform: rotateX(0); } 45%, 75% { transform: rotateX(90deg); } }
+</style>
+
+<!-- 1. Capa -->
+<section class="slide capa" data-nome="Capa">
+  <div class="estrelas"></div>
+  <div class="texto-capa" style="top:160px">
+    <span class="selo">Matemática · IF</span>
+    <p class="aula">Perímetros e áreas · Parte 2 de 2</p>
+    <h1 style="font-size:106px">Polígonos regulares, círculo e planificações</h1>
+    <p class="sub">A pizza que vira retângulo</p>
+  </div>
+  <svg class="emblema" viewBox="0 0 640 640" aria-hidden="true">
+    <g class="gira-lento"><ellipse cx="320" cy="320" rx="300" ry="128" fill="none" stroke="#fff" stroke-opacity=".38" stroke-width="2" transform="rotate(-10 320 320)"/></g>
+    <g class="gira"><circle cx="320" cy="320" r="236" fill="none" stroke="#FFD10C" stroke-opacity=".75" stroke-width="2.5" stroke-dasharray="3 14" stroke-linecap="round"/><circle cx="84" cy="320" r="13" fill="#FFD10C" stroke="#fff" stroke-width="3"/></g>
+    <circle cx="320" cy="320" r="132" fill="#FFD10C"/>
+    <image href="{{SYM_ROXO}}" x="238" y="238" width="164" height="164"/>
+  </svg>
+  <img class="logo-capa" src="{{LOGO_BRANCO}}" alt="Quarks">
+  <aside class="notas"><p>Fecha a Geometria plana: área do polígono regular, do círculo e de suas partes, figuras compostas, sólidos e planificações. Depois vêm os blocos de questões do IF Sudeste do capítulo.</p></aside>
+</section>
+
+<!-- 2. Área do polígono regular -->
+<section class="slide" data-nome="Área do polígono regular">
+  <div class="conteudo">
+    <p class="olho">Área do polígono regular</p>
+    <h2 class="titulo">\(n\) triângulos iguais a partir do centro</h2>
+    <svg viewBox="0 0 360 360" style="position:absolute;left:0;top:140px;width:450px;height:450px" aria-hidden="true">
+      <g class="tri6" data-passo="1">
+        <path d="M180 180 L330 180 L255 50.1 Z"/><path d="M180 180 L255 50.1 L105 50.1 Z"/><path d="M180 180 L105 50.1 L30 180 Z"/>
+        <path d="M180 180 L30 180 L105 309.9 Z"/><path d="M180 180 L105 309.9 L255 309.9 Z"/><path d="M180 180 L255 309.9 L330 180 Z"/>
+      </g>
+      <polygon points="330,180 255,50.1 105,50.1 30,180 105,309.9 255,309.9" fill="none" stroke="var(--d)" stroke-width="6" stroke-linejoin="round"/>
+      <line data-passo="2" x1="180" y1="180" x2="180" y2="309.9" stroke="#B5731A" stroke-width="5"/>
+      <text data-passo="2" x="190" y="252" class="rot" font-size="28" fill="#B5731A">a</text>
+      <text x="180" y="342" text-anchor="middle" class="rot" font-size="28">ℓ</text>
+      <circle cx="180" cy="180" r="6" fill="#292B2C"/>
+    </svg>
+    <div style="position:absolute;left:580px;right:0;top:170px;display:flex;flex-direction:column;gap:22px">
+      <p class="texto pequeno" data-passo="1" style="margin:0">Cada triângulo: base \(\ell\), altura igual ao <b>apótema</b> \(a\).</p>
+      <div class="contas" style="font-size:48px">
+        <div class="eq" data-passo="2"><span>\(A\)</span><span>\(=\)</span><span>\(n \cdot \dfrac{\ell \cdot a}{2}\)</span></div>
+        <div class="eq final" data-passo="3"><span>\(A\)</span><span>\(=\)</span><span>\(\dfrac{n \cdot \ell}{2} \cdot a\)</span></div>
+      </div>
+      <div class="caixa caixa-fundamental" data-passo="4" style="padding:16px 30px"><div class="texto" style="font-size:34px">Área = <b>semiperímetro × apótema</b></div></div>
+    </div>
+  </div>
+  <aside class="notas"><p>Da apostila: um polígono regular de n lados se divide, a partir do centro, em n triângulos iguais, de base ℓ e altura igual ao apótema. n · ℓ é o perímetro; a metade é o semiperímetro.</p></aside>
+</section>
+
+<!-- 3. Exemplo hexágono -->
+<section class="slide" data-nome="Exemplo: hexágono de lado 4">
+  <div class="conteudo">
+    <p class="olho">Exemplo</p>
+    <h2 class="titulo">O hexágono de lado 4 cm</h2>
+    <p class="texto" style="position:absolute;left:0;right:0;top:150px;margin:0">O hexágono são <b>6 triângulos equiláteros</b> de lado 4.</p>
+    <div class="contas" style="position:absolute;left:580px;top:260px;font-size:48px">
+      <div class="eq" data-passo="1"><span>\(A\)</span><span>\(=\)</span><span>\(6 \cdot \dfrac{\ell^2\sqrt{3}}{4}\)</span></div>
+      <div class="eq" data-passo="2"><span>\(A\)</span><span>\(=\)</span><span>\(6 \cdot \dfrac{16\sqrt{3}}{4}\)</span></div>
+      <div class="eq" data-passo="3"><span>\(A\)</span><span>\(=\)</span><span>\(24\sqrt{3}\)</span></div>
+      <div class="eq final" data-passo="4"><span>\(A\)</span><span>\(\approx\)</span><span>\(24 \cdot 1{,}7 = 40{,}8\ \text{cm}^2\)</span></div>
+    </div>
+    <svg viewBox="0 0 360 360" style="position:absolute;left:0;top:240px;width:340px;height:340px" aria-hidden="true">
+      <g fill="#E8F0FF" stroke="#BFB6E6" stroke-width="2"><path d="M180 180 L330 180 L255 50.1 Z"/><path d="M180 180 L255 50.1 L105 50.1 Z"/><path d="M180 180 L105 50.1 L30 180 Z"/><path d="M180 180 L30 180 L105 309.9 Z"/><path d="M180 180 L105 309.9 L255 309.9 Z"/><path d="M180 180 L255 309.9 L330 180 Z"/></g>
+      <polygon points="330,180 255,50.1 105,50.1 30,180 105,309.9 255,309.9" fill="none" stroke="var(--d)" stroke-width="6" stroke-linejoin="round"/>
+      <text x="290" y="110" class="rot" font-size="30">4</text>
+    </svg>
+  </div>
+  <aside class="notas"><p>Exemplo da apostila. 16√3 ÷ 4 = 4√3 em cada triângulo; 6 · 4√3 = 24√3; com √3 ≈ 1,7, cerca de 40,8 cm². (Com o apótema: semiperímetro 12 vezes 2√3 dá os mesmos 24√3.)</p></aside>
+</section>
+
+<!-- 4. Área do círculo -->
+<section class="slide" data-nome="Área do círculo">
+  <div class="conteudo">
+    <p class="olho">Área do círculo</p>
+    <h2 class="titulo">Fatias finas viram quase um retângulo</h2>
+    <div data-anima="geob-pizza" data-anima-passo="0" style="position:absolute;left:0;top:150px;width:1060px;height:420px;transform:scale(.9);transform-origin:0 0"></div>
+    <div style="position:absolute;left:1020px;right:0;top:170px;display:flex;flex-direction:column;gap:22px">
+      <div class="contas" style="font-size:48px">
+        <div class="eq" data-passo="1"><span>\(A\)</span><span>\(=\)</span><span>\(\pi r \cdot r\)</span></div>
+        <div class="eq final" data-passo="2"><span>\(A\)</span><span>\(=\)</span><span>\(\pi r^2\)</span></div>
+      </div>
+    </div>
+    <div class="caixa caixa-fundamental" data-passo="2" style="position:absolute;left:580px;right:0;top:600px;padding:16px 30px">
+      <div class="texto" style="font-size:30px">Altura = raio; base = meia circunferência, \(\pi r\). Área do círculo: \(\pi r^2\).</div>
+    </div>
+  </div>
+  <aside class="notas"><p>A ideia da apostila: corte a pizza em muitas fatias finas e arrume lado a lado, uma para cima e outra para baixo. Parece um retângulo de altura r e base πr (metade de 2πr). A área é πr · r = πr². A animação monta e desmonta.</p></aside>
+</section>
+
+<!-- 5. Setor e coroa -->
+<section class="slide" data-nome="Setor e coroa">
+  <div class="conteudo">
+    <p class="olho">Partes do círculo</p>
+    <h2 class="titulo">Setor e coroa</h2>
+    <div style="position:absolute;left:0;right:0;top:150px;display:grid;grid-template-columns:1fr 1fr;gap:40px">
+      <div class="caixa" style="display:grid;grid-template-columns:250px 1fr;gap:24px;align-items:center">
+        <svg viewBox="0 0 240 240" width="250" height="250" aria-hidden="true"><circle cx="120" cy="120" r="100" fill="#fff" stroke="#BFB6E6" stroke-width="4"/><path d="M120 120 L220 120 A100 100 0 0 0 70 33.4 Z" fill="#FFE58A" stroke="#E8A33A" stroke-width="4"/><path d="M150 120 A30 30 0 0 0 105 94" fill="none" stroke="#B5731A" stroke-width="3"/><text x="150" y="104" class="rot" font-size="22" fill="#B5731A">α</text></svg>
+        <div><span class="rotulo">Setor de α graus</span><div style="font-size:50px;margin-top:6px">\(A = \dfrac{\alpha}{360°} \cdot \pi r^2\)</div><div class="texto pequeno" style="margin-top:6px">uma fatia de pizza</div></div>
+      </div>
+      <div class="caixa" data-passo="1" style="display:grid;grid-template-columns:250px 1fr;gap:24px;align-items:center">
+        <svg viewBox="0 0 240 240" width="250" height="250" aria-hidden="true"><circle cx="120" cy="120" r="100" fill="#CFE0FF" stroke="var(--d)" stroke-width="4"/><circle cx="120" cy="120" r="56" fill="#fff" stroke="var(--d)" stroke-width="4"/><line x1="120" y1="120" x2="220" y2="120" stroke="#6551D1" stroke-width="3"/><line x1="120" y1="120" x2="80.4" y2="80.4" stroke="#B5731A" stroke-width="3"/><text x="196" y="112" class="rot" font-size="22" fill="#6551D1">R</text><text x="84" y="110" class="rot" font-size="22" fill="#B5731A">r</text></svg>
+        <div><span class="rotulo">Coroa</span><div style="font-size:50px;margin-top:6px">\(A = \pi(R^2 - r^2)\)</div><div class="texto pequeno" style="margin-top:6px">entre dois círculos de mesmo centro</div></div>
+      </div>
+    </div>
+  </div>
+  <aside class="notas"><p>Fórmulas da apostila. O setor é a fração α/360° do círculo (mesma ideia do arco, agora com área). A coroa é o círculo grande menos o pequeno.</p></aside>
+</section>
+
+<!-- 6. Exemplo pizza e coroa -->
+<section class="slide" data-nome="Exemplo: pizza e coroa">
+  <div class="conteudo">
+    <p class="olho">Exemplo · use π = 3,14</p>
+    <h2 class="titulo">Pizza e coroa</h2>
+    <div style="position:absolute;left:0;width:820px;top:150px">
+      <p class="texto pequeno" style="margin:0 0 16px"><b>a)</b> Pizza de raio 20 cm: área inteira e de 1 das 8 fatias?</p>
+      <div class="contas" style="font-size:42px;row-gap:10px">
+        <div class="eq" data-passo="1"><span>\(A\)</span><span>\(=\)</span><span>\(3{,}14 \cdot 20^2\)</span></div>
+        <div class="eq" data-passo="2"><span>\(A\)</span><span>\(=\)</span><span>\(3{,}14 \cdot 400\)</span></div>
+        <div class="eq final" data-passo="3"><span>\(A\)</span><span>\(=\)</span><span>\(1256\ \text{cm}^2\)</span></div>
+      </div>
+    </div>
+    <span class="pilula pilula-resposta" data-passo="4" style="position:absolute;left:0;top:520px">fatia: \(1256 \div 8 = 157\ \text{cm}^2\)</span>
+    <div style="position:absolute;left:900px;right:0;top:150px">
+      <p class="texto pequeno" style="margin:0 0 16px"><b>b)</b> Coroa entre raios de 5 cm e 3 cm?</p>
+      <div class="contas" style="font-size:42px;row-gap:10px">
+        <div class="eq" data-passo="5"><span>\(A\)</span><span>\(=\)</span><span>\(3{,}14 \cdot (25 - 9)\)</span></div>
+        <div class="eq" data-passo="6"><span>\(A\)</span><span>\(=\)</span><span>\(3{,}14 \cdot 16\)</span></div>
+        <div class="eq final" data-passo="7"><span>\(A\)</span><span>\(=\)</span><span>\(50{,}24\ \text{cm}^2\)</span></div>
+      </div>
+    </div>
+  </div>
+  <aside class="notas"><p>Exemplo "Pizza e coroa" da apostila. a) 3,14 · 400 = 1256 cm²; cada fatia, 1256 ÷ 8 = 157 cm². b) 3,14 · 16 = 50,24 cm².</p></aside>
+</section>
+
+<!-- 7. Atenção dobro do raio -->
+<section class="slide" data-nome="Atenção: dobro do raio">
+  <div class="conteudo">
+    <p class="olho">Atenção</p>
+    <h2 class="titulo">Dobro do raio não é dobro da área</h2>
+    <svg viewBox="0 0 700 300" style="position:absolute;left:0;top:150px;width:700px;height:300px" aria-hidden="true">
+      <circle cx="110" cy="190" r="70" fill="#FFE58A" stroke="#E8A33A" stroke-width="5"/>
+      <circle cx="450" cy="150" r="140" fill="#FFE58A" stroke="#E8A33A" stroke-width="5"/>
+      <g data-passo="1" fill="none" stroke="#6551D1" stroke-width="3" stroke-dasharray="8 6"><rect x="110" y="120" width="70" height="70"/><rect x="450" y="10" width="140" height="140"/><line x1="520" y1="10" x2="520" y2="150"/><line x1="450" y1="80" x2="590" y2="80"/></g>
+      <text x="110" y="290" text-anchor="middle" class="rot" font-size="26">raio 10 cm</text><text x="450" y="320" text-anchor="middle" class="rot" font-size="26">raio 20 cm</text>
+    </svg>
+    <div class="contas" style="position:absolute;left:800px;top:170px;font-size:44px">
+      <div class="eq" data-passo="2"><span>\(3{,}14 \cdot 10^2\)</span><span>\(=\)</span><span>\(314\ \text{cm}^2\)</span></div>
+      <div class="eq" data-passo="3"><span>\(3{,}14 \cdot 20^2\)</span><span>\(=\)</span><span>\(1256\ \text{cm}^2\)</span></div>
+    </div>
+    <div class="caixa caixa-atencao" data-passo="4" style="position:absolute;left:800px;right:0;top:400px;padding:18px 30px">
+      <div class="texto" style="font-size:31px">\(1256 = 4 \cdot 314\): <b>quatro vezes</b> a área, porque o raio entra <b>ao quadrado</b>.</div>
+    </div>
+  </div>
+  <aside class="notas"><p>Atenção da apostila: pizza de raio 20 cm tem quatro vezes a área da de raio 10 cm. Clique 1: o quadrado do raio (r²) vira 4 quadradinhos quando o raio dobra.</p></aside>
+</section>
+
+<!-- 8. Figuras compostas -->
+<section class="slide" data-nome="Figuras compostas">
+  <div class="conteudo">
+    <p class="olho">Figuras compostas</p>
+    <h2 class="titulo">Monte com figuras conhecidas</h2>
+    <svg viewBox="0 0 480 340" style="position:absolute;left:0;top:150px;width:500px;height:354px" aria-hidden="true">
+      <rect x="20" y="20" width="440" height="293.3" fill="#BFE8CC" stroke="#1F9D62" stroke-width="5"/>
+      <g fill="#7FCB9E" opacity=".7"><circle cx="70" cy="60" r="4"/><circle cx="130" cy="250" r="4"/><circle cx="400" cy="70" r="4"/><circle cx="380" cy="270" r="4"/><circle cx="90" cy="170" r="4"/><circle cx="420" cy="180" r="4"/></g>
+      <circle cx="300" cy="150" r="73.3" fill="#9CCBF2" stroke="#5E9FD6" stroke-width="5"/>
+      <g data-passo="1"><circle class="onda" cx="300" cy="150" r="60" fill="none" stroke="#fff" stroke-width="3"/></g>
+      <line x1="300" y1="150" x2="373.3" y2="150" stroke="#2C2A9E" stroke-width="3"/><text x="336" y="140" text-anchor="middle" class="rot" font-size="20">2 m</text>
+      <text x="240" y="338" text-anchor="middle" class="rot" font-size="24">12 m</text><text x="30" y="176" class="rot" font-size="24">8 m</text>
+    </svg>
+    <div style="position:absolute;left:580px;right:0;top:150px">
+      <p class="texto pequeno" style="margin:0 0 14px">Terreno de 12 m por 8 m com uma piscina redonda de raio 2 m. Quanto de <b>grama</b>?</p>
+      <ol class="passos-lista">
+        <li data-passo="1"><span>Decomponha em partes conhecidas: retângulo e círculo.</span></li>
+        <li data-passo="2"><span>Decida: cada parte <b>soma</b> ou <b>subtrai</b> (buraco)?</span></li>
+        <li data-passo="3"><span>Calcule cada área com a fórmula certa.</span></li>
+        <li data-passo="4"><span>Some ou subtraia e confira a unidade.</span></li>
+      </ol>
+    </div>
+  </div>
+  <aside class="notas"><p>Situação e passo a passo da apostila. Clique 1: a piscina é o buraco (subtrai). Próximo slide: a conta.</p></aside>
+</section>
+
+<!-- 9. Exemplo: a grama -->
+<section class="slide" data-nome="Exemplo: a grama do terreno">
+  <div class="conteudo">
+    <p class="olho">Exemplo · use π = 3,14</p>
+    <h2 class="titulo">A grama do terreno</h2>
+    <div class="contas" style="position:absolute;left:0;top:160px;font-size:46px">
+      <div class="eq" data-passo="1"><span>\(A_{\text{grama}}\)</span><span>\(=\)</span><span>\(A_{\text{retângulo}} - A_{\text{círculo}}\)</span></div>
+      <div class="eq" data-passo="2"><span>\(A_{\text{grama}}\)</span><span>\(=\)</span><span>\(12 \cdot 8 - 3{,}14 \cdot 2^2\)</span></div>
+      <div class="eq" data-passo="3"><span>\(A_{\text{grama}}\)</span><span>\(=\)</span><span>\(96 - 12{,}56\)</span></div>
+      <div class="eq final" data-passo="4"><span>\(A_{\text{grama}}\)</span><span>\(=\)</span><span>\(83{,}44\ \text{m}^2\)</span></div>
+    </div>
+    <div class="caixa caixa-fundamental" data-passo="5" style="position:absolute;left:1080px;right:0;top:170px;padding:18px 28px">
+      <span class="rotulo">Como cai no IF</span>
+      <div class="texto" style="font-size:28px">Plantas de casas, terrenos e pisos: área para comprar <b>piso, grama ou tinta</b>. Depois da área, muitas vezes ainda há uma <b>divisão</b> (caixas, latas), com arredondamento <b>para cima</b>.</div>
+    </div>
+  </div>
+  <aside class="notas"><p>Exemplo "A grama do terreno" da apostila: 96 − 12,56 = 83,44 m². Clique 5: a dica "Como cai no IF" da apostila.</p></aside>
+</section>
+
+<!-- 10. Figuras planas e sólidos -->
+<section class="slide" data-nome="Figuras planas e sólidos">
+  <div class="conteudo">
+    <p class="olho">Figuras planas e sólidos</p>
+    <h2 class="titulo">Comprimento, largura e altura</h2>
+    <div class="cena" style="position:absolute;left:150px;top:220px;width:150px;height:150px"><div class="cubo"><i></i><i></i><i></i><i></i><i></i><i></i></div></div>
+    <p class="texto pequeno" style="position:absolute;left:0;width:460px;top:470px;margin:0;text-align:center">Sólido: ocupa espaço</p>
+    <div style="position:absolute;left:560px;right:0;top:160px;display:flex;flex-direction:column;gap:20px">
+      <div class="caixa" style="padding:16px 28px"><span class="rotulo">Figura plana</span><div class="texto pequeno">só comprimento e largura (o desenho no caderno)</div></div>
+      <div class="caixa caixa-fundamental" data-passo="1" style="padding:16px 28px"><span class="rotulo">Poliedros</span><div class="texto pequeno">todas as faces <b>planas</b> (polígonos): cubo, caixa de sapatos, pirâmides</div></div>
+      <div class="caixa caixa-fundamental" data-passo="2" style="padding:16px 28px;display:grid;grid-template-columns:1fr auto;gap:20px;align-items:center">
+        <div><span class="rotulo">Corpos redondos</span><div class="texto pequeno">alguma parte <b>curva</b>: cilindro (lata), cone (casquinha), esfera (bola)</div></div>
+        <svg viewBox="0 0 330 110" width="330" height="110" aria-hidden="true">
+          <g fill="#E8F0FF" stroke="#2C2A9E" stroke-width="4"><path d="M15 25 v60 a40 12 0 0 0 80 0 v-60"/><ellipse cx="55" cy="25" rx="40" ry="12"/><path d="M125 95 L165 10 L205 95"/><ellipse cx="165" cy="95" rx="40" ry="11"/><circle cx="275" cy="55" r="45"/></g>
+          <ellipse cx="275" cy="55" rx="45" ry="12" fill="none" stroke="#2C2A9E" stroke-width="2" stroke-dasharray="6 5"/>
+        </svg>
+      </div>
+    </div>
+  </div>
+  <aside class="notas"><p>Da apostila: figura plana tem só comprimento e largura; sólidos (figuras espaciais) têm também altura e ocupam espaço. Dois grupos: poliedros (faces planas) e corpos redondos (alguma parte curva). O cubo gira devagar para mostrar as três dimensões.</p></aside>
+</section>
+
+<!-- 11. Faces, arestas e vértices -->
+<section class="slide" data-nome="Faces, arestas e vértices">
+  <div class="conteudo">
+    <p class="olho">Elementos dos poliedros</p>
+    <h2 class="titulo">Faces, arestas e vértices</h2>
+    <div class="solidos" style="position:absolute;left:0;right:0;top:150px">
+      <div><svg viewBox="0 0 220 180" width="230" height="188" aria-hidden="true"><path d="M20 160 V60 H130 V160 Z" fill="#E8F0FF" stroke="#2C2A9E" stroke-width="5" stroke-linejoin="round"/><path d="M20 60 L70 20 H180 L130 60 M180 20 V120 L130 160" fill="none" stroke="#2C2A9E" stroke-width="5" stroke-linejoin="round"/><path d="M70 20 V120 H180 M70 120 L20 160" fill="none" stroke="#8E8AA0" stroke-width="3" stroke-dasharray="7 6"/><g fill="#2F6BFF"><circle cx="20" cy="160" r="6"/><circle cx="20" cy="60" r="6"/><circle cx="130" cy="60" r="6"/><circle cx="130" cy="160" r="6"/><circle cx="70" cy="20" r="6"/><circle cx="180" cy="20" r="6"/><circle cx="180" cy="120" r="6"/><circle cx="70" cy="120" r="6"/></g></svg><b>cubo</b>6 faces, 12 arestas, 8 vértices</div>
+      <div data-passo="1"><svg viewBox="0 0 220 180" width="230" height="188" aria-hidden="true"><path d="M40 160 V60 H180 V160 Z" fill="#E8F0FF" stroke="#2C2A9E" stroke-width="5" stroke-linejoin="round"/><path d="M40 60 L110 20 L180 60" fill="none" stroke="#2C2A9E" stroke-width="5" stroke-linejoin="round"/><path d="M110 20 V120 L40 160 M110 120 L180 160" fill="none" stroke="#8E8AA0" stroke-width="3" stroke-dasharray="7 6"/><g fill="#2F6BFF"><circle cx="40" cy="160" r="6"/><circle cx="40" cy="60" r="6"/><circle cx="180" cy="60" r="6"/><circle cx="180" cy="160" r="6"/><circle cx="110" cy="20" r="6"/><circle cx="110" cy="120" r="6"/></g></svg><b>prisma triangular</b>5 faces, 9 arestas, 6 vértices</div>
+      <div data-passo="2"><svg viewBox="0 0 220 180" width="230" height="188" aria-hidden="true"><path d="M20 160 H150 L130 15 Z" fill="#E8F0FF" stroke="#2C2A9E" stroke-width="5" stroke-linejoin="round"/><path d="M150 160 L205 115 L130 15" fill="none" stroke="#2C2A9E" stroke-width="5" stroke-linejoin="round"/><path d="M20 160 L75 115 H205 M75 115 L130 15" fill="none" stroke="#8E8AA0" stroke-width="3" stroke-dasharray="7 6"/><g fill="#2F6BFF"><circle cx="20" cy="160" r="6"/><circle cx="150" cy="160" r="6"/><circle cx="205" cy="115" r="6"/><circle cx="75" cy="115" r="6"/><circle cx="130" cy="15" r="6"/></g></svg><b>pirâmide quadrangular</b>5 faces, 8 arestas, 5 vértices</div>
+    </div>
+    <div style="position:absolute;left:580px;right:0;top:500px;display:grid;grid-template-columns:1fr 1fr;gap:24px">
+      <div class="caixa" data-passo="1" style="padding:14px 26px"><span class="rotulo">Prisma</span><div class="texto" style="font-size:27px">duas bases iguais e paralelas, faces laterais retangulares; o nome vem da base</div></div>
+      <div class="caixa" data-passo="2" style="padding:14px 26px"><span class="rotulo">Pirâmide</span><div class="texto" style="font-size:27px">uma base e faces triangulares que se encontram no <b>vértice da pirâmide</b></div></div>
+    </div>
+  </div>
+  <aside class="notas"><p>Figura da apostila (as tracejadas ficam escondidas atrás). Faces: os polígonos da superfície. Arestas: onde duas faces se encontram. Vértices: onde as arestas se encontram. Conte junto com a turma no cubo antes de mostrar os outros.</p></aside>
+</section>
+
+<!-- 12. Exemplo e Euler -->
+<section class="slide" data-nome="Exemplo: prisma hexagonal">
+  <div class="conteudo">
+    <p class="olho">Exemplo</p>
+    <h2 class="titulo">Prisma de base hexagonal</h2>
+    <div class="contas" style="position:absolute;left:0;top:170px;font-size:44px">
+      <div class="eq" data-passo="1"><span>\(F\)</span><span>\(=\)</span><span>\(2 + 6 = 8\)</span></div>
+      <div class="eq" data-passo="2"><span>\(A\)</span><span>\(=\)</span><span>\(6 + 6 + 6 = 18\)</span></div>
+      <div class="eq" data-passo="3"><span>\(V\)</span><span>\(=\)</span><span>\(6 + 6 = 12\)</span></div>
+    </div>
+    <div style="position:absolute;left:640px;width:500px;top:170px;display:flex;flex-direction:column;gap:14px">
+      <p class="texto pequeno" data-passo="1" style="margin:0">2 bases e 1 face lateral por lado</p>
+      <p class="texto pequeno" data-passo="2" style="margin:0">6 em cada base e 6 laterais</p>
+      <p class="texto pequeno" data-passo="3" style="margin:0">os 6 de cada base</p>
+    </div>
+    <div class="caixa caixa-fundamental" data-passo="4" style="position:absolute;left:1180px;right:0;top:160px;padding:18px 28px">
+      <span class="rotulo">Relação de Euler (convexos)</span>
+      <div style="font-size:52px">\(V - A + F = 2\)</div>
+      <div class="texto pequeno" data-passo="5" style="margin-top:8px">\(12 - 18 + 8 = 2\) ✓<br>cubo: \(8 - 12 + 6 = 2\) ✓</div>
+    </div>
+  </div>
+  <aside class="notas"><p>Exemplo "Contar elementos" da apostila: 8 faces, 18 arestas, 12 vértices. A relação de Euler serve para conferir uma contagem (a apostila confere no cubo; aqui conferimos também o prisma).</p></aside>
+</section>
+
+<!-- 13. Planificação -->
+<section class="slide" data-nome="Planificação">
+  <div class="conteudo">
+    <p class="olho">Planificações</p>
+    <h2 class="titulo">Abra o sólido sobre a mesa</h2>
+    <div data-passo="1" class="cena" style="position:absolute;left:60px;top:180px;width:440px;height:330px">
+      <div class="rede">
+        <div class="face base">2
+          <div class="face f1">1</div>
+          <div class="face f3">3<div class="face f4">4</div></div>
+          <div class="face f5">5</div>
+          <div class="face f6">6</div>
+        </div>
+      </div>
+    </div>
+    <div style="position:absolute;left:580px;right:0;top:160px;display:flex;flex-direction:column;gap:18px">
+      <div class="caixa caixa-fundamental" style="padding:16px 28px"><div class="texto pequeno">Planificar é "abrir" a superfície no plano, sem esticar nem sobrepor. <b>Um polígono para cada face</b>, do mesmo formato e tamanho.</div></div>
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:18px">
+        <div class="caixa" data-passo="2" style="padding:12px 22px;display:grid;grid-template-columns:150px 1fr;gap:14px;align-items:center">
+          <svg viewBox="0 0 150 150" width="150" height="150" aria-hidden="true"><g fill="#E8F0FF" stroke="#2C2A9E" stroke-width="3"><rect x="15" y="45" width="120" height="60"/><circle cx="45" cy="25" r="18"/><circle cx="45" cy="125" r="18"/></g></svg>
+          <div class="texto" style="font-size:26px"><b>Cilindro:</b> 2 círculos e 1 retângulo</div>
+        </div>
+        <div class="caixa" data-passo="3" style="padding:12px 22px;display:grid;grid-template-columns:150px 1fr;gap:14px;align-items:center">
+          <svg viewBox="0 0 150 150" width="150" height="150" aria-hidden="true"><g fill="#E8F0FF" stroke="#2C2A9E" stroke-width="3"><path d="M75 10 L20 95 A65 65 0 0 0 130 95 Z"/><circle cx="75" cy="125" r="20"/></g></svg>
+          <div class="texto" style="font-size:26px"><b>Cone:</b> 1 círculo e 1 setor</div>
+        </div>
+      </div>
+      <div class="caixa" data-passo="4" style="padding:12px 22px;display:grid;grid-template-columns:150px 1fr;gap:14px;align-items:center">
+        <svg viewBox="0 0 150 110" width="150" height="110" aria-hidden="true"><g fill="#E8F0FF" stroke="#2C2A9E" stroke-width="3"><rect x="10" y="30" width="40" height="50"/><rect x="50" y="30" width="40" height="50"/><rect x="90" y="30" width="40" height="50"/><path d="M50 30 L70 5 L90 30 Z M50 80 L70 105 L90 80 Z"/></g></svg>
+        <div class="texto" style="font-size:26px"><b>Prisma triangular:</b> 2 triângulos e 3 retângulos. <b>Cubo:</b> 6 quadrados.</div>
+      </div>
+    </div>
+  </div>
+  <aside class="notas">
+    <p>Da apostila: desmonte uma caixa de leite e abra sobre a mesa. Clique 1: a planificação do cubo da apostila se fecha e se abre devagar (repare: a 1 cai em frente à 3, a 2 em frente à 4, a 5 em frente à 6; é o exemplo do próximo slide).</p>
+    <p>Cliques 2 a 4: cilindro (o retângulo é a parte lateral que enrola), cone (o setor é a parte lateral) e prisma triangular.</p>
+  </aside>
+</section>
+
+<!-- 14. Exemplo: faces opostas -->
+<section class="slide" data-nome="Exemplo: faces opostas">
+  <div class="conteudo">
+    <p class="olho">Exemplo</p>
+    <h2 class="titulo">Faces opostas do cubo</h2>
+    <svg viewBox="0 0 440 330" style="position:absolute;left:0;top:160px;width:470px;height:352px" aria-hidden="true">
+      <g fill="#E8F0FF" stroke="#2C2A9E" stroke-width="4"><rect x="0" y="110" width="110" height="110"/><rect x="110" y="110" width="110" height="110"/><rect x="220" y="110" width="110" height="110"/><rect x="330" y="110" width="110" height="110"/><rect x="110" y="0" width="110" height="110"/><rect x="110" y="220" width="110" height="110"/></g>
+      <g font-family="'Bricolage Grotesque',Figtree,sans-serif" font-size="46" font-weight="800" text-anchor="middle" fill="#1E4FD8"><text x="55" y="181">1</text><text x="165" y="181">2</text><text x="275" y="181">3</text><text x="385" y="181">4</text><text x="165" y="71">5</text><text x="165" y="291">6</text></g>
+    </svg>
+    <div style="position:absolute;left:580px;right:0;top:160px;display:flex;flex-direction:column;gap:20px">
+      <p class="texto pequeno" style="margin:0">Montando o cubo, qual face fica <b>oposta à 1</b>?</p>
+      <p class="texto pequeno" data-passo="1" style="margin:0">Os quatro da linha dão a volta no cubo: andando <b>duas casas</b>, chega-se ao lado oposto.</p>
+      <div data-passo="2" style="display:flex;gap:20px;flex-wrap:wrap">
+        <span class="pilula pilula-resposta">1 e 3</span><span class="pilula pilula-resposta" data-passo="3">2 e 4</span><span class="pilula pilula-resposta" data-passo="3">5 e 6</span>
+      </div>
+    </div>
+  </div>
+  <aside class="notas"><p>Exemplo "Faces opostas do cubo" da apostila. Resposta: a face 3; do mesmo modo, 2 é oposta à 4 e 5 é oposta à 6. É o que a animação do slide anterior mostrava.</p></aside>
+</section>
+
+<!-- 15. Atenção e dica -->
+<section class="slide" data-nome="Plano ou espacial">
+  <div class="conteudo">
+    <p class="olho">Atenção</p>
+    <h2 class="titulo">Figura plana ou espacial?</h2>
+    <div style="position:absolute;left:0;right:0;top:160px;display:grid;grid-template-columns:1fr 1fr;gap:40px">
+      <div class="caixa caixa-atencao" style="padding:20px 30px;display:grid;grid-template-columns:auto 1fr;gap:24px;align-items:center">
+        <svg viewBox="0 0 240 110" width="240" height="110" aria-hidden="true"><rect x="10" y="20" width="80" height="80" fill="#fff" stroke="#8A6A00" stroke-width="4"/><text x="120" y="70" text-anchor="middle" font-size="30" font-weight="800" fill="#8A6A00">≠</text><path d="M150 40 h60 v60 h-60 z M150 40 l20 -20 h60 l-20 20 M210 100 l20 -20 v-60" fill="#fff" stroke="#8A6A00" stroke-width="4" stroke-linejoin="round"/></svg>
+        <div class="texto pequeno">Quadrado é plano; <b>cubo</b> é espacial. Círculo é plano; <b>esfera</b> é espacial.</div>
+      </div>
+      <div class="caixa caixa-fundamental" data-passo="1" style="padding:20px 30px">
+        <span class="rotulo">Como cai no IF</span>
+        <div class="texto pequeno">Uma embalagem e várias figuras planas: qual é a planificação? <b>Conte as faces</b>, confira o formato de cada uma e imagine a montagem (nada sobreposto).</div>
+      </div>
+    </div>
+  </div>
+  <aside class="notas"><p>Atenção "Figura plana ou espacial" e dica "Como cai no IF" da apostila: essas trocas são as alternativas erradas das questões.</p></aside>
+</section>
+
+<!-- 16. Questão 1 -->
+<section class="slide questao" data-nome="Questão 1">
+  <div class="conteudo">
+    <div class="area-resolucao"></div>
+    <span class="pilula pilula-pausa" data-em="1:some">Pause o vídeo e tente</span>
+    <div class="painel-questao">
+      <p class="olho">Questão 1 · IF Sudeste MG 2013</p>
+      <p class="enunciado">Um hexágono regular está inscrito numa circunferência de raio 4 cm. A área do hexágono é:</p>
+      <ol class="alternativas curtas">
+        <li data-em="2:apaga"><b>A</b><span>\(4\sqrt{3}\) cm²</span></li>
+        <li data-em="2:apaga"><b>B</b><span>\(12\sqrt{3}\) cm²</span></li>
+        <li data-em="2:certo"><b>C</b><span>\(24\sqrt{3}\) cm²</span></li>
+        <li data-em="2:apaga"><b>D</b><span>24 cm²</span></li>
+        <li data-em="2:apaga"><b>E</b><span>12 cm²</span></li>
+      </ol>
+      <p class="fonte">IF Sudeste MG 2013 (prova 2013-1), questão 18.</p>
+    </div>
+  </div>
+  <aside class="resolucao">
+    <p class="dados"><b>Dados:</b> hexágono inscrito, \(R = 4\ \text{cm}\).</p>
+    <ol class="passos">
+      <li>Hexágono inscrito: \(\ell = R = 4\)</li>
+      <li>Um equilátero: \(\dfrac{16\sqrt{3}}{4} = 4\sqrt{3}\)</li>
+      <li>Seis deles: \(6 \cdot 4\sqrt{3} = 24\sqrt{3}\ \text{cm}^2\)</li>
+    </ol>
+    <p class="resposta"><b>Resposta:</b> \(24\sqrt{3}\) cm². <b>Gabarito C.</b></p>
+    <p class="atencao"><b>Destaque no quadro:</b> Hexágono regular = 6 triângulos equiláteros de lado igual ao raio.</p>
+    <ul class="erros">
+      <li><b>A</b> Só um triângulo.</li>
+      <li><b>B</b> Três triângulos: meio hexágono.</li>
+      <li><b>D</b> Esqueceu o \(\sqrt{3}\).</li>
+      <li><b>E</b> Sem \(\sqrt{3}\) e só metade.</li>
+    </ul>
+  </aside>
+  <aside class="notas">
+    <p>Clique 1 tira o aviso de pausa. Clique 2: gabarito C.</p>
+    <p>Questão oficial do IF Sudeste MG 2013-1, q18, MAT-0369 (classificada em Polígonos regulares; é a sobra desse subcapítulo e entra aqui porque usa a área do polígono regular). Conferido: 16√3/4 = 4√3; 6 · 4√3 = 24√3.</p>
+  </aside>
+</section>
+
+<!-- 17. Questão 2 -->
+<section class="slide questao" data-nome="Questão 2">
+  <div class="conteudo">
+    <div class="area-resolucao"></div>
+    <span class="pilula pilula-pausa" data-em="1:some">Pause o vídeo e tente</span>
+    <div class="painel-questao">
+      <p class="olho">Questão 2 · IF Sudeste MG 2018</p>
+      <p class="enunciado">Uma circunferência tem diâmetro de 20 cm. Qual é a razão entre a área e o comprimento dessa circunferência? (Use \(\pi = 3{,}14\))</p>
+      <ol class="alternativas curtas">
+        <li data-em="2:apaga"><b>A</b><span>\(\pi\)</span></li>
+        <li data-em="2:certo"><b>B</b><span>5</span></li>
+        <li data-em="2:apaga"><b>C</b><span>\(2\pi\)</span></li>
+        <li data-em="2:apaga"><b>D</b><span>10</span></li>
+        <li data-em="2:apaga"><b>E</b><span>20</span></li>
+      </ol>
+      <p class="fonte">IF Sudeste MG 2018 (prova 2018-1), questão 13.</p>
+    </div>
+  </div>
+  <aside class="resolucao">
+    <p class="dados"><b>Dados:</b> \(d = 20\ \text{cm}\), então \(r = 10\ \text{cm}\).</p>
+    <ol class="passos">
+      <li>\(\dfrac{A}{C} = \dfrac{\pi r^2}{2\pi r}\)</li>
+      <li>\(\dfrac{A}{C} = \dfrac{r}{2}\)</li>
+      <li>\(\dfrac{A}{C} = \dfrac{10}{2} = 5\)</li>
+    </ol>
+    <p class="resposta"><b>Resposta:</b> 5. <b>Gabarito B.</b></p>
+    <p class="atencao"><b>Destaque no quadro:</b> O π se cancela: o 3,14 nem é usado. "Área da circunferência" é a área do círculo.</p>
+    <ul class="erros">
+      <li><b>A</b> Não cancelou o π.</li>
+      <li><b>C</b> É o fator do comprimento.</li>
+      <li><b>D</b> Usou o diâmetro no lugar do raio.</li>
+      <li><b>E</b> É o próprio diâmetro.</li>
+    </ul>
+  </aside>
+  <aside class="notas">
+    <p>Clique 1 tira o aviso de pausa. Clique 2: gabarito B.</p>
+    <p>Questão oficial do IF Sudeste MG 2018-1, q13, MAT-0354 (sobra do capítulo). Conferido com números: A = 314, C = 62,8, 314 ÷ 62,8 = 5.</p>
+  </aside>
+</section>
+
+<!-- 18. Questão 3 -->
+<section class="slide questao" data-nome="Questão 3">
+  <div class="conteudo">
+    <div class="area-resolucao"></div>
+    <span class="pilula pilula-pausa" data-em="1:some">Pause o vídeo e tente</span>
+    <div class="painel-questao" style="gap:12px">
+      <p class="olho">Questão 3 · Modelo IF</p>
+      <p class="enunciado" style="font-size:23px">Uma janela tem a forma de um retângulo com um semicírculo em cima, como mostra a figura. A largura da janela é 2 m e a altura total, do ponto mais baixo ao mais alto, é 3 m. A janela será toda fechada com vidro, que custa R$ 100,00 o metro quadrado. Quanto custará o vidro? (Use \(\pi = 3{,}14\).)</p>
+      <svg viewBox="0 0 240 230" style="width:200px;height:192px;display:block;margin:0 auto" aria-hidden="true">
+        <path d="M40 210 V90 A60 60 0 0 1 160 90 V210 Z" fill="#E8F0FF" stroke="#2C2A9E" stroke-width="4"/>
+        <line x1="40" y1="90" x2="160" y2="90" stroke="#2C2A9E" stroke-width="2" stroke-dasharray="4 4"/>
+        <line x1="190" y1="32" x2="190" y2="208" stroke="#292B2C" stroke-width="2"/><path d="M184 40 L190 30 L196 40 M184 200 L190 210 L196 200" fill="none" stroke="#292B2C" stroke-width="2"/>
+        <text x="200" y="126" font-family="Figtree,sans-serif" font-size="18" font-weight="700" fill="#292B2C">3 m</text>
+        <text x="100" y="228" text-anchor="middle" font-family="Figtree,sans-serif" font-size="18" font-weight="700" fill="#292B2C">2 m</text>
+      </svg>
+      <ol class="alternativas curtas">
+        <li data-em="2:apaga"><b>A</b><span>R$ 357,00</span></li>
+        <li data-em="2:apaga"><b>B</b><span>R$ 400,00</span></li>
+        <li data-em="2:apaga"><b>C</b><span>R$ 450,00</span></li>
+        <li data-em="2:apaga"><b>D</b><span>R$ 478,50</span></li>
+        <li data-em="2:certo"><b>E</b><span>R$ 557,00</span></li>
+      </ol>
+    </div>
+  </div>
+  <aside class="resolucao">
+    <p class="dados"><b>Dados:</b> largura 2 m (raio 1 m); altura total 3 m.</p>
+    <ol class="passos">
+      <li>Retângulo: altura \(3 - 1 = 2\); \(A = 2 \cdot 2 = 4\)</li>
+      <li>Semicírculo: \(\dfrac{3{,}14 \cdot 1^2}{2} = 1{,}57\)</li>
+      <li>Vidro: \(4 + 1{,}57 = 5{,}57\ \text{m}^2\)</li>
+      <li>Custo: \(5{,}57 \cdot 100 = 557\)</li>
+    </ol>
+    <p class="resposta"><b>Resposta:</b> R$ 557,00. <b>Gabarito E.</b></p>
+    <p class="atencao"><b>Destaque no quadro:</b> O semicírculo sobe só um raio acima do retângulo.</p>
+    <ul class="erros">
+      <li><b>A</b> Descontou o diâmetro da altura.</li>
+      <li><b>B</b> Só o retângulo.</li>
+      <li><b>C</b> Esqueceu o π.</li>
+      <li><b>D</b> Usou um quarto de círculo.</li>
+    </ul>
+  </aside>
+  <aside class="notas">
+    <p>Clique 1 tira o aviso de pausa. Clique 2: gabarito E.</p>
+    <p>Modelo IF, lote if-matematica-areas, m008, MAT-0768. Figura do banco redesenhada. Conferido: 4 + 1,57 = 5,57; 5,57 · 100 = 557.</p>
+  </aside>
+</section>
+
+<!-- 19. Questão 4 -->
+<section class="slide questao" data-nome="Questão 4">
+  <div class="conteudo">
+    <div class="area-resolucao"></div>
+    <span class="pilula pilula-pausa" data-em="1:some">Pause o vídeo e tente</span>
+    <div class="painel-questao">
+      <p class="olho">Questão 4 · Modelo IF</p>
+      <p class="enunciado">Uma fábrica corta folhas de metal para montar latas de milho com tampa e fundo. Para cada lata, as peças cortadas, abertas sobre a mesa, formam a planificação da lata. Essa planificação é formada por</p>
+      <ol class="alternativas">
+        <li data-em="2:apaga"><b>A</b><span>um círculo e um setor circular.</span></li>
+        <li data-em="2:apaga"><b>B</b><span>dois triângulos e três retângulos.</span></li>
+        <li data-em="2:apaga"><b>C</b><span>seis quadrados iguais.</span></li>
+        <li data-em="2:apaga"><b>D</b><span>um círculo e um retângulo.</span></li>
+        <li data-em="2:certo"><b>E</b><span>dois círculos e um retângulo.</span></li>
+      </ol>
+    </div>
+  </div>
+  <aside class="resolucao">
+    <p class="dados"><b>Dados:</b> lata de milho com tampa e fundo.</p>
+    <ol class="passos">
+      <li>Lata: cilindro.</li>
+      <li>Tampa e fundo: 2 círculos.</li>
+      <li>Parte lateral aberta: 1 retângulo.</li>
+    </ol>
+    <p class="resposta"><b>Resposta:</b> dois círculos e um retângulo. <b>Gabarito E.</b></p>
+    <p class="atencao"><b>Destaque no quadro:</b> Um polígono (ou figura) para cada parte da superfície.</p>
+    <ul class="erros">
+      <li><b>A</b> É o cone.</li>
+      <li><b>B</b> É o prisma triangular.</li>
+      <li><b>C</b> É o cubo.</li>
+      <li><b>D</b> Esqueceu a tampa ou o fundo.</li>
+    </ul>
+  </aside>
+  <aside class="notas">
+    <p>Clique 1 tira o aviso de pausa. Clique 2: gabarito E. Rápida, para fechar com planificação.</p>
+    <p>Modelo IF, lote if-matematica-geometria-espacial, m003, MAT-13310 (no banco: Perímetros e áreas > Planificações).</p>
+  </aside>
+</section>
+
+<!-- 20. Resumo -->
+<section class="slide" data-nome="Resumo">
+  <div class="conteudo">
+    <p class="olho">Resumo</p>
+    <h2 class="titulo">O essencial</h2>
+    <div class="resumo" style="position:absolute;left:0;right:0;top:150px;grid-template-columns:repeat(3,1fr)">
+      <div><b>Polígono regular:</b> semiperímetro × apótema; hexágono = 6 equiláteros.</div>
+      <div><b>Círculo:</b> \(\pi r^2\). <b>Setor:</b> fração \(\dfrac{\alpha}{360°}\). <b>Coroa:</b> \(\pi(R^2 - r^2)\).</div>
+      <div><b>Compostas:</b> decomponha, some ou subtraia, confira a unidade.</div>
+      <div><b>Sólidos:</b> poliedros (faces planas) e corpos redondos (partes curvas).</div>
+      <div><b>Euler:</b> \(V - A + F = 2\) nos poliedros convexos.</div>
+      <div><b>Planificação:</b> um polígono por face; cilindro, 2 círculos e 1 retângulo; cone, círculo e setor.</div>
+    </div>
+  </div>
+  <aside class="notas"><p>Resumo da apostila (área do polígono regular, círculo, compostas, sólidos e planificações). Peça para tirarem um print desta tela.</p></aside>
+</section>
+
+<!-- 21. A seguir -->
+<section class="slide capa" data-nome="A seguir">
+  <div class="estrelas"></div>
+  <div class="texto-capa" style="top:170px">
+    <span class="selo">Matemática · IF</span>
+    <p class="aula" style="font-size:28px">A seguir · Questões do IF Sudeste · Parte 1 de 2</p>
+    <h1>Questões do IF Sudeste</h1>
+    <p class="sub">Geometria plana</p>
+  </div>
+  <svg class="emblema" viewBox="0 0 640 640" aria-hidden="true">
+    <rect x="150" y="80" width="340" height="460" rx="36" fill="#fff" opacity=".95"/>
+    <rect x="200" y="140" width="240" height="18" rx="9" fill="#C9C0F0"/><rect x="200" y="180" width="200" height="18" rx="9" fill="#C9C0F0"/>
+    <g font-family="Figtree,'Segoe UI',sans-serif" font-size="30" font-weight="800" text-anchor="middle">
+      <circle cx="225" cy="260" r="24" fill="#F1EEFD"/><text x="225" y="271" fill="#3F2FA0">A</text><rect x="265" y="252" width="160" height="16" rx="8" fill="#E4DEFB"/>
+      <circle cx="225" cy="320" r="24" fill="#F1EEFD"/><text x="225" y="331" fill="#3F2FA0">B</text><rect x="265" y="312" width="130" height="16" rx="8" fill="#E4DEFB"/>
+      <circle cx="225" cy="380" r="24" fill="#FFD10C"/><text x="225" y="391" fill="#292B2C">C</text><rect x="265" y="372" width="150" height="16" rx="8" fill="#E4DEFB"/>
+      <circle cx="225" cy="440" r="24" fill="#F1EEFD"/><text x="225" y="451" fill="#3F2FA0">D</text><rect x="265" y="432" width="110" height="16" rx="8" fill="#E4DEFB"/>
+    </g>
+    <circle cx="470" cy="470" r="86" fill="var(--d)" stroke="#fff" stroke-width="6"/>
+    <text x="470" y="490" text-anchor="middle" font-family="'Bricolage Grotesque',Figtree,sans-serif" font-size="58" font-weight="800" fill="#fff">IF</text>
+  </svg>
+  <img class="logo-capa" src="{{LOGO_BRANCO}}" alt="Quarks">
+  <aside class="notas"><p>Fim do conteúdo de Geometria plana. A seguir, dois blocos só com questões oficiais do IF Sudeste do capítulo: o primeiro com ângulos, triângulos e quadriláteros, Tales e Pitágoras; o segundo com polígonos, circunferência e áreas.</p></aside>
+</section>

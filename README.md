@@ -27,4 +27,6 @@ Cada subcapítulo é dividido em partes de cerca de 20 minutos ("Movimento unifo
 ## Para quem edita
 `python3 build.py` monta todas as aulas em `saida/` e, para cada parte com questões, o roteiro do professor (`*-professor.html`, com as resoluções passo a passo). Regras em `CLAUDE.md`.
 
+`python3 scripts/verificar_tudo.py` confere tudo antes de juntar no `main` (inclui o `python3 build.py --check`, que não grava nada e diz se `saida/` e os slides da gestão estão em dia). O push para o `main` passa por ela sozinho (`scripts/ganchos/pre-push`); pular com `git push --no-verify` só com ordem do dono.
+
 `python3 build.py --sistema ../quarks-gestao/slides` monta a versão da aba **Slides** do sistema de gestão (catálogo, partes, notas para o celular e roteiros). Lá o professor apresenta na TV pelo tablet, controla pelo celular, escreve com a caneta, faz enquete com a turma e baixa o arquivo sem internet com o nome dele.

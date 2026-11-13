@@ -1,0 +1,495 @@
+<!--aula
+{"disciplina": "quimica", "curso": "IF", "assunto": "Estrutura atômica", "parte": "Parte única", "titulo": "Número atômico e de massa", "scripts": ["animacoes-atomo.js"]}
+-->
+<!-- Fonte: slides da professora (Química IF 2026, aula 07: partículas do átomo, Z, A = n + Z, representação, exemplo do carbono, íons Na+ e Cl-), completados com a apostila IF, Química, 2.2 Número atômico e de massa (tabela das partículas, átomo neutro, isótopos, isóbaros e isótonos). Questões: IF Sudeste MG 2024, 2016 e 2013 (oficiais). -->
+<style>
+  .caixa { box-sizing: border-box; }
+  .linha-ex { box-sizing: border-box; background: var(--branco); border: 2px solid var(--lilas-2); border-radius: 24px; padding: 14px 26px; font-size: 30px; line-height: 1.3; }
+  .linha-ex b { color: var(--roxo-titulo); }
+  /* notação do átomo: A em cima, Z embaixo, à esquerda do símbolo */
+  .nuc { display: inline-flex; align-items: center; gap: .06em; font-family: var(--fonte-titulo); font-weight: 800; color: var(--roxo-titulo); line-height: 1; }
+  .nuc .az { display: inline-flex; flex-direction: column; align-items: flex-end; font-size: .42em; line-height: 1.08; }
+  .nuc .q { align-self: flex-start; font-size: .42em; margin-left: .04em; }
+  .conta { display: grid; grid-template-columns: auto auto 1fr; column-gap: 16px; row-gap: 10px; align-items: center; font: 600 40px Figtree, sans-serif; color: var(--carvao); }
+  .conta > div { display: contents; }
+  .conta > div > span { transition: opacity .45s ease, transform .45s ease; }
+  .conta > div[data-passo]:not(.mostra) > span { opacity: 0; transform: translateY(12px); }
+  .conta > div[data-passo] { opacity: 1 !important; transform: none !important; }
+  .conta > div > span:first-child { justify-self: end; font-style: italic; }
+  .conta .fim > span:nth-child(3) { justify-self: start; background: var(--d-clara); border-radius: 16px; padding: 0 16px; margin-left: -6px; font-weight: 800; color: var(--roxo-titulo); }
+  .cont-part { display: grid; grid-template-columns: repeat(3, 1fr); gap: 16px; }
+  .cont-part > div { background: var(--branco); border: 2px solid var(--lilas-2); border-radius: 22px; padding: 12px 16px; text-align: center; font-size: 26px; line-height: 1.25; }
+  .cont-part b { display: block; font: 800 46px var(--fonte-titulo); color: var(--roxo-titulo); }
+  .rot-at { font: 800 30px Figtree, sans-serif; color: var(--roxo-titulo); text-align: center; }
+</style>
+
+<!-- 1. Capa -->
+<section class="slide capa" data-nome="Capa">
+  <div class="estrelas"></div>
+  <div class="texto-capa" style="top:150px">
+    <span class="selo">Química · IF</span>
+    <p class="aula">Estrutura atômica · Parte única</p>
+    <h1 style="font-size:110px">Número atômico e de massa</h1>
+    <p class="sub">Prótons, nêutrons, elétrons, íons e isótopos</p>
+  </div>
+  <svg class="emblema" viewBox="0 0 640 640" aria-hidden="true">
+    <g class="gira-lento"><ellipse cx="320" cy="320" rx="300" ry="128" fill="none" stroke="#fff" stroke-opacity=".38" stroke-width="2" transform="rotate(-10 320 320)"/></g>
+    <g class="gira"><ellipse cx="320" cy="320" rx="236" ry="196" fill="none" stroke="#FFD10C" stroke-opacity=".75" stroke-width="2.5" stroke-dasharray="3 14" stroke-linecap="round" transform="rotate(-8 320 320)"/>
+      <circle cx="84" cy="300" r="13" fill="#FFD10C" stroke="#fff" stroke-width="3"/></g>
+    <circle cx="320" cy="320" r="132" fill="#FFD10C"/>
+    <image href="{{SYM_ROXO}}" x="238" y="238" width="164" height="164"/>
+  </svg>
+  <img class="logo-capa" src="{{LOGO_BRANCO}}" alt="Quarks">
+  <aside class="notas"><p>Hoje: as três partículas do átomo, o número atômico (Z) e o número de massa (A), como contar prótons, nêutrons e elétrons, os íons e os isótopos.</p></aside>
+</section>
+
+<!-- 2. As três partículas -->
+<section class="slide" data-nome="Prótons, nêutrons e elétrons">
+  <div class="conteudo">
+    <p class="olho">A matéria é formada por átomos</p>
+    <h2 class="titulo">Prótons, nêutrons e elétrons</h2>
+    <div data-anima="atomo" data-anima-passo="0" data-w="440" data-h="440" data-p="6" data-n="6" data-rn="12" data-re="12" data-camadas="2,4" data-r0="95" data-dr="80" data-letras="K,L" style="position:absolute;left:30px;top:150px;width:440px;height:440px"></div>
+    <table class="tabela" style="position:absolute;left:600px;top:170px;font-size:32px">
+      <tr><th style="padding:12px 30px;text-align:left">Partícula</th><th style="padding:12px 30px">Onde fica</th><th style="padding:12px 30px">Carga</th><th style="padding:12px 30px">Massa</th></tr>
+      <tr data-passo="1"><td style="padding:12px 30px;text-align:left"><svg viewBox="0 0 30 30" width="30" height="30" style="vertical-align:-5px"><circle cx="15" cy="15" r="12" fill="#FFD10C" stroke="#B88A00" stroke-width="2"/></svg> <b>Próton</b></td><td style="padding:12px 30px">núcleo</td><td style="padding:12px 30px">+1</td><td style="padding:12px 30px">1</td></tr>
+      <tr data-passo="2"><td style="padding:12px 30px;text-align:left"><svg viewBox="0 0 30 30" width="30" height="30" style="vertical-align:-5px"><circle cx="15" cy="15" r="12" fill="#C9C0F0" stroke="#8C7BEA" stroke-width="2"/></svg> <b>Nêutron</b></td><td style="padding:12px 30px">núcleo</td><td style="padding:12px 30px">0</td><td style="padding:12px 30px">1</td></tr>
+      <tr data-passo="3"><td style="padding:12px 30px;text-align:left"><svg viewBox="0 0 30 30" width="30" height="30" style="vertical-align:-5px"><circle cx="15" cy="15" r="12" fill="#3F2FA0"/><path d="M9 15h12" stroke="#fff" stroke-width="3.5" stroke-linecap="round"/></svg> <b>Elétron</b></td><td style="padding:12px 30px">eletrosfera</td><td style="padding:12px 30px">−1</td><td style="padding:12px 30px">quase zero</td></tr>
+    </table>
+    <div class="caixa caixa-fundamental" data-passo="4" style="position:absolute;left:600px;right:0;top:560px">
+      <div class="texto" style="font-size:30px">O elétron é cerca de <b>1836 vezes mais leve</b> que o próton: a massa do átomo está quase toda no <b>núcleo</b>.</div>
+    </div>
+  </div>
+  <aside class="notas">
+    <p>A figura é um átomo de carbono: 6 prótons (amarelos, +) e 6 nêutrons (lilás) no núcleo, vibrando; 6 elétrons girando nas camadas K e L. Fora de escala: o núcleo de verdade seria invisível.</p>
+    <p>Um clique por partícula. A massa da tabela é comparada à do próton. O nêutron foi descoberto em 1932 (Chadwick).</p>
+  </aside>
+</section>
+
+<!-- 3. Átomo neutro -->
+<section class="slide" data-nome="Átomo neutro">
+  <div class="conteudo">
+    <p class="olho">Fundamental</p>
+    <h2 class="titulo">Por que o átomo é neutro?</h2>
+    <div class="cont-part" style="position:absolute;left:0;width:1080px;top:170px">
+      <div data-passo="1"><b>6</b>prótons<br>(+6)</div>
+      <div data-passo="2"><b>6</b>elétrons<br>(−6)</div>
+      <div data-passo="3"><b>0</b>carga total<br>(+6 − 6)</div>
+    </div>
+    <p class="texto" style="position:absolute;left:1140px;right:0;top:180px;margin:0;font-size:30px">No átomo de carbono, as cargas <b>se cancelam</b>.</p>
+    <div class="caixa caixa-fundamental" data-passo="4" style="position:absolute;left:0;width:1080px;top:400px">
+      <span class="rotulo">Átomo neutro</span>
+      <div class="texto" style="font-size:33px">Número de <b>prótons</b> = número de <b>elétrons</b>.</div>
+    </div>
+    <div class="caixa caixa-atencao" data-passo="5" style="position:absolute;left:600px;right:0;top:620px">
+      <span class="rotulo">O nome engana</span>
+      <div class="texto" style="font-size:30px">Quem deixa o átomo neutro não é o <b>nêutron</b>: ele não tem carga e não cancela nada. É a igualdade entre <b>prótons e elétrons</b>.</div>
+    </div>
+  </div>
+  <aside class="notas">
+    <p>Cliques 1 a 3: conte as cargas do carbono do slide anterior. Clique 4: a regra. Clique 5: o erro comum (o nêutron ajuda a manter o núcleo unido, mas não neutraliza).</p>
+  </aside>
+</section>
+
+<!-- 4. Z e A -->
+<section class="slide" data-nome="Z e A">
+  <div class="conteudo">
+    <p class="olho">Os dois números do átomo</p>
+    <h2 class="titulo">Número atômico e número de massa</h2>
+    <div style="position:absolute;left:0;width:1000px;top:165px;display:flex;flex-direction:column;gap:16px">
+      <div class="caixa caixa-fundamental" data-passo="1" style="padding:18px 30px">
+        <span class="rotulo">Número atômico (Z)</span>
+        <div class="texto" style="font-size:31px">É o número de <b>prótons</b>. Ele é a <b>identidade</b> do elemento: todo átomo com 6 prótons é carbono; com 8, oxigênio.</div>
+      </div>
+      <div class="caixa caixa-fundamental" data-passo="2" style="padding:18px 30px">
+        <span class="rotulo">Número de massa (A)</span>
+        <div class="texto" style="font-size:31px">É a soma de <b>prótons e nêutrons</b> (n), as partículas do núcleo.</div>
+        <p style="margin:8px 0 0;font:800 56px var(--fonte-titulo);color:var(--roxo-titulo)">A = n + Z</p>
+      </div>
+    </div>
+    <div data-passo="3" style="position:absolute;left:1080px;right:0;top:165px;height:420px;background:var(--branco);border:2px solid var(--lilas-2);border-radius:28px">
+      <p style="position:absolute;left:0;right:0;top:18px;margin:0;text-align:center;font:800 24px Figtree,sans-serif;letter-spacing:.1em;color:var(--d-forte)">COMO SE ESCREVE</p>
+      <span class="nuc" style="position:absolute;left:210px;top:110px;font-size:190px"><span class="az"><span>A</span><span>Z</span></span>X</span>
+      <svg viewBox="0 0 680 420" style="position:absolute;inset:0;width:100%;height:100%;overflow:visible" aria-hidden="true">
+        <g stroke="#E5533D" stroke-width="4" fill="none" stroke-linecap="round"><path d="M200 150 H120"/><path d="M200 262 H120"/></g>
+        <g font-family="Figtree,sans-serif" font-size="25" font-weight="800" fill="#C63C28" text-anchor="end"><text x="112" y="140">número</text><text x="112" y="168">de massa</text><text x="112" y="254">número</text><text x="112" y="282">atômico</text></g>
+        <text x="340" y="390" text-anchor="middle" font-family="Figtree,sans-serif" font-size="25" font-weight="700" fill="#5E5A70">X = símbolo do elemento</text>
+      </svg>
+    </div>
+    <div class="caixa" data-passo="4" style="position:absolute;left:600px;width:1000px;top:640px">
+      <div class="texto" style="font-size:30px">Atenção: o número de massa é sempre <b>maior ou igual</b> ao atômico, porque soma também os nêutrons.</div>
+    </div>
+  </div>
+  <aside class="notas">
+    <p>Clique 1: Z. Se o número de prótons muda, muda o elemento. Clique 2: A, com a fórmula da professora (A = n + Z, n = nêutrons). Os elétrons não entram: a massa deles é quase zero.</p>
+    <p>Clique 3: a representação, com A em cima e Z embaixo, à esquerda do símbolo. Clique 4: dica para não trocar os números (só o hidrogênio comum tem A = Z, sem nêutrons).</p>
+  </aside>
+</section>
+
+<!-- 5. Exemplo: carbono -->
+<section class="slide" data-nome="Exemplo: carbono">
+  <div class="conteudo">
+    <p class="olho">Exemplo</p>
+    <h2 class="titulo">Lendo o átomo de carbono</h2>
+    <div style="position:absolute;left:0;width:520px;top:160px;height:420px;background:var(--branco);border:2px solid var(--lilas-2);border-radius:28px;display:grid;place-items:center">
+      <span class="nuc" style="font-size:200px"><span class="az"><span>12</span><span>6</span></span>C</span>
+    </div>
+    <div style="position:absolute;left:600px;right:0;top:160px;display:flex;flex-direction:column;gap:12px">
+      <div class="linha-ex">Número de massa? <b data-passo="1">A = 12</b></div>
+      <div class="linha-ex">Número atômico? <b data-passo="2">Z = 6</b></div>
+      <div class="linha-ex">Número de prótons? <b data-passo="3">6 (é o próprio Z)</b></div>
+      <div class="linha-ex">Número de elétrons, no átomo neutro? <b data-passo="4">6 (igual aos prótons)</b></div>
+      <div class="linha-ex">Número de nêutrons?</div>
+    </div>
+    <div class="conta" style="position:absolute;left:640px;top:620px">
+      <div data-passo="5"><span>n</span><span>=</span><span>A − Z</span></div>
+      <div data-passo="6"><span>n</span><span>=</span><span>12 − 6</span></div>
+      <div data-passo="7" class="fim"><span>n</span><span>=</span><span>6 nêutrons</span></div>
+    </div>
+  </div>
+  <aside class="notas">
+    <p>As perguntas são as do slide da professora. Peça a resposta antes de cada clique.</p>
+    <p>Cliques 5 a 7: isole n na fórmula A = n + Z. Carbono-12: 6 prótons, 6 nêutrons e 6 elétrons.</p>
+  </aside>
+</section>
+
+<!-- 6. Exemplo: sódio e cloro -->
+<section class="slide" data-nome="Exemplo: nêutrons">
+  <div class="conteudo">
+    <p class="olho">Exemplo</p>
+    <h2 class="titulo">Quantos nêutrons?</h2>
+    <p class="texto" style="position:absolute;left:0;width:520px;top:170px;margin:0;font-size:32px">Quantos nêutrons têm os átomos de sódio e de cloro abaixo?</p>
+    <div style="position:absolute;left:600px;width:520px;top:160px;display:flex;flex-direction:column;align-items:center;gap:24px">
+      <span class="nuc" style="font-size:120px"><span class="az"><span>23</span><span>11</span></span>Na</span>
+      <div class="conta">
+        <div data-passo="1"><span>n</span><span>=</span><span>A − Z</span></div>
+        <div data-passo="2"><span>n</span><span>=</span><span>23 − 11</span></div>
+        <div data-passo="3" class="fim"><span>n</span><span>=</span><span>12</span></div>
+      </div>
+    </div>
+    <div style="position:absolute;left:1220px;right:0;top:160px;display:flex;flex-direction:column;align-items:center;gap:24px">
+      <span class="nuc" style="font-size:120px"><span class="az"><span>35</span><span>17</span></span>Cl</span>
+      <div class="conta">
+        <div data-passo="4"><span>n</span><span>=</span><span>A − Z</span></div>
+        <div data-passo="5"><span>n</span><span>=</span><span>35 − 17</span></div>
+        <div data-passo="6" class="fim"><span>n</span><span>=</span><span>18</span></div>
+      </div>
+    </div>
+    <span class="pilula pilula-resposta" data-passo="7" style="position:absolute;left:600px;top:660px">Sódio: 12 nêutrons. Cloro: 18 nêutrons.</span>
+  </div>
+  <aside class="notas">
+    <p>Sempre a mesma conta: nêutrons = massa − prótons. 23 − 11 = 12; 35 − 17 = 18.</p>
+    <p>São os mesmos átomos dos íons a seguir.</p>
+  </aside>
+</section>
+
+<!-- 7. Íons: cátion -->
+<section class="slide" data-nome="Cátion">
+  <div class="conteudo">
+    <p class="olho">Íons · átomos que perderam ou ganharam elétrons</p>
+    <h2 class="titulo">Perdeu elétron: cátion</h2>
+    <div data-anima="atomo" data-anima-passo="1" data-w="420" data-h="420" data-p="11" data-n="12" data-rn="9" data-re="11" data-camadas="2,8,1" data-r0="72" data-dr="56" data-acao="perde" data-voo="190" style="position:absolute;left:30px;top:160px;width:420px;height:420px"></div>
+    <div style="position:absolute;left:640px;right:0;top:160px;display:flex;flex-direction:column;gap:16px">
+      <div class="linha-ex" style="display:flex;align-items:center;gap:30px"><span class="nuc" style="font-size:80px"><span class="az"><span>23</span><span>11</span></span>Na</span><span>11 prótons · 11 elétrons<br><b>átomo neutro</b></span></div>
+      <div class="linha-ex" data-passo="2" style="display:flex;align-items:center;gap:30px"><span class="nuc" style="font-size:80px"><span class="az"><span>23</span><span>11</span></span>Na<span class="q">+</span></span><span>11 prótons · 10 elétrons<br><b>cátion: carga +1</b></span></div>
+    </div>
+    <div class="caixa caixa-fundamental" data-passo="3" style="position:absolute;left:640px;right:0;top:560px">
+      <span class="rotulo">Cátion</span>
+      <div class="texto" style="font-size:31px">Íon <b>positivo</b>: o átomo <b>perdeu elétrons</b>. Os prótons não mudam; sobra carga positiva.</div>
+    </div>
+  </div>
+  <aside class="notas">
+    <p>Clique 1: o elétron da camada mais externa do sódio sai do átomo (fica apagadinho do lado de fora). Clique 2: a contagem depois: 11 prótons e 10 elétrons, carga +1, escrita Na⁺. Clique 3: a definição.</p>
+    <p>Íons se formam quando um átomo ganha ou perde elétrons (slide da professora).</p>
+  </aside>
+</section>
+
+<!-- 8. Íons: ânion -->
+<section class="slide" data-nome="Ânion">
+  <div class="conteudo">
+    <p class="olho">Íons · átomos que perderam ou ganharam elétrons</p>
+    <h2 class="titulo">Ganhou elétron: ânion</h2>
+    <div data-anima="atomo" data-anima-passo="1" data-w="420" data-h="420" data-p="17" data-n="18" data-rn="8" data-re="11" data-camadas="2,8,8" data-r0="72" data-dr="56" data-acao="ganha" data-voo="180" style="position:absolute;left:30px;top:160px;width:420px;height:420px"></div>
+    <div style="position:absolute;left:640px;right:0;top:160px;display:flex;flex-direction:column;gap:16px">
+      <div class="linha-ex" style="display:flex;align-items:center;gap:30px"><span class="nuc" style="font-size:80px"><span class="az"><span>35</span><span>17</span></span>Cl</span><span>17 prótons · 17 elétrons<br><b>átomo neutro</b></span></div>
+      <div class="linha-ex" data-passo="2" style="display:flex;align-items:center;gap:30px"><span class="nuc" style="font-size:80px"><span class="az"><span>35</span><span>17</span></span>Cl<span class="q">−</span></span><span>17 prótons · 18 elétrons<br><b>ânion: carga −1</b></span></div>
+    </div>
+    <div class="caixa caixa-fundamental" data-passo="3" style="position:absolute;left:640px;right:0;top:560px">
+      <span class="rotulo">Ânion</span>
+      <div class="texto" style="font-size:31px">Íon <b>negativo</b>: o átomo <b>ganhou elétrons</b>. Os prótons não mudam; sobra carga negativa.</div>
+    </div>
+  </div>
+  <aside class="notas">
+    <p>Clique 1: um elétron chega de fora e entra na camada mais externa do cloro. Clique 2: 17 prótons e 18 elétrons, carga −1, escrita Cl⁻. Clique 3: a definição.</p>
+    <p>Para lembrar: cátion, carga positiva (perdeu); ânion, carga negativa (ganhou).</p>
+  </aside>
+</section>
+
+<!-- 9. Exemplo: elétrons de íons -->
+<section class="slide" data-nome="Exemplo: elétrons de íons">
+  <div class="conteudo">
+    <p class="olho">Exemplo</p>
+    <h2 class="titulo">Quantos elétrons tem o íon?</h2>
+    <p class="texto" style="position:absolute;left:0;width:520px;top:170px;margin:0;font-size:31px">Parta dos prótons e desconte a carga: <b>e = Z − carga</b>.</p>
+    <div style="position:absolute;left:600px;width:540px;top:160px;display:flex;flex-direction:column;align-items:center;gap:20px">
+      <span class="nuc" style="font-size:100px"><span class="az"><span>&nbsp;</span><span>20</span></span>Ca<span class="q">2+</span></span>
+      <div class="conta" style="font-size:38px">
+        <div data-passo="1"><span>e</span><span>=</span><span>Z − carga</span></div>
+        <div data-passo="2"><span>e</span><span>=</span><span>20 − (+2)</span></div>
+        <div data-passo="3" class="fim"><span>e</span><span>=</span><span>18</span></div>
+      </div>
+    </div>
+    <div style="position:absolute;left:1200px;right:0;top:160px;display:flex;flex-direction:column;align-items:center;gap:20px">
+      <span class="nuc" style="font-size:100px"><span class="az"><span>&nbsp;</span><span>8</span></span>O<span class="q">2−</span></span>
+      <div class="conta" style="font-size:38px">
+        <div data-passo="4"><span>e</span><span>=</span><span>Z − carga</span></div>
+        <div data-passo="5"><span>e</span><span>=</span><span>8 − (−2)</span></div>
+        <div data-passo="6" class="fim"><span>e</span><span>=</span><span>10</span></div>
+      </div>
+    </div>
+    <div class="caixa caixa-atencao" data-passo="7" style="position:absolute;left:600px;right:0;top:640px">
+      <span class="rotulo">Cátion não ganhou prótons</span>
+      <div class="texto" style="font-size:29px">O Ca²⁺ é positivo porque <b>perdeu 2 elétrons</b>. Se os prótons mudassem, ele deixaria de ser cálcio.</div>
+    </div>
+  </div>
+  <aside class="notas">
+    <p>Ca²⁺ (Z = 20): perdeu 2 elétrons, 20 − 2 = 18. O²⁻ (Z = 8): ganhou 2, 8 + 2 = 10. Menos com menos dá mais: 8 − (−2) = 10.</p>
+    <p>Os prótons continuam 20 e 8.</p>
+  </aside>
+</section>
+
+<!-- 10. Isótopos -->
+<section class="slide" data-nome="Isótopos">
+  <div class="conteudo">
+    <p class="olho">Mesmo elemento, massas diferentes</p>
+    <h2 class="titulo">Isótopos</h2>
+    <div style="position:absolute;left:0;width:540px;top:160px;display:flex;flex-direction:column;gap:14px">
+      <div class="caixa caixa-fundamental" data-passo="1" style="padding:18px 26px"><span class="rotulo">Isótopos</span><div class="texto" style="font-size:29px">Mesmo número de <b>prótons</b> (Z) e números de <b>massa</b> (A) diferentes: muda o número de <b>nêutrons</b>.</div></div>
+      <div class="linha-ex" data-passo="2" style="font-size:28px">Mesmo Z: são o <b>mesmo elemento</b>.</div>
+      <div class="linha-ex" data-passo="3" style="font-size:28px">O <b>carbono-14</b> serve para descobrir a idade de fósseis.</div>
+    </div>
+    <div style="position:absolute;left:620px;top:150px;width:540px">
+      <div data-anima="atomo" data-anima-passo="0" data-w="360" data-h="330" data-p="6" data-n="6" data-rn="11" data-re="11" data-camadas="2,4" data-r0="80" data-dr="60" style="margin:0 auto;width:360px;height:330px"></div>
+      <p class="rot-at" style="margin:6px 0 0"><span class="nuc" style="font-size:66px"><span class="az"><span>12</span><span>6</span></span>C</span></p>
+      <p class="texto" style="margin:4px 0 0;font-size:27px;text-align:center">6 prótons · <b>6 nêutrons</b></p>
+    </div>
+    <div style="position:absolute;left:1200px;top:150px;width:560px">
+      <div data-anima="atomo" data-anima-passo="0" data-w="360" data-h="330" data-p="6" data-n="8" data-rn="11" data-re="11" data-camadas="2,4" data-r0="80" data-dr="60" style="margin:0 auto;width:360px;height:330px"></div>
+      <p class="rot-at" style="margin:6px 0 0"><span class="nuc" style="font-size:66px"><span class="az"><span>14</span><span>6</span></span>C</span></p>
+      <p class="texto" style="margin:4px 0 0;font-size:27px;text-align:center">6 prótons · <b>8 nêutrons</b></p>
+    </div>
+    <div class="caixa" data-passo="4" style="position:absolute;left:620px;right:0;top:700px;padding:16px 28px">
+      <div class="texto" style="font-size:28px">O hidrogênio tem três: <b>prótio</b> (¹H, sem nêutron), <b>deutério</b> (²H) e <b>trítio</b> (³H).</div>
+    </div>
+  </div>
+  <aside class="notas">
+    <p>Os dois átomos são carbono (6 prótons); o da direita tem 2 nêutrons a mais no núcleo. Os elétrons são os mesmos: 6.</p>
+    <p>Quase todo o carbono é carbono-12. O nome vem do grego: "mesmo lugar" (na tabela periódica). Os slides da professora não trazem isótopos; o conteúdo vem da apostila.</p>
+  </aside>
+</section>
+
+<!-- 11. Isóbaros e isótonos -->
+<section class="slide" data-nome="Isóbaros e isótonos">
+  <div class="conteudo">
+    <p class="olho">Comparando átomos</p>
+    <h2 class="titulo">Isótopos, isóbaros e isótonos</h2>
+    <table class="tabela" style="position:absolute;left:0;top:165px;font-size:30px">
+      <tr><th style="padding:10px 28px;text-align:left">Nome</th><th style="padding:10px 28px">O que é igual</th><th style="padding:10px 28px">Para lembrar</th></tr>
+      <tr data-passo="1"><td style="padding:10px 28px;text-align:left"><b>isóto<u>p</u>os</b></td><td style="padding:10px 28px">prótons (Z)</td><td style="padding:10px 28px">p de próton</td></tr>
+      <tr data-passo="2"><td style="padding:10px 28px;text-align:left"><b>isó<u>b</u>aros</b></td><td style="padding:10px 28px">massa (A)</td><td style="padding:10px 28px">“baros” = peso</td></tr>
+      <tr data-passo="3"><td style="padding:10px 28px;text-align:left"><b>isóto<u>n</u>os</b></td><td style="padding:10px 28px">nêutrons (n)</td><td style="padding:10px 28px">n de nêutron</td></tr>
+    </table>
+    <div style="position:absolute;left:1020px;right:0;top:165px;display:flex;justify-content:space-around">
+      <span class="nuc" style="font-size:90px"><span class="az"><span>39</span><span>19</span></span>K</span>
+      <span class="nuc" style="font-size:90px"><span class="az"><span>40</span><span>19</span></span>K</span>
+      <span class="nuc" style="font-size:90px"><span class="az"><span>40</span><span>20</span></span>Ca</span>
+    </div>
+    <div style="position:absolute;left:1020px;right:0;top:300px;display:flex;flex-direction:column;gap:12px">
+      <div class="linha-ex" data-passo="4" style="font-size:27px"><b>Isótopos:</b> K-39 e K-40 (Z = 19).</div>
+      <div class="linha-ex" data-passo="5" style="font-size:27px"><b>Isóbaros:</b> K-40 e Ca-40 (A = 40).</div>
+      <div class="linha-ex" data-passo="6" style="font-size:27px"><b>Isótonos:</b> K-39 e Ca-40? Calcule n.</div>
+    </div>
+    <div style="position:absolute;left:600px;right:0;top:640px;display:grid;grid-template-columns:1.2fr 1.2fr 1fr;gap:24px;align-items:center">
+      <div class="conta" style="font-size:34px">
+        <div data-passo="7"><span>K-39: n</span><span>=</span><span>39 − 19</span></div>
+        <div data-passo="8" class="fim"><span>n</span><span>=</span><span>20</span></div>
+      </div>
+      <div class="conta" style="font-size:34px">
+        <div data-passo="9"><span>Ca-40: n</span><span>=</span><span>40 − 20</span></div>
+        <div data-passo="10" class="fim"><span>n</span><span>=</span><span>20</span></div>
+      </div>
+      <span class="pilula pilula-resposta" data-passo="11" style="font-size:26px">Isótonos: 20 nêutrons cada</span>
+    </div>
+  </div>
+  <aside class="notas">
+    <p>Cliques 1 a 3: a tabela da apostila, com a letra que lembra o que é igual. Cliques 4 a 6: os pares formados por K-39, K-40 e Ca-40.</p>
+    <p>Cliques 7 a 11: potássio-39, 39 − 19 = 20 nêutrons; cálcio-40, 40 − 20 = 20 nêutrons: isótonos. O potássio-40 tem 21. Só isótopos são do mesmo elemento.</p>
+  </aside>
+</section>
+
+<!-- Questão 1 -->
+<section class="slide questao" data-nome="Questão 1">
+  <div class="conteudo">
+    <div class="area-resolucao"></div>
+    <span class="pilula pilula-pausa" data-em="1:some">Pause o vídeo e tente</span>
+    <div class="painel-questao" style="gap:12px">
+      <p class="olho">Questão 1 · IF Sudeste MG 2024</p>
+      <p class="enunciado" style="font-size:20px;line-height:1.38">O fósforo é um elemento químico muito reativo à atmosfera, sofrendo ignição e liberando vapores tóxicos. Uma característica marcante do fósforo é a capacidade de formar três substâncias simples diferentes, conhecidas como alótropos e denominados fósforo vermelho, fósforo branco e fósforo preto. Industrialmente, grande parte do fósforo extraído é empregada na fabricação de fertilizantes, produção de fármacos, detergentes de limpeza pesada, utensílios militares e no revestimento das caixas de fósforo. No organismo dos seres vivos, o fósforo desempenha importante função, pois compõe a molécula do ATP, responsável pelo armazenamento de energia.</p>
+      <p class="enunciado" style="font-size:15px;line-height:1.3;color:#5E5A70">Disponível em: &lt;https://mundoeducacao.uol.com.br/quimica/fosforo.htm.&gt;. Acesso em: 07 ago. 2023. Adaptado.</p>
+      <p class="enunciado" style="font-size:20px;line-height:1.38">Sobre o elemento químico citado no texto, assinale a alternativa que apresenta, respectivamente, o seu símbolo, número de prótons, nêutrons e elétrons.</p>
+      <p class="enunciado" style="font-size:18px;line-height:1.3;color:#5E5A70">(Da tabela periódica: fósforo, Z = 15, massa 31.)</p>
+      <ol class="alternativas curtas" style="gap:6px">
+        <li data-em="2:apaga" style="font-size:21px;padding:4px 14px"><b>A</b><span>F, 9, 10 e 9</span></li>
+        <li data-em="2:apaga" style="font-size:21px;padding:4px 14px"><b>B</b><span>Fr, 83, 136, 83</span></li>
+        <li data-em="2:certo" style="font-size:21px;padding:4px 14px"><b>C</b><span>P, 15, 16 e 15</span></li>
+        <li data-em="2:apaga" style="font-size:21px;padding:4px 14px"><b>D</b><span>F, 9, 19 e 10</span></li>
+        <li data-em="2:apaga" style="font-size:21px;padding:4px 14px"><b>E</b><span>P, 15, 31 e 16</span></li>
+      </ol>
+    </div>
+  </div>
+  <aside class="resolucao">
+    <p class="dados"><b>Dados:</b> fósforo: P, Z = 15, A = 31.</p>
+    <ol class="passos">
+      <li>Símbolo do fósforo: P.</li>
+      <li>Prótons = Z = 15.</li>
+      <li>n = A − Z = 31 − 15 = 16.</li>
+      <li>Átomo neutro: elétrons = 15.</li>
+    </ol>
+    <p class="resposta"><b>Resposta:</b> P, 15, 16 e 15. <b>Gabarito C.</b></p>
+    <p class="atencao"><b>Destaque no quadro:</b> 31 é a massa, não os nêutrons: n = 31 − 15.</p>
+    <ul class="erros">
+      <li><b>A</b> F é o flúor (Z = 9), não o fósforo.</li>
+      <li><b>B</b> Fr é o frâncio; e ele tem 87 prótons, não 83.</li>
+      <li><b>D</b> F é o flúor, e os números não batem com o flúor neutro.</li>
+      <li><b>E</b> Põe a massa (31) como nêutrons e 16 elétrons no átomo neutro.</li>
+    </ul>
+  </aside>
+  <aside class="notas">
+    <p>Clique 1 tira o aviso de pausa: resolva na área (D liga a caneta; E esconde o enunciado). Clique 2: gabarito C.</p>
+    <p>Questão oficial do IF Sudeste MG, prova de 2024. A prova traz a tabela periódica; a linha "Da tabela periódica" foi acrescentada aqui com os dados que ela daria. Cuidado com o símbolo: fósforo é P (do latim phosphorus); F é flúor.</p>
+  </aside>
+</section>
+
+<!-- Questão 2 -->
+<section class="slide questao" data-nome="Questão 2">
+  <div class="conteudo">
+    <div class="area-resolucao"></div>
+    <span class="pilula pilula-pausa" data-em="1:some">Pause o vídeo e tente</span>
+    <div class="painel-questao">
+      <p class="olho">Questão 2 · IF Sudeste MG 2016</p>
+      <p class="enunciado" style="font-size:26px">Marque a alternativa <b>INCORRETA</b> sobre a transformação a seguir:</p>
+      <p class="enunciado" style="font-size:44px;text-align:center;margin:4px 0"><span class="nuc" style="color:var(--carvao)"><span class="az"><span>&nbsp;</span><span>9</span></span>F</span> → <span class="nuc" style="color:var(--carvao)"><span class="az"><span>&nbsp;</span><span>9</span></span>F<span class="q">−</span></span></p>
+      <ol class="alternativas" style="gap:8px">
+        <li data-em="2:apaga" style="font-size:22px;padding:6px 14px"><b>A</b><span>O número de partículas nucleares não se altera durante a transformação.</span></li>
+        <li data-em="2:certo" style="font-size:22px;padding:6px 14px"><b>B</b><span>O número de massa do íon é menor que o número de massa do átomo neutro.</span></li>
+        <li data-em="2:apaga" style="font-size:22px;padding:6px 14px"><b>C</b><span>O número de prótons permanece inalterado.</span></li>
+        <li data-em="2:apaga" style="font-size:22px;padding:6px 14px"><b>D</b><span>O produto da transformação é um ânion.</span></li>
+        <li data-em="2:apaga" style="font-size:22px;padding:6px 14px"><b>E</b><span>O íon formado possui um elétron a mais que o átomo neutro.</span></li>
+      </ol>
+    </div>
+  </div>
+  <aside class="resolucao">
+    <p class="dados"><b>Dados:</b> F (Z = 9) vira F⁻.</p>
+    <ol class="passos">
+      <li>F⁻: ganhou 1 elétron (ânion).</li>
+      <li>Núcleo não muda: prótons e nêutrons iguais.</li>
+      <li>A = n + Z não muda.</li>
+      <li>"Massa do íon menor" é falso.</li>
+    </ol>
+    <p class="resposta"><b>Resposta:</b> o número de massa continua o mesmo. <b>Gabarito B.</b></p>
+    <p class="atencao"><b>Destaque no quadro:</b> Íon: só os elétrons mudam. Z e A ficam iguais.</p>
+    <ul class="erros">
+      <li><b>A</b> Correta: prótons e nêutrons não mudam.</li>
+      <li><b>C</b> Correta: Z = 9 continua; ainda é flúor.</li>
+      <li><b>D</b> Correta: carga negativa, ganhou elétron: ânion.</li>
+      <li><b>E</b> Correta: F tem 9 elétrons; F⁻ tem 10.</li>
+    </ul>
+  </aside>
+  <aside class="notas">
+    <p>Clique 1 tira o aviso de pausa: resolva na área (D liga a caneta; E esconde o enunciado). Clique 2: gabarito B.</p>
+    <p>Questão oficial do IF Sudeste MG, prova de 2016. O elétron tem massa quase zero e não entra no número de massa.</p>
+  </aside>
+</section>
+
+<!-- Questão 3 -->
+<section class="slide questao" data-nome="Questão 3">
+  <div class="conteudo">
+    <div class="area-resolucao"></div>
+    <span class="pilula pilula-pausa" data-em="1:some">Pause o vídeo e tente</span>
+    <div class="painel-questao" style="gap:10px">
+      <p class="olho">Questão 3 · IF Sudeste MG 2013</p>
+      <p class="enunciado" style="font-size:21px;line-height:1.35">Alguns estudantes de Química, avaliando seus conhecimentos relativos a conceitos básicos para o estudo do átomo, analisam as seguintes afirmativas:</p>
+      <p class="enunciado" style="font-size:20px;line-height:1.35">I. Átomos isótopos são aqueles que possuem mesmo número atômico e números de massa diferentes.<br>II. O número atômico de um elemento corresponde à soma do número de prótons com o de nêutrons.<br>III. O número de massa de um átomo, em particular, é a soma do número de prótons com o de elétrons.<br>IV. Átomos isóbaros são aqueles que possuem números atômicos diferentes e mesmo número de massa.<br>V. Átomos isótonos são aqueles que apresentam números atômicos diferentes, números de massa diferentes e mesmo número de nêutrons.</p>
+      <p class="enunciado" style="font-size:21px">Esses estudantes concluem que:</p>
+      <ol class="alternativas curtas" style="gap:6px">
+        <li data-em="2:apaga" style="font-size:20px;padding:4px 14px"><b>A</b><span>apenas I, III e V são verdadeiras.</span></li>
+        <li data-em="2:certo" style="font-size:20px;padding:4px 14px"><b>B</b><span>apenas I, IV e V são verdadeiras.</span></li>
+        <li data-em="2:apaga" style="font-size:20px;padding:4px 14px"><b>C</b><span>apenas II e III são verdadeiras.</span></li>
+        <li data-em="2:apaga" style="font-size:20px;padding:4px 14px"><b>D</b><span>apenas II, III e V são verdadeiras.</span></li>
+        <li data-em="2:apaga" style="font-size:20px;padding:4px 14px"><b>E</b><span>apenas II e V são verdadeiras.</span></li>
+      </ol>
+    </div>
+  </div>
+  <aside class="resolucao">
+    <p class="dados"><b>Dados:</b> Z = prótons; A = n + Z.</p>
+    <ol class="passos">
+      <li><b>I</b> Isótopos: mesmo Z, A diferente. V.</li>
+      <li><b>II</b> Z é só prótons. F.</li>
+      <li><b>III</b> A soma nêutrons, não elétrons. F.</li>
+      <li><b>IV</b> Isóbaros: mesmo A, Z diferente. V.</li>
+      <li><b>V</b> Isótonos: mesmo n. V.</li>
+    </ol>
+    <p class="resposta"><b>Resposta:</b> I, IV e V verdadeiras. <b>Gabarito B.</b></p>
+    <p class="atencao"><b>Destaque no quadro:</b> isóto<b>p</b>os = prótons; isó<b>b</b>aros = massa; isóto<b>n</b>os = nêutrons.</p>
+    <ul class="erros">
+      <li><b>A</b> Inclui a III (prótons + elétrons) e deixa de fora a IV.</li>
+      <li><b>C</b> As duas estão erradas: II é o número de massa; III troca nêutrons por elétrons.</li>
+      <li><b>D</b> Inclui II e III, falsas, e deixa de fora I e IV.</li>
+      <li><b>E</b> Inclui a II, falsa, e deixa de fora I e IV.</li>
+    </ul>
+  </aside>
+  <aside class="notas">
+    <p>Clique 1 tira o aviso de pausa: resolva na área (D liga a caneta; E esconde o enunciado). Clique 2: gabarito B.</p>
+    <p>Questão oficial do IF Sudeste MG, prova de 2013 (2º semestre). Marque V ou F em cada afirmativa antes de olhar as alternativas.</p>
+  </aside>
+</section>
+
+<!-- Resumo -->
+<section class="slide" data-nome="Resumo">
+  <div class="conteudo">
+    <p class="olho">Resumo</p>
+    <h2 class="titulo">O essencial</h2>
+    <div class="resumo" style="position:absolute;left:0;right:0;top:150px">
+      <div><b>Núcleo:</b> prótons (+) e nêutrons (sem carga). <b>Eletrosfera:</b> elétrons (−).</div>
+      <div><b>Átomo neutro:</b> prótons = elétrons.</div>
+      <div><b>Z</b> = prótons: a identidade do elemento.</div>
+      <div><b>A = n + Z</b>: nêutrons = A − Z.</div>
+      <div><b>Cátion</b> perdeu elétrons (+); <b>ânion</b> ganhou elétrons (−). Prótons não mudam.</div>
+      <div><b>Isótopos:</b> mesmo Z. <b>Isóbaros:</b> mesmo A. <b>Isótonos:</b> mesmo n.</div>
+    </div>
+    <div class="caixa caixa-atencao" style="position:absolute;left:580px;right:0;top:660px">
+      <div class="texto" style="font-size:30px">Elétrons de um íon: <b>e = Z − carga</b>.</div>
+    </div>
+  </div>
+  <aside class="notas"><p>Peça para tirarem um print desta tela.</p></aside>
+</section>
+
+<!-- A seguir -->
+<section class="slide capa" data-nome="A seguir">
+  <div class="estrelas"></div>
+  <div class="texto-capa" style="top:170px">
+    <span class="selo">Química · IF</span>
+    <p class="aula" style="font-size:26px">A seguir · Estrutura atômica · Parte única</p>
+    <h1>Tabela periódica</h1>
+    <p class="sub">Períodos, famílias, metais e não metais</p>
+  </div>
+  <svg class="emblema" viewBox="0 0 640 640" aria-hidden="true">
+    <g fill="#fff" fill-opacity=".85">
+      <rect x="70" y="150" width="56" height="56" rx="10"/><rect x="514" y="150" width="56" height="56" rx="10"/>
+      <rect x="70" y="214" width="56" height="56" rx="10"/><rect x="134" y="214" width="56" height="56" rx="10"/><rect x="322" y="214" width="56" height="56" rx="10"/><rect x="386" y="214" width="56" height="56" rx="10"/><rect x="450" y="214" width="56" height="56" rx="10"/><rect x="514" y="214" width="56" height="56" rx="10"/>
+      <rect x="70" y="278" width="56" height="56" rx="10"/><rect x="134" y="278" width="56" height="56" rx="10"/><rect x="322" y="278" width="56" height="56" rx="10"/><rect x="386" y="278" width="56" height="56" rx="10"/><rect x="450" y="278" width="56" height="56" rx="10"/><rect x="514" y="278" width="56" height="56" rx="10"/>
+    </g>
+    <g fill="#FFD10C"><rect x="70" y="342" width="56" height="56" rx="10"/><rect x="134" y="342" width="56" height="56" rx="10"/><rect x="198" y="342" width="56" height="56" rx="10"/><rect x="262" y="342" width="56" height="56" rx="10"/><rect x="322" y="342" width="56" height="56" rx="10"/><rect x="386" y="342" width="56" height="56" rx="10"/><rect x="450" y="342" width="56" height="56" rx="10"/><rect x="514" y="342" width="56" height="56" rx="10"/></g>
+  </svg>
+  <img class="logo-capa" src="{{LOGO_BRANCO}}" alt="Quarks">
+  <aside class="notas"><p>Próxima: como os elementos foram organizados na tabela periódica, períodos e famílias, metais, não metais e gases nobres.</p></aside>
+</section>

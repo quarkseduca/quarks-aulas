@@ -5,6 +5,7 @@ Uso:
   python3 build.py                 # monta todas as aulas em saida/
   python3 build.py aulas/fisica/pism1/mu-1.html
   python3 build.py --previa ...    # versão para a prévia no claude.ai (sem <html>/<head>/<body>)
+  python3 build.py --check        # não grava nada: confere se saida/ e ../quarks-gestao/slides batem com o que o build geraria
   python3 build.py --sistema ../quarks-gestao/slides
                                    # versão para a aba Slides do sistema: partes, roteiros, catalogo.json e vendor/
                                    # (fontes e MathJax ficam num arquivo só, servido pelo sistema; o sistema embute
@@ -16,6 +17,7 @@ import json
 import random
 import re
 import sys
+import tempfile
 from pathlib import Path
 
 RAIZ = Path(__file__).resolve().parent
@@ -23,7 +25,7 @@ MOTOR = RAIZ / "motor"
 MARCA = RAIZ / "marca"
 VENDOR = RAIZ / "vendor"
 
-DISCIPLINAS = {"fisica": "Física", "quimica": "Química", "matematica": "Matemática", "portugues": "Português"}
+DISCIPLINAS = {"fisica": "Física", "quimica": "Química", "matematica": "Matemática", "portugues": "Português", "literatura": "Literatura"}
 
 FONTES = ('<link rel="preconnect" href="https://fonts.googleapis.com">'
           '<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>'
@@ -35,7 +37,8 @@ MATHJAX = MATHJAX_CONFIG + '<script src="https://cdn.jsdelivr.net/npm/mathjax@3.
 # no sistema, __VENDOR__ vira o endereço do arquivo (api.php?a=slides_vendor&f=); Baixar troca as duas linhas pelo conteúdo
 FONTES_SISTEMA = '<link rel="stylesheet" href="__VENDOR__fontes.css">'
 MATHJAX_SISTEMA = MATHJAX_CONFIG + '<script src="__VENDOR__tex-svg-full.js"></script>'
-CURSOS = {"PISM I": "pism1", "PISM II": "pism2", "PISM III": "pism3"}
+CURSOS = {"PISM I": "pism1", "PISM II": "pism2", "PISM III": "pism3", "IF": "if"}
+NOME_CURSO = {"pism1": "PISM I", "pism2": "PISM II", "pism3": "PISM III", "if": "IF/Sudeste"}  # rótulo da aba no sistema
 
 
 def fontes_css():
@@ -160,7 +163,7 @@ def roteiro(caminho, meta, slides, modo="offline"):
         return None
     cartoes, gabaritos = [], []
     for i, q in enumerate(questoes, 1):
-        painel = re.search(r'<div class="painel-questao">(.*?)</div>\s*</div>\s*(?:<aside|</section)', q, re.S)
+        painel = re.search(r'<div class="painel-questao"[^>]*>(.*?)</div>\s*</div>\s*(?:<aside|</section)', q, re.S)
         painel = painel.group(1) if painel else ""
         painel = re.sub(r'data-em="\d+:certo"', 'class="certo"', painel)
         painel = re.sub(r'\s*data-(?:em|passo)="[^"]*"', "", painel)
@@ -168,7 +171,8 @@ def roteiro(caminho, meta, slides, modo="offline"):
         olho = re.search(r'<p class="olho">(.*?)</p>', painel, re.S)
         painel = painel.replace(olho.group(0), "", 1) if olho else painel
         res = re.search(r'<aside class="resolucao">(.*?)</aside>', q, re.S)
-        gab = re.search(r'class="certo"><b>(\w)</b>', painel)
+        gab = (re.search(r'class="certo"><b>(\w)</b>', painel)
+               or re.search(r'<li[^>]*data-em="[^"]*\bcerto\b[^"]*"[^>]*><b>([A-E])</b>', q))  # li com style ou com mais de um passo
         rotulo = olho.group(1) if olho else f"Questão {i}"
         gabaritos.append(f"<li>{rotulo}: <b>{gab.group(1) if gab else '?'}</b></li>")
         corpo = res.group(1) if res else "<p><i>Resolução ainda não escrita.</i></p>"
@@ -250,8 +254,9 @@ def lugar_no_plano(meta, plano):
     """Acha o capítulo e o item do cronograma (planejamento/cronograma.json) que este arquivo cumpre."""
     parte = meta.get("parte", "")
     for cap in plano:
-        if parte == "Questões do PISM" and meta["assunto"] == cap["t"]:
-            return cap["n"], "pism"
+        q = re.match(r"Questões do (PISM|IF Sudeste)(?: · Parte (\d+) de \d+)?$", parte)
+        if q and meta["assunto"] == cap["t"]:
+            return cap["n"], ("pism" if not cap.get("questoes") else ("pism", int(q.group(2) or 1)))
         k = re.match(r"Parte (\d+) de (\d+)", parte)
         alvo = meta["assunto"] if k else meta["titulo"]  # parte única: o subcapítulo vai no título
         if not k and meta["assunto"] != cap["t"]:
@@ -305,9 +310,19 @@ def sistema(destino):
                             and partes[p]["disc"] == disc and partes[p]["curso"] == curso), None)
                 itens.append({"sub": f'{cap["n"]}.{subs.index(x["sub"]) + 1}', "t": x["t"], "k": mesmos.index(x) + 1,
                               "de": len(mesmos), "top": x.get("top", []), "id": pid})
-            pism = next((p for p, (c, it) in ligados.items() if c == cap["n"] and it == "pism"
-                         and partes[p]["disc"] == disc and partes[p]["curso"] == curso), None)
-            itens.append({"pism": True, "t": "Questões do PISM", "id": pism})
+            nome_q = "Questões do PISM" if curso.startswith("pism") else "Questões do IF Sudeste"
+            blocos = cap.get("questoes") or []
+            if not blocos:
+                pism = next((p for p, (c, it) in ligados.items() if c == cap["n"] and it == "pism"
+                             and partes[p]["disc"] == disc and partes[p]["curso"] == curso), None)
+                itens.append({"pism": True, "t": nome_q, "id": pism})
+            for k, b in enumerate(blocos, 1):  # blocos planejados de questões oficiais (1 ou 2 por capítulo)
+                pid = next((p for p, (c, it) in ligados.items() if c == cap["n"] and it == ("pism", k)
+                            and partes[p]["disc"] == disc and partes[p]["curso"] == curso), None)
+                nomes = {x["t"]: True for x in cap["partes"]}
+                cob = [t for t in nomes if any(q.get("sub") == t for q in b["q"])]
+                itens.append({"pism": True, "plano": True, "t": nome_q, "k": k, "de": len(blocos), "id": pid,
+                              "nq": len(b["q"]), "nm": sum(1 for q in b["q"] if q.get("modelo")), "top": cob})
             lista.append({"n": cap["n"], "t": cap["t"], "itens": itens})
         soltos = [p for p, (c, it) in ligados.items() if c is None and partes[p]["disc"] == disc and partes[p]["curso"] == curso]
         if soltos:
@@ -317,34 +332,103 @@ def sistema(destino):
     vend.mkdir(parents=True, exist_ok=True)
     (vend / "fontes.css").write_text(fontes_css(), encoding="utf-8")
     (vend / "tex-svg-full.js").write_bytes((VENDOR / "tex-svg-full.js").read_bytes())
-    corpo = json.dumps({"disciplinas": DISCIPLINAS, "cursos": {v: k for k, v in CURSOS.items()}, "planos": cursos, "partes": partes},
+    corpo = json.dumps({"disciplinas": DISCIPLINAS, "cursos": NOME_CURSO, "planos": cursos, "partes": partes},
                        ensure_ascii=False, sort_keys=True)
     versao = hashlib.sha1(corpo.encode() + (vend / "fontes.css").read_bytes() + (vend / "tex-svg-full.js").read_bytes()).hexdigest()[:10]  # muda junto com fontes e MathJax (cache do navegador)
     (destino / "catalogo.json").write_text(json.dumps({"versao": versao, **json.loads(corpo)}, ensure_ascii=False, indent=1), encoding="utf-8")
     print("ok: catalogo.json", versao, f"({len(partes)} partes)")
 
 
-def main():
-    args = sys.argv[1:]
-    if "--sistema" in args:
-        i = args.index("--sistema")
-        return sistema(args[i + 1] if i + 1 < len(args) else RAIZ.parent / "quarks-gestao" / "slides")
-    previa = "--previa" in args
-    args = [a for a in args if a != "--previa"]
-    aulas = [Path(a) for a in args] or sorted((RAIZ / "aulas").rglob("*.html"))
+def gera_saida(aulas, previa=False, base=None):
+    base = Path(base) if base else RAIZ / "saida"
     for a in aulas:
         rel = Path(a).resolve().relative_to(RAIZ / "aulas")
-        destino = RAIZ / "saida" / (rel.with_name(rel.stem + "-previa.html") if previa else rel)
+        destino = base / (rel.with_name(rel.stem + "-previa.html") if previa else rel)
         destino.parent.mkdir(parents=True, exist_ok=True)
         destino.write_text(monta(a, "previa" if previa else "offline"), encoding="utf-8")
-        print("ok:", destino.relative_to(RAIZ))
+        print("ok:", Path("saida") / destino.relative_to(base))
         if not previa:
             meta, slides = ler(a)
             doc = roteiro(a, meta, slides)
             if doc:
                 rot = destino.with_name(destino.stem + "-professor.html")
                 rot.write_text(doc, encoding="utf-8")
-                print("ok:", rot.relative_to(RAIZ))
+                print("ok:", Path("saida") / rot.relative_to(base))
+
+
+def compara(novo, atual, quais, ignora=lambda rel: False):
+    """Diferenças entre o que o build gerou agora (novo) e o que está gravado (atual), só nos caminhos de `quais`."""
+    dif = []
+    gerados = {}
+    for q in quais:
+        alvo = novo / q
+        for f in ([alvo] if alvo.is_file() else sorted(alvo.rglob("*")) if alvo.is_dir() else []):
+            if f.is_file():
+                gerados[f.relative_to(novo).as_posix()] = f
+    for rel, f in gerados.items():
+        g = atual / rel
+        if not g.is_file():
+            dif.append(f"falta: {rel}")
+        elif g.read_bytes() != f.read_bytes():
+            dif.append(f"diferente: {rel}")
+    for q in quais:
+        alvo = atual / q
+        if alvo.is_dir():
+            for g in sorted(alvo.rglob("*")):
+                rel = g.relative_to(atual).as_posix()
+                if g.is_file() and rel not in gerados and not ignora(rel):
+                    dif.append(f"sobrando (o build não gera mais): {rel}")
+    return dif
+
+
+def check(gestao=None):
+    """Não grava nada no repositório: monta tudo numa pasta temporária e compara. Sai com 1 se algo estiver diferente."""
+    import contextlib
+    import io
+    gestao = Path(gestao) if gestao else RAIZ.parent / "quarks-gestao" / "slides"
+    erros = 0
+    with tempfile.TemporaryDirectory() as tmp:
+        tmp = Path(tmp)
+        with contextlib.redirect_stdout(io.StringIO()):
+            gera_saida(sorted((RAIZ / "aulas").rglob("*.html")), base=tmp / "saida")
+        dif = compara(tmp, RAIZ, ["saida"], ignora=lambda rel: rel.endswith("-previa.html"))
+        if dif:
+            erros += 1
+            print(f"FALHA: saida/ não bate com o build ({len(dif)} arquivo(s)). Rode: python3 build.py")
+            print("\n".join("  " + d for d in dif))
+        else:
+            print("ok: saida/ bate com o build")
+        if not (gestao / "catalogo.json").is_file():
+            print(f"pulado: a pasta de slides da gestão não está em {gestao} (a comparação com o sistema não foi feita)")
+        else:
+            avisos = io.StringIO()
+            with contextlib.redirect_stdout(avisos):
+                sistema(tmp / "slides")
+            for linha in avisos.getvalue().splitlines():
+                if linha.startswith("aviso"):
+                    print(linha)
+            dif = compara(tmp / "slides", gestao, ["partes", "catalogo.json", "vendor/fontes.css", "vendor/tex-svg-full.js"])
+            if dif:
+                erros += 1
+                print(f"FALHA: {gestao} não bate com o build ({len(dif)} arquivo(s)). Rode: python3 build.py --sistema ../quarks-gestao/slides")
+                print("\n".join("  " + d for d in dif))
+            else:
+                print("ok: os slides da gestão batem com o build")
+    sys.exit(1 if erros else 0)
+
+
+def main():
+    args = sys.argv[1:]
+    if "--check" in args:
+        i = args.index("--check")
+        return check(args[i + 1] if i + 1 < len(args) else None)
+    if "--sistema" in args:
+        i = args.index("--sistema")
+        return sistema(args[i + 1] if i + 1 < len(args) else RAIZ.parent / "quarks-gestao" / "slides")
+    previa = "--previa" in args
+    args = [a for a in args if a != "--previa"]
+    aulas = [Path(a) for a in args] or sorted((RAIZ / "aulas").rglob("*.html"))
+    gera_saida(aulas, previa)
 
 
 if __name__ == "__main__":

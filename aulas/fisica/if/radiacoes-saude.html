@@ -1,0 +1,512 @@
+<!--aula
+{"disciplina": "fisica", "curso": "IF", "assunto": "Ondas", "parte": "Parte única", "titulo": "Radiações e saúde", "scripts": ["animacoes-ondas.js"]}
+-->
+<!-- Fonte: apostila IF, Física, cap. 5 Ondas (5.3 Radiações e saúde: "Radiações na medicina", com a tabela, e "Radiações ionizantes e não ionizantes", e o resumo de 5.3). Questões da apostila: Modelo IF if-fisica-radiacoes-e-saude m005 (FIS-8782) e m007 (FIS-8784) e if-fisica-ondas m029 (FIS-0830). A m027 (FIS-0828) fica reservada para o bloco do fim do capítulo. -->
+<style>
+  .caixa, .painel, .linha-ex, .cartao { box-sizing: border-box; }
+  .linha-ex { background: var(--branco); border: 2px solid var(--lilas-2); border-radius: 24px; padding: 14px 26px; font-size: 30px; line-height: 1.3; }
+  .linha-ex b { color: var(--roxo-titulo); }
+  .tag { display: inline-block; padding: 5px 18px; border-radius: 999px; font-weight: 800; font-size: 24px; white-space: nowrap; }
+  .tag-n { background: var(--d-clara); color: var(--d-forte); }
+  .tag-i { background: var(--erro-claro); color: var(--erro); }
+  .tag-m { background: #FFF1C2; color: #8A6A00; }
+  .rot { font-family: Figtree, 'Segoe UI', sans-serif; font-weight: 800; }
+  .painel { background: var(--branco); border: 2px solid var(--lilas-2); border-radius: 30px; padding: 20px 28px; }
+  .painel h3 { margin: 0 0 6px; font: 800 40px var(--fonte-titulo); letter-spacing: -.02em; color: var(--roxo-titulo); }
+  .painel p { margin: 8px 0 0; font-size: 27px; line-height: 1.33; }
+  .painel b { color: var(--roxo-titulo); }
+  .cartao { background: var(--branco); border: 2px solid var(--lilas-2); border-radius: 26px; padding: 18px 26px; display: grid; grid-template-columns: 140px 1fr; gap: 20px; align-items: center; }
+  .cartao svg { width: 140px; height: 116px; display: block; }
+  .cartao h3 { margin: 0; font: 800 38px var(--fonte-titulo); letter-spacing: -.02em; color: var(--roxo-titulo); }
+  .cartao p { margin: 4px 0 0; font-size: 28px; line-height: 1.3; }
+  .cartao b { color: var(--roxo-titulo); }
+  .tab-med { border-collapse: separate; border-spacing: 0; background: var(--branco); border: 2px solid var(--lilas-2); border-radius: 26px; overflow: hidden; width: 1760px; font-size: 30px; }
+  .tab-med th { background: var(--d-clara); color: var(--d-forte); font-weight: 800; padding: 12px 26px; text-align: left; }
+  .tab-med td { padding: 9px 26px; border-top: 2px solid var(--lilas); }
+  .tab-med td:first-child { font-weight: 800; color: var(--roxo-titulo); }
+  /* raios X: descem e atravessam o braço; os ossos barram */
+  @keyframes desce-x { from { stroke-dashoffset: 0; } to { stroke-dashoffset: -60; } }
+  .raio-x { stroke-dasharray: 22 8; }
+  .slide.ativo .mostra .raio-x { animation: desce-x 1.8s linear infinite; }
+  @keyframes revela { from { opacity: 0; } to { opacity: 1; } }
+  .slide.ativo .mostra .chapa-osso { animation: revela 3s ease-out both; }
+  /* ultrassom: o pulso entra, bate no bebê e volta como eco */
+  @keyframes us-vai { 0% { transform: translateY(0) scale(.6); opacity: 0; } 10% { opacity: 1; } 50% { transform: translateY(110px) scale(1.1); opacity: 1; } 51%, 100% { opacity: 0; } }
+  @keyframes us-volta { 0%, 50% { opacity: 0; transform: translateY(110px) scale(1.1); } 52% { opacity: 1; } 95% { transform: translateY(0) scale(.6); opacity: .9; } 100% { opacity: 0; } }
+  .us-vai, .us-volta { transform-box: fill-box; transform-origin: center top; opacity: 0; }
+  .slide.ativo .us-vai { animation: us-vai 4.5s linear infinite; }
+  .slide.ativo .us-volta { animation: us-volta 4.5s linear infinite; }
+  /* ionização: a onda de alta energia arranca o elétron; a de baixa energia não */
+  @keyframes foton { 0% { transform: translateX(0); opacity: 0; } 10% { opacity: 1; } 45% { transform: translateX(300px); opacity: 1; } 50%, 100% { transform: translateX(300px); opacity: 0; } }
+  .foton { opacity: 0; }
+  .slide.ativo .mostra .foton { animation: foton 6s linear infinite; }
+  @keyframes arranca { 0%, 46% { transform: translate(0, 0); opacity: 1; } 80% { transform: translate(60px, -100px); opacity: 1; } 90%, 100% { transform: translate(75px, -120px); opacity: 0; } }
+  .slide.ativo .mostra .eletron-sai { animation: arranca 6s ease-in infinite; }
+  @keyframes treme { 0%, 46%, 64%, 100% { transform: translate(0, 0); } 50% { transform: translate(2px, -1px); } 55% { transform: translate(-2px, 1px); } 60% { transform: translate(1px, 1px); } }
+  .slide.ativo .mostra .atomo-treme { animation: treme 6s linear infinite; }
+  @keyframes gira-e { to { transform: rotate(360deg); } }
+  .orbita-e { transform-box: view-box; }
+</style>
+
+<!-- 1. Capa -->
+<section class="slide capa" data-nome="Capa">
+  <div class="estrelas"></div>
+  <div class="texto-capa">
+    <span class="selo">Física · IF</span>
+    <p class="aula">Ondas</p>
+    <h1>Radiações e saúde</h1>
+    <p class="sub">Ver dentro do corpo, tratar e se proteger</p>
+  </div>
+  <svg class="emblema" viewBox="0 0 640 640" aria-hidden="true">
+    <g class="gira-lento"><ellipse cx="320" cy="320" rx="300" ry="128" fill="none" stroke="#fff" stroke-opacity=".38" stroke-width="2" transform="rotate(-10 320 320)"/></g>
+    <circle cx="320" cy="320" r="132" fill="#FFD10C"/>
+    <image href="{{SYM_ROXO}}" x="238" y="238" width="164" height="164"/>
+    <g class="gira"><ellipse cx="320" cy="320" rx="236" ry="196" fill="none" stroke="#FFD10C" stroke-opacity=".75" stroke-width="2.5" stroke-dasharray="3 14" stroke-linecap="round" transform="rotate(-8 320 320)"/><circle cx="84" cy="300" r="13" fill="#fff"/></g>
+  </svg>
+  <img class="logo-capa" src="{{LOGO_BRANCO}}" alt="Quarks">
+  <aside class="notas"><p>Última parte de Ondas (subcapítulo de parte única): as ondas que a medicina usa para ver e tratar o corpo, e a diferença entre radiação ionizante e não ionizante. Depois vem o bloco de questões do IF.</p></aside>
+</section>
+
+<!-- 2. Gancho -->
+<section class="slide" data-nome="Ver sem abrir">
+  <div class="conteudo">
+    <p class="olho">Para começar</p>
+    <h2 class="titulo">Ver o corpo por dentro sem abrir</h2>
+    <div style="position:absolute;left:0;right:0;top:170px;display:grid;grid-template-columns:repeat(3,1fr);gap:30px">
+      <div class="painel" style="text-align:center">
+        <svg viewBox="0 0 200 160" width="200" height="160" aria-hidden="true"><rect x="10" y="10" width="180" height="140" rx="16" fill="#1C1433"/><path d="M60 140 L80 60 L95 30 M130 140 L118 60 L105 30" stroke="#fff" stroke-width="16" stroke-linecap="round" fill="none" opacity=".92"/><path d="M70 95 l20 -6" stroke="#E5484D" stroke-width="5" stroke-linecap="round"/></svg>
+        <h3>Um braço quebrado</h3>
+      </div>
+      <div class="painel" style="text-align:center">
+        <svg viewBox="0 0 200 160" width="200" height="160" aria-hidden="true"><path d="M20 150 L60 20 h80 L180 150 z" fill="#2B2440"/><ellipse cx="100" cy="100" rx="34" ry="24" fill="#8C7BEA" opacity=".8"/><circle cx="76" cy="92" r="14" fill="#8C7BEA"/></svg>
+        <h3>Um bebê na barriga</h3>
+      </div>
+      <div class="painel" style="text-align:center">
+        <svg viewBox="0 0 200 160" width="200" height="160" aria-hidden="true"><rect x="10" y="10" width="180" height="140" rx="16" fill="#E4DEFB"/><path d="M80 20 v50 q0 14 14 14 h12 q14 0 14 14 v52" fill="none" stroke="#8C7BEA" stroke-width="26" stroke-linecap="round"/><circle cx="100" cy="84" r="16" fill="#FFD10C"/></svg>
+        <h3>Uma lesão no joelho</h3>
+      </div>
+    </div>
+    <div class="caixa caixa-fundamental" data-passo="1" style="position:absolute;left:580px;right:0;top:560px">
+      <div class="texto" style="font-size:32px">Hoje os médicos veem o interior do corpo <b>sem precisar abri-lo</b>. Cada exame usa um <b>tipo de onda</b>.</div>
+    </div>
+  </div>
+  <aside class="notas"><p>Abertura da apostila. Pergunte: que exame cada um faria? A resposta vem na tabela do próximo slide.</p></aside>
+</section>
+
+<!-- 3. Tabela -->
+<section class="slide" data-nome="Radiações na medicina">
+  <div class="conteudo">
+    <p class="olho">Radiações na medicina</p>
+    <h2 class="titulo">Cada técnica, uma onda</h2>
+    <table class="tab-med" style="position:absolute;left:0;top:150px">
+      <tr><th>Técnica</th><th>Onda usada</th><th>Uso principal</th></tr>
+      <tr data-passo="1"><td>Radiografia e tomografia</td><td><span class="tag tag-i">raios X</span></td><td>ossos, pulmões, dentes</td></tr>
+      <tr data-passo="2"><td>Ultrassonografia</td><td><span class="tag tag-m">ultrassom (mecânica)</span></td><td>gestação, órgãos internos</td></tr>
+      <tr data-passo="3"><td>Ressonância magnética</td><td><span class="tag tag-n">ímã forte e ondas de rádio</span></td><td>músculos, cérebro, articulações</td></tr>
+      <tr data-passo="4"><td>Radioterapia</td><td><span class="tag tag-i">raios X ou gama</span></td><td>destruir células de tumores</td></tr>
+      <tr data-passo="5"><td>Cirurgia a laser</td><td><span class="tag tag-n">luz concentrada</span></td><td>correção da miopia, cortes precisos</td></tr>
+      <tr data-passo="6"><td>Fisioterapia</td><td><span class="tag tag-n">infravermelho</span></td><td>aquecer e relaxar músculos</td></tr>
+    </table>
+    <div data-passo="7" style="position:absolute;left:580px;right:0;top:690px;display:flex;gap:16px;align-items:center;font-size:26px">
+      <span class="tag tag-i">ionizante</span><span class="tag tag-n">eletromagnética não ionizante</span><span class="tag tag-m">mecânica</span>
+    </div>
+  </div>
+  <aside class="notas">
+    <p>Tabela da apostila, uma linha por clique. Clique 7: a legenda das cores, que antecipa a segunda metade desta parte (ionizantes × não ionizantes).</p>
+  </aside>
+</section>
+
+<!-- 4. Radiografia -->
+<section class="slide" data-nome="Radiografia">
+  <div class="conteudo">
+    <p class="olho">Raios X</p>
+    <h2 class="titulo">Radiografia e tomografia</h2>
+    <svg viewBox="0 0 760 460" width="760" height="460" style="position:absolute;left:0;top:140px;overflow:visible" aria-hidden="true">
+      <rect x="230" y="0" width="300" height="56" rx="14" fill="#4B39B3"/><text x="380" y="38" text-anchor="middle" class="rot" font-size="26" fill="#fff">fonte de raios X</text>
+      <g data-passo="1">
+        <g stroke="#FFD10C" stroke-width="6" stroke-linecap="round">
+          <line class="raio-x" x1="260" y1="62" x2="260" y2="360"/><line class="raio-x" x1="300" y1="62" x2="300" y2="360"/><line class="raio-x" x1="340" y1="62" x2="340" y2="200"/><line class="raio-x" x1="380" y1="62" x2="380" y2="186"/><line class="raio-x" x1="420" y1="62" x2="420" y2="200"/><line class="raio-x" x1="460" y1="62" x2="460" y2="360"/><line class="raio-x" x1="500" y1="62" x2="500" y2="360"/>
+        </g>
+      </g>
+      <ellipse cx="380" cy="230" rx="170" ry="60" fill="#F2C9B0" opacity=".85" stroke="#C98A6B" stroke-width="3"/>
+      <ellipse cx="380" cy="230" rx="56" ry="40" fill="#FFFDF5" stroke="#C9C4DC" stroke-width="4"/>
+      <text x="600" y="214" class="rot" font-size="24" fill="#C98A6B">pele e músculo</text>
+      <text x="600" y="246" class="rot" font-size="24" fill="#8E8AA0">osso</text>
+      <path d="M594 240 H440" stroke="#8E8AA0" stroke-width="2"/>
+      <rect x="200" y="360" width="360" height="60" rx="10" fill="#1C1433"/>
+      <rect class="chapa-osso" data-passo="1" x="324" y="366" width="112" height="48" rx="20" fill="#fff"/>
+      <text x="380" y="450" text-anchor="middle" class="rot" font-size="24" fill="#5E5A70">a imagem: o osso aparece claro</text>
+    </svg>
+    <div style="position:absolute;left:840px;right:0;top:150px;display:flex;flex-direction:column;gap:18px">
+      <div class="linha-ex" data-passo="1" style="font-size:28px">Os raios X <b>atravessam os tecidos moles</b> com facilidade, mas são <b>barrados pelos ossos</b>, que aparecem <b>claros</b> na imagem.</div>
+      <div class="linha-ex" data-passo="2" style="font-size:28px">A <b>tomografia</b> junta muitas imagens de raios X para montar <b>"fatias"</b> do corpo.</div>
+      <div class="caixa caixa-atencao" data-passo="3" style="padding:18px 26px">
+        <div class="texto" style="font-size:27px">Os raios X são <b>ionizantes</b>: o exame usa doses <b>pequenas e controladas</b>, e o <b>avental de chumbo</b> protege as partes do corpo que não estão sendo examinadas.</div>
+      </div>
+    </div>
+  </div>
+  <aside class="notas"><p>Clique 1: os raios descem (câmera lenta); os que passam pelo osso param nele, e na chapa o osso aparece claro. Da apostila.</p></aside>
+</section>
+
+<!-- 5. Ultrassom e ressonância -->
+<section class="slide" data-nome="Ultrassom e ressonância">
+  <div class="conteudo">
+    <p class="olho">Sem raios X</p>
+    <h2 class="titulo">Ultrassom e ressonância magnética</h2>
+    <div class="painel" style="position:absolute;left:0;width:840px;top:150px">
+      <h3>Ultrassonografia</h3>
+      <svg viewBox="0 0 780 230" width="780" height="230" style="display:block" aria-hidden="true">
+        <path d="M60 230 Q60 60 390 50 Q720 60 720 230 Z" fill="#F2C9B0" stroke="#C98A6B" stroke-width="3"/>
+        <ellipse cx="390" cy="185" rx="80" ry="40" fill="#E4A98C"/><circle cx="335" cy="170" r="26" fill="#E4A98C"/>
+        <rect x="360" y="0" width="60" height="50" rx="12" fill="#4B39B3"/>
+        <g class="us-vai"><path d="M350 62 q40 18 80 0 M360 76 q30 14 60 0" fill="none" stroke="#0F8B8D" stroke-width="5" stroke-linecap="round"/></g>
+        <g class="us-volta"><path d="M350 76 q40 -18 80 0 M360 62 q30 -14 60 0" fill="none" stroke="#C2384F" stroke-width="5" stroke-linecap="round"/></g>
+      </svg>
+      <p>O <b>ultrassom</b> é um som <b>agudo demais</b> para ouvirmos: ele bate nos órgãos e <b>volta como eco</b>, e o aparelho monta a imagem.</p>
+    </div>
+    <div class="painel" data-passo="1" style="position:absolute;left:900px;right:0;top:150px">
+      <h3>Ressonância magnética</h3>
+      <svg viewBox="0 0 800 230" width="800" height="230" style="display:block" aria-hidden="true">
+        <rect x="200" y="20" width="400" height="190" rx="95" fill="#E4DEFB" stroke="#8C7BEA" stroke-width="5"/>
+        <ellipse cx="400" cy="115" rx="90" ry="62" fill="#F7F5FE" stroke="#8C7BEA" stroke-width="4"/>
+        <rect x="80" y="122" width="560" height="26" rx="8" fill="#C9C0F0"/>
+        <text x="400" y="14" text-anchor="middle" class="rot" font-size="22" fill="#4B39B3">ímã muito forte</text>
+      </svg>
+      <p>Usa um <b>ímã muito forte</b> e <b>ondas de rádio</b>, <b>sem raios X</b>. Antes se chamava ressonância nuclear magnética.</p>
+    </div>
+    <div class="caixa caixa-atencao" data-passo="2" style="position:absolute;left:580px;right:0;top:680px;padding:18px 28px">
+      <span class="rotulo">Atenção · Ultrassom não é radiação ionizante</span>
+      <div class="texto" style="font-size:28px">É uma onda <b>mecânica</b>, como o som: por isso é usado com segurança na <b>gestação</b>.</div>
+    </div>
+  </div>
+  <aside class="notas"><p>O pulso de ultrassom entra (verde), bate no bebê e volta (vermelho): é o eco de Ondas e som, agora dentro do corpo. Clique 2: a atenção da apostila.</p></aside>
+</section>
+
+<!-- 6. Por quê? -->
+<section class="slide" data-nome="Por que uns protegem e outros não">
+  <div class="conteudo">
+    <p class="olho">Radiações ionizantes e não ionizantes</p>
+    <h2 class="titulo">Por que uns pedem proteção e outros não?</h2>
+    <div style="position:absolute;left:0;right:0;top:170px;display:grid;grid-template-columns:1fr 1fr;gap:40px">
+      <div class="painel">
+        <h3>Pedem proteção</h3>
+        <p>Na praia, o <b>protetor solar</b> evita a queimadura.</p>
+        <p>No dentista, o <b>avental de chumbo</b> cobre o corpo durante a radiografia.</p>
+      </div>
+      <div class="painel" data-passo="1">
+        <h3>Não pedem</h3>
+        <p>O <b>celular</b>, o <b>wi-fi</b> e o <b>forno de micro-ondas</b> não pedem nenhuma dessas proteções.</p>
+      </div>
+    </div>
+    <div class="caixa caixa-fundamental" data-passo="2" style="position:absolute;left:580px;right:0;top:520px">
+      <div class="texto" style="font-size:32px">A diferença está na <b>energia</b> que cada onda carrega. No espectro, quanto <b>maior a frequência</b>, <b>maior a energia</b>.</div>
+    </div>
+  </div>
+  <aside class="notas"><p>Abertura da apostila de "Radiações ionizantes e não ionizantes". Deixe a turma tentar responder antes do clique 2.</p></aside>
+</section>
+
+<!-- 7. Radiação ionizante -->
+<section class="slide" data-nome="Radiação ionizante">
+  <div class="conteudo">
+    <p class="olho">Fundamental</p>
+    <h2 class="titulo">Radiação ionizante</h2>
+    <div class="caixa caixa-fundamental" style="position:absolute;left:0;right:0;top:150px;padding:22px 34px">
+      <div class="texto" style="font-size:32px">É a que tem energia suficiente para <b>arrancar elétrons dos átomos</b> e <b>danificar as células</b>, inclusive o material genético.</div>
+    </div>
+    <div style="position:absolute;left:0;right:0;top:330px;display:grid;grid-template-columns:1fr 1fr;gap:40px">
+      <div class="painel" data-passo="1" style="padding:14px 24px">
+        <svg viewBox="0 0 800 230" width="800" height="230" style="display:block;overflow:visible" aria-hidden="true">
+          <text x="0" y="28" class="rot" font-size="28" fill="#0B6B6D">luz visível: o elétron fica</text>
+          <g class="foton"><path d="M60 130 q15 -34 30 0 t30 0 t30 0 t30 0" fill="none" stroke="#3FBF7F" stroke-width="7" stroke-linecap="round"/></g>
+          <g class="atomo-treme"><circle cx="580" cy="130" r="30" fill="#4B39B3"/><ellipse cx="580" cy="130" rx="120" ry="58" fill="none" stroke="#C9C0F0" stroke-width="4"/><circle cx="700" cy="130" r="15" fill="#0F8B8D"/></g>
+        </svg>
+      </div>
+      <div class="painel" data-passo="2" style="padding:14px 24px">
+        <svg viewBox="0 0 800 230" width="800" height="230" style="display:block;overflow:visible" aria-hidden="true">
+          <text x="0" y="28" class="rot" font-size="28" fill="#C2384F">raios X: o elétron é arrancado</text>
+          <g class="foton"><path d="M60 130 q6 -34 12 0 t12 0 t12 0 t12 0 t12 0 t12 0 t12 0 t12 0 t12 0 t12 0" fill="none" stroke="#7B4FE0" stroke-width="6" stroke-linecap="round"/></g>
+          <circle cx="580" cy="130" r="30" fill="#4B39B3"/><ellipse cx="580" cy="130" rx="120" ry="58" fill="none" stroke="#C9C0F0" stroke-width="4"/>
+          <circle class="eletron-sai" cx="700" cy="130" r="15" fill="#0F8B8D"/>
+        </svg>
+      </div>
+    </div>
+    <div data-passo="3" style="position:absolute;left:580px;right:0;top:640px;display:flex;flex-direction:column;gap:12px">
+      <div style="display:flex;gap:12px;flex-wrap:wrap;align-items:center"><b style="font-size:26px;color:var(--erro)">Ionizantes:</b><span class="tag tag-i">ultravioleta de maior energia</span><span class="tag tag-i">raios X</span><span class="tag tag-i">raios gama</span></div>
+      <div style="display:flex;gap:12px;flex-wrap:wrap;align-items:center"><b style="font-size:26px;color:var(--d-forte)">Não ionizantes:</b><span class="tag tag-n">rádio</span><span class="tag tag-n">micro-ondas</span><span class="tag tag-n">infravermelho</span><span class="tag tag-n">luz visível</span></div>
+    </div>
+  </div>
+  <aside class="notas">
+    <p>Esquema (não está na apostila, ilustra a definição dela): a onda de baixa energia (luz visível) chega ao átomo e o elétron continua nele; a de alta energia (raios X) arranca o elétron. Átomo arrancando elétron = ionização (íons, da Química).</p>
+  </aside>
+</section>
+
+<!-- 8. A dose -->
+<section class="slide" data-nome="A dose">
+  <div class="conteudo">
+    <p class="olho">Ionizantes: o perigo depende da dose</p>
+    <h2 class="titulo">Intensidade e tempo de exposição</h2>
+    <div style="position:absolute;left:0;right:0;top:160px;display:grid;grid-template-columns:1fr 1fr;gap:20px 30px">
+      <div class="cartao" data-passo="1">
+        <svg viewBox="0 0 120 100" aria-hidden="true"><path d="M30 10 h60 l10 80 h-80 z" fill="#8E8AA0"/><path d="M45 10 q15 16 30 0" fill="none" stroke="#5E5A70" stroke-width="4"/><text x="60" y="66" text-anchor="middle" font-size="22" font-weight="800" fill="#fff" font-family="Figtree,sans-serif">Pb</text></svg>
+        <div><h3>Raio X rápido</h3><p>Dose pequena; o <b>avental de chumbo</b> barra a radiação nas partes não examinadas.</p></div>
+      </div>
+      <div class="cartao" data-passo="2">
+        <svg viewBox="0 0 120 100" aria-hidden="true"><rect x="10" y="10" width="40" height="80" rx="6" fill="#8E8AA0"/><rect x="60" y="30" width="50" height="40" rx="6" fill="#E8F3FC" stroke="#7FB4E0" stroke-width="3"/><circle cx="85" cy="50" r="10" fill="#6551D1"/></svg>
+        <div><h3>Quem trabalha</h3><p>fica atrás de uma <b>parede</b> ou de um <b>vidro com chumbo</b>.</p></div>
+      </div>
+      <div class="cartao" data-passo="3">
+        <svg viewBox="0 0 120 100" aria-hidden="true"><circle cx="60" cy="56" r="34" fill="#F2C9B0"/><circle cx="66" cy="60" r="12" fill="#C2384F"/><path d="M60 0 L64 46 M40 4 L60 48 M80 4 L64 48" stroke="#7B4FE0" stroke-width="4"/></svg>
+        <div><h3>Radioterapia</h3><p>raios X ou gama <b>apontados para o tumor</b>, justamente porque destroem células.</p></div>
+      </div>
+      <div class="cartao" data-passo="4">
+        <svg viewBox="0 0 120 100" aria-hidden="true"><circle cx="60" cy="40" r="22" fill="#FFD10C"/><path d="M20 70 q40 -20 80 0 v14 h-80 z" fill="#C98A6B"/><path d="M28 64 q32 -30 64 0" fill="none" stroke="#4B39B3" stroke-width="6"/></svg>
+        <div><h3>Ultravioleta do Sol</h3><p>bronzeia e queima; com anos de exposição, pode causar <b>câncer de pele</b>.</p></div>
+      </div>
+    </div>
+    <div class="caixa caixa-fundamental" data-passo="5" style="position:absolute;left:580px;right:0;top:620px;padding:18px 28px">
+      <div class="texto" style="font-size:28px">Contra o UV: <b>protetor solar</b>, <b>chapéu</b>, <b>óculos escuros com proteção UV</b> e evitar o Sol entre <b>10 h e 16 h</b>. Tudo isso diminui a dose.</div>
+    </div>
+  </div>
+  <aside class="notas"><p>Da apostila: o perigo de uma radiação ionizante depende da dose (intensidade e tempo de exposição). Um cartão por clique.</p></aside>
+</section>
+
+<!-- 9. Tratamentos -->
+<section class="slide" data-nome="Radioterapia, laser, infravermelho e ultravioleta">
+  <div class="conteudo">
+    <p class="olho">Ondas que tratam</p>
+    <h2 class="titulo">Radioterapia, laser, infravermelho e UV</h2>
+    <div style="position:absolute;left:0;right:0;top:160px;display:grid;grid-template-columns:1fr 1fr;gap:20px 30px">
+      <div class="cartao">
+        <svg viewBox="0 0 120 100" aria-hidden="true"><circle cx="60" cy="56" r="34" fill="#F2C9B0"/><circle cx="66" cy="60" r="12" fill="#C2384F"/><path d="M60 0 L64 46" stroke="#7B4FE0" stroke-width="5"/></svg>
+        <div><h3>Radioterapia</h3><p><span class="tag tag-i" style="font-size:20px">raios X ou gama</span> destroem as células do tumor.</p></div>
+      </div>
+      <div class="cartao" data-passo="1">
+        <svg viewBox="0 0 120 100" aria-hidden="true"><ellipse cx="80" cy="50" rx="30" ry="22" fill="#fff" stroke="#8E8AA0" stroke-width="3"/><circle cx="80" cy="50" r="10" fill="#4B39B3"/><path d="M6 20 L72 48" stroke="#E5484D" stroke-width="5" stroke-linecap="round"/></svg>
+        <div><h3>Cirurgia a laser</h3><p><span class="tag tag-n" style="font-size:20px">luz concentrada</span> corrige a miopia e faz cortes precisos.</p></div>
+      </div>
+      <div class="cartao" data-passo="2">
+        <svg viewBox="0 0 120 100" aria-hidden="true"><path d="M30 10 h60 l-10 30 h-40 z" fill="#4B39B3"/><g stroke="#E5484D" stroke-width="4" stroke-linecap="round" fill="none"><path d="M45 48 q6 10 0 20 q-6 10 0 20"/><path d="M60 48 q6 10 0 20 q-6 10 0 20"/><path d="M75 48 q6 10 0 20 q-6 10 0 20"/></g></svg>
+        <div><h3>Fisioterapia</h3><p><span class="tag tag-n" style="font-size:20px">infravermelho</span> aquece e relaxa os músculos.</p></div>
+      </div>
+      <div class="cartao" data-passo="3">
+        <svg viewBox="0 0 120 100" aria-hidden="true"><rect x="20" y="20" width="80" height="20" rx="10" fill="#7B4FE0"/><g stroke="#7B4FE0" stroke-width="4" stroke-linecap="round"><path d="M35 48 v20 M60 48 v24 M85 48 v20"/></g><rect x="30" y="76" width="60" height="16" rx="4" fill="#C9C0F0"/></svg>
+        <div><h3>Ultravioleta</h3><p><span class="tag tag-i" style="font-size:20px">ionizante (o de maior energia)</span> esteriliza objetos.</p></div>
+      </div>
+    </div>
+    <div class="caixa caixa-atencao" data-passo="4" style="position:absolute;left:580px;right:0;top:620px;padding:18px 28px">
+      <span class="rotulo">Atenção · Não ionizante não é inofensiva</span>
+      <div class="texto" style="font-size:27px">O <b>infravermelho intenso queima</b>, e olhar um <b>laser</b> pode lesar a retina.</div>
+    </div>
+  </div>
+  <aside class="notas"><p>Os tratamentos da tabela e o uso do ultravioleta para esterilizar (espectro, Ondas eletromagnéticas). O laser da cirurgia é luz visível ou próxima dela, concentrada.</p></aside>
+</section>
+
+<!-- 10. Não ionizantes: aquecem -->
+<section class="slide" data-nome="Não ionizantes também pedem cuidado">
+  <div class="conteudo">
+    <p class="olho">Não ionizantes</p>
+    <h2 class="titulo">Também pedem cuidado: aquecem</h2>
+    <div class="painel" style="position:absolute;left:0;width:820px;top:160px">
+      <h3>Forno de micro-ondas</h3>
+      <svg viewBox="0 0 760 200" width="760" height="200" style="display:block" aria-hidden="true">
+        <rect x="100" y="10" width="520" height="180" rx="20" fill="#fff" stroke="#4B39B3" stroke-width="6"/>
+        <rect x="120" y="30" width="360" height="140" rx="12" fill="#E4DEFB"/>
+        <g stroke="#8C7BEA" stroke-width="2" opacity=".9">
+          <line x1="140" y1="30" x2="140" y2="170"/><line x1="160" y1="30" x2="160" y2="170"/><line x1="180" y1="30" x2="180" y2="170"/><line x1="200" y1="30" x2="200" y2="170"/><line x1="220" y1="30" x2="220" y2="170"/><line x1="240" y1="30" x2="240" y2="170"/><line x1="260" y1="30" x2="260" y2="170"/><line x1="280" y1="30" x2="280" y2="170"/><line x1="300" y1="30" x2="300" y2="170"/><line x1="320" y1="30" x2="320" y2="170"/><line x1="340" y1="30" x2="340" y2="170"/><line x1="360" y1="30" x2="360" y2="170"/><line x1="380" y1="30" x2="380" y2="170"/><line x1="400" y1="30" x2="400" y2="170"/><line x1="420" y1="30" x2="420" y2="170"/><line x1="440" y1="30" x2="440" y2="170"/><line x1="460" y1="30" x2="460" y2="170"/>
+          <line x1="120" y1="50" x2="480" y2="50"/><line x1="120" y1="70" x2="480" y2="70"/><line x1="120" y1="90" x2="480" y2="90"/><line x1="120" y1="110" x2="480" y2="110"/><line x1="120" y1="130" x2="480" y2="130"/><line x1="120" y1="150" x2="480" y2="150"/>
+        </g>
+        <text x="300" y="104" text-anchor="middle" class="rot" font-size="26" fill="#3F2FA0">tela metálica</text>
+        <g fill="#4B39B3"><circle cx="555" cy="60" r="14"/><circle cx="555" cy="110" r="14"/></g>
+      </svg>
+      <p>Aquece a comida porque <b>agita as moléculas de água</b>. A porta com <b>tela metálica</b> não deixa as ondas saírem.</p>
+    </div>
+    <div style="position:absolute;left:880px;right:0;top:160px;display:flex;flex-direction:column;gap:18px">
+      <div class="linha-ex" style="font-size:28px">As não ionizantes não arrancam elétrons, mas <b>muita energia aquece</b>.</div>
+      <div class="linha-ex" data-passo="1" style="font-size:28px">O <b>celular</b> e o <b>wi-fi</b> usam ondas de rádio e micro-ondas, que não ionizam e, nos níveis de uso do dia a dia, são consideradas <b>seguras</b>.</div>
+    </div>
+  </div>
+  <aside class="notas"><p>Da apostila (parágrafo das não ionizantes e a atenção "Não ionizante não é inofensiva", cuja segunda metade está no slide anterior).</p></aside>
+</section>
+
+<!-- 11. Exemplo: avental -->
+<section class="slide" data-nome="Exemplo: avental de chumbo">
+  <div class="conteudo">
+    <p class="olho">Exemplo</p>
+    <h2 class="titulo">Qual pede avental de chumbo?</h2>
+    <p class="texto" style="position:absolute;left:0;right:0;top:150px;margin:0">Numa clínica, Lívia fará uma <b>ultrassonografia</b>, e o irmão, uma <b>radiografia do braço</b>. Qual dos dois exames usa radiação ionizante?</p>
+    <div style="position:absolute;left:0;right:0;top:330px;display:grid;grid-template-columns:1fr 1fr;gap:40px">
+      <div class="linha-ex" data-passo="1"><b>Ultrassom:</b> onda <b>mecânica</b>; nem chega a ser eletromagnética. <span class="tag tag-m">não ionizante</span></div>
+      <div class="linha-ex" data-passo="2"><b>Raios X:</b> eletromagnéticos de frequência <b>muito alta</b>. <span class="tag tag-i">ionizantes</span></div>
+    </div>
+    <span class="pilula pilula-resposta" data-passo="3" style="position:absolute;right:0;top:640px">Resposta: a radiografia; só nela se usa o avental</span>
+  </div>
+  <aside class="notas"><p>Exemplo da apostila.</p></aside>
+</section>
+
+<!-- 12. Questão 1 -->
+<section class="slide questao" data-nome="Questão 1">
+  <div class="conteudo">
+    <div class="area-resolucao"></div>
+    <span class="pilula pilula-pausa" data-em="1:some">Pause o vídeo e tente</span>
+    <div class="painel-questao">
+      <p class="olho">Questão 1 · Modelo IF</p>
+      <p class="enunciado" style="font-size:22px">Num hospital de Juiz de Fora, três pacientes chegaram para exames de imagem na mesma manhã:</p>
+      <table class="tabela" style="font-size:19px;border-radius:16px;flex:none">
+        <tr><th style="padding:5px 12px">Paciente</th><th style="padding:5px 12px">Situação</th></tr>
+        <tr><td style="padding:4px 12px">1</td><td style="padding:4px 12px;text-align:left">Gestante de cinco meses, que vai acompanhar o crescimento do bebê.</td></tr>
+        <tr><td style="padding:4px 12px">2</td><td style="padding:4px 12px;text-align:left">Jogadora de vôlei com suspeita de lesão no ligamento do joelho, um tecido mole.</td></tr>
+        <tr><td style="padding:4px 12px">3</td><td style="padding:4px 12px;text-align:left">Pedreiro que caiu de uma escada e pode ter fraturado o braço.</td></tr>
+      </table>
+      <p class="enunciado" style="font-size:22px">Os exames disponíveis são ultrassonografia, ressonância magnética e radiografia. A escolha <b>mais adequada</b> para os pacientes 1, 2 e 3, nessa ordem, é</p>
+      <ol class="alternativas" style="gap:6px">
+        <li data-em="2:apaga" style="font-size:20px;padding:5px 14px"><b>A</b><span>ultrassonografia, radiografia e ressonância magnética.</span></li>
+        <li data-em="2:certo" style="font-size:20px;padding:5px 14px"><b>B</b><span>ultrassonografia, ressonância magnética e radiografia.</span></li>
+        <li data-em="2:apaga" style="font-size:20px;padding:5px 14px"><b>C</b><span>radiografia, ressonância magnética e ultrassonografia.</span></li>
+        <li data-em="2:apaga" style="font-size:20px;padding:5px 14px"><b>D</b><span>ressonância magnética, ultrassonografia e radiografia.</span></li>
+        <li data-em="2:apaga" style="font-size:20px;padding:5px 14px"><b>E</b><span>radiografia, ultrassonografia e ressonância magnética.</span></li>
+      </ol>
+    </div>
+  </div>
+  <aside class="resolucao">
+    <p class="dados"><b>Dados:</b> gestante; ligamento (tecido mole); suspeita de fratura.</p>
+    <ol class="passos">
+      <li>1: gestação → ultrassonografia (sem ionizar).</li>
+      <li>2: tecido mole → ressonância magnética.</li>
+      <li>3: osso → radiografia (raios X).</li>
+    </ol>
+    <p class="resposta"><b>Resposta:</b> ultrassonografia, ressonância e radiografia. <b>Gabarito B.</b></p>
+    <p class="atencao"><b>Destaque no quadro:</b> Osso: raio X. Gestação: ultrassom. Tecido mole: ressonância.</p>
+    <ul class="erros">
+      <li><b>A</b> Troca ressonância e radiografia.</li>
+      <li><b>C</b> Raio X na gestante.</li>
+      <li><b>D</b> Ressonância na gestante e ultrassom no joelho.</li>
+      <li><b>E</b> Tudo trocado, com raio X na gestante.</li>
+    </ul>
+  </aside>
+  <aside class="notas">
+    <p>Clique 1 tira o aviso de pausa: resolva na área (D liga a caneta; E esconde o enunciado). Clique 2: gabarito B.</p>
+    <p>Modelo IF, lote if-fisica-radiacoes-e-saude, m005, FIS-8782 (questão da apostila, 5.3).</p>
+  </aside>
+</section>
+
+<!-- 13. Questão 2 -->
+<section class="slide questao" data-nome="Questão 2">
+  <div class="conteudo">
+    <div class="area-resolucao"></div>
+    <span class="pilula pilula-pausa" data-em="1:some">Pause o vídeo e tente</span>
+    <div class="painel-questao">
+      <p class="olho">Questão 2 · Modelo IF</p>
+      <p class="enunciado" style="font-size:22px">Numa clínica de radiologia, Marina fez uma radiografia do tórax. Ela ficou na frente do aparelho, com um avental de chumbo cobrindo só a barriga, enquanto o técnico saiu da sala e acionou o aparelho atrás de uma parede com chumbo. Marina estranhou: "Se a dose de um exame é pequena, por que ele precisa se esconder?".</p>
+      <p class="enunciado" style="font-size:22px">A melhor resposta para a dúvida de Marina é que</p>
+      <ol class="alternativas" style="gap:6px">
+        <li data-em="2:apaga" style="font-size:19px;padding:5px 14px"><b>A</b><span>depois de cada exame, os raios X ficam acumulados no ar da sala, e o técnico precisa esperar que eles saiam.</span></li>
+        <li data-em="2:apaga" style="font-size:19px;padding:5px 14px"><b>B</b><span>o chumbo transforma os raios X em luz visível, que não faz mal ao técnico.</span></li>
+        <li data-em="2:certo" style="font-size:19px;padding:5px 14px"><b>C</b><span>o técnico faz muitos exames por dia e, como o perigo depende da dose, a exposição repetida, somada ao longo do tempo, seria grande.</span></li>
+        <li data-em="2:apaga" style="font-size:19px;padding:5px 14px"><b>D</b><span>para Marina não há risco nenhum, porque os raios X só são ionizantes em doses grandes.</span></li>
+        <li data-em="2:apaga" style="font-size:19px;padding:5px 14px"><b>E</b><span>o técnico se protege das ondas de rádio do aparelho, que são mais perigosas que os raios X.</span></li>
+      </ol>
+    </div>
+  </div>
+  <aside class="resolucao">
+    <p class="dados"><b>Dados:</b> um exame tem dose pequena; o técnico faz muitos por dia.</p>
+    <ol class="passos">
+      <li>Perigo depende da dose: intensidade e tempo.</li>
+      <li>Muitos exames por dia: a dose se soma.</li>
+      <li>A parede com chumbo barra os raios X.</li>
+    </ol>
+    <p class="resposta"><b>Resposta:</b> a exposição repetida do técnico seria grande. <b>Gabarito C.</b></p>
+    <p class="atencao"><b>Destaque no quadro:</b> Dose = intensidade × tempo de exposição, somada ao longo do tempo.</p>
+    <ul class="erros">
+      <li><b>A</b> Os raios X acabam quando o aparelho desliga.</li>
+      <li><b>B</b> O chumbo barra (absorve) os raios X, não vira luz.</li>
+      <li><b>D</b> Raios X são sempre ionizantes; a dose pequena só reduz o risco.</li>
+      <li><b>E</b> O aparelho de raio X não usa ondas de rádio.</li>
+    </ul>
+  </aside>
+  <aside class="notas">
+    <p>Clique 1 tira o aviso de pausa: resolva na área (D liga a caneta; E esconde o enunciado). Clique 2: gabarito C.</p>
+    <p>Modelo IF, lote if-fisica-radiacoes-e-saude, m007, FIS-8784 (questão da apostila, 5.3).</p>
+  </aside>
+</section>
+
+<!-- 14. Questão 3 -->
+<section class="slide questao" data-nome="Questão 3">
+  <div class="conteudo">
+    <div class="area-resolucao"></div>
+    <span class="pilula pilula-pausa" data-em="1:some">Pause o vídeo e tente</span>
+    <div class="painel-questao">
+      <p class="olho">Questão 3 · Modelo IF</p>
+      <p class="enunciado" style="font-size:22px">O celular se comunica com as antenas usando micro-ondas. Num consultório de dentista, a radiografia dos dentes usa raios X. Sobre essas duas ondas, considere as afirmativas:</p>
+      <p class="enunciado" style="font-size:21px">I. As duas são ondas eletromagnéticas e se propagam no vácuo com a mesma velocidade.<br>II. Os raios X têm frequência maior que as micro-ondas e, por isso, têm comprimento de onda menor.<br>III. As micro-ondas do celular são radiações ionizantes, assim como os raios X.<br>IV. Na radiografia, usa-se um avental de chumbo para proteger as partes do corpo que não estão sendo examinadas.</p>
+      <p class="enunciado" style="font-size:22px">Está <b>CORRETO</b> o que se afirma em</p>
+      <ol class="alternativas curtas">
+        <li data-em="2:apaga"><b>A</b><span>I e II, apenas.</span></li>
+        <li data-em="2:apaga"><b>B</b><span>II e III, apenas.</span></li>
+        <li data-em="2:apaga"><b>C</b><span>I, III e IV, apenas.</span></li>
+        <li data-em="2:certo"><b>D</b><span>I, II e IV, apenas.</span></li>
+        <li data-em="2:apaga"><b>E</b><span>I, II, III e IV.</span></li>
+      </ol>
+    </div>
+  </div>
+  <aside class="resolucao">
+    <p class="dados"><b>Dados:</b> micro-ondas (celular) e raios X (dentista).</p>
+    <ol class="passos">
+      <li>I: as duas são eletromagnéticas, mesma velocidade (V).</li>
+      <li>II: \(v = \lambda \cdot f\) fixo: mais \(f\), menos \(\lambda\) (V).</li>
+      <li>III: micro-ondas não ionizam (F).</li>
+      <li>IV: o avental protege o resto do corpo (V).</li>
+    </ol>
+    <p class="resposta"><b>Resposta:</b> I, II e IV. <b>Gabarito D.</b></p>
+    <p class="atencao"><b>Destaque no quadro:</b> Ionizantes: UV forte, raios X e gama. Micro-ondas, não.</p>
+    <ul class="erros">
+      <li><b>A</b> Esquece a IV, que é verdadeira.</li>
+      <li><b>B</b> Aceita a III, que é falsa.</li>
+      <li><b>C</b> Aceita a III e esquece a II.</li>
+      <li><b>E</b> A III é falsa.</li>
+    </ul>
+  </aside>
+  <aside class="notas">
+    <p>Clique 1 tira o aviso de pausa: resolva na área (D liga a caneta; E esconde o enunciado). Clique 2: gabarito D.</p>
+    <p>Modelo IF, lote if-fisica-ondas, m029, FIS-0830 (questão da apostila, 5.3).</p>
+  </aside>
+</section>
+
+<!-- 15. Resumo -->
+<section class="slide" data-nome="Resumo">
+  <div class="conteudo">
+    <p class="olho">Resumo</p>
+    <h2 class="titulo">O essencial</h2>
+    <div class="resumo" style="position:absolute;left:0;right:0;top:150px">
+      <div><b>Medicina:</b> raios X e tomografia (ossos), ultrassom (gestação), ressonância magnética (tecidos moles), radioterapia, laser e infravermelho.</div>
+      <div><b>Ionizantes</b> (ultravioleta forte, raios X, gama) podem danificar as células; rádio, micro-ondas, infravermelho e luz visível <b>não ionizam</b>.</div>
+      <div><b>Dose e tempo de exposição importam:</b> avental de chumbo no raio X, protetor solar contra o ultravioleta.</div>
+      <div><b>Ultrassom</b> é onda mecânica: não é radiação ionizante.</div>
+    </div>
+  </div>
+  <aside class="notas"><p>Resumo da apostila de 5.3. Peça para tirarem um print desta tela.</p></aside>
+</section>
+
+<!-- 16. A seguir -->
+<section class="slide capa" data-nome="A seguir">
+  <div class="estrelas"></div>
+  <div class="texto-capa" style="top:240px">
+    <span class="selo">Física · IF</span>
+    <p class="aula">A seguir · Ondas · Questões do IF Sudeste</p>
+    <h1>Questões do IF Sudeste</h1>
+    <p class="sub">Ondas</p>
+  </div>
+  <svg class="emblema" viewBox="0 0 640 640" aria-hidden="true">
+    <rect x="150" y="80" width="340" height="460" rx="36" fill="#fff" opacity=".95"/>
+    <rect x="200" y="140" width="240" height="18" rx="9" fill="#C9C0F0"/><rect x="200" y="180" width="200" height="18" rx="9" fill="#C9C0F0"/>
+    <g font-family="Figtree,'Segoe UI',sans-serif" font-size="30" font-weight="800" text-anchor="middle">
+      <circle cx="225" cy="260" r="24" fill="#F1EEFD"/><text x="225" y="271" fill="#3F2FA0">A</text><rect x="265" y="252" width="160" height="16" rx="8" fill="#E4DEFB"/>
+      <circle cx="225" cy="320" r="24" fill="#F1EEFD"/><text x="225" y="331" fill="#3F2FA0">B</text><rect x="265" y="312" width="130" height="16" rx="8" fill="#E4DEFB"/>
+      <circle cx="225" cy="380" r="24" fill="#FFD10C"/><text x="225" y="391" fill="#292B2C">C</text><rect x="265" y="372" width="150" height="16" rx="8" fill="#E4DEFB"/>
+      <circle cx="225" cy="440" r="24" fill="#F1EEFD"/><text x="225" y="451" fill="#3F2FA0">D</text><rect x="265" y="432" width="110" height="16" rx="8" fill="#E4DEFB"/>
+    </g>
+    <circle cx="470" cy="470" r="86" fill="var(--d)" stroke="#fff" stroke-width="6"/>
+    <text x="470" y="490" text-anchor="middle" font-family="'Bricolage Grotesque',Figtree,sans-serif" font-size="58" font-weight="800" fill="#fff">IF</text>
+  </svg>
+  <img class="logo-capa" src="{{LOGO_BRANCO}}" alt="Quarks">
+  <aside class="notas"><p>Fim do conteúdo de Ondas. A seguir, o bloco só com as questões do IF Sudeste deste capítulo (cinco oficiais e uma Modelo de Radiações e saúde).</p></aside>
+</section>

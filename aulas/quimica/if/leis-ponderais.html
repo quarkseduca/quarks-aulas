@@ -1,0 +1,427 @@
+<!--aula
+{"disciplina": "quimica", "curso": "IF", "assunto": "Reações químicas", "parte": "Parte única", "titulo": "Leis ponderais", "scripts": ["animacoes-reacoes.js"]}
+-->
+<!-- Fonte: slides da professora (Química IF 2026, aula 04: leis ponderais, Lavoisier, Proust, tabela da decomposição da água, as leis numa reação, o brigadeiro e a questão da UFGD), completados com a apostila IF, Química, 5.2 Leis ponderais (sistema aberto e fechado, exemplos). Questões: UFGD e o exercício do brigadeiro, do material da professora. -->
+<style>
+  .caixa, .linha-ex, .lado-card, .cartao { box-sizing: border-box; }
+  .eq-q { font: 800 60px var(--fonte-titulo); letter-spacing: -.01em; color: var(--roxo-titulo); white-space: nowrap; }
+  .eq-q sub { font-size: .55em; }
+  .eq-q .e { font: 700 .48em var(--fonte-texto); color: var(--cinza); letter-spacing: 0; }
+  .linha-ex { background: var(--branco); border: 2px solid var(--lilas-2); border-radius: 22px; padding: 12px 24px; font-size: 30px; line-height: 1.3; }
+  .linha-ex b { color: var(--roxo-titulo); }
+  .linha-ex sub, .texto sub, .caixa sub, .cartao sub { font-size: .65em; }
+  .cartao { background: var(--branco); border: 2px solid var(--lilas-2); border-radius: 26px; padding: 18px 26px; font-size: 28px; line-height: 1.3; }
+  .cartao .rotulo { display: block; font-weight: 800; font-size: 21px; letter-spacing: .1em; text-transform: uppercase; color: var(--d-forte); margin-bottom: 4px; }
+  .cartao h3 { margin: 0 0 4px; font: 800 40px var(--fonte-titulo); letter-spacing: -.02em; color: var(--roxo-titulo); }
+  .lado-card { background: var(--branco); border: 2px solid var(--lilas-2); border-radius: 30px; padding: 14px 28px 16px; display: flex; flex-direction: column; align-items: center; gap: 4px; text-align: center; }
+  .lado-card h3 { margin: 0; font: 800 40px var(--fonte-titulo); letter-spacing: -.02em; color: var(--roxo-titulo); }
+  .lado-card p { margin: 0; font-size: 26px; line-height: 1.3; color: var(--cinza); }
+  .frase { font: 800 italic 40px var(--fonte-titulo); color: var(--roxo-titulo); letter-spacing: -.01em; line-height: 1.15; }
+  .tabela td, .tabela th { padding: 10px 34px; }
+  .tabela .x { color: var(--d-forte); font-weight: 800; }
+  .barra { display: flex; width: 260px; height: 26px; border-radius: 13px; overflow: hidden; background: var(--lilas); }
+  .barra i { display: block; height: 100%; width: 0; transition: width 1.2s ease-out .2s; }
+  .barra i.h { background: #B7AAF6; } .barra i.o { background: #E5533D; }
+  .mostra .barra i.h, .barra.sempre i.h { width: 11.1%; } .mostra .barra i.o, .barra.sempre i.o { width: 88.9%; }
+  .resp { align-self: flex-start; }
+  /* ---------- Animações (só na tela aberta e depois que a figura aparece) ---------- */
+  @keyframes bolha-dentro { 0% { transform: translateY(0); opacity: 0; } 15% { opacity: 1; } 80% { opacity: 1; } 100% { transform: translateY(-62px); opacity: 0; } }
+  @keyframes bolha-fora { 0% { transform: translateY(0); opacity: 0; } 12% { opacity: 1; } 75% { opacity: 1; } 100% { transform: translateY(-150px); opacity: 0; } }
+  .bolhas-in circle, .bolhas-out circle { opacity: 0; }
+  .slide.ativo .mostra .bolhas-in circle { animation: bolha-dentro 3.2s linear infinite; }
+  .slide.ativo .mostra .bolhas-out circle { animation: bolha-fora 3.6s linear infinite; }
+  .bolhas-in circle:nth-child(2), .bolhas-out circle:nth-child(2) { animation-delay: -.8s !important; }
+  .bolhas-in circle:nth-child(3), .bolhas-out circle:nth-child(3) { animation-delay: -1.6s !important; }
+  .bolhas-in circle:nth-child(4), .bolhas-out circle:nth-child(4) { animation-delay: -2.4s !important; }
+  /* ponteiro da balança: parado no sistema fechado; no aberto, desce enquanto o gás escapa */
+  .ponteiro { transform-box: view-box; transform-origin: 210px 312px; }
+  @keyframes desce { 0%,8% { transform: rotate(0deg); } 80%,94% { transform: rotate(-38deg); } 100% { transform: rotate(0deg); } }
+  .slide.ativo .mostra .ponteiro.cai { animation: desce 9s ease-in-out infinite; }
+  @keyframes comp { 0%,8% { transform: scale(1); } 80%,94% { transform: scale(.25); opacity: .6; } 100% { transform: scale(1); } }
+  .comprimido { transform-box: fill-box; transform-origin: 50% 100%; }
+  .slide.ativo .mostra .comprimido.some-aos-poucos { animation: comp 9s ease-in-out infinite; }
+</style>
+
+<!-- 1. Capa -->
+<section class="slide capa" data-nome="Capa">
+  <div class="estrelas"></div>
+  <div class="texto-capa">
+    <span class="selo">Química · IF</span>
+    <p class="aula">Reações químicas</p>
+    <h1>Leis ponderais</h1>
+    <p class="sub">Lavoisier e Proust</p>
+  </div>
+  <svg class="emblema" viewBox="0 0 640 640" aria-hidden="true">
+    <g class="gira-lento"><ellipse cx="320" cy="320" rx="300" ry="128" fill="none" stroke="#fff" stroke-opacity=".38" stroke-width="2" transform="rotate(-10 320 320)"/></g>
+    <g class="gira"><ellipse cx="320" cy="320" rx="236" ry="196" fill="none" stroke="#FFD10C" stroke-opacity=".75" stroke-width="2.5" stroke-dasharray="3 14" stroke-linecap="round" transform="rotate(-8 320 320)"/>
+      <circle cx="84" cy="300" r="13" fill="#FFD10C" stroke="#fff" stroke-width="3"/></g>
+    <circle cx="320" cy="320" r="132" fill="#FFD10C"/>
+    <image href="{{SYM_ROXO}}" x="238" y="238" width="164" height="164"/>
+  </svg>
+  <img class="logo-capa" src="{{LOGO_BRANCO}}" alt="Quarks">
+  <aside class="notas"><p>Hoje: as leis que relacionam as massas numa reação. Lavoisier (a massa se conserva) e Proust (a proporção das massas é sempre a mesma), com tabelas e regra de três.</p></aside>
+</section>
+
+<!-- 2. O que são -->
+<section class="slide" data-nome="Leis ponderais">
+  <div class="conteudo">
+    <p class="olho">Pesando as reações</p>
+    <h2 class="titulo">O que são leis ponderais?</h2>
+    <div class="caixa caixa-fundamental" style="position:absolute;left:0;width:1040px;top:165px">
+      <span class="rotulo">Leis ponderais</span>
+      <div class="texto" style="font-size:32px">Relacionam matematicamente as <b>massas</b> dos reagentes e dos produtos numa reação química.</div>
+    </div>
+    <div style="position:absolute;left:0;width:1040px;top:370px;display:grid;grid-template-columns:1fr 1fr;gap:24px">
+      <div class="cartao" data-passo="1"><span class="rotulo">Lavoisier</span><h3>Conservação das massas</h3>A massa total não muda.</div>
+      <div class="cartao" data-passo="2"><span class="rotulo">Proust</span><h3>Proporções constantes</h3>A proporção das massas é fixa.</div>
+    </div>
+    <div class="caixa caixa-atencao" data-passo="3" style="position:absolute;left:1100px;right:0;top:165px">
+      <span class="rotulo">Pense</span>
+      <div class="texto" style="font-size:30px">O carvão e a lenha queimam e viram cinzas. A massa das cinzas é <b>maior, menor ou igual</b> à do carvão e da lenha?</div>
+    </div>
+  </div>
+  <aside class="notas">
+    <p>Cliques 1 e 2: as duas leis que o IF cobra. Elas ajudaram a construir a teoria atômica de Dalton (que vem no capítulo de estrutura atômica).</p>
+    <p>O material da professora cita também a lei de Dalton (proporções múltiplas) e a de Gay-Lussac (volumes); só para saberem que existem.</p>
+    <p>Clique 3: deixe a pergunta no ar; a resposta vem duas telas adiante.</p>
+  </aside>
+</section>
+
+<!-- 3. Lavoisier -->
+<section class="slide" data-nome="Lei de Lavoisier">
+  <div class="conteudo">
+    <p class="olho">Antoine Laurent de Lavoisier (1743-1794)</p>
+    <h2 class="titulo">A massa se conserva</h2>
+    <div style="position:absolute;left:0;width:760px;top:165px;display:flex;flex-direction:column;gap:14px">
+      <div class="linha-ex" data-passo="1">Químico francês, considerado o <b>pai da Química moderna</b>.</div>
+      <div class="linha-ex" data-passo="1">Pesava tudo com cuidado, em <b>recipientes fechados</b>.</div>
+      <div class="linha-ex" data-passo="1">Levou a Química do "como é" para o <b>"quanto"</b>.</div>
+    </div>
+    <div style="position:absolute;left:820px;right:0;top:165px;display:flex;flex-direction:column;gap:18px">
+      <div class="caixa caixa-fundamental" data-passo="2">
+        <span class="rotulo">Lei de Lavoisier</span>
+        <div class="texto" style="font-size:31px">Numa reação em <b>sistema fechado</b>, a massa dos reagentes é igual à massa dos produtos.</div>
+        <p class="eq-q" style="margin:10px 0 0;font-size:46px">m<sub>reagentes</sub> = m<sub>produtos</sub></p>
+      </div>
+      <div class="linha-ex" data-passo="3"><b>Sistema fechado:</b> não troca matéria com o ambiente (nada entra, nada sai).</div>
+    </div>
+    <p class="frase" data-passo="4" style="position:absolute;left:580px;right:0;top:640px;margin:0">"Na natureza, nada se perde, nada se cria, tudo se transforma."</p>
+  </div>
+  <aside class="notas">
+    <p>Clique 1: quem foi Lavoisier (material da professora). Ele derrubou a teoria do flogisto, que dizia que algo "saía" do material ao queimar. Clique 2: a lei. Clique 3: sistema fechado. Clique 4: a frase atribuída a ele.</p>
+  </aside>
+</section>
+
+<!-- 4. Fechado e aberto -->
+<section class="slide" data-nome="Sistema fechado e aberto">
+  <div class="conteudo">
+    <p class="olho">Nunca esqueça os gases</p>
+    <h2 class="titulo">Fechado ou aberto?</h2>
+    <div style="position:absolute;left:0;right:0;top:150px;display:grid;grid-template-columns:1fr 1fr;gap:30px">
+      <div class="lado-card" data-passo="1">
+        <svg viewBox="0 0 420 340" style="width:330px;height:267px" aria-hidden="true">
+          <path d="M172 40 h76 v18 h-76 z" fill="#8C7BEA"/>
+          <path d="M180 58 v60 L120 230 a14 14 0 0 0 12 20 H288 a14 14 0 0 0 12 -20 L240 118 v-60" fill="#FBFAFF" stroke="#7F7A99" stroke-width="5" stroke-linejoin="round"/>
+          <path d="M146 190 H274 L294 230 a10 10 0 0 1 -9 15 H135 a10 10 0 0 1 -9 -15 Z" fill="#CFE6FA"/>
+          <rect x="196" y="228" width="28" height="12" rx="4" fill="#fff" stroke="#9A95AD" stroke-width="2"/>
+          <g class="bolhas-in" fill="#fff" stroke="#7FB4E0" stroke-width="2"><circle cx="200" cy="226" r="5"/><circle cx="214" cy="228" r="4"/><circle cx="222" cy="226" r="5"/><circle cx="208" cy="230" r="4"/></g>
+          <rect x="40" y="252" width="340" height="80" rx="20" fill="#E4DEFB" stroke="#8C7BEA" stroke-width="4"/>
+          <path d="M176 312 a34 34 0 0 1 68 0" fill="#fff" stroke="#8C7BEA" stroke-width="3"/>
+          <path class="ponteiro" d="M210 312 V284" stroke="#C2384F" stroke-width="5" stroke-linecap="round"/>
+          <circle cx="210" cy="312" r="5" fill="#292B2C"/>
+        </svg>
+        <h3>Sistema fechado</h3>
+        <p>O gás fica no frasco: a balança <b>não muda</b>.</p>
+      </div>
+      <div class="lado-card" data-passo="2">
+        <svg viewBox="0 0 420 340" style="width:330px;height:267px" aria-hidden="true">
+          <path d="M140 100 V232 a16 16 0 0 0 16 16 H264 a16 16 0 0 0 16 -16 V100" fill="#FBFAFF" stroke="#7F7A99" stroke-width="5" stroke-linecap="round"/>
+          <path d="M143 150 H277 V232 a13 13 0 0 1 -13 13 H156 a13 13 0 0 1 -13 -13 Z" fill="#CFE6FA"/>
+          <rect class="comprimido some-aos-poucos" x="194" y="228" width="32" height="14" rx="4" fill="#fff" stroke="#9A95AD" stroke-width="2"/>
+          <g class="bolhas-out" fill="#fff" stroke="#7FB4E0" stroke-width="2"><circle cx="198" cy="224" r="5"/><circle cx="214" cy="226" r="4"/><circle cx="226" cy="224" r="5"/><circle cx="206" cy="228" r="4"/></g>
+          <rect x="40" y="252" width="340" height="80" rx="20" fill="#E4DEFB" stroke="#8C7BEA" stroke-width="4"/>
+          <path d="M176 312 a34 34 0 0 1 68 0" fill="#fff" stroke="#8C7BEA" stroke-width="3"/>
+          <path class="ponteiro cai" d="M210 312 V284" stroke="#C2384F" stroke-width="5" stroke-linecap="round"/>
+          <circle cx="210" cy="312" r="5" fill="#292B2C"/>
+        </svg>
+        <h3>Sistema aberto</h3>
+        <p>O gás escapa: a balança <b>marca menos</b>.</p>
+      </div>
+    </div>
+    <div class="caixa caixa-atencao" data-passo="3" style="position:absolute;left:580px;right:0;top:640px">
+      <span class="rotulo">Resposta da pergunta</span>
+      <div class="texto" style="font-size:28px">As cinzas pesam <b>menos</b>: o gás carbônico e o vapor de água foram para o ar. A palha de aço queimada pesa <b>mais</b>: o O<sub>2</sub> do ar se juntou ao ferro.</div>
+    </div>
+  </div>
+  <aside class="notas">
+    <p>Clique 1: comprimido efervescente num frasco tampado; as bolhas ficam dentro e o ponteiro não se mexe. Clique 2: no copo aberto, o gás escapa e o ponteiro desce.</p>
+    <p>Clique 3: a resposta da pergunta do carvão. A lei vale sempre; o que muda é se você está pesando tudo (o "nunca esqueça a massa do oxigênio" do material da professora).</p>
+  </aside>
+</section>
+
+<!-- 5. Exemplos de Lavoisier -->
+<section class="slide" data-nome="Exemplos de Lavoisier">
+  <div class="conteudo">
+    <p class="olho">Lei de Lavoisier na prática</p>
+    <h2 class="titulo">Somando massas</h2>
+    <div style="position:absolute;left:0;width:840px;top:165px;display:flex;flex-direction:column;gap:12px">
+      <div class="cartao"><span class="rotulo">Exemplo 1 · Decomposição da água</span>18 g de água formam 2 g de hidrogênio e 16 g de oxigênio. A massa se conservou?</div>
+      <div class="linha-ex" data-passo="1"><b>Reagente:</b> 18 g</div>
+      <div class="linha-ex" data-passo="2"><b>Produtos:</b> 2 + 16 = 18 g</div>
+      <div class="linha-ex" data-passo="3" style="background:var(--d-clara)"><b>18 g = 18 g:</b> a massa se conservou ✓</div>
+    </div>
+    <div style="position:absolute;left:900px;right:0;top:165px;display:flex;flex-direction:column;gap:12px">
+      <div class="cartao" data-passo="4"><span class="rotulo">Exemplo 2 · Queima do carvão</span>12 g de carbono queimam e formam 44 g de gás carbônico, e nada mais. Quanto oxigênio reagiu?</div>
+      <div class="linha-ex" data-passo="5">m<sub>carbono</sub> + m<sub>oxigênio</sub> = m<sub>gás carbônico</sub></div>
+      <div class="linha-ex" data-passo="6">12 + m = 44</div>
+      <div class="linha-ex" data-passo="7">m = 44 − 12</div>
+      <div class="linha-ex" data-passo="8" style="background:var(--d-clara)"><b>m = 32 g</b> de oxigênio</div>
+    </div>
+  </div>
+  <aside class="notas">
+    <p>Exemplo 1 (material da professora): água → hidrogênio + oxigênio, 18 g = 2 g + 16 g. Exemplo 2 (apostila): o oxigênio veio do ar; num sistema aberto, a balança mostraria só o carvão diminuindo.</p>
+    <p>Um clique por linha. Sempre: tudo o que reage de um lado, tudo o que se forma do outro.</p>
+  </aside>
+</section>
+
+<!-- 6. Por que a massa se conserva -->
+<section class="slide" data-nome="Por que a massa se conserva">
+  <div class="conteudo">
+    <p class="olho">As leis ponderais numa reação</p>
+    <h2 class="titulo">Os átomos não somem</h2>
+    <div style="position:absolute;left:0;top:165px;width:900px">
+      <div data-anima="rearranjo" data-reacao="h2o" data-inverte="1" data-anima-passo="1" style="width:900px;height:300px"></div>
+      <div style="display:grid;grid-template-columns:1fr 1fr;text-align:center;margin-top:4px" data-passo="1">
+        <span class="eq-q" style="font-size:44px">2 H<sub>2</sub>O</span><span class="eq-q" style="font-size:44px">2 H<sub>2</sub> + O<sub>2</sub></span>
+      </div>
+    </div>
+    <div style="position:absolute;left:960px;right:0;top:170px;display:flex;flex-direction:column;gap:16px">
+      <div class="linha-ex" data-passo="2"><b>Antes:</b> 4 átomos de H e 2 de O.</div>
+      <div class="linha-ex" data-passo="2"><b>Depois:</b> 4 átomos de H e 2 de O.</div>
+      <div class="linha-ex" data-passo="3"><b>Com o dobro de água:</b> 8 H e 4 O, antes e depois.</div>
+      <div class="caixa caixa-fundamental" data-passo="4" style="padding:18px 28px">
+        <div class="texto" style="font-size:30px">Os átomos só se reorganizam. Mesmos átomos, <b>mesma massa</b>: é a Lei de Lavoisier.</div>
+      </div>
+    </div>
+  </div>
+  <aside class="notas">
+    <p>Clique 1: a decomposição da água, com os átomos se soltando e formando H₂ e O₂. Clique 2: a contagem. Clique 3: com o dobro de água, o dobro de átomos dos dois lados (material da professora). Clique 4: a ligação com a lei.</p>
+    <p>É por isso que balanceamos as equações: a equação balanceada é a Lei de Lavoisier escrita com átomos.</p>
+  </aside>
+</section>
+
+<!-- 7. Proust -->
+<section class="slide" data-nome="Lei de Proust">
+  <div class="conteudo">
+    <p class="olho">Joseph-Louis Proust (1754-1826)</p>
+    <h2 class="titulo">A proporção é sempre a mesma</h2>
+    <div style="position:absolute;left:0;width:760px;top:165px;display:flex;flex-direction:column;gap:14px">
+      <div class="linha-ex" data-passo="1">Químico francês, <b>contemporâneo de Lavoisier</b>.</div>
+      <div class="linha-ex" data-passo="1">Estudou Química e Farmácia; trabalhou em <b>Madri</b>.</div>
+      <div class="linha-ex" data-passo="1">Analisou amostras de <b>origens diferentes</b> do mesmo composto.</div>
+    </div>
+    <div class="caixa caixa-fundamental" data-passo="2" style="position:absolute;left:820px;right:0;top:165px">
+      <span class="rotulo">Lei de Proust (proporções constantes ou definidas)</span>
+      <div class="texto" style="font-size:31px">Amostras diferentes do mesmo composto têm sempre a <b>mesma proporção entre as massas</b> dos seus elementos.</div>
+    </div>
+    <div class="caixa caixa-atencao" data-passo="3" style="position:absolute;left:580px;right:0;top:600px">
+      <span class="rotulo">Na prática</span>
+      <div class="texto" style="font-size:29px">A água do rio, da chuva ou do laboratório: em toda água pura, para cada <b>1 g de hidrogênio</b> há <b>8 g de oxigênio</b>.</div>
+    </div>
+  </div>
+  <aside class="notas">
+    <p>Clique 1: quem foi Proust (material da professora: estudou Química e Farmácia e trabalhou no laboratório de Carlos IV, em Madri). Clique 2: a lei. Clique 3: o exemplo da água, que vem na tabela a seguir.</p>
+  </aside>
+</section>
+
+<!-- 8. Tabela de Proust -->
+<section class="slide" data-nome="Tabela da água">
+  <div class="conteudo">
+    <p class="olho">Decomposição de amostras de água</p>
+    <h2 class="titulo">Dobra a água, dobra tudo</h2>
+    <table class="tabela" style="position:absolute;left:0;top:160px;font-size:36px">
+      <tr><th>Água</th><th>Hidrogênio</th><th>Oxigênio</th><th>H : O</th><th>Proporção</th></tr>
+      <tr data-passo="1"><td>18 g</td><td>2 g</td><td>16 g</td><td class="x">1 : 8</td><td><div class="barra"><i class="h"></i><i class="o"></i></div></td></tr>
+      <tr data-passo="2"><td>90 g</td><td>10 g</td><td>80 g</td><td class="x">1 : 8</td><td><div class="barra"><i class="h"></i><i class="o"></i></div></td></tr>
+      <tr data-passo="3"><td>135 g</td><td>15 g</td><td>120 g</td><td class="x">1 : 8</td><td><div class="barra"><i class="h"></i><i class="o"></i></div></td></tr>
+      <tr data-passo="4"><td>405 g</td><td>45 g</td><td>360 g</td><td class="x">1 : 8</td><td><div class="barra"><i class="h"></i><i class="o"></i></div></td></tr>
+      <tr data-passo="5" style="background:var(--d-clara)"><td><b>100 %</b></td><td><b>11,1 %</b></td><td><b>88,9 %</b></td><td></td><td></td></tr>
+    </table>
+    <div class="caixa caixa-fundamental" data-passo="6" style="position:absolute;left:1320px;right:0;top:160px">
+      <span class="rotulo">Proporção em massa</span>
+      <p class="eq-q" style="margin:4px 0 6px;font-size:44px">2 / 16 = 1 / 8</p>
+      <div class="texto" style="font-size:27px">Igual em todas as linhas. Em %: 2 ÷ 18 = 11,1 % de H.</div>
+    </div>
+  </div>
+  <aside class="notas">
+    <p>Dados experimentais do material da professora, uma linha por clique. Pergunte: de 18 para 90 g, multiplicou por quanto? (5.) E o hidrogênio? (2 → 10, também por 5.)</p>
+    <p>A barra mostra a fatia de hidrogênio (lilás) e de oxigênio (vermelho): é a mesma em todas as amostras. Clique 5: em porcentagem, 2/18 = 11,1 % e 16/18 = 88,9 %. Clique 6: a proporção em massa 2 : 16 = 1 : 8.</p>
+  </aside>
+</section>
+
+<!-- 9. Exemplo: regra de três -->
+<section class="slide" data-nome="Exemplo: regra de três">
+  <div class="conteudo">
+    <p class="olho">Exemplo 1 · Lei de Proust com regra de três</p>
+    <h2 class="titulo">Quanto H e O há em 45 g de água?</h2>
+    <table class="tabela" data-passo="1" style="position:absolute;left:0;top:165px;font-size:38px">
+      <tr><th>Água (g)</th><th>Hidrogênio (g)</th></tr>
+      <tr><td>18</td><td>2</td></tr>
+      <tr><td>45</td><td class="x">x</td></tr>
+    </table>
+    <div style="position:absolute;left:640px;width:600px;top:165px;display:flex;flex-direction:column;gap:12px">
+      <div class="linha-ex" data-passo="2"><b>Direta:</b> mais água, mais H.</div>
+      <div class="linha-ex" data-passo="3">18 · x = 45 · 2</div>
+      <div class="linha-ex" data-passo="4">18 x = 90</div>
+      <div class="linha-ex" data-passo="5" style="background:var(--d-clara)"><b>x = 5 g</b> de hidrogênio</div>
+    </div>
+    <div style="position:absolute;left:1300px;right:0;top:165px;display:flex;flex-direction:column;gap:12px">
+      <div class="linha-ex" data-passo="6"><b>Oxigênio</b> (Lavoisier):</div>
+      <div class="linha-ex" data-passo="6">45 − 5 = <b>40 g</b></div>
+      <div class="linha-ex" data-passo="7"><b>Confira:</b> 5 : 40 = 1 : 8 ✓</div>
+    </div>
+  </div>
+  <aside class="notas">
+    <p>A linha de cima da regra de três vem da tabela (18 g de água têm 2 g de hidrogênio). Cliques 2 a 5: a regra de três. Clique 6: o oxigênio sai pela Lei de Lavoisier, sem outra regra de três. Clique 7: a proporção 1 : 8 confere (Proust).</p>
+  </aside>
+</section>
+
+<!-- 10. Exemplo: o que sobra -->
+<section class="slide" data-nome="Exemplo: o que sobra">
+  <div class="conteudo">
+    <p class="olho">Exemplo 2 · As duas leis juntas</p>
+    <h2 class="titulo">10 g de hidrogênio e 100 g de oxigênio</h2>
+    <div class="cartao" style="position:absolute;left:0;width:860px;top:165px">Juntam-se 10 g de gás hidrogênio e 100 g de gás oxigênio para formar água. Quanto de água se forma? Sobra algum reagente?</div>
+    <div style="position:absolute;left:0;width:860px;top:310px;display:flex;flex-direction:column;gap:12px">
+      <div class="linha-ex" data-passo="1"><b>Proust:</b> H : O = 1 : 8.</div>
+      <div class="linha-ex" data-passo="2"><b>10 g de H</b> pedem 10 · 8 = <b>80 g de O</b>.</div>
+      <div class="linha-ex" data-passo="3"><b>Sobra:</b> 100 − 80 = <b>20 g de O</b>.</div>
+    </div>
+    <div style="position:absolute;left:920px;right:0;top:310px;display:flex;flex-direction:column;gap:12px">
+      <div class="linha-ex" data-passo="4"><b>Lavoisier:</b> só reage o que tem par.</div>
+      <div class="linha-ex" data-passo="5">Água = 10 + 80 = <b>90 g</b></div>
+      <div class="linha-ex" data-passo="6">Total: 90 + 20 = 110 = 10 + 100 ✓</div>
+    </div>
+    <div class="caixa caixa-atencao" data-passo="7" style="position:absolute;left:580px;right:0;top:640px">
+      <div class="texto" style="font-size:29px">Reagente fora da proporção <b>sobra</b> (está em excesso). É a 2ª linha da tabela: 10 g + 80 g → 90 g.</div>
+    </div>
+  </div>
+  <aside class="notas">
+    <p>Um clique por linha. O erro mais comum é somar tudo (110 g de água): só reage o que está na proporção 1 : 8. Os 20 g de oxigênio que sobram continuam no frasco, e a massa total (110 g) se conserva.</p>
+  </aside>
+</section>
+
+<!-- Questão 1 -->
+<section class="slide questao" data-nome="Questão 1">
+  <div class="conteudo">
+    <div class="area-resolucao"></div>
+    <span class="pilula pilula-pausa" data-em="1:some">Pause o vídeo e tente</span>
+    <div class="painel-questao">
+      <p class="olho">Questão 1 · UFGD</p>
+      <p class="enunciado" style="font-size:26px">A transformação química:</p>
+      <p class="enunciado" style="font-size:24px;font-weight:800;color:var(--roxo-titulo);text-align:center;line-height:1.2;white-space:nowrap">2 KI(s) + Pb(NO<sub>3</sub>)<sub>2</sub>(s) → 2 KNO<sub>3</sub>(s) + PbI<sub>2</sub>(s)<br><span style="font:600 20px var(--fonte-texto);color:var(--cinza)">branco &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; branco &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; branco &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; amarelo</span></p>
+      <p class="enunciado" style="font-size:26px">é um exemplo de reação entre sólidos, que ocorre rapidamente. Em um recipiente de vidro com tampa, de massa igual a 20 g, foram colocados 2 g de KI e 4 g de Pb(NO<sub>3</sub>)<sub>2</sub> pulverizados. O recipiente, hermeticamente fechado, foi vigorosamente agitado para ocorrer a reação. Qual será a massa total do recipiente ao final da reação?</p>
+      <p class="pilula pilula-resposta resp" data-passo="2">Resposta: 26 g</p>
+    </div>
+  </div>
+  <aside class="resolucao">
+    <p class="dados"><b>Dados:</b> frasco 20 g; KI 2 g; Pb(NO₃)₂ 4 g; fechado.</p>
+    <ol class="passos">
+      <li><b>Fechado:</b> nada entra, nada sai.</li>
+      <li><b>Lavoisier:</b> massa final = massa inicial.</li>
+      <li><b>Soma:</b> 20 + 2 + 4 = 26 g.</li>
+    </ol>
+    <p class="resposta"><b>Resposta:</b> a massa total continua 26 g.</p>
+    <p class="atencao"><b>Destaque no quadro:</b> Hermeticamente fechado = Lavoisier direto.</p>
+    <ul class="erros">
+      <li><b>6 g</b> Esquece a massa do frasco.</li>
+      <li><b>20 g</b> Esquece os reagentes.</li>
+      <li><b>Outra</b> Acha que a cor amarela muda a massa.</li>
+    </ul>
+  </aside>
+  <aside class="notas">
+    <p>Clique 1 tira o aviso de pausa: resolva na área. Clique 2: a resposta, 26 g.</p>
+    <p>Questão da UFGD, do material da professora (lá ela aparece sem alternativas; trabalhe como questão aberta). A cor amarela do PbI₂ mostra que houve reação, mas a massa total não muda.</p>
+  </aside>
+</section>
+
+<!-- Questão 2 -->
+<section class="slide questao" data-nome="Questão 2">
+  <div class="conteudo">
+    <div class="area-resolucao"></div>
+    <span class="pilula pilula-pausa" data-em="1:some">Pause o vídeo e tente</span>
+    <div class="painel-questao">
+      <p class="olho">Questão 2 · O brigadeiro</p>
+      <p class="enunciado" style="font-size:26px">Vamos aplicar as leis ponderais na produção de brigadeiro? Em um sistema fechado, foram feitos três experimentos. Encontre X, Y e Z.</p>
+      <table class="tabela" style="font-size:22px;width:100%">
+        <tr><th style="padding:8px 6px">Exp.</th><th style="padding:8px 6px">Leite cond.</th><th style="padding:8px 6px">Chocolate</th><th style="padding:8px 6px">Manteiga</th><th style="padding:8px 6px">Brigadeiro</th></tr>
+        <tr><td style="padding:8px 6px">1º</td><td style="padding:8px 6px">800 g</td><td style="padding:8px 6px" class="x">X</td><td style="padding:8px 6px">40 g</td><td style="padding:8px 6px">1000 g</td></tr>
+        <tr><td style="padding:8px 6px">2º</td><td style="padding:8px 6px">400 g</td><td style="padding:8px 6px">80 g</td><td style="padding:8px 6px">20 g</td><td style="padding:8px 6px">500 g</td></tr>
+        <tr><td style="padding:8px 6px">3º</td><td style="padding:8px 6px">200 g</td><td style="padding:8px 6px" class="x">Y</td><td style="padding:8px 6px">10 g</td><td style="padding:8px 6px" class="x">Z</td></tr>
+      </table>
+      <p class="pilula pilula-resposta resp" data-passo="2">X = 160 g · Y = 40 g · Z = 250 g</p>
+    </div>
+  </div>
+  <aside class="resolucao">
+    <p class="dados"><b>Dados:</b> sistema fechado; três experimentos.</p>
+    <ol class="passos">
+      <li><b>1º (Lavoisier):</b> 800 + X + 40 = 1000.</li>
+      <li><b>X</b> = 1000 − 840 = 160 g.</li>
+      <li><b>3º é metade do 2º</b> (400 → 200; 20 → 10).</li>
+      <li><b>Y (Proust):</b> 80 ÷ 2 = 40 g.</li>
+      <li><b>Z (Lavoisier):</b> 200 + 40 + 10 = 250 g.</li>
+    </ol>
+    <p class="resposta"><b>Resposta:</b> X = 160 g, Y = 40 g e Z = 250 g.</p>
+    <p class="atencao"><b>Destaque no quadro:</b> Soma: Lavoisier. Mesma proporção: Proust.</p>
+    <ul class="erros">
+      <li><b>X</b> Confira: o 2º é metade do 1º (160 ÷ 2 = 80).</li>
+      <li><b>Z</b> 500 ÷ 2 = 250 também confere.</li>
+    </ul>
+  </aside>
+  <aside class="notas">
+    <p>Clique 1 tira o aviso de pausa: resolva na área. Clique 2: X = 160 g, Y = 40 g, Z = 250 g.</p>
+    <p>Exercício do material da professora. O 1º experimento usa Lavoisier (soma). O 2º e o 3º seguem a mesma proporção do 1º (Proust): cada um é metade do anterior. Confira Z dos dois jeitos: 200 + 40 + 10 = 250 e 500 ÷ 2 = 250.</p>
+  </aside>
+</section>
+
+<!-- Resumo -->
+<section class="slide" data-nome="Resumo">
+  <div class="conteudo">
+    <p class="olho">Resumo</p>
+    <h2 class="titulo">O essencial</h2>
+    <div class="resumo" style="position:absolute;left:0;right:0;top:150px">
+      <div><b>Lavoisier:</b> em sistema fechado, m<sub style="font-size:.65em">reagentes</sub> = m<sub style="font-size:.65em">produtos</sub>.</div>
+      <div><b>Sistema aberto:</b> gás que sai faz a massa cair; gás que entra (O<sub style="font-size:.65em">2</sub>) faz subir.</div>
+      <div><b>Por quê:</b> os átomos só se reorganizam; a equação balanceada mostra isso.</div>
+      <div><b>Proust:</b> o mesmo composto tem sempre a mesma proporção em massa.</div>
+      <div><b>Água:</b> H : O = 1 : 8 (11,1 % e 88,9 %).</div>
+      <div><b>Fora da proporção:</b> um reagente sobra (excesso).</div>
+    </div>
+    <div class="caixa caixa-atencao" style="position:absolute;left:580px;right:0;top:660px">
+      <div class="texto" style="font-size:30px">Somar massas: <b>Lavoisier</b>. Regra de três com a tabela: <b>Proust</b>.</div>
+    </div>
+  </div>
+  <aside class="notas"><p>Peça para tirarem um print desta tela.</p></aside>
+</section>
+
+<!-- A seguir -->
+<section class="slide capa" data-nome="A seguir">
+  <div class="estrelas"></div>
+  <div class="texto-capa" style="top:200px">
+    <span class="selo">Química · IF</span>
+    <p class="aula" style="font-size:26px">A seguir · Reações químicas</p>
+    <h1 style="font-size:120px">Questões do IF Sudeste</h1>
+    <p class="sub">Provas oficiais, uma por tela</p>
+  </div>
+  <svg class="emblema" viewBox="0 0 640 640" aria-hidden="true">
+    <rect x="150" y="110" width="340" height="430" rx="34" fill="#fff" fill-opacity=".12" stroke="#fff" stroke-opacity=".6" stroke-width="4"/>
+    <g fill="#fff" fill-opacity=".7"><rect x="200" y="170" width="240" height="18" rx="9"/><rect x="200" y="210" width="200" height="18" rx="9"/><rect x="200" y="250" width="220" height="18" rx="9"/></g>
+    <g fill="none" stroke="#fff" stroke-opacity=".75" stroke-width="4"><circle cx="216" cy="330" r="16"/><circle cx="216" cy="390" r="16"/><circle cx="216" cy="450" r="16"/></g>
+    <circle cx="216" cy="390" r="16" fill="#FFD10C"/>
+    <g fill="#fff" fill-opacity=".55"><rect x="250" y="321" width="150" height="16" rx="8"/><rect x="250" y="381" width="170" height="16" rx="8"/><rect x="250" y="441" width="130" height="16" rx="8"/></g>
+    <circle cx="470" cy="130" r="54" fill="#FFD10C"/>
+    <path d="M446 132 L464 150 L496 112" fill="none" stroke="#292B2C" stroke-width="10" stroke-linecap="round" stroke-linejoin="round"/>
+  </svg>
+  <img class="logo-capa" src="{{LOGO_BRANCO}}" alt="Quarks">
+  <aside class="notas"><p>Fim da teoria de Reações químicas. A seguir, só questões oficiais do IF Sudeste sobre reações, balanceamento, combustão, neutralização e leis ponderais.</p></aside>
+</section>

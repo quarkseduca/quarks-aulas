@@ -1,0 +1,423 @@
+<!--aula
+{"disciplina": "matematica", "curso": "IF", "assunto": "Porcentagem e juros simples", "parte": "Parte 2 de 2", "titulo": "Juros simples", "scripts": ["animacoes-comercial.js"]}
+-->
+<!-- Fonte: apostila IF, Matemática, cap. 2 (2.2 Porcentagem e juros simples: Juros e montante; Problemas de juros simples; resumo do subcapítulo). Questões: oficiais IF Sudeste MG 2018-1 q21 (MAT-0362) e 2016-1 q19 (MAT-0474), sobras do bloco; Modelo IF do lote if-matematica-juros-simples, m007 (MAT-3419). -->
+<style>
+  .caixa, .co-card { box-sizing: border-box; }
+  .co-card { background: var(--branco); border: 2px solid var(--lilas-2); border-radius: 26px; padding: 18px 26px; font-size: 30px; line-height: 1.32; }
+  .co-card b { color: var(--roxo-titulo); }
+  .co-card.d { background: var(--d-clara); border-color: color-mix(in srgb, var(--d) 35%, transparent); }
+  .co-tag { display: inline-block; padding: 6px 20px; border-radius: 999px; font-weight: 800; font-size: 26px; white-space: nowrap; background: var(--d-clara); color: var(--d-forte); }
+  .co-tag.am { background: #FFF4C2; color: #8A6A00; }
+  .tabela.co-t { font-size: 32px; }
+  .tabela.co-t th { padding: 10px 26px; }
+  .tabela.co-t td { padding: 6px 26px; }
+  .tabela.co-t td.co-op { color: var(--d-forte); font-weight: 800; }
+  .letras.co-5 { grid-template-columns: repeat(5, 1fr); gap: 18px; }
+  .letras.co-5 > div { font-size: 27px; padding: 20px 22px; }
+  .co-passos { margin: 0; padding: 0; list-style: none; display: flex; flex-direction: column; gap: 14px; }
+  .co-passos li { display: flex; align-items: baseline; gap: 16px; font-size: 31px; line-height: 1.3; }
+  .co-passos li b.n { flex: none; width: 46px; height: 46px; border-radius: 50%; display: grid; place-items: center; background: var(--d); color: #fff; font: 800 26px var(--fonte-titulo); transform: translateY(6px); }
+  .co-passos li > span b { color: var(--roxo-titulo); }
+  .resumo.co-res > div { font-size: 28px; padding: 16px 24px; }
+  /* ---------- Animações (só na tela aberta) ---------- */
+  /* o capital dobra: a barra dos juros cresce o mesmo tanto a cada mês até igualar a do capital (20 meses) */
+  .co-juros-barra { transform: scaleX(1); transform-box: fill-box; transform-origin: left center; }
+  .slide.ativo .mostra .co-juros-barra { animation: co-enche 8s linear .4s both; }
+  @keyframes co-enche { from { transform: scaleX(0); } to { transform: scaleX(1); } }
+  .co-meses text { opacity: 1; }
+  .slide.ativo .mostra .co-meses text { animation: co-aparece .4s ease-out both; }
+  .slide.ativo .mostra .co-meses text:nth-child(1) { animation-delay: .4s; } .slide.ativo .mostra .co-meses text:nth-child(2) { animation-delay: 2.4s; }
+  .slide.ativo .mostra .co-meses text:nth-child(3) { animation-delay: 4.4s; } .slide.ativo .mostra .co-meses text:nth-child(4) { animation-delay: 6.4s; }
+  .slide.ativo .mostra .co-meses text:nth-child(5) { animation-delay: 8.4s; }
+  @keyframes co-aparece { from { opacity: 0; } to { opacity: 1; } }
+</style>
+
+<!-- 1. Capa -->
+<section class="slide capa" data-nome="Capa">
+  <div class="estrelas"></div>
+  <div class="texto-capa" style="top:200px">
+    <span class="selo">Matemática · IF</span>
+    <p class="aula">Porcentagem e juros simples · Parte 2 de 2</p>
+    <h1>Juros simples</h1>
+    <p class="sub">O "aluguel" do dinheiro</p>
+  </div>
+  <svg class="emblema" viewBox="0 0 640 640" aria-hidden="true">
+    <g class="gira-lento"><ellipse cx="320" cy="320" rx="300" ry="128" fill="none" stroke="#fff" stroke-opacity=".38" stroke-width="2" transform="rotate(-10 320 320)"/></g>
+    <g fill="#fff" fill-opacity=".85"><rect x="110" y="380" width="70" height="140" rx="10"/><rect x="210" y="350" width="70" height="170" rx="10"/><rect x="310" y="320" width="70" height="200" rx="10"/><rect x="410" y="290" width="70" height="230" rx="10"/></g>
+    <g fill="#FFD10C"><rect x="210" y="350" width="70" height="30" rx="6"/><rect x="310" y="320" width="70" height="60" rx="6"/><rect x="410" y="290" width="70" height="90" rx="6"/></g>
+    <path d="M145 370 L545 250" stroke="#FFD10C" stroke-width="8" stroke-linecap="round" stroke-dasharray="14 12"/>
+    <circle cx="545" cy="250" r="16" fill="#FFD10C"/>
+  </svg>
+  <img class="logo-capa" src="{{LOGO_BRANCO}}" alt="Quarks">
+  <aside class="notas">
+    <p>Continuação de Porcentagem e juros simples. Hoje: capital, taxa, tempo, juros e montante; a fórmula J = C · i · t; e os problemas que pedem a taxa, o tempo ou o capital.</p>
+  </aside>
+</section>
+
+<!-- 2. O empréstimo de Lúcia -->
+<section class="slide" data-nome="O empréstimo de Lúcia">
+  <div class="conteudo">
+    <p class="olho">Para começar</p>
+    <h2 class="titulo">O empréstimo de Lúcia</h2>
+    <div class="co-card d" style="position:absolute;left:0;width:780px;top:170px;font-size:36px;padding:24px 32px">Pegou <b>R$ 2 000</b> e combinou pagar <b>3% ao mês</b> sobre esse valor.</div>
+    <div class="contas" style="position:absolute;left:900px;top:160px;font-size:48px">
+      <div class="eq" data-passo="1"><span>\(3\%\ \text{de}\ 2\,000\)</span><span>\(=\)</span><span>\(60\ \text{por mês}\)</span></div>
+      <div class="eq" data-passo="2"><span>\(5\ \text{meses}\)</span><span>\(=\)</span><span>\(5 \cdot 60 = 300\)</span></div>
+      <div class="eq final" data-passo="3"><span>\(\text{deve}\)</span><span>\(=\)</span><span>\(2\,000 + 300 = 2\,300\)</span></div>
+    </div>
+    <div class="caixa caixa-fundamental" data-passo="4" style="position:absolute;left:0;width:780px;top:380px;padding:22px 30px">
+      <span class="rotulo">Juro</span>
+      <div class="texto" style="font-size:34px">O "aluguel" que se paga por usar o dinheiro de outra pessoa.</div>
+    </div>
+  </div>
+  <aside class="notas">
+    <p>A cada mês, a dívida aumenta 3% de 2 000, ou seja, R$ 60. Cliques 1 a 3: em 5 meses, R$ 300 de acréscimo; ela deve R$ 2 300.</p>
+    <p>Clique 4: esse acréscimo é o juro.</p>
+  </aside>
+</section>
+
+<!-- 3. Os nomes -->
+<section class="slide" data-nome="Capital, taxa, tempo, juros, montante">
+  <div class="conteudo">
+    <p class="olho">Cada grandeza tem nome e letra</p>
+    <h2 class="titulo">Os nomes</h2>
+    <div class="letras co-5" style="position:absolute;left:0;right:0;top:170px">
+      <div data-passo="1"><span class="simbolo">\(C\)</span><b>capital</b>: o valor do começo<br><span class="unidade">R$ 2 000</span></div>
+      <div data-passo="2"><span class="simbolo">\(i\)</span><b>taxa</b>: a % por período<br><span class="unidade">3% ao mês</span></div>
+      <div data-passo="3"><span class="simbolo">\(t\)</span><b>tempo</b>: número de períodos<br><span class="unidade">5 meses</span></div>
+      <div data-passo="4"><span class="simbolo">\(J\)</span><b>juros</b>: o acréscimo total<br><span class="unidade">R$ 300</span></div>
+      <div data-passo="5"><span class="simbolo">\(M\)</span><b>montante</b>: capital + juros<br><span class="unidade">R$ 2 300</span></div>
+    </div>
+  </div>
+  <aside class="notas">
+    <p>Uma letra por clique, com o valor do empréstimo de Lúcia embaixo. Capital é o valor emprestado ou aplicado no começo; taxa, a porcentagem por período (ao mês, ao ano); tempo, o número de períodos; juros, o acréscimo total; montante, capital mais juros.</p>
+  </aside>
+</section>
+
+<!-- 4. Mês a mês -->
+<section class="slide" data-nome="Mês a mês">
+  <div class="conteudo">
+    <p class="olho">Juros simples</p>
+    <h2 class="titulo">Sempre sobre o capital inicial</h2>
+    <table class="tabela co-t" style="position:absolute;left:0;top:150px">
+      <tr><th>mês</th><th>juros do mês</th><th>dívida</th></tr>
+      <tr><td>0</td><td>0</td><td>2 000</td></tr>
+      <tr><td>1</td><td class="co-op">60</td><td>2 060</td></tr>
+      <tr><td>2</td><td class="co-op">60</td><td>2 120</td></tr>
+      <tr><td>3</td><td class="co-op">60</td><td>2 180</td></tr>
+      <tr><td>4</td><td class="co-op">60</td><td>2 240</td></tr>
+      <tr><td>5</td><td class="co-op">60</td><td>2 300</td></tr>
+    </table>
+    <div data-anima="com-juros" data-anima-passo="1" style="position:absolute;left:800px;top:120px;width:860px;height:500px"></div>
+    <div class="caixa caixa-fundamental" data-passo="2" style="position:absolute;left:600px;right:0;top:680px;padding:18px 30px">
+      <div class="texto" style="font-size:31px">Juros de cada mês <b>iguais</b>: cresce sempre <b>R$ 60</b> por mês. No gráfico, uma <b>reta</b>.</div>
+    </div>
+  </div>
+  <aside class="notas">
+    <p>Nos juros simples, a taxa incide sempre sobre o capital inicial. Por isso os juros de cada mês são iguais. Clique 1: a dívida de Lúcia, mês a mês; cada mês empilha os mesmos R$ 60 (amarelo) sobre os R$ 2 000 (azul). O eixo do gráfico começa em R$ 1 900 para caber.</p>
+    <p>Clique 2: as pontas formam uma reta. Em Função afim, um crescimento assim, num gráfico, forma uma reta.</p>
+  </aside>
+</section>
+
+<!-- 5. A fórmula -->
+<section class="slide" data-nome="Fórmula dos juros simples">
+  <div class="conteudo">
+    <p class="olho">Fórmula</p>
+    <h2 class="titulo">Juros simples</h2>
+    <div class="caixa caixa-fundamental" style="position:absolute;left:300px;right:300px;top:150px;text-align:center;font-size:96px;padding:18px">\(J = C \cdot i \cdot t \qquad M = C + J\)</div>
+    <div style="position:absolute;left:0;right:0;top:420px;display:grid;grid-template-columns:1fr 1fr;gap:34px">
+      <div class="co-card" data-passo="1" style="font-size:34px;padding:22px 30px"><b>Taxa em decimal</b><div style="font-size:48px;margin-top:6px">\(3\% \to 0{,}03\)</div></div>
+      <div class="co-card" data-passo="2" style="font-size:34px;padding:22px 30px"><b>\(i\) e \(t\) na mesma unidade</b><div style="font-size:40px;margin-top:10px">ao mês com meses; ao ano com anos</div></div>
+    </div>
+  </div>
+  <aside class="notas">
+    <p>A fórmula dos juros simples. Clique 1: a taxa entra na forma decimal. Clique 2: taxa e tempo precisam estar na mesma unidade de tempo.</p>
+  </aside>
+</section>
+
+<!-- 6. Exemplo: Lúcia na fórmula -->
+<section class="slide" data-nome="Exemplo: o empréstimo de Lúcia">
+  <div class="conteudo">
+    <p class="olho">Exemplo</p>
+    <h2 class="titulo">Lúcia na fórmula</h2>
+    <div class="caixa" style="position:absolute;left:0;width:760px;top:160px;display:flex;gap:30px;align-items:center;padding:18px 30px">
+      <span class="rotulo" style="margin:0">Dados</span>
+      <span class="texto" style="font-size:34px">\(C = 2\,000\)</span><span class="texto" style="font-size:34px">\(i = 0{,}03\) a.m.</span><span class="texto" style="font-size:34px">\(t = 5\)</span>
+    </div>
+    <div class="contas" style="position:absolute;left:0;top:300px">
+      <div class="eq" data-passo="1"><span>\(J\)</span><span>\(=\)</span><span>\(C \cdot i \cdot t\)</span></div>
+      <div class="eq" data-passo="2"><span>\(J\)</span><span>\(=\)</span><span>\(2\,000 \cdot 0{,}03 \cdot 5\)</span></div>
+      <div class="eq final" data-passo="3"><span>\(J\)</span><span>\(=\)</span><span>\(300\)</span></div>
+    </div>
+    <div class="contas" style="position:absolute;left:900px;top:300px">
+      <div class="eq" data-passo="4"><span>\(M\)</span><span>\(=\)</span><span>\(C + J\)</span></div>
+      <div class="eq" data-passo="5"><span>\(M\)</span><span>\(=\)</span><span>\(2\,000 + 300\)</span></div>
+      <div class="eq final" data-passo="6"><span>\(M\)</span><span>\(=\)</span><span>\(2\,300\)</span></div>
+    </div>
+    <span class="pilula pilula-resposta" data-passo="7" style="position:absolute;right:0;top:640px">Juros R$ 300,00 · montante R$ 2 300,00</span>
+  </div>
+  <aside class="notas">
+    <p>Os mesmos números do começo, agora pela fórmula. Cliques 1 a 3: os juros. Cliques 4 a 6: o montante. Clique 7: a resposta.</p>
+  </aside>
+</section>
+
+<!-- 7. Problemas: o método -->
+<section class="slide" data-nome="Problemas de juros simples">
+  <div class="conteudo">
+    <p class="olho">Problemas de juros simples</p>
+    <h2 class="titulo">Deu três, ache a quarta</h2>
+    <div class="caixa caixa-fundamental" style="position:absolute;left:0;width:620px;top:170px;text-align:center;font-size:80px;padding:22px">\(J = C \cdot i \cdot t\)</div>
+    <p class="texto" style="position:absolute;left:0;width:620px;top:360px;margin:0;font-size:32px">Quatro grandezas. Substitua as que você sabe e isole a que falta.</p>
+    <div class="co-card" style="position:absolute;left:760px;right:0;top:170px;padding:26px 32px">
+      <ol class="co-passos">
+        <li data-passo="1"><b class="n">1</b><span>Anote os dados com <b>letra e unidade</b>.</span></li>
+        <li data-passo="2"><b class="n">2</b><span>Taxa em <b>decimal</b>; taxa e tempo na <b>mesma unidade</b>.</span></li>
+        <li data-passo="3"><b class="n">3</b><span>Escreva \(J = C \cdot i \cdot t\) (ou \(M = C + J\)) e substitua.</span></li>
+        <li data-passo="4"><b class="n">4</b><span>Resolva a equação e responda <b>com a unidade certa</b>.</span></li>
+      </ol>
+    </div>
+  </div>
+  <aside class="notas">
+    <p>Se o problema dá três das quatro grandezas, a quarta sai de uma equação: faça a mesma conta dos dois lados do igual. Os casos mais comuns pedem a taxa, o tempo ou o capital.</p>
+    <p>Um passo por clique.</p>
+  </aside>
+</section>
+
+<!-- 8. Exemplo: achar a taxa -->
+<section class="slide" data-nome="Exemplo: achar a taxa">
+  <div class="conteudo">
+    <p class="olho">Exemplo</p>
+    <h2 class="titulo">Achar a taxa</h2>
+    <p class="texto" style="position:absolute;left:0;width:780px;top:160px;margin:0"><b>R$ 1 500</b> aplicados por <b>6 meses</b> renderam <b>R$ 270</b> de juros simples. Qual foi a taxa mensal?</p>
+    <div class="contas" style="position:absolute;left:900px;top:150px;font-size:50px;row-gap:16px">
+      <div class="eq" data-passo="1"><span>\(J\)</span><span>\(=\)</span><span>\(C \cdot i \cdot t\)</span></div>
+      <div class="eq" data-passo="2"><span>\(270\)</span><span>\(=\)</span><span>\(1\,500 \cdot i \cdot 6\)</span></div>
+      <div class="eq" data-passo="3"><span>\(270\)</span><span>\(=\)</span><span>\(9\,000\,i\)</span></div>
+      <div class="eq" data-passo="4"><span>\(i\)</span><span>\(=\)</span><span>\(\dfrac{270}{9\,000}\)</span></div>
+      <div class="eq final" data-passo="5"><span>\(i\)</span><span>\(=\)</span><span>\(0{,}03\)</span></div>
+    </div>
+    <span class="pilula pilula-resposta" data-passo="6" style="position:absolute;left:0;top:420px">3% ao mês</span>
+  </div>
+  <aside class="notas">
+    <p>Uma linha por clique. Clique 6: 0,03 é 3%, e como o tempo estava em meses, a taxa é ao mês.</p>
+  </aside>
+</section>
+
+<!-- 9. Em quanto tempo dobra -->
+<section class="slide" data-nome="Em quanto tempo dobra">
+  <div class="conteudo">
+    <p class="olho">Pergunta clássica</p>
+    <h2 class="titulo">A 5% ao mês, quando o capital dobra?</h2>
+    <svg viewBox="0 0 820 300" width="820" height="300" style="position:absolute;left:0;top:170px;overflow:visible;font-family:Figtree,'Segoe UI',sans-serif" aria-hidden="true">
+      <text x="0" y="40" font-size="30" font-weight="800" fill="#5E5A70">capital C</text>
+      <rect x="0" y="56" width="800" height="64" rx="14" fill="var(--d)"/>
+      <g data-passo="1">
+        <text x="0" y="170" font-size="30" font-weight="800" fill="#8A6A00">juros acumulados</text>
+        <rect x="0" y="186" width="800" height="64" rx="14" fill="#FFF4C2" stroke="#E7C98A" stroke-width="2"/>
+        <rect class="co-juros-barra" x="0" y="186" width="800" height="64" rx="14" fill="#FFD10C"/>
+        <g class="co-meses" font-size="26" font-weight="800" fill="#5E5A70" text-anchor="middle">
+          <text x="10" y="290">0</text><text x="200" y="290">5</text><text x="400" y="290">10</text><text x="600" y="290">15</text><text x="790" y="290">20 meses</text>
+        </g>
+      </g>
+    </svg>
+    <div style="position:absolute;left:940px;right:0;top:160px">
+      <p class="texto" data-passo="2" style="margin:0 0 18px;font-size:32px">Dobrar: os juros ficam iguais ao capital, \(J = C\).</p>
+      <div class="contas" style="font-size:48px;row-gap:14px">
+        <div class="eq" data-passo="3"><span>\(C\)</span><span>\(=\)</span><span>\(C \cdot 0{,}05 \cdot t\)</span></div>
+        <div class="eq" data-passo="4"><span>\(1\)</span><span>\(=\)</span><span>\(0{,}05\,t\)</span></div>
+        <div class="eq" data-passo="5"><span>\(t\)</span><span>\(=\)</span><span>\(\dfrac{1}{0{,}05}\)</span></div>
+        <div class="eq final" data-passo="6"><span>\(t\)</span><span>\(=\)</span><span>\(20\ \text{meses}\)</span></div>
+      </div>
+    </div>
+    <span class="co-tag am" data-passo="7" style="position:absolute;left:600px;top:700px">o capital se cancela: vale para qualquer capital</span>
+  </div>
+  <aside class="notas">
+    <p>Clique 1: a barra dos juros cresce o mesmo tanto a cada mês (5% do capital) e alcança a do capital no mês 20.</p>
+    <p>Cliques 2 a 6: dobrar é J = C; divida os dois lados por C. Clique 7: o valor do capital não importa, ele se cancela: 20 meses para qualquer capital.</p>
+  </aside>
+</section>
+
+<!-- 10. Taxa anual, tempo em meses -->
+<section class="slide" data-nome="Taxa anual, tempo em meses">
+  <div class="conteudo">
+    <p class="olho">Exemplo</p>
+    <h2 class="titulo">Taxa ao ano, tempo em meses</h2>
+    <p class="texto" style="position:absolute;left:0;width:780px;top:160px;margin:0">Quanto rendem <b>R$ 800</b> a juros simples de <b>18% ao ano</b>, durante <b>8 meses</b>?</p>
+    <div class="caixa caixa-fundamental" data-passo="1" style="position:absolute;left:0;width:780px;top:320px;padding:20px 30px">
+      <span class="rotulo">Converta antes</span>
+      <div style="font-size:48px">\(\dfrac{18\%}{12} = 1{,}5\%\ \text{ao mês}\)</div>
+    </div>
+    <div class="contas" style="position:absolute;left:900px;top:160px">
+      <div class="eq" data-passo="2"><span>\(J\)</span><span>\(=\)</span><span>\(C \cdot i \cdot t\)</span></div>
+      <div class="eq" data-passo="3"><span>\(J\)</span><span>\(=\)</span><span>\(800 \cdot 0{,}015 \cdot 8\)</span></div>
+      <div class="eq final" data-passo="4"><span>\(J\)</span><span>\(=\)</span><span>\(96\)</span></div>
+    </div>
+    <span class="pilula pilula-resposta" data-passo="5" style="position:absolute;left:900px;top:440px">R$ 96,00</span>
+    <div class="caixa caixa-atencao" data-passo="6" style="position:absolute;left:600px;right:0;top:580px;padding:20px 30px">
+      <span class="rotulo">Taxa e tempo na mesma unidade</span>
+      <div class="texto" style="font-size:31px">Sem converter: \(800 \cdot 0{,}18 \cdot 8 = 1\,152\). Juros <b>maiores que o capital</b>: um absurdo.</div>
+    </div>
+  </div>
+  <aside class="notas">
+    <p>Nos juros simples, a taxa anual é proporcional à mensal. Clique 1: 18% ao ano são 1,5% ao mês (18 ÷ 12). Cliques 2 a 5: R$ 96.</p>
+    <p>Clique 6: quem usa 18% ao ano com 8 meses acha R$ 1 152 de juros. Confira sempre "ao mês" ou "ao ano" e a unidade do tempo.</p>
+  </aside>
+</section>
+
+<!-- 11. Questão 1 -->
+<section class="slide questao" data-nome="Questão 1">
+  <div class="conteudo">
+    <div class="area-resolucao"></div>
+    <span class="pilula pilula-pausa" data-em="1:some">Pause o vídeo e tente</span>
+    <div class="painel-questao">
+      <p class="olho">Questão 1 · IF Sudeste MG 2018</p>
+      <p class="enunciado" style="font-size:26px">Paulo emprestou a quantia de R$ 250,00 para Cristina, com a seguinte condição: a taxa de juros será de 2,5% ao mês com capitalização simples. Suponhamos que Cristina pague Paulo 6 meses após ter contraído o empréstimo. Qual será o montante final pago por Cristina ao final da operação?</p>
+      <ol class="alternativas">
+        <li data-em="2:apaga"><b>A</b><span>R$ 256,25</span></li>
+        <li data-em="2:apaga"><b>B</b><span>R$ 262,50</span></li>
+        <li data-em="2:apaga"><b>C</b><span>R$ 268,75</span></li>
+        <li data-em="2:apaga"><b>D</b><span>R$ 275,00</span></li>
+        <li data-em="2:certo"><b>E</b><span>R$ 287,50</span></li>
+      </ol>
+    </div>
+  </div>
+  <aside class="resolucao">
+    <p class="dados"><b>Dados:</b> \(C = 250\); \(i = 0{,}025\) a.m.; \(t = 6\) meses.</p>
+    <ol class="passos">
+      <li>\(J = 250 \cdot 0{,}025 \cdot 6\)</li>
+      <li>\(J = 6{,}25 \cdot 6 = 37{,}50\)</li>
+      <li>\(M = 250 + 37{,}50 = 287{,}50\)</li>
+    </ol>
+    <p class="resposta"><b>Resposta:</b> montante de R$ 287,50. <b>Gabarito E.</b></p>
+    <p class="atencao"><b>Destaque no quadro:</b> Pediu montante: capital + juros.</p>
+    <ul class="erros">
+      <li><b>A</b> Montante de 1 mês só.</li>
+      <li><b>B</b> Montante de 2 meses.</li>
+      <li><b>C</b> Montante de 3 meses.</li>
+      <li><b>D</b> Montante de 4 meses.</li>
+    </ul>
+  </aside>
+  <aside class="notas">
+    <p>Clique 1 tira o aviso de pausa: resolva na área (D liga a caneta; E esconde o enunciado). Clique 2: gabarito E.</p>
+    <p>Questão oficial do IF Sudeste MG 2018-1, q21, MAT-0362 (sobra do bloco). Repare que as alternativas são os montantes mês a mês: 6,25 a mais por mês, como na tabela de Lúcia.</p>
+  </aside>
+</section>
+
+<!-- 12. Questão 2 -->
+<section class="slide questao" data-nome="Questão 2">
+  <div class="conteudo">
+    <div class="area-resolucao"></div>
+    <span class="pilula pilula-pausa" data-em="1:some">Pause o vídeo e tente</span>
+    <div class="painel-questao">
+      <p class="olho">Questão 2 · IF Sudeste MG 2016</p>
+      <p class="enunciado">Durante quantos anos uma pessoa deve aplicar o capital de R$25.000,00 a uma taxa de 0,5% ao mês, até produzir R$3.000,00 de juros simples?</p>
+      <ol class="alternativas curtas">
+        <li data-em="2:apaga"><b>A</b><span>1</span></li>
+        <li data-em="2:certo"><b>B</b><span>2</span></li>
+        <li data-em="2:apaga"><b>C</b><span>3</span></li>
+        <li data-em="2:apaga"><b>D</b><span>6</span></li>
+        <li data-em="2:apaga"><b>E</b><span>12</span></li>
+      </ol>
+    </div>
+  </div>
+  <aside class="resolucao">
+    <p class="dados"><b>Dados:</b> \(C = 25\,000\); \(i = 0{,}005\) a.m.; \(J = 3\,000\).</p>
+    <ol class="passos">
+      <li>\(3\,000 = 25\,000 \cdot 0{,}005 \cdot t\)</li>
+      <li>\(3\,000 = 125\,t\)</li>
+      <li>\(t = 24\ \text{meses}\)</li>
+      <li>\(24 \div 12 = 2\ \text{anos}\)</li>
+    </ol>
+    <p class="resposta"><b>Resposta:</b> 2 anos. <b>Gabarito B.</b></p>
+    <p class="atencao"><b>Destaque no quadro:</b> Taxa ao mês dá o tempo em meses; a pergunta pede anos.</p>
+    <ul class="erros">
+      <li><b>A</b> Em 1 ano, só R$ 1 500 de juros.</li>
+      <li><b>C</b> Em 3 anos, R$ 4 500: passa do pedido.</li>
+      <li><b>D</b> 6 é a taxa anual em % (0,5 · 12).</li>
+      <li><b>E</b> Confunde os 12 meses do ano com a resposta.</li>
+    </ul>
+  </aside>
+  <aside class="notas">
+    <p>Clique 1 tira o aviso de pausa: resolva na área (D liga a caneta; E esconde o enunciado). Clique 2: gabarito B.</p>
+    <p>Questão oficial do IF Sudeste MG 2016-1, q19, MAT-0474 (sobra do bloco). Rende R$ 125 por mês; 3 000 ÷ 125 = 24 meses.</p>
+  </aside>
+</section>
+
+<!-- 13. Questão 3 -->
+<section class="slide questao" data-nome="Questão 3">
+  <div class="conteudo">
+    <div class="area-resolucao"></div>
+    <span class="pilula pilula-pausa" data-em="1:some">Pause o vídeo e tente</span>
+    <div class="painel-questao">
+      <p class="olho">Questão 3 · Modelo IF</p>
+      <p class="enunciado">Rafael aplicou R$ 1 200,00 a juros simples de 30% ao ano e retirou o dinheiro depois de 7 meses. Quanto ele recebeu de juros?</p>
+      <ol class="alternativas">
+        <li data-em="2:apaga"><b>A</b><span>R$ 30,00</span></li>
+        <li data-em="2:certo"><b>B</b><span>R$ 210,00</span></li>
+        <li data-em="2:apaga"><b>C</b><span>R$ 252,00</span></li>
+        <li data-em="2:apaga"><b>D</b><span>R$ 1 410,00</span></li>
+        <li data-em="2:apaga"><b>E</b><span>R$ 2 520,00</span></li>
+      </ol>
+    </div>
+  </div>
+  <aside class="resolucao">
+    <p class="dados"><b>Dados:</b> \(C = 1\,200\); 30% ao ano; \(t = 7\) meses.</p>
+    <ol class="passos">
+      <li>\(\dfrac{30\%}{12} = 2{,}5\%\) ao mês</li>
+      <li>\(J = 1\,200 \cdot 0{,}025 \cdot 7\)</li>
+      <li>\(J = 30 \cdot 7 = 210\)</li>
+    </ol>
+    <p class="resposta"><b>Resposta:</b> R$ 210,00 de juros. <b>Gabarito B.</b></p>
+    <p class="atencao"><b>Destaque no quadro:</b> 7 meses são 7/12 do ano, não 0,7 ano.</p>
+    <ul class="erros">
+      <li><b>A</b> Juros de um mês só.</li>
+      <li><b>C</b> Usa 7 meses como 0,7 ano.</li>
+      <li><b>D</b> Dá o montante; pediu os juros.</li>
+      <li><b>E</b> Não converte: 30% ao ano com 7 meses.</li>
+    </ul>
+  </aside>
+  <aside class="notas">
+    <p>Clique 1 tira o aviso de pausa: resolva na área (D liga a caneta; E esconde o enunciado). Clique 2: gabarito B.</p>
+    <p>Questão Modelo IF, lote if-matematica-juros-simples, m007, MAT-3419. Conferir se está na apostila publicada (Banco de questões &gt; Apostilas). Mesma armadilha do exemplo de 18% ao ano.</p>
+  </aside>
+</section>
+
+<!-- 14. Resumo -->
+<section class="slide" data-nome="Resumo">
+  <div class="conteudo">
+    <p class="olho">Resumo · Porcentagem e juros simples</p>
+    <h2 class="titulo">O essencial</h2>
+    <div class="resumo co-res" style="position:absolute;left:0;right:0;top:150px">
+      <div>\(p\%\) de \(V\) = \(\dfrac{p}{100} \cdot V\). Quanto por cento: parte ÷ todo, vezes 100.</div>
+      <div><b>Aumento</b>: \(\times\left(1 + \dfrac{p}{100}\right)\); <b>desconto</b>: \(\times\left(1 - \dfrac{p}{100}\right)\). Sucessivos: multiplique.</div>
+      <div><b>Lucro</b> \(L = V - C\); em %, divida pela base pedida (o custo, se nada for dito).</div>
+      <div><b>Médias</b>: soma ÷ quantidade; ponderada: valor × peso ÷ soma dos pesos.</div>
+      <div><b>Juros simples</b>: \(J = C \cdot i \cdot t\), \(M = C + J\); taxa em decimal, sempre sobre o capital inicial.</div>
+      <div>Taxa e tempo na <b>mesma unidade</b>; no regime simples, anual ÷ 12 = mensal.</div>
+    </div>
+  </div>
+  <aside class="notas"><p>O resumo de todo o subcapítulo Porcentagem e juros simples (Partes 1 e 2). Peça para tirarem um print desta tela.</p></aside>
+</section>
+
+<!-- 15. A seguir -->
+<section class="slide capa" data-nome="A seguir">
+  <div class="estrelas"></div>
+  <div class="texto-capa" style="top:170px">
+    <span class="selo">Matemática · IF</span>
+    <p class="aula" style="font-size:26px">A seguir · Matemática comercial · Questões do IF Sudeste</p>
+    <h1>Questões do IF Sudeste</h1>
+    <p class="sub">Matemática comercial</p>
+  </div>
+  <svg class="emblema" viewBox="0 0 640 640" aria-hidden="true">
+    <rect x="150" y="80" width="340" height="460" rx="36" fill="#fff" opacity=".95"/>
+    <rect x="200" y="140" width="240" height="18" rx="9" fill="#C9C0F0"/><rect x="200" y="180" width="200" height="18" rx="9" fill="#C9C0F0"/>
+    <g fill="none" stroke="#C9C0F0" stroke-width="4"><circle cx="216" cy="270" r="16"/><circle cx="216" cy="330" r="16"/><circle cx="216" cy="390" r="16"/><circle cx="216" cy="450" r="16"/></g>
+    <circle cx="216" cy="330" r="16" fill="#FFD10C"/>
+    <g fill="#E4DEFB"><rect x="250" y="261" width="150" height="16" rx="8"/><rect x="250" y="321" width="170" height="16" rx="8"/><rect x="250" y="381" width="130" height="16" rx="8"/><rect x="250" y="441" width="160" height="16" rx="8"/></g>
+    <circle cx="470" cy="120" r="54" fill="#FFD10C"/>
+    <text x="470" y="140" text-anchor="middle" font-family="Bricolage Grotesque, Trebuchet MS, sans-serif" font-weight="800" font-size="60" fill="#4B258D">%</text>
+  </svg>
+  <img class="logo-capa" src="{{LOGO_BRANCO}}" alt="Quarks">
+  <aside class="notas"><p>Fim do capítulo Matemática comercial. A seguir, o bloco só com questões oficiais do IF Sudeste deste capítulo: razão e proporção, porcentagem e juros simples.</p></aside>
+</section>

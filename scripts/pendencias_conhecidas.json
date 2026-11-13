@@ -1,0 +1,6 @@
+{
+ "_leia": "Regras que partes antigas já descumpriam em 13/11/2026 (auditoria A49). Aqui viram aviso; qualquer caso novo falha. Formato: parte -> regra -> quantas vezes. Consertou? Tire da lista.",
+ "quimica/if/leis-ponderais": {"questao-sem-alternativas": 2},
+ "fisica/if/eletricidade-questoes-if": {"capa-fim": 1},
+ "matematica/if/estatistica-questoes-if": {"capa-fim": 1}
+}

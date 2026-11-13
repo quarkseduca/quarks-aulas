@@ -1,0 +1,325 @@
+<!--aula
+{"disciplina": "matematica", "curso": "IF", "assunto": "Equações do 1º grau", "parte": "Parte 2 de 2", "titulo": "Frações e equações literais", "scripts": ["animacoes-algebra.js"]}
+-->
+<!-- Fonte: apostila IF/Sudeste, Matemática, cap. 3 (3.2 Equações do 1º grau: Equações fracionárias; a equação literal do fim de "Resolução"; resumo do 3.2). Questões: oficiais do IF Sudeste MG que sobraram do bloco do capítulo (2014-2 q16, 2014-1 q25, 2018-1 q14). -->
+<style>
+  .caixa { box-sizing: border-box; }
+  .contas.c4 { grid-template-columns: auto auto auto 1fr; }
+  .ag-anot { font-size: 26px; font-weight: 800; color: var(--d-forte); background: var(--d-clara); border-radius: 999px; padding: 2px 16px; justify-self: start; white-space: nowrap; }
+  .ag-certo { color: var(--certo); font-weight: 800; }
+  .ag-erro { color: var(--erro); font-weight: 800; }
+  /* setas da multiplicação cruzada */
+  .ag-arco { stroke-dasharray: 1; stroke-dashoffset: 1; }
+  .mostra .ag-arco { animation: ag-traca 1.3s ease-in-out forwards; }
+  @keyframes ag-traca { to { stroke-dashoffset: 0; } }
+  /* o retângulo cujo lado a muda com o perímetro */
+  @keyframes ag-estica { 0%, 15% { width: 300px; } 45%, 65% { width: 420px; } 95%, 100% { width: 300px; } }
+  .ag-ret { width: 300px; }
+  .slide.ativo .ag-ret { animation: ag-estica 7s ease-in-out infinite; }
+  @media (prefers-reduced-motion: reduce) { .ag-arco { stroke-dasharray: none; stroke-dashoffset: 0; } }
+</style>
+
+<!-- 1. Capa -->
+<section class="slide capa" data-nome="Capa">
+  <div class="estrelas"></div>
+  <div class="texto-capa">
+    <span class="selo">Matemática · IF</span>
+    <p class="aula">Equações do 1º grau · Parte 2 de 2</p>
+    <h1 style="font-size:128px">Frações e equações literais</h1>
+    <p class="sub">Multiplique tudo pelo MMC</p>
+  </div>
+  <svg class="emblema" viewBox="0 0 640 640" aria-hidden="true">
+    <g class="gira-lento"><ellipse cx="320" cy="320" rx="300" ry="128" fill="none" stroke="#fff" stroke-opacity=".38" stroke-width="2" transform="rotate(-10 320 320)"/></g>
+    <g font-family="Figtree,'Segoe UI',sans-serif" font-weight="800" text-anchor="middle" fill="#fff">
+      <text x="200" y="250" font-size="90">x</text><line x1="150" y1="280" x2="250" y2="280" stroke="#fff" stroke-width="8" stroke-linecap="round"/><text x="200" y="370" font-size="90">2</text>
+      <text x="320" y="310" font-size="80">+</text>
+      <text x="440" y="250" font-size="90">x</text><line x1="390" y1="280" x2="490" y2="280" stroke="#fff" stroke-width="8" stroke-linecap="round"/><text x="440" y="370" font-size="90">3</text>
+      <circle cx="320" cy="480" r="62" fill="#FFD10C"/><text x="320" y="506" font-size="70" fill="#3F2FA0">× 6</text>
+    </g>
+  </svg>
+  <img class="logo-capa" src="{{LOGO_BRANCO}}" alt="Quarks">
+  <aside class="notas">
+    <p>Segunda parte de Equações do 1º grau: equações com frações (inclusive com x no denominador) e equações literais.</p>
+  </aside>
+</section>
+
+<!-- 2. Metade mais um terço -->
+<section class="slide" data-nome="Metade mais um terço">
+  <div class="conteudo">
+    <p class="olho">Para começar</p>
+    <h2 class="titulo">A metade mais um terço dá 10</h2>
+    <div data-anima="alg-barras" data-anima-passo="1" style="position:absolute;left:300px;top:150px;width:1200px;height:470px"></div>
+    <div class="caixa caixa-fundamental" data-passo="2" style="position:absolute;left:640px;right:0;top:640px;padding:20px 32px">
+      <div class="texto" style="font-size:33px">Em sextos, as frações viram <b>números inteiros</b> de pedaços: \(\dfrac{x}{2}\) são 3 pedaços e \(\dfrac{x}{3}\) são 2.</div>
+    </div>
+  </div>
+  <aside class="notas">
+    <p>Clique 1: a barra é o número x, cortada em 6 pedaços iguais (6 é o MMC de 2 e 3). A metade são 3 pedaços; um terço, 2. Juntos, 5 pedaços valem 10: cada pedaço vale 2, e x = 12.</p>
+    <p>Clique 2: é isso que a conta faz quando multiplica tudo por 6.</p>
+  </aside>
+</section>
+
+<!-- 3. Exemplo: frações com números -->
+<section class="slide" data-nome="Exemplo: MMC">
+  <div class="conteudo">
+    <p class="olho">Exemplo</p>
+    <h2 class="titulo">Livre-se das frações</h2>
+    <div class="contas c4" style="position:absolute;left:0;top:140px;font-size:46px;row-gap:10px">
+      <div class="eq" data-passo="1"><span>\(\dfrac{x}{2} + \dfrac{x}{3}\)</span><span>\(=\)</span><span>\(10\)</span><span class="ag-anot">MMC(2, 3) = 6</span></div>
+      <div class="eq" data-passo="2"><span>\(\textcolor{#1E4FD8}{6} \cdot \dfrac{x}{2} + \textcolor{#1E4FD8}{6} \cdot \dfrac{x}{3}\)</span><span>\(=\)</span><span>\(\textcolor{#1E4FD8}{6} \cdot 10\)</span><span class="ag-anot">× 6 em cada termo</span></div>
+      <div class="eq" data-passo="3"><span>\(3x + 2x\)</span><span>\(=\)</span><span>\(60\)</span><span></span></div>
+      <div class="eq" data-passo="4"><span>\(5x\)</span><span>\(=\)</span><span>\(60\)</span><span></span></div>
+      <div class="eq final" data-passo="5"><span>\(x\)</span><span>\(=\)</span><span>\(12\)</span><span></span></div>
+    </div>
+    <div class="caixa caixa-fundamental" data-passo="6" style="position:absolute;left:1160px;right:0;top:170px;padding:22px 30px">
+      <span class="rotulo">A regra</span>
+      <div class="texto" style="font-size:31px">Multiplique os dois lados pelo <b>MMC dos denominadores</b>: todas as frações viram números inteiros.</div>
+    </div>
+  </div>
+  <aside class="notas">
+    <p>Clique 2: o 6 multiplica todos os termos, inclusive o 10 do outro lado. 6 · x/2 = 3x e 6 · x/3 = 2x.</p>
+    <p>Mesmo resultado da barra: x = 12.</p>
+  </aside>
+</section>
+
+<!-- 4. Incógnita no denominador -->
+<section class="slide" data-nome="Incógnita embaixo">
+  <div class="conteudo">
+    <p class="olho">Exemplo</p>
+    <h2 class="titulo">Incógnita no denominador</h2>
+    <div class="caixa caixa-atencao" style="position:absolute;left:0;width:520px;top:160px;padding:20px 28px">
+      <span class="rotulo">Antes de tudo</span>
+      <div class="texto" style="font-size:31px">Os valores proibidos: os que zeram algum denominador.</div>
+      <div style="font-size:44px;margin-top:10px" data-passo="1">\(x \ne 0\ \text{ e }\ x \ne 4\)</div>
+    </div>
+    <svg viewBox="0 0 540 220" width="540" height="220" style="position:absolute;left:0;top:400px;overflow:visible;font-family:Figtree,'Segoe UI',sans-serif" aria-hidden="true">
+      <g font-size="64" font-weight="700" fill="#292B2C" text-anchor="middle" font-style="italic">
+        <text x="80" y="70">6</text><line x1="30" y1="96" x2="130" y2="96" stroke="#292B2C" stroke-width="4"/><text x="80" y="166">x</text>
+        <text x="235" y="118" font-style="normal">=</text>
+        <text x="440" y="70">2</text><line x1="350" y1="96" x2="530" y2="96" stroke="#292B2C" stroke-width="4"/><text x="440" y="166">x − 4</text>
+      </g>
+      <g data-passo="2">
+        <path d="M112 34 C 200 34, 270 150, 352 160" fill="none" stroke="var(--d)" stroke-width="4" class="ag-arco" pathLength="1"/>
+        <path d="M108 150 C 200 160, 300 40, 410 34" fill="none" stroke="#C9A400" stroke-width="4" class="ag-arco" pathLength="1"/>
+      </g>
+    </svg>
+    <div class="contas" style="position:absolute;left:760px;top:160px;font-size:52px;row-gap:20px">
+      <div class="eq" data-passo="2"><span>\(6(x - 4)\)</span><span>\(=\)</span><span>\(2x\)</span></div>
+      <div class="eq" data-passo="3"><span>\(6x - 24\)</span><span>\(=\)</span><span>\(2x\)</span></div>
+      <div class="eq" data-passo="4"><span>\(6x - 2x\)</span><span>\(=\)</span><span>\(24\)</span></div>
+      <div class="eq" data-passo="5"><span>\(4x\)</span><span>\(=\)</span><span>\(24\)</span></div>
+      <div class="eq final" data-passo="6"><span>\(x\)</span><span>\(=\)</span><span>\(6\)</span></div>
+    </div>
+    <span class="pilula pilula-resposta" data-passo="7" style="position:absolute;right:0;top:680px">6 não é proibido: a solução vale ✓</span>
+  </div>
+  <aside class="notas">
+    <p>Equação: 6/x = 2/(x − 4). Clique 1: x não pode ser 0 nem 4. Clique 2: multiplicação cruzada (as setas): 6 vezes (x − 4) igual a 2 vezes x.</p>
+    <p>Clique 7: confira se a resposta não é um valor proibido.</p>
+  </aside>
+</section>
+
+<!-- 5. Atenção: a condição -->
+<section class="slide" data-nome="Atenção: a condição">
+  <div class="conteudo">
+    <p class="olho">Atenção</p>
+    <h2 class="titulo">Confira a condição</h2>
+    <div class="caixa caixa-atencao" style="position:absolute;left:0;right:0;top:160px;padding:24px 34px">
+      <div class="texto" style="font-size:36px">Se a conta der um valor <b>proibido</b>, ele <b>não</b> é solução: a fração não existiria. Nesse caso, a equação <b>não tem solução</b>.</div>
+    </div>
+    <div style="position:absolute;left:640px;right:0;top:400px" data-passo="1">
+      <p class="texto" style="margin:0 0 16px;font-size:32px">No exemplo, se a conta desse \(x = 4\):</p>
+      <div style="font-size:60px">\(\dfrac{2}{4 - 4} = \dfrac{2}{0}\) <span class="ag-erro" style="font-size:44px">não existe</span></div>
+    </div>
+  </div>
+  <aside class="notas">
+    <p>Divisão por zero não existe. Por isso a condição vem antes e é conferida no fim.</p>
+  </aside>
+</section>
+
+<!-- 6. Equação literal -->
+<section class="slide" data-nome="Equação literal">
+  <div class="conteudo">
+    <p class="olho">Equação literal</p>
+    <h2 class="titulo">Outras letras além da incógnita</h2>
+    <div style="position:absolute;left:0;top:170px;width:540px;height:400px">
+      <div class="ag-ret" style="position:relative;height:200px;margin:40px 0 0 60px;border-radius:12px;background:var(--d-clara);border:5px solid var(--d)">
+        <span style="position:absolute;left:50%;top:-56px;transform:translateX(-50%);font:800 40px var(--fonte-texto);color:var(--roxo-titulo);font-style:italic">a</span>
+        <span style="position:absolute;left:-46px;top:50%;transform:translateY(-50%);font:800 40px var(--fonte-texto);color:#8A6A00;font-style:italic">b</span>
+      </div>
+      <p class="texto" style="margin:26px 0 0 60px;font-size:30px;color:var(--cinza)">Perímetro: \(P = 2a + 2b\)</p>
+    </div>
+    <div style="position:absolute;left:720px;right:0;top:160px">
+      <p class="texto" style="margin:0 0 20px;font-size:32px"><b>Isolar \(a\):</b> do mesmo jeito, como se \(P\) e \(b\) fossem números.</p>
+      <div class="contas c4" style="font-size:54px;row-gap:20px">
+        <div class="eq" data-passo="1"><span>\(P\)</span><span>\(=\)</span><span>\(2a + 2b\)</span><span></span></div>
+        <div class="eq" data-passo="2"><span>\(P - 2b\)</span><span>\(=\)</span><span>\(2a\)</span><span class="ag-anot">− 2b dos dois lados</span></div>
+        <div class="eq final" data-passo="3"><span>\(a\)</span><span>\(=\)</span><span>\(\dfrac{P - 2b}{2}\)</span><span class="ag-anot">÷ 2</span></div>
+      </div>
+    </div>
+  </div>
+  <aside class="notas">
+    <p>Uma equação literal tem outras letras além da incógnita. Resolve-se do mesmo jeito. O retângulo muda de tamanho: a fórmula para o lado a vale para qualquer perímetro.</p>
+    <p>É assim que se "vira" uma fórmula para achar a letra pedida.</p>
+  </aside>
+</section>
+
+<!-- 7. Questão 1 -->
+<section class="slide questao" data-nome="Questão 1">
+  <div class="conteudo">
+    <div class="area-resolucao"></div>
+    <span class="pilula pilula-pausa" data-em="1:some">Pause o vídeo e tente</span>
+    <div class="painel-questao" style="gap:10px">
+      <p class="olho">Questão 1 · IF Sudeste MG 2014</p>
+      <p class="enunciado" style="font-size:26px;line-height:1.4">Na equação \(\dfrac{2x}{x - 3} - 5 = \dfrac{3}{x - 3}\), sabemos que:<br>• O número 2 não é solução, pois substituindo \(x\) por 2 temos: \(\dfrac{2 \cdot 2}{2 - 3} - 5 = \dfrac{3}{2 - 3} \Rightarrow -9 \ne -3\)<br>• O número 4 é solução, visto que: \(\dfrac{2 \cdot 4}{4 - 3} - 5 = \dfrac{3}{4 - 3} \Rightarrow 3 = 3\)</p>
+      <p class="enunciado" style="font-size:27px;line-height:1.4">Agora, resolva o exercício: Se 1 é a solução da equação \(\dfrac{x}{x - 2} - 4 = \dfrac{a}{x - 2}\), o valor de \(a\) é:</p>
+      <ol class="alternativas curtas">
+        <li data-em="2:apaga"><b>A</b><span>\(-2\)</span></li>
+        <li data-em="2:apaga"><b>B</b><span>\(-1\)</span></li>
+        <li data-em="2:apaga"><b>C</b><span>0</span></li>
+        <li data-em="2:apaga"><b>D</b><span>4</span></li>
+        <li data-em="2:certo"><b>E</b><span>5</span></li>
+      </ol>
+      <p class="fonte">IF Sudeste MG 2014 (segunda prova) · questão 16</p>
+    </div>
+  </div>
+  <aside class="resolucao">
+    <p class="dados"><b>Dados:</b> \(x = 1\) é solução de \(\dfrac{x}{x - 2} - 4 = \dfrac{a}{x - 2}\).</p>
+    <ol class="passos">
+      <li>Troque \(x\) por 1: \(\dfrac{1}{1 - 2} - 4 = \dfrac{a}{1 - 2}\)</li>
+      <li>\(\dfrac{1}{-1} - 4 = \dfrac{a}{-1}\)</li>
+      <li>\(-1 - 4 = -a\)</li>
+      <li>\(-5 = -a \Rightarrow a = 5\)</li>
+    </ol>
+    <p class="resposta"><b>Resposta:</b> \(a = 5\). <b>Gabarito E.</b></p>
+    <p class="atencao"><b>Destaque no quadro:</b> "Ser solução" = trocar x pelo número e a igualdade ficar verdadeira.</p>
+    <ul class="erros">
+      <li><b>A</b> Usa o −2 do denominador como se fosse a.</li>
+      <li><b>B</b> Para em 1/(1 − 2) = −1 e esquece o resto.</li>
+      <li><b>C</b> Com a = 0, fica −5 = 0.</li>
+      <li><b>D</b> Usa o 4 da equação; com a = 4, fica −5 = −4.</li>
+    </ul>
+  </aside>
+  <aside class="notas">
+    <p>Clique 1 tira o aviso de pausa: resolva na área (D liga a caneta; E esconde o enunciado). Clique 2: gabarito E.</p>
+    <p>Questão oficial do IF Sudeste MG 2014-2, q16, MAT-0321 (sobra do bloco, usada aqui). x = 1 não é proibido (só x = 2 zera o denominador).</p>
+  </aside>
+</section>
+
+<!-- 8. Questão 2 -->
+<section class="slide questao" data-nome="Questão 2">
+  <div class="conteudo">
+    <div class="area-resolucao"></div>
+    <span class="pilula pilula-pausa" data-em="1:some">Pause o vídeo e tente</span>
+    <div class="painel-questao">
+      <p class="olho">Questão 2 · IF Sudeste MG 2014</p>
+      <p class="enunciado" style="font-size:31px">De um recipiente cheio de água, tiram-se \(\dfrac{1}{3}\) de seu conteúdo. Recolocando-se 15 litros de água, o conteúdo passa a ocupar \(\dfrac{5}{6}\) do volume inicial. Qual a capacidade do recipiente?</p>
+      <ol class="alternativas">
+        <li data-em="2:apaga"><b>A</b><span>75 litros</span></li>
+        <li data-em="2:apaga"><b>B</b><span>80 litros</span></li>
+        <li data-em="2:apaga"><b>C</b><span>85 litros</span></li>
+        <li data-em="2:certo"><b>D</b><span>90 litros</span></li>
+        <li data-em="2:apaga"><b>E</b><span>95 litros</span></li>
+      </ol>
+      <p class="fonte">IF Sudeste MG 2014 · questão 25</p>
+    </div>
+  </div>
+  <aside class="resolucao">
+    <p class="dados"><b>Dados:</b> capacidade \(V\); tira \(\frac{1}{3}\), sobra \(\frac{2}{3}V\); \(+15\) litros dá \(\frac{5}{6}V\).</p>
+    <ol class="passos">
+      <li>\(\dfrac{2}{3}V + 15 = \dfrac{5}{6}V\)</li>
+      <li>× 6: \(4V + 90 = 5V\)</li>
+      <li>\(V = 90\) litros</li>
+      <li>Confira: \(\frac{2}{3} \cdot 90 = 60\); \(60 + 15 = 75 = \frac{5}{6} \cdot 90\) ✓</li>
+    </ol>
+    <p class="resposta"><b>Resposta:</b> 90 litros. <b>Gabarito D.</b></p>
+    <p class="atencao"><b>Destaque no quadro:</b> Multiplique tudo pelo MMC (6) e as frações somem.</p>
+    <ul class="erros">
+      <li><b>A</b> 75 litros é o conteúdo final, não a capacidade.</li>
+      <li><b>B</b> Com 80, os dois lados não batem.</li>
+      <li><b>C</b> Com 85, os dois lados não batem.</li>
+      <li><b>E</b> Com 95, os dois lados não batem.</li>
+    </ul>
+  </aside>
+  <aside class="notas">
+    <p>Clique 1 tira o aviso de pausa: resolva na área (D liga a caneta; E esconde o enunciado). Clique 2: gabarito D.</p>
+    <p>Questão oficial do IF Sudeste MG 2014-1, q25, MAT-0353. Não aparece na lista curta de sobras (que termina em "…"), mas é oficial do subcapítulo e não está reservada para o bloco. A resolução do banco subtrai frações; aqui ela usa o MMC desta parte (mesmo resultado).</p>
+  </aside>
+</section>
+
+<!-- 9. Questão 3 -->
+<section class="slide questao" data-nome="Questão 3">
+  <div class="conteudo">
+    <div class="area-resolucao"></div>
+    <span class="pilula pilula-pausa" data-em="1:some">Pause o vídeo e tente</span>
+    <div class="painel-questao">
+      <p class="olho">Questão 3 · IF Sudeste MG 2018</p>
+      <p class="enunciado" style="font-size:32px">O perímetro de um retângulo ABCD é 60 dm. Se o menor lado mede \(\dfrac{2}{3}\) do lado maior, a diferença entre o lado maior e o lado menor é:</p>
+      <ol class="alternativas">
+        <li data-em="2:certo"><b>A</b><span>6</span></li>
+        <li data-em="2:apaga"><b>B</b><span>12</span></li>
+        <li data-em="2:apaga"><b>C</b><span>18</span></li>
+        <li data-em="2:apaga"><b>D</b><span>24</span></li>
+        <li data-em="2:apaga"><b>E</b><span>30</span></li>
+      </ol>
+      <p class="fonte">IF Sudeste MG 2018 · questão 14</p>
+    </div>
+  </div>
+  <aside class="resolucao">
+    <p class="dados"><b>Dados:</b> \(P = 60\) dm; lado maior \(x\); lado menor \(\frac{2}{3}x\).</p>
+    <ol class="passos">
+      <li>\(2x + 2 \cdot \dfrac{2}{3}x = 60\)</li>
+      <li>× 3: \(6x + 4x = 180\)</li>
+      <li>\(10x = 180 \Rightarrow x = 18\) dm</li>
+      <li>Lado menor: \(\frac{2}{3} \cdot 18 = 12\) dm</li>
+      <li>Diferença: \(18 - 12 = 6\) dm</li>
+    </ol>
+    <p class="resposta"><b>Resposta:</b> 6 dm. <b>Gabarito A.</b></p>
+    <p class="atencao"><b>Destaque no quadro:</b> A pergunta é a diferença, não um dos lados.</p>
+    <ul class="erros">
+      <li><b>B</b> 12 é o lado menor.</li>
+      <li><b>C</b> 18 é o lado maior.</li>
+      <li><b>D</b> Usa só um lado de cada: x + 2x/3 = 60 dá 36 e 24.</li>
+      <li><b>E</b> 30 é o semiperímetro.</li>
+    </ul>
+  </aside>
+  <aside class="notas">
+    <p>Clique 1 tira o aviso de pausa: resolva na área (D liga a caneta; E esconde o enunciado). Clique 2: gabarito A.</p>
+    <p>Questão oficial do IF Sudeste MG 2018-1, q14, MAT-0355 (sobra do bloco, usada aqui). A resolução do banco soma as frações; aqui ela multiplica por 3 (MMC), como nesta parte. Confira: 2 · 18 + 2 · 12 = 60.</p>
+  </aside>
+</section>
+
+<!-- 10. Resumo -->
+<section class="slide" data-nome="Resumo">
+  <div class="conteudo">
+    <p class="olho">Resumo de Equações do 1º grau</p>
+    <h2 class="titulo">O essencial</h2>
+    <div class="resumo" style="position:absolute;left:0;right:0;top:150px">
+      <div>Faça sempre a <b>mesma operação dos dois lados</b> da igualdade.</div>
+      <div><b>Equação literal:</b> isole a letra pedida do mesmo jeito.</div>
+      <div><b>Problema:</b> dê nome à incógnita, traduza, resolva e confira no enunciado.</div>
+      <div><b>Frações:</b> multiplique tudo pelo MMC dos denominadores; com \(x\) no denominador, exclua os valores que o zeram.</div>
+    </div>
+  </div>
+  <aside class="notas">
+    <p>Resumo do subcapítulo inteiro (as duas partes). Peça para tirarem um print.</p>
+  </aside>
+</section>
+
+<!-- 11. A seguir -->
+<section class="slide capa" data-nome="A seguir">
+  <div class="estrelas"></div>
+  <div class="texto-capa" style="top:220px">
+    <span class="selo">Matemática · IF</span>
+    <p class="aula">A seguir · Álgebra · Parte única</p>
+    <h1>Sistemas do 1º grau</h1>
+    <p class="sub">Duas incógnitas, duas informações</p>
+  </div>
+  <svg class="emblema" viewBox="0 0 640 640" aria-hidden="true">
+    <path d="M90 560 V90 M90 560 H580" stroke="#fff" stroke-opacity=".8" stroke-width="5" stroke-linecap="round" fill="none"/>
+    <line x1="110" y1="140" x2="540" y2="520" stroke="#fff" stroke-width="9" stroke-linecap="round"/>
+    <line x1="110" y1="470" x2="560" y2="200" stroke="#FFD10C" stroke-width="9" stroke-linecap="round"/>
+    <circle cx="338" cy="342" r="24" fill="#FFD10C" stroke="#fff" stroke-width="6"/>
+  </svg>
+  <img class="logo-capa" src="{{LOGO_BRANCO}}" alt="Quarks">
+  <aside class="notas"><p>Fim de Equações do 1º grau. A seguir, Sistemas do 1º grau: substituição, adição e problemas com duas incógnitas.</p></aside>
+</section>

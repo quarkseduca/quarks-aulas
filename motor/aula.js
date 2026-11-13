@@ -263,6 +263,35 @@
   };
   if (sistema) { dica.hidden = true; }
 
+  /* ---------- Capas: o texto nunca desce para a zona da câmera ---------- */
+  /* Regra do repositório: nada abaixo de y = 720 à esquerda de x = 620. Título longo com subtítulo de duas linhas
+     passava disso; aqui a capa diminui o título (até 96 px) e o subtítulo (até 38 px) só o quanto for preciso. */
+  function ajustaCapas() {
+    slides.forEach(function (s) {
+      if (!s.classList.contains("capa")) { return; }
+      var bloco = s.querySelector(".texto-capa");
+      if (!bloco || bloco.offsetLeft >= 620) { return; }
+      var h1 = bloco.querySelector("h1"), sub = bloco.querySelector(".sub");
+      var t = h1 ? parseFloat(getComputedStyle(h1).fontSize) : 0;
+      if (h1 && !h1.dataset.t0) { h1.dataset.t0 = t; }
+      var u = sub ? parseFloat(getComputedStyle(sub).fontSize) : 0;
+      for (var n = 0; n < 60 && bloco.offsetTop + bloco.offsetHeight > 720; n++) {
+        var mudou = false;
+        if (h1 && t > 96) { t = Math.max(96, t - 4); h1.style.fontSize = t + "px"; mudou = true; }
+        if (sub && u > 38 && n % 2) { u = Math.max(38, u - 2); sub.style.fontSize = u + "px"; mudou = true; }
+        if (!mudou && !(sub && u > 38)) { break; }
+      }
+      /* a quebra de linha muda aos saltos: devolve ao título o tamanho que ainda couber */
+      for (var t0 = h1 && n ? parseFloat(h1.dataset.t0 || 0) : 0; h1 && t + 2 <= t0; ) {
+        h1.style.fontSize = (t + 2) + "px";
+        if (bloco.offsetTop + bloco.offsetHeight > 720) { h1.style.fontSize = t + "px"; break; }
+        t += 2;
+      }
+    });
+  }
+  ajustaCapas();
+  if (document.fonts && document.fonts.ready) { document.fonts.ready.then(ajustaCapas); }
+
   /* ---------- Início ---------- */
   var m = /^#s(\d+)$/.exec(location.hash);
   mostra(m ? +m[1] - 1 : 0, 0);

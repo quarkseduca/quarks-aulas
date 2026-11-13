@@ -1,0 +1,488 @@
+<!--aula
+{"disciplina": "fisica", "curso": "IF", "assunto": "Máquinas simples", "parte": "Parte 2 de 2", "titulo": "Roldanas, rampas e engrenagens", "scripts": ["animacoes-maquinas.js"]}
+-->
+<!-- Fonte: apostila IF, Física, cap. 2 Mecânica, 2.1 Máquinas simples (blocos "Roldanas, plano inclinado, roda e eixo" e "Máquinas simples ao longo da história", com a atenção "Não se ganha energia", e o resumo do subcapítulo). Engrenagens: tópico do cronograma que a apostila só cita (a bicicleta como combinação de máquinas simples); o slide fica no qualitativo, como roda com eixo de dentes (ver notas). Questões: Modelo IF, lote if-fisica-equilibrio-do-corpo-extenso (hoje no subcapítulo Máquinas simples): m002 FIS-1348, m006 FIS-1352, m009 FIS-1355. -->
+<style>
+  .caixa, .cartao, .linha-ex, .painel { box-sizing: border-box; }
+  .linha-ex { background: var(--branco); border: 2px solid var(--lilas-2); border-radius: 24px; padding: 14px 26px; font-size: 30px; line-height: 1.3; }
+  .linha-ex b { color: var(--roxo-titulo); }
+  .painel { background: var(--branco); border: 2px solid var(--lilas-2); border-radius: 30px; padding: 18px 22px; }
+  .painel h3 { margin: 0 0 6px; font: 800 32px var(--fonte-titulo); letter-spacing: -.02em; color: var(--roxo-titulo); }
+  .painel p { margin: 6px 0 0; font-size: 24px; line-height: 1.32; }
+  .painel b { color: var(--roxo-titulo); }
+  .rot-fig { font-family: Figtree, "Segoe UI", sans-serif; font-weight: 700; font-size: 24px; fill: #5E5A70; }
+  .resumo.menor > div { font-size: 27px; padding: 18px 24px; }
+  .tag { display: inline-block; padding: 5px 18px; border-radius: 999px; font-weight: 800; font-size: 24px; white-space: nowrap; background: var(--d-clara); color: var(--d-forte); }
+  /* caixas subindo as rampas */
+  @keyframes sobe-curta { 0%, 10% { transform: translateX(0); } 70%, 100% { transform: translateX(225px); } }
+  @keyframes sobe-longa { 0%, 10% { transform: translateX(0); } 70%, 100% { transform: translateX(615px); } }
+  .slide.ativo .mostra .sobe-curta { animation: sobe-curta 7s ease-in-out infinite; }
+  .slide.ativo .mostra .sobe-longa { animation: sobe-longa 7s ease-in-out infinite; }
+  /* cunha que entra na madeira; rosca do parafuso girando */
+  @keyframes cunha { 0%, 15% { transform: translateY(-40px); } 60%, 85% { transform: translateY(0); } 100% { transform: translateY(-40px); } }
+  @keyframes abre-e { 0%, 25% { transform: translateX(0); } 60%, 85% { transform: translateX(-12px) rotate(-3deg); } 100% { transform: translateX(0); } }
+  @keyframes abre-d { 0%, 25% { transform: translateX(0); } 60%, 85% { transform: translateX(12px) rotate(3deg); } 100% { transform: translateX(0); } }
+  .lamina { transform: translateY(-40px); }
+  .slide.ativo .mostra .lamina { animation: cunha 6s ease-in-out infinite; }
+  .tora-e, .tora-d { transform-box: fill-box; transform-origin: 50% 100%; }
+  .slide.ativo .mostra .tora-e { animation: abre-e 6s ease-in-out infinite; }
+  .slide.ativo .mostra .tora-d { animation: abre-d 6s ease-in-out infinite; }
+  @keyframes rosca { to { transform: translateY(36px); } }
+  .slide.ativo .mostra .rosca { animation: rosca 2.4s linear infinite; }
+  /* roda com eixo e engrenagens */
+  @keyframes gira { to { transform: rotate(360deg); } }
+  @keyframes gira-anti { to { transform: rotate(-360deg); } }
+  .roda-eixo { transform-box: fill-box; transform-origin: center; }
+  .slide.ativo .mostra .roda-eixo { animation: gira 12s linear infinite; }
+  @keyframes balde { from { transform: translateY(0); } to { transform: translateY(-60px); } }
+  .slide.ativo .mostra .balde { animation: balde 12s linear infinite; }
+  .eng-g, .eng-p { transform-box: fill-box; transform-origin: center; }
+  .slide.ativo .mostra .eng-g { animation: gira 24s linear infinite; }
+  .slide.ativo .mostra .eng-p { animation: gira-anti 12s linear infinite; }
+</style>
+
+<svg width="0" height="0" style="position:absolute" aria-hidden="true">
+  <defs>
+    <marker id="ms2SetaP" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="5" markerHeight="5" orient="auto-start-reverse"><path d="M0 0 L10 5 L0 10 z" fill="#0B6B6D"/></marker>
+    <marker id="ms2SetaR" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="5" markerHeight="5" orient="auto-start-reverse"><path d="M0 0 L10 5 L0 10 z" fill="#C2384F"/></marker>
+    <marker id="ms2Cota" viewBox="0 0 10 10" refX="5" refY="5" markerWidth="5" markerHeight="5" orient="auto-start-reverse"><path d="M0 0 L10 5 L0 10 z" fill="#5E5A70"/></marker>
+    <pattern id="ms2Rosca" width="80" height="36" patternUnits="userSpaceOnUse"><path d="M0 0 L80 18" stroke="#6E6A80" stroke-width="6"/><path d="M0 36 L80 54 M0 -36 L80 -18" stroke="#6E6A80" stroke-width="6"/></pattern>
+  </defs>
+</svg>
+
+<!-- 1. Capa -->
+<section class="slide capa" data-nome="Capa">
+  <div class="estrelas"></div>
+  <div class="texto-capa">
+    <span class="selo">Física · IF</span>
+    <p class="aula">Máquinas simples · Parte 2 de 2</p>
+    <h1 style="font-size:120px">Roldanas, rampas e engrenagens</h1>
+    <p class="sub">O que se ganha em força se perde em distância</p>
+  </div>
+  <svg class="emblema" viewBox="0 0 640 640" aria-hidden="true">
+    <g class="gira-lento"><ellipse cx="320" cy="320" rx="300" ry="128" fill="none" stroke="#fff" stroke-opacity=".38" stroke-width="2" transform="rotate(-10 320 320)"/></g>
+    <g transform="translate(260 300)"><g class="gira" data-dentes="20" data-r="120" data-h="22" data-cor="#FFD10C"></g></g>
+    <g transform="translate(448 450)"><g class="gira-lento" data-dentes="10" data-r="56" data-h="22" data-cor="#fff"></g></g>
+  </svg>
+  <img class="logo-capa" src="{{LOGO_BRANCO}}" alt="Quarks">
+  <aside class="notas"><p>Segunda parte de Máquinas simples: roldana fixa e móvel, plano inclinado (com a cunha e o parafuso), roda com eixo, engrenagens e um pouco de história. No fim, o resumo do subcapítulo e o bloco de questões do IF do capítulo.</p></aside>
+</section>
+
+<!-- 2. A roldana -->
+<section class="slide" data-nome="A roldana">
+  <div class="conteudo">
+    <p class="olho">Outros truques além da alavanca</p>
+    <h2 class="titulo">A roldana, ou polia</h2>
+    <svg viewBox="0 0 400 400" style="position:absolute;left:1300px;top:150px;width:400px;height:400px" aria-hidden="true">
+      <circle cx="200" cy="200" r="150" fill="#fff" stroke="#8C7BEA" stroke-width="20"/>
+      <circle cx="200" cy="200" r="122" fill="none" stroke="#8C7BEA" stroke-width="4" opacity=".5"/>
+      <circle cx="200" cy="200" r="20" fill="#4B39B3"/>
+      <path d="M40 400 V200 A160 160 0 0 1 360 200 V400" fill="none" stroke="#0B6B6D" stroke-width="10"/>
+      <text x="200" y="120" text-anchor="middle" class="rot-fig">sulco</text>
+    </svg>
+    <div style="position:absolute;left:0;width:1160px;top:170px;display:flex;flex-direction:column;gap:18px">
+      <div class="linha-ex">Subir um balde de água de um <b>poço</b>; levar um carrinho de compras até a <b>calçada</b>…</div>
+      <div class="caixa caixa-fundamental" data-passo="1" style="padding:20px 30px">
+        <span class="rotulo">Roldana</span>
+        <div class="texto" style="font-size:30px">Uma <b>roda com um sulco</b> por onde passa uma <b>corda</b>.</div>
+      </div>
+      <div class="linha-ex" data-passo="2">Há dois jeitos de usar: a roldana <b>fixa</b> e a roldana <b>móvel</b>.</div>
+    </div>
+  </div>
+  <aside class="notas"><p>Da apostila (bloco "Roldanas, plano inclinado, roda e eixo"). O poço e o carrinho de compras são os ganchos da apostila; o carrinho volta no plano inclinado.</p></aside>
+</section>
+
+<!-- 3. Roldana fixa -->
+<section class="slide" data-nome="Roldana fixa">
+  <div class="conteudo">
+    <p class="olho">Roldana fixa</p>
+    <h2 class="titulo">Muda a direção da força</h2>
+    <div data-anima="roldana" data-modo="fixa" data-anima-passo="1" data-w="640" data-h="600" style="position:absolute;left:1120px;top:140px;width:640px;height:600px"></div>
+    <div style="position:absolute;left:0;width:1040px;top:170px;display:flex;flex-direction:column;gap:18px">
+      <div class="linha-ex">Fica <b>presa no teto</b>.</div>
+      <div class="linha-ex" data-passo="1">Ela <b>não diminui a força</b>: a força é igual ao peso.</div>
+      <div class="linha-ex" data-passo="2">Mas <b>muda a direção</b>: em vez de levantar a carga, você <b>puxa a corda para baixo</b>, usando o <b>próprio peso do corpo</b>.</div>
+    </div>
+    <span class="pilula pilula-resposta" data-passo="3" style="position:absolute;left:600px;top:620px">Sobe h, puxa h · F = P</span>
+  </div>
+  <aside class="notas">
+    <p>Clique 1: a mão puxa para baixo e a carga sobe a mesma altura (as duas cotas crescem juntas). A força na corda é igual ao peso da carga (desprezando o atrito e o peso da corda). Da apostila.</p>
+  </aside>
+</section>
+
+<!-- 4. Roldana móvel -->
+<section class="slide" data-nome="Roldana móvel">
+  <div class="conteudo">
+    <p class="olho">Roldana móvel</p>
+    <h2 class="titulo">Divide a força por dois</h2>
+    <div data-anima="roldana" data-modo="movel" data-anima-passo="1" data-w="640" data-h="600" style="position:absolute;left:1120px;top:140px;width:640px;height:600px"></div>
+    <div style="position:absolute;left:0;width:1040px;top:170px;display:flex;flex-direction:column;gap:18px">
+      <div class="linha-ex">A roldana móvel <b>sobe junto com a carga</b>.</div>
+      <div class="linha-ex" data-passo="1">O peso fica <b>dividido entre os dois lados</b> da corda: a força cai pela <b>metade</b>.</div>
+      <div class="linha-ex" data-passo="2">Em troca, é preciso puxar o <b>dobro de corda</b>.</div>
+    </div>
+    <span class="pilula pilula-resposta" data-passo="3" style="position:absolute;left:600px;top:620px">Sobe h, puxa 2h · F = P/2</span>
+  </div>
+  <aside class="notas">
+    <p>Clique 1: a corda está presa no teto à esquerda, passa por baixo da roldana (que segura a carga) e sobe até a mão. A carga sobe h e a mão sobe 2h: compare as duas cotas. A força é metade do peso.</p>
+    <p>Fixa + móvel juntas: a fixa só muda a direção e a móvel divide por 2 (questão 2 desta parte). Cada roldana móvel a mais divide de novo por 2 (questão do IF 2024 no bloco do capítulo).</p>
+  </aside>
+</section>
+
+<!-- 5. Atenção: não se ganha energia -->
+<section class="slide" data-nome="Não se ganha energia">
+  <div class="conteudo">
+    <p class="olho">Atenção</p>
+    <h2 class="titulo">Não se ganha energia</h2>
+    <div class="caixa caixa-atencao" style="position:absolute;left:0;right:0;top:160px;padding:24px 34px">
+      <div class="texto">A máquina simples <b>diminui a força</b>, mas <b>não diminui o trabalho total</b>. Para usar menos força, é preciso fazer o movimento por uma <b>distância maior</b>.</div>
+    </div>
+    <div style="position:absolute;left:600px;right:0;top:420px;display:grid;grid-template-columns:1fr 1fr;gap:30px">
+      <div class="painel" data-passo="1" style="text-align:center"><h3>Ganha em força</h3><p>F = P/2</p><svg viewBox="0 0 200 90" style="width:200px;height:90px" aria-hidden="true"><path d="M20 45 H180" stroke="#0B6B6D" stroke-width="10" marker-end="url(#ms2SetaP)"/></svg></div>
+      <div class="painel" data-passo="2" style="text-align:center"><h3>Perde em distância</h3><p>puxa 2h de corda</p><svg viewBox="0 0 200 90" style="width:200px;height:90px" aria-hidden="true"><path d="M20 45 H180" stroke="#C2384F" stroke-width="10" stroke-dasharray="14 10" marker-end="url(#ms2SetaR)"/></svg></div>
+    </div>
+    <span class="pilula pilula-resposta" data-passo="3" style="position:absolute;left:600px;top:700px">O que se ganha em força, perde-se em distância</span>
+  </div>
+  <aside class="notas"><p>Atenção da apostila ("Não se ganha energia"). Vale para todas as máquinas simples: alavanca, roldana, rampa, parafuso, roda com eixo. Ela cai na questão 3 desta parte (a rampa não economiza energia).</p></aside>
+</section>
+
+<!-- 6. Plano inclinado -->
+<section class="slide" data-nome="Plano inclinado">
+  <div class="conteudo">
+    <p class="olho">Plano inclinado</p>
+    <h2 class="titulo">A rampa: menos força, caminho maior</h2>
+    <svg viewBox="0 0 1160 470" style="position:absolute;left:600px;top:130px;width:1160px;height:470px" aria-hidden="true">
+      <rect x="0" y="430" width="1160" height="16" rx="8" fill="#E4DEFB"/>
+      <g data-passo="1">
+        <path d="M20 430 L240 430 L240 230 Z" fill="#C9C0F0" stroke="#8C7BEA" stroke-width="3"/>
+        <g transform="translate(26 430) rotate(-42.3)"><g class="sobe-curta"><rect x="0" y="-60" width="60" height="60" rx="8" fill="#E8C27A" stroke="#B8893A" stroke-width="3"/></g></g>
+        <path d="M100 330 L180 257" stroke="#0B6B6D" stroke-width="8" marker-end="url(#ms2SetaP)"/>
+        <text x="10" y="190" class="rot-fig" style="fill:#0B6B6D;font-weight:800">rampa curta: mais força</text>
+      </g>
+      <g data-passo="2">
+        <path d="M480 430 L1140 430 L1140 230 Z" fill="#C9C0F0" stroke="#8C7BEA" stroke-width="3"/>
+        <g transform="translate(486 430) rotate(-16.9)"><g class="sobe-longa"><rect x="0" y="-60" width="60" height="60" rx="8" fill="#E8C27A" stroke="#B8893A" stroke-width="3"/></g></g>
+        <path d="M640 330 L690 315" stroke="#0B6B6D" stroke-width="8" marker-end="url(#ms2SetaP)"/>
+        <text x="820" y="200" text-anchor="middle" class="rot-fig" style="fill:#0B6B6D;font-weight:800">rampa longa (mais suave): menos força</text>
+      </g>
+      <g data-passo="3"><line x1="1160" y1="230" x2="1160" y2="430" stroke="#5E5A70" stroke-width="3" marker-start="url(#ms2Cota)" marker-end="url(#ms2Cota)"/><line x1="258" y1="230" x2="258" y2="430" stroke="#5E5A70" stroke-width="3" marker-start="url(#ms2Cota)" marker-end="url(#ms2Cota)"/><text x="300" y="336" class="rot-fig">mesma altura</text></g>
+    </svg>
+    <div style="position:absolute;left:0;width:520px;top:170px;display:flex;flex-direction:column;gap:14px">
+      <div class="linha-ex" data-passo="1" style="font-size:27px">Subir pela rampa exige <b>menos força</b> que levantar na vertical…</div>
+      <div class="linha-ex" data-passo="2" style="font-size:27px">…mas o <b>caminho é mais longo</b>.</div>
+    </div>
+    <div class="caixa caixa-fundamental" data-passo="3" style="position:absolute;left:600px;right:0;top:640px;padding:18px 28px">
+      <div class="texto" style="font-size:29px"><b>Quanto mais suave a rampa, menor a força.</b> Exemplo: a rampa de acesso para cadeira de rodas.</div>
+    </div>
+  </div>
+  <aside class="notas">
+    <p>Clique 1: rampa curta e íngreme; clique 2: rampa longa e suave, até a mesma altura. As setas verdes representam a força para empurrar (mais curta na rampa suave). As caixas sobem ao mesmo tempo: na rampa longa, ela percorre um caminho maior.</p>
+    <p>Da apostila. Sem conta: a matriz do IF não pede o cálculo da força na rampa.</p>
+  </aside>
+</section>
+
+<!-- 7. Cunha e parafuso -->
+<section class="slide" data-nome="Cunha e parafuso">
+  <div class="conteudo">
+    <p class="olho">Plano inclinado disfarçado</p>
+    <h2 class="titulo">A cunha e o parafuso</h2>
+    <div style="position:absolute;left:0;right:0;top:160px;display:grid;grid-template-columns:1fr 1fr;gap:34px">
+      <div class="painel" data-passo="1" style="display:grid;grid-template-columns:300px 1fr;gap:16px;align-items:center">
+        <svg viewBox="0 0 300 320" style="width:300px;height:320px" aria-hidden="true">
+          <g class="tora-e"><path d="M40 160 H148 V300 H40 Z" fill="#C9A26B" stroke="#8A6A3E" stroke-width="3"/></g>
+          <g class="tora-d"><path d="M152 160 H260 V300 H152 Z" fill="#C9A26B" stroke="#8A6A3E" stroke-width="3"/></g>
+          <g class="lamina"><path d="M110 40 H190 L150 200 Z" fill="#A9A3B8" stroke="#5E5A70" stroke-width="3"/><rect x="138" y="0" width="24" height="44" rx="6" fill="#8A6A3E"/></g>
+        </svg>
+        <div><h3>Cunha</h3><p>Formada por <b>dois planos inclinados</b>, como a <b>lâmina do machado</b>.</p></div>
+      </div>
+      <div class="painel" data-passo="2" style="display:grid;grid-template-columns:300px 1fr;gap:16px;align-items:center">
+        <svg viewBox="0 0 300 320" style="width:300px;height:320px" aria-hidden="true">
+          <path d="M10 300 L120 300 L120 120 Z" fill="#E4DEFB" stroke="#8C7BEA" stroke-width="3"/>
+          <path d="M130 200 H160 M150 190 L162 200 L150 210" stroke="#3F2FA0" stroke-width="4" fill="none" stroke-linecap="round"/>
+          <rect x="180" y="20" width="90" height="26" rx="6" fill="#8E8AA0"/>
+          <rect x="200" y="46" width="50" height="240" fill="#D9D6E3" stroke="#6E6A80" stroke-width="3"/>
+          <clipPath id="ms2CorpoP"><rect x="200" y="46" width="50" height="240"/></clipPath>
+          <g clip-path="url(#ms2CorpoP)"><g class="rosca"><rect x="200" y="0" width="50" height="340" fill="url(#ms2Rosca)"/></g></g>
+          <path d="M200 286 L225 316 L250 286" fill="#D9D6E3" stroke="#6E6A80" stroke-width="3"/>
+        </svg>
+        <div><h3>Parafuso</h3><p>Um <b>plano inclinado enrolado</b>: a rosca é a rampa dando voltas.</p></div>
+      </div>
+    </div>
+    <div class="caixa" data-passo="3" style="position:absolute;left:600px;right:0;top:620px;padding:18px 28px">
+      <div class="texto" style="font-size:29px">Pouca força, aplicada ao longo de um caminho grande, empurra com muita força no fim.</div>
+    </div>
+  </div>
+  <aside class="notas">
+    <p>Clique 1: a lâmina (cunha) entra na tora e as duas metades se afastam. Clique 2: um triângulo de papel enrolado num lápis forma uma espiral: é a rosca do parafuso (a rosca "anda" para mostrar o parafuso girando).</p>
+    <p>Apostila: "O parafuso é um plano inclinado enrolado; a cunha, como a lâmina do machado, é formada por dois planos inclinados." A frase do clique 3 é a mesma ideia do "ganha em força, perde em distância".</p>
+  </aside>
+</section>
+
+<!-- 8. Roda com eixo -->
+<section class="slide" data-nome="Roda com eixo">
+  <div class="conteudo">
+    <p class="olho">Roda com eixo</p>
+    <h2 class="titulo">Roda grande, eixo fino</h2>
+    <svg viewBox="0 0 560 600" style="position:absolute;left:1200px;top:140px;width:560px;height:600px" aria-hidden="true">
+      <g class="roda-eixo">
+        <circle cx="240" cy="200" r="170" fill="none" stroke="#8C7BEA" stroke-width="14"/>
+        <path d="M240 30 V370 M70 200 H410 M120 80 L360 320 M360 80 L120 320" stroke="#8C7BEA" stroke-width="6"/>
+        <circle cx="240" cy="200" r="36" fill="#5E5A70"/>
+      </g>
+      <line x1="276" y1="200" x2="276" y2="420" stroke="#0B6B6D" stroke-width="6"/>
+      <g class="balde"><path d="M236 420 H316 L304 500 H248 Z" fill="#4C9BE8" stroke="#3A5FC0" stroke-width="4"/></g>
+      <path d="M430 230 Q440 300 400 340" stroke="#0B6B6D" stroke-width="8" fill="none" marker-end="url(#ms2SetaP)"/>
+      <text x="440" y="200" class="rot-fig" style="fill:#0B6B6D;font-weight:800">pouca força</text>
+      <text x="320" y="560" text-anchor="middle" class="rot-fig">o eixo enrola a corda</text>
+    </svg>
+    <div style="position:absolute;left:0;width:1080px;top:170px;display:flex;flex-direction:column;gap:18px">
+      <div class="linha-ex">Uma <b>roda grande</b> presa a um <b>eixo fino</b>.</div>
+      <div class="linha-ex" data-passo="1">Girar a roda grande exige <b>pouca força</b> para fazer o eixo girar <b>com força</b>.</div>
+    </div>
+    <div style="position:absolute;left:600px;width:560px;top:460px;display:grid;grid-template-columns:1fr 1fr 1fr;gap:14px">
+      <div class="painel" data-passo="2" style="text-align:center;padding:14px"><svg viewBox="0 0 120 90" style="width:120px;height:90px" aria-hidden="true"><circle cx="40" cy="45" r="22" fill="#D9D6E3" stroke="#6E6A80" stroke-width="4"/><rect x="40" y="38" width="70" height="16" rx="8" fill="#8E8AA0"/></svg><p><b>maçaneta</b></p></div>
+      <div class="painel" data-passo="2" style="text-align:center;padding:14px"><svg viewBox="0 0 120 90" style="width:120px;height:90px" aria-hidden="true"><circle cx="60" cy="45" r="38" fill="none" stroke="#5E5A70" stroke-width="8"/><circle cx="60" cy="45" r="9" fill="#5E5A70"/><path d="M60 45 L24 58 M60 45 L96 58 M60 45 V8" stroke="#5E5A70" stroke-width="6"/></svg><p><b>volante</b></p></div>
+      <div class="painel" data-passo="2" style="text-align:center;padding:14px"><svg viewBox="0 0 120 90" style="width:120px;height:90px" aria-hidden="true"><rect x="10" y="38" width="80" height="16" rx="8" fill="#C9A26B"/><path d="M90 46 H104 V16 H116" stroke="#5E5A70" stroke-width="7" fill="none" stroke-linecap="round"/></svg><p><b>manivela</b></p></div>
+    </div>
+  </div>
+  <aside class="notas">
+    <p>Clique 1: a roda grande gira devagar, o eixo fino gira junto e enrola a corda: o balde sobe. A força na borda da roda é pequena; no eixo, a força é grande. Clique 2: os exemplos da apostila (maçaneta, volante do carro, manivela do poço).</p>
+  </aside>
+</section>
+
+<!-- 9. Engrenagens -->
+<section class="slide" data-nome="Engrenagens">
+  <div class="conteudo">
+    <p class="olho">Rodas com dentes</p>
+    <h2 class="titulo">Engrenagens</h2>
+    <svg viewBox="0 0 560 520" style="position:absolute;left:1200px;top:140px;width:560px;height:520px" aria-hidden="true" data-passo="1">
+      <g transform="translate(220 260)"><g class="eng-g" data-dentes="24" data-r="150" data-h="18" data-cor="#8C7BEA"></g></g>
+      <g transform="translate(455 260)"><g class="eng-p" data-dentes="12" data-r="70" data-h="18" data-cor="#0F8B8D"></g></g>
+    </svg>
+    <div style="position:absolute;left:0;width:1080px;top:170px;display:flex;flex-direction:column;gap:16px">
+      <div class="linha-ex" data-passo="1">Engrenagem é uma <b>roda com dentes</b> presa a um eixo: os dentes de uma empurram os da outra.</div>
+      <div class="linha-ex" data-passo="2">Duas engrenagens encaixadas giram em <b>sentidos opostos</b>.</div>
+      <div class="linha-ex" data-passo="3">A <b>menor</b> dá <b>mais voltas</b>: aqui, com metade dos dentes, ela gira <b>duas vezes mais rápido</b>.</div>
+    </div>
+    <div class="caixa caixa-fundamental" data-passo="4" style="position:absolute;left:600px;right:0;top:640px;padding:18px 28px">
+      <div class="texto" style="font-size:28px">Na <b>bicicleta</b>, a corrente liga a coroa do pedal à catraca da roda: ela é uma <b>combinação de máquinas simples</b>.</div>
+    </div>
+  </div>
+  <aside class="notas">
+    <p>Clique 1: a engrenagem grande (24 dentes) gira e empurra a pequena (12 dentes), que gira no sentido contrário e com o dobro de voltas (uma volta da grande a cada 24 s, uma da pequena a cada 12 s).</p>
+    <p><b>Para conferência:</b> a apostila do IF não tem um bloco de engrenagens; só diz que a bicicleta é uma combinação de máquinas simples. Este slide atende ao tópico do cronograma ("Engrenagens…") só no qualitativo, como uma roda com eixo com dentes. Não há questão do IF sobre engrenagens na apostila.</p>
+  </aside>
+</section>
+
+<!-- 10. História -->
+<section class="slide" data-nome="Máquinas simples na história">
+  <div class="conteudo">
+    <p class="olho">Máquinas simples ao longo da história</p>
+    <h2 class="titulo">Das pirâmides à bicicleta</h2>
+    <div class="linha-tempo" style="position:absolute;left:0;right:0;top:170px">
+      <div data-passo="1"><span class="ano">Povos antigos</span>Rampas e alavancas para mover <b>grandes blocos de pedra</b> em construções.</div>
+      <div data-passo="2"><span class="ano">Século III a.C.</span><b>Arquimedes</b>, na Grécia Antiga, estudou as <b>alavancas</b> e as <b>roldanas</b>.</div>
+      <div data-passo="3"><span class="ano">Hoje</span>Tesoura, alicate, abridor de garrafa, carrinho de mão, rampa, parafuso, maçaneta, volante, guindaste.</div>
+      <div data-passo="4"><span class="ano">Combinações</span>Muitas máquinas complexas, como a <b>bicicleta</b>, juntam várias máquinas simples.</div>
+    </div>
+    <div class="caixa caixa-fundamental" data-passo="2" style="position:absolute;left:600px;right:0;top:600px;padding:20px 30px">
+      <div class="texto" style="font-size:31px">"Deem-me um ponto de apoio e eu moverei o mundo." <span style="font-size:24px;color:var(--cinza)">(frase atribuída a Arquimedes)</span></div>
+    </div>
+  </div>
+  <aside class="notas"><p>Tudo da apostila (bloco "Máquinas simples ao longo da história"). A frase é "atribuída" a Arquimedes: não há registro de que ele a tenha dito com essas palavras. A questão oficial do IF de 2024 (no bloco do capítulo) começa justamente pelas roldanas "desde a época da construção das pirâmides".</p></aside>
+</section>
+
+<!-- 11. Exemplo -->
+<section class="slide" data-nome="Exemplo: qual máquina?">
+  <div class="conteudo">
+    <p class="olho">Exemplo</p>
+    <h2 class="titulo">Qual é a máquina simples principal?</h2>
+    <div style="position:absolute;left:0;right:0;top:170px;display:flex;flex-direction:column;gap:18px">
+      <div class="linha-ex" style="display:grid;grid-template-columns:1fr auto;gap:20px;align-items:center"><span><b>(a)</b> A rampa de acesso para cadeira de rodas.</span><span data-passo="1" class="tag">plano inclinado</span></div>
+      <div class="linha-ex" style="display:grid;grid-template-columns:1fr auto;gap:20px;align-items:center"><span><b>(b)</b> O mastro da bandeira: puxa-se a corda para baixo, e a bandeira sobe.</span><span data-passo="2" class="tag">roldana fixa</span></div>
+      <div class="linha-ex" style="display:grid;grid-template-columns:1fr auto;gap:20px;align-items:center"><span><b>(c)</b> A chave de fenda girando um parafuso.</span><span data-passo="3" class="tag">roda com eixo</span></div>
+    </div>
+    <div class="caixa" data-passo="4" style="position:absolute;left:600px;right:0;top:520px;padding:18px 28px">
+      <div class="texto" style="font-size:29px">Na (c), o <b>cabo largo</b> gira a <b>ponta fina</b>. E o próprio parafuso é um <b>plano inclinado enrolado</b>.</div>
+    </div>
+  </div>
+  <aside class="notas"><p>Exemplo da apostila ("Qual máquina simples?"). Peça a resposta antes de cada clique.</p></aside>
+</section>
+
+<!-- 12. Questão 1 -->
+<section class="slide questao" data-nome="Questão 1">
+  <div class="conteudo">
+    <div class="area-resolucao"></div>
+    <span class="pilula pilula-pausa" data-em="1:some">Pause o vídeo e tente</span>
+    <div class="painel-questao" style="gap:12px">
+      <p class="olho">Questão 1 · Modelo IF</p>
+      <p class="enunciado" style="font-size:23px">Numa obra de dois andares, o pedreiro precisa subir baldes de massa até a laje. Ele prende uma roldana numa viga no alto, passa uma corda por ela e amarra o balde numa das pontas. Do chão, puxa a outra ponta da corda para baixo, e o balde sobe. A roldana fica sempre presa na viga.</p>
+      <p class="enunciado" style="font-size:23px">Qual é a vantagem de usar essa roldana?</p>
+      <ol class="alternativas" style="gap:7px">
+        <li data-em="2:certo" style="font-size:20px;padding:5px 14px"><b>A</b><span>Ela muda a direção da força: o pedreiro puxa para baixo, usando o peso do próprio corpo, com uma força igual ao peso do balde.</span></li>
+        <li data-em="2:apaga" style="font-size:20px;padding:5px 14px"><b>B</b><span>Ela divide a força pela metade, porque o peso do balde fica repartido entre os dois lados da corda.</span></li>
+        <li data-em="2:apaga" style="font-size:20px;padding:5px 14px"><b>C</b><span>Ela diminui o trabalho total necessário para levar o balde até a laje.</span></li>
+        <li data-em="2:apaga" style="font-size:20px;padding:5px 14px"><b>D</b><span>Ela diminui a massa do balde enquanto ele está subindo.</span></li>
+        <li data-em="2:apaga" style="font-size:20px;padding:5px 14px"><b>E</b><span>Ela permite puxar menos corda do que a altura que o balde sobe.</span></li>
+      </ol>
+    </div>
+  </div>
+  <aside class="resolucao">
+    <p class="dados"><b>Dados:</b> roldana presa na viga: fixa.</p>
+    <ol class="passos">
+      <li>Fixa: não diminui a força (F = P).</li>
+      <li>Muda a direção: puxa para baixo.</li>
+      <li>Usa o peso do corpo para ajudar.</li>
+    </ol>
+    <p class="resposta"><b>Resposta:</b> muda a direção da força. <b>Gabarito A.</b></p>
+    <p class="atencao"><b>Destaque no quadro:</b> Fixa muda a direção; móvel divide por 2.</p>
+    <ul class="erros">
+      <li><b>B</b> Quem divide por 2 é a roldana móvel.</li>
+      <li><b>C</b> Nenhuma máquina simples diminui o trabalho.</li>
+      <li><b>D</b> A massa do balde não muda.</li>
+      <li><b>E</b> Na fixa, puxa-se a mesma corda que o balde sobe.</li>
+    </ul>
+  </aside>
+  <aside class="notas">
+    <p>Clique 1 tira o aviso de pausa: resolva na área (D liga a caneta; E esconde o enunciado). Clique 2: gabarito A.</p>
+    <p>Modelo IF, lote if-fisica-equilibrio-do-corpo-extenso, m002, FIS-1348 (nível 2).</p>
+  </aside>
+</section>
+
+<!-- 13. Questão 2 -->
+<section class="slide questao" data-nome="Questão 2">
+  <div class="conteudo">
+    <div class="area-resolucao"></div>
+    <span class="pilula pilula-pausa" data-em="1:some">Pause o vídeo e tente</span>
+    <div class="painel-questao" style="gap:10px">
+      <p class="olho">Questão 2 · Modelo IF</p>
+      <div style="display:grid;grid-template-columns:1fr 170px;gap:12px;align-items:start">
+        <p class="enunciado" style="font-size:21px">Na reforma de uma casa em Juiz de Fora, os pedreiros montaram o sistema de roldanas da figura para subir uma caixa de 80 kg até o segundo andar, 3 m acima. Uma roldana fica presa no alto e a outra sobe junto com a caixa. Considere \(g = 10\ \text{m/s}^2\) e despreze o peso das roldanas e das cordas.</p>
+        <svg viewBox="0 0 170 300" style="width:170px;height:300px;display:block" aria-hidden="true">
+          <rect x="4" y="4" width="162" height="14" rx="4" fill="#B5ADC9"/>
+          <line x1="110" y1="18" x2="110" y2="56" stroke="#5E5A70" stroke-width="5"/>
+          <circle cx="110" cy="76" r="22" fill="#fff" stroke="#8C7BEA" stroke-width="6"/>
+          <path d="M44 18 V186 A22 22 0 0 0 88 186 V76 A22 22 0 0 1 132 76 V250" fill="none" stroke="#0B6B6D" stroke-width="4"/>
+          <circle cx="66" cy="186" r="22" fill="#fff" stroke="#0F8B8D" stroke-width="6"/>
+          <line x1="66" y1="186" x2="66" y2="226" stroke="#5E5A70" stroke-width="5"/>
+          <rect x="34" y="226" width="64" height="50" rx="8" fill="#E8C27A" stroke="#B8893A" stroke-width="3"/>
+          <text x="66" y="258" text-anchor="middle" font-family="Figtree,sans-serif" font-size="16" font-weight="800" fill="#6E4B12">80 kg</text>
+          <path d="M132 250 V286" stroke="#3F2FA0" stroke-width="4" marker-end="url(#ms2SetaP)"/><text x="142" y="276" font-family="Figtree,sans-serif" font-size="18" font-weight="800" fill="#3F2FA0">F</text>
+        </svg>
+      </div>
+      <p class="enunciado" style="font-size:21px">Para subir a caixa devagar, qual força F o pedreiro faz na ponta da corda e quantos metros de corda ele precisa puxar para a caixa subir os 3 m?</p>
+      <ol class="alternativas curtas">
+        <li data-em="2:apaga" style="font-size:20px"><b>A</b><span>800 N e 3 m</span></li>
+        <li data-em="2:apaga" style="font-size:20px"><b>B</b><span>200 N e 12 m</span></li>
+        <li data-em="2:apaga" style="font-size:20px"><b>C</b><span>400 N e 3 m</span></li>
+        <li data-em="2:apaga" style="font-size:20px"><b>D</b><span>800 N e 6 m</span></li>
+        <li data-em="2:certo" style="font-size:20px"><b>E</b><span>400 N e 6 m</span></li>
+      </ol>
+    </div>
+  </div>
+  <aside class="resolucao">
+    <p class="dados"><b>Dados:</b> \(m = 80\ \text{kg}\); \(g = 10\ \text{m/s}^2\); 1 roldana móvel; \(h = 3\ \text{m}\).</p>
+    <ol class="passos">
+      <li>\(P = m \cdot g = 80 \cdot 10 = 800\ \text{N}\)</li>
+      <li>Móvel divide por 2: \(F = \dfrac{800}{2} = 400\ \text{N}\)</li>
+      <li>Fixa só muda a direção.</li>
+      <li>Corda: \(d = 2 \cdot h = 2 \cdot 3 = 6\ \text{m}\)</li>
+    </ol>
+    <p class="resposta"><b>Resposta:</b> 400 N e 6 m. <b>Gabarito E.</b></p>
+    <p class="atencao"><b>Destaque no quadro:</b> Metade da força, o dobro de corda.</p>
+    <ul class="erros">
+      <li><b>A</b> Só valeria com roldanas fixas.</li>
+      <li><b>B</b> Contou duas móveis.</li>
+      <li><b>C</b> Ganhou força sem perder distância.</li>
+      <li><b>D</b> Esqueceu que a móvel divide a força.</li>
+    </ul>
+  </aside>
+  <aside class="notas">
+    <p>Clique 1 tira o aviso de pausa: resolva na área (D liga a caneta; E esconde o enunciado). Clique 2: gabarito E.</p>
+    <p>Modelo IF, lote if-fisica-equilibrio-do-corpo-extenso, m006, FIS-1352 (nível 3). Figura redesenhada no visual da marca, com o arranjo descrito no enunciado (uma fixa no alto, uma móvel com a caixa). Contas conferidas: 80 · 10 = 800; 800 ÷ 2 = 400; 2 · 3 = 6.</p>
+  </aside>
+</section>
+
+<!-- 14. Questão 3 -->
+<section class="slide questao" data-nome="Questão 3">
+  <div class="conteudo">
+    <div class="area-resolucao"></div>
+    <span class="pilula pilula-pausa" data-em="1:some">Pause o vídeo e tente</span>
+    <div class="painel-questao" style="gap:10px">
+      <p class="olho">Questão 3 · Modelo IF</p>
+      <p class="enunciado" style="font-size:20px">Rafael precisa colocar uma máquina de lavar na carroceria de uma caminhonete e pensa em algumas soluções com máquinas simples: duas rampas de tábua, uma curta e uma longa, que chegam à mesma altura da carroceria, e roldanas presas num galho de árvore acima da caminhonete. Ele anotou o que achava de cada solução:</p>
+      <p class="enunciado" style="font-size:20px">I. Empurrando a máquina pela rampa longa, a força necessária é menor que pela rampa curta.<br>II. Pela rampa longa, além de fazer menos força, ele gasta menos energia no total para levar a máquina até a carroceria.<br>III. Uma única roldana fixa presa no galho permite levantar a máquina fazendo metade da força do peso dela.<br>IV. Com uma roldana móvel, a força cai pela metade, mas é preciso puxar o dobro de corda.</p>
+      <p class="enunciado" style="font-size:20px">São <b>CORRETAS</b> apenas as anotações:</p>
+      <ol class="alternativas curtas">
+        <li data-em="2:apaga" style="font-size:20px"><b>A</b><span>I e II.</span></li>
+        <li data-em="2:apaga" style="font-size:20px"><b>B</b><span>II e III.</span></li>
+        <li data-em="2:apaga" style="font-size:20px"><b>C</b><span>III e IV.</span></li>
+        <li data-em="2:certo" style="font-size:20px"><b>D</b><span>I e IV.</span></li>
+        <li data-em="2:apaga" style="font-size:20px"><b>E</b><span>I, III e IV.</span></li>
+      </ol>
+    </div>
+  </div>
+  <aside class="resolucao">
+    <p class="dados"><b>Dados:</b> rampa curta × longa; roldana fixa × móvel.</p>
+    <ol class="passos">
+      <li><b>I:</b> rampa mais suave, menos força (V).</li>
+      <li><b>II:</b> não economiza energia (F).</li>
+      <li><b>III:</b> a fixa não divide a força (F).</li>
+      <li><b>IV:</b> metade da força, o dobro de corda (V).</li>
+    </ol>
+    <p class="resposta"><b>Resposta:</b> I e IV. <b>Gabarito D.</b></p>
+    <p class="atencao"><b>Destaque no quadro:</b> Máquina simples poupa força, nunca energia.</p>
+    <ul class="erros">
+      <li><b>A</b> Inclui a II (rampa poupando energia).</li>
+      <li><b>B</b> II e III são as falsas.</li>
+      <li><b>C</b> III falsa; deixa a I de fora.</li>
+      <li><b>E</b> Inclui a III (fixa dividindo a força).</li>
+    </ul>
+  </aside>
+  <aside class="notas">
+    <p>Clique 1 tira o aviso de pausa: resolva na área (D liga a caneta; E esconde o enunciado). Clique 2: gabarito D.</p>
+    <p>Modelo IF, lote if-fisica-equilibrio-do-corpo-extenso, m009, FIS-1355 (nível 4).</p>
+  </aside>
+</section>
+
+<!-- 15. Resumo -->
+<section class="slide" data-nome="Resumo">
+  <div class="conteudo">
+    <p class="olho">Resumo · Máquinas simples</p>
+    <h2 class="titulo">O essencial</h2>
+    <div class="resumo menor" style="position:absolute;left:0;right:0;top:150px">
+      <div><b>Máquinas simples</b> (alavanca, roldana, plano inclinado, roda com eixo) facilitam tarefas; o que se ganha em força se perde em distância.</div>
+      <div><b>Alavanca:</b> interfixa, inter-resistente e interpotente, conforme o que fica no meio.</div>
+      <div><b>Equilíbrio:</b> \(F_P \cdot b_P = F_R \cdot b_R\), braços medidos até o apoio.</div>
+      <div><b>Roldana fixa</b> muda a direção; <b>roldana móvel</b> divide a força por dois e pede o dobro de corda.</div>
+      <div><b>Rampa</b> suave pede menos força; <b>cunha</b> e <b>parafuso</b> são planos inclinados.</div>
+      <div><b>Roda com eixo</b> e <b>engrenagens</b>: maçaneta, volante, bicicleta.</div>
+    </div>
+  </div>
+  <aside class="notas"><p>Resumo do subcapítulo inteiro (as duas partes), com o "O essencial" da apostila e a cunha, o parafuso e as engrenagens. Peça para tirarem um print.</p></aside>
+</section>
+
+<!-- 16. A seguir -->
+<section class="slide capa" data-nome="A seguir">
+  <div class="estrelas"></div>
+  <div class="texto-capa" style="top:200px">
+    <span class="selo">Física · IF</span>
+    <p class="aula" style="font-size:28px">A seguir · Mecânica · Questões do IF Sudeste</p>
+    <h1>Questões do IF Sudeste</h1>
+    <p class="sub">Mecânica</p>
+  </div>
+  <svg class="emblema" viewBox="0 0 640 640" aria-hidden="true">
+    <rect x="150" y="80" width="340" height="460" rx="36" fill="#fff" opacity=".95"/>
+    <rect x="200" y="140" width="240" height="18" rx="9" fill="#C9C0F0"/><rect x="200" y="180" width="200" height="18" rx="9" fill="#C9C0F0"/>
+    <g font-family="Figtree,'Segoe UI',sans-serif" font-size="30" font-weight="800" text-anchor="middle">
+      <circle cx="225" cy="260" r="24" fill="#F1EEFD"/><text x="225" y="271" fill="#3F2FA0">A</text><rect x="265" y="252" width="160" height="16" rx="8" fill="#E4DEFB"/>
+      <circle cx="225" cy="320" r="24" fill="#F1EEFD"/><text x="225" y="331" fill="#3F2FA0">B</text><rect x="265" y="312" width="130" height="16" rx="8" fill="#E4DEFB"/>
+      <circle cx="225" cy="380" r="24" fill="#FFD10C"/><text x="225" y="391" fill="#292B2C">C</text><rect x="265" y="372" width="150" height="16" rx="8" fill="#E4DEFB"/>
+      <circle cx="225" cy="440" r="24" fill="#F1EEFD"/><text x="225" y="451" fill="#3F2FA0">D</text><rect x="265" y="432" width="110" height="16" rx="8" fill="#E4DEFB"/>
+    </g>
+    <circle cx="470" cy="470" r="86" fill="var(--d)" stroke="#fff" stroke-width="6"/>
+    <text x="470" y="490" text-anchor="middle" font-family="'Bricolage Grotesque',Figtree,sans-serif" font-size="58" font-weight="800" fill="#fff">IF</text>
+  </svg>
+  <img class="logo-capa" src="{{LOGO_BRANCO}}" alt="Quarks">
+  <aside class="notas"><p>Fim do conteúdo de Mecânica. A seguir, o bloco "Questões do IF Sudeste" do capítulo, com as três questões oficiais de máquinas simples (2024, 2014 e 2013).</p></aside>
+</section>

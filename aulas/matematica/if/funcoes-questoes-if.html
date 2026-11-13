@@ -1,0 +1,347 @@
+<!--aula
+{"disciplina": "matematica", "curso": "IF", "assunto": "Funções", "parte": "Questões do IF Sudeste", "titulo": "Questões do IF Sudeste", "scripts": ["animacoes-funcoes.js"]}
+-->
+<!-- Fonte: questões oficiais do IF Sudeste MG do capítulo Funções reservadas para este bloco (planejamento/questoes-if.md e campo "questoes" do capítulo 4 em planejamento/cronograma.json): 2026-1 q13 (MAT-0545), 2025-1 q23 (MAT-0544), 2026-1 q20 (MAT-0552), 2026-1 q21 (MAT-0553), 2026-1 q14 (MAT-0546), 2024-1 q19 (MAT-0303). Nenhuma delas aparece nas partes do capítulo. Figuras refeitas em SVG a partir das figuras das provas (apostilas/questoes/oficiais/if/<prova>/figuras no cérebro). -->
+<style>
+  .caixa { box-sizing: border-box; }
+  .fig-prova { display: block; font-family: var(--fonte-texto); }
+  .fig-prova .eixo { stroke: #7F7A99; stroke-width: 2; fill: none; }
+  .fig-prova .traco { stroke: var(--d); stroke-width: 3.5; fill: none; stroke-linecap: round; stroke-linejoin: round; }
+  .fig-prova .rot { font-size: 13px; font-weight: 700; fill: var(--cinza); text-anchor: middle; }
+  .fig-prova .nome { font-size: 16px; font-weight: 800; fill: var(--roxo-titulo); }
+  .afirm { font-size: 24px; line-height: 1.35; margin: 0; }
+</style>
+
+<!-- Capa -->
+<section class="slide capa" data-nome="Capa">
+  <div class="estrelas"></div>
+  <div class="texto-capa" style="top:150px">
+    <span class="selo">Matemática · IF</span>
+    <p class="aula">Funções</p>
+    <h1>Questões do IF Sudeste</h1>
+    <p class="sub">Provas oficiais, uma por tela</p>
+  </div>
+  <svg class="emblema" viewBox="0 0 640 640" aria-hidden="true">
+    <rect x="150" y="110" width="340" height="430" rx="34" fill="#fff" fill-opacity=".12" stroke="#fff" stroke-opacity=".6" stroke-width="4"/>
+    <g fill="#fff" fill-opacity=".7"><rect x="200" y="170" width="240" height="18" rx="9"/><rect x="200" y="210" width="200" height="18" rx="9"/></g>
+    <path d="M200 470 L200 270 M200 470 L440 470" stroke="#fff" stroke-opacity=".8" stroke-width="5" stroke-linecap="round" fill="none"/>
+    <path d="M220 290 Q320 560 420 290" fill="none" stroke="#FFD10C" stroke-width="7" stroke-linecap="round"/>
+    <circle cx="470" cy="130" r="54" fill="#FFD10C"/>
+    <path d="M446 132 L464 150 L496 112" fill="none" stroke="#292B2C" stroke-width="10" stroke-linecap="round" stroke-linejoin="round"/>
+  </svg>
+  <img class="logo-capa" src="{{LOGO_BRANCO}}" alt="Quarks">
+  <aside class="notas"><p>Fechamento de Funções: só questões que caíram no IF Sudeste MG, duas de cada subcapítulo (conceito de função, função afim e função quadrática). Em cada uma, pause, tente e depois confira a resolução.</p></aside>
+</section>
+
+<!-- IF 2026 · pintores -->
+<section class="slide questao" data-nome="IF 2026 · pintores">
+  <div class="conteudo">
+    <div class="area-resolucao"></div>
+    <span class="pilula pilula-pausa" data-em="1:some">Pause o vídeo e tente</span>
+    <div class="painel-questao" style="gap:10px">
+      <p class="olho" style="font-size:23px">IF Sudeste MG 2026 · Questão 13</p>
+      <p class="enunciado" style="font-size:18.5px;line-height:1.33">As professoras de Arte e Matemática estão elaborando uma forma de apresentar aos estudantes grandes pintores e explorar o conteúdo de gráfico de funções. A professora de Arte apresentou o nome de cinco grandes pintores: Leonardo da Vinci (1452-1519), Michelangelo Buonarroti (1475-1564), Vincent Van Gogh (1853-1890), Pablo Picasso (1881-1973) e Claude Monet (1840-1926). Após ouvir sobre a história de cada um e sobre seus estilos de pintura, a professora de Matemática solicitou que os estudantes representassem, através de curvas no plano cartesiano, cada um dos estilos dos pintores. Veja as imagens representadas pelos estudantes e seus comentários sobre suas obras.</p>
+      <svg class="fig-prova" viewBox="0 0 530 132" width="530" height="132" aria-hidden="true">
+        <g transform="translate(2 0)">
+          <path class="eixo" d="M2 84 H100 M40 4 V100"/><path class="traco" d="M4 12 Q50 132 98 14"/>
+          <text class="rot" x="51" y="116">I · Da Vinci</text><text class="rot" x="51" y="130">sorriso</text>
+        </g>
+        <g transform="translate(108 0)">
+          <path class="eixo" d="M2 56 H100 M40 4 V100"/><path class="traco" d="M22 98 L96 8"/>
+          <text class="rot" x="51" y="116">II · Michelangelo</text><text class="rot" x="51" y="130">braço estendido</text>
+        </g>
+        <g transform="translate(214 0)">
+          <path class="eixo" d="M2 70 H100 M40 4 V100"/><path class="traco" d="M98 50 C86 18 62 8 50 18 C40 26 38 44 46 62 C50 70 54 56 52 48"/>
+          <text class="rot" x="51" y="116">III · Van Gogh</text><text class="rot" x="51" y="130">espiral</text>
+        </g>
+        <g transform="translate(320 0)">
+          <path class="eixo" d="M2 96 H100 M10 4 V100"/><path class="traco" d="M30 12 V84 H92 V12" style="stroke-width:3"/>
+          <rect class="traco" x="44" y="28" width="12" height="12" style="stroke-width:2.5"/><rect class="traco" x="68" y="28" width="12" height="12" style="stroke-width:2.5"/>
+          <path class="traco" d="M50 64 H74 M50 58 V70 M74 58 V70" style="stroke-width:2.5"/>
+          <text class="rot" x="51" y="116">IV · Picasso</text><text class="rot" x="51" y="130">rosto cubista</text>
+        </g>
+        <g transform="translate(426 0)">
+          <path class="eixo" d="M2 54 H102 M18 4 V100"/><path class="traco" d="M2 80 C12 104 20 96 26 54 C32 10 44 6 52 34 C60 64 66 104 76 76 C84 52 90 6 100 22"/>
+          <text class="rot" x="51" y="116">V · Monet</text><text class="rot" x="51" y="130">ondulante</text>
+        </g>
+      </svg>
+      <p class="enunciado" style="font-size:20px;line-height:1.33">A professora avaliou os desenhos e exibiu para a turma dizendo que aqueles que poderiam representar gráficos de funções reais com domínios reais eram os de número:</p>
+      <ol class="alternativas curtas">
+        <li data-em="2:apaga"><b>A</b><span>I e II.</span></li>
+        <li data-em="2:apaga"><b>B</b><span>I e III.</span></li>
+        <li data-em="2:apaga"><b>C</b><span>III e V.</span></li>
+        <li data-em="2:certo"><b>D</b><span>I, II e V.</span></li>
+        <li data-em="2:apaga"><b>E</b><span>I, III e IV.</span></li>
+      </ol>
+    </div>
+  </div>
+  <aside class="resolucao">
+    <p class="dados"><b>Dados:</b> cinco curvas; função: cada \(x\) com um único \(y\).</p>
+    <ol class="passos">
+      <li>Teste da reta vertical em cada desenho</li>
+      <li>I (U) e II (reta): uma vez só</li>
+      <li>III: a espiral volta para trás: duas vezes</li>
+      <li>IV: lados verticais: infinitos pontos</li>
+      <li>V: sobe e desce, mas não volta: uma vez</li>
+    </ol>
+    <p class="resposta"><b>Resposta:</b> I, II e V. <b>Gabarito D.</b></p>
+    <p class="atencao"><b>Destaque no quadro:</b> Subir e descer pode; voltar para trás ou ter trecho vertical, não.</p>
+    <ul class="erros">
+      <li><b>A</b> Esquece o V: a onda também é função.</li>
+      <li><b>B</b> Inclui a espiral e deixa de fora II e V.</li>
+      <li><b>C</b> Inclui a espiral e esquece I e II.</li>
+      <li><b>E</b> Inclui III e IV e esquece II e V.</li>
+    </ul>
+  </aside>
+  <aside class="notas">
+    <p>Clique 1 tira o aviso de pausa: resolva na área (D liga a caneta; E esconde o enunciado). Clique 2: gabarito D.</p>
+    <p>Questão oficial do IF Sudeste MG 2026-1, q13, MAT-0545 (Conceito de função). Os desenhos foram refeitos em SVG; os comentários dos alunos que vinham embaixo de cada desenho foram resumidos numa palavra (sorriso da Mona Lisa, braço da Criação de Adão, céu da Noite Estrelada, rosto cubista, reflexo nas Ninfeias).</p>
+  </aside>
+</section>
+
+<!-- IF 2025 · desenhos livres -->
+<section class="slide questao" data-nome="IF 2025 · desenhos livres">
+  <div class="conteudo">
+    <div class="area-resolucao"></div>
+    <span class="pilula pilula-pausa" data-em="1:some">Pause o vídeo e tente</span>
+    <div class="painel-questao" style="gap:10px">
+      <p class="olho" style="font-size:23px">IF Sudeste MG 2025 · Questão 23</p>
+      <p class="enunciado" style="font-size:21px;line-height:1.35">A professora de Arte da turma do 9º ano entregou uma folha para seus alunos e solicitou que eles fizessem desenhos livres. Abaixo estão os desenhos feitos por Evellyn, Pedro e Tainara.</p>
+      <svg class="fig-prova" viewBox="0 0 530 190" width="477" height="171" aria-hidden="true">
+        <g transform="translate(0 0)">
+          <path class="eixo" d="M6 176 H168 M14 8 V184"/>
+          <text class="nome" x="24" y="24">Evellyn</text>
+          <path class="traco" d="M120 40 H66 V150 H120 M66 95 H110"/>
+        </g>
+        <g transform="translate(180 0)">
+          <path class="eixo" d="M6 176 H168 M14 8 V184"/>
+          <text class="nome" x="24" y="24">Pedro</text>
+          <path class="traco" d="M86 168 V34 A38 38 0 0 1 86 110"/>
+        </g>
+        <g transform="translate(360 0)">
+          <path class="eixo" d="M6 176 H168 M14 8 V184"/>
+          <text class="nome" x="24" y="24">Tainara</text>
+          <path class="traco" d="M40 46 H160 M100 46 V162"/>
+        </g>
+      </svg>
+      <p class="enunciado" style="font-size:21px;line-height:1.35">A professora de Matemática resolveu aproveitar essa atividade em suas aulas sobre relação e função entre conjuntos e acrescentou eixos cartesianos nas figuras. Pode-se afirmar que:</p>
+      <ol class="alternativas" style="gap:6px">
+        <li data-em="2:apaga" style="font-size:19px;padding:5px 12px"><b>A</b><span>a única que representa uma função é a figura de Tainara, por se tratar de uma função constante.</span></li>
+        <li data-em="2:apaga" style="font-size:19px;padding:5px 12px"><b>B</b><span>são funções os desenhos apresentados por Evellyn e Tainara, pois apresentam retas paralelas ao eixo x.</span></li>
+        <li data-em="2:apaga" style="font-size:19px;padding:5px 12px"><b>C</b><span>a única que representa uma função é a figura de Pedro, já que ele desenhou uma curva não reta.</span></li>
+        <li data-em="2:apaga" style="font-size:19px;padding:5px 12px"><b>D</b><span>são funções os desenhos apresentados por Evellyn e Pedro, pois possuem mais de um ponto de interseção entre as partes desenhadas.</span></li>
+        <li data-em="2:certo" style="font-size:19px;padding:5px 12px"><b>E</b><span>nenhum dos desenhos representa uma função por possuírem uma reta vertical em sua figura.</span></li>
+      </ol>
+    </div>
+  </div>
+  <aside class="resolucao">
+    <p class="dados"><b>Dados:</b> letras E, P e T sobre eixos cartesianos.</p>
+    <ol class="passos">
+      <li>Os três têm um segmento vertical</li>
+      <li>Nele, um mesmo \(x\) tem infinitos \(y\)</li>
+      <li>A reta vertical corta mais de uma vez: nenhum é função</li>
+    </ol>
+    <p class="resposta"><b>Resposta:</b> nenhum é função. <b>Gabarito E.</b></p>
+    <p class="atencao"><b>Destaque no quadro:</b> Segmento vertical derruba o desenho no teste.</p>
+    <ul class="erros">
+      <li><b>A</b> O "T" tem haste vertical: não é constante.</li>
+      <li><b>B</b> Ter horizontais não basta: há vertical.</li>
+      <li><b>C</b> Curva não salva: o "P" tem haste vertical.</li>
+      <li><b>D</b> Interseção entre partes não é critério.</li>
+    </ul>
+  </aside>
+  <aside class="notas">
+    <p>Clique 1 tira o aviso de pausa: resolva na área (D liga a caneta; E esconde o enunciado). Clique 2: gabarito E.</p>
+    <p>Questão oficial do IF Sudeste MG 2025-1, q23, MAT-0544 (Conceito de função). Desenhos refeitos em SVG.</p>
+  </aside>
+</section>
+
+<!-- IF 2026 · 2x + y = 1 -->
+<section class="slide questao" data-nome="IF 2026 · 2x + y = 1">
+  <div class="conteudo">
+    <div class="area-resolucao"></div>
+    <span class="pilula pilula-pausa" data-em="1:some">Pause o vídeo e tente</span>
+    <div class="painel-questao">
+      <p class="olho" style="font-size:23px">IF Sudeste MG 2026 · Questão 20</p>
+      <p class="enunciado" style="font-size:26px">Considere as afirmações sobre a equação \(2x + y = 1\):</p>
+      <p class="afirm">I. o gráfico que representa a equação no plano cartesiano é uma reta crescente.<br>II. a raiz da equação é o valor \(\frac{1}{2}\).<br>III. o ponto (5,−9) é uma solução da equação.</p>
+      <p class="enunciado" style="font-size:26px">Pode-se afirmar que é (são) <b>CORRETA(s)</b>:</p>
+      <ol class="alternativas" style="gap:8px">
+        <li data-em="2:apaga"><b>A</b><span>somente a afirmativa I.</span></li>
+        <li data-em="2:apaga"><b>B</b><span>somente a afirmativa II.</span></li>
+        <li data-em="2:apaga"><b>C</b><span>somente a afirmativa III.</span></li>
+        <li data-em="2:apaga"><b>D</b><span>somente as afirmativas I e II.</span></li>
+        <li data-em="2:certo"><b>E</b><span>somente as afirmativas II e III.</span></li>
+      </ol>
+    </div>
+  </div>
+  <aside class="resolucao">
+    <p class="dados"><b>Dados:</b> \(2x + y = 1 \Rightarrow y = -2x + 1\).</p>
+    <ol class="passos">
+      <li>I: \(a = -2 < 0\), decrescente: falsa</li>
+      <li>II: \(0 = -2x + 1 \Rightarrow x = \frac{1}{2}\): verdadeira</li>
+      <li>III: \(2 \cdot 5 + (-9) = 1\): verdadeira</li>
+    </ol>
+    <p class="resposta"><b>Resposta:</b> II e III. <b>Gabarito E.</b></p>
+    <p class="atencao"><b>Destaque no quadro:</b> Isole o \(y\) antes de ler \(a\) e \(b\).</p>
+    <ul class="erros">
+      <li><b>A</b> A I é falsa: reta decrescente.</li>
+      <li><b>B</b> Esquece a III, que é verdadeira.</li>
+      <li><b>C</b> Esquece a II: \(y = 0\) dá \(x = \frac{1}{2}\).</li>
+      <li><b>D</b> Inclui a I (falsa) e deixa a III.</li>
+    </ul>
+  </aside>
+  <aside class="notas">
+    <p>Clique 1 tira o aviso de pausa: resolva na área (D liga a caneta; E esconde o enunciado). Clique 2: gabarito E.</p>
+    <p>Questão oficial do IF Sudeste MG 2026-1, q20, MAT-0552 (Função afim). "Raiz da equação" aqui é o zero da função y = −2x + 1.</p>
+  </aside>
+</section>
+
+<!-- IF 2026 · (a − 1)x + b³ -->
+<section class="slide questao" data-nome="IF 2026 · coeficientes">
+  <div class="conteudo">
+    <div class="area-resolucao"></div>
+    <span class="pilula pilula-pausa" data-em="1:some">Pause o vídeo e tente</span>
+    <div class="painel-questao">
+      <p class="olho" style="font-size:23px">IF Sudeste MG 2026 · Questão 21</p>
+      <p class="enunciado">Considere a função \(f(x) = (a - 1)x + b^3\), definida de \(\mathbb{R}\) em \(\mathbb{R}\). Se a interseção do gráfico de \(f\) com o eixo das ordenadas é o ponto (0,8) e o zero de \(f\) é 2, então \(a + b\) é:</p>
+      <ol class="alternativas">
+        <li data-em="2:apaga"><b>A</b><span>\(-3\).</span></li>
+        <li data-em="2:certo"><b>B</b><span>\(-1\).</span></li>
+        <li data-em="2:apaga"><b>C</b><span>\(\frac{3}{4} + \sqrt[3]{2}\).</span></li>
+        <li data-em="2:apaga"><b>D</b><span>\(7\).</span></li>
+        <li data-em="2:apaga"><b>E</b><span>\(8 + \sqrt[3]{2}\).</span></li>
+      </ol>
+    </div>
+  </div>
+  <aside class="resolucao">
+    <p class="dados"><b>Dados:</b> corte em y: \((0;\ 8)\); zero: \(x = 2\).</p>
+    <ol class="passos">
+      <li>Corte em y é o \(b\) da reta: \(b^3 = 8 \Rightarrow b = 2\)</li>
+      <li>Zero: \(f(2) = (a - 1) \cdot 2 + 8 = 0\)</li>
+      <li>\(a - 1 = -4 \Rightarrow a = -3\)</li>
+      <li>\(a + b = -3 + 2 = -1\)</li>
+    </ol>
+    <p class="resposta"><b>Resposta:</b> \(a + b = -1\). <b>Gabarito B.</b></p>
+    <p class="atencao"><b>Destaque no quadro:</b> Aqui o "b" da questão não é o coeficiente linear: o termo fixo é \(b^3\).</p>
+    <ul class="erros">
+      <li><b>A</b> −3 é só o \(a\): falta somar \(b = 2\).</li>
+      <li><b>C</b> Não sai das condições: \(b = 2\), sem raiz cúbica.</li>
+      <li><b>D</b> Erra o sinal de \(a\) (5 + 2).</li>
+      <li><b>E</b> Usa \(b = 8\) e soma uma raiz sem origem.</li>
+    </ul>
+  </aside>
+  <aside class="notas">
+    <p>Clique 1 tira o aviso de pausa: resolva na área (D liga a caneta; E esconde o enunciado). Clique 2: gabarito B.</p>
+    <p>Questão oficial do IF Sudeste MG 2026-1, q21, MAT-0553 (Função afim). Na prova os reais aparecem como ℜ e o ponto como (0,8).</p>
+  </aside>
+</section>
+
+<!-- IF 2026 · duas parábolas -->
+<section class="slide questao" data-nome="IF 2026 · duas parábolas">
+  <div class="conteudo">
+    <div class="area-resolucao"></div>
+    <span class="pilula pilula-pausa" data-em="1:some">Pause o vídeo e tente</span>
+    <div class="painel-questao" style="gap:12px">
+      <p class="olho" style="font-size:23px">IF Sudeste MG 2026 · Questão 14</p>
+      <p class="enunciado" style="font-size:24px">Considere as funções quadráticas abaixo definidas, seus gráficos e as afirmativas a seguir.</p>
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;text-align:center;font-size:21px;color:var(--carvao)">
+        <div>\(y = ax^2 + bx + c\)<div data-anima="fn-figura" style="width:260px;height:210px" data-fig='{"xmin":-4,"xmax":2.6,"ymin":-2,"ymax":4.8,"numeros":false,"grade":false,"pl":10,"pr":30,"pt":44,"pb":8,"fs":16,"curvas":[{"f":"-x*x-2*x+3","w":4}]}'></div></div>
+        <div>\(y = mx^2 + nx + p\)<div data-anima="fn-figura" style="width:260px;height:210px" data-fig='{"xmin":-2.4,"xmax":4.2,"ymin":-4.6,"ymax":2.2,"numeros":false,"grade":false,"pl":10,"pr":30,"pt":44,"pb":8,"fs":16,"curvas":[{"f":"x*x-2.4*x-2.56","w":4}]}'></div></div>
+      </div>
+      <p class="afirm">I. \(a \cdot p > 0\)<br>II. \(b \cdot n < 0\)<br>III. \(c \cdot m > 0\)<br>IV. Ambas as funções possuem duas raízes reais distintas.</p>
+      <p class="enunciado" style="font-size:24px">A sequência <b>CORRETA</b> das afirmativas é:</p>
+      <ol class="alternativas curtas" style="flex-wrap:wrap">
+        <li data-em="2:certo"><b>A</b><span>V – F – V – V</span></li>
+        <li data-em="2:apaga"><b>B</b><span>V – F – F – V</span></li>
+        <li data-em="2:apaga"><b>C</b><span>V – V – F – V</span></li>
+        <li data-em="2:apaga"><b>D</b><span>V – V – F – F</span></li>
+        <li data-em="2:apaga"><b>E</b><span>F – V – V – F</span></li>
+      </ol>
+    </div>
+  </div>
+  <aside class="resolucao">
+    <p class="dados"><b>Dados:</b> 1ª: ∩, vértice à esquerda, corta y acima. 2ª: U, vértice à direita, corta y abaixo.</p>
+    <ol class="passos">
+      <li>1ª: \(a < 0\), \(c > 0\); cruza o eixo y descendo: \(b < 0\)</li>
+      <li>2ª: \(m > 0\), \(p < 0\); cruza o eixo y descendo: \(n < 0\)</li>
+      <li>I: \(a \cdot p = (-)(-) > 0\): V</li>
+      <li>II: \(b \cdot n = (-)(-) > 0\), não \(< 0\): F</li>
+      <li>III: \(c \cdot m = (+)(+) > 0\): V</li>
+      <li>IV: as duas cortam o eixo x em 2 pontos: V</li>
+    </ol>
+    <p class="resposta"><b>Resposta:</b> V – F – V – V. <b>Gabarito A.</b></p>
+    <p class="atencao"><b>Destaque no quadro:</b> \(a\) pela boca, \(c\) pelo corte em y, \(b\) pelo jeito de cruzar o eixo y.</p>
+    <ul class="erros">
+      <li><b>B</b> Marca III falsa, mas \(c > 0\) e \(m > 0\).</li>
+      <li><b>C</b> Marca II verdadeira: \(b\) e \(n\) são ambos negativos.</li>
+      <li><b>D</b> Erra II e III e ainda nega IV.</li>
+      <li><b>E</b> Erra I, II e IV.</li>
+    </ul>
+  </aside>
+  <aside class="notas">
+    <p>Clique 1 tira o aviso de pausa: resolva na área (D liga a caneta; E esconde o enunciado). Clique 2: gabarito A.</p>
+    <p>Questão oficial do IF Sudeste MG 2026-1, q14, MAT-0546 (Função quadrática). Gráficos refeitos em SVG com a mesma forma dos da prova (a da esquerda é y = −x² − 2x + 3; a da direita, y = x² − 2,4x − 2,56; a prova não dá números). O sinal de b sai da regra da apostila (b &gt; 0, cruza o eixo y subindo; b &lt; 0, descendo); também dá para usar x_V = −b/2a.</p>
+  </aside>
+</section>
+
+<!-- IF 2024 · (2x − 6)² − 4 -->
+<section class="slide questao" data-nome="IF 2024 · vértice e cortes">
+  <div class="conteudo">
+    <div class="area-resolucao"></div>
+    <span class="pilula pilula-pausa" data-em="1:some">Pause o vídeo e tente</span>
+    <div class="painel-questao">
+      <p class="olho" style="font-size:23px">IF Sudeste MG 2024 · Questão 19</p>
+      <p class="enunciado" style="font-size:26px">Considere as seguintes afirmativas sobre a função quadrática \(f(x) = (2x - 6)^2 - 4\).</p>
+      <p class="afirm">I. O vértice da função \(f\) é o ponto \(V = (3, -4)\).<br>II. Os pontos de interseção do gráfico de \(f\) com o eixo Ox são (2,0) e (4,0).<br>III. O ponto de interseção do gráfico de \(f\) com o eixo Oy é (0,3).</p>
+      <p class="enunciado" style="font-size:26px">Assinale a alternativa <b>CORRETA</b>.</p>
+      <ol class="alternativas" style="gap:8px">
+        <li data-em="2:apaga"><b>A</b><span>Somente a afirmativa I está correta.</span></li>
+        <li data-em="2:certo"><b>B</b><span>Somente as afirmativas I e II estão corretas.</span></li>
+        <li data-em="2:apaga"><b>C</b><span>Somente as afirmativas I e III estão corretas.</span></li>
+        <li data-em="2:apaga"><b>D</b><span>Somente as afirmativas II e III estão corretas.</span></li>
+        <li data-em="2:apaga"><b>E</b><span>As afirmativas I, II e III estão corretas.</span></li>
+      </ol>
+    </div>
+  </div>
+  <aside class="resolucao">
+    <p class="dados"><b>Dados:</b> \(f(x) = (2x - 6)^2 - 4 = 4(x - 3)^2 - 4\).</p>
+    <ol class="passos">
+      <li>Forma canônica: \(V(3;\ {-4})\): I verdadeira</li>
+      <li>\(f(2) = (-2)^2 - 4 = 0\); \(f(4) = 2^2 - 4 = 0\): II verdadeira</li>
+      <li>\(f(0) = (-6)^2 - 4 = 32\): corta y em \((0;\ 32)\): III falsa</li>
+    </ol>
+    <p class="resposta"><b>Resposta:</b> I e II. <b>Gabarito B.</b></p>
+    <p class="atencao"><b>Destaque no quadro:</b> Corte em y: troque \(x\) por 0 na lei inteira.</p>
+    <ul class="erros">
+      <li><b>A</b> A II também é verdadeira.</li>
+      <li><b>C</b> A III é falsa: o corte é \((0;\ 32)\).</li>
+      <li><b>D</b> Inclui a III e deixa a I.</li>
+      <li><b>E</b> A III é falsa.</li>
+    </ul>
+  </aside>
+  <aside class="notas">
+    <p>Clique 1 tira o aviso de pausa: resolva na área (D liga a caneta; E esconde o enunciado). Clique 2: gabarito B.</p>
+    <p>Questão oficial do IF Sudeste MG 2024-1, q19, MAT-0303 (Função quadrática). (2x − 6)² = 4(x − 3)², então a forma canônica é 4(x − 3)² − 4 e o vértice é (3; −4). Quem marca a III costuma não elevar o −6 ao quadrado.</p>
+  </aside>
+</section>
+
+<!-- A seguir -->
+<section class="slide capa" data-nome="A seguir">
+  <div class="estrelas"></div>
+  <div class="texto-capa" style="top:200px">
+    <span class="selo">Matemática · IF</span>
+    <p class="aula" style="font-size:26px">A seguir · Ângulos e paralelismo · Parte 1 de 2</p>
+    <h1>Geometria plana</h1>
+    <p class="sub">Começa o capítulo: postulados, perpendiculares e paralelas</p>
+  </div>
+  <svg class="emblema" viewBox="0 0 640 640" aria-hidden="true">
+    <line x1="80" y1="220" x2="560" y2="220" stroke="#fff" stroke-width="6" stroke-linecap="round"/>
+    <line x1="80" y1="420" x2="560" y2="420" stroke="#fff" stroke-width="6" stroke-linecap="round"/>
+    <line x1="200" y1="560" x2="440" y2="80" stroke="#FFD10C" stroke-width="7" stroke-linecap="round"/>
+    <path d="M370 220 A40 40 0 0 1 350 186" fill="none" stroke="#FFD10C" stroke-width="5"/>
+    <path d="M270 420 A40 40 0 0 1 250 386" fill="none" stroke="#FFD10C" stroke-width="5"/>
+  </svg>
+  <img class="logo-capa" src="{{LOGO_BRANCO}}" alt="Quarks">
+  <aside class="notas"><p>Fim de Funções. A seguir, o capítulo Geometria plana, começando por Ângulos e paralelismo.</p></aside>
+</section>

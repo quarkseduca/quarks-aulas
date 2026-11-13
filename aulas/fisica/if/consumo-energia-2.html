@@ -1,0 +1,303 @@
+<!--aula
+{"disciplina": "fisica", "curso": "IF", "assunto": "Consumo de energia elétrica", "parte": "Parte 2 de 2", "titulo": "Eficiência e uso consciente", "scripts": ["animacoes-eletricidade.js"]}
+-->
+<!-- Fonte: apostila IF, Física, cap. 6 (6.3 Consumo de energia elétrica: a conta de luz e o consumo consciente, eficiência energética e uso consciente, resumo do 6.3). Questões Modelo IF do lote if-fisica-potencia-e-energia-eletrica (m008, m010, m011). -->
+<style>
+  .caixa, .el-card, .el-linha { box-sizing: border-box; }
+  .el-cards { display: grid; gap: 22px; }
+  .el-card { background: var(--branco); border: 2px solid var(--lilas-2); border-radius: 26px; padding: 16px 22px; font-size: 27px; line-height: 1.3; }
+  .el-card h3 { margin: 0 0 4px; font: 800 32px var(--fonte-titulo); color: var(--roxo-titulo); letter-spacing: -.01em; display: flex; align-items: center; gap: 14px; }
+  .el-card h3 svg { width: 70px; height: 70px; flex: none; }
+  .el-card p { margin: 0; color: var(--carvao); }
+  .el-card.d { background: var(--d-clara); border-color: color-mix(in srgb, var(--d) 35%, transparent); }
+  .el-linha { display: grid; grid-template-columns: 90px 1fr auto; align-items: center; gap: 22px; background: var(--branco); border: 2px solid var(--lilas-2); border-radius: 22px; padding: 10px 24px; font-size: 30px; }
+  .el-linha svg { width: 80px; height: 70px; }
+  .el-linha b { color: var(--roxo-titulo); }
+  .tag { justify-self: end; padding: 6px 20px; border-radius: 999px; font-weight: 800; font-size: 25px; white-space: nowrap; }
+  .tag-d { background: var(--d-clara); color: var(--d-forte); }
+  .tag-a { background: #FFF4C2; color: #8A6A00; }
+  .tag-r { background: var(--erro-claro); color: var(--erro); }
+  .el-lista { margin: 0; padding: 0; list-style: none; display: flex; flex-direction: column; gap: 14px; }
+  .el-lista li { display: flex; align-items: baseline; gap: 16px; font-size: 31px; line-height: 1.3; }
+  .el-lista li b.n { flex: none; width: 46px; height: 46px; border-radius: 50%; display: grid; place-items: center; background: var(--d); color: #fff; font: 800 26px var(--fonte-titulo); transform: translateY(6px); }
+  .el-lista li > span b { color: var(--roxo-titulo); }
+  .el-cadeia { display: flex; align-items: center; gap: 14px; flex-wrap: wrap; }
+  .el-cadeia .f { padding: 10px 24px; border-radius: 999px; background: var(--d-clara); color: var(--d-forte); font-weight: 800; font-size: 30px; }
+  .el-cadeia .f.am { background: #FFF4C2; color: #8A6A00; }
+  .el-cadeia .s { font: 800 36px var(--fonte-titulo); color: var(--roxo-claro); }
+  .tabela.el-t { font-size: 30px; }
+  .tabela.el-t th { padding: 12px 28px; }
+  .tabela.el-t td { padding: 10px 28px; text-align: left; }
+  /* colunas de enunciado mais largas para questões longas (data-largo); E continua ampliando a área */
+  .questao[data-largo="1"] .area-resolucao { width: 1070px; } .questao[data-largo="1"] .painel-questao { left: 1110px; } .questao[data-largo="1"] .pilula-pausa { left: 535px; }
+  .questao[data-largo="2"] .area-resolucao { width: 960px; } .questao[data-largo="2"] .painel-questao { left: 1000px; } .questao[data-largo="2"] .pilula-pausa { left: 480px; }
+  .questao[data-largo].amplia .area-resolucao { width: 1760px; } .questao[data-largo].amplia .pilula-pausa { left: 880px; }
+  .questao[data-gap="8"] .painel-questao { gap: 8px; } .questao[data-gap="10"] .painel-questao { gap: 10px; } .questao[data-gap="12"] .painel-questao { gap: 12px; } .questao[data-gap="14"] .painel-questao { gap: 14px; }
+  .painel-questao .figura { display: block; margin: 0 auto; flex: none; }
+  .painel-questao .el-mini { font-size: 22px; border-collapse: separate; border-spacing: 0; background: #fff; border: 2px solid var(--lilas-2); border-radius: 16px; overflow: hidden; }
+  .painel-questao .el-mini th { background: var(--d-clara); color: var(--d-forte); padding: 5px 12px; font-weight: 800; }
+  .painel-questao .el-mini td { padding: 4px 12px; border-top: 2px solid var(--lilas); text-align: center; }
+  .painel-questao .el-mini td:first-child { text-align: left; }
+  .el-fios path, .el-fio { fill: none; stroke: #292B2C; stroke-width: 6; stroke-linejoin: round; stroke-linecap: round; }
+  /* ---------- Animações (só na tela aberta) ---------- */
+  /* cargas andando pelo fio: pontinhos amarelos que correm quando o circuito está fechado */
+  .el-fluxo { fill: none; stroke: #FFD10C; stroke-width: 10; stroke-linecap: round; stroke-dasharray: 0 32; opacity: 0; transition: opacity .5s; }
+  .el-on .el-fluxo, .el-fluxo.sempre { opacity: 1; }
+  .el-off .el-fluxo, .el-on .el-off .el-fluxo { opacity: 0 !important; }
+  .slide.ativo .el-on .el-fluxo, .slide.ativo .el-fluxo.sempre { animation: el-flui 1.6s linear infinite; }
+  .slide.ativo .el-on .el-fluxo.lento { animation-duration: 3.2s; }
+  @keyframes el-flui { to { stroke-dashoffset: -32; } }
+  .el-agua { fill: none; stroke: #8FC8F0; stroke-width: 12; stroke-linecap: round; stroke-dasharray: 2 26; }
+  .slide.ativo .el-agua { animation: el-flui 1.8s linear infinite; }
+  /* lâmpada: acende quando o circuito fecha (sem piscar) */
+  .el-lamp .luz { opacity: 0; transition: opacity .7s ease; }
+  .el-on .el-lamp .luz, .el-lamp.acesa .luz { opacity: 1; }
+  .el-on .el-lamp.fraca .luz { opacity: .42; }
+  .el-off .el-lamp .luz, .el-on .el-off .el-lamp .luz { opacity: 0 !important; }
+  .el-lamp { transition: transform .8s ease, opacity .8s ease; }
+  .el-tira .el-lamp.sai { transform: translateY(-46px); opacity: .3; }
+  /* chave: a alavanca baixa e fecha o circuito */
+  .el-alavanca { transform: rotate(-32deg); transition: transform .7s ease; }
+  .el-alavanca.fechada, .el-fecha .el-alavanca { transform: none; }
+  .el-abre .el-alavanca { transform: rotate(-32deg) !important; }
+  /* rodas que giram (turbina, pás) e raios do Sol */
+  .slide.ativo .el-roda { animation: el-gira 9s linear infinite; }
+  .slide.ativo .el-roda.rapida { animation-duration: 5s; }
+  .slide.ativo .el-raios { animation: el-gira 30s linear infinite; }
+  @keyframes el-gira { to { transform: rotate(360deg); } }
+  /* calor que sobe */
+  .el-calor path { opacity: 0; }
+  .slide.ativo .el-calor path { animation: el-sobe 5s ease-in-out infinite; }
+  .el-calor path:nth-child(2) { animation-delay: -1.7s !important; } .el-calor path:nth-child(3) { animation-delay: -3.4s !important; }
+  @keyframes el-sobe { 0% { transform: translateY(10px); opacity: 0; } 30% { opacity: .9; } 100% { transform: translateY(-34px); opacity: 0; } }
+  /* gotas que caem (chuveiro) */
+  .el-gotas circle { opacity: 0; }
+  .slide.ativo .el-gotas circle { animation: el-cai 2.6s linear infinite; }
+  .el-gotas circle:nth-child(2) { animation-delay: -.9s !important; } .el-gotas circle:nth-child(3) { animation-delay: -1.7s !important; } .el-gotas circle:nth-child(4) { animation-delay: -.4s !important; } .el-gotas circle:nth-child(5) { animation-delay: -2.1s !important; }
+  @keyframes el-cai { 0% { transform: translateY(0); opacity: 0; } 15% { opacity: 1; } 85% { opacity: 1; } 100% { transform: translateY(70px); opacity: 0; } }
+  /* barras que crescem quando aparecem */
+  .el-barra { transform: scaleX(0); transform-box: fill-box; transform-origin: left center; transition: transform 2.2s ease-out; }
+  .mostra .el-barra, .mostra.el-barra, .el-barra.ja { transform: none; }
+  .el-barra-v { transform: scaleY(0); transform-box: fill-box; transform-origin: center bottom; transition: transform 2.2s ease-out; }
+  .mostra .el-barra-v, .mostra.el-barra-v { transform: none; }
+  /* traço que se desenha */
+  .el-traca { stroke-dasharray: 1; stroke-dashoffset: 1; transition: stroke-dashoffset 1.6s ease-in-out; }
+  .mostra .el-traca, .mostra.el-traca { stroke-dashoffset: 0; }
+  @media (prefers-reduced-motion: reduce) { .el-barra, .el-barra-v { transform: none; } .el-traca { stroke-dashoffset: 0; } .el-alavanca { transition: none; } }
+</style>
+<svg width="0" height="0" style="position:absolute" aria-hidden="true">
+  <defs>
+    <radialGradient id="elBrilho" cx=".5" cy=".5" r=".5"><stop offset="0" stop-color="#FFE680" stop-opacity=".95"/><stop offset=".45" stop-color="#FFD10C" stop-opacity=".45"/><stop offset="1" stop-color="#FFD10C" stop-opacity="0"/></radialGradient>
+    <linearGradient id="elAgua" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#CFE6FA"/><stop offset="1" stop-color="#8CC1EE"/></linearGradient>
+    <linearGradient id="elCobre" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#F2A86B"/><stop offset="1" stop-color="#B9652A"/></linearGradient>
+  </defs>
+</svg>
+
+<section class="slide capa" data-nome="Capa">
+  <div class="estrelas"></div>
+  <div class="texto-capa" style="top:150px">
+    <span class="selo">Física · IF</span>
+    <p class="aula">Consumo de energia elétrica · Parte 2 de 2</p>
+    <h1 style="font-size:118px">Eficiência e uso consciente</h1>
+    <p class="sub">Etiqueta, selo Procel e economia</p>
+  </div>
+  <svg class="emblema" viewBox="0 0 640 640" aria-hidden="true">
+    <g class="gira-lento"><ellipse cx="320" cy="320" rx="300" ry="128" fill="none" stroke="#fff" stroke-opacity=".38" stroke-width="2" transform="rotate(-10 320 320)"/></g>
+    <g class="gira"><ellipse cx="320" cy="320" rx="236" ry="196" fill="none" stroke="#FFD10C" stroke-opacity=".75" stroke-width="2.5" stroke-dasharray="3 14" stroke-linecap="round" transform="rotate(-8 320 320)"/>
+      <circle cx="84" cy="300" r="13" fill="var(--d)" stroke="#fff" stroke-width="3"/></g>
+    <circle cx="320" cy="320" r="150" fill="#FFD10C"/>
+    <path d="M346 196 L262 336 H318 L292 450 L382 300 H326 Z" fill="#4B258D" stroke="#4B258D" stroke-width="8" stroke-linejoin="round"/>
+  </svg>
+  <img class="logo-capa" src="{{LOGO_BRANCO}}" alt="Quarks">
+  <aside class="notas"><p>Hoje: aparelho eficiente, etiqueta do Inmetro e selo Procel, e as atitudes que mais economizam energia.</p><p>Retoma a conta da parte anterior: E = P · Δt, em kW e horas.</p></aside>
+</section>
+
+<section class="slide" data-nome="A lâmpada que queima o dedo">
+  <div class="conteudo">
+    <p class="olho">Para começar</p>
+    <h2 class="titulo">Por que a lâmpada antiga queima o dedo?</h2>
+    <div style="position:absolute;left:0;top:250px;display:flex;gap:60px;align-items:flex-end">
+      <div style="text-align:center"><svg viewBox="0 0 200 230" width="260" height="300"  style="overflow:visible;font-family:Figtree,'Segoe UI',sans-serif;" aria-hidden="true"><circle cx="100" cy="120" r="90" fill="url(#elBrilho)"/><circle cx="100" cy="110" r="62" fill="#FFF7CF" stroke="#292B2C" stroke-width="5"/><path d="M78 128 q8 -30 22 0 q14 -30 22 0" fill="none" stroke="#E86A3A" stroke-width="5"/><path d="M78 128 V172 M122 128 V172" stroke="#7F7A99" stroke-width="4"/><rect x="72" y="170" width="56" height="40" rx="8" fill="#7F7A99"/><g class="el-calor" fill="none" stroke="#E86A3A" stroke-width="6" stroke-linecap="round"><path d="M60 40 q12 -16 0 -32 q-12 -16 0 -32"/><path d="M100 30 q12 -16 0 -32 q-12 -16 0 -32"/><path d="M140 40 q12 -16 0 -32 q-12 -16 0 -32"/></g></svg><p class="texto" style="margin:6px 0 0;font-size:30px"><b>incandescente</b></p></div>
+      <div data-passo="2" style="text-align:center"><svg viewBox="0 0 200 230" width="260" height="300"  style="overflow:visible;font-family:Figtree,'Segoe UI',sans-serif;" aria-hidden="true"><circle cx="100" cy="120" r="90" fill="url(#elBrilho)"/><path d="M48 110 a52 52 0 0 1 104 0 V150 H48 Z" fill="#FFF7CF" stroke="#292B2C" stroke-width="5"/><g fill="#FFD10C"><rect x="62" y="118" width="14" height="14" rx="3"/><rect x="84" y="118" width="14" height="14" rx="3"/><rect x="106" y="118" width="14" height="14" rx="3"/><rect x="128" y="118" width="14" height="14" rx="3"/></g><rect x="64" y="150" width="72" height="60" rx="10" fill="#fff" stroke="#7F7A99" stroke-width="4"/></svg><p class="texto" style="margin:6px 0 0;font-size:30px"><b>LED</b></p></div>
+    </div>
+    <div style="position:absolute;left:760px;right:0;top:180px;display:flex;flex-direction:column;gap:24px">
+      <p class="texto" style="margin:0;font-size:34px">A lâmpada <b>incandescente</b>, a antiga de filamento, esquenta tanto que queima o dedo.</p>
+      <div class="caixa caixa-atencao" data-passo="1" style="padding:18px 28px"><div class="texto" style="font-size:32px">Esse <b>calor</b> é energia que <b>não virou luz</b>.</div></div>
+      <p class="texto" data-passo="2" style="margin:0;font-size:34px">A lâmpada <b>LED</b> dá a mesma luz com <b>bem menos energia</b>.</p>
+    </div>
+  </div>
+  <aside class="notas"><p>O calor sobe da incandescente: é energia desperdiçada. Clique 1: o calor não virou luz. Clique 2: a LED, que quase não esquenta.</p></aside>
+</section>
+
+<section class="slide" data-nome="Eficiência energética">
+  <div class="conteudo">
+    <p class="olho">Eficiência energética</p>
+    <h2 class="titulo">Eficiência energética</h2>
+    <div class="caixa caixa-fundamental" style="position:absolute;left:0;right:0;top:150px;padding:20px 32px"><span class="rotulo">Eficiência</span>
+      <div class="texto" style="font-size:33px">Diz que parte da energia que o aparelho recebe vira a energia que <b>queremos</b>. Um aparelho eficiente faz o mesmo serviço recebendo <b>menos energia</b>, porque desperdiça menos em calor.</div></div>
+    <p class="texto" data-passo="1" style="position:absolute;left:0;right:0;top:340px;margin:0;font-size:31px">Na incandescente, a <b>maior parte</b> da energia vira calor. Mesma luz, energia recebida muito diferente:</p>
+    <div style="position:absolute;left:560px;top:430px"><svg viewBox="0 0 940 300" width="940" height="300"  style="overflow:visible;font-family:Figtree,'Segoe UI',sans-serif;" aria-hidden="true"><g data-passo="2"><text x="0" y="66" text-anchor="start" font-size="30" font-weight="800" fill="#3F2FA0" >incandescente</text><rect class="el-barra" x="260" y="20" width="85" height="70" rx="12" fill="#FFD10C"/><rect class="el-barra" x="345" y="20" width="555" height="70" rx="12" fill="#E86A3A" fill-opacity=".85"/></g><g data-passo="3"><text x="0" y="186" text-anchor="start" font-size="30" font-weight="800" fill="#3F2FA0" >LED</text><rect class="el-barra" x="260" y="140" width="85" height="70" rx="12" fill="#FFD10C"/><rect class="el-barra" x="345" y="140" width="21" height="70" rx="12" fill="#E86A3A" fill-opacity=".85"/></g><g data-passo="3"><text x="260" y="270" text-anchor="start" font-size="26" font-weight="800" fill="#8A6A00" ><tspan fill="#FFD10C">■</tspan> luz</text><text x="380" y="270" text-anchor="start" font-size="26" font-weight="800" fill="#C2502A" ><tspan fill="#E86A3A">■</tspan> calor (desperdício)</text></g></svg></div>
+  </div>
+  <aside class="notas"><p>Clique 1 a 3: as faixas crescem. O comprimento total é a energia recebida no mesmo tempo (proporcional a 60 W e 10 W, os valores do exemplo a seguir); a parte amarela, a luz, é igual nas duas.</p><p>Quanto da energia vira luz em cada lâmpada a apostila não diz; a figura só mostra a ideia: a LED desperdiça bem menos.</p></aside>
+</section>
+
+<section class="slide" data-nome="Etiqueta e selo Procel">
+  <div class="conteudo">
+    <p class="olho">Eficiência energética</p>
+    <h2 class="titulo">Na hora de comprar</h2>
+    <div style="position:absolute;left:0;top:150px"><svg viewBox="0 0 420 380" width="420" height="380"  style="overflow:visible;font-family:Figtree,'Segoe UI',sans-serif;" aria-hidden="true"><rect x="0" y="0" width="420" height="380" rx="24" fill="#fff" stroke="#7F7A99" stroke-width="4"/><text x="210" y="50" text-anchor="middle" font-size="24" font-weight="800" fill="#292B2C" >EFICIÊNCIA ENERGÉTICA</text><rect class="el-barra ja" x="30" y="80" width="140" height="42" rx="6" fill="#1F9D62"/><text x="50" y="110" text-anchor="middle" font-size="28" font-weight="800" fill="#fff" >A</text><rect class="el-barra ja" x="30" y="134" width="180" height="42" rx="6" fill="#6BBF3A"/><text x="50" y="164" text-anchor="middle" font-size="28" font-weight="800" fill="#fff" >B</text><rect class="el-barra ja" x="30" y="188" width="220" height="42" rx="6" fill="#D7D21F"/><text x="50" y="218" text-anchor="middle" font-size="28" font-weight="800" fill="#fff" >C</text><rect class="el-barra ja" x="30" y="242" width="260" height="42" rx="6" fill="#F2A21B"/><text x="50" y="272" text-anchor="middle" font-size="28" font-weight="800" fill="#fff" >D</text><rect class="el-barra ja" x="30" y="296" width="300" height="42" rx="6" fill="#E2502A"/><text x="50" y="326" text-anchor="middle" font-size="28" font-weight="800" fill="#fff" >E</text><g data-passo="1"><path d="M400 102 l-60 0 l-20 -21 l20 -21 l60 0 Z" fill="#292B2C" transform="translate(0 20)"/><text x="372" y="109" text-anchor="middle" font-size="30" font-weight="800" fill="#fff" >A</text></g></svg></div>
+    <div style="position:absolute;left:520px;right:0;top:160px;display:flex;flex-direction:column;gap:24px">
+      <div class="caixa" style="padding:20px 28px"><span class="rotulo">Etiqueta de eficiência do Inmetro</span>
+        <div class="texto" style="font-size:31px">Vai da classe <b>A</b> (<b>mais eficiente</b>) às classes de <b>maior consumo</b>. Muitas trazem também o consumo de energia por mês, em kWh.</div></div>
+      <div class="caixa caixa-fundamental" data-passo="2" style="padding:20px 28px"><span class="rotulo">Selo Procel</span>
+        <div class="texto" style="font-size:31px">Dado aos aparelhos <b>mais econômicos</b> da categoria.</div></div>
+      <p class="texto" data-passo="3" style="margin:0;font-size:31px">Para comparar aparelhos na loja: procure a etiqueta <b>A</b> e o selo Procel.</p>
+    </div>
+  </div>
+  <aside class="notas"><p>A etiqueta é só ilustração (cores e letras como na etiqueta do Inmetro). Clique 1: a seta aponta a classe do aparelho, aqui a A.</p><p>Clique 2: o selo Procel. Clique 3: a regra prática. A questão 3 compara duas geladeiras pela etiqueta.</p></aside>
+</section>
+
+<section class="slide" data-nome="Exemplo: LED">
+  <div class="conteudo">
+    <p class="olho">Exemplo</p>
+    <h2 class="titulo">LED ou incandescente?</h2>
+    <p class="texto" style="position:absolute;left:0;width:1000px;top:150px;margin:0;font-size:31px">Uma LED de <b>10 W</b> ilumina tanto quanto uma incandescente de <b>60 W</b>. Ligadas pelo mesmo tempo, quantas vezes a incandescente consome mais energia?</p>
+    <div class="caixa" data-passo="1" style="position:absolute;left:0;width:1000px;top:290px;padding:16px 26px"><span class="rotulo">Raciocínio</span>
+      <div class="texto" style="font-size:30px">A potência diz quanta energia o aparelho recebe a cada segundo. No <b>mesmo tempo</b>, a energia é <b>proporcional</b> à potência.</div></div>
+    <div style="position:absolute;left:600px;top:470px"><div class="contas" style="font-size:42px;"><div class="eq" data-passo="2"><span>razão</span><span>\(=\)</span><span>\(\dfrac{P_{\text{incandescente}}}{P_{\text{LED}}}\)</span></div><div class="eq" data-passo="3"><span>razão</span><span>\(=\)</span><span>\(\dfrac{60}{10}\)</span></div><div class="eq final" data-passo="4"><span>razão</span><span>\(=\)</span><span>\(6\)</span></div></div></div>
+    <div style="position:absolute;left:1180px;top:200px;display:flex;gap:20px;align-items:flex-end"><svg viewBox="0 0 200 230" width="220" height="253"  style="overflow:visible;font-family:Figtree,'Segoe UI',sans-serif;" aria-hidden="true"><circle cx="100" cy="120" r="90" fill="url(#elBrilho)"/><circle cx="100" cy="110" r="62" fill="#FFF7CF" stroke="#292B2C" stroke-width="5"/><path d="M78 128 q8 -30 22 0 q14 -30 22 0" fill="none" stroke="#E86A3A" stroke-width="5"/><path d="M78 128 V172 M122 128 V172" stroke="#7F7A99" stroke-width="4"/><rect x="72" y="170" width="56" height="40" rx="8" fill="#7F7A99"/><g class="el-calor" fill="none" stroke="#E86A3A" stroke-width="6" stroke-linecap="round"><path d="M60 40 q12 -16 0 -32 q-12 -16 0 -32"/><path d="M100 30 q12 -16 0 -32 q-12 -16 0 -32"/><path d="M140 40 q12 -16 0 -32 q-12 -16 0 -32"/></g></svg><svg viewBox="0 0 200 230" width="220" height="253"  style="overflow:visible;font-family:Figtree,'Segoe UI',sans-serif;" aria-hidden="true"><circle cx="100" cy="120" r="90" fill="url(#elBrilho)"/><path d="M48 110 a52 52 0 0 1 104 0 V150 H48 Z" fill="#FFF7CF" stroke="#292B2C" stroke-width="5"/><g fill="#FFD10C"><rect x="62" y="118" width="14" height="14" rx="3"/><rect x="84" y="118" width="14" height="14" rx="3"/><rect x="106" y="118" width="14" height="14" rx="3"/><rect x="128" y="118" width="14" height="14" rx="3"/></g><rect x="64" y="150" width="72" height="60" rx="10" fill="#fff" stroke="#7F7A99" stroke-width="4"/></svg></div>
+    <span class="pilula pilula-resposta" data-passo="5" style="position:absolute;left:1180px;top:640px">6 vezes mais energia</span>
+  </div>
+  <aside class="notas"><p>Clique 1: no mesmo tempo, E = P · Δt é proporcional a P. Cliques 2 a 4: 60 ÷ 10 = 6. Clique 5: a resposta.</p></aside>
+</section>
+
+<section class="slide" data-nome="O que mais pesa">
+  <div class="conteudo">
+    <p class="olho">Uso consciente da energia elétrica</p>
+    <h2 class="titulo">O que mais pesa na conta</h2>
+    <p class="texto" style="position:absolute;left:0;right:0;top:140px;margin:0;font-size:31px">O chuveiro gastou <b>quatro vezes</b> mais que a TV. Os aparelhos que <b>esquentam</b> (chuveiro, ferro, aquecedor) e a <b>geladeira</b>, ligada o dia todo, pesam mais.</p>
+    <p class="texto" data-passo="1" style="position:absolute;left:0;right:0;top:250px;margin:0;font-size:31px"><b>As atitudes que mais economizam:</b></p>
+    <div class="el-cards" style="position:absolute;left:0;right:0;top:310px;grid-template-columns:1fr 1fr;gap:16px"><div class="el-card" data-passo="2" style="display:grid;grid-template-columns:90px 1fr;gap:16px;align-items:center;font-size:28px"><svg viewBox="0 0 100 100" width="84" height="84" style="overflow:visible;" aria-hidden="true"><path d="M20 14 V26 H56" fill="none" stroke="#7F7A99" stroke-width="6" stroke-linecap="round"/><path d="M40 26 h32 a8 8 0 0 1 8 8 v6 H32 v-6 a8 8 0 0 1 8 -8 Z" fill="var(--d)"/><g class="el-gotas" fill="#8CC1EE"><circle cx="40" cy="50" r="4"/><circle cx="52" cy="50" r="4"/><circle cx="64" cy="50" r="4"/><circle cx="46" cy="50" r="3"/><circle cx="72" cy="50" r="3"/></g></svg><p>Banhos mais <b>curtos</b> e o chuveiro no <b>verão</b> nos dias quentes.</p></div><div class="el-card" data-passo="3" style="display:grid;grid-template-columns:90px 1fr;gap:16px;align-items:center;font-size:28px"><svg viewBox="0 0 100 100" width="84" height="84" style="overflow:visible;" aria-hidden="true"><rect x="24" y="8" width="52" height="86" rx="8" fill="#fff" stroke="#7F7A99" stroke-width="4"/><line x1="24" y1="38" x2="76" y2="38" stroke="#7F7A99" stroke-width="4"/><line x1="66" y1="16" x2="66" y2="30" stroke="var(--d)" stroke-width="5" stroke-linecap="round"/><line x1="66" y1="46" x2="66" y2="66" stroke="var(--d)" stroke-width="5" stroke-linecap="round"/></svg><p>Não abrir a geladeira à toa, não pôr comida quente nela e conferir a <b>borracha da porta</b>.</p></div><div class="el-card" data-passo="4" style="display:grid;grid-template-columns:90px 1fr;gap:16px;align-items:center;font-size:28px"><svg viewBox="0 0 100 100" width="84" height="84" style="overflow:visible;" aria-hidden="true"><path d="M14 70 C 18 44 40 34 72 34 H86 V70 Z" fill="var(--d)"/><path d="M44 34 C 46 22 56 18 80 18 V34" fill="none" stroke="#7F7A99" stroke-width="6" stroke-linecap="round"/><rect x="10" y="70" width="80" height="8" rx="4" fill="#7F7A99"/></svg><p><b>Juntar roupas</b> para passar de uma vez só.</p></div><div class="el-card" data-passo="5" style="display:grid;grid-template-columns:90px 1fr;gap:16px;align-items:center;font-size:28px"><svg viewBox="0 0 100 100" width="84" height="84" style="overflow:visible;" aria-hidden="true"><rect x="10" y="20" width="80" height="54" rx="8" fill="#292B2C"/><rect x="16" y="26" width="68" height="42" rx="4" fill="var(--d-clara)"/><path d="M40 36 L62 47 L40 58 Z" fill="var(--d)"/><path d="M38 86 H62 M50 74 V86" stroke="#7F7A99" stroke-width="5" stroke-linecap="round"/></svg><p>Desligar da tomada os aparelhos em <b>espera</b> (<i>standby</i>), com a luzinha acesa.</p></div></div>
+  </div>
+  <aside class="notas"><p>Retoma o exemplo da parte anterior: chuveiro 60 kWh × TV 15 kWh por mês.</p><p>Cliques 2 a 5: uma atitude por clique; cada uma ataca um aparelho que pesa na conta.</p></aside>
+</section>
+
+<section class="slide" data-nome="Uso consciente">
+  <div class="conteudo">
+    <p class="olho">Uso consciente da energia elétrica</p>
+    <h2 class="titulo">Usar a energia com consciência</h2>
+    <div class="caixa caixa-fundamental" style="position:absolute;left:0;right:0;top:150px;padding:20px 30px"><div class="texto" style="font-size:33px">Economiza <b>dinheiro</b> e reduz a necessidade de <b>novas usinas</b> e de seus <b>impactos</b>.</div></div>
+    <p class="texto" data-passo="1" style="position:absolute;left:0;right:0;top:290px;margin:0;font-size:31px"><b>Em casa e na escola:</b></p>
+    <ol class="el-lista" style="position:absolute;left:0;width:1100px;top:350px"><li data-passo="2"><b class="n">1</b><span>Apagar a luz e desligar o ventilador de <b>ambientes vazios</b>.</span></li><li data-passo="3"><b class="n">2</b><span>Aproveitar a <b>luz do dia</b> e preferir lâmpadas <b>LED</b>.</span></li><li data-passo="4"><b class="n">3</b><span>Tomar banhos mais <b>curtos</b> e não deixar a geladeira <b>aberta</b>.</span></li><li data-passo="5"><b class="n">4</b><span>Na compra, escolher aparelhos com etiqueta <b>A</b> ou selo <b>Procel</b>.</span></li></ol>
+    <div data-passo="5" style="position:absolute;left:1260px;top:300px"><svg viewBox="0 0 100 100" width="300" height="300" style="overflow:visible;" aria-hidden="true"><circle cx="50" cy="40" r="26" fill="#FFE680" stroke="#292B2C" stroke-width="4"/><rect x="38" y="66" width="24" height="18" rx="4" fill="#7F7A99"/><path d="M42 44 l8 -8 l8 8" fill="none" stroke="#C99A00" stroke-width="3"/></svg></div>
+  </div>
+  <aside class="notas"><p>A ligação com a próxima parte: menos consumo, menos usinas, menos impacto.</p><p>Cliques 2 a 5: as atitudes. Peça mais exemplos para a turma.</p></aside>
+</section>
+
+<section class="slide" data-nome="Como costuma cair">
+  <div class="conteudo">
+    <p class="olho">Dica</p>
+    <h2 class="titulo">Como costuma cair</h2>
+    <div class="caixa caixa-fundamental" style="position:absolute;left:0;right:0;top:160px;padding:22px 32px"><div class="texto" style="font-size:33px">As questões trazem uma <b>tabela</b> com a potência e o tempo de uso de alguns aparelhos e perguntam qual pesa mais no mês ou quanto se economiza ao reduzir o uso.</div></div>
+    <ol class="el-lista" style="position:absolute;left:0;width:1200px;top:360px">
+      <li data-passo="1"><b class="n">1</b><span>Monte a conta de <b>cada aparelho</b> separadamente.</span></li>
+      <li data-passo="2"><b class="n">2</b><span>Sempre em <b>kW</b> e em <b>horas</b>: \(E = P \cdot \Delta t\).</span></li>
+      <li data-passo="3"><b class="n">3</b><span>Para a economia, use só o que <b>muda</b>: a potência ou o tempo que deixa de ser usado.</span></li>
+    </ol>
+  </div>
+  <aside class="notas"><p>O passo 3 é a chave da questão 1 a seguir: a economia de cada medida é só a energia que deixa de ser consumida.</p></aside>
+</section>
+
+<section class="slide questao" data-nome="Questão 1" data-largo="1" data-gap="10">
+  <div class="conteudo">
+    <div class="area-resolucao"></div>
+    <span class="pilula pilula-pausa" data-em="1:some">Pause o vídeo e tente</span>
+    <div class="painel-questao">
+      <p class="olho">Questão 1 · Modelo IF</p>
+      <p class="enunciado" style="font-size:23px">Para diminuir a conta de luz, uma família anotou a potência e o tempo de uso diário de alguns aparelhos da casa:</p>
+      
+      <table class="el-mini" style="align-self:center"><tr><th>Aparelho</th><th>Potência</th><th>Uso por dia</th></tr><tr><td>Chuveiro</td><td>5000 W</td><td>40 min</td></tr><tr><td>Geladeira</td><td>50 W (média)</td><td>24 h</td></tr><tr><td>TV</td><td>100 W</td><td>5 h</td></tr><tr><td>Ferro de passar</td><td>1200 W</td><td>15 min</td></tr><tr><td>6 lâmpadas</td><td>10 W cada</td><td>5 h</td></tr></table><p class="enunciado" style="font-size:23px">Considerando um mês de 30 dias, qual das medidas abaixo traz a <b>maior economia de energia</b> no mês?</p>
+      <ol class="alternativas" style="gap:8px"><li data-em="2:apaga" style="font-size:21px;padding:6px 14px"><b>A</b><span>Deixar a TV desligada o mês inteiro.</span></li><li data-em="2:apaga" style="font-size:21px;padding:6px 14px"><b>B</b><span>Apagar as 6 lâmpadas 2 horas mais cedo todos os dias.</span></li><li data-em="2:certo" style="font-size:21px;padding:6px 14px"><b>C</b><span>Diminuir o tempo total de chuveiro de 40 para 30 minutos por dia.</span></li><li data-em="2:apaga" style="font-size:21px;padding:6px 14px"><b>D</b><span>Trocar a geladeira por um modelo novo, de potência média 40 W, que também fica ligado 24 h por dia.</span></li><li data-em="2:apaga" style="font-size:21px;padding:6px 14px"><b>E</b><span>Juntar as roupas e passar tudo de uma vez, reduzindo o uso do ferro pela metade.</span></li></ol>
+    </div>
+  </div>
+  <aside class="resolucao">
+    <p class="dados"><b>Dados:</b> 30 dias; tabela de potências e tempos.</p>
+    <ol class="passos"><li><b>A:</b> \(0{,}1 \cdot 150 = 15\ \text{kWh}\)</li><li><b>B:</b> \(0{,}06 \cdot 60 = 3{,}6\ \text{kWh}\)</li><li><b>C:</b> 10 min · 30 = 5 h; \(5 \cdot 5 = 25\ \text{kWh}\)</li><li><b>D:</b> \(0{,}01 \cdot 720 = 7{,}2\ \text{kWh}\)</li><li><b>E:</b> 225 min = 3,75 h; \(1{,}2 \cdot 3{,}75 = 4{,}5\ \text{kWh}\)</li></ol>
+    <p class="resposta"><b>Resposta:</b> cortar 10 min de chuveiro por dia economiza 25 kWh, a maior economia. <b>Gabarito C.</b></p>
+    <p class="atencao"><b>Destaque no quadro:</b> Economia = só o que deixa de ser usado, em kW e h.</p>
+    <ul class="erros"><li><b>A</b> 15 kWh: a TV tem potência pequena.</li><li><b>B</b> 3,6 kWh: as 6 lâmpadas somam só 60 W.</li><li><b>D</b> 7,2 kWh: a troca reduz só 10 W.</li><li><b>E</b> 4,5 kWh: o ferro é usado pouco tempo.</li></ul>
+  </aside>
+  <aside class="notas"><p>Clique 1 tira o aviso de pausa: resolva na área (D liga a caneta; E esconde o enunciado). Clique 2: gabarito C.</p><p>Modelo IF, lote if-fisica-potencia-e-energia-eletrica, m008, FIS-1624. Contas conferidas: 15; 3,6; 25; 7,2; 4,5 kWh.</p></aside>
+</section>
+
+<section class="slide questao" data-nome="Questão 2" data-largo="1" data-gap="12">
+  <div class="conteudo">
+    <div class="area-resolucao"></div>
+    <span class="pilula pilula-pausa" data-em="1:some">Pause o vídeo e tente</span>
+    <div class="painel-questao">
+      <p class="olho">Questão 2 · Modelo IF</p>
+      <p class="enunciado" style="font-size:23px">Numa campanha de economia de energia, uma escola trocou lâmpadas incandescentes de 60 W por lâmpadas de LED de 8 W. As duas iluminam a sala praticamente da mesma forma. Os alunos fizeram as seguintes afirmações:</p><p class="enunciado" style="font-size:23px">I. Ligadas durante o mesmo tempo, a lâmpada de LED consome menos energia elétrica que a incandescente, porque tem menor potência.<br>II. Como as duas iluminam da mesma forma, elas transformam a mesma quantidade de energia elétrica a cada segundo.<br>III. A lâmpada de LED tem potência maior que a incandescente, porque produz a mesma luz gastando menos.<br>IV. Trocar uma lâmpada incandescente que fica acesa 5 horas por dia por uma de LED economiza 7,8 kWh em 30 dias.</p><p class="enunciado" style="font-size:23px">Estão <b>CORRETAS</b> apenas as afirmações:</p>
+      
+      
+      <ol class="alternativas curtas"><li data-em="2:apaga"><b>A</b><span>I e II.</span></li><li data-em="2:apaga"><b>B</b><span>II e III.</span></li><li data-em="2:apaga"><b>C</b><span>I, III e IV.</span></li><li data-em="2:certo"><b>D</b><span>I e IV.</span></li><li data-em="2:apaga"><b>E</b><span>IV.</span></li></ol>
+    </div>
+  </div>
+  <aside class="resolucao">
+    <p class="dados"><b>Dados:</b> incandescente 60 W; LED 8 W; mesma luz; 5 h por dia; 30 dias.</p>
+    <ol class="passos"><li><b>I.</b> Verdadeira: menor potência, menos energia.</li><li><b>II.</b> Falsa: 60 W × 8 W por segundo.</li><li><b>III.</b> Falsa: a potência da LED é menor.</li><li><b>IV.</b> \(60 - 8 = 52\ \text{W} = 0{,}052\ \text{kW}\)</li><li>\(5 \cdot 30 = 150\ \text{h}\)</li><li>\(0{,}052 \cdot 150 = 7{,}8\ \text{kWh}\): verdadeira.</li></ol>
+    <p class="resposta"><b>Resposta:</b> I e IV. <b>Gabarito D.</b></p>
+    <p class="atencao"><b>Destaque no quadro:</b> Mesma luz não é mesma potência.</p>
+    <ul class="erros"><li><b>A</b> Aceita a II.</li><li><b>B</b> Aceita II e III, falsas.</li><li><b>C</b> Aceita a III.</li><li><b>E</b> Esquece a I.</li></ul>
+  </aside>
+  <aside class="notas"><p>Clique 1 tira o aviso de pausa. Clique 2: gabarito D.</p><p>Modelo IF, lote if-fisica-potencia-e-energia-eletrica, m010, FIS-1626. Conta da IV conferida: 0,052 × 150 = 7,8.</p></aside>
+</section>
+
+<section class="slide questao" data-nome="Questão 3" data-gap="14">
+  <div class="conteudo">
+    <div class="area-resolucao"></div>
+    <span class="pilula pilula-pausa" data-em="1:some">Pause o vídeo e tente</span>
+    <div class="painel-questao">
+      <p class="olho">Questão 3 · Modelo IF</p>
+      <p class="enunciado" style="font-size:25px">Numa loja do centro de Juiz de Fora, uma família compara duas geladeiras do mesmo tamanho e de preço parecido. A etiqueta de eficiência do Inmetro de cada uma informa a classe e o consumo de energia por mês. Só a geladeira X tem o selo Procel.</p>
+      
+      <table class="el-mini" style="align-self:center;font-size:24px"><tr><th>Geladeira</th><th>Classe na etiqueta</th><th>Consumo (kWh/mês)</th></tr><tr><td>X</td><td>A</td><td>25</td></tr><tr><td>Y</td><td>C</td><td>40</td></tr></table><p class="enunciado" style="font-size:25px">A escolha mais eficiente e a energia que ela economiza em <b>um ano</b>, em relação à outra, são</p>
+      <ol class="alternativas" style="gap:8px"><li data-em="2:certo" style="font-size:24px;padding:6px 14px"><b>A</b><span>X, com economia de 180 kWh por ano.</span></li><li data-em="2:apaga" style="font-size:24px;padding:6px 14px"><b>B</b><span>X, com economia de 15 kWh por ano.</span></li><li data-em="2:apaga" style="font-size:24px;padding:6px 14px"><b>C</b><span>Y, porque consome mais energia e, por isso, gela melhor.</span></li><li data-em="2:apaga" style="font-size:24px;padding:6px 14px"><b>D</b><span>X, com economia de 780 kWh por ano.</span></li><li data-em="2:apaga" style="font-size:24px;padding:6px 14px"><b>E</b><span>Y, com economia de 180 kWh por ano.</span></li></ol>
+    </div>
+  </div>
+  <aside class="resolucao">
+    <p class="dados"><b>Dados:</b> X: classe A, 25 kWh/mês, selo Procel; Y: classe C, 40 kWh/mês.</p>
+    <ol class="passos"><li><b>1.</b> Mesmo serviço, menos energia: X é a eficiente.</li><li><b>2.</b> \(\Delta E_{\text{mês}} = 40 - 25 = 15\ \text{kWh}\)</li><li><b>3.</b> \(\Delta E_{\text{ano}} = 12 \cdot 15 = 180\ \text{kWh}\)</li></ol>
+    <p class="resposta"><b>Resposta:</b> X, com economia de 180 kWh por ano. <b>Gabarito A.</b></p>
+    <p class="atencao"><b>Destaque no quadro:</b> Economia vem da diferença, vezes 12 meses.</p>
+    <ul class="erros"><li><b>B</b> 15 kWh é a economia de um mês.</li><li><b>C</b> Gastar mais não é gelar melhor.</li><li><b>D</b> Somou os consumos: (25 + 40) × 12.</li><li><b>E</b> Conta certa, aparelho trocado.</li></ul>
+  </aside>
+  <aside class="notas"><p>Clique 1 tira o aviso de pausa. Clique 2: gabarito A.</p><p>Modelo IF, lote if-fisica-potencia-e-energia-eletrica, m011, FIS-8795.</p></aside>
+</section>
+
+<section class="slide" data-nome="Resumo">
+  <div class="conteudo">
+    <p class="olho">Resumo</p>
+    <h2 class="titulo">O essencial</h2>
+<div class="resumo" style="position:absolute;left:0;right:0;top:150px"><div><b>Potência</b>, em W ou kW: energia por segundo; vem na etiqueta. \(P = U \cdot i\).</div><div><b>Consumo</b>: \(E = P \cdot \Delta t\), com P em kW e tempo em h, dá kWh.</div><div><b>Conta</b>: (leitura atual − anterior) × preço do kWh, mais impostos.</div><div><b>Eficiente</b> é o aparelho que desperdiça menos energia em calor. LED gasta bem menos que a incandescente.</div><div>Etiqueta do <b>Inmetro</b> (A é a mais eficiente) e selo <b>Procel</b> ajudam a escolher.</div><div>Economizar: banhos curtos, geladeira fechada, LED, desligar o que não usa.</div></div><div class="caixa caixa-atencao" style="position:absolute;left:560px;right:0;top:640px"><div class="texto" style="font-size:30px">Economizar energia também <b>reduz a necessidade de novas usinas</b> e de seus impactos.</div></div>
+  </div>
+  <aside class="notas"><p>Peça para tirarem um print desta tela.</p></aside>
+</section>
+
+<section class="slide capa" data-nome="A seguir">
+  <div class="estrelas"></div>
+  <div class="texto-capa" style="top:150px">
+    <span class="selo">Física · IF</span>
+    <p class="aula" style="font-size:26px">A seguir · Eletricidade · Parte única</p>
+    <h1 style="font-size:118px">Usinas de energia elétrica</h1>
+    <p class="sub">Da usina até a tomada</p>
+  </div>
+  <svg class="emblema" viewBox="0 0 640 640" aria-hidden="true">
+    <g class="gira-lento"><ellipse cx="320" cy="320" rx="300" ry="128" fill="none" stroke="#fff" stroke-opacity=".38" stroke-width="2" transform="rotate(-10 320 320)"/></g>
+    <g class="gira"><ellipse cx="320" cy="320" rx="236" ry="196" fill="none" stroke="#FFD10C" stroke-opacity=".75" stroke-width="2.5" stroke-dasharray="3 14" stroke-linecap="round" transform="rotate(-8 320 320)"/>
+      <circle cx="84" cy="300" r="13" fill="var(--d)" stroke="#fff" stroke-width="3"/></g>
+    <circle cx="320" cy="320" r="150" fill="#FFD10C"/>
+    <path d="M346 196 L262 336 H318 L292 450 L382 300 H326 Z" fill="#4B258D" stroke="#4B258D" stroke-width="8" stroke-linejoin="round"/>
+  </svg>
+  <img class="logo-capa" src="{{LOGO_BRANCO}}" alt="Quarks">
+  <aside class="notas"><p>Próxima: como a eletricidade é produzida nas usinas, os impactos de cada uma e o caminho até a casa.</p></aside>
+</section>

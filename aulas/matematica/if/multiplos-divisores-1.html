@@ -1,0 +1,474 @@
+<!--aula
+{"disciplina": "matematica", "curso": "IF", "assunto": "Múltiplos e divisores", "parte": "Parte 1 de 2", "titulo": "Divisibilidade e números primos", "scripts": ["animacoes-conjuntos.js"]}
+-->
+<!-- Fonte: apostila IF, Matemática, cap. 1 Números e operações, 1.3 Múltiplos e divisores (teorias "Múltiplos e divisores", "Critérios de divisibilidade", "Números primos e fatoração" e "Quadrados e cubos perfeitos pela fatoração", com exemplos e atenções). Questões da apostila: Modelo IF m006 MAT-1191 (lote if-matematica-divisibilidade), oficiais 2015-1-extra q14 MAT-0412 e 2015-1 q21 MAT-0294. As oficiais MAT-0515 e MAT-0336 ficam reservadas para o bloco do fim do capítulo. -->
+<style>
+  .caixa, .linha-ex, .painel { box-sizing: border-box; }
+  .linha-ex { background: var(--branco); border: 2px solid var(--lilas-2); border-radius: 24px; padding: 12px 26px; font-size: 32px; line-height: 1.3; }
+  .linha-ex b { color: var(--roxo-titulo); }
+  .rot { font: 700 26px Figtree, sans-serif; fill: #5E5A70; }
+  .alt-mat li { font-size: 30px !important; }
+  .resumo > div { font-size: 30px; }
+  .contas.folga { row-gap: 20px; }
+  .ok { color: var(--certo); font-weight: 800; }
+  .tabela.crit { font-size: 32px; }
+  .tabela.crit td, .tabela.crit th { padding: 10px 30px; text-align: left; }
+  .tabela.crit td:first-child { font: 800 40px var(--fonte-titulo); color: var(--roxo-titulo); text-align: center; }
+  .teste { display: grid; grid-template-columns: 90px 1fr 70px; align-items: center; gap: 16px; background: #fff; border: 2px solid var(--lilas-2); border-radius: 20px; padding: 8px 20px; font-size: 28px; }
+  .teste b.n { font: 800 40px var(--fonte-titulo); color: var(--roxo-titulo); text-align: center; }
+  .teste .ok { font-size: 36px; text-align: center; }
+  /* escada da fatoração */
+  .escada { border-collapse: collapse; font: 700 46px var(--fonte-texto); font-variant-numeric: tabular-nums; }
+  .escada td { padding: 4px 26px; }
+  .escada td:first-child { text-align: right; border-right: 5px solid var(--roxo-titulo); color: var(--carvao); }
+  .escada td:last-child { color: var(--d-forte); font-weight: 800; }
+  /* retângulos de quadradinhos */
+  .qd { fill: #2F6BFF; stroke: #fff; stroke-width: 3; }
+  .qd.b { fill: #8C7BEA; } .qd.c { fill: #FFD10C; }
+  @keyframes respira { 0%, 100% { opacity: 1; } 50% { opacity: .55; } }
+  .slide.ativo .mostra .pisca { animation: respira 2.6s ease-in-out infinite; }
+  .exp-par { color: var(--certo); } .exp-impar { color: var(--erro); }
+</style>
+
+<!-- 1. Capa -->
+<section class="slide capa" data-nome="Capa">
+  <div class="estrelas"></div>
+  <div class="texto-capa" style="top:170px">
+    <span class="selo">Matemática · IF</span>
+    <p class="aula">Múltiplos e divisores · Parte 1 de 2</p>
+    <h1 style="font-size:116px">Divisibilidade e números primos</h1>
+    <p class="sub">Dividir sem sobrar</p>
+  </div>
+  <svg class="emblema" viewBox="0 0 640 640" aria-hidden="true">
+    <g class="gira-lento"><ellipse cx="320" cy="320" rx="300" ry="128" fill="none" stroke="#fff" stroke-opacity=".38" stroke-width="2" transform="rotate(-10 320 320)"/></g>
+    <g class="gira"><ellipse cx="320" cy="320" rx="236" ry="196" fill="none" stroke="#FFD10C" stroke-opacity=".75" stroke-width="2.5" stroke-dasharray="3 14" stroke-linecap="round" transform="rotate(-8 320 320)"/>
+      <circle cx="84" cy="300" r="13" fill="var(--d)" stroke="#fff" stroke-width="3"/></g>
+    <circle cx="320" cy="320" r="132" fill="#FFD10C"/>
+    <image href="{{SYM_ROXO}}" x="238" y="238" width="164" height="164"/>
+  </svg>
+  <img class="logo-capa" src="{{LOGO_BRANCO}}" alt="Quarks">
+  <aside class="notas">
+    <p>Parte 1 de Múltiplos e divisores: divisor e múltiplo, critérios de divisibilidade, números primos, fatoração em primos e quadrados e cubos perfeitos. A Parte 2 traz MDC e MMC.</p>
+  </aside>
+</section>
+
+<!-- 2. Figurinhas do Davi -->
+<section class="slide" data-nome="As figurinhas do Davi">
+  <div class="conteudo">
+    <p class="olho">Para começar</p>
+    <h2 class="titulo">24 figurinhas, partes iguais</h2>
+    <div data-anima="nc-figurinhas" data-anima-passo="1" data-seq="3,4,5" data-l="54" data-w="820" data-h="420" style="position:absolute;left:0;top:150px;width:820px;height:420px"></div>
+    <div style="position:absolute;left:940px;right:0;top:160px;display:flex;flex-direction:column;gap:22px">
+      <p class="texto" style="margin:0">Davi quer dividir <b>todas</b> as 24 figurinhas entre amigos, sem sobrar nenhuma.</p>
+      <div class="caixa caixa-fundamental" data-passo="2">
+        <span class="rotulo">Divisor e múltiplo</span>
+        <div class="texto">\(d\) é <b>divisor</b> de \(n\) quando \(n : d\) é exata (resto zero). Aí \(n\) é <b>múltiplo</b> de \(d\) e <b>divisível</b> por \(d\).</div>
+      </div>
+    </div>
+  </div>
+  <aside class="notas">
+    <p>Clique 1: as figurinhas se arrumam: 3 amigos (8 para cada), 4 amigos (6 para cada) e 5 amigos, em que sobram 4 (em vermelho). Deixe rodar uma volta.</p>
+    <p>Clique 2: a definição da apostila.</p>
+  </aside>
+</section>
+
+<!-- 3. A mesma frase de dois lados -->
+<section class="slide" data-nome="Divisor e múltiplo">
+  <div class="conteudo">
+    <p class="olho">A mesma coisa, olhando de lados diferentes</p>
+    <h2 class="titulo">\(24 : 3 = 8\), resto 0</h2>
+    <div style="position:absolute;left:0;right:0;top:170px;display:grid;grid-template-columns:1fr 1fr 1fr;gap:28px">
+      <div class="linha-ex" data-passo="1" style="font-size:36px;text-align:center;padding:30px">3 é <b>divisor</b> de 24</div>
+      <div class="linha-ex" data-passo="2" style="font-size:36px;text-align:center;padding:30px">24 é <b>múltiplo</b> de 3</div>
+      <div class="linha-ex" data-passo="3" style="font-size:36px;text-align:center;padding:30px">24 é <b>divisível</b> por 3</div>
+    </div>
+    <div class="caixa" data-passo="4" style="position:absolute;left:0;width:820px;top:360px">
+      <span class="rotulo">Divisores: poucos, a lista termina</span>
+      <div style="font-size:44px">\(D(24) = \{1, 2, 3, 4, 6, 8, 12, 24\}\)</div>
+    </div>
+    <div class="caixa" data-passo="5" style="position:absolute;left:900px;right:0;top:360px">
+      <span class="rotulo">Múltiplos: infinitos</span>
+      <div style="font-size:44px">\(M(4) = \{0, 4, 8, 12, 16, \dots\}\)</div>
+      <div class="texto" style="font-size:28px">4 vezes 0, 1, 2, 3, …</div>
+    </div>
+  </div>
+  <aside class="notas"><p>Da apostila: as três frases dizem a mesma coisa. Divisores formam uma lista que termina; múltiplos são infinitos (multiplique por 0, 1, 2, 3…).</p></aside>
+</section>
+
+<!-- 4. Pares que dão 24 -->
+<section class="slide" data-nome="Listar divisores aos pares">
+  <div class="conteudo">
+    <p class="olho">Um jeito rápido de listar os divisores</p>
+    <h2 class="titulo">Pares que dão 24</h2>
+    <div class="contas" style="position:absolute;left:0;top:170px;font-size:48px">
+      <div class="eq"><span>\(24\)</span><span>\(=\)</span><span>\(1 \cdot 24\)</span></div>
+      <div class="eq" data-passo="1"><span>\(24\)</span><span>\(=\)</span><span>\(2 \cdot 12\)</span></div>
+      <div class="eq" data-passo="2"><span>\(24\)</span><span>\(=\)</span><span>\(3 \cdot 8\)</span></div>
+      <div class="eq" data-passo="3"><span>\(24\)</span><span>\(=\)</span><span>\(4 \cdot 6\)</span></div>
+    </div>
+    <div data-anima="nc-figurinhas" data-anima-passo="1" data-seq="1,2,3,4" data-modo="pares" data-w="1100" data-h="330" style="position:absolute;left:660px;top:150px;width:1100px;height:330px"></div>
+    <div class="caixa caixa-fundamental" data-passo="4" style="position:absolute;left:580px;right:0;top:500px;padding:18px 30px">
+      <div class="texto">Os oito números dos pares são <b>todos</b> os divisores de 24.</div>
+    </div>
+    <div class="caixa" data-passo="5" style="position:absolute;left:580px;right:0;top:640px;padding:18px 30px">
+      <span class="rotulo">Davi: pelo menos 2 amigos e 2 figurinhas para cada</span>
+      <div class="texto"><b>2, 3, 4, 6, 8 ou 12</b> amigos. Com 24 amigos, cada um ganharia só 1.</div>
+    </div>
+  </div>
+  <aside class="notas">
+    <p>Cliques 1 a 3: os pares da apostila; as figurinhas se arrumam em retângulos 1 × 24, 2 × 12, 3 × 8 e 4 × 6 (cada retângulo é um par de divisores). Clique 5: a resposta do Davi.</p>
+  </aside>
+</section>
+
+<!-- 5. Critérios de divisibilidade -->
+<section class="slide" data-nome="Critérios de divisibilidade">
+  <div class="conteudo">
+    <p class="olho">Sinais que aparecem nos algarismos</p>
+    <h2 class="titulo">Critérios de divisibilidade</h2>
+    <p class="texto" style="position:absolute;left:0;width:520px;top:170px;margin:0">Dá para saber se <b>2 340</b> é divisível por 9 <b>sem dividir</b>?</p>
+    <table class="tabela crit" style="position:absolute;left:600px;right:0;top:150px">
+      <tr><th style="text-align:center">por</th><th>quando</th></tr>
+      <tr data-passo="1"><td>2</td><td>termina em 0, 2, 4, 6 ou 8 (é par)</td></tr>
+      <tr data-passo="2"><td>3</td><td>a soma dos algarismos é divisível por 3</td></tr>
+      <tr data-passo="3"><td>4</td><td>os dois últimos algarismos formam número divisível por 4</td></tr>
+      <tr data-passo="4"><td>5</td><td>termina em 0 ou 5</td></tr>
+      <tr data-passo="5"><td>6</td><td>é divisível por 2 <b>e</b> por 3 ao mesmo tempo</td></tr>
+      <tr data-passo="6"><td>9</td><td>a soma dos algarismos é divisível por 9</td></tr>
+      <tr data-passo="7"><td>10</td><td>termina em 0</td></tr>
+    </table>
+  </div>
+  <aside class="notas"><p>Tabela da apostila, uma linha por clique. Peça exemplos para cada linha (ex.: 135 por 5, 316 por 4 porque 16 é divisível por 4).</p></aside>
+</section>
+
+<!-- 6. Exemplo: 2 340 -->
+<section class="slide" data-nome="Exemplo: testar o 2 340">
+  <div class="conteudo">
+    <p class="olho">Exemplo</p>
+    <h2 class="titulo">Testar o 2 340</h2>
+    <div class="contas" style="position:absolute;left:0;top:170px;font-size:46px">
+      <div class="eq"><span>\(\text{soma}\)</span><span>\(=\)</span><span>\(2 + 3 + 4 + 0\)</span></div>
+      <div class="eq final" data-passo="1"><span>\(\text{soma}\)</span><span>\(=\)</span><span>\(9\)</span></div>
+    </div>
+    <div style="position:absolute;left:660px;right:0;top:150px;display:grid;grid-template-columns:1fr 1fr;gap:12px 20px">
+      <div class="teste" data-passo="2"><b class="n">2</b><span>termina em 0</span><span class="ok">✓</span></div>
+      <div class="teste" data-passo="2"><b class="n">5</b><span>termina em 0</span><span class="ok">✓</span></div>
+      <div class="teste" data-passo="2"><b class="n">10</b><span>termina em 0</span><span class="ok">✓</span></div>
+      <div class="teste" data-passo="3"><b class="n">3</b><span>soma 9</span><span class="ok">✓</span></div>
+      <div class="teste" data-passo="3"><b class="n">9</b><span>soma 9</span><span class="ok">✓</span></div>
+      <div class="teste" data-passo="4"><b class="n">6</b><span>passa no 2 e no 3</span><span class="ok">✓</span></div>
+      <div class="teste" data-passo="5"><b class="n">4</b><span>40 é divisível por 4</span><span class="ok">✓</span></div>
+    </div>
+    <span class="pilula pilula-resposta" data-passo="6" style="position:absolute;left:660px;top:560px">2 340 é divisível por todos eles</span>
+    <div class="caixa caixa-atencao" data-passo="7" style="position:absolute;left:660px;right:0;top:670px;padding:16px 28px">
+      <span class="rotulo">O critério do 6 pede os dois</span>
+      <div class="texto" style="font-size:30px">15 é divisível só por 3; 8, só por 2. Nenhum dos dois é divisível por 6.</div>
+    </div>
+  </div>
+  <aside class="notas"><p>Exemplo da apostila: 2, 3, 4, 5, 6, 9 e 10. Clique 1: a soma dos algarismos. Cliques 2 a 5: os testes. Clique 7: a atenção da apostila.</p></aside>
+</section>
+
+<!-- 7. Números primos -->
+<section class="slide" data-nome="Números primos">
+  <div class="conteudo">
+    <p class="olho">As peças básicas da multiplicação</p>
+    <h2 class="titulo">Números primos</h2>
+    <svg viewBox="0 0 1000 440" style="position:absolute;left:0;top:150px;width:1000px;height:440px" aria-hidden="true">
+      <text x="0" y="40" class="rot" style="font-size:30px;font-weight:800;fill:#3F2FA0">7: um jeito só</text>
+      <g transform="translate(0 60)"><rect class="qd" x="0" y="0" width="56" height="56" rx="8"/><rect class="qd" x="60" y="0" width="56" height="56" rx="8"/><rect class="qd" x="120" y="0" width="56" height="56" rx="8"/><rect class="qd" x="180" y="0" width="56" height="56" rx="8"/><rect class="qd" x="240" y="0" width="56" height="56" rx="8"/><rect class="qd" x="300" y="0" width="56" height="56" rx="8"/><rect class="qd" x="360" y="0" width="56" height="56" rx="8"/><text x="440" y="40" class="rot" style="font-size:30px">1 × 7</text></g>
+      <g data-passo="1">
+        <text x="0" y="180" class="rot" style="font-size:30px;font-weight:800;fill:#3F2FA0">12: vários jeitos</text>
+        <g transform="translate(0 200)"><g class="qd b"><rect x="0" y="0" width="34" height="34" rx="6"/><rect x="38" y="0" width="34" height="34" rx="6"/><rect x="76" y="0" width="34" height="34" rx="6"/><rect x="114" y="0" width="34" height="34" rx="6"/><rect x="152" y="0" width="34" height="34" rx="6"/><rect x="190" y="0" width="34" height="34" rx="6"/><rect x="228" y="0" width="34" height="34" rx="6"/><rect x="266" y="0" width="34" height="34" rx="6"/><rect x="304" y="0" width="34" height="34" rx="6"/><rect x="342" y="0" width="34" height="34" rx="6"/><rect x="380" y="0" width="34" height="34" rx="6"/><rect x="418" y="0" width="34" height="34" rx="6"/></g><text x="470" y="28" class="rot">1 × 12</text></g>
+        <g transform="translate(0 260)"><g class="qd b"><rect x="0" y="0" width="34" height="34" rx="6"/><rect x="38" y="0" width="34" height="34" rx="6"/><rect x="76" y="0" width="34" height="34" rx="6"/><rect x="114" y="0" width="34" height="34" rx="6"/><rect x="152" y="0" width="34" height="34" rx="6"/><rect x="190" y="0" width="34" height="34" rx="6"/><rect x="0" y="38" width="34" height="34" rx="6"/><rect x="38" y="38" width="34" height="34" rx="6"/><rect x="76" y="38" width="34" height="34" rx="6"/><rect x="114" y="38" width="34" height="34" rx="6"/><rect x="152" y="38" width="34" height="34" rx="6"/><rect x="190" y="38" width="34" height="34" rx="6"/></g><text x="240" y="48" class="rot">2 × 6</text></g>
+        <g transform="translate(560 260)"><g class="qd b"><rect x="0" y="0" width="34" height="34" rx="6"/><rect x="38" y="0" width="34" height="34" rx="6"/><rect x="76" y="0" width="34" height="34" rx="6"/><rect x="114" y="0" width="34" height="34" rx="6"/><rect x="0" y="38" width="34" height="34" rx="6"/><rect x="38" y="38" width="34" height="34" rx="6"/><rect x="76" y="38" width="34" height="34" rx="6"/><rect x="114" y="38" width="34" height="34" rx="6"/><rect x="0" y="76" width="34" height="34" rx="6"/><rect x="38" y="76" width="34" height="34" rx="6"/><rect x="76" y="76" width="34" height="34" rx="6"/><rect x="114" y="76" width="34" height="34" rx="6"/></g><text x="166" y="66" class="rot">3 × 4</text></g>
+      </g>
+    </svg>
+    <div class="caixa caixa-fundamental" data-passo="2" style="position:absolute;left:1060px;right:0;top:160px">
+      <span class="rotulo">Número primo</span>
+      <div class="texto">Tem <b>exatamente dois divisores</b>: o 1 e ele mesmo.</div>
+    </div>
+    <div style="position:absolute;left:1060px;right:0;top:400px;display:flex;flex-direction:column;gap:12px">
+      <div class="linha-ex" data-passo="3">O <b>1 não é primo</b>: tem um divisor só.</div>
+      <div class="linha-ex" data-passo="4">O <b>2</b> é o único primo par.</div>
+      <div class="linha-ex" data-passo="5">Maior que 1 e não primo: <b>composto</b>.</div>
+    </div>
+  </div>
+  <aside class="notas"><p>Da apostila: o 7 só se divide em partes iguais de dois jeitos (1 parte de 7 ou 7 partes de 1), em fila; o 12 forma vários retângulos. Um clique por ideia.</p></aside>
+</section>
+
+<!-- 8. Os primeiros primos -->
+<section class="slide" data-nome="Os primeiros primos">
+  <div class="conteudo">
+    <p class="olho">De 1 a 30</p>
+    <h2 class="titulo">Quem sobra é primo</h2>
+    <div data-anima="nc-crivo" data-anima-passo="1" data-w="840" data-h="320" style="position:absolute;left:0;top:160px;width:840px;height:320px"></div>
+    <div style="position:absolute;left:940px;right:0;top:170px;display:flex;flex-direction:column;gap:20px">
+      <div class="caixa caixa-fundamental" data-passo="2">
+        <span class="rotulo">Os primeiros primos</span>
+        <div style="font-size:44px">2, 3, 5, 7, 11, 13, 17, 19, 23, 29</div>
+      </div>
+      <p class="texto" data-passo="2" style="margin:0;font-size:32px">Todo múltiplo de 2, 3 ou 5 (fora eles mesmos) tem divisor a mais: <b>não</b> é primo.</p>
+    </div>
+  </div>
+  <aside class="notas"><p>Clique 1: o 1 sai (não é primo); depois saem os múltiplos de 2, de 3 e de 5. Até 30 não sobra mais nenhum múltiplo de 7 (14, 21 e 28 já saíram). Ficam exatamente os primos da lista da apostila.</p></aside>
+</section>
+
+<!-- 9. Fatoração em primos -->
+<section class="slide" data-nome="Fatoração em primos">
+  <div class="conteudo">
+    <p class="olho">Todo composto é produto de primos, de um jeito só</p>
+    <h2 class="titulo">Fatorar o 360</h2>
+    <table class="escada" style="position:absolute;left:40px;top:150px">
+      <tr><td>360</td><td data-passo="1">2</td></tr>
+      <tr data-passo="1"><td>180</td><td data-passo="2">2</td></tr>
+      <tr data-passo="2"><td>90</td><td data-passo="3">2</td></tr>
+      <tr data-passo="3"><td>45</td><td data-passo="4">3</td></tr>
+      <tr data-passo="4"><td>15</td><td data-passo="5">3</td></tr>
+      <tr data-passo="5"><td>5</td><td data-passo="6">5</td></tr>
+      <tr data-passo="6"><td>1</td><td></td></tr>
+    </table>
+    <div style="position:absolute;left:640px;right:0;top:160px;display:flex;flex-direction:column;gap:26px">
+      <p class="texto" style="margin:0">Divida pelo <b>menor primo</b> possível; repita com o quociente até chegar a 1.</p>
+      <div class="caixa caixa-fundamental" data-passo="7" style="text-align:center"><div style="font-size:84px">\(360 = 2^3 \cdot 3^2 \cdot 5\)</div></div>
+      <div class="caixa" data-passo="8"><span class="rotulo">Fatores repetidos viram potência</span><div class="texto">\(2 \cdot 2 \cdot 2 = 2^3\): o <b>expoente</b> conta quantas vezes o 2 aparece.</div></div>
+    </div>
+  </div>
+  <aside class="notas"><p>Exemplo da apostila. Uma divisão por clique: 360 : 2 = 180, : 2 = 90, : 2 = 45, : 3 = 15, : 3 = 5, : 5 = 1. As potências ganham estudo completo em Potências e radicais.</p></aside>
+</section>
+
+<!-- 10. Atenção: ímpar não é primo -->
+<section class="slide" data-nome="Atenção: ímpar não é primo">
+  <div class="conteudo">
+    <p class="olho">Atenção</p>
+    <h2 class="titulo">91 é primo?</h2>
+    <p class="texto" style="position:absolute;left:0;width:520px;top:170px;margin:0">É ímpar e não termina em 5. Parece primo…</p>
+    <div style="position:absolute;left:640px;right:0;top:160px;display:flex;flex-direction:column;gap:12px">
+      <div class="teste" data-passo="1"><b class="n">2</b><span>91 é ímpar</span><span class="ok" style="color:var(--cinza)">não</span></div>
+      <div class="teste" data-passo="2"><b class="n">3</b><span>soma 9 + 1 = 10</span><span class="ok" style="color:var(--cinza)">não</span></div>
+      <div class="teste" data-passo="3"><b class="n">5</b><span>não termina em 0 nem 5</span><span class="ok" style="color:var(--cinza)">não</span></div>
+      <div class="teste" data-passo="4" style="border-color:var(--erro)"><b class="n">7</b><span>\(91 : 7 = 13\), resto 0</span><span class="ok" style="color:var(--erro)">sim!</span></div>
+    </div>
+    <span class="pilula pilula-resposta" data-passo="5" style="position:absolute;left:640px;top:520px">\(91 = 7 \cdot 13\): composto</span>
+    <div class="caixa caixa-atencao" data-passo="6" style="position:absolute;left:640px;right:0;top:640px;padding:18px 28px">
+      <div class="texto" style="font-size:30px">Para testar, divida pelos primos 2, 3, 5, 7, 11… até o <b>quadrado do primo passar do número</b>.</div>
+    </div>
+  </div>
+  <aside class="notas"><p>Atenção da apostila "Ímpar não é primo". Teste um primo por clique. Para 91 bastaria testar até o 7, porque 11² = 121 já passa de 91; mas o 7 já divide.</p></aside>
+</section>
+
+<!-- 11. Quadrados perfeitos -->
+<section class="slide" data-nome="Quadrados e cubos perfeitos">
+  <div class="conteudo">
+    <p class="olho">Olhe os expoentes</p>
+    <h2 class="titulo">Quadrados perfeitos pela fatoração</h2>
+    <svg viewBox="0 0 300 300" data-passo="1" style="position:absolute;left:0;top:160px;width:300px;height:300px" aria-hidden="true">
+      <g class="pisca">
+        <g fill="#2F6BFF" stroke="#fff" stroke-width="4">
+          <rect x="0" y="0" width="50" height="50" rx="8"/><rect x="50" y="0" width="50" height="50" rx="8"/><rect x="100" y="0" width="50" height="50" rx="8"/><rect x="150" y="0" width="50" height="50" rx="8"/><rect x="200" y="0" width="50" height="50" rx="8"/><rect x="250" y="0" width="50" height="50" rx="8"/>
+          <rect x="0" y="50" width="50" height="50" rx="8"/><rect x="50" y="50" width="50" height="50" rx="8"/><rect x="100" y="50" width="50" height="50" rx="8"/><rect x="150" y="50" width="50" height="50" rx="8"/><rect x="200" y="50" width="50" height="50" rx="8"/><rect x="250" y="50" width="50" height="50" rx="8"/>
+          <rect x="0" y="100" width="50" height="50" rx="8"/><rect x="50" y="100" width="50" height="50" rx="8"/><rect x="100" y="100" width="50" height="50" rx="8"/><rect x="150" y="100" width="50" height="50" rx="8"/><rect x="200" y="100" width="50" height="50" rx="8"/><rect x="250" y="100" width="50" height="50" rx="8"/>
+          <rect x="0" y="150" width="50" height="50" rx="8"/><rect x="50" y="150" width="50" height="50" rx="8"/><rect x="100" y="150" width="50" height="50" rx="8"/><rect x="150" y="150" width="50" height="50" rx="8"/><rect x="200" y="150" width="50" height="50" rx="8"/><rect x="250" y="150" width="50" height="50" rx="8"/>
+          <rect x="0" y="200" width="50" height="50" rx="8"/><rect x="50" y="200" width="50" height="50" rx="8"/><rect x="100" y="200" width="50" height="50" rx="8"/><rect x="150" y="200" width="50" height="50" rx="8"/><rect x="200" y="200" width="50" height="50" rx="8"/><rect x="250" y="200" width="50" height="50" rx="8"/>
+          <rect x="0" y="250" width="50" height="50" rx="8"/><rect x="50" y="250" width="50" height="50" rx="8"/><rect x="100" y="250" width="50" height="50" rx="8"/><rect x="150" y="250" width="50" height="50" rx="8"/><rect x="200" y="250" width="50" height="50" rx="8"/><rect x="250" y="250" width="50" height="50" rx="8"/>
+        </g>
+      </g>
+    </svg>
+    <p class="texto" data-passo="1" style="position:absolute;left:0;width:300px;top:480px;margin:0;font-size:30px;text-align:center">\(36 = 6 \cdot 6\)</p>
+    <div style="position:absolute;left:380px;width:560px;top:170px;display:flex;flex-direction:column;gap:14px;font-size:46px">
+      <div data-passo="2">\(36 = 2^{\color{#1F9D62}{2}} \cdot 3^{\color{#1F9D62}{2}}\)</div>
+      <div data-passo="3">\(100 = 2^{\color{#1F9D62}{2}} \cdot 5^{\color{#1F9D62}{2}}\)</div>
+      <div data-passo="4">\(144 = 2^{\color{#1F9D62}{4}} \cdot 3^{\color{#1F9D62}{2}}\)</div>
+      <p class="texto" data-passo="5" style="margin:6px 0 0;font-size:30px">Elevar ao quadrado <b>dobra</b> cada expoente: \(6 = 2 \cdot 3\) e \(36 = 2^2 \cdot 3^2\).</p>
+    </div>
+    <div style="position:absolute;left:1000px;right:0;top:160px;display:flex;flex-direction:column;gap:18px">
+      <div class="caixa caixa-fundamental" data-passo="6"><span class="rotulo">Quadrado perfeito</span><div class="texto" style="font-size:31px">Quadrado de um natural: na fatoração, <b>todos os expoentes são pares</b>.</div></div>
+      <div class="caixa" data-passo="7"><span class="rotulo">Cubo perfeito</span><div class="texto" style="font-size:31px">Todos os expoentes são <b>múltiplos de 3</b>.</div></div>
+      <div class="caixa" data-passo="8"><span class="rotulo">A raiz quadrada sai junto</span><div class="texto" style="font-size:31px">Divida cada expoente por 2: \(\sqrt{2^4 \cdot 3^2} = 2^2 \cdot 3 = 12\).</div></div>
+    </div>
+  </div>
+  <aside class="notas"><p>Da apostila. Clique 1: 36 quadradinhos formam um quadrado 6 × 6. Cliques 2 a 4: as fatorações de 36, 100 e 144; todos os expoentes pares (em verde). Clique 5: por quê. Cliques 6 a 8: definições e a raiz (o número que, multiplicado por ele mesmo, dá o original).</p></aside>
+</section>
+
+<!-- 12. Exemplo: completar o quadrado perfeito -->
+<section class="slide" data-nome="Exemplo: completar o quadrado perfeito">
+  <div class="conteudo">
+    <p class="olho">Exemplo</p>
+    <h2 class="titulo">O menor fator que falta</h2>
+    <p class="texto" style="position:absolute;left:0;right:0;top:150px;margin:0;font-size:34px">Menor natural, diferente de zero, que multiplicado por <b>180</b> dá um <b>quadrado perfeito</b>?</p>
+    <div class="contas folga" style="position:absolute;left:0;top:250px;font-size:46px">
+      <div class="eq" data-passo="1"><span>\(180\)</span><span>\(=\)</span><span>\(2^{\color{#1F9D62}{2}} \cdot 3^{\color{#1F9D62}{2}} \cdot 5^{\color{#C2384F}{1}}\)</span></div>
+      <div class="eq" data-passo="2"><span>\(180 \cdot 5\)</span><span>\(=\)</span><span>\(2^2 \cdot 3^2 \cdot 5^2\)</span></div>
+      <div class="eq final" data-passo="3"><span>\(180 \cdot 5\)</span><span>\(=\)</span><span>\(900 = 30^2\)</span></div>
+    </div>
+    <span class="pilula pilula-resposta" data-passo="3" style="position:absolute;left:0;top:530px">Resposta: 5</span>
+    <div style="position:absolute;left:960px;right:0;top:250px">
+      <p class="texto" data-passo="4" style="margin:0 0 14px;font-size:32px"><b>Cubo perfeito:</b> complete até múltiplo de 3.</p>
+      <div class="contas folga" style="font-size:46px">
+        <div class="eq" data-passo="5"><span>\(72\)</span><span>\(=\)</span><span>\(2^3 \cdot 3^{\color{#C2384F}{2}}\)</span></div>
+        <div class="eq" data-passo="6"><span>\(72 \cdot 3\)</span><span>\(=\)</span><span>\(2^3 \cdot 3^3\)</span></div>
+        <div class="eq final" data-passo="7"><span>\(72 \cdot 3\)</span><span>\(=\)</span><span>\(216 = 6^3\)</span></div>
+      </div>
+    </div>
+    <div class="caixa caixa-atencao" data-passo="8" style="position:absolute;left:580px;right:0;top:700px;padding:16px 28px">
+      <span class="rotulo">O menor, não qualquer um</span>
+      <div class="texto" style="font-size:30px">\(180 \cdot 180\) também é quadrado perfeito, mas não é o menor fator. Complete <b>só</b> os expoentes que faltam.</div>
+    </div>
+  </div>
+  <aside class="notas"><p>Exemplo da apostila. O expoente do 5 é ímpar (vermelho); falta um 5. No cubo, o 3 tem expoente 2; falta um 3. Clique 8: a atenção.</p></aside>
+</section>
+
+<!-- 13. Questão 1 -->
+<section class="slide questao" data-nome="Questão 1">
+  <div class="conteudo">
+    <div class="area-resolucao"></div>
+    <span class="pilula pilula-pausa" data-em="1:some">Pause o vídeo e tente</span>
+    <div class="painel-questao">
+      <p class="olho">Questão 1 · Modelo IF</p>
+      <p class="enunciado" style="font-size:30px">O código de um cadeado tem quatro algarismos e a forma 3□7□, em que cada quadradinho é um algarismo. Pedro só lembra que o código é divisível por 2, por 5 e por 9 ao mesmo tempo. Qual é o código?</p>
+      <ol class="alternativas curtas alt-mat">
+        <li data-em="2:apaga"><b>A</b><span>3 270</span></li>
+        <li data-em="2:apaga"><b>B</b><span>3 375</span></li>
+        <li data-em="2:apaga"><b>C</b><span>3 978</span></li>
+        <li data-em="2:certo"><b>D</b><span>3 870</span></li>
+        <li data-em="2:apaga"><b>E</b><span>3 975</span></li>
+      </ol>
+    </div>
+  </div>
+  <aside class="resolucao">
+    <p class="dados"><b>Dados:</b> 3□7□, divisível por 2, 5 e 9.</p>
+    <ol class="passos">
+      <li>Por 2 e por 5: termina em 0 → 3□70.</li>
+      <li>Por 9: \(3 + a + 7 + 0 = 10 + a\)</li>
+      <li>Soma entre 10 e 19: múltiplo de 9 é 18.</li>
+      <li>\(10 + a = 18 \Rightarrow a = 8\)</li>
+    </ol>
+    <p class="resposta"><b>Resposta:</b> 3 870. <b>Gabarito D.</b></p>
+    <p class="atencao"><b>Destaque no quadro:</b> Comece pelo critério que fixa o último algarismo.</p>
+    <ul class="erros">
+      <li><b>A</b> Soma 12: usou o critério do 3.</li>
+      <li><b>B</b> Ímpar: esquece o 2.</li>
+      <li><b>C</b> Não termina em 0 nem 5.</li>
+      <li><b>E</b> Soma 24 e ímpar.</li>
+    </ul>
+  </aside>
+  <aside class="notas">
+    <p>Clique 1 tira o aviso de pausa: resolva na área (D liga a caneta; E esconde o enunciado). Clique 2: gabarito D.</p>
+    <p>Questão Modelo IF da apostila: lote if-matematica-divisibilidade, m006, MAT-1191.</p>
+  </aside>
+</section>
+
+<!-- 14. Questão 2 -->
+<section class="slide questao" data-nome="Questão 2">
+  <div class="conteudo">
+    <div class="area-resolucao"></div>
+    <span class="pilula pilula-pausa" data-em="1:some">Pause o vídeo e tente</span>
+    <div class="painel-questao">
+      <p class="olho">Questão 2 · IF Sudeste MG 2015</p>
+      <p class="enunciado" style="font-size:30px">Um número é dito <b>“PERFEITO”</b> se a soma de seus divisores inteiros positivos, com a exceção dele próprio, é igual a ele. Assim podemos dizer que, dentre os números abaixo, o <b><u>único número perfeito é</u></b>:</p>
+      <ol class="alternativas curtas alt-mat">
+        <li data-em="2:apaga"><b>A</b><span>30.</span></li>
+        <li data-em="2:apaga"><b>B</b><span>60.</span></li>
+        <li data-em="2:apaga"><b>C</b><span>63.</span></li>
+        <li data-em="2:certo"><b>D</b><span>28.</span></li>
+        <li data-em="2:apaga"><b>E</b><span>81.</span></li>
+      </ol>
+    </div>
+  </div>
+  <aside class="resolucao">
+    <p class="dados"><b>Dados:</b> perfeito = soma dos divisores (sem ele) igual a ele.</p>
+    <ol class="passos">
+      <li>Divisores de 28 em pares: \(1 \cdot 28\), \(2 \cdot 14\), \(4 \cdot 7\).</li>
+      <li>Sem o 28: 1, 2, 4, 7, 14.</li>
+      <li>\(1 + 2 + 4 + 7 + 14 = 28\)</li>
+    </ol>
+    <p class="resposta"><b>Resposta:</b> 28 é perfeito. <b>Gabarito D.</b></p>
+    <p class="atencao"><b>Destaque no quadro:</b> Liste os divisores aos pares para não esquecer nenhum.</p>
+    <ul class="erros">
+      <li><b>A</b> 1 + 2 + 3 + 5 + 6 + 10 + 15 = 42.</li>
+      <li><b>B</b> A soma dá 108.</li>
+      <li><b>C</b> 1 + 3 + 7 + 9 + 21 = 41.</li>
+      <li><b>E</b> 1 + 3 + 9 + 27 = 40.</li>
+    </ul>
+  </aside>
+  <aside class="notas">
+    <p>Clique 1 tira o aviso de pausa: resolva na área. Clique 2: gabarito D.</p>
+    <p>Questão oficial do IF Sudeste MG 2015-1 (prova extra), q14, MAT-0412 (da apostila; sobra do capítulo). Para 60: 1 + 2 + 3 + 4 + 5 + 6 + 10 + 12 + 15 + 20 + 30 = 108.</p>
+  </aside>
+</section>
+
+<!-- 15. Questão 3 -->
+<section class="slide questao" data-nome="Questão 3">
+  <div class="conteudo">
+    <div class="area-resolucao"></div>
+    <span class="pilula pilula-pausa" data-em="1:some">Pause o vídeo e tente</span>
+    <div class="painel-questao">
+      <p class="olho">Questão 3 · IF Sudeste MG 2015</p>
+      <p class="enunciado" style="font-size:32px">Qual é o menor número natural, diferente de zero, que devemos multiplicar por 56 para obter um quadrado perfeito?</p>
+      <ol class="alternativas curtas alt-mat">
+        <li data-em="2:apaga"><b>A</b><span>56.</span></li>
+        <li data-em="2:apaga"><b>B</b><span>7.</span></li>
+        <li data-em="2:apaga"><b>C</b><span>49.</span></li>
+        <li data-em="2:certo"><b>D</b><span>14.</span></li>
+        <li data-em="2:apaga"><b>E</b><span>1.</span></li>
+      </ol>
+    </div>
+  </div>
+  <aside class="resolucao">
+    <p class="dados"><b>Dados:</b> \(56 \cdot k\) quadrado perfeito, \(k\) o menor.</p>
+    <ol class="passos">
+      <li>\(56 = 2^3 \cdot 7\)</li>
+      <li>Expoentes 3 e 1: ímpares.</li>
+      <li>Falta um 2 e um 7: \(k = 2 \cdot 7 = 14\)</li>
+      <li>\(56 \cdot 14 = 2^4 \cdot 7^2 = 784 = 28^2\)</li>
+    </ol>
+    <p class="resposta"><b>Resposta:</b> 14. <b>Gabarito D.</b></p>
+    <p class="atencao"><b>Destaque no quadro:</b> Quadrado perfeito: todos os expoentes pares.</p>
+    <ul class="erros">
+      <li><b>A</b> Dá quadrado, mas não é o menor.</li>
+      <li><b>B</b> \(2^3 \cdot 7^2\): o 2 continua ímpar.</li>
+      <li><b>C</b> \(2^3 \cdot 7^3\): os dois ímpares.</li>
+      <li><b>E</b> 56 não é quadrado perfeito.</li>
+    </ul>
+  </aside>
+  <aside class="notas">
+    <p>Clique 1 tira o aviso de pausa: resolva na área. Clique 2: gabarito D.</p>
+    <p>Questão oficial do IF Sudeste MG 2015-1, q21, MAT-0294 (da apostila; sobra do capítulo). É o mesmo raciocínio do exemplo do 180.</p>
+  </aside>
+</section>
+
+<!-- 16. Resumo -->
+<section class="slide" data-nome="Resumo">
+  <div class="conteudo">
+    <p class="olho">Resumo</p>
+    <h2 class="titulo">O essencial</h2>
+    <div class="resumo" style="position:absolute;left:0;right:0;top:150px">
+      <div>\(d\) é <b>divisor</b> de \(n\) quando a divisão é exata; aí \(n\) é <b>múltiplo</b> de \(d\).</div>
+      <div><b>Critérios:</b> 2 (par), 3 e 9 (soma dos algarismos), 4 (dois últimos), 5 (0 ou 5), 6 (2 e 3), 10 (0).</div>
+      <div><b>Primo:</b> exatamente dois divisores. O 1 não é primo; o 2 é o único par.</div>
+      <div><b>Fatoração:</b> todo composto vira produto de primos, de um jeito só. \(360 = 2^3 \cdot 3^2 \cdot 5\).</div>
+      <div><b>Quadrado perfeito:</b> todos os expoentes pares. <b>Cubo perfeito:</b> múltiplos de 3.</div>
+      <div><b>Testar se é primo:</b> divida pelos primos até o quadrado do primo passar do número.</div>
+    </div>
+  </div>
+  <aside class="notas"><p>Resumo da apostila (a parte de divisibilidade, primos e fatoração). Peça para tirarem um print desta tela.</p></aside>
+</section>
+
+<!-- 17. A seguir -->
+<section class="slide capa" data-nome="A seguir">
+  <div class="estrelas"></div>
+  <div class="texto-capa" style="top:170px">
+    <span class="selo">Matemática · IF</span>
+    <p class="aula" style="font-size:26px">A seguir · Múltiplos e divisores · Parte 2 de 2</p>
+    <h1 style="font-size:116px">MDC e MMC</h1>
+    <p class="sub">Encontrar de novo ou repartir</p>
+  </div>
+  <svg class="emblema" viewBox="0 0 640 640" aria-hidden="true">
+    <line x1="60" y1="260" x2="600" y2="260" stroke="#fff" stroke-opacity=".7" stroke-width="6" stroke-linecap="round"/>
+    <line x1="60" y1="420" x2="600" y2="420" stroke="#fff" stroke-opacity=".7" stroke-width="6" stroke-linecap="round"/>
+    <g fill="#fff"><circle cx="80" cy="260" r="14"/><circle cx="200" cy="260" r="14"/><circle cx="320" cy="260" r="14"/><circle cx="440" cy="260" r="14"/><circle cx="560" cy="260" r="14"/>
+      <circle cx="80" cy="420" r="14"/><circle cx="260" cy="420" r="14"/><circle cx="440" cy="420" r="14"/></g>
+    <rect x="410" y="200" width="60" height="280" rx="30" fill="#FFD10C" fill-opacity=".5"/>
+    <text x="440" y="560" text-anchor="middle" font-family="'Bricolage Grotesque',Figtree,sans-serif" font-weight="800" font-size="60" fill="#FFD10C">36</text>
+  </svg>
+  <img class="logo-capa" src="{{LOGO_BRANCO}}" alt="Quarks">
+  <aside class="notas"><p>Próxima parte: MDC e MMC, os problemas com cada um e a relação MDC · MMC = a · b.</p></aside>
+</section>

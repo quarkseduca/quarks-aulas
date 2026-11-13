@@ -1,0 +1,354 @@
+<!--aula
+{"disciplina": "fisica", "curso": "IF", "assunto": "Circuitos elétricos", "parte": "Parte 2 de 2", "titulo": "Série, paralelo e a instalação da casa", "scripts": ["animacoes-eletricidade.js"]}
+-->
+<!-- Fonte: apostila IF, Física, cap. 6 (6.2 Circuitos elétricos: circuitos em série e em paralelo, resistência equivalente, resumo do 6.2). Questões Modelo IF do lote if-fisica-associacao-de-resistores (m002, m004, m009); as oficiais do subcapítulo (2016-2 q29 e 2019-2 q30) ficam no bloco do fim do capítulo. -->
+<style>
+  .caixa, .el-card, .el-linha { box-sizing: border-box; }
+  .el-cards { display: grid; gap: 22px; }
+  .el-card { background: var(--branco); border: 2px solid var(--lilas-2); border-radius: 26px; padding: 16px 22px; font-size: 27px; line-height: 1.3; }
+  .el-card h3 { margin: 0 0 4px; font: 800 32px var(--fonte-titulo); color: var(--roxo-titulo); letter-spacing: -.01em; display: flex; align-items: center; gap: 14px; }
+  .el-card h3 svg { width: 70px; height: 70px; flex: none; }
+  .el-card p { margin: 0; color: var(--carvao); }
+  .el-card.d { background: var(--d-clara); border-color: color-mix(in srgb, var(--d) 35%, transparent); }
+  .el-linha { display: grid; grid-template-columns: 90px 1fr auto; align-items: center; gap: 22px; background: var(--branco); border: 2px solid var(--lilas-2); border-radius: 22px; padding: 10px 24px; font-size: 30px; }
+  .el-linha svg { width: 80px; height: 70px; }
+  .el-linha b { color: var(--roxo-titulo); }
+  .tag { justify-self: end; padding: 6px 20px; border-radius: 999px; font-weight: 800; font-size: 25px; white-space: nowrap; }
+  .tag-d { background: var(--d-clara); color: var(--d-forte); }
+  .tag-a { background: #FFF4C2; color: #8A6A00; }
+  .tag-r { background: var(--erro-claro); color: var(--erro); }
+  .el-lista { margin: 0; padding: 0; list-style: none; display: flex; flex-direction: column; gap: 14px; }
+  .el-lista li { display: flex; align-items: baseline; gap: 16px; font-size: 31px; line-height: 1.3; }
+  .el-lista li b.n { flex: none; width: 46px; height: 46px; border-radius: 50%; display: grid; place-items: center; background: var(--d); color: #fff; font: 800 26px var(--fonte-titulo); transform: translateY(6px); }
+  .el-lista li > span b { color: var(--roxo-titulo); }
+  .el-cadeia { display: flex; align-items: center; gap: 14px; flex-wrap: wrap; }
+  .el-cadeia .f { padding: 10px 24px; border-radius: 999px; background: var(--d-clara); color: var(--d-forte); font-weight: 800; font-size: 30px; }
+  .el-cadeia .f.am { background: #FFF4C2; color: #8A6A00; }
+  .el-cadeia .s { font: 800 36px var(--fonte-titulo); color: var(--roxo-claro); }
+  .tabela.el-t { font-size: 30px; }
+  .tabela.el-t th { padding: 12px 28px; }
+  .tabela.el-t td { padding: 10px 28px; text-align: left; }
+  /* colunas de enunciado mais largas para questões longas (data-largo); E continua ampliando a área */
+  .questao[data-largo="1"] .area-resolucao { width: 1070px; } .questao[data-largo="1"] .painel-questao { left: 1110px; } .questao[data-largo="1"] .pilula-pausa { left: 535px; }
+  .questao[data-largo="2"] .area-resolucao { width: 960px; } .questao[data-largo="2"] .painel-questao { left: 1000px; } .questao[data-largo="2"] .pilula-pausa { left: 480px; }
+  .questao[data-largo].amplia .area-resolucao { width: 1760px; } .questao[data-largo].amplia .pilula-pausa { left: 880px; }
+  .questao[data-gap="8"] .painel-questao { gap: 8px; } .questao[data-gap="10"] .painel-questao { gap: 10px; } .questao[data-gap="12"] .painel-questao { gap: 12px; } .questao[data-gap="14"] .painel-questao { gap: 14px; }
+  .painel-questao .figura { display: block; margin: 0 auto; flex: none; }
+  .painel-questao .el-mini { font-size: 22px; border-collapse: separate; border-spacing: 0; background: #fff; border: 2px solid var(--lilas-2); border-radius: 16px; overflow: hidden; }
+  .painel-questao .el-mini th { background: var(--d-clara); color: var(--d-forte); padding: 5px 12px; font-weight: 800; }
+  .painel-questao .el-mini td { padding: 4px 12px; border-top: 2px solid var(--lilas); text-align: center; }
+  .painel-questao .el-mini td:first-child { text-align: left; }
+  .el-fios path, .el-fio { fill: none; stroke: #292B2C; stroke-width: 6; stroke-linejoin: round; stroke-linecap: round; }
+  /* ---------- Animações (só na tela aberta) ---------- */
+  /* cargas andando pelo fio: pontinhos amarelos que correm quando o circuito está fechado */
+  .el-fluxo { fill: none; stroke: #FFD10C; stroke-width: 10; stroke-linecap: round; stroke-dasharray: 0 32; opacity: 0; transition: opacity .5s; }
+  .el-on .el-fluxo, .el-fluxo.sempre { opacity: 1; }
+  .el-off .el-fluxo, .el-on .el-off .el-fluxo { opacity: 0 !important; }
+  .slide.ativo .el-on .el-fluxo, .slide.ativo .el-fluxo.sempre { animation: el-flui 1.6s linear infinite; }
+  .slide.ativo .el-on .el-fluxo.lento { animation-duration: 3.2s; }
+  @keyframes el-flui { to { stroke-dashoffset: -32; } }
+  .el-agua { fill: none; stroke: #8FC8F0; stroke-width: 12; stroke-linecap: round; stroke-dasharray: 2 26; }
+  .slide.ativo .el-agua { animation: el-flui 1.8s linear infinite; }
+  /* lâmpada: acende quando o circuito fecha (sem piscar) */
+  .el-lamp .luz { opacity: 0; transition: opacity .7s ease; }
+  .el-on .el-lamp .luz, .el-lamp.acesa .luz { opacity: 1; }
+  .el-on .el-lamp.fraca .luz { opacity: .42; }
+  .el-off .el-lamp .luz, .el-on .el-off .el-lamp .luz { opacity: 0 !important; }
+  .el-lamp { transition: transform .8s ease, opacity .8s ease; }
+  .el-tira .el-lamp.sai { transform: translateY(-46px); opacity: .3; }
+  /* chave: a alavanca baixa e fecha o circuito */
+  .el-alavanca { transform: rotate(-32deg); transition: transform .7s ease; }
+  .el-alavanca.fechada, .el-fecha .el-alavanca { transform: none; }
+  .el-abre .el-alavanca { transform: rotate(-32deg) !important; }
+  /* rodas que giram (turbina, pás) e raios do Sol */
+  .slide.ativo .el-roda { animation: el-gira 9s linear infinite; }
+  .slide.ativo .el-roda.rapida { animation-duration: 5s; }
+  .slide.ativo .el-raios { animation: el-gira 30s linear infinite; }
+  @keyframes el-gira { to { transform: rotate(360deg); } }
+  /* calor que sobe */
+  .el-calor path { opacity: 0; }
+  .slide.ativo .el-calor path { animation: el-sobe 5s ease-in-out infinite; }
+  .el-calor path:nth-child(2) { animation-delay: -1.7s !important; } .el-calor path:nth-child(3) { animation-delay: -3.4s !important; }
+  @keyframes el-sobe { 0% { transform: translateY(10px); opacity: 0; } 30% { opacity: .9; } 100% { transform: translateY(-34px); opacity: 0; } }
+  /* gotas que caem (chuveiro) */
+  .el-gotas circle { opacity: 0; }
+  .slide.ativo .el-gotas circle { animation: el-cai 2.6s linear infinite; }
+  .el-gotas circle:nth-child(2) { animation-delay: -.9s !important; } .el-gotas circle:nth-child(3) { animation-delay: -1.7s !important; } .el-gotas circle:nth-child(4) { animation-delay: -.4s !important; } .el-gotas circle:nth-child(5) { animation-delay: -2.1s !important; }
+  @keyframes el-cai { 0% { transform: translateY(0); opacity: 0; } 15% { opacity: 1; } 85% { opacity: 1; } 100% { transform: translateY(70px); opacity: 0; } }
+  /* barras que crescem quando aparecem */
+  .el-barra { transform: scaleX(0); transform-box: fill-box; transform-origin: left center; transition: transform 2.2s ease-out; }
+  .mostra .el-barra, .mostra.el-barra, .el-barra.ja { transform: none; }
+  .el-barra-v { transform: scaleY(0); transform-box: fill-box; transform-origin: center bottom; transition: transform 2.2s ease-out; }
+  .mostra .el-barra-v, .mostra.el-barra-v { transform: none; }
+  /* traço que se desenha */
+  .el-traca { stroke-dasharray: 1; stroke-dashoffset: 1; transition: stroke-dashoffset 1.6s ease-in-out; }
+  .mostra .el-traca, .mostra.el-traca { stroke-dashoffset: 0; }
+  @media (prefers-reduced-motion: reduce) { .el-barra, .el-barra-v { transform: none; } .el-traca { stroke-dashoffset: 0; } .el-alavanca { transition: none; } }
+</style>
+<svg width="0" height="0" style="position:absolute" aria-hidden="true">
+  <defs>
+    <radialGradient id="elBrilho" cx=".5" cy=".5" r=".5"><stop offset="0" stop-color="#FFE680" stop-opacity=".95"/><stop offset=".45" stop-color="#FFD10C" stop-opacity=".45"/><stop offset="1" stop-color="#FFD10C" stop-opacity="0"/></radialGradient>
+    <linearGradient id="elAgua" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#CFE6FA"/><stop offset="1" stop-color="#8CC1EE"/></linearGradient>
+    <linearGradient id="elCobre" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#F2A86B"/><stop offset="1" stop-color="#B9652A"/></linearGradient>
+  </defs>
+</svg>
+
+<section class="slide capa" data-nome="Capa">
+  <div class="estrelas"></div>
+  <div class="texto-capa" style="top:150px">
+    <span class="selo">Física · IF</span>
+    <p class="aula">Circuitos elétricos · Parte 2 de 2</p>
+    <h1 style="font-size:130px">Série e paralelo</h1>
+    <p class="sub">E a instalação da sua casa</p>
+  </div>
+  <svg class="emblema" viewBox="0 0 640 640" aria-hidden="true">
+    <g class="gira-lento"><ellipse cx="320" cy="320" rx="300" ry="128" fill="none" stroke="#fff" stroke-opacity=".38" stroke-width="2" transform="rotate(-10 320 320)"/></g>
+    <g class="gira"><ellipse cx="320" cy="320" rx="236" ry="196" fill="none" stroke="#FFD10C" stroke-opacity=".75" stroke-width="2.5" stroke-dasharray="3 14" stroke-linecap="round" transform="rotate(-8 320 320)"/>
+      <circle cx="84" cy="300" r="13" fill="var(--d)" stroke="#fff" stroke-width="3"/></g>
+    <circle cx="320" cy="320" r="150" fill="#FFD10C"/>
+    <path d="M346 196 L262 336 H318 L292 450 L382 300 H326 Z" fill="#4B258D" stroke="#4B258D" stroke-width="8" stroke-linejoin="round"/>
+  </svg>
+  <img class="logo-capa" src="{{LOGO_BRANCO}}" alt="Quarks">
+  <aside class="notas"><p>Hoje: as duas formas de ligar vários aparelhos, o que acontece quando um deles queima, a resistência equivalente e por que a casa é ligada em paralelo.</p><p>Na tela, as cargas (pontinhos amarelos) só andam onde o caminho está fechado.</p></aside>
+</section>
+
+<section class="slide" data-nome="Pisca-pisca e a casa">
+  <div class="conteudo">
+    <p class="olho">Para começar</p>
+    <h2 class="titulo">Por que uma apaga tudo e a outra não?</h2>
+    <div class="caixa" style="position:absolute;left:0;width:820px;top:160px;padding:18px 24px"><span class="rotulo">Pisca-pisca antigo de Natal</span><svg viewBox="0 0 700 260" width="700" height="260"  style="overflow:visible;font-family:Figtree,'Segoe UI',sans-serif;" aria-hidden="true"><path class="el-fio" d="M20 120 C 120 60 220 180 340 120 C 460 60 560 180 680 120" /><g class="el-lamp " ><circle class="luz" cx="110" cy="98" r="51" fill="url(#elBrilho)"/><circle cx="110" cy="98" r="22" fill="#fff" stroke="#292B2C" stroke-width="5"/><circle class="luz" cx="110" cy="98" r="18" fill="#FFE680"/><path d="M94.6 82.6 L125.4 113.4 M125.4 82.6 L94.6 113.4" stroke="#292B2C" stroke-width="4"/></g><g class="el-lamp " ><circle class="luz" cx="240" cy="140" r="51" fill="url(#elBrilho)"/><circle cx="240" cy="140" r="22" fill="#fff" stroke="#292B2C" stroke-width="5"/><circle class="luz" cx="240" cy="140" r="18" fill="#FFE680"/><path d="M224.6 124.6 L255.4 155.4 M255.4 124.6 L224.6 155.4" stroke="#292B2C" stroke-width="4"/></g><g class="el-lamp " ><circle class="luz" cx="450" cy="98" r="51" fill="url(#elBrilho)"/><circle cx="450" cy="98" r="22" fill="#fff" stroke="#292B2C" stroke-width="5"/><circle class="luz" cx="450" cy="98" r="18" fill="#FFE680"/><path d="M434.6 82.6 L465.4 113.4 M465.4 82.6 L434.6 113.4" stroke="#292B2C" stroke-width="4"/></g><g class="el-lamp " ><circle class="luz" cx="580" cy="140" r="51" fill="url(#elBrilho)"/><circle cx="580" cy="140" r="22" fill="#fff" stroke="#292B2C" stroke-width="5"/><circle class="luz" cx="580" cy="140" r="18" fill="#FFE680"/><path d="M564.6 124.6 L595.4 155.4 M595.4 124.6 L564.6 155.4" stroke="#292B2C" stroke-width="4"/></g><g opacity=".5"><g class="el-lamp " ><circle class="luz" cx="345" cy="60" r="51" fill="url(#elBrilho)"/><circle cx="345" cy="60" r="22" fill="#fff" stroke="#292B2C" stroke-width="5"/><circle class="luz" cx="345" cy="60" r="18" fill="#FFE680"/><path d="M329.6 44.6 L360.4 75.4 M360.4 44.6 L329.6 75.4" stroke="#292B2C" stroke-width="4"/></g></g><path d="M345 84 V110" stroke="#C2384F" stroke-width="4" stroke-dasharray="6 6"/><text x="345" y="232" text-anchor="middle" font-size="28" font-weight="800" fill="#C2384F" >uma queima: todas apagam</text></svg></div>
+    <div class="caixa" data-passo="1" style="position:absolute;left:900px;right:0;top:160px;padding:18px 24px"><span class="rotulo">Na sua casa</span><svg viewBox="0 0 700 300" width="740" height="300"  style="overflow:visible;font-family:Figtree,'Segoe UI',sans-serif;" aria-hidden="true"><path d="M40 130 L350 20 L660 130 V290 H40 Z" fill="#fff" stroke="#C9C0F0" stroke-width="5" stroke-linejoin="round"/><line x1="350" y1="130" x2="350" y2="290" stroke="#C9C0F0" stroke-width="5"/><g class="el-lamp " ><circle class="luz" cx="195" cy="190" r="69" fill="url(#elBrilho)"/><circle cx="195" cy="190" r="30" fill="#fff" stroke="#292B2C" stroke-width="5"/><circle class="luz" cx="195" cy="190" r="26" fill="#FFE680"/><path d="M174.0 169.0 L216.0 211.0 M216.0 169.0 L174.0 211.0" stroke="#292B2C" stroke-width="4"/></g><g class="el-lamp acesa" ><circle class="luz" cx="505" cy="190" r="69" fill="url(#elBrilho)"/><circle cx="505" cy="190" r="30" fill="#fff" stroke="#292B2C" stroke-width="5"/><circle class="luz" cx="505" cy="190" r="26" fill="#FFE680"/><path d="M484.0 169.0 L526.0 211.0 M526.0 169.0 L484.0 211.0" stroke="#292B2C" stroke-width="4"/></g><text x="195" y="260" text-anchor="middle" font-size="26" font-weight="800" fill="#C2384F" >sala: queimou</text><text x="505" y="260" text-anchor="middle" font-size="26" font-weight="800" fill="var(--d-forte)" >cozinha: acesa</text></svg></div>
+    <div class="caixa caixa-fundamental" data-passo="2" style="position:absolute;left:560px;right:0;top:600px;padding:20px 30px"><div class="texto" style="font-size:32px">A diferença está no <b>jeito de ligar</b> os aparelhos: em <b>série</b> ou em <b>paralelo</b>.</div></div>
+  </div>
+  <aside class="notas"><p>No pisca-pisca antigo, bastava uma lâmpada queimar para o cordão inteiro apagar. Clique 1: em casa, a lâmpada da sala queima e a da cozinha continua acesa.</p><p>Clique 2: pergunte qual a diferença antes de mostrar.</p></aside>
+</section>
+
+<section class="slide" data-nome="Em série">
+  <div class="conteudo">
+    <p class="olho">Circuitos em série e em paralelo</p>
+    <h2 class="titulo">Ligação em série</h2>
+    <div style="position:absolute;left:0;top:170px"><svg viewBox="0 0 800 440" width="800" height="440"  style="overflow:visible;font-family:Figtree,'Segoe UI',sans-serif;" aria-hidden="true"><g class="el-on" data-em="1:el-tira 1:el-off"><path class="el-fio" d="M110 158 V80 H224 M296 80 H384 M456 80 H544 M616 80 H700 V380 H110 V286" /><path class="el-fluxo " d="M110 158 V80 H700 V380 H110 V286" /><rect x="98.0" y="146" width="24" height="14" rx="3" fill="#052E30"/><rect x="80" y="158" width="60" height="116" rx="12" fill="var(--d)" stroke="#052E30" stroke-width="3"/><text x="110.0" y="194" text-anchor="middle" font-size="34" font-weight="800" fill="#fff">+</text><text x="110.0" y="260" text-anchor="middle" font-size="40" font-weight="800" fill="#fff">−</text><g class="el-lamp fraca" ><circle class="luz" cx="260" cy="80" r="83" fill="url(#elBrilho)"/><circle cx="260" cy="80" r="36" fill="#fff" stroke="#292B2C" stroke-width="5"/><circle class="luz" cx="260" cy="80" r="32" fill="#FFE680"/><path d="M234.8 54.8 L285.2 105.2 M285.2 54.8 L234.8 105.2" stroke="#292B2C" stroke-width="4"/><text x="260" y="28" text-anchor="middle" font-size="30" font-weight="800" fill="#3F2FA0" >L₁</text></g><g class="el-lamp fraca sai" ><circle class="luz" cx="420" cy="80" r="83" fill="url(#elBrilho)"/><circle cx="420" cy="80" r="36" fill="#fff" stroke="#292B2C" stroke-width="5"/><circle class="luz" cx="420" cy="80" r="32" fill="#FFE680"/><path d="M394.8 54.8 L445.2 105.2 M445.2 54.8 L394.8 105.2" stroke="#292B2C" stroke-width="4"/><text x="420" y="28" text-anchor="middle" font-size="30" font-weight="800" fill="#3F2FA0" >L₂</text></g><g class="el-lamp fraca" ><circle class="luz" cx="580" cy="80" r="83" fill="url(#elBrilho)"/><circle cx="580" cy="80" r="36" fill="#fff" stroke="#292B2C" stroke-width="5"/><circle class="luz" cx="580" cy="80" r="32" fill="#FFE680"/><path d="M554.8 54.8 L605.2 105.2 M605.2 54.8 L554.8 105.2" stroke="#292B2C" stroke-width="4"/><text x="580" y="28" text-anchor="middle" font-size="30" font-weight="800" fill="#3F2FA0" >L₃</text></g></g></svg></div>
+    <ol class="el-lista" style="position:absolute;left:900px;right:0;top:170px">
+      <li><b class="n">1</b><span>Um depois do outro, num <b>caminho só</b>.</span></li>
+      <li><b class="n">2</b><span>A <b>mesma corrente</b> passa por todos.</span></li>
+      <li data-passo="1"><b class="n">3</b><span>Se um queima ou é desligado, o caminho se abre e <b>todos param</b>.</span></li>
+      <li data-passo="2"><b class="n">4</b><span>As lâmpadas <b>dividem a tensão</b> da fonte e brilham <b>menos</b> do que brilhariam sozinhas.</span></li>
+    </ol>
+  </div>
+  <aside class="notas"><p>As três lâmpadas no mesmo fio: as cargas passam por uma, depois pela outra. Brilho fraco: a tensão da pilha se divide entre as três.</p><p>Clique 1: tiro a L₂ do lugar. O único caminho se abre, as cargas param e todas apagam. Volte com a seta e mostre que tudo acende de novo.</p><p>Clique 2: dividem a tensão.</p></aside>
+</section>
+
+<section class="slide" data-nome="Em paralelo">
+  <div class="conteudo">
+    <p class="olho">Circuitos em série e em paralelo</p>
+    <h2 class="titulo">Ligação em paralelo</h2>
+    <div style="position:absolute;left:0;top:160px"><svg viewBox="0 0 800 460" width="800" height="460"  style="overflow:visible;font-family:Figtree,'Segoe UI',sans-serif;" aria-hidden="true"><g class="el-on"><path class="el-fio" d="M110 158 V80 H660 M660 400 H110 V286" /><path class="el-fluxo " d="M110 158 V80 H660" /><path class="el-fluxo " d="M660 400 H110 V286" /><rect x="98.0" y="146" width="24" height="14" rx="3" fill="#052E30"/><rect x="80" y="158" width="60" height="116" rx="12" fill="var(--d)" stroke="#052E30" stroke-width="3"/><text x="110.0" y="194" text-anchor="middle" font-size="34" font-weight="800" fill="#fff">+</text><text x="110.0" y="260" text-anchor="middle" font-size="40" font-weight="800" fill="#fff">−</text><g><path class="el-fio" d="M300 80 V204.0 M300 276.0 V400" /><path class="el-fluxo " d="M300 80 V400" /><g class="el-lamp " ><circle class="luz" cx="300" cy="240.0" r="83" fill="url(#elBrilho)"/><circle cx="300" cy="240.0" r="36" fill="#fff" stroke="#292B2C" stroke-width="5"/><circle class="luz" cx="300" cy="240.0" r="32" fill="#FFE680"/><path d="M274.8 214.8 L325.2 265.2 M325.2 214.8 L274.8 265.2" stroke="#292B2C" stroke-width="4"/><text x="350" y="250.0" text-anchor="start" font-size="30" font-weight="800" fill="#3F2FA0" >L₁</text></g><circle cx="300" cy="80" r="7" fill="#292B2C"/><circle cx="300" cy="400" r="7" fill="#292B2C"/></g><g data-em="1:el-tira 1:el-off"><path class="el-fio" d="M480 80 V204.0 M480 276.0 V400" /><path class="el-fluxo " d="M480 80 V400" /><g class="el-lamp  sai" ><circle class="luz" cx="480" cy="240.0" r="83" fill="url(#elBrilho)"/><circle cx="480" cy="240.0" r="36" fill="#fff" stroke="#292B2C" stroke-width="5"/><circle class="luz" cx="480" cy="240.0" r="32" fill="#FFE680"/><path d="M454.8 214.8 L505.2 265.2 M505.2 214.8 L454.8 265.2" stroke="#292B2C" stroke-width="4"/><text x="530" y="250.0" text-anchor="start" font-size="30" font-weight="800" fill="#3F2FA0" >L₂</text></g><circle cx="480" cy="80" r="7" fill="#292B2C"/><circle cx="480" cy="400" r="7" fill="#292B2C"/></g><g><path class="el-fio" d="M660 80 V204.0 M660 276.0 V400" /><path class="el-fluxo " d="M660 80 V400" /><g class="el-lamp " ><circle class="luz" cx="660" cy="240.0" r="83" fill="url(#elBrilho)"/><circle cx="660" cy="240.0" r="36" fill="#fff" stroke="#292B2C" stroke-width="5"/><circle class="luz" cx="660" cy="240.0" r="32" fill="#FFE680"/><path d="M634.8 214.8 L685.2 265.2 M685.2 214.8 L634.8 265.2" stroke="#292B2C" stroke-width="4"/><text x="710" y="250.0" text-anchor="start" font-size="30" font-weight="800" fill="#3F2FA0" >L₃</text></g></g></g></svg></div>
+    <ol class="el-lista" style="position:absolute;left:900px;right:0;top:170px">
+      <li><b class="n">1</b><span>Cada aparelho tem o <b>seu próprio caminho</b> até a fonte.</span></li>
+      <li><b class="n">2</b><span>Todos recebem a <b>tensão inteira</b> da fonte.</span></li>
+      <li data-passo="1"><b class="n">3</b><span>Funcionam de forma <b>independente</b>: desligar um não afeta os outros.</span></li>
+      <li data-passo="2"><b class="n">4</b><span>A corrente total se <b>divide</b> entre os ramos.</span></li>
+    </ol>
+  </div>
+  <aside class="notas"><p>Cada lâmpada num ramo, ligado direto aos dois polos: brilho forte, porque cada uma recebe a tensão toda.</p><p>Clique 1: tiro a L₂. Só o ramo dela fica sem corrente; L₁ e L₃ continuam acesas, com o mesmo brilho.</p><p>Clique 2: a corrente que sai da pilha se divide pelos ramos.</p></aside>
+</section>
+
+<section class="slide" data-nome="Série × paralelo">
+  <div class="conteudo">
+    <p class="olho">Circuitos em série e em paralelo</p>
+    <h2 class="titulo">Série × paralelo</h2>
+    <div style="position:absolute;left:0;top:150px"><table class="tabela el-t"><tr><th></th><th>Em série</th><th>Em paralelo</th></tr><tr data-passo="1"><td style="font-weight:800;color:var(--d-forte)">Caminhos</td><td>um só</td><td>um para cada aparelho</td></tr><tr data-passo="2"><td style="font-weight:800;color:var(--d-forte)">Se um queima</td><td>todos apagam</td><td>os outros funcionam</td></tr><tr data-passo="3"><td style="font-weight:800;color:var(--d-forte)">Corrente</td><td>a mesma em todos</td><td>dividida entre os ramos</td></tr><tr data-passo="4"><td style="font-weight:800;color:var(--d-forte)">Tensão em cada um</td><td>dividida</td><td>a da fonte inteira</td></tr></table></div>
+    <div class="caixa caixa-fundamental" data-passo="5" style="position:absolute;left:1180px;right:0;top:150px;padding:20px 28px">
+      <span class="rotulo">A casa é ligada em paralelo</span>
+      <div class="texto" style="font-size:30px">Tomadas e lâmpadas ficam <b>em paralelo</b>: cada aparelho recebe a tensão da rede (<b>127 V</b> ou <b>220 V</b>) e pode ser ligado ou desligado <b>sem interferir</b> nos outros.</div>
+    </div>
+  </div>
+  <aside class="notas"><p>Uma linha por clique. Peça a resposta de cada linha antes. Clique 5: por isso a casa é em paralelo.</p><p>Este é o slide para tirarem print.</p></aside>
+</section>
+
+<section class="slide" data-nome="O interruptor">
+  <div class="conteudo">
+    <p class="olho">Circuito residencial</p>
+    <h2 class="titulo">Cada lâmpada com o seu interruptor</h2>
+    <div style="position:absolute;left:0;top:150px"><svg viewBox="0 0 720 460" width="720" height="460"  style="overflow:visible;font-family:Figtree,'Segoe UI',sans-serif;" aria-hidden="true"><g class="el-on"><path class="el-fio" d="M110 158 V80 H560 M560 400 H110 V286" /><path class="el-fluxo " d="M110 158 V80 H560" /><path class="el-fluxo " d="M560 400 H110 V286" /><rect x="98.0" y="146" width="24" height="14" rx="3" fill="#052E30"/><rect x="80" y="158" width="60" height="116" rx="12" fill="var(--d)" stroke="#052E30" stroke-width="3"/><text x="110.0" y="194" text-anchor="middle" font-size="34" font-weight="800" fill="#fff">+</text><text x="110.0" y="260" text-anchor="middle" font-size="40" font-weight="800" fill="#fff">−</text><g data-em="1:el-abre 1:el-off"><path class="el-fio" d="M320 80 V120 M320 190 V204.0 M320 276.0 V400" /><path class="el-fluxo " d="M320 80 V400" /><g transform="rotate(90 320 120)"><circle cx="320" cy="120" r="8" fill="#292B2C"/><circle cx="390" cy="120" r="8" fill="#292B2C"/><line class="el-alavanca fechada" style="transform-origin:320px 120px" x1="320" y1="120" x2="390" y2="120" stroke="#292B2C" stroke-width="7" stroke-linecap="round"/></g><g class="el-lamp " ><circle class="luz" cx="320" cy="240.0" r="83" fill="url(#elBrilho)"/><circle cx="320" cy="240.0" r="36" fill="#fff" stroke="#292B2C" stroke-width="5"/><circle class="luz" cx="320" cy="240.0" r="32" fill="#FFE680"/><path d="M294.8 214.8 L345.2 265.2 M345.2 214.8 L294.8 265.2" stroke="#292B2C" stroke-width="4"/><text x="370" y="250.0" text-anchor="start" font-size="30" font-weight="800" fill="#3F2FA0" >sala</text></g><circle cx="320" cy="80" r="7" fill="#292B2C"/><circle cx="320" cy="400" r="7" fill="#292B2C"/></g><g><path class="el-fio" d="M560 80 V120 M560 190 V204.0 M560 276.0 V400" /><path class="el-fluxo " d="M560 80 V400" /><g transform="rotate(90 560 120)"><circle cx="560" cy="120" r="8" fill="#292B2C"/><circle cx="630" cy="120" r="8" fill="#292B2C"/><line class="el-alavanca fechada" style="transform-origin:560px 120px" x1="560" y1="120" x2="630" y2="120" stroke="#292B2C" stroke-width="7" stroke-linecap="round"/></g><g class="el-lamp " ><circle class="luz" cx="560" cy="240.0" r="83" fill="url(#elBrilho)"/><circle cx="560" cy="240.0" r="36" fill="#fff" stroke="#292B2C" stroke-width="5"/><circle class="luz" cx="560" cy="240.0" r="32" fill="#FFE680"/><path d="M534.8 214.8 L585.2 265.2 M585.2 214.8 L534.8 265.2" stroke="#292B2C" stroke-width="4"/><text x="610" y="250.0" text-anchor="start" font-size="30" font-weight="800" fill="#3F2FA0" >cozinha</text></g></g></g></svg></div>
+    <div style="position:absolute;left:880px;right:0;top:170px;display:flex;flex-direction:column;gap:24px">
+      <div class="caixa caixa-fundamental" style="padding:20px 28px"><span class="rotulo">Interruptor em série</span>
+        <div class="texto" style="font-size:31px">O interruptor fica <b>em série</b> com a lâmpada que comanda: precisa estar <b>no mesmo caminho</b> dela para conseguir abrir o circuito.</div></div>
+      <p class="texto" data-passo="1" style="margin:0;font-size:31px">Desligou o da <b>sala</b>: só o ramo da sala abre. A <b>cozinha</b> continua acesa.</p>
+    </div>
+  </div>
+  <aside class="notas"><p>Duas lâmpadas em paralelo, cada uma com o seu interruptor no próprio ramo (em série com ela).</p><p>Clique 1: o interruptor da sala abre; o ramo dela para e a cozinha não muda.</p></aside>
+</section>
+
+<section class="slide" data-nome="Exemplo: qual ligação">
+  <div class="conteudo">
+    <p class="olho">Exemplo</p>
+    <h2 class="titulo">Qual ligação?</h2>
+    <p class="texto" style="position:absolute;left:0;width:1000px;top:150px;margin:0;font-size:32px">Kauã liga três lâmpadas iguais a uma bateria. Quando ele tira uma delas do soquete, as outras duas continuam <b>acesas</b>, com o <b>mesmo brilho</b>. Como as lâmpadas estão ligadas?</p>
+    <div class="caixa" data-passo="1" style="position:absolute;left:0;width:1000px;top:330px;padding:18px 28px"><span class="rotulo">Raciocínio</span>
+      <div class="texto" style="font-size:31px">Se fosse em série, tirar uma lâmpada abriria o único caminho, e <b>todas apagariam</b>. Como as outras seguem funcionando, cada uma tem o <b>seu próprio caminho</b>.</div></div>
+    <span class="pilula pilula-resposta" data-passo="2" style="position:absolute;left:600px;top:580px">Em paralelo</span>
+    <div data-passo="2" style="position:absolute;left:1120px;top:170px"><svg viewBox="0 0 800 460" width="600" height="345"  style="overflow:visible;font-family:Figtree,'Segoe UI',sans-serif;" aria-hidden="true"><g class="el-on"><path class="el-fio" d="M110 158 V80 H660 M660 400 H110 V286" /><path class="el-fluxo " d="M110 158 V80 H660" /><path class="el-fluxo " d="M660 400 H110 V286" /><rect x="98.0" y="146" width="24" height="14" rx="3" fill="#052E30"/><rect x="80" y="158" width="60" height="116" rx="12" fill="var(--d)" stroke="#052E30" stroke-width="3"/><text x="110.0" y="194" text-anchor="middle" font-size="34" font-weight="800" fill="#fff">+</text><text x="110.0" y="260" text-anchor="middle" font-size="40" font-weight="800" fill="#fff">−</text><g><path class="el-fio" d="M300 80 V204.0 M300 276.0 V400" /><path class="el-fluxo " d="M300 80 V400" /><g class="el-lamp " ><circle class="luz" cx="300" cy="240.0" r="83" fill="url(#elBrilho)"/><circle cx="300" cy="240.0" r="36" fill="#fff" stroke="#292B2C" stroke-width="5"/><circle class="luz" cx="300" cy="240.0" r="32" fill="#FFE680"/><path d="M274.8 214.8 L325.2 265.2 M325.2 214.8 L274.8 265.2" stroke="#292B2C" stroke-width="4"/></g><circle cx="300" cy="80" r="7" fill="#292B2C"/><circle cx="300" cy="400" r="7" fill="#292B2C"/></g><g data-em="2:el-tira 2:el-off"><path class="el-fio" d="M480 80 V204.0 M480 276.0 V400" /><path class="el-fluxo " d="M480 80 V400" /><g class="el-lamp  sai" ><circle class="luz" cx="480" cy="240.0" r="83" fill="url(#elBrilho)"/><circle cx="480" cy="240.0" r="36" fill="#fff" stroke="#292B2C" stroke-width="5"/><circle class="luz" cx="480" cy="240.0" r="32" fill="#FFE680"/><path d="M454.8 214.8 L505.2 265.2 M505.2 214.8 L454.8 265.2" stroke="#292B2C" stroke-width="4"/></g><circle cx="480" cy="80" r="7" fill="#292B2C"/><circle cx="480" cy="400" r="7" fill="#292B2C"/></g><g><path class="el-fio" d="M660 80 V204.0 M660 276.0 V400" /><path class="el-fluxo " d="M660 80 V400" /><g class="el-lamp " ><circle class="luz" cx="660" cy="240.0" r="83" fill="url(#elBrilho)"/><circle cx="660" cy="240.0" r="36" fill="#fff" stroke="#292B2C" stroke-width="5"/><circle class="luz" cx="660" cy="240.0" r="32" fill="#FFE680"/><path d="M634.8 214.8 L685.2 265.2 M685.2 214.8 L634.8 265.2" stroke="#292B2C" stroke-width="4"/></g></g></g></svg></div>
+  </div>
+  <aside class="notas"><p>Peça a resposta antes do clique 1. Clique 2: em paralelo, e a figura mostra a lâmpada tirada sem apagar as outras.</p></aside>
+</section>
+
+<section class="slide" data-nome="Resistência equivalente">
+  <div class="conteudo">
+    <p class="olho">Resistência equivalente</p>
+    <h2 class="titulo">Vários resistores, um só para a fonte</h2>
+    <p class="texto" style="position:absolute;left:0;right:0;top:140px;margin:0;font-size:31px">A <b>resistência equivalente</b> \(R_{eq}\) é a de um resistor único que faria passar a <b>mesma corrente total</b> com a <b>mesma tensão</b>.</p>
+    <div class="caixa" data-passo="1" style="position:absolute;left:0;width:840px;top:260px;padding:18px 26px"><span class="rotulo">Em série</span>
+      <div class="texto" style="font-size:28px">A corrente atravessa um e depois o outro: as dificuldades <b>se somam</b>, como dois trechos de estrada ruim. A tensão se <b>divide</b>; o de maior R fica com a maior parte.</div>
+      <div style="font-size:42px;margin-top:12px;text-align:center">\(R_{eq} = R_1 + R_2 + R_3 + \ldots\)</div></div>
+    <div class="caixa" data-passo="2" style="position:absolute;left:900px;right:0;top:260px;padding:18px 26px"><span class="rotulo">Em paralelo</span>
+      <div class="texto" style="font-size:28px">A corrente ganha caminhos a mais, como uma estrada que se abre em pistas: \(R_{eq}\) fica <b>menor que a menor</b>. A corrente total é a <b>soma</b> dos ramos.</div>
+      <div style="font-size:42px;margin-top:12px;text-align:center">\(\dfrac{1}{R_{eq}} = \dfrac{1}{R_1} + \dfrac{1}{R_2} + \ldots\)</div></div>
+    <div class="caixa caixa-fundamental" data-passo="3" style="position:absolute;left:900px;right:0;top:650px;padding:12px 26px;font-size:34px;display:flex;justify-content:space-around;align-items:center">
+      <span>dois: \(R_{eq} = \dfrac{R_1 \cdot R_2}{R_1 + R_2}\)</span><span>\(n\) iguais: \(R_{eq} = \dfrac{R}{n}\)</span></div>
+  </div>
+  <aside class="notas"><p>Clique 1: em série soma. Clique 2: em paralelo, o inverso soma, e a equivalente fica menor que a menor.</p><p>Clique 3: os atalhos para dois resistores (produto pela soma) e para n iguais (R ÷ n).</p></aside>
+</section>
+
+<section class="slide" data-nome="Exemplo: em série">
+  <div class="conteudo">
+    <p class="olho">Exemplo</p>
+    <h2 class="titulo">4 Ω e 6 Ω em série, a 12 V</h2>
+    <div style="position:absolute;left:40px;top:150px"><svg viewBox="0 0 760 300" width="600" height="284"  style="overflow:visible;font-family:Figtree,'Segoe UI',sans-serif;" aria-hidden="true"><path class="el-fio" d="M110 158 V80 H230 M340 80 H460 M570 80 H680 V330 H110 V274" /><g class="el-on"><path class="el-fluxo " d="M110 158 V80 H680 V330 H110 V274" /></g><rect x="230" y="57.0" width="110" height="46" rx="10" fill="var(--d-clara)" stroke="var(--d)" stroke-width="5"/><text x="285.0" y="90" text-anchor="middle" font-size="26" font-weight="800" fill="var(--d-forte)" >4 Ω</text><rect x="460" y="57.0" width="110" height="46" rx="10" fill="var(--d-clara)" stroke="var(--d)" stroke-width="5"/><text x="515.0" y="90" text-anchor="middle" font-size="26" font-weight="800" fill="var(--d-forte)" >6 Ω</text><rect x="98.0" y="146" width="24" height="14" rx="3" fill="#052E30"/><rect x="80" y="158" width="60" height="116" rx="12" fill="var(--d)" stroke="#052E30" stroke-width="3"/><text x="110.0" y="194" text-anchor="middle" font-size="34" font-weight="800" fill="#fff">+</text><text x="110.0" y="260" text-anchor="middle" font-size="40" font-weight="800" fill="#fff">−</text><text x="66" y="226.0" text-anchor="end" font-size="28" font-weight="800" fill="#3F2FA0" >12 V</text></svg></div>
+    <div style="position:absolute;left:760px;top:150px;display:grid;grid-template-columns:1fr 1fr;gap:50px">
+      <div class="contas" style="font-size:40px;"><div class="eq" data-passo="1"><span>\(R_{eq}\)</span><span>\(=\)</span><span>\(R_1 + R_2\)</span></div><div class="eq" data-passo="2"><span>\(R_{eq}\)</span><span>\(=\)</span><span>\(4 + 6\)</span></div><div class="eq final" data-passo="3"><span>\(R_{eq}\)</span><span>\(=\)</span><span>\(10\ \Omega\)</span></div></div>
+      <div class="contas" style="font-size:40px;"><div class="eq" data-passo="4"><span>\(U\)</span><span>\(=\)</span><span>\(R_{eq} \cdot i\)</span></div><div class="eq" data-passo="5"><span>\(12\)</span><span>\(=\)</span><span>\(10 \cdot i\)</span></div><div class="eq final" data-passo="6"><span>\(i\)</span><span>\(=\)</span><span>\(1{,}2\ \text{A}\)</span></div></div>
+    </div>
+    <p class="texto" data-passo="7" style="position:absolute;left:760px;top:440px;margin:0;font-size:30px"><b>Como a tensão se divide</b> (cada um com \(U = R \cdot i\)):</p>
+    <div style="position:absolute;left:760px;top:500px;display:grid;grid-template-columns:1fr 1fr;gap:50px">
+      <div class="contas" style="font-size:40px;"><div class="eq" data-passo="8"><span>\(U_1\)</span><span>\(=\)</span><span>\(4 \cdot 1{,}2\)</span></div><div class="eq final" data-passo="9"><span>\(U_1\)</span><span>\(=\)</span><span>\(4{,}8\ \text{V}\)</span></div></div>
+      <div class="contas" style="font-size:40px;"><div class="eq" data-passo="8"><span>\(U_2\)</span><span>\(=\)</span><span>\(6 \cdot 1{,}2\)</span></div><div class="eq final" data-passo="9"><span>\(U_2\)</span><span>\(=\)</span><span>\(7{,}2\ \text{V}\)</span></div></div>
+    </div>
+    <span class="pilula pilula-resposta" data-passo="10" style="position:absolute;left:760px;top:720px">4,8 V + 7,2 V = 12 V: o maior ficou com a maior parte</span>
+  </div>
+  <aside class="notas"><p>Cliques 1 a 3: R_eq = 10 Ω. Cliques 4 a 6: i = 1,2 A, a mesma nos dois resistores.</p><p>Cliques 7 a 10: a tensão se divide: 4,8 V no de 4 Ω e 7,2 V no de 6 Ω, somando os 12 V da fonte.</p></aside>
+</section>
+
+<section class="slide" data-nome="Exemplo: em paralelo">
+  <div class="conteudo">
+    <p class="olho">Exemplo</p>
+    <h2 class="titulo">Os mesmos, agora em paralelo</h2>
+    <div style="position:absolute;left:40px;top:150px"><svg viewBox="0 0 760 360" width="600" height="284"  style="overflow:visible;font-family:Figtree,'Segoe UI',sans-serif;" aria-hidden="true"><path class="el-fio" d="M110 158 V60 H600 M600 330 H110 V274 M300 60 V120 M300 240 V330 M600 60 V120 M600 240 V330" /><g class="el-on"><path class="el-fluxo " d="M110 158 V60 H600" /><path class="el-fluxo " d="M600 330 H110 V274" /><path class="el-fluxo " d="M300 60 V330" /><path class="el-fluxo " d="M600 60 V330" /></g><g transform="rotate(90 300 180)"><rect x="240" y="157.0" width="120" height="46" rx="10" fill="var(--d-clara)" stroke="var(--d)" stroke-width="5"/></g><text x="330" y="192" text-anchor="start" font-size="30" font-weight="800" fill="var(--d-forte)" >4 Ω</text><g transform="rotate(90 600 180)"><rect x="540" y="157.0" width="120" height="46" rx="10" fill="var(--d-clara)" stroke="var(--d)" stroke-width="5"/></g><text x="630" y="192" text-anchor="start" font-size="30" font-weight="800" fill="var(--d-forte)" >6 Ω</text><circle cx="300" cy="60" r="7" fill="#292B2C"/><circle cx="300" cy="330" r="7" fill="#292B2C"/><rect x="98.0" y="146" width="24" height="14" rx="3" fill="#052E30"/><rect x="80" y="158" width="60" height="116" rx="12" fill="var(--d)" stroke="#052E30" stroke-width="3"/><text x="110.0" y="194" text-anchor="middle" font-size="34" font-weight="800" fill="#fff">+</text><text x="110.0" y="260" text-anchor="middle" font-size="40" font-weight="800" fill="#fff">−</text><text x="66" y="226.0" text-anchor="end" font-size="28" font-weight="800" fill="#3F2FA0" >12 V</text></svg></div>
+    <div style="position:absolute;left:760px;top:150px;display:grid;grid-template-columns:1.2fr 1fr;gap:50px">
+      <div class="contas" style="font-size:38px;"><div class="eq" data-passo="1"><span>\(R_{eq}\)</span><span>\(=\)</span><span>\(\dfrac{R_1 \cdot R_2}{R_1 + R_2}\)</span></div><div class="eq" data-passo="2"><span>\(R_{eq}\)</span><span>\(=\)</span><span>\(\dfrac{4 \cdot 6}{4 + 6}\)</span></div><div class="eq final" data-passo="3"><span>\(R_{eq}\)</span><span>\(=\)</span><span>\(2{,}4\ \Omega\)</span></div></div>
+      <div class="contas" style="font-size:38px;"><div class="eq" data-passo="4"><span>\(U\)</span><span>\(=\)</span><span>\(R_{eq} \cdot i\)</span></div><div class="eq" data-passo="5"><span>\(12\)</span><span>\(=\)</span><span>\(2{,}4 \cdot i\)</span></div><div class="eq final" data-passo="6"><span>\(i\)</span><span>\(=\)</span><span>\(5\ \text{A}\)</span></div></div>
+    </div>
+    <div class="caixa caixa-fundamental" data-passo="7" style="position:absolute;left:760px;right:0;top:560px;padding:16px 26px"><span class="rotulo">Confira pelos ramos</span>
+      <div class="texto" style="font-size:31px">Cada resistor recebe 12 V: \(12 \div 4 = 3\ \text{A}\) num e \(12 \div 6 = 2\ \text{A}\) no outro. Total: <b>5 A</b>.</div></div>
+  </div>
+  <aside class="notas"><p>Cliques 1 a 3: produto pela soma: 24 ÷ 10 = 2,4 Ω, menor que o menor (4 Ω). Cliques 4 a 6: i = 12 ÷ 2,4 = 5 A.</p><p>Clique 7: a conferência pelos ramos. Compare com a série: 10 Ω e 1,2 A.</p></aside>
+</section>
+
+<section class="slide" data-nome="Mais aparelhos">
+  <div class="conteudo">
+    <p class="olho">Circuito residencial e segurança</p>
+    <h2 class="titulo">Cada aparelho a mais em paralelo…</h2>
+    <div class="el-cadeia" style="position:absolute;left:0;right:0;top:160px">
+      <span class="f">mais um aparelho</span><span class="s">→</span><span class="f" data-passo="1">\(R_{eq}\) diminui</span><span class="s" data-passo="1">→</span><span class="f am" data-passo="2">corrente total aumenta</span></div>
+    <div style="position:absolute;left:0;top:280px" data-passo="3"><svg viewBox="0 0 520 300" width="520" height="300"  style="overflow:visible;font-family:Figtree,'Segoe UI',sans-serif;" aria-hidden="true"><rect x="160" y="120" width="200" height="110" rx="24" fill="#fff" stroke="#292B2C" stroke-width="5"/><circle cx="190" cy="160" r="6" fill="#292B2C"/><circle cx="212" cy="160" r="6" fill="#292B2C"/><circle cx="290" cy="160" r="6" fill="#292B2C"/><circle cx="312" cy="160" r="6" fill="#292B2C"/><circle cx="250" cy="200" r="6" fill="#292B2C"/><circle cx="272" cy="200" r="6" fill="#292B2C"/><path class="el-fio" d="M260 230 V290" /><g class="el-on"><path class="el-fluxo " d="M260 290 V230" /></g><path class="el-fio" d="M200 120 C 160 40 100 40 60 60" /><path class="el-fio" d="M300 120 C 340 40 420 40 460 60" /><path class="el-fio" d="M261 120 V40" /><g class="el-calor" fill="none" stroke="#E86A3A" stroke-width="5" stroke-linecap="round"><path d="M230 300 q10 -14 0 -28 q-10 -14 0 -28"/><path d="M290 300 q10 -14 0 -28 q-10 -14 0 -28"/><path d="M200 300 q10 -14 0 -28 q-10 -14 0 -28"/></g></svg></div>
+    <div class="caixa caixa-atencao" data-passo="3" style="position:absolute;left:600px;right:0;top:270px;padding:18px 28px"><span class="rotulo">Benjamim sobrecarregado</span>
+      <div class="texto" style="font-size:29px">O benjamim (o "T") liga vários aparelhos em paralelo numa só tomada. Cada aparelho a mais aumenta a corrente no fio da tomada, que pode <b>esquentar demais</b>. Evite ligar aparelhos potentes, como ferro e aquecedor, no mesmo benjamim.</div></div>
+    <div class="caixa caixa-fundamental" data-passo="4" style="position:absolute;left:600px;right:0;top:560px;padding:18px 28px"><span class="rotulo">Curto-circuito</span>
+      <div class="texto" style="font-size:29px">A resistência fica <b>quase zero</b> e a corrente, <b>enorme</b>. É por isso que o benjamim cheio esquenta e o <b>disjuntor desarma</b>.</div></div>
+  </div>
+  <aside class="notas"><p>Cliques 1 e 2: em paralelo, cada aparelho é um caminho a mais: a resistência equivalente cai e a corrente total sobe.</p><p>Clique 3: o benjamim; o fio da tomada esquenta (calor subindo). Clique 4: no curto, R quase zero e corrente enorme: o disjuntor desarma.</p></aside>
+</section>
+
+<section class="slide questao" data-nome="Questão 1" data-largo="1" data-gap="14">
+  <div class="conteudo">
+    <div class="area-resolucao"></div>
+    <span class="pilula pilula-pausa" data-em="1:some">Pause o vídeo e tente</span>
+    <div class="painel-questao">
+      <p class="olho">Questão 1 · Modelo IF</p>
+      <p class="enunciado" style="font-size:25px">Para enfeitar a janela da escola, uma turma usou um cordão antigo com 20 lampadinhas. Ao montar o enfeite, um aluno tirou uma das lampadinhas do lugar para ver se estava boa e, no mesmo instante, todas as outras 19 apagaram. Quando ele recolocou a lampadinha, o cordão inteiro voltou a acender.</p><p class="enunciado" style="font-size:25px">Marque a explicação <b>CORRETA</b> para o que a turma observou.</p>
+      
+      
+      <ol class="alternativas" style="gap:8px"><li data-em="2:apaga" style="font-size:22px;padding:6px 14px"><b>A</b><span>As lampadinhas estão ligadas em paralelo, e na ligação em paralelo tirar uma lâmpada apaga todas as outras.</span></li><li data-em="2:apaga" style="font-size:22px;padding:6px 14px"><b>B</b><span>Ao retirar a lampadinha, aconteceu um curto-circuito, que desligou o cordão inteiro.</span></li><li data-em="2:apaga" style="font-size:22px;padding:6px 14px"><b>C</b><span>A lampadinha retirada passou a puxar toda a corrente da tomada, e não sobrou corrente para as outras.</span></li><li data-em="2:certo" style="font-size:22px;padding:6px 14px"><b>D</b><span>As lampadinhas estão ligadas em série: existe um só caminho para a corrente, e retirar uma delas abre esse caminho.</span></li><li data-em="2:apaga" style="font-size:22px;padding:6px 14px"><b>E</b><span>As lampadinhas estão ligadas em série, e na ligação em série cada lâmpada tem o seu próprio caminho até a tomada.</span></li></ol>
+    </div>
+  </div>
+  <aside class="resolucao">
+    <p class="dados"><b>Dados:</b> tirou 1 lâmpada: as 19 apagam; recolocou: todas acendem.</p>
+    <ol class="passos"><li><b>1.</b> Um só caminho para a corrente: série.</li><li><b>2.</b> Tirar uma abre o caminho: circuito aberto.</li><li><b>3.</b> Recolocar fecha o caminho de novo.</li></ol>
+    <p class="resposta"><b>Resposta:</b> em série, um só caminho, que se abre. <b>Gabarito D.</b></p>
+    <p class="atencao"><b>Destaque no quadro:</b> Série: um caminho só. Paralelo: um para cada.</p>
+    <ul class="erros"><li><b>A</b> Em paralelo as outras continuariam acesas.</li><li><b>B</b> Curto é fio com fio sem aparelho; aqui o circuito abriu.</li><li><b>C</b> Sem caminho, ela não puxa corrente nenhuma.</li><li><b>E</b> Troca as definições: um caminho para cada é paralelo.</li></ul>
+  </aside>
+  <aside class="notas"><p>Clique 1 tira o aviso de pausa: resolva na área (D liga a caneta; E esconde o enunciado). Clique 2: gabarito D.</p><p>Modelo IF, lote if-fisica-associacao-de-resistores, m002, FIS-1478.</p></aside>
+</section>
+
+<section class="slide questao" data-nome="Questão 2" data-largo="1" data-gap="8">
+  <div class="conteudo">
+    <div class="area-resolucao"></div>
+    <span class="pilula pilula-pausa" data-em="1:some">Pause o vídeo e tente</span>
+    <div class="painel-questao">
+      <p class="olho">Questão 2 · Modelo IF</p>
+      <p class="enunciado" style="font-size:23px">Numa aula de Ciências, Lúcia montou o circuito abaixo com uma bateria de 12 V, três lâmpadas iguais (\(L_1\), \(L_2\) e \(L_3\)) e uma chave C. No início, a chave C está fechada e as três lâmpadas estão acesas. Ao abrir a chave C, Lúcia observará que:</p>
+      <svg viewBox="0 0 800 460" width="440" height="253" class="figura"  style="overflow:visible;font-family:Figtree,'Segoe UI',sans-serif;" aria-hidden="true"><g class="el-on"><path class="el-fio" d="M110 158 V80 H660 M660 400 H110 V286" /><path class="el-fluxo " d="M110 158 V80 H660" /><path class="el-fluxo " d="M660 400 H110 V286" /><rect x="98.0" y="146" width="24" height="14" rx="3" fill="#052E30"/><rect x="80" y="158" width="60" height="116" rx="12" fill="var(--d)" stroke="#052E30" stroke-width="3"/><text x="110.0" y="194" text-anchor="middle" font-size="34" font-weight="800" fill="#fff">+</text><text x="110.0" y="260" text-anchor="middle" font-size="40" font-weight="800" fill="#fff">−</text><text x="66" y="226.0" text-anchor="end" font-size="28" font-weight="800" fill="#3F2FA0" >12 V</text><g><path class="el-fio" d="M300 80 V204.0 M300 276.0 V400" /><path class="el-fluxo " d="M300 80 V400" /><g class="el-lamp " ><circle class="luz" cx="300" cy="240.0" r="83" fill="url(#elBrilho)"/><circle cx="300" cy="240.0" r="36" fill="#fff" stroke="#292B2C" stroke-width="5"/><circle class="luz" cx="300" cy="240.0" r="32" fill="#FFE680"/><path d="M274.8 214.8 L325.2 265.2 M325.2 214.8 L274.8 265.2" stroke="#292B2C" stroke-width="4"/><text x="350" y="250.0" text-anchor="start" font-size="30" font-weight="800" fill="#3F2FA0" >L₁</text></g><circle cx="300" cy="80" r="7" fill="#292B2C"/><circle cx="300" cy="400" r="7" fill="#292B2C"/></g><g><path class="el-fio" d="M480 80 V120 M480 190 V204.0 M480 276.0 V400" /><path class="el-fluxo " d="M480 80 V400" /><g transform="rotate(90 480 120)"><circle cx="480" cy="120" r="8" fill="#292B2C"/><circle cx="550" cy="120" r="8" fill="#292B2C"/><line class="el-alavanca fechada" style="transform-origin:480px 120px" x1="480" y1="120" x2="550" y2="120" stroke="#292B2C" stroke-width="7" stroke-linecap="round"/></g><g class="el-lamp " ><circle class="luz" cx="480" cy="240.0" r="83" fill="url(#elBrilho)"/><circle cx="480" cy="240.0" r="36" fill="#fff" stroke="#292B2C" stroke-width="5"/><circle class="luz" cx="480" cy="240.0" r="32" fill="#FFE680"/><path d="M454.8 214.8 L505.2 265.2 M505.2 214.8 L454.8 265.2" stroke="#292B2C" stroke-width="4"/><text x="530" y="250.0" text-anchor="start" font-size="30" font-weight="800" fill="#3F2FA0" >L₂</text></g><circle cx="480" cy="80" r="7" fill="#292B2C"/><circle cx="480" cy="400" r="7" fill="#292B2C"/></g><g><path class="el-fio" d="M660 80 V204.0 M660 276.0 V400" /><path class="el-fluxo " d="M660 80 V400" /><g class="el-lamp " ><circle class="luz" cx="660" cy="240.0" r="83" fill="url(#elBrilho)"/><circle cx="660" cy="240.0" r="36" fill="#fff" stroke="#292B2C" stroke-width="5"/><circle class="luz" cx="660" cy="240.0" r="32" fill="#FFE680"/><path d="M634.8 214.8 L685.2 265.2 M685.2 214.8 L634.8 265.2" stroke="#292B2C" stroke-width="4"/><text x="710" y="250.0" text-anchor="start" font-size="30" font-weight="800" fill="#3F2FA0" >L₃</text></g></g></g><text x="500" y="170" text-anchor="start" font-size="32" font-weight="800" fill="#292B2C" >C</text></svg>
+      
+      <ol class="alternativas" style="gap:8px"><li data-em="2:apaga" style="font-size:20px;padding:6px 14px"><b>A</b><span>as três lâmpadas apagam, porque a chave interrompe o caminho da corrente de todo o circuito.</span></li><li data-em="2:apaga" style="font-size:20px;padding:6px 14px"><b>B</b><span>só \(L_1\) continua acesa, porque a corrente que sai da bateria para na chave C e não chega até \(L_3\).</span></li><li data-em="2:apaga" style="font-size:20px;padding:6px 14px"><b>C</b><span>\(L_2\) continua acesa, e \(L_1\) e \(L_3\) apagam, porque a chave aberta interrompe o caminho dessas duas lâmpadas.</span></li><li data-em="2:apaga" style="font-size:20px;padding:6px 14px"><b>D</b><span>\(L_2\) apaga, e \(L_1\) e \(L_3\) continuam acesas, mas com brilho maior, porque passam a receber a parte da corrente que ia para \(L_2\).</span></li><li data-em="2:certo" style="font-size:20px;padding:6px 14px"><b>E</b><span>\(L_2\) apaga, e \(L_1\) e \(L_3\) continuam acesas, com o mesmo brilho de antes.</span></li></ol>
+    </div>
+  </div>
+  <aside class="resolucao">
+    <p class="dados"><b>Dados:</b> 12 V; L₁, L₂ e L₃ iguais em paralelo; chave C só no ramo de L₂.</p>
+    <ol class="passos"><li><b>1.</b> Cada lâmpada num ramo ligado à bateria: paralelo.</li><li><b>2.</b> C abre só o ramo de L₂: L₂ apaga.</li><li><b>3.</b> L₁ e L₃ seguem com 12 V: mesmo brilho.</li></ol>
+    <p class="resposta"><b>Resposta:</b> L₂ apaga; L₁ e L₃ continuam iguais. <b>Gabarito E.</b></p>
+    <p class="atencao"><b>Destaque no quadro:</b> Em paralelo, cada ramo é independente.</p>
+    <ul class="erros"><li><b>A</b> Seria assim em série; a chave está num ramo só.</li><li><b>B</b> O ramo de L₃ vai direto à bateria.</li><li><b>C</b> Troca as lâmpadas.</li><li><b>D</b> A tensão em L₁ e L₃ continua 12 V: brilho igual.</li></ul>
+  </aside>
+  <aside class="notas"><p>Clique 1 tira o aviso de pausa. Clique 2: gabarito E.</p><p>Modelo IF, lote if-fisica-associacao-de-resistores, m004, FIS-1480. Figura refeita no molde: a chave C (no ramo de L₂) aparece fechada, como no início do enunciado.</p></aside>
+</section>
+
+<section class="slide questao" data-nome="Questão 3" data-largo="1" data-gap="8">
+  <div class="conteudo">
+    <div class="area-resolucao"></div>
+    <span class="pilula pilula-pausa" data-em="1:some">Pause o vídeo e tente</span>
+    <div class="painel-questao">
+      <p class="olho">Questão 3 · Modelo IF</p>
+      <p class="enunciado" style="font-size:23px">Numa casa, as lâmpadas da sala e a tomada onde fica o ventilador fazem parte do mesmo circuito, protegido por um disjuntor no quadro de luz. Como em toda residência, os aparelhos desse circuito estão ligados em paralelo. Certa noite, o fio do ventilador, já gasto, ficou desencapado, e os dois fios de cobre se encostaram. Na mesma hora, o ventilador parou e as lâmpadas da sala também apagaram, enquanto as lâmpadas da cozinha, ligadas a outro disjuntor, continuaram acesas.</p><p class="enunciado" style="font-size:23px">Marque a explicação <b>CORRETA</b> para o que aconteceu.</p>
+      
+      
+      <ol class="alternativas" style="gap:8px"><li data-em="2:apaga" style="font-size:20px;padding:6px 14px"><b>A</b><span>O ventilador estava ligado em série com as lâmpadas da sala; o curto queimou o ventilador e abriu o único caminho da corrente.</span></li><li data-em="2:apaga" style="font-size:20px;padding:6px 14px"><b>B</b><span>Como os aparelhos estão em paralelo, um problema no ventilador nunca afeta as lâmpadas; as luzes da sala apagaram por falta de energia na rua.</span></li><li data-em="2:apaga" style="font-size:20px;padding:6px 14px"><b>C</b><span>O curto-circuito fez a tensão da rede se dividir entre o ventilador e as lâmpadas, que passaram a receber tensão pequena demais para acender.</span></li><li data-em="2:apaga" style="font-size:20px;padding:6px 14px"><b>D</b><span>Com os fios encostados, a corrente ficou muito pequena, insuficiente para manter as lâmpadas da sala acesas.</span></li><li data-em="2:certo" style="font-size:20px;padding:6px 14px"><b>E</b><span>Com os fios encostados, a corrente ficou enorme; o disjuntor desligou o circuito e cortou a energia de todos os aparelhos ligados a ele, mesmo estando em paralelo.</span></li></ol>
+    </div>
+  </div>
+  <aside class="resolucao">
+    <p class="dados"><b>Dados:</b> fios do ventilador se encostam; sala apaga; cozinha (outro disjuntor) acesa.</p>
+    <ol class="passos"><li><b>1.</b> Fios encostados sem aparelho: curto-circuito.</li><li><b>2.</b> Corrente enorme: o disjuntor desarma.</li><li><b>3.</b> Desliga os fios comuns: sala e ventilador param.</li><li><b>4.</b> Cozinha acesa: havia energia na rua.</li></ol>
+    <p class="resposta"><b>Resposta:</b> corrente enorme; o disjuntor desligou o circuito da sala. <b>Gabarito E.</b></p>
+    <p class="atencao"><b>Destaque no quadro:</b> Curto: R quase zero, corrente enorme, disjuntor desarma.</p>
+    <ul class="erros"><li><b>A</b> Na casa tudo é em paralelo.</li><li><b>B</b> O disjuntor desliga o circuito inteiro; e a cozinha mostra que havia energia.</li><li><b>C</b> O curto não divide a tensão.</li><li><b>D</b> É o contrário: a corrente fica enorme.</li></ul>
+  </aside>
+  <aside class="notas"><p>Clique 1 tira o aviso de pausa. Clique 2: gabarito E.</p><p>Modelo IF, lote if-fisica-associacao-de-resistores, m009, FIS-1485. Junta o curto-circuito e a proteção do disjuntor.</p></aside>
+</section>
+
+<section class="slide" data-nome="Resumo">
+  <div class="conteudo">
+    <p class="olho">Resumo</p>
+    <h2 class="titulo">O essencial</h2>
+<div class="resumo" style="position:absolute;left:0;right:0;top:150px"><div><b>Série</b>: um caminho só e a <b>mesma corrente</b>; a tensão se divide; se um para, <b>todos param</b>.</div><div><b>Paralelo</b>: um caminho para cada e a <b>mesma tensão</b>; os aparelhos são <b>independentes</b>.</div><div>A casa é ligada em <b>paralelo</b> (127 V ou 220 V em cada aparelho).</div><div>O <b>interruptor</b> fica em série com a lâmpada que comanda.</div><div>\(R_{eq}\): em série, <b>soma</b>; em paralelo, <b>menor que a menor</b> (produto pela soma, ou R ÷ n).</div><div>Cada aparelho a mais em paralelo <b>aumenta a corrente</b> total: benjamim cheio esquenta.</div></div><div class="caixa caixa-atencao" style="position:absolute;left:560px;right:0;top:640px"><div class="texto" style="font-size:30px">Curto-circuito: corrente enorme. O <b>disjuntor</b> desliga o circuito sozinho.</div></div>
+  </div>
+  <aside class="notas"><p>Peça para tirarem um print desta tela.</p></aside>
+</section>
+
+<section class="slide capa" data-nome="A seguir">
+  <div class="estrelas"></div>
+  <div class="texto-capa" style="top:150px">
+    <span class="selo">Física · IF</span>
+    <p class="aula" style="font-size:26px">A seguir · Consumo de energia elétrica · Parte 1 de 2</p>
+    <h1 style="font-size:120px">Consumo de energia</h1>
+    <p class="sub">Potência, kWh e a conta de luz</p>
+  </div>
+  <svg class="emblema" viewBox="0 0 640 640" aria-hidden="true">
+    <g class="gira-lento"><ellipse cx="320" cy="320" rx="300" ry="128" fill="none" stroke="#fff" stroke-opacity=".38" stroke-width="2" transform="rotate(-10 320 320)"/></g>
+    <g class="gira"><ellipse cx="320" cy="320" rx="236" ry="196" fill="none" stroke="#FFD10C" stroke-opacity=".75" stroke-width="2.5" stroke-dasharray="3 14" stroke-linecap="round" transform="rotate(-8 320 320)"/>
+      <circle cx="84" cy="300" r="13" fill="var(--d)" stroke="#fff" stroke-width="3"/></g>
+    <circle cx="320" cy="320" r="150" fill="#FFD10C"/>
+    <path d="M346 196 L262 336 H318 L292 450 L382 300 H326 Z" fill="#4B258D" stroke="#4B258D" stroke-width="8" stroke-linejoin="round"/>
+  </svg>
+  <img class="logo-capa" src="{{LOGO_BRANCO}}" alt="Quarks">
+  <aside class="notas"><p>Próxima: quanto cada aparelho consome e como se calcula a conta de luz.</p></aside>
+</section>

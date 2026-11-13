@@ -1,0 +1,621 @@
+<!--aula
+{"disciplina": "matematica", "curso": "IF", "assunto": "Potências e radicais", "parte": "Parte 2 de 2", "titulo": "Radicais e racionalização", "scripts": ["animacoes-potencias.js"]}
+-->
+<!-- Fonte: apostila IF, Matemática, cap. 1 (1.4 Potências e radicais: "Radiciação e simplificação de radicais", "Potência de expoente fracionário", "Raiz de raiz e redução ao mesmo índice",
+     "Operações com radicais e racionalização", "Racionalização com o conjugado" e o resumo do 1.4).
+     Questões (nenhuma reservada para o bloco do fim do capítulo): Modelo IF, lote if-matematica-operacoes-e-expressoes-numericas, m018 (MAT-0613);
+     IF Sudeste MG 2018-1 q19 (MAT-0360) e 2018-2 q20 (MAT-0508), sobras de Potências e radicais em planejamento/questoes-if.md. -->
+<style>
+  .caixa { box-sizing: border-box; }
+  .pr-lado { font-size: 34px; line-height: 1.38; margin: 0; }
+  .pr-lado b { color: var(--roxo-titulo); }
+  .pr-cartao { box-sizing: border-box; background: var(--branco); border: 2px solid var(--lilas-2); border-radius: 26px; padding: 20px 28px; font-size: 32px; line-height: 1.35; }
+  .pr-cartao b { color: var(--roxo-titulo); }
+  .pr-cartao .grande { display: block; font: 800 44px var(--fonte-titulo); color: var(--d-forte); margin-bottom: 6px; }
+  .contas.com-nota { grid-template-columns: auto auto auto 1fr; }
+  .contas .nota-l { font-size: 26px; font-weight: 700; color: var(--cinza); padding-left: 26px; }
+  .pr-resp { display: inline-block; font: 800 46px var(--fonte-titulo); padding: 6px 28px; border-radius: 22px; }
+  .pr-resp.errado { background: var(--erro-claro); color: var(--erro); border: 3px solid var(--erro); text-decoration: line-through; text-decoration-thickness: 4px; }
+  .pr-resp.certo { background: var(--certo-claro); color: var(--certo); border: 3px solid var(--certo); }
+  /* terreno 7 x 7 que vai sendo coberto, fileira por fileira */
+  .pr-terreno .fila { transform-box: fill-box; transform-origin: 0 50%; transform: scaleX(0); transition: transform .7s ease-out; }
+  .pr-terreno.mostra .fila { transform: scaleX(1); }
+  .pr-terreno.mostra .fila:nth-of-type(2) { transition-delay: .45s; } .pr-terreno.mostra .fila:nth-of-type(3) { transition-delay: .9s; }
+  .pr-terreno.mostra .fila:nth-of-type(4) { transition-delay: 1.35s; } .pr-terreno.mostra .fila:nth-of-type(5) { transition-delay: 1.8s; }
+  .pr-terreno.mostra .fila:nth-of-type(6) { transition-delay: 2.25s; } .pr-terreno.mostra .fila:nth-of-type(7) { transition-delay: 2.7s; }
+  .pr-terreno .lado { opacity: 0; transition: opacity .6s 3.3s; }
+  .pr-terreno.mostra .lado { opacity: 1; }
+  /* maçãs e laranjas (radicais semelhantes) */
+  .pr-frutas { display: flex; gap: 10px; align-items: center; flex-wrap: wrap; }
+  .pr-frutas i { width: 38px; height: 38px; border-radius: 50%; display: inline-block; }
+  .pr-frutas i.m { background: radial-gradient(circle at 35% 30%, #FF8A8A, #D7263D); }
+  .pr-frutas i.l { background: radial-gradient(circle at 35% 30%, #FFD27A, #F08A00); }
+  .pr-lista { margin: 0; padding: 0; list-style: none; display: flex; flex-direction: column; gap: 14px; }
+  .pr-lista li { display: flex; align-items: center; gap: 18px; font-size: 30px; line-height: 1.3; background: var(--branco); border: 2px solid var(--lilas-2); border-radius: 22px; padding: 12px 22px; }
+  .pr-lista li b.n { flex: none; width: 48px; height: 48px; border-radius: 50%; display: grid; place-items: center; background: var(--d); color: #fff; font: 800 26px var(--fonte-titulo); }
+  .painel-questao .enunciado.menor { font-size: 25px; }
+</style>
+
+<!-- 1. Capa -->
+<section class="slide capa" data-nome="Capa">
+  <div class="estrelas"></div>
+  <div class="texto-capa">
+    <span class="selo">Matemática · IF</span>
+    <p class="aula">Potências e radicais · Parte 2 de 2</p>
+    <h1 style="font-size:124px">Radicais e racionalização</h1>
+    <p class="sub">A operação que desfaz a potência</p>
+  </div>
+  <svg class="emblema" viewBox="0 0 640 640" aria-hidden="true">
+    <g class="gira-lento"><ellipse cx="320" cy="320" rx="300" ry="128" fill="none" stroke="#fff" stroke-opacity=".38" stroke-width="2" transform="rotate(-10 320 320)"/></g>
+    <g class="gira"><ellipse cx="320" cy="320" rx="236" ry="196" fill="none" stroke="#FFD10C" stroke-opacity=".75" stroke-width="2.5" stroke-dasharray="3 14" stroke-linecap="round" transform="rotate(-8 320 320)"/>
+      <circle cx="84" cy="300" r="13" fill="var(--d)" stroke="#fff" stroke-width="3"/></g>
+    <circle cx="320" cy="320" r="150" fill="#FFD10C"/>
+    <path d="M196 336 L230 316 L268 414 L322 236 H448" fill="none" stroke="#3F2FA0" stroke-width="18" stroke-linecap="round" stroke-linejoin="round"/>
+    <text x="390" y="378" text-anchor="middle" font-family="'Bricolage Grotesque',Figtree,sans-serif" font-size="110" font-weight="800" fill="#3F2FA0">a</text>
+  </svg>
+  <img class="logo-capa" src="{{LOGO_BRANCO}}" alt="Quarks">
+  <aside class="notas">
+    <p>Segunda parte de Potências e radicais: raiz, simplificação, expoente fracionário, raiz de raiz, operações com radicais e racionalização (também com o conjugado).</p>
+    <p>A apostila do IF traz expoente fracionário e conjugado; a prova cobra os dois (questões desta parte).</p>
+  </aside>
+</section>
+
+<!-- 2. O lado do terreno -->
+<section class="slide" data-nome="O lado do terreno">
+  <div class="conteudo">
+    <p class="olho">Para começar</p>
+    <h2 class="titulo">Qual é o lado do terreno?</h2>
+    <p class="pr-lado" style="position:absolute;left:0;width:540px;top:160px">Um terreno <b>quadrado</b> tem <b>49 m²</b> de área. Quanto mede o lado?</p>
+    <svg class="pr-terreno" data-passo="1" viewBox="0 0 470 470" width="470" height="470" style="position:absolute;left:640px;top:140px;overflow:visible;font-family:Figtree,'Segoe UI',sans-serif" aria-hidden="true">
+      <rect x="0" y="0" width="420" height="420" rx="10" fill="#fff" stroke="#C9D5F8" stroke-width="3"/>
+      <g fill="#E8F0FF"><rect class="fila" x="0" y="0" width="420" height="60"/><rect class="fila" x="0" y="60" width="420" height="60"/><rect class="fila" x="0" y="120" width="420" height="60"/><rect class="fila" x="0" y="180" width="420" height="60"/><rect class="fila" x="0" y="240" width="420" height="60"/><rect class="fila" x="0" y="300" width="420" height="60"/><rect class="fila" x="0" y="360" width="420" height="60"/></g>
+      <g stroke="#9DB6F7" stroke-width="2"><path d="M60 0V420M120 0V420M180 0V420M240 0V420M300 0V420M360 0V420M0 60H420M0 120H420M0 180H420M0 240H420M0 300H420M0 360H420"/></g>
+      <rect x="0" y="0" width="420" height="420" rx="10" fill="none" stroke="var(--d)" stroke-width="5"/>
+      <g class="lado" font-size="34" font-weight="800" fill="var(--d-forte)"><text x="210" y="460" text-anchor="middle">7 m</text><text x="440" y="222">7 m</text></g>
+    </svg>
+    <div class="contas" style="position:absolute;left:1200px;top:200px;font-size:54px;row-gap:26px">
+      <div class="eq" data-passo="2"><span>\(7^2\)</span><span>\(=\)</span><span>\(49\)</span></div>
+      <div class="eq final" data-passo="3"><span>\(\sqrt{49}\)</span><span>\(=\)</span><span>\(7\)</span></div>
+    </div>
+    <div class="caixa caixa-fundamental" data-passo="4" style="position:absolute;left:1200px;right:0;top:440px;padding:20px 28px"><div class="texto" style="font-size:32px">A <b>radiciação</b> desfaz a potência.</div></div>
+  </div>
+  <aside class="notas">
+    <p>Procuramos o número que, multiplicado por ele mesmo, dá 49. Clique 1: o terreno se enche, 7 fileiras de 7 quadradinhos de 1 m².</p>
+    <p>Cliques 2 e 3: \(7^2 = 49\), então a raiz quadrada de 49 é 7. Clique 4: a radiciação é a operação inversa da potência.</p>
+  </aside>
+</section>
+
+<!-- 3. Raiz: índice e radicando -->
+<section class="slide" data-nome="Índice e radicando">
+  <div class="conteudo">
+    <p class="olho">Definição</p>
+    <h2 class="titulo">Raiz: índice e radicando</h2>
+    <div class="caixa caixa-fundamental" style="position:absolute;left:0;width:1020px;top:160px;padding:26px 34px;text-align:center;font-size:66px">\(\sqrt[n]{a} = b \quad \text{quando} \quad b^n = a\)</div>
+    <div style="position:absolute;left:1080px;right:0;top:160px;display:flex;flex-direction:column;gap:20px">
+      <div class="pr-cartao" data-passo="1"><span class="grande">\(n\): índice</span>na raiz quadrada, o 2 não se escreve</div>
+      <div class="pr-cartao" data-passo="2"><span class="grande">\(a\): radicando</span>o número de dentro</div>
+    </div>
+    <div class="contas com-nota" style="position:absolute;left:640px;top:530px;font-size:50px;row-gap:22px">
+      <div class="eq" data-passo="3"><span>\(\sqrt[3]{8}\)</span><span>\(=\)</span><span>\(2\)</span><span class="nota-l">porque \(2^3 = 8\)</span></div>
+      <div class="eq" data-passo="4"><span>\(\sqrt[3]{-8}\)</span><span>\(=\)</span><span>\(-2\)</span><span class="nota-l">porque \((-2)^3 = -8\)</span></div>
+      <div class="eq" data-passo="5"><span>\(\sqrt{-4}\)</span><span>\(\notin\)</span><span>\(\mathbb{R}\)</span><span class="nota-l">nenhum número ao quadrado dá negativo</span></div>
+    </div>
+  </div>
+  <aside class="notas">
+    <p>Cliques 1 e 2: os nomes. Clique 3: raiz cúbica de 8 é 2. Clique 4: raiz cúbica de negativo existe: −2 · −2 · −2 = −8.</p>
+    <p>Clique 5: raiz quadrada de negativo não existe nos reais, porque todo número ao quadrado dá positivo (ou zero).</p>
+  </aside>
+</section>
+
+<!-- 4. Simplificar -->
+<section class="slide" data-nome="Simplificar radicais">
+  <div class="conteudo">
+    <p class="olho">Simplificação de radicais</p>
+    <h2 class="titulo">Tirar fatores da raiz</h2>
+    <div style="position:absolute;left:0;width:540px;top:160px">
+      <p class="pr-lado" style="font-size:32px">Separe o radicando num produto com um <b>quadrado perfeito</b>:</p>
+      <div class="caixa caixa-fundamental" style="margin-top:24px;padding:18px 26px;font-size:44px;text-align:center">\(\sqrt{a \cdot b} = \sqrt{a} \cdot \sqrt{b}\)</div>
+    </div>
+    <div class="contas" style="position:absolute;left:640px;top:160px;font-size:52px;row-gap:24px">
+      <div class="eq" data-passo="1"><span>\(r\)</span><span>\(=\)</span><span>\(\sqrt{12}\)</span></div>
+      <div class="eq" data-passo="2"><span>\(r\)</span><span>\(=\)</span><span>\(\sqrt{4 \cdot 3}\)</span></div>
+      <div class="eq" data-passo="3"><span>\(r\)</span><span>\(=\)</span><span>\(\sqrt{4} \cdot \sqrt{3}\)</span></div>
+      <div class="eq final" data-passo="4"><span>\(r\)</span><span>\(=\)</span><span>\(2\sqrt{3}\)</span></div>
+    </div>
+    <div class="contas" style="position:absolute;left:1220px;top:160px;font-size:52px;row-gap:24px">
+      <div class="eq" data-passo="5"><span>\(s\)</span><span>\(=\)</span><span>\(\sqrt{50}\)</span></div>
+      <div class="eq" data-passo="6"><span>\(s\)</span><span>\(=\)</span><span>\(\sqrt{25 \cdot 2}\)</span></div>
+      <div class="eq" data-passo="7"><span>\(s\)</span><span>\(=\)</span><span>\(\sqrt{25} \cdot \sqrt{2}\)</span></div>
+      <div class="eq final" data-passo="8"><span>\(s\)</span><span>\(=\)</span><span>\(5\sqrt{2}\)</span></div>
+    </div>
+  </div>
+  <aside class="notas">
+    <p>Quando o radicando não é quadrado perfeito, procure dentro dele um fator que seja: 12 = 4 · 3 e 50 = 25 · 2. A raiz do 4 sai como 2; a do 25 sai como 5.</p>
+  </aside>
+</section>
+
+<!-- 5. Atenção: a soma -->
+<section class="slide" data-nome="Atenção: raiz e soma">
+  <div class="conteudo">
+    <p class="olho">Atenção</p>
+    <h2 class="titulo">A raiz não se separa na soma</h2>
+    <div class="contas" style="position:absolute;left:0;top:170px;font-size:48px;row-gap:22px">
+      <div class="eq final"><span>\(\sqrt{9 + 16}\)</span><span>\(=\)</span><span>\(\sqrt{25} = 5\)</span></div>
+      <div class="eq" data-passo="2"><span>\(\sqrt{9} + \sqrt{16}\)</span><span>\(=\)</span><span>\(3 + 4 = 7\)</span></div>
+    </div>
+    <div data-anima="pr-soma-raiz" data-anima-passo="1" style="position:absolute;left:640px;top:250px;width:1060px;height:360px"></div>
+    <div class="caixa caixa-atencao" data-passo="3" style="position:absolute;left:640px;right:0;top:660px;padding:18px 30px"><div class="texto" style="font-size:32px">A raiz se separa no <b>produto</b>, nunca na <b>soma</b>.</div></div>
+  </div>
+  <aside class="notas">
+    <p>Clique 1: os 9 quadradinhos (lado 3) e os 16 (lado 4) juntos montam um quadrado de 25, de lado 5, e não 7.</p>
+    <p>Clique 2: separar a raiz na soma daria 7. Clique 3: a regra. O mesmo vale na subtração.</p>
+  </aside>
+</section>
+
+<!-- 6. Expoente fracionário -->
+<section class="slide" data-nome="Expoente fracionário">
+  <div class="conteudo">
+    <p class="olho">Potência de expoente fracionário</p>
+    <h2 class="titulo">Quanto vale \(9^{\frac{1}{2}}\)?</h2>
+    <div class="contas" style="position:absolute;left:0;top:170px;font-size:48px;row-gap:22px">
+      <div class="eq" data-passo="1"><span>\(9^{\frac{1}{2}} \cdot 9^{\frac{1}{2}}\)</span><span>\(=\)</span><span>\(9^{\frac{1}{2} + \frac{1}{2}}\)</span></div>
+      <div class="eq" data-passo="2"><span>\(9^{\frac{1}{2}} \cdot 9^{\frac{1}{2}}\)</span><span>\(=\)</span><span>\(9^1\)</span></div>
+      <div class="eq final" data-passo="3"><span>\(9^{\frac{1}{2}}\)</span><span>\(=\)</span><span>\(\sqrt{9} = 3\)</span></div>
+      <div class="eq final" data-passo="4"><span>\(8^{\frac{1}{3}}\)</span><span>\(=\)</span><span>\(\sqrt[3]{8} = 2\)</span></div>
+    </div>
+    <div class="caixa caixa-fundamental" data-passo="5" style="position:absolute;left:880px;right:0;top:170px;padding:24px 34px">
+      <span class="rotulo">Para \(a \gt 0\)</span>
+      <div style="font-size:84px;text-align:center;margin:6px 0 10px">\(a^{\frac{\color{#C99400}{m}}{\color{#2F6BFF}{n}}} = \sqrt[\color{#2F6BFF}{n}]{a^{\color{#C99400}{m}}}\)</div>
+      <div class="texto" style="font-size:31px">O <b style="color:#2F6BFF">denominador</b> vira o <b style="color:#2F6BFF">índice</b>; o <b style="color:#8A6A00">numerador</b> fica como <b style="color:#8A6A00">expoente</b>.</div>
+    </div>
+    <div class="pr-cartao" data-passo="6" style="position:absolute;left:880px;right:0;top:600px;font-size:30px">Na conta, tire a raiz <b>primeiro</b> e eleve depois: os números ficam pequenos.</div>
+  </div>
+  <aside class="notas">
+    <p>Cliques 1 a 3: pela regra do produto, \(9^{\frac12}\) vezes ele mesmo dá 9; é o número que, ao quadrado, dá 9: a raiz quadrada de 9. Clique 4: o mesmo com 8 e o 1/3.</p>
+    <p>Clique 5: a regra geral. Clique 6: \(16^{\frac34} = (\sqrt[4]{16})^3\), e \(\sqrt[4]{16} = 2\).</p>
+  </aside>
+</section>
+
+<!-- 7. Exemplo: A e B -->
+<section class="slide" data-nome="Exemplo: potências fracionárias">
+  <div class="conteudo">
+    <p class="olho">Exemplo</p>
+    <h2 class="titulo">Duas potências fracionárias</h2>
+    <div style="position:absolute;left:0;width:500px;top:170px">
+      <p style="margin:0;font-size:48px">\(A = 16^{\frac{3}{4}}\)</p>
+      <p style="margin:26px 0 0;font-size:48px">\(B = 8^{\frac{2}{3}}\)</p>
+    </div>
+    <div class="contas" style="position:absolute;left:620px;top:160px;font-size:52px;row-gap:24px">
+      <div class="eq" data-passo="1"><span>\(A\)</span><span>\(=\)</span><span>\(16^{\frac{3}{4}}\)</span></div>
+      <div class="eq" data-passo="2"><span>\(A\)</span><span>\(=\)</span><span>\(\left(\sqrt[4]{16}\right)^3\)</span></div>
+      <div class="eq" data-passo="3"><span>\(A\)</span><span>\(=\)</span><span>\(2^3\)</span></div>
+      <div class="eq final" data-passo="4"><span>\(A\)</span><span>\(=\)</span><span>\(8\)</span></div>
+    </div>
+    <div class="contas" style="position:absolute;left:1220px;top:160px;font-size:52px;row-gap:24px">
+      <div class="eq" data-passo="5"><span>\(B\)</span><span>\(=\)</span><span>\(8^{\frac{2}{3}}\)</span></div>
+      <div class="eq" data-passo="6"><span>\(B\)</span><span>\(=\)</span><span>\(\left(\sqrt[3]{8}\right)^2\)</span></div>
+      <div class="eq" data-passo="7"><span>\(B\)</span><span>\(=\)</span><span>\(2^2\)</span></div>
+      <div class="eq final" data-passo="8"><span>\(B\)</span><span>\(=\)</span><span>\(4\)</span></div>
+    </div>
+  </div>
+  <aside class="notas">
+    <p>A: o 4 de baixo vira raiz quarta; \(\sqrt[4]{16} = 2\) (2 · 2 · 2 · 2 = 16); depois \(2^3 = 8\).</p>
+    <p>B: o 3 de baixo vira raiz cúbica; \(\sqrt[3]{8} = 2\); depois \(2^2 = 4\).</p>
+  </aside>
+</section>
+
+<!-- 8. Exemplo: negativo e decimal; de raiz para potência -->
+<section class="slide" data-nome="Exemplo: expoente negativo e decimal">
+  <div class="conteudo">
+    <p class="olho">Exemplo</p>
+    <h2 class="titulo">Expoente negativo e decimal</h2>
+    <div style="position:absolute;left:0;width:540px;top:160px">
+      <p style="margin:0;font-size:48px">\(C = 25^{-0{,}5}\)</p>
+      <div class="caixa" data-passo="1" style="margin-top:24px;padding:18px 24px;font-size:30px;line-height:1.35">\(-0{,}5 = -\dfrac{1}{2}\). O <b style="color:var(--roxo-titulo)">menos</b> inverte; o \(\dfrac{1}{2}\) vira <b style="color:var(--roxo-titulo)">raiz quadrada</b>.</div>
+    </div>
+    <div class="contas" style="position:absolute;left:640px;top:160px;font-size:50px;row-gap:22px">
+      <div class="eq" data-passo="2"><span>\(C\)</span><span>\(=\)</span><span>\(25^{-\frac{1}{2}}\)</span></div>
+      <div class="eq" data-passo="3"><span>\(C\)</span><span>\(=\)</span><span>\(\dfrac{1}{25^{\frac{1}{2}}}\)</span></div>
+      <div class="eq" data-passo="4"><span>\(C\)</span><span>\(=\)</span><span>\(\dfrac{1}{\sqrt{25}}\)</span></div>
+      <div class="eq final" data-passo="5"><span>\(C\)</span><span>\(=\)</span><span>\(\dfrac{1}{5}\)</span></div>
+    </div>
+    <div class="pr-cartao" data-passo="6" style="position:absolute;left:1200px;right:0;top:160px">
+      <span class="grande">De volta</span>De raiz para potência:
+      <div style="font-size:44px;margin-top:14px">\(\sqrt[3]{5^6} = 5^{\frac{6}{3}}\)</div>
+      <div style="font-size:44px;margin-top:10px">\(= 5^2 = 25\)</div>
+    </div>
+  </div>
+  <aside class="notas">
+    <p>Clique 1: o decimal vira fração. Cliques 2 a 5: inverte e tira a raiz: \(\dfrac{1}{5}\), um número positivo.</p>
+    <p>Clique 6: o caminho de volta também cai: a raiz vira potência e o expoente 6/3 = 2.</p>
+  </aside>
+</section>
+
+<!-- 9. Raízes de índices diferentes -->
+<section class="slide" data-nome="Produto de raízes">
+  <div class="conteudo">
+    <p class="olho">Raiz como potência</p>
+    <h2 class="titulo">Índices diferentes? Vire potência</h2>
+    <p class="pr-lado" style="position:absolute;left:0;width:540px;top:160px">Escritas como potência, as raízes obedecem às <b>propriedades das potências</b>.</p>
+    <div class="contas com-nota" style="position:absolute;left:640px;top:160px;font-size:52px;row-gap:22px">
+      <div class="eq" data-passo="1"><span>\(M\)</span><span>\(=\)</span><span>\(\sqrt{a} \cdot \sqrt[3]{a}\)</span><span class="nota-l"></span></div>
+      <div class="eq" data-passo="2"><span>\(M\)</span><span>\(=\)</span><span>\(a^{\frac{1}{2}} \cdot a^{\frac{1}{3}}\)</span><span class="nota-l">vira potência</span></div>
+      <div class="eq" data-passo="3"><span>\(M\)</span><span>\(=\)</span><span>\(a^{\frac{1}{2} + \frac{1}{3}}\)</span><span class="nota-l">mesma base: soma</span></div>
+      <div class="eq" data-passo="4"><span>\(M\)</span><span>\(=\)</span><span>\(a^{\frac{5}{6}}\)</span><span class="nota-l">\(\frac{3}{6} + \frac{2}{6}\)</span></div>
+      <div class="eq final" data-passo="5"><span>\(M\)</span><span>\(=\)</span><span>\(\sqrt[6]{a^5}\)</span><span class="nota-l">volta para raiz</span></div>
+    </div>
+  </div>
+  <aside class="notas">
+    <p>Com índices diferentes, não dá para juntar direto. Passe para potência (cliques 1 e 2), some os expoentes com o denominador comum 6 (cliques 3 e 4) e volte para raiz (clique 5).</p>
+  </aside>
+</section>
+
+<!-- 10. Atenção e como cai -->
+<section class="slide" data-nome="Atenção: a fração">
+  <div class="conteudo">
+    <p class="olho">Atenção</p>
+    <h2 class="titulo">A fração não multiplica a base</h2>
+    <div style="position:absolute;left:0;right:0;top:170px;display:grid;grid-template-columns:1fr 1fr;gap:34px">
+      <div class="caixa caixa-atencao" data-passo="1" style="padding:24px 34px">
+        <span class="rotulo">Expoente fracionário</span>
+        <div style="font-size:48px;margin:8px 0 18px">\(16^{\frac{3}{4}} = 8\)</div>
+        <span class="pr-resp errado">16 · ¾ = 12</span>
+      </div>
+      <div class="caixa caixa-atencao" data-passo="2" style="padding:24px 34px">
+        <span class="rotulo">Expoente negativo</span>
+        <div style="font-size:48px;margin:8px 0 18px">\(25^{-0{,}5} = \dfrac{1}{5}\), positivo</div>
+      </div>
+    </div>
+    <div class="caixa caixa-fundamental" data-passo="3" style="position:absolute;left:640px;right:0;top:560px;padding:20px 30px">
+      <span class="rotulo">Como cai no IF</span>
+      <div class="texto" style="font-size:31px">Afirmativas I, II e III misturando raiz e potência. Passe tudo para <b>potência</b>, use as propriedades e, se precisar, volte para <b>raiz</b> no fim.</div>
+    </div>
+  </div>
+  <aside class="notas">
+    <p>Clique 1: quem multiplica 16 por 3/4 e marca 12 caiu na armadilha. Clique 2: o negativo inverte; não deixa o resultado negativo.</p>
+    <p>Clique 3: o formato das provas do IF. A Questão 2 desta parte é exatamente assim.</p>
+  </aside>
+</section>
+
+<!-- 11. Raiz de raiz -->
+<section class="slide" data-nome="Raiz de raiz">
+  <div class="conteudo">
+    <p class="olho">Raiz de raiz</p>
+    <h2 class="titulo">Os índices se multiplicam</h2>
+    <div class="contas com-nota" style="position:absolute;left:0;top:160px;font-size:48px;row-gap:20px">
+      <div class="eq" data-passo="1"><span>\(\sqrt{\sqrt{16}}\)</span><span>\(=\)</span><span>\(\sqrt{4} = 2\)</span><span class="nota-l">de dentro para fora</span></div>
+      <div class="eq final" data-passo="2"><span>\(\sqrt[4]{16}\)</span><span>\(=\)</span><span>\(2\)</span><span class="nota-l">porque \(2^4 = 16\)</span></div>
+    </div>
+    <div class="caixa caixa-fundamental" data-passo="3" style="position:absolute;left:0;width:1000px;top:400px;padding:22px 32px">
+      <span class="rotulo">Para \(a \geq 0\)</span>
+      <div style="font-size:58px;text-align:center">\(\sqrt[m]{\sqrt[n]{a}} = \sqrt[m \cdot n]{a} \qquad \sqrt[n \cdot p]{a^{m \cdot p}} = \sqrt[n]{a^m}\)</div>
+    </div>
+    <div class="pr-cartao" data-passo="4" style="position:absolute;left:1080px;right:0;top:160px">
+      <span class="grande">Simplificar</span>
+      <div style="font-size:42px;line-height:1.6">\(\sqrt[8]{64} = \sqrt[8]{2^6}\)<br>\(= \sqrt[4]{2^3} = \sqrt[4]{8}\)</div>
+      <div style="font-size:26px;color:var(--cinza);margin-top:6px">índice e expoente divididos por 2</div>
+    </div>
+  </div>
+  <aside class="notas">
+    <p>Cliques 1 e 2: a raiz quadrada da raiz quadrada de 16 é 2, que é a raiz quarta de 16. Com potências: \(\left(a^{\frac12}\right)^{\frac12} = a^{\frac14}\).</p>
+    <p>Clique 3: as duas regras. A segunda: dividir (ou multiplicar) o índice e o expoente do radicando pelo mesmo número não muda a raiz. Clique 4: \(64 = 2^6\), dividindo 8 e 6 por 2.</p>
+  </aside>
+</section>
+
+<!-- 12. Mesmo índice -->
+<section class="slide" data-nome="Exemplo: mesmo índice">
+  <div class="conteudo">
+    <p class="olho">Exemplo</p>
+    <h2 class="titulo">Qual é maior: \(\sqrt[3]{3}\) ou \(\sqrt{2}\)?</h2>
+    <div class="caixa" style="position:absolute;left:0;width:540px;top:170px;padding:18px 26px;font-size:30px;line-height:1.35">Leve ao <b style="color:var(--roxo-titulo)">mesmo índice</b>: o MMC dos índices 3 e 2, que é <b style="color:var(--roxo-titulo)">6</b>.</div>
+    <div class="contas" style="position:absolute;left:640px;top:160px;font-size:50px;row-gap:22px">
+      <div class="eq" data-passo="1"><span>\(\sqrt[3]{3}\)</span><span>\(=\)</span><span>\(\sqrt[3 \cdot 2]{3^{1 \cdot 2}} = \sqrt[6]{9}\)</span></div>
+      <div class="eq" data-passo="2"><span>\(\sqrt{2}\)</span><span>\(=\)</span><span>\(\sqrt[2 \cdot 3]{2^{1 \cdot 3}} = \sqrt[6]{8}\)</span></div>
+    </div>
+    <span class="pilula pilula-resposta" data-passo="3" style="position:absolute;left:640px;top:370px">\(9 \gt 8\): \(\sqrt[3]{3}\) é maior</span>
+    <p class="pr-lado" data-passo="4" style="position:absolute;left:1260px;top:170px;font-size:30px">Para <b>multiplicar</b>, o caminho é o mesmo:</p>
+    <div class="contas" style="position:absolute;left:1260px;top:250px;font-size:46px;row-gap:16px">
+      <div class="eq" data-passo="5"><span>\(N\)</span><span>\(=\)</span><span>\(\sqrt{2} \cdot \sqrt[3]{2}\)</span></div>
+      <div class="eq" data-passo="6"><span>\(N\)</span><span>\(=\)</span><span>\(\sqrt[6]{2^3} \cdot \sqrt[6]{2^2}\)</span></div>
+      <div class="eq" data-passo="7"><span>\(N\)</span><span>\(=\)</span><span>\(\sqrt[6]{2^5}\)</span></div>
+      <div class="eq final" data-passo="8"><span>\(N\)</span><span>\(=\)</span><span>\(\sqrt[6]{32}\)</span></div>
+    </div>
+  </div>
+  <aside class="notas">
+    <p>Cliques 1 e 2: multiplique o índice e o expoente pelo número que leva o índice a 6. Clique 3: com o mesmo índice, ganha o maior radicando.</p>
+    <p>Cliques 4 a 8: no mesmo índice, os radicandos se juntam: \(2^3 \cdot 2^2 = 2^5 = 32\).</p>
+  </aside>
+</section>
+
+<!-- 13. Atenção: o radicando -->
+<section class="slide" data-nome="Atenção: o radicando">
+  <div class="conteudo">
+    <p class="olho">Atenção</p>
+    <h2 class="titulo">O radicando não se divide</h2>
+    <div class="caixa caixa-atencao" style="position:absolute;left:0;right:0;top:170px;padding:24px 34px">
+      <div style="font-size:52px">\(\sqrt{\sqrt{16}} = \sqrt[4]{16} = 2\)</div>
+      <div style="margin-top:18px"><span class="pr-resp errado">√8</span></div>
+      <div class="texto" style="font-size:32px;margin-top:16px">Quem se multiplica são os <b>índices</b>; o radicando 16 fica onde está.</div>
+    </div>
+  </div>
+  <aside class="notas">
+    <p>Erro comum: dividir o 16 por 2 e escrever \(\sqrt{8}\). Os índices 2 e 2 se multiplicam e dão 4; o 16 não muda.</p>
+  </aside>
+</section>
+
+<!-- 14. Operações com radicais -->
+<section class="slide" data-nome="Operações com radicais">
+  <div class="conteudo">
+    <p class="olho">Operações com radicais</p>
+    <h2 class="titulo">Radicais como objetos com nome</h2>
+    <div style="position:absolute;left:0;width:540px;top:160px;display:flex;flex-direction:column;gap:20px">
+      <div class="pr-cartao" data-passo="1"><div style="font-size:42px">\(3\sqrt{2} + 5\sqrt{2} = 8\sqrt{2}\)</div><div class="pr-frutas" style="margin-top:8px"><i class="m"></i><i class="m"></i><i class="m"></i><b>+</b><i class="m"></i><i class="m"></i><i class="m"></i><i class="m"></i><i class="m"></i></div></div>
+      <div class="pr-cartao" data-passo="2"><div style="font-size:42px">\(\sqrt{2} + \sqrt{3}\) não se junta</div><div class="pr-frutas" style="margin-top:8px"><i class="m"></i><b>+</b><i class="l"></i></div></div>
+    </div>
+    <div class="contas com-nota" style="position:absolute;left:640px;top:160px;font-size:50px;row-gap:20px">
+      <div class="eq" data-passo="3"><span>\(S\)</span><span>\(=\)</span><span>\(\sqrt{8} + \sqrt{18}\)</span><span class="nota-l">parecem diferentes</span></div>
+      <div class="eq" data-passo="4"><span>\(S\)</span><span>\(=\)</span><span>\(\sqrt{4 \cdot 2} + \sqrt{9 \cdot 2}\)</span><span class="nota-l"></span></div>
+      <div class="eq" data-passo="5"><span>\(S\)</span><span>\(=\)</span><span>\(2\sqrt{2} + 3\sqrt{2}\)</span><span class="nota-l">ficaram iguais</span></div>
+      <div class="eq final" data-passo="6"><span>\(S\)</span><span>\(=\)</span><span>\(5\sqrt{2}\)</span><span class="nota-l"></span></div>
+    </div>
+    <div class="caixa caixa-fundamental" data-passo="7" style="position:absolute;left:640px;right:0;top:600px;padding:18px 30px">
+      <span class="rotulo">Multiplicação (mesmo índice)</span>
+      <div style="font-size:44px">\(\sqrt{2} \cdot \sqrt{8} = \sqrt{16} = 4\)</div>
+    </div>
+  </div>
+  <aside class="notas">
+    <p>Clique 1: 3 maçãs mais 5 maçãs. Clique 2: maçãs e laranjas não se juntam: \(\sqrt{2} + \sqrt{3}\) fica assim.</p>
+    <p>Cliques 3 a 6: simplifique antes; aí os dois viram \(\sqrt{2}\) e se somam. Clique 7: na multiplicação, os radicandos se juntam numa raiz só.</p>
+  </aside>
+</section>
+
+<!-- 15. Racionalizar -->
+<section class="slide" data-nome="Racionalizar">
+  <div class="conteudo">
+    <p class="olho">Racionalização</p>
+    <h2 class="titulo">Tirar a raiz do denominador</h2>
+    <div style="position:absolute;left:0;width:540px;top:160px">
+      <p class="pr-lado" style="font-size:31px">Multiplique <b>em cima e embaixo</b> pela mesma raiz. A fração não muda: é multiplicar por 1.</p>
+      <div class="caixa caixa-fundamental" style="margin-top:22px;padding:16px 24px;font-size:42px;text-align:center">\(\sqrt{3} \cdot \sqrt{3} = 3\)</div>
+    </div>
+    <div class="contas" style="position:absolute;left:640px;top:150px;font-size:54px;row-gap:22px">
+      <div class="eq" data-passo="1"><span>\(R\)</span><span>\(=\)</span><span>\(\dfrac{6}{\sqrt{3}}\)</span></div>
+      <div class="eq" data-passo="2"><span>\(R\)</span><span>\(=\)</span><span>\(\dfrac{6 \cdot \sqrt{3}}{\sqrt{3} \cdot \sqrt{3}}\)</span></div>
+      <div class="eq" data-passo="3"><span>\(R\)</span><span>\(=\)</span><span>\(\dfrac{6\sqrt{3}}{3}\)</span></div>
+      <div class="eq final" data-passo="4"><span>\(R\)</span><span>\(=\)</span><span>\(2\sqrt{3}\)</span></div>
+    </div>
+  </div>
+  <aside class="notas">
+    <p>Racionalizar é tirar a raiz do denominador. Multiplicar por \(\dfrac{\sqrt3}{\sqrt3}\) é multiplicar por 1. Embaixo, \(\sqrt3 \cdot \sqrt3 = 3\); depois 6 : 3 = 2.</p>
+  </aside>
+</section>
+
+<!-- 16. Conjugado -->
+<section class="slide" data-nome="Conjugado">
+  <div class="conteudo">
+    <p class="olho">Racionalização com o conjugado</p>
+    <h2 class="titulo">E se embaixo tiver \(3 - \sqrt{5}\)?</h2>
+    <div class="contas" style="position:absolute;left:0;top:160px;font-size:44px;row-gap:18px">
+      <div class="eq" data-passo="1"><span>\(P\)</span><span>\(=\)</span><span>\((3 - \sqrt{5})(3 + \sqrt{5})\)</span></div>
+      <div class="eq" data-passo="2"><span>\(P\)</span><span>\(=\)</span><span>\(9 + 3\sqrt{5} - 3\sqrt{5} - \sqrt{5} \cdot \sqrt{5}\)</span></div>
+      <div class="eq" data-passo="3"><span>\(P\)</span><span>\(=\)</span><span>\(9 - 5\)</span></div>
+      <div class="eq final" data-passo="4"><span>\(P\)</span><span>\(=\)</span><span>\(4\)</span></div>
+    </div>
+    <div class="caixa caixa-fundamental" data-passo="5" style="position:absolute;left:1060px;right:0;top:150px;padding:20px 28px">
+      <span class="rotulo">Conjugado</span>
+      <div class="texto" style="font-size:29px">\(a + \sqrt{b}\) e \(a - \sqrt{b}\): o sinal do meio trocado.</div>
+      <div style="font-size:42px;margin-top:8px">\((a + \sqrt{b})(a - \sqrt{b}) = a^2 - b\)</div>
+    </div>
+    <ol class="pr-lista" style="position:absolute;left:640px;right:0;top:470px">
+      <li data-passo="6"><b class="n">1</b><span>Escreva o conjugado do denominador.</span></li>
+      <li data-passo="7"><b class="n">2</b><span>Multiplique numerador e denominador por ele.</span></li>
+      <li data-passo="8"><b class="n">3</b><span>Embaixo, use \(a^2 - b\); em cima, a distributiva.</span></li>
+    </ol>
+  </div>
+  <aside class="notas">
+    <p>Multiplicar por \(\sqrt5\) não resolve: \((3 - \sqrt5)\sqrt5 = 3\sqrt5 - 5\), ainda tem raiz. Cliques 1 a 4: com o "irmão de sinal trocado", os termos com raiz se cancelam e sobra 4.</p>
+    <p>Clique 5: a definição. Cliques 6 a 8: o passo a passo (na apostila são 4 passos; o 3 e o 4 estão juntos na linha 3).</p>
+  </aside>
+</section>
+
+<!-- 17. Exemplos com o conjugado -->
+<section class="slide" data-nome="Exemplo: conjugado">
+  <div class="conteudo">
+    <p class="olho">Exemplo</p>
+    <h2 class="titulo">Racionalizando com o conjugado</h2>
+    <div class="contas" style="position:absolute;left:600px;top:160px;font-size:40px;row-gap:16px">
+      <div class="eq" data-passo="1"><span>\(R\)</span><span>\(=\)</span><span>\(\dfrac{4}{3 - \sqrt{5}}\)</span></div>
+      <div class="eq" data-passo="2"><span>\(R\)</span><span>\(=\)</span><span>\(\dfrac{4 \cdot (3 + \sqrt{5})}{(3 - \sqrt{5})(3 + \sqrt{5})}\)</span></div>
+      <div class="eq" data-passo="3"><span>\(R\)</span><span>\(=\)</span><span>\(\dfrac{12 + 4\sqrt{5}}{9 - 5}\)</span></div>
+      <div class="eq final" data-passo="4"><span>\(R\)</span><span>\(=\)</span><span>\(3 + \sqrt{5}\)</span></div>
+    </div>
+    <div class="contas" style="position:absolute;left:1200px;top:160px;font-size:40px;row-gap:16px">
+      <div class="eq" data-passo="5"><span>\(Q\)</span><span>\(=\)</span><span>\(\dfrac{(\sqrt{2} + 1)(\sqrt{2} + 1)}{(\sqrt{2} - 1)(\sqrt{2} + 1)}\)</span></div>
+      <div class="eq" data-passo="6"><span>\(Q\)</span><span>\(=\)</span><span>\(\dfrac{2 + \sqrt{2} + \sqrt{2} + 1}{2 - 1}\)</span></div>
+      <div class="eq" data-passo="7"><span>\(Q\)</span><span>\(=\)</span><span>\(\dfrac{3 + 2\sqrt{2}}{1}\)</span></div>
+      <div class="eq final" data-passo="8"><span>\(Q\)</span><span>\(=\)</span><span>\(3 + 2\sqrt{2}\)</span></div>
+    </div>
+  </div>
+  <aside class="notas">
+    <p>R: o conjugado de \(3 - \sqrt5\) é \(3 + \sqrt5\). Embaixo, \(9 - 5 = 4\); em cima, \(12 + 4\sqrt5\); dividindo tudo por 4, \(3 + \sqrt5\).</p>
+    <p>Q: \(\dfrac{\sqrt2 + 1}{\sqrt2 - 1}\). O conjugado de \(\sqrt2 - 1\) é \(\sqrt2 + 1\). Em cima, \(\sqrt2 \cdot \sqrt2 + \sqrt2 + \sqrt2 + 1 = 3 + 2\sqrt2\); embaixo, \(2 - 1 = 1\).</p>
+  </aside>
+</section>
+
+<!-- 18. Atenção: sinal do meio -->
+<section class="slide" data-nome="Atenção: o conjugado">
+  <div class="conteudo">
+    <p class="olho">Atenção</p>
+    <h2 class="titulo">Troque só o sinal do meio</h2>
+    <div class="caixa caixa-atencao" style="position:absolute;left:0;right:0;top:170px;padding:24px 34px">
+      <div style="font-size:46px">Conjugado de \(3 - \sqrt{5}\): <b style="color:var(--certo)">\(3 + \sqrt{5}\)</b></div>
+      <div style="display:flex;gap:24px;margin-top:18px"><span class="pr-resp errado">−3 + √5</span><span class="pr-resp errado">√5</span></div>
+    </div>
+    <div class="caixa caixa-fundamental" data-passo="1" style="position:absolute;left:640px;right:0;top:520px;padding:20px 30px"><div class="texto" style="font-size:32px">Multiplique <b>também o numerador</b>. Se só o denominador mudar, a fração muda de valor.</div></div>
+  </div>
+  <aside class="notas">
+    <p>Os mesmos números, só o sinal do meio trocado. Clique 1: o que se faz embaixo, faz-se em cima.</p>
+  </aside>
+</section>
+
+<!-- 19. Questão 1 (Modelo m018) -->
+<section class="slide questao" data-nome="Questão 1 · Modelo IF">
+  <div class="conteudo">
+    <div class="area-resolucao"></div>
+    <span class="pilula pilula-pausa" data-em="1:some">Pause o vídeo e tente</span>
+    <div class="painel-questao">
+      <p class="olho">Questão 1 · Modelo IF</p>
+      <p class="enunciado" style="font-size:34px">O valor de \(\sqrt{12} + \sqrt{27} - \sqrt{3}\) é:</p>
+      <ol class="alternativas">
+        <li data-em="2:certo"><b>A</b><span>\(4\sqrt{3}\)</span></li>
+        <li data-em="2:apaga"><b>B</b><span>\(6\)</span></li>
+        <li data-em="2:apaga"><b>C</b><span>\(5\sqrt{3}\)</span></li>
+        <li data-em="2:apaga"><b>D</b><span>\(6\sqrt{3}\)</span></li>
+        <li data-em="2:apaga"><b>E</b><span>\(12\)</span></li>
+      </ol>
+      <p class="fonte">Questão Modelo IF (lote if-matematica-operacoes-e-expressoes-numericas, m018)</p>
+    </div>
+  </div>
+  <aside class="resolucao">
+    <p class="dados"><b>Dados:</b> só se somam radicais iguais; simplifique antes.</p>
+    <ol class="passos">
+      <li><b>Simplifique</b> \(\sqrt{12} = \sqrt{4 \cdot 3} = 2\sqrt{3}\)</li>
+      <li><b>Simplifique</b> \(\sqrt{27} = \sqrt{9 \cdot 3} = 3\sqrt{3}\)</li>
+      <li><b>Agora todos são \(\sqrt{3}\)</b> \(2\sqrt{3} + 3\sqrt{3} - 1\sqrt{3}\)</li>
+      <li><b>Junte</b> \((2 + 3 - 1)\sqrt{3} = 4\sqrt{3}\)</li>
+    </ol>
+    <p class="resposta"><b>Resposta:</b> \(4\sqrt{3}\). <b>Gabarito A.</b></p>
+    <p class="atencao"><b>Destaque no quadro:</b> Radicais se somam como objetos iguais: \(2\sqrt3 + 3\sqrt3 = 5\sqrt3\).</p>
+    <ul class="erros">
+      <li><b>B</b> Junta tudo numa raiz: \(\sqrt{36} = 6\).</li>
+      <li><b>C</b> Esquece o \(-\sqrt{3}\).</li>
+      <li><b>D</b> Soma o \(\sqrt{3}\) em vez de subtrair.</li>
+      <li><b>E</b> Troca \(\sqrt{3}\) por 3: \(4 \cdot 3\).</li>
+    </ul>
+  </aside>
+  <aside class="notas">
+    <p>Clique 1 tira o aviso de pausa: resolva na área (D liga a caneta; E esconde o enunciado). Clique 2: gabarito A.</p>
+    <p>Modelo IF, lote if-matematica-operacoes-e-expressoes-numericas, m018, MAT-0613. Conferido: 2 + 3 − 1 = 4. B: 12 + 27 − 3 = 36 e √36 = 6.</p>
+  </aside>
+</section>
+
+<!-- 20. Questão 2 (IF 2018-1 q19) -->
+<section class="slide questao" data-nome="Questão 2 · IF 2018">
+  <div class="conteudo">
+    <div class="area-resolucao"></div>
+    <span class="pilula pilula-pausa" data-em="1:some">Pause o vídeo e tente</span>
+    <div class="painel-questao">
+      <p class="olho">Questão 2 · IF Sudeste MG 2018</p>
+      <p class="enunciado" style="font-size:28px">São feitas as seguintes afirmações sobre potências.</p>
+      <p class="enunciado" style="font-size:32px;line-height:1.6">I. \(9^{\frac{3}{2}} = 27\)<br>II. \(64^{-\frac{2}{3}} = \dfrac{1}{4}\)<br>III. \(81^{-0{,}25} = \dfrac{1}{3}\)</p>
+      <p class="enunciado" style="font-size:26px">Assinale a alternativa <b>CORRETA</b>.</p>
+      <ol class="alternativas">
+        <li data-em="2:apaga"><b>A</b><span>Apenas a afirmativa I é verdadeira.</span></li>
+        <li data-em="2:apaga"><b>B</b><span>Apenas a afirmativa II é verdadeira.</span></li>
+        <li data-em="2:apaga"><b>C</b><span>Apenas a afirmativa III é verdadeira.</span></li>
+        <li data-em="2:certo"><b>D</b><span>Apenas as afirmativas I e III são verdadeiras.</span></li>
+        <li data-em="2:apaga"><b>E</b><span>Todas as afirmativas são verdadeiras.</span></li>
+      </ol>
+      <p class="fonte">IF Sudeste MG, prova de 2018 (1º semestre), questão 19</p>
+    </div>
+  </div>
+  <aside class="resolucao">
+    <p class="dados"><b>Dados:</b> \(a^{\frac{m}{n}} = (\sqrt[n]{a})^m\); expoente negativo inverte.</p>
+    <ol class="passos">
+      <li><b>I</b> \(9^{\frac32} = (\sqrt9)^3 = 3^3 = 27\): verdadeira</li>
+      <li><b>II: inverte</b> \(64^{-\frac23} = \dfrac{1}{(\sqrt[3]{64})^2}\)</li>
+      <li><b>II: calcula</b> \(\dfrac{1}{4^2} = \dfrac{1}{16} \neq \dfrac14\): falsa</li>
+      <li><b>III</b> \(-0{,}25 = -\frac14\): \(\dfrac{1}{\sqrt[4]{81}} = \dfrac13\): verdadeira</li>
+    </ol>
+    <p class="resposta"><b>Resposta:</b> só I e III são verdadeiras. <b>Gabarito D.</b></p>
+    <p class="atencao"><b>Destaque no quadro:</b> Tire a raiz e não se esqueça de elevar: \(\sqrt[3]{64} = 4\), e ainda falta o quadrado.</p>
+    <ul class="erros">
+      <li><b>A</b> A III também é verdadeira.</li>
+      <li><b>B</b> A II é justamente a falsa.</li>
+      <li><b>C</b> A I também é verdadeira.</li>
+      <li><b>E</b> A II é falsa: dá \(\frac{1}{16}\).</li>
+    </ul>
+  </aside>
+  <aside class="notas">
+    <p>Clique 1 tira o aviso de pausa. Clique 2: gabarito D.</p>
+    <p>Questão oficial do IF Sudeste MG 2018-1, q19, MAT-0360 (sobra de Potências e radicais). Conferido: √9 = 3 e 3³ = 27; ∛64 = 4 e 4² = 16; ⁴√81 = 3. Quem marca 1/4 na II esqueceu de elevar ao quadrado.</p>
+  </aside>
+</section>
+
+<!-- 21. Questão 3 (IF 2018-2 q20) -->
+<section class="slide questao" data-nome="Questão 3 · IF 2018">
+  <div class="conteudo">
+    <div class="area-resolucao"></div>
+    <span class="pilula pilula-pausa" data-em="1:some">Pause o vídeo e tente</span>
+    <div class="painel-questao">
+      <p class="olho">Questão 3 · IF Sudeste MG 2018</p>
+      <p class="enunciado" style="font-size:32px">Sabendo que \(a = \sqrt{3} + 1\) e \(b = 1 - \sqrt{3}\), o valor de \(\dfrac{a}{b}\) é:</p>
+      <ol class="alternativas">
+        <li data-em="2:certo"><b>A</b><span>\(-2 - \sqrt{3}\)</span></li>
+        <li data-em="2:apaga"><b>B</b><span>\(-2 + \sqrt{3}\)</span></li>
+        <li data-em="2:apaga"><b>C</b><span>\(-3\sqrt{3}\)</span></li>
+        <li data-em="2:apaga"><b>D</b><span>\(-2\)</span></li>
+        <li data-em="2:apaga"><b>E</b><span>\(-1\)</span></li>
+      </ol>
+      <p class="fonte">IF Sudeste MG, prova de 2018 (2º semestre), questão 20</p>
+    </div>
+  </div>
+  <aside class="resolucao">
+    <p class="dados"><b>Dados:</b> \(\dfrac{a}{b} = \dfrac{\sqrt3 + 1}{1 - \sqrt3}\); conjugado de \(1 - \sqrt3\): \(1 + \sqrt3\).</p>
+    <ol class="passos">
+      <li><b>Multiplique em cima e embaixo</b> \(\dfrac{(\sqrt3 + 1)(1 + \sqrt3)}{(1 - \sqrt3)(1 + \sqrt3)}\)</li>
+      <li><b>Embaixo: \(a^2 - b\)</b> \(1 - 3 = -2\)</li>
+      <li><b>Em cima: distributiva</b> \(\sqrt3 + 3 + 1 + \sqrt3 = 4 + 2\sqrt3\)</li>
+      <li><b>Divida cada termo por −2</b> \(\dfrac{4 + 2\sqrt3}{-2} = -2 - \sqrt3\)</li>
+    </ol>
+    <p class="resposta"><b>Resposta:</b> \(-2 - \sqrt{3}\). <b>Gabarito A.</b></p>
+    <p class="atencao"><b>Destaque no quadro:</b> Dividir por −2 troca o sinal dos dois termos.</p>
+    <ul class="erros">
+      <li><b>B</b> Erra o sinal: \(2\sqrt3 : (-2) = -\sqrt3\).</li>
+      <li><b>C</b> Não sai de conta certa.</li>
+      <li><b>D</b> Esquece o termo do meio \(2\sqrt3\).</li>
+      <li><b>E</b> Acha que \(a\) e \(b\) são opostos.</li>
+    </ul>
+  </aside>
+  <aside class="notas">
+    <p>Clique 1 tira o aviso de pausa. Clique 2: gabarito A.</p>
+    <p>Questão oficial do IF Sudeste MG 2018-2, q20, MAT-0508 (sobra de Potências e radicais). Conferido: \((\sqrt3 + 1)^2 = 3 + 2\sqrt3 + 1 = 4 + 2\sqrt3\); \((1 - \sqrt3)(1 + \sqrt3) = 1 - 3 = -2\); \((4 + 2\sqrt3) : (-2) = -2 - \sqrt3\).</p>
+  </aside>
+</section>
+
+<!-- 22. Resumo -->
+<section class="slide" data-nome="Resumo">
+  <div class="conteudo">
+    <p class="olho">Resumo · Potências e radicais</p>
+    <h2 class="titulo">O essencial</h2>
+    <div class="resumo" style="position:absolute;left:0;right:0;top:150px;gap:16px 24px">
+      <div><b>Potências:</b> \(a^m \cdot a^n = a^{m+n}\), \(a^m : a^n = a^{m-n}\), \((a^m)^n = a^{m \cdot n}\), \(a^0 = 1\), \(a^{-n} = \dfrac{1}{a^n}\).</div>
+      <div><b>Notação científica:</b> \(a \times 10^n\) com \(1 \leq a \lt 10\).</div>
+      <div><b>Raiz:</b> \(\sqrt{a \cdot b} = \sqrt{a} \cdot \sqrt{b}\), mas a raiz não se separa na soma.</div>
+      <div><b>Fracionário:</b> \(a^{\frac{m}{n}} = \sqrt[n]{a^m}\); \(\sqrt[m]{\sqrt[n]{a}} = \sqrt[m \cdot n]{a}\). Para comparar ou multiplicar raízes, mesmo índice.</div>
+      <div><b>Racionalizar</b> tira a raiz de baixo; com \(a \pm \sqrt{b}\), use o conjugado: \((a + \sqrt{b})(a - \sqrt{b}) = a^2 - b\).</div>
+      <div><b>Ordem:</b> parênteses, potências e raízes, multiplicação e divisão, soma e subtração.</div>
+    </div>
+  </div>
+  <aside class="notas">
+    <p>"O essencial" da apostila para o subcapítulo inteiro (as duas partes). Peça para tirarem um print desta tela.</p>
+  </aside>
+</section>
+
+<!-- 23. A seguir -->
+<section class="slide capa" data-nome="A seguir">
+  <div class="estrelas"></div>
+  <div class="texto-capa" style="top:200px">
+    <span class="selo">Matemática · IF</span>
+    <p class="aula" style="font-size:28px">A seguir · Unidades de medida · Parte 1 de 2</p>
+    <h1 style="font-size:120px">O sistema métrico decimal</h1>
+    <p class="sub">Comprimento, massa, capacidade e tempo</p>
+  </div>
+  <svg class="emblema" viewBox="0 0 640 640" aria-hidden="true">
+    <rect x="70" y="250" width="500" height="140" rx="24" fill="#FFD10C"/>
+    <g stroke="#3F2FA0" stroke-width="8" stroke-linecap="round"><path d="M120 250v70M170 250v40M220 250v40M270 250v40M320 250v70M370 250v40M420 250v40M470 250v40M520 250v70"/></g>
+    <text x="320" y="372" text-anchor="middle" font-family="'Bricolage Grotesque',Figtree,sans-serif" font-size="44" font-weight="800" fill="#3F2FA0">× 10</text>
+  </svg>
+  <img class="logo-capa" src="{{LOGO_BRANCO}}" alt="Quarks">
+  <aside class="notas"><p>Fim de Potências e radicais. A seguir, Unidades de medida: a escada de 10 em 10 do sistema métrico.</p></aside>
+</section>

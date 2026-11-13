@@ -1,0 +1,378 @@
+<!--aula
+{"disciplina": "fisica", "curso": "IF", "assunto": "Lentes e instrumentos ópticos", "parte": "Parte 1 de 2", "titulo": "Lentes convergentes e divergentes", "scripts": ["animacoes-optica.js"]}
+-->
+<!-- Fonte: apostila IF, Física, cap. 4 Óptica (4.3 Lentes e instrumentos ópticos: "Lentes convergentes e divergentes", exemplo "Que lente é essa?", atenção "Lupa ao Sol" e o resumo). A apostila não traz construção de imagens em lentes nem equações (fora da matriz do IF): "Imagens formadas por lentes" ficou no nível da apostila (convergente perto do objeto aumenta e deixa direita; divergente diminui; a convergente forma a imagem no sensor da câmera). Questões: Modelo IF if-fisica-lentes-e-instrumentos-opticos m002 (FIS-8759), m004 (FIS-8761) e m005 (FIS-8762). A m001 (FIS-8758, lupa ao Sol) fica reservada para o bloco do fim do capítulo. -->
+<style>
+  .caixa, .painel, .linha-ex { box-sizing: border-box; }
+  .linha-ex { background: var(--branco); border: 2px solid var(--lilas-2); border-radius: 24px; padding: 14px 26px; font-size: 30px; line-height: 1.3; }
+  .linha-ex b { color: var(--roxo-titulo); }
+  .painel { background: var(--branco); border: 2px solid var(--lilas-2); border-radius: 30px; padding: 16px 24px; }
+  .painel h3 { margin: 0 0 4px; font: 800 34px var(--fonte-titulo); letter-spacing: -.02em; color: var(--roxo-titulo); }
+  .painel p { margin: 6px 0 0; font-size: 25px; line-height: 1.3; }
+  .painel svg { display: block; }
+  .rot { font-family: Figtree, 'Segoe UI', sans-serif; font-weight: 700; font-size: 24px; fill: #5E5A70; }
+  .rotF { font-family: Figtree, 'Segoe UI', sans-serif; font-weight: 800; font-size: 28px; fill: #3F2FA0; }
+  .raio { fill: none; stroke: #E0A800; stroke-width: 5; stroke-linecap: round; stroke-linejoin: round; }
+  .prolonga { fill: none; stroke: #B08600; stroke-width: 3.5; stroke-dasharray: 9 8; }
+  .lente { fill: rgba(15,139,141,.16); stroke: #0B6B6D; stroke-width: 4; }
+  .eixo { stroke: #9C93C4; stroke-width: 3; stroke-dasharray: 12 8; }
+  .ponto { fill: #3F2FA0; }
+  .usos { display: grid; grid-template-columns: 1fr 1fr; gap: 26px; }
+  .usos h3 { margin: 0 0 10px; font: 800 36px var(--fonte-titulo); color: var(--roxo-titulo); letter-spacing: -.02em; display: flex; align-items: center; gap: 14px; }
+  .usos ul { list-style: none; margin: 0; padding: 0; display: flex; flex-direction: column; gap: 12px; }
+  .usos li { display: grid; grid-template-columns: 74px 1fr; gap: 16px; align-items: center; background: var(--branco); border: 2px solid var(--lilas-2); border-radius: 22px; padding: 8px 18px; font-size: 27px; line-height: 1.25; }
+  .usos li svg { width: 74px; height: 56px; }
+  .usos li b { color: var(--roxo-titulo); }
+  .painel-questao .figura { display: block; margin: 0 auto; }
+  /* folha que esquenta no foco */
+  @keyframes pisca-foco { 0%, 100% { r: 9; opacity: .85; } 50% { r: 13; opacity: 1; } }
+  .slide.ativo .mostra .foco-quente { animation: pisca-foco 2.4s ease-in-out infinite; }
+  @keyframes fumaca { 0% { transform: translateY(0); opacity: 0; } 25% { opacity: .7; } 100% { transform: translateY(-60px); opacity: 0; } }
+  .fumo path { opacity: 0; }
+  .slide.ativo .mostra .fumo path { animation: fumaca 4s ease-out infinite; }
+  .fumo path:nth-child(2) { animation-delay: -2s !important; }
+</style>
+
+<!-- 1. Capa -->
+<section class="slide capa" data-nome="Capa">
+  <div class="estrelas"></div>
+  <div class="texto-capa">
+    <span class="selo">Física · IF</span>
+    <p class="aula">Lentes e instrumentos ópticos · Parte 1 de 2</p>
+    <h1 style="font-size:104px">Lentes convergentes e divergentes</h1>
+    <p class="sub">A lupa que aumenta e a que queima</p>
+  </div>
+  <svg class="emblema" viewBox="0 0 640 640" aria-hidden="true">
+    <g class="gira-lento"><ellipse cx="320" cy="320" rx="300" ry="128" fill="none" stroke="#fff" stroke-opacity=".38" stroke-width="2" transform="rotate(-10 320 320)"/></g>
+    <path d="M320 120 Q400 320 320 520 Q240 320 320 120 Z" fill="#fff" opacity=".9"/>
+    <g stroke="#FFD10C" stroke-width="9" stroke-linecap="round" fill="none"><path d="M40 220 H300 L540 320"/><path d="M40 320 H560"/><path d="M40 420 H300 L540 320"/></g>
+    <circle cx="540" cy="320" r="16" fill="#FFD10C"/>
+  </svg>
+  <img class="logo-capa" src="{{LOGO_BRANCO}}" alt="Quarks">
+  <aside class="notas">
+    <p>Começa o subcapítulo Lentes e instrumentos ópticos. Nesta parte: o que é uma lente, convergente e divergente, as imagens que cada uma forma e o cuidado com a lupa ao Sol. Na Parte 2: os instrumentos ópticos.</p>
+    <p>Da apostila IF, cap. 4, 4.3. Sem equações nem construção de raios em lentes (fora da matriz do IF).</p>
+  </aside>
+</section>
+
+<!-- 2. O que é uma lente -->
+<section class="slide" data-nome="O que é uma lente">
+  <div class="conteudo">
+    <p class="olho">Lentes</p>
+    <h2 class="titulo">A lupa desvia a luz</h2>
+    <svg viewBox="0 0 640 360" width="760" height="428" style="position:absolute;left:0;top:150px;overflow:visible" aria-hidden="true" data-anima="opt-fotons" data-anima-passo="2">
+      <g data-passo="2"><line class="eixo" x1="20" y1="180" x2="620" y2="180"/><path class="raio" d="M20 90 L273 90 L327 110 L600 210"/></g>
+      <path class="lente" d="M300 40 Q380 180 300 320 Q220 180 300 40 Z" data-passo="1"/>
+      <g data-passo="2"><circle cx="276" cy="90" r="16" fill="none" stroke="#D6336C" stroke-width="3"/><circle cx="324" cy="110" r="16" fill="none" stroke="#D6336C" stroke-width="3"/><text x="276" y="62" text-anchor="middle" class="rot" style="fill:#D6336C;font-size:20px">entra</text><text x="352" y="96" text-anchor="start" class="rot" style="fill:#D6336C;font-size:20px">sai</text></g>
+    </svg>
+    <div style="position:absolute;left:840px;right:0;top:150px;display:flex;flex-direction:column;gap:18px">
+      <p class="texto" style="margin:0;font-size:28px">Com uma lupa, você lê as letras miúdas de um rótulo. Ao Sol, a mesma lupa junta a luz num pontinho que queima uma folha seca. Os dois efeitos vêm do mesmo fato: <b>a lupa desvia a luz</b>.</p>
+      <div class="caixa caixa-fundamental" data-passo="1" style="padding:16px 28px">
+        <span class="rotulo">Lente</span>
+        <div class="texto" style="font-size:28px">Objeto <b>transparente</b>, em geral de vidro ou plástico, com pelo menos <b>uma face curva</b>.</div>
+      </div>
+      <div class="linha-ex" data-passo="2" style="font-size:27px">A luz <b>refrata</b> ao entrar e ao sair da lente e <b>muda de direção</b>.</div>
+    </div>
+  </div>
+  <aside class="notas">
+    <p>Clique 1: a definição de lente. Clique 2: um raio atravessando a lente; ele desvia duas vezes, na entrada e na saída (os círculos). É a refração da parte anterior, agora numa superfície curva.</p>
+  </aside>
+</section>
+
+<!-- 3. Convergente e divergente -->
+<section class="slide" data-nome="Convergente e divergente">
+  <div class="conteudo">
+    <p class="olho">Raios paralelos chegando à lente</p>
+    <h2 class="titulo">Junta ou espalha</h2>
+    <div data-anima="opt-fotons" style="position:absolute;left:0;right:0;top:140px;display:grid;grid-template-columns:1fr 1fr;gap:30px">
+      <div class="painel" data-passo="1">
+        <svg viewBox="0 0 720 400" width="100%" height="320" aria-hidden="true"><line class="eixo" x1="20" y1="200" x2="700" y2="200"/><path class="lente" d="M330 50 Q384 200 330 350 Q276 200 330 50 Z"/><path class="raio" d="M20 110 L330 110 L690 272"/><path class="raio" d="M20 160 L330 160 L690 232"/><path class="raio" d="M20 240 L330 240 L690 168"/><path class="raio" d="M20 290 L330 290 L690 128"/><circle cx="530" cy="200" r="9" class="ponto"/><text x="530" y="244" class="rotF" text-anchor="middle">F</text></svg>
+        <h3>Convergente</h3>
+        <p><b>Junta</b> no <b>foco</b> os raios que chegam paralelos. Em geral, é <b>mais grossa no meio</b> que nas bordas.</p>
+      </div>
+      <div class="painel" data-passo="2">
+        <svg viewBox="0 0 720 400" width="100%" height="320" aria-hidden="true"><line class="eixo" x1="20" y1="200" x2="700" y2="200"/><path class="lente" d="M300 50 H360 Q334 200 360 350 H300 Q326 200 300 50 Z"/><path class="raio" d="M20 120 L330 120 L640 -4"/><path class="prolonga" d="M330 120 L130 200"/><path class="raio" d="M20 165 L330 165 L640 110.8"/><path class="prolonga" d="M330 165 L130 200"/><path class="raio" d="M20 235 L330 235 L640 289.2"/><path class="prolonga" d="M330 235 L130 200"/><path class="raio" d="M20 280 L330 280 L640 404"/><path class="prolonga" d="M330 280 L130 200"/><circle cx="130" cy="200" r="9" class="ponto"/><text x="130" y="244" class="rotF" text-anchor="middle">F</text></svg>
+        <h3>Divergente</h3>
+        <p><b>Espalha</b> os raios que chegam paralelos: parecem vir de um foco do <b>mesmo lado</b> de onde a luz chegou. Em geral, é <b>mais fina no meio</b>.</p>
+      </div>
+    </div>
+  </div>
+  <aside class="notas">
+    <p>Os pontinhos mostram a luz andando. Clique 1: a convergente junta os raios no foco F. Clique 2: a divergente espalha; os prolongamentos tracejados se encontram num foco do lado de onde a luz veio.</p>
+    <p>Dica para a prova: olhe a espessura. Mais grossa no meio, convergente; mais fina no meio, divergente (é a questão 1).</p>
+  </aside>
+</section>
+
+<!-- 4. Imagens formadas por lentes -->
+<section class="slide" data-nome="Imagens formadas por lentes">
+  <div class="conteudo">
+    <p class="olho">Imagens formadas por lentes</p>
+    <h2 class="titulo">Maior ou menor?</h2>
+    <div class="painel" data-passo="1" style="position:absolute;left:0;top:150px;width:860px">
+      <h3>Convergente perto do objeto: a lupa</h3>
+      <div data-anima="opt-lupa" data-anima-passo="1" data-w="810" data-h="230" data-raio="86" data-aumento="2" data-texto="Tome 1 comprimido a cada 8 horas, depois das refeições." style="width:810px;height:230px;margin-top:6px"></div>
+      <p>Forma uma imagem <b>maior e direita</b>.</p>
+    </div>
+    <div class="painel" data-passo="2" style="position:absolute;left:920px;right:0;top:150px">
+      <h3>Divergente: imagens menores</h3>
+      <svg viewBox="0 0 800 230" width="100%" height="230" aria-hidden="true" style="margin-top:6px">
+        <rect x="0" y="0" width="800" height="230" rx="24" fill="#FFFFFF" stroke="#E4DEFB" stroke-width="2"/>
+        <defs><clipPath id="opMenor"><circle cx="400" cy="112" r="86"/></clipPath></defs>
+        <text x="30" y="122" font-family="Figtree,'Segoe UI',sans-serif" font-size="26" font-weight="600" fill="#292B2C">Tome 1 comprimido a cada 8 horas, depois das refeições.</text>
+        <g clip-path="url(#opMenor)"><rect x="300" y="20" width="200" height="190" fill="#FFFDF2"/><text transform="translate(400 112) scale(.55) translate(-400 -112)" x="30" y="122" font-family="Figtree,'Segoe UI',sans-serif" font-size="26" font-weight="600" fill="#292B2C">Tome 1 comprimido a cada 8 horas, depois das refeições.</text></g>
+        <circle cx="400" cy="112" r="86" fill="rgba(224,244,244,.18)" stroke="#5E5A70" stroke-width="10"/>
+      </svg>
+      <p>As letras ficam <b>menores</b>, e cabe mais coisa no círculo.</p>
+    </div>
+    <div class="caixa caixa-fundamental" data-passo="3" style="position:absolute;left:580px;right:0;top:640px;padding:14px 26px">
+      <div class="texto" style="font-size:27px">Nas <b>câmeras</b> e nos <b>projetores</b>, a lente convergente forma a imagem numa tela ou num sensor (é o que veremos nos instrumentos).</div>
+    </div>
+  </div>
+  <aside class="notas">
+    <p>Clique 1: a lupa passa devagar sobre a bula; dentro dela as letras aparecem maiores e direitas. Clique 2: a lente divergente sobre o mesmo texto; as letras ficam menores. Clique 3: a convergente também forma a imagem na câmera e no projetor (Parte 2).</p>
+    <p>A apostila do IF não pede a construção de raios nas lentes nem a posição da imagem; basta saber que a convergente usada perto do objeto aumenta e que a divergente diminui.</p>
+  </aside>
+</section>
+
+<!-- 5. Onde estão -->
+<section class="slide" data-nome="Onde estão as lentes">
+  <div class="conteudo">
+    <p class="olho">No dia a dia</p>
+    <h2 class="titulo">Onde estão as lentes</h2>
+    <div class="usos" style="position:absolute;left:0;right:0;top:150px">
+      <div data-passo="1">
+        <h3><svg viewBox="0 0 60 80" width="36" height="48" aria-hidden="true"><path d="M30 4 Q52 40 30 76 Q8 40 30 4 Z" fill="rgba(15,139,141,.2)" stroke="#0B6B6D" stroke-width="4"/></svg>Convergente</h3>
+        <ul>
+          <li><svg viewBox="0 0 74 56" aria-hidden="true"><circle cx="30" cy="24" r="18" fill="#E0F4F4" stroke="#5E5A70" stroke-width="5"/><path d="M43 37 L60 52" stroke="#5E5A70" stroke-width="8" stroke-linecap="round"/></svg><span>a <b>lupa</b></span></li>
+          <li><svg viewBox="0 0 74 56" aria-hidden="true"><rect x="6" y="14" width="62" height="38" rx="8" fill="#5E5A70"/><rect x="18" y="8" width="18" height="8" rx="2" fill="#5E5A70"/><circle cx="37" cy="33" r="13" fill="#E0F4F4" stroke="#292B2C" stroke-width="4"/></svg><span>as <b>câmeras</b></span></li>
+          <li><svg viewBox="0 0 74 56" aria-hidden="true"><rect x="4" y="18" width="46" height="28" rx="6" fill="#5E5A70"/><circle cx="50" cy="32" r="9" fill="#E0F4F4" stroke="#292B2C" stroke-width="3"/><path d="M58 28 L72 16 M58 36 L72 48" stroke="#E0A800" stroke-width="3"/></svg><span>os <b>projetores</b></span></li>
+          <li><svg viewBox="0 0 74 56" aria-hidden="true"><circle cx="20" cy="30" r="15" fill="#E0F4F4" stroke="#292B2C" stroke-width="4"/><circle cx="54" cy="30" r="15" fill="#E0F4F4" stroke="#292B2C" stroke-width="4"/><path d="M35 28 q2 -4 4 0" stroke="#292B2C" stroke-width="4" fill="none"/></svg><span>os óculos de quem tem dificuldade de enxergar <b>de perto</b></span></li>
+        </ul>
+      </div>
+      <div data-passo="2">
+        <h3><svg viewBox="0 0 60 80" width="36" height="48" aria-hidden="true"><path d="M14 4 H46 Q32 40 46 76 H14 Q28 40 14 4 Z" fill="rgba(15,139,141,.2)" stroke="#0B6B6D" stroke-width="4"/></svg>Divergente</h3>
+        <ul>
+          <li><svg viewBox="0 0 74 56" aria-hidden="true"><circle cx="20" cy="30" r="15" fill="#E0F4F4" stroke="#292B2C" stroke-width="4"/><circle cx="54" cy="30" r="15" fill="#E0F4F4" stroke="#292B2C" stroke-width="4"/><path d="M35 28 q2 -4 4 0" stroke="#292B2C" stroke-width="4" fill="none"/></svg><span>os óculos de quem não enxerga bem <b>de longe</b></span></li>
+          <li><svg viewBox="0 0 74 56" aria-hidden="true"><rect x="14" y="2" width="46" height="54" rx="4" fill="#C9A27A" stroke="#8A5A33" stroke-width="3"/><circle cx="37" cy="22" r="7" fill="#E0F4F4" stroke="#292B2C" stroke-width="3"/><circle cx="50" cy="34" r="3" fill="#8A5A33"/></svg><span>o <b>olho mágico</b> das portas, que mostra um <b>campo de visão maior</b></span></li>
+        </ul>
+      </div>
+    </div>
+  </div>
+  <aside class="notas">
+    <p>Clique 1: os usos da convergente; clique 2: os da divergente, como estão na apostila. Os óculos voltam com detalhe em O olho humano (miopia, hipermetropia e presbiopia).</p>
+    <p>No olho mágico as pessoas aparecem pequenas, mas se vê quase o corredor inteiro (é a questão 2).</p>
+  </aside>
+</section>
+
+<!-- 6. Exemplo: que lente é essa? -->
+<section class="slide" data-nome="Exemplo: que lente é essa?">
+  <div class="conteudo">
+    <p class="olho">Exemplo</p>
+    <h2 class="titulo">Que lente é essa?</h2>
+    <p class="texto" style="position:absolute;left:0;right:0;top:150px;margin:0;font-size:30px">Kauã olha um texto através de duas lentes. Na lente <b>A</b>, as letras ficam <b>maiores</b>; na lente <b>B</b>, ficam <b>menores</b>. Qual é convergente?</p>
+    <svg viewBox="0 0 860 300" width="860" height="300" style="position:absolute;left:0;top:270px;overflow:visible" aria-hidden="true">
+      <g transform="translate(200 150)"><circle r="130" fill="#FFFDF2" stroke="#5E5A70" stroke-width="10"/><text y="22" text-anchor="middle" font-family="Figtree,sans-serif" font-weight="700" font-size="68" fill="#292B2C">texto</text><text y="-150" text-anchor="middle" class="rot" style="font-weight:800;fill:#3F2FA0;font-size:30px">A</text></g>
+      <g transform="translate(600 150)"><circle r="130" fill="#FFFDF2" stroke="#5E5A70" stroke-width="10"/><text y="9" text-anchor="middle" font-family="Figtree,sans-serif" font-weight="700" font-size="26" fill="#292B2C">texto texto texto</text><text y="-150" text-anchor="middle" class="rot" style="font-weight:800;fill:#3F2FA0;font-size:30px">B</text></g>
+    </svg>
+    <div style="position:absolute;left:960px;right:0;top:290px;display:flex;flex-direction:column;gap:18px">
+      <div class="linha-ex" data-passo="1" style="font-size:28px"><b>Raciocínio:</b> usada perto do objeto, a convergente funciona como lupa e <b>aumenta</b>; a divergente <b>diminui</b>.</div>
+    </div>
+    <span class="pilula pilula-resposta" data-passo="2" style="position:absolute;right:0;top:600px">A é convergente e B é divergente</span>
+  </div>
+  <aside class="notas">
+    <p>Exemplo "Que lente é essa?" da apostila. Peça a resposta antes do clique 1. Clique 2: a resposta.</p>
+  </aside>
+</section>
+
+<!-- 7. Atenção: lupa ao Sol -->
+<section class="slide" data-nome="Lupa ao Sol">
+  <div class="conteudo">
+    <p class="olho">Atenção</p>
+    <h2 class="titulo">Lupa ao Sol</h2>
+    <svg viewBox="0 0 700 460" width="700" height="460" style="position:absolute;left:0;top:130px;overflow:visible" aria-hidden="true" data-anima="opt-fotons" data-anima-passo="1">
+      <circle cx="80" cy="60" r="44" fill="#FFD10C"/><circle cx="80" cy="60" r="60" fill="#FFD10C" opacity=".25"/>
+      <g data-passo="1">
+        <path class="raio" d="M260 10 L260 170 L400 360"/><path class="raio" d="M340 10 L340 170 L400 360"/><path class="raio" d="M460 10 L460 170 L400 360"/><path class="raio" d="M540 10 L540 170 L400 360"/>
+      </g>
+      <ellipse cx="400" cy="170" rx="170" ry="26" fill="rgba(15,139,141,.18)" stroke="#0B6B6D" stroke-width="5"/>
+      <path d="M570 170 L660 170" stroke="#5E5A70" stroke-width="18" stroke-linecap="round"/>
+      <path d="M240 400 q160 -70 330 -10 q-160 70 -330 10 z" fill="#B9925A" stroke="#8A5A33" stroke-width="3"/>
+      <path d="M260 400 Q400 380 550 392" stroke="#8A5A33" stroke-width="2" fill="none"/>
+      <g data-passo="1"><circle class="foco-quente" cx="400" cy="362" r="10" fill="#FFF4C2" stroke="#FF8A3D" stroke-width="4"/>
+        <g class="fumo" fill="none" stroke="#9C93C4" stroke-width="4" stroke-linecap="round"><path d="M400 340 q10 -12 0 -24 q-10 -12 0 -24"/><path d="M412 344 q10 -12 0 -24 q-10 -12 0 -24"/></g></g>
+    </svg>
+    <div style="position:absolute;left:800px;right:0;top:160px;display:flex;flex-direction:column;gap:18px">
+      <div class="linha-ex" data-passo="1" style="font-size:28px">A lupa ao Sol <b>concentra luz e calor</b> no foco: a folha seca esquenta até soltar fumaça.</div>
+      <div class="caixa caixa-atencao" data-passo="2" style="padding:16px 28px">
+        <span class="rotulo">Cuidado</span>
+        <div class="texto" style="font-size:28px">Pode causar <b>queimaduras e incêndios</b>. <b>Nunca olhe para o Sol</b> através dela.</div>
+      </div>
+    </div>
+  </div>
+  <aside class="notas">
+    <p>Atenção "Lupa ao Sol" da apostila. Clique 1: a luz do Sol chega paralela, a lupa junta tudo num ponto da folha, que brilha e solta fumaça. Clique 2: o cuidado. O mesmo vale para garrafas e cacos de vidro no mato (questão 3) e para olhar o Sol com binóculo ou luneta (O olho humano).</p>
+  </aside>
+</section>
+
+<!-- Questão 1 -->
+<section class="slide questao" data-nome="Questão 1">
+  <div class="conteudo">
+    <div class="area-resolucao"></div>
+    <span class="pilula pilula-pausa" data-em="1:some">Pause o vídeo e tente</span>
+    <div class="painel-questao">
+      <p class="olho">Questão 1 · Modelo IF</p>
+      <p class="enunciado" style="font-size:24px">Uma loja de material escolar vende lentes de vidro para experiências de Ciências. A figura mostra quatro dessas lentes vistas de lado.</p>
+      <svg viewBox="0 0 520 200" width="500" height="192" class="figura" aria-hidden="true">
+        <g fill="#E0F4F4" stroke="#0B6B6D" stroke-width="5" stroke-linejoin="round">
+          <path d="M45 30 H85 Q125 100 85 170 H45 Q5 100 45 30 Z"/>
+          <path d="M170 30 H230 Q205 100 230 170 H170 Q195 100 170 30 Z"/>
+          <path d="M310 30 H350 Q385 100 350 170 H310 Z"/>
+          <path d="M440 30 H490 Q462 100 490 170 H440 Z"/>
+        </g>
+        <g font-family="Figtree,sans-serif" font-weight="800" font-size="26" fill="#292B2C" text-anchor="middle"><text x="65" y="198">1</text><text x="200" y="198">2</text><text x="335" y="198">3</text><text x="465" y="198">4</text></g>
+      </svg>
+      <p class="enunciado" style="font-size:24px">Um estudante quer comprar lentes que funcionem como <b>lupa</b>, para ver maiores as letras miúdas de um mapa. Ele deve escolher as lentes</p>
+      <ol class="alternativas curtas">
+        <li data-em="2:apaga"><b>A</b><span>1, apenas</span></li>
+        <li data-em="2:apaga"><b>B</b><span>2 e 4, apenas</span></li>
+        <li data-em="2:apaga"><b>C</b><span>3 e 4, apenas</span></li>
+        <li data-em="2:certo"><b>D</b><span>1 e 3, apenas</span></li>
+        <li data-em="2:apaga"><b>E</b><span>1, 2, 3 e 4</span></li>
+      </ol>
+    </div>
+  </div>
+  <aside class="resolucao">
+    <p class="dados"><b>Dados:</b> quatro perfis de lente; quer uma lupa.</p>
+    <ol class="passos">
+      <li>Lupa = lente convergente.</li>
+      <li>Convergente: mais grossa no meio.</li>
+      <li>1 e 3: grossas no meio.</li>
+      <li>2 e 4: finas no meio (divergentes).</li>
+    </ol>
+    <p class="resposta"><b>Resposta:</b> lentes 1 e 3. <b>Gabarito D.</b></p>
+    <p class="atencao"><b>Destaque no quadro:</b> A face plana não decide nada: olhe a espessura do meio.</p>
+    <ul class="erros">
+      <li><b>A</b> Esquece a 3 (uma face curva para fora basta).</li>
+      <li><b>B</b> Troca os tipos: 2 e 4 diminuem.</li>
+      <li><b>C</b> A 4 é mais fina no meio.</li>
+      <li><b>E</b> Nem toda lente aumenta.</li>
+    </ul>
+  </aside>
+  <aside class="notas">
+    <p>Clique 1 tira o aviso de pausa: resolva na área (D liga a caneta; E esconde o enunciado). Clique 2: gabarito D.</p>
+    <p>Modelo IF, lote if-fisica-lentes-e-instrumentos-opticos, m002, FIS-8759 (está na apostila, 4.3). Figura redesenhada a partir da do banco (mesmos quatro perfis, mesma numeração).</p>
+  </aside>
+</section>
+
+<!-- Questão 2 -->
+<section class="slide questao" data-nome="Questão 2">
+  <div class="conteudo">
+    <div class="area-resolucao"></div>
+    <span class="pilula pilula-pausa" data-em="1:some">Pause o vídeo e tente</span>
+    <div class="painel-questao">
+      <p class="olho">Questão 2 · Modelo IF</p>
+      <p class="enunciado" style="font-size:24px">O olho mágico, instalado em muitas portas de apartamento, permite ver quem está no corredor sem abrir a porta. Quem olha por ele vê as pessoas pequenas, mas enxerga quase o corredor inteiro de uma vez, inclusive alguém encostado na parede, ao lado da porta.</p>
+      <p class="enunciado" style="font-size:24px">Esse efeito é obtido com uma lente</p>
+      <ol class="alternativas">
+        <li data-em="2:apaga" style="font-size:21px"><b>A</b><span>convergente, que aumenta a imagem das pessoas para mostrar mais detalhes do corredor.</span></li>
+        <li data-em="2:apaga" style="font-size:21px"><b>B</b><span>convergente, que junta a luz do corredor num ponto e, por isso, mostra uma região maior.</span></li>
+        <li data-em="2:apaga" style="font-size:21px"><b>C</b><span>divergente, que é mais grossa no meio que nas bordas e forma imagens menores.</span></li>
+        <li data-em="2:apaga" style="font-size:21px"><b>D</b><span>plana, sem nenhuma face curva, que deixa a luz passar sem desviá-la.</span></li>
+        <li data-em="2:certo" style="font-size:21px"><b>E</b><span>divergente, que espalha a luz, forma imagens menores e mostra um campo de visão maior.</span></li>
+      </ol>
+    </div>
+  </div>
+  <aside class="resolucao">
+    <p class="dados"><b>Dados:</b> pessoas pequenas; quase o corredor inteiro.</p>
+    <ol class="passos">
+      <li>Imagens menores: lente divergente.</li>
+      <li>Divergente espalha a luz.</li>
+      <li>Imagens menores: campo de visão maior.</li>
+    </ol>
+    <p class="resposta"><b>Resposta:</b> divergente, imagens menores e campo maior. <b>Gabarito E.</b></p>
+    <p class="atencao"><b>Destaque no quadro:</b> Divergente: mais fina no meio, diminui, mostra mais.</p>
+    <ul class="erros">
+      <li><b>A</b> A convergente aumentaria as pessoas.</li>
+      <li><b>B</b> Juntar a luz não amplia o campo.</li>
+      <li><b>C</b> A divergente é mais fina no meio.</li>
+      <li><b>D</b> Vidro plano não muda o tamanho.</li>
+    </ul>
+  </aside>
+  <aside class="notas">
+    <p>Clique 1 tira o aviso de pausa: resolva na área (D liga a caneta; E esconde o enunciado). Clique 2: gabarito E.</p>
+    <p>Modelo IF, lote if-fisica-lentes-e-instrumentos-opticos, m004, FIS-8761 (está na apostila, 4.3).</p>
+  </aside>
+</section>
+
+<!-- Questão 3 -->
+<section class="slide questao" data-nome="Questão 3">
+  <div class="conteudo">
+    <div class="area-resolucao"></div>
+    <span class="pilula pilula-pausa" data-em="1:some">Pause o vídeo e tente</span>
+    <div class="painel-questao" style="gap:12px">
+      <p class="olho">Questão 3 · Modelo IF</p>
+      <p class="enunciado" style="font-size:21px;line-height:1.33">Na estação seca, de maio a setembro, aumentam os incêndios em pastos e matas da Zona da Mata mineira. As campanhas de prevenção pedem que ninguém jogue garrafas e cacos de vidro no mato.</p>
+      <p class="enunciado" style="font-size:21px;line-height:1.33">Considere uma garrafa redonda e transparente, cheia de água e deitada ao sol sobre o capim seco. Sobre o risco que ela representa, é <b>CORRETO</b> afirmar que</p>
+      <ol class="alternativas" style="gap:8px">
+        <li data-em="2:apaga" style="font-size:19px;padding:6px 14px"><b>A</b><span>a água da garrafa absorve a luz do Sol e aquece o capim por contato, como uma bolsa de água quente.</span></li>
+        <li data-em="2:apaga" style="font-size:19px;padding:6px 14px"><b>B</b><span>a garrafa funciona como um espelho plano, que reflete a luz do Sol de volta para o céu.</span></li>
+        <li data-em="2:certo" style="font-size:19px;padding:6px 14px"><b>C</b><span>a garrafa cheia, mais grossa no meio que nas bordas, funciona como uma lente convergente e pode juntar a luz do Sol numa pequena região do capim, que esquenta muito.</span></li>
+        <li data-em="2:apaga" style="font-size:19px;padding:6px 14px"><b>D</b><span>a garrafa funciona como uma lente divergente, que espalha a luz do Sol por uma grande área do capim e aquece toda essa área até pegar fogo.</span></li>
+        <li data-em="2:apaga" style="font-size:19px;padding:6px 14px"><b>E</b><span>só garrafas de vidro escuro oferecem perigo, porque a cor escura junta a luz do Sol num ponto.</span></li>
+      </ol>
+    </div>
+  </div>
+  <aside class="resolucao">
+    <p class="dados"><b>Dados:</b> garrafa redonda, transparente, cheia de água, ao sol.</p>
+    <ol class="passos">
+      <li>Vista de lado: mais grossa no meio.</li>
+      <li>Funciona como lente convergente.</li>
+      <li>Junta a luz do Sol numa faixa estreita.</li>
+      <li>Muita energia numa área pequena: o capim pode pegar fogo.</li>
+    </ol>
+    <p class="resposta"><b>Resposta:</b> lente convergente que concentra a luz. <b>Gabarito C.</b></p>
+    <p class="atencao"><b>Destaque no quadro:</b> Quem concentra a luz é a forma de lente, não a cor.</p>
+    <ul class="erros">
+      <li><b>A</b> Esquece o desvio da luz.</li>
+      <li><b>B</b> A luz atravessa a garrafa (refração).</li>
+      <li><b>D</b> Divergente espalharia: menos luz por área.</li>
+      <li><b>E</b> Cor escura absorve, mas não junta a luz.</li>
+    </ul>
+  </aside>
+  <aside class="notas">
+    <p>Clique 1 tira o aviso de pausa: resolva na área (D liga a caneta; E esconde o enunciado). Clique 2: gabarito C.</p>
+    <p>Modelo IF, lote if-fisica-lentes-e-instrumentos-opticos, m005, FIS-8762 (está na apostila, 4.3). É a lupa ao Sol num objeto que não foi feito para ser lente.</p>
+  </aside>
+</section>
+
+<!-- Resumo -->
+<section class="slide" data-nome="Resumo">
+  <div class="conteudo">
+    <p class="olho">Resumo</p>
+    <h2 class="titulo">O essencial</h2>
+    <div class="resumo" style="position:absolute;left:0;right:0;top:150px">
+      <div><b>Lente:</b> material transparente com face curva que desvia a luz por <b>refração</b>.</div>
+      <div><b>Convergente</b> (mais grossa no meio): junta a luz no foco; serve de lupa e <b>aumenta</b> a imagem.</div>
+      <div><b>Divergente</b> (mais fina no meio): espalha a luz; <b>diminui</b> a imagem (olho mágico, óculos para longe).</div>
+      <div><b>Lupa ao Sol</b> concentra luz e calor: queimaduras e incêndios. Nunca olhe o Sol por ela.</div>
+    </div>
+  </div>
+  <aside class="notas"><p>Os três primeiros itens do resumo do 4.3 da apostila, mais a atenção da lupa. O último item do resumo (instrumentos) fica na Parte 2. Peça para tirarem um print desta tela.</p></aside>
+</section>
+
+<!-- A seguir -->
+<section class="slide capa" data-nome="A seguir">
+  <div class="estrelas"></div>
+  <div class="texto-capa" style="top:170px">
+    <span class="selo">Física · IF</span>
+    <p class="aula" style="font-size:26px">A seguir · Lentes e instrumentos ópticos · Parte 2 de 2</p>
+    <h1>Instrumentos ópticos</h1>
+    <p class="sub">Lupa, luneta, câmera e mais</p>
+  </div>
+  <svg class="emblema" viewBox="0 0 640 640" aria-hidden="true">
+    <g transform="rotate(-24 320 320)"><rect x="120" y="270" width="380" height="100" rx="24" fill="#fff" opacity=".92"/><rect x="480" y="250" width="70" height="140" rx="20" fill="#FFD10C"/><rect x="80" y="290" width="50" height="60" rx="14" fill="#FFD10C"/></g>
+    <path d="M270 420 L230 560 M370 420 L410 560" stroke="#fff" stroke-width="12" stroke-linecap="round" opacity=".8"/>
+  </svg>
+  <img class="logo-capa" src="{{LOGO_BRANCO}}" alt="Quarks">
+  <aside class="notas"><p>Na Parte 2: os instrumentos ópticos (lupa, microscópio, luneta e telescópio, periscópio e câmera fotográfica) e como eles mudaram a sociedade.</p></aside>
+</section>

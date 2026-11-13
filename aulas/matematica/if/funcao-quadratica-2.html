@@ -1,0 +1,502 @@
+<!--aula
+{"disciplina": "matematica", "curso": "IF", "assunto": "Função quadrática", "parte": "Parte 2 de 2", "titulo": "Zeros, vértice e máximo", "scripts": ["animacoes-funcoes.js"]}
+-->
+<!-- Fonte: apostila IF, Matemática, cap. 4 (4.3 Função quadrática: Zeros e interseções com os eixos; Vértice, máximo e mínimo; Forma fatorada e forma canônica; Problemas com função quadrática; resumo). Questões da apostila: Modelo IF if-matematica-funcao-quadratica m002 e m003; oficiais 2017-1 q13 e 2019-2 q21 (sobras do capítulo em planejamento/questoes-if.md). -->
+<style>
+  .caixa { box-sizing: border-box; }
+  .lado { display: grid; grid-template-columns: 1fr 1fr; column-gap: 60px; }
+  .tres { display: grid; grid-template-columns: repeat(3, 1fr); gap: 22px; }
+  .tres .caixa { text-align: center; padding: 18px 20px; }
+  .tres .grande { font-size: 44px; margin-bottom: 4px; }
+</style>
+
+<!-- 1. Capa -->
+<section class="slide capa" data-nome="Capa">
+  <div class="estrelas"></div>
+  <div class="texto-capa">
+    <span class="selo">Matemática · IF</span>
+    <p class="aula">Função quadrática · Parte 2 de 2</p>
+    <h1>Zeros, vértice e máximo</h1>
+    <p class="sub">Onde a parábola corta e até onde vai</p>
+  </div>
+  <svg class="emblema" viewBox="0 0 640 640" aria-hidden="true">
+    <path d="M90 470 H590 M330 80 V580" stroke="#fff" stroke-opacity=".8" stroke-width="5" stroke-linecap="round" fill="none"/>
+    <g class="gira-lento"><ellipse cx="330" cy="320" rx="280" ry="120" fill="none" stroke="#fff" stroke-opacity=".3" stroke-width="2" transform="rotate(-12 330 320)"/></g>
+    <path d="M160 140 Q330 760 500 140" fill="none" stroke="#FFD10C" stroke-width="9" stroke-linecap="round"/>
+    <circle cx="216" cy="370" r="14" fill="#fff"/><circle cx="444" cy="370" r="14" fill="#fff"/>
+    <circle cx="330" cy="450" r="16" fill="#FFD10C" stroke="#fff" stroke-width="4"/>
+  </svg>
+  <img class="logo-capa" src="{{LOGO_BRANCO}}" alt="Quarks">
+  <aside class="notas">
+    <p>Nesta parte: cortes com os eixos e o Δ, vértice, máximo e mínimo, formas fatorada e canônica e o problema da bola. No fim, o bloco de questões do IF do capítulo.</p>
+  </aside>
+</section>
+
+<!-- 2. Cortes com os eixos -->
+<section class="slide" data-nome="Cortes com os eixos">
+  <div class="conteudo">
+    <p class="olho">Zeros e interseções</p>
+    <h2 class="titulo">Onde a parábola corta os eixos</h2>
+    <div style="position:absolute;left:0;width:800px;top:160px;display:flex;flex-direction:column;gap:24px">
+      <div class="caixa caixa-fundamental" data-passo="1">
+        <span class="rotulo">Eixo x: os zeros</span>
+        <div class="texto" style="font-size:32px">Ali \(y = 0\): raízes de \(ax^2 + bx + c = 0\) (Equações do 2º grau).</div>
+      </div>
+      <div class="caixa caixa-fundamental" data-passo="2">
+        <span class="rotulo">Eixo y</span>
+        <div class="texto" style="font-size:32px">No ponto \((0;\ c)\).</div>
+      </div>
+    </div>
+    <div data-anima="fn-cortes" data-anima-passo="0" style="position:absolute;left:900px;top:110px;width:860px;height:740px"></div>
+  </div>
+  <aside class="notas">
+    <p>A parábola de y = x² − 2x − 3 se desenha; depois aparecem os zeros (−1 e 3), o corte em y (0; −3) e o vértice (1; −4), que é o assunto do meio desta parte.</p>
+  </aside>
+</section>
+
+<!-- 3. O Δ -->
+<section class="slide" data-nome="O Δ e os cortes">
+  <div class="conteudo">
+    <p class="olho">Discriminante</p>
+    <h2 class="titulo">Quantas vezes toca o eixo x?</h2>
+    <div data-anima="fn-delta" data-anima-passo="0" style="position:absolute;left:820px;top:110px;width:940px;height:740px"></div>
+    <div style="position:absolute;left:0;width:740px;top:150px;display:flex;flex-direction:column;gap:14px">
+      <p style="margin:0;font-size:56px">\(\Delta = b^2 - 4ac\)</p>
+      <div class="caixa" style="padding:14px 26px" data-passo="1"><div class="texto" style="font-size:32px">\(\Delta > 0\): corta em <b>dois</b> pontos.</div></div>
+      <div class="caixa" style="padding:14px 26px" data-passo="2"><div class="texto" style="font-size:32px">\(\Delta = 0\): toca em <b>um</b> ponto (o vértice).</div></div>
+      <div class="caixa" style="padding:14px 26px" data-passo="3"><div class="texto" style="font-size:32px">\(\Delta < 0\): <b>não toca</b>.</div></div>
+    </div>
+  </div>
+  <aside class="notas">
+    <p>Na animação, y = x² − 2x + c sobe: c = −3 (Δ = 16), c = 1 (Δ = 0) e c = 3 (Δ = −8). A boca é a mesma; muda só a altura.</p>
+  </aside>
+</section>
+
+<!-- 4. Exemplo: os cortes -->
+<section class="slide" data-nome="Exemplo: os cortes">
+  <div class="conteudo">
+    <p class="olho">Exemplo</p>
+    <h2 class="titulo">Cortes de \(y = x^2 - 2x - 3\)</h2>
+    <p class="texto" style="position:absolute;left:0;top:150px;margin:0"><b>Eixo y:</b> \(c = -3\), ponto \((0;\ {-3})\).</p>
+    <div class="contas" style="position:absolute;left:0;top:240px;font-size:46px;row-gap:10px">
+      <div class="eq" data-passo="1"><span>\(\Delta\)</span><span>\(=\)</span><span>\(b^2 - 4ac\)</span></div>
+      <div class="eq" data-passo="2"><span>\(\Delta\)</span><span>\(=\)</span><span>\((-2)^2 - 4 \cdot 1 \cdot (-3)\)</span></div>
+      <div class="eq" data-passo="3"><span>\(\Delta\)</span><span>\(=\)</span><span>\(4 + 12\)</span></div>
+      <div class="eq final" data-passo="4"><span>\(\Delta\)</span><span>\(=\)</span><span>\(16\)</span></div>
+    </div>
+    <div class="contas" style="position:absolute;left:960px;top:240px;font-size:46px;row-gap:16px">
+      <div class="eq" data-passo="5"><span>\(x\)</span><span>\(=\)</span><span>\(\dfrac{-b \pm \sqrt{\Delta}}{2a} = \dfrac{2 \pm 4}{2}\)</span></div>
+      <div class="eq final" data-passo="6"><span>\(x_1\)</span><span>\(=\)</span><span>\(\dfrac{2 + 4}{2} = 3\)</span></div>
+      <div class="eq final" data-passo="7"><span>\(x_2\)</span><span>\(=\)</span><span>\(\dfrac{2 - 4}{2} = -1\)</span></div>
+    </div>
+    <span class="pilula pilula-resposta" data-passo="8" style="position:absolute;right:0;top:720px">Eixo x: \((-1;\ 0)\) e \((3;\ 0)\) · eixo y: \((0;\ {-3})\)</span>
+  </div>
+  <aside class="notas">
+    <p>Primeiro o corte em y, de graça: c. Depois o Δ e a fórmula. Uma linha por clique.</p>
+  </aside>
+</section>
+
+<!-- 5. Questão 1 -->
+<section class="slide questao" data-nome="Questão 1">
+  <div class="conteudo">
+    <div class="area-resolucao"></div>
+    <span class="pilula pilula-pausa" data-em="1:some">Pause o vídeo e tente</span>
+    <div class="painel-questao">
+      <p class="olho">Questão 1 · Modelo IF</p>
+      <p class="enunciado">Para desenhar o gráfico de \(y = x^2 - 6x + 8\) no caderno, Júlia quer marcar primeiro os pontos em que a parábola corta os eixos. Esses pontos são:</p>
+      <ol class="alternativas">
+        <li data-em="2:certo"><b>A</b><span>\((2;\ 0)\), \((4;\ 0)\) e \((0;\ 8)\)</span></li>
+        <li data-em="2:apaga"><b>B</b><span>\((-2;\ 0)\), \((-4;\ 0)\) e \((0;\ 8)\)</span></li>
+        <li data-em="2:apaga"><b>C</b><span>\((4;\ 0)\), \((8;\ 0)\) e \((0;\ 8)\)</span></li>
+        <li data-em="2:apaga"><b>D</b><span>\((0;\ 2)\), \((0;\ 4)\) e \((8;\ 0)\)</span></li>
+        <li data-em="2:apaga"><b>E</b><span>\((2;\ 0)\), \((4;\ 0)\) e \((0;\ {-6})\)</span></li>
+      </ol>
+      <p class="fonte">Questão Modelo IF (lote if-matematica-funcao-quadratica, m002)</p>
+    </div>
+  </div>
+  <aside class="resolucao">
+    <p class="dados"><b>Dados:</b> \(a = 1\), \(b = -6\), \(c = 8\).</p>
+    <ol class="passos">
+      <li>Eixo y: \((0;\ 8)\)</li>
+      <li>\(\Delta = 36 - 32 = 4\)</li>
+      <li>\(x = \dfrac{6 \pm 2}{2}\): \(x_1 = 4\), \(x_2 = 2\)</li>
+    </ol>
+    <p class="resposta"><b>Resposta:</b> \((2;\ 0)\), \((4;\ 0)\) e \((0;\ 8)\). <b>Gabarito A.</b></p>
+    <p class="atencao"><b>Destaque no quadro:</b> Zeros têm \(y = 0\); o corte em y tem \(x = 0\).</p>
+    <ul class="erros">
+      <li><b>B</b> Usa \(-6\) no lugar de \(-b = 6\): sinais trocados.</li>
+      <li><b>C</b> Esquece de dividir por \(2a\): 8 e 4.</li>
+      <li><b>D</b> Troca as coordenadas dos pontos.</li>
+      <li><b>E</b> Usa o \(b\) como corte em y; é o \(c = 8\).</li>
+    </ul>
+  </aside>
+  <aside class="notas">
+    <p>Clique 1 tira o aviso de pausa: resolva na área (D liga a caneta; E esconde o enunciado). Clique 2: gabarito A.</p>
+    <p>Modelo IF, lote if-matematica-funcao-quadratica, m002, MAT-0667.</p>
+  </aside>
+</section>
+
+<!-- 6. Vértice -->
+<section class="slide" data-nome="O vértice">
+  <div class="conteudo">
+    <p class="olho">Vértice</p>
+    <h2 class="titulo">No meio dos dois zeros</h2>
+    <div data-anima="fn-figura" data-anima-passo="0" style="position:absolute;left:1080px;top:110px;width:680px;height:620px"
+      data-fig='{"anima":true,"xmin":-3,"xmax":5,"ymin":-5,"ymax":4,"pl":44,"pr":40,"pt":36,"pb":16,"curvas":[{"f":"x*x-2*x-3","de":-2,"ate":4,"fixo":true}],"pontos":[{"x":-1,"y":0,"t":"−1","anc":"end","dx":-14,"dy":-16,"fixo":true},{"x":3,"y":0,"t":"3","dx":14,"dy":-16,"fixo":true}],"segs":[{"x1":1,"y1":3.6,"x2":1,"y2":-4.6,"tr":true,"cor":"#FFD10C"}],"textos":[{"x":2.6,"y":-4.4,"t":"V(1; −4)"}]}'></div>
+    <p class="texto" style="position:absolute;left:0;width:900px;top:150px;margin:0">Ponto mais baixo (ou mais alto) da parábola, sobre o <b>eixo de simetria</b>.</p>
+    <p class="texto" data-passo="1" style="position:absolute;left:0;width:900px;top:260px;margin:0">Zeros −1 e 3: o meio é <b>1</b>.</p>
+    <div class="caixa caixa-fundamental" data-passo="2" style="position:absolute;left:0;width:440px;top:350px;text-align:center;font-size:76px;padding:12px">\(x_V = -\dfrac{b}{2a}\)</div>
+    <div class="contas" style="position:absolute;left:560px;top:350px;font-size:38px;row-gap:12px">
+      <div class="eq" data-passo="3"><span>\(x_V\)</span><span>\(=\)</span><span>\(-\dfrac{-2}{2 \cdot 1} = 1\)</span></div>
+    </div>
+    <div class="contas" style="position:absolute;left:560px;top:520px;font-size:38px">
+      <div class="eq final" data-passo="4"><span>\(y_V\)</span><span>\(=\)</span><span>\(1^2 - 2 \cdot 1 - 3 = -4\)</span></div>
+    </div>
+    <p class="texto" data-passo="4" style="position:absolute;left:560px;top:620px;margin:0;font-size:30px">\(y_V\): troque \(x\) por \(x_V\) na lei.</p>
+  </div>
+  <aside class="notas">
+    <p>Clique 1: quando os zeros existem, o vértice fica exatamente no meio deles. Clique 2: a fórmula. Cliques 3 e 4: confirma x_V = 1 e y_V = −4.</p>
+  </aside>
+</section>
+
+<!-- 7. Máximo ou mínimo -->
+<section class="slide" data-nome="Máximo ou mínimo">
+  <div class="conteudo">
+    <p class="olho">Máximo ou mínimo</p>
+    <h2 class="titulo">O vértice decide</h2>
+    <div class="lado" style="position:absolute;left:0;right:0;top:160px">
+      <div class="caixa caixa-fundamental" data-passo="1">
+        <span class="rotulo">\(a > 0\): mínimo</span>
+        <div data-anima="fn-figura" style="width:100%;height:220px" data-fig='{"xmin":-3,"xmax":3,"ymin":-1.5,"ymax":5,"numeros":false,"grade":false,"pl":10,"pr":30,"pt":30,"pb":10,"curvas":[{"f":"x*x"}],"pontos":[{"x":0,"y":0,"cor":"#FFD10C","t":"menor y","dx":18,"dy":8}]}'></div>
+      </div>
+      <div class="caixa caixa-fundamental" data-passo="2">
+        <span class="rotulo">\(a < 0\): máximo</span>
+        <div data-anima="fn-figura" style="width:100%;height:220px" data-fig='{"xmin":-3,"xmax":3,"ymin":-5,"ymax":1.5,"numeros":false,"grade":false,"pl":10,"pr":30,"pt":30,"pb":10,"curvas":[{"f":"-x*x"}],"pontos":[{"x":0,"y":0,"cor":"#FFD10C","t":"maior y","dx":18,"dy":-12}]}'></div>
+      </div>
+    </div>
+    <div class="caixa caixa-atencao" data-passo="3" style="position:absolute;left:560px;right:0;top:560px">
+      <span class="rotulo">Valor máximo é o \(y\)</span>
+      <div class="texto" style="font-size:32px">"Qual é o valor máximo?" pede o \(y_V\). "Para que \(x\) o máximo acontece?" pede o \(x_V\).</div>
+    </div>
+  </div>
+  <aside class="notas">
+    <p>Leia a pergunta com atenção: é a pegadinha mais comum dessas questões.</p>
+  </aside>
+</section>
+
+<!-- 8. Exemplo: o maior canteiro -->
+<section class="slide" data-nome="Exemplo: o maior canteiro">
+  <div class="conteudo">
+    <p class="olho">Exemplo · \(A = -x^2 + 10x\)</p>
+    <h2 class="titulo">O maior canteiro com 20 m de tela</h2>
+    <p class="texto" style="position:absolute;left:0;top:150px;margin:0">\(a = -1 < 0\): o vértice é um <b>máximo</b>.</p>
+    <div class="contas" style="position:absolute;left:0;top:240px;font-size:46px;row-gap:12px">
+      <div class="eq" data-passo="1"><span>\(x_V\)</span><span>\(=\)</span><span>\(-\dfrac{b}{2a}\)</span></div>
+      <div class="eq" data-passo="2"><span>\(x_V\)</span><span>\(=\)</span><span>\(-\dfrac{10}{2 \cdot (-1)}\)</span></div>
+      <div class="eq final" data-passo="3"><span>\(x_V\)</span><span>\(=\)</span><span>\(5\ \text{m}\)</span></div>
+    </div>
+    <div class="contas" style="position:absolute;left:640px;top:240px;font-size:46px;row-gap:12px">
+      <div class="eq" data-passo="4"><span>\(A\)</span><span>\(=\)</span><span>\(-(5^2) + 10 \cdot 5\)</span></div>
+      <div class="eq" data-passo="5"><span>\(A\)</span><span>\(=\)</span><span>\(-25 + 50\)</span></div>
+      <div class="eq final" data-passo="6"><span>\(A\)</span><span>\(=\)</span><span>\(25\ \text{m}^2\)</span></div>
+    </div>
+    <div data-anima="fn-figura" data-anima-passo="6" style="position:absolute;left:1260px;top:160px;width:500px;height:440px"
+      data-fig='{"anima":true,"xmin":0,"xmax":10,"ymin":0,"ymax":30,"dx":1,"lx":2,"dy":5,"ly":10,"pl":54,"pr":40,"pt":36,"pb":44,"fs":20,"rx":"x","ry":"A","curvas":[{"f":"-x*x+10*x","de":0,"ate":10,"fixo":true}],"segs":[{"x1":5,"y1":0,"x2":5,"y2":25,"tr":true}],"pontos":[{"x":5,"y":25,"cor":"#FFD10C","t":"(5; 25)","anc":"middle","dx":0,"dy":-22}]}'></div>
+    <span class="pilula pilula-resposta" data-passo="7" style="position:absolute;left:640px;top:680px">Lado de 5 m (um quadrado): área máxima de 25 m²</span>
+  </div>
+  <aside class="notas">
+    <p>Responde a pergunta da Parte 1: sim, 25 m² é o máximo. Com a = −1 e b = 10. Clique 6 também marca o vértice no gráfico.</p>
+  </aside>
+</section>
+
+<!-- 9. Questão 2 -->
+<section class="slide questao" data-nome="Questão 2">
+  <div class="conteudo">
+    <div class="area-resolucao"></div>
+    <span class="pilula pilula-pausa" data-em="1:some">Pause o vídeo e tente</span>
+    <div class="painel-questao">
+      <p class="olho">Questão 2 · IF Sudeste MG 2017</p>
+      <p class="enunciado" style="font-size:25px">Uma função quadrática é definida por \(f(x) = ax^2 + bx + c\), com \(a \neq 0\), o vértice dessa função é o ponto no qual a função muda de comportamento, ou seja, é seu ponto máximo ou mínimo, dependendo do sinal de \(a\).</p>
+      <p class="enunciado" style="font-size:25px">Com base nessas informações e dada a função \(f(x) = 2x^2 - 3x + 2\), as coordenadas do vértice são:</p>
+      <ol class="alternativas curtas">
+        <li data-em="2:apaga"><b>A</b><span>\(\left(\dfrac{-3}{4}, \dfrac{7}{8}\right)\)</span></li>
+        <li data-em="2:certo"><b>B</b><span>\(\left(\dfrac{3}{4}, \dfrac{7}{8}\right)\)</span></li>
+        <li data-em="2:apaga"><b>C</b><span>\(\left(\dfrac{7}{4}, \dfrac{3}{8}\right)\)</span></li>
+        <li data-em="2:apaga"><b>D</b><span>\(\left(\dfrac{3}{4}, \dfrac{-7}{8}\right)\)</span></li>
+        <li data-em="2:apaga"><b>E</b><span>\(\left(\dfrac{-7}{4}, \dfrac{3}{8}\right)\)</span></li>
+      </ol>
+      <p class="fonte">IF Sudeste MG, prova de 2017 (1º semestre), questão 13</p>
+    </div>
+  </div>
+  <aside class="resolucao">
+    <p class="dados"><b>Dados:</b> \(a = 2\), \(b = -3\), \(c = 2\).</p>
+    <ol class="passos">
+      <li>\(x_V = -\dfrac{-3}{2 \cdot 2} = \dfrac{3}{4}\)</li>
+      <li>\(y_V = 2 \cdot \dfrac{9}{16} - 3 \cdot \dfrac{3}{4} + 2\)</li>
+      <li>\(y_V = \dfrac{9}{8} - \dfrac{18}{8} + \dfrac{16}{8} = \dfrac{7}{8}\)</li>
+    </ol>
+    <p class="resposta"><b>Resposta:</b> \(V\left(\dfrac{3}{4};\ \dfrac{7}{8}\right)\). <b>Gabarito B.</b></p>
+    <p class="atencao"><b>Destaque no quadro:</b> O "menos" de \(-\dfrac{b}{2a}\) com \(b = -3\) dá positivo.</p>
+    <ul class="erros">
+      <li><b>A</b> Esquece o sinal de menos da fórmula.</li>
+      <li><b>C</b> Troca os numeradores das coordenadas.</li>
+      <li><b>D</b> \(y_V\) negativo: com \(a > 0\) e sem zeros, o vértice fica acima do eixo x.</li>
+      <li><b>E</b> Mistura as coordenadas e erra o sinal.</li>
+    </ul>
+  </aside>
+  <aside class="notas">
+    <p>Clique 1 tira o aviso de pausa: resolva na área (D liga a caneta; E esconde o enunciado). Clique 2: gabarito B.</p>
+    <p>Questão oficial do IF Sudeste MG 2017-1, q13, MAT-0331. A apostila calcula y_V trocando x por x_V (não usa −Δ/4a); a resolução segue a apostila. Conferência: Δ = 9 − 16 = −7 &lt; 0, então a parábola não corta o eixo x e o vértice, com a &gt; 0, está acima dele.</p>
+  </aside>
+</section>
+
+<!-- 10. Forma fatorada -->
+<section class="slide" data-nome="Forma fatorada">
+  <div class="conteudo">
+    <p class="olho">Forma fatorada</p>
+    <h2 class="titulo">Quem conhece os zeros tem a lei</h2>
+    <p class="texto" style="position:absolute;left:0;top:150px;margin:0">Zeros de \(y = x^2 - 2x - 3\): −1 e 3. Multiplique:</p>
+    <div class="contas" style="position:absolute;left:0;top:240px;font-size:48px;row-gap:12px">
+      <div class="eq" data-passo="1"><span>\(P\)</span><span>\(=\)</span><span>\((x + 1)(x - 3)\)</span></div>
+      <div class="eq" data-passo="2"><span>\(P\)</span><span>\(=\)</span><span>\(x^2 - 3x + x - 3\)</span></div>
+      <div class="eq final" data-passo="3"><span>\(P\)</span><span>\(=\)</span><span>\(x^2 - 2x - 3\)</span></div>
+    </div>
+    <p class="texto" data-passo="4" style="position:absolute;left:0;width:820px;top:520px;margin:0;font-size:31px">Em \(x = -1\), o 1º fator zera; em \(x = 3\), o 2º.</p>
+    <div class="caixa caixa-fundamental" data-passo="5" style="position:absolute;left:900px;right:0;top:240px;text-align:center">
+      <span class="rotulo">Forma fatorada</span>
+      <div style="font-size:64px;margin:8px 0">\(f(x) = a(x - x_1)(x - x_2)\)</div>
+      <div class="texto" style="font-size:28px">\(x_1\) e \(x_2\): zeros · \(a\): coeficiente de \(x^2\)<br>Raiz dupla: \(f(x) = a(x - x_1)^2\)</div>
+    </div>
+  </div>
+  <aside class="notas">
+    <p>Voltou a própria lei: faz sentido, porque cada fator zera num dos zeros.</p>
+  </aside>
+</section>
+
+<!-- 11. Exemplo: zeros 1 e 5 -->
+<section class="slide" data-nome="Exemplo: zeros 1 e 5">
+  <div class="conteudo">
+    <p class="olho">Exemplo · a lei a partir dos zeros</p>
+    <h2 class="titulo">Zeros 1 e 5, passa por \((0;\ 10)\)</h2>
+    <div class="contas" style="position:absolute;left:0;top:180px;font-size:46px;row-gap:12px">
+      <div class="eq" data-passo="1"><span>\(f(x)\)</span><span>\(=\)</span><span>\(a(x - 1)(x - 5)\)</span></div>
+      <div class="eq" data-passo="2"><span>\(f(0)\)</span><span>\(=\)</span><span>\(a(0 - 1)(0 - 5)\)</span></div>
+      <div class="eq" data-passo="3"><span>\(10\)</span><span>\(=\)</span><span>\(5a\)</span></div>
+      <div class="eq final" data-passo="4"><span>\(a\)</span><span>\(=\)</span><span>\(2\)</span></div>
+    </div>
+    <div style="position:absolute;left:900px;right:0;top:180px">
+      <p class="texto" style="margin:0 0 12px" data-passo="5"><b>Desenvolvendo:</b></p>
+      <div class="contas" style="font-size:46px;row-gap:12px">
+        <div class="eq" data-passo="5"><span>\(f(x)\)</span><span>\(=\)</span><span>\(2(x - 1)(x - 5)\)</span></div>
+        <div class="eq" data-passo="6"><span>\(f(x)\)</span><span>\(=\)</span><span>\(2(x^2 - 6x + 5)\)</span></div>
+        <div class="eq final" data-passo="7"><span>\(f(x)\)</span><span>\(=\)</span><span>\(2x^2 - 12x + 10\)</span></div>
+      </div>
+    </div>
+    <div class="caixa caixa-atencao" data-passo="8" style="position:absolute;left:560px;right:0;top:620px;padding:18px 30px">
+      <span class="rotulo">O sinal dentro do parêntese</span>
+      <div class="texto" style="font-size:30px">Zero −2 entra como \((x + 2)\); zero 3, como \((x - 3)\). E não esqueça o \(a\): sem ele, passaria por \((0;\ 5)\).</div>
+    </div>
+  </div>
+  <aside class="notas">
+    <p>Passo a passo: escreva a(x − x₁)(x − x₂); use outro ponto (quase sempre o corte em y) para achar a; desenvolva se as alternativas estiverem na forma ax² + bx + c. Para conferir o sinal, troque x pelo zero: o fator tem que dar zero.</p>
+  </aside>
+</section>
+
+<!-- 12. Raiz dupla e forma canônica -->
+<section class="slide" data-nome="Raiz dupla e forma canônica">
+  <div class="conteudo">
+    <p class="olho">Raiz dupla</p>
+    <h2 class="titulo">Toca o eixo x só em 3</h2>
+    <p class="texto" style="position:absolute;left:0;width:820px;top:150px;margin:0;font-size:32px">E corta o eixo y em −18:</p>
+    <div class="contas" style="position:absolute;left:0;top:220px;font-size:46px;row-gap:12px">
+      <div class="eq" data-passo="1"><span>\(f(x)\)</span><span>\(=\)</span><span>\(a(x - 3)^2\)</span></div>
+      <div class="eq" data-passo="2"><span>\(f(0)\)</span><span>\(=\)</span><span>\(a(0 - 3)^2\)</span></div>
+      <div class="eq" data-passo="3"><span>\(-18\)</span><span>\(=\)</span><span>\(9a\)</span></div>
+      <div class="eq final" data-passo="4"><span>\(a\)</span><span>\(=\)</span><span>\(-2\)</span></div>
+    </div>
+    <div class="caixa" data-passo="5" style="position:absolute;left:900px;right:0;top:160px;padding:20px 30px">
+      <div class="texto" style="font-size:32px">\(f(x) = -2(x - 3)^2 = -2x^2 + 12x - 18\)<br>\(a < 0\): boca para baixo, só encosta no 3.</div>
+    </div>
+    <div class="caixa caixa-fundamental" data-passo="6" style="position:absolute;left:900px;right:0;top:400px">
+      <span class="rotulo">Forma canônica (pelo vértice)</span>
+      <div style="font-size:52px;margin:6px 0">\(f(x) = a(x - x_V)^2 + y_V\)</div>
+      <div class="texto" style="font-size:28px">\(V(1;\ {-4})\): \((x - 1)^2 - 4 = x^2 - 2x + 1 - 4\), a própria \(x^2 - 2x - 3\).</div>
+    </div>
+  </div>
+  <aside class="notas">
+    <p>Tocar o eixo x num ponto só é ter raiz dupla. Clique 6: a forma canônica aparece na apostila do IF; o plano antigo da apostila a punha fora do IF, mas o capítulo atual a traz, então ela entra aqui de forma rápida.</p>
+  </aside>
+</section>
+
+<!-- 13. Questão 3 -->
+<section class="slide questao" data-nome="Questão 3">
+  <div class="conteudo">
+    <div class="area-resolucao"></div>
+    <span class="pilula pilula-pausa" data-em="1:some">Pause o vídeo e tente</span>
+    <div class="painel-questao">
+      <p class="olho">Questão 3 · IF Sudeste MG 2019</p>
+      <p class="enunciado">Seja \(f\colon \mathbb{R} \to \mathbb{R}\), uma função quadrática que possui duas raízes iguais a \(-2\) e intercepta o eixo das ordenadas no ponto \((0,4)\). A lei que descreve essa função é:</p>
+      <ol class="alternativas">
+        <li data-em="2:apaga"><b>A</b><span>\(f(x) = x^2 - 4x + 4\)</span></li>
+        <li data-em="2:apaga"><b>B</b><span>\(f(x) = -x^2 + 4x - 4\)</span></li>
+        <li data-em="2:certo"><b>C</b><span>\(f(x) = x^2 + 4x + 4\)</span></li>
+        <li data-em="2:apaga"><b>D</b><span>\(f(x) = -x^2 - 4x + 4\)</span></li>
+        <li data-em="2:apaga"><b>E</b><span>\(f(x) = x^2 - 4x - 4\)</span></li>
+      </ol>
+      <p class="fonte">IF Sudeste MG, prova de 2019 (2º semestre), questão 21</p>
+    </div>
+  </div>
+  <aside class="resolucao">
+    <p class="dados"><b>Dados:</b> raiz dupla \(-2\); passa por \((0;\ 4)\).</p>
+    <ol class="passos">
+      <li>\(f(x) = a(x + 2)^2\)</li>
+      <li>\(4 = a(0 + 2)^2 = 4a \Rightarrow a = 1\)</li>
+      <li>\(f(x) = (x + 2)^2 = x^2 + 4x + 4\)</li>
+    </ol>
+    <p class="resposta"><b>Resposta:</b> \(f(x) = x^2 + 4x + 4\). <b>Gabarito C.</b></p>
+    <p class="atencao"><b>Destaque no quadro:</b> Zero −2 entra como \((x + 2)\).</p>
+    <ul class="erros">
+      <li><b>A</b> É \((x - 2)^2\): raiz +2, erro de sinal.</li>
+      <li><b>B</b> É \(-(x - 2)^2\): raiz +2 e \(f(0) = -4\).</li>
+      <li><b>D</b> \(f(-2) = -4 + 8 + 4 = 8 \neq 0\).</li>
+      <li><b>E</b> \(f(0) = -4\) e \(f(-2) = 8 \neq 0\).</li>
+    </ul>
+  </aside>
+  <aside class="notas">
+    <p>Clique 1 tira o aviso de pausa: resolva na área (D liga a caneta; E esconde o enunciado). Clique 2: gabarito C.</p>
+    <p>Questão oficial do IF Sudeste MG 2019-2, q21, MAT-0520. Na prova o ponto aparece como (0,4).</p>
+  </aside>
+</section>
+
+<!-- 14. Problema: a bola -->
+<section class="slide" data-nome="Problema: a bola">
+  <div class="conteudo">
+    <p class="olho">Problemas com função quadrática</p>
+    <h2 class="titulo">A bola chutada: \(h = -5t^2 + 20t\)</h2>
+    <div data-anima="fn-bola" data-anima-passo="0" style="position:absolute;left:820px;top:180px;width:940px;height:620px"></div>
+    <div style="position:absolute;left:0;width:740px;top:160px">
+      <p class="texto" style="margin:0 0 6px;font-size:32px">Três perguntas de sempre:</p>
+      <p class="texto" style="margin:0;font-size:32px">altura num instante · altura máxima · quando volta ao chão.</p>
+      <p class="texto" style="margin:26px 0 10px" data-passo="1"><b>a)</b> Altura em \(t = 1\) s:</p>
+      <div class="contas" style="font-size:44px;row-gap:10px">
+        <div class="eq" data-passo="1"><span>\(h\)</span><span>\(=\)</span><span>\(-5 \cdot 1^2 + 20 \cdot 1\)</span></div>
+        <div class="eq final" data-passo="2"><span>\(h\)</span><span>\(=\)</span><span>\(15\ \text{m}\)</span></div>
+      </div>
+    </div>
+  </div>
+  <aside class="notas">
+    <p>h em metros, t em segundos. A bola sobe e desce à esquerda enquanto o gráfico altura × tempo vai sendo traçado: o gráfico não é o caminho da bola, é a altura ao longo do tempo.</p>
+  </aside>
+</section>
+
+<!-- 15. Bola: máximo e chão -->
+<section class="slide" data-nome="Bola: máximo e chão">
+  <div class="conteudo">
+    <p class="olho">Problemas com função quadrática</p>
+    <h2 class="titulo">Altura máxima e volta ao chão</h2>
+    <div style="position:absolute;left:0;width:840px;top:160px">
+      <p class="texto" style="margin:0 0 10px"><b>b)</b> \(a = -5 < 0\): máximo.</p>
+      <div class="contas" style="font-size:42px;row-gap:10px">
+        <div class="eq" data-passo="1"><span>\(t_V\)</span><span>\(=\)</span><span>\(-\dfrac{20}{2 \cdot (-5)} = 2\ \text{s}\)</span></div>
+        <div class="eq" data-passo="2"><span>\(h\)</span><span>\(=\)</span><span>\(-5 \cdot 2^2 + 20 \cdot 2\)</span></div>
+        <div class="eq final" data-passo="3"><span>\(h\)</span><span>\(=\)</span><span>\(-20 + 40 = 20\ \text{m}\)</span></div>
+      </div>
+    </div>
+    <div style="position:absolute;left:960px;right:0;top:160px">
+      <p class="texto" style="margin:0 0 10px" data-passo="4"><b>c)</b> No chão, \(h = 0\):</p>
+      <div class="contas" style="font-size:42px;row-gap:10px">
+        <div class="eq" data-passo="4"><span>\(-5t^2 + 20t\)</span><span>\(=\)</span><span>\(0\)</span></div>
+        <div class="eq" data-passo="5"><span>\(t(-5t + 20)\)</span><span>\(=\)</span><span>\(0\)</span></div>
+        <div class="eq" data-passo="6"><span>\(-5t + 20\)</span><span>\(=\)</span><span>\(0\)</span></div>
+        <div class="eq final" data-passo="7"><span>\(t\)</span><span>\(=\)</span><span>\(4\ \text{s}\)</span></div>
+      </div>
+      <p class="texto" data-passo="6" style="margin:10px 0 0;font-size:28px">(o outro fator dá \(t = 0\), o instante do chute)</p>
+    </div>
+    <div class="caixa caixa-fundamental" data-passo="8" style="position:absolute;left:560px;right:0;top:700px;padding:18px 30px">
+      <div class="texto" style="font-size:31px">Subida em 2 s, metade dos 4 s no ar: é a <b>simetria</b> da parábola.</div>
+    </div>
+  </div>
+  <aside class="notas">
+    <p>b) altura máxima 20 m (em 2 s). c) t em evidência: um dos fatores é zero; t = 0 é o chute e t = 4 s a queda.</p>
+  </aside>
+</section>
+
+<!-- 16. Questão 4 -->
+<section class="slide questao" data-nome="Questão 4">
+  <div class="conteudo">
+    <div class="area-resolucao"></div>
+    <span class="pilula pilula-pausa" data-em="1:some">Pause o vídeo e tente</span>
+    <div class="painel-questao">
+      <p class="olho">Questão 4 · Modelo IF</p>
+      <p class="enunciado">Na feira de ciências da escola, um grupo lançou um foguete feito com garrafa PET. A altura \(h\) do foguete, em metros, \(t\) segundos após o lançamento, é dada por \(h = -5t^2 + 30t\). A altura máxima atingida pelo foguete foi de:</p>
+      <ol class="alternativas">
+        <li data-em="2:apaga"><b>A</b><span>3 m</span></li>
+        <li data-em="2:apaga"><b>B</b><span>6 m</span></li>
+        <li data-em="2:certo"><b>C</b><span>45 m</span></li>
+        <li data-em="2:apaga"><b>D</b><span>90 m</span></li>
+        <li data-em="2:apaga"><b>E</b><span>135 m</span></li>
+      </ol>
+      <p class="fonte">Questão Modelo IF (lote if-matematica-funcao-quadratica, m003)</p>
+    </div>
+  </div>
+  <aside class="resolucao">
+    <p class="dados"><b>Dados:</b> \(a = -5\), \(b = 30\): máximo no vértice.</p>
+    <ol class="passos">
+      <li>\(t_V = -\dfrac{30}{2 \cdot (-5)} = 3\ \text{s}\)</li>
+      <li>\(h = -5 \cdot 3^2 + 30 \cdot 3\)</li>
+      <li>\(h = -45 + 90 = 45\ \text{m}\)</li>
+    </ol>
+    <p class="resposta"><b>Resposta:</b> 45 m. <b>Gabarito C.</b></p>
+    <p class="atencao"><b>Destaque no quadro:</b> Altura máxima é o \(y\) do vértice, não o \(t_V\).</p>
+    <ul class="erros">
+      <li><b>A</b> 3 é o \(t_V\), um instante.</li>
+      <li><b>B</b> 6 s é quando volta ao chão.</li>
+      <li><b>D</b> Esquece o \(-5t^2\): \(30 \cdot 3\).</li>
+      <li><b>E</b> Troca o sinal: \(45 + 90\).</li>
+    </ul>
+  </aside>
+  <aside class="notas">
+    <p>Clique 1 tira o aviso de pausa: resolva na área (D liga a caneta; E esconde o enunciado). Clique 2: gabarito C.</p>
+    <p>Modelo IF, lote if-matematica-funcao-quadratica, m003, MAT-0668.</p>
+  </aside>
+</section>
+
+<!-- 17. Resumo -->
+<section class="slide" data-nome="Resumo">
+  <div class="conteudo">
+    <p class="olho">Resumo · Função quadrática</p>
+    <h2 class="titulo">O essencial</h2>
+    <div class="resumo" style="position:absolute;left:0;right:0;top:150px;font-size:28px">
+      <div style="font-size:29px">\(f(x) = ax^2 + bx + c\), \(a \neq 0\): parábola com eixo de simetria vertical.</div>
+      <div style="font-size:29px">\(a > 0\): boca para cima; \(a < 0\): para baixo. Corte em y: \((0;\ c)\).</div>
+      <div style="font-size:29px"><b>Zeros:</b> raízes de \(ax^2 + bx + c = 0\); o \(\Delta\) diz quantos cortes no eixo x.</div>
+      <div style="font-size:29px"><b>Vértice:</b> \(x_V = -\frac{b}{2a}\), \(y_V = f(x_V)\); mínimo se \(a > 0\), máximo se \(a < 0\).</div>
+      <div style="font-size:29px"><b>Fatorada:</b> \(a(x - x_1)(x - x_2)\). <b>Canônica:</b> \(a(x - x_V)^2 + y_V\).</div>
+      <div style="font-size:29px"><b>Valor máximo</b> é o \(y_V\); <b>onde</b> acontece é o \(x_V\).</div>
+    </div>
+  </div>
+  <aside class="notas">
+    <p>Resumo do subcapítulo inteiro (as duas partes). Peça para tirarem um print desta tela.</p>
+  </aside>
+</section>
+
+<!-- 18. A seguir: bloco de questões -->
+<section class="slide capa" data-nome="A seguir">
+  <div class="estrelas"></div>
+  <div class="texto-capa" style="top:200px">
+    <span class="selo">Matemática · IF</span>
+    <p class="aula" style="font-size:26px">A seguir · Funções</p>
+    <h1>Questões do IF Sudeste</h1>
+    <p class="sub">Provas oficiais do capítulo, uma por tela</p>
+  </div>
+  <svg class="emblema" viewBox="0 0 640 640" aria-hidden="true">
+    <rect x="150" y="110" width="340" height="430" rx="34" fill="#fff" fill-opacity=".12" stroke="#fff" stroke-opacity=".6" stroke-width="4"/>
+    <g fill="#fff" fill-opacity=".7"><rect x="200" y="170" width="240" height="18" rx="9"/><rect x="200" y="210" width="200" height="18" rx="9"/></g>
+    <path d="M200 470 L200 270 M200 470 L440 470" stroke="#fff" stroke-opacity=".8" stroke-width="5" stroke-linecap="round" fill="none"/>
+    <path d="M220 290 Q320 560 420 290" fill="none" stroke="#FFD10C" stroke-width="7" stroke-linecap="round"/>
+    <circle cx="470" cy="130" r="54" fill="#FFD10C"/>
+    <path d="M446 132 L464 150 L496 112" fill="none" stroke="#292B2C" stroke-width="10" stroke-linecap="round" stroke-linejoin="round"/>
+  </svg>
+  <img class="logo-capa" src="{{LOGO_BRANCO}}" alt="Quarks">
+  <aside class="notas"><p>Fim do conteúdo de Funções. A seguir, o bloco de questões oficiais do IF Sudeste do capítulo (conceito de função, função afim e função quadrática).</p></aside>
+</section>

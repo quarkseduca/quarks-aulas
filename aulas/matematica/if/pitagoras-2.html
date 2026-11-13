@@ -1,0 +1,465 @@
+<!--aula
+{"disciplina": "matematica", "curso": "IF", "assunto": "Teorema de Pitágoras e relações métricas", "parte": "Parte 2 de 2", "titulo": "Relações métricas", "scripts": ["animacoes-geometria-a.js"]}
+-->
+<!-- Fonte: apostila IF, Matemática, cap. 5 (5.4 Teorema de Pitágoras e relações métricas > Relações métricas no triângulo retângulo; Triângulo qualquer: agudo, reto ou obtuso; resumo). Questões: Modelo if-matematica-teorema-de-pitagoras m009 (MAT-0879); oficiais IF Sudeste 2020-1 q17 (MAT-0527) e 2013-1 q19 (MAT-0370), sobras (a 2013-1 q19 está classificada em Semelhança, mas pede Pitágoras, que só chega aqui). As oficiais 2024-1 q13 (MAT-0297) e 2023-1 q19 (MAT-0451) ficam reservadas para o bloco do fim do capítulo. -->
+<style>
+  .cartao { box-sizing: border-box; background: var(--branco); border: 2px solid var(--lilas-2); border-radius: 28px; padding: 16px 24px; }
+  .cartao h3 { margin: 0 0 4px; font: 800 34px var(--fonte-titulo); letter-spacing: -.02em; color: var(--roxo-titulo); }
+  .cartao p { margin: 0; font-size: 27px; line-height: 1.3; }
+  .fig { overflow: visible; font-family: Figtree, "Segoe UI", sans-serif; }
+  .fig text { font-weight: 800; }
+  .tri { fill: rgba(47,107,255,.1); stroke: var(--carvao); stroke-width: 5; stroke-linejoin: round; }
+  .ang-a { fill: rgba(47,107,255,.28); stroke: var(--d); stroke-width: 3; }
+  .ang-b { fill: rgba(255,209,12,.55); stroke: #C99A00; stroke-width: 3; }
+  .rel { display: grid; grid-template-columns: repeat(4, 1fr); gap: 20px; }
+  .rel > div { background: var(--branco); border: 2px solid var(--lilas-2); border-radius: 24px; padding: 18px 12px; text-align: center; font-size: 50px; }
+  .rel > div span { display: block; font-size: 24px; color: var(--cinza); margin-top: 6px; font-weight: 600; }
+  .placa { display: inline-flex; gap: 16px; align-items: center; background: var(--branco); border: 2px solid var(--lilas-2); border-radius: 22px; padding: 12px 26px; font: 800 40px var(--fonte-titulo); color: var(--roxo-titulo); font-variant-numeric: tabular-nums; }
+  /* os dois triângulos menores se separam do maior: são três triângulos semelhantes */
+  .peca { transition: transform 1.8s cubic-bezier(.4,0,.2,1); }
+  .mostra .peca-e { transform: translate(-60px, 20px); }
+  .mostra .peca-d { transform: translate(70px, 20px); }
+</style>
+
+<!-- 1. Capa -->
+<section class="slide capa" data-nome="Capa">
+  <div class="estrelas"></div>
+  <div class="texto-capa" style="top:200px">
+    <span class="selo">Matemática · IF</span>
+    <p class="aula" style="font-size:28px">Teorema de Pitágoras e relações métricas · Parte 2 de 2</p>
+    <h1 style="font-size:140px">Relações métricas</h1>
+    <p class="sub">A altura relativa à hipotenusa e o tipo pelo maior lado</p>
+  </div>
+  <svg class="emblema" viewBox="0 0 640 640" aria-hidden="true">
+    <g class="gira-lento"><ellipse cx="320" cy="320" rx="300" ry="128" fill="none" stroke="#fff" stroke-opacity=".38" stroke-width="2" transform="rotate(-10 320 320)"/></g>
+    <g class="gira"><ellipse cx="320" cy="320" rx="236" ry="196" fill="none" stroke="#FFD10C" stroke-opacity=".75" stroke-width="2.5" stroke-dasharray="3 14" stroke-linecap="round" transform="rotate(-8 320 320)"/>
+      <circle cx="84" cy="300" r="13" fill="var(--d)" stroke="#fff" stroke-width="3"/></g>
+    <circle cx="320" cy="320" r="132" fill="#FFD10C"/>
+    <image href="{{SYM_ROXO}}" x="238" y="238" width="164" height="164"/>
+  </svg>
+  <img class="logo-capa" src="{{LOGO_BRANCO}}" alt="Quarks">
+  <aside class="notas">
+    <p>Segunda parte: as relações métricas no triângulo retângulo (que saem da semelhança) e como saber, só pelos lados, se um triângulo qualquer é acutângulo, retângulo ou obtusângulo. Fecha a primeira metade da Geometria plana.</p>
+  </aside>
+</section>
+
+<!-- 2. Altura e projeções -->
+<section class="slide" data-nome="Altura e projeções">
+  <div class="conteudo">
+    <p class="olho">Os nomes</p>
+    <h2 class="titulo">Altura relativa à hipotenusa</h2>
+    <svg class="fig" viewBox="0 0 780 460" width="780" height="460" style="position:absolute;left:0;top:140px" aria-hidden="true">
+      <polygon class="tri" points="60,400 700,400 260,103.4"/>
+      <path d="M246 124.1 L266.8 138.1 L280.7 117.4" fill="none" stroke="var(--carvao)" stroke-width="3"/>
+      <line class="traca" data-passo="1" pathLength="100" x1="260" y1="103.4" x2="260" y2="400" stroke="#C2384F" stroke-width="6"/>
+      <path data-passo="1" d="M260 376 H284 V400" fill="none" stroke="var(--carvao)" stroke-width="3"/>
+      <g data-passo="2" stroke-width="10" stroke-linecap="butt"><line x1="62" y1="418" x2="258" y2="418" stroke="#8C7BEA"/><line x1="262" y1="418" x2="698" y2="418" stroke="var(--d)"/></g>
+      <g font-size="34"><text x="130" y="240" fill="var(--carvao)" font-style="italic">c</text><text x="490" y="236" fill="var(--carvao)" font-style="italic">b</text><text x="380" y="384" fill="var(--carvao)" font-style="italic">a</text>
+        <text data-passo="1" x="272" y="270" fill="#C2384F" font-style="italic">h</text><text data-passo="2" x="150" y="450" fill="#6551D1" font-style="italic" font-size="30">n</text><text data-passo="2" x="470" y="450" font-size="30" fill="var(--d-forte)" font-style="italic">m</text></g>
+      <g font-size="28" fill="var(--roxo-titulo)"><text x="30" y="420">B</text><text x="712" y="420">C</text><text x="248" y="88">A</text></g>
+    </svg>
+    <div style="position:absolute;left:900px;right:0;top:170px;display:flex;flex-direction:column;gap:20px">
+      <div class="cartao" data-passo="1"><h3 style="color:#C2384F">Altura \(h\)</h3><p>sai do vértice do ângulo reto e cai <b>perpendicular</b> à hipotenusa</p></div>
+      <div class="cartao" data-passo="2"><h3>Projeções</h3><p>os dois pedaços da hipotenusa: \(m\) é a projeção de \(b\); \(n\), a de \(c\)</p></div>
+      <p class="texto" data-passo="2" style="margin:0;font-size:31px">\(m + n = a\)</p>
+    </div>
+  </div>
+  <aside class="notas">
+    <p>Letras da apostila: a hipotenusa, b e c catetos, h a altura relativa à hipotenusa, m a projeção de b e n a projeção de c. Clique 1: a altura. Clique 2: as projeções (cada uma fica "embaixo" do seu cateto).</p>
+    <p>O m + n = a é óbvio pela figura, mas é bom dizer (aparece na Questão 1).</p>
+  </aside>
+</section>
+
+<!-- 3. Três triângulos semelhantes -->
+<section class="slide" data-nome="Três triângulos semelhantes">
+  <div class="conteudo">
+    <p class="olho">De onde vêm as relações</p>
+    <h2 class="titulo">Três triângulos semelhantes</h2>
+    <svg class="fig" viewBox="0 0 780 460" width="780" height="460" style="position:absolute;left:0;top:150px" aria-hidden="true">
+      <g data-passo="1">
+        <g class="peca peca-e">
+          <polygon points="60,400 260,400 260,103.4" fill="rgba(140,123,234,.22)" stroke="var(--carvao)" stroke-width="5" stroke-linejoin="round"/>
+          <path class="ang-a" d="M60 400 L110 400 A50 50 0 0 0 88 358.6 Z"/><path class="ang-b" d="M260 103.4 L234.3 141.5 A46 46 0 0 0 260 149.4 Z"/>
+        </g>
+        <g class="peca peca-d">
+          <polygon points="260,400 700,400 260,103.4" fill="rgba(47,107,255,.16)" stroke="var(--carvao)" stroke-width="5" stroke-linejoin="round"/>
+          <path class="ang-b" d="M700 400 L650.3 366.4 A60 60 0 0 0 640 400 Z"/><path class="ang-a" d="M260 103.4 L260 149.4 A46 46 0 0 0 298.1 129.1 Z"/>
+        </g>
+      </g>
+      <g data-em="1:some">
+        <polygon class="tri" points="60,400 700,400 260,103.4"/>
+        <line x1="260" y1="103.4" x2="260" y2="400" stroke="#C2384F" stroke-width="5"/>
+        <path class="ang-a" d="M60 400 L110 400 A50 50 0 0 0 88 358.6 Z"/><path class="ang-b" d="M700 400 L650.3 366.4 A60 60 0 0 0 640 400 Z"/>
+      </g>
+    </svg>
+    <div style="position:absolute;left:900px;right:0;top:170px;display:flex;flex-direction:column;gap:22px">
+      <p class="texto" style="margin:0">A altura divide o triângulo em <b>dois menores</b>.</p>
+      <div class="caixa caixa-fundamental" data-passo="2"><div class="texto">Os três têm um ângulo reto e compartilham os outros ângulos: são <b>semelhantes</b> (caso AA).</div></div>
+      <div class="contas" data-passo="3" style="font-size:48px;row-gap:24px">
+        <div class="eq"><span>\(\dfrac{h}{m}\)</span><span>\(=\)</span><span>\(\dfrac{n}{h}\)</span></div>
+        <div class="eq final" data-passo="4"><span>\(h^2\)</span><span>\(=\)</span><span>\(m \cdot n\)</span></div>
+      </div>
+    </div>
+  </div>
+  <aside class="notas">
+    <p>Clique 1: os dois triângulos menores se separam. Azul = ângulo B; amarelo = ângulo C. Cada pedaço tem o ângulo reto (em H), um azul e um amarelo: semelhantes ao grande.</p>
+    <p>Cliques 3 e 4 (dedução do professor, a apostila só cita que as relações saem das proporções): comparando os dois pequenos, cateto menor/cateto maior: h/m = n/h, então h² = m · n. As outras saem do mesmo jeito.</p>
+  </aside>
+</section>
+
+<!-- 4. As quatro relações -->
+<section class="slide" data-nome="As relações métricas">
+  <div class="conteudo">
+    <p class="olho">Fórmulas</p>
+    <h2 class="titulo">Relações métricas</h2>
+    <div class="rel" style="position:absolute;left:0;right:0;top:170px">
+      <div data-passo="1">\(h^2 = m \cdot n\)<span>altura e projeções</span></div>
+      <div data-passo="2">\(b^2 = a \cdot m\)<span>cateto e a sua projeção</span></div>
+      <div data-passo="3">\(c^2 = a \cdot n\)<span>cateto e a sua projeção</span></div>
+      <div data-passo="4">\(b \cdot c = a \cdot h\)<span>catetos e altura</span></div>
+    </div>
+    <svg class="fig" viewBox="0 0 780 360" width="780" height="360" style="position:absolute;left:600px;top:400px" aria-hidden="true">
+      <polygon class="tri" points="40,300 680,300 240,3.4"/>
+      <line x1="240" y1="3.4" x2="240" y2="300" stroke="#C2384F" stroke-width="5"/>
+      <g stroke-width="9"><line x1="42" y1="318" x2="238" y2="318" stroke="#8C7BEA"/><line x1="242" y1="318" x2="678" y2="318" stroke="var(--d)"/></g>
+      <g font-size="30" font-style="italic"><text x="110" y="140">c</text><text x="470" y="136">b</text><text x="352" y="286">a</text><text x="252" y="170" fill="#C2384F">h</text><text x="130" y="352" fill="#6551D1">n</text><text x="450" y="352" fill="var(--d-forte)">m</text></g>
+    </svg>
+    <div class="caixa" data-passo="4" style="position:absolute;left:1420px;right:0;top:420px;padding:16px 22px">
+      <div class="texto" style="font-size:26px">\(b \cdot c = a \cdot h\): a área calculada de dois jeitos, \(\tfrac{b \cdot c}{2} = \tfrac{a \cdot h}{2}\).</div>
+    </div>
+  </div>
+  <aside class="notas">
+    <p>As quatro relações da apostila, uma por clique. Diga em palavras: "altura ao quadrado é o produto das projeções"; "cateto ao quadrado é a hipotenusa vezes a projeção DELE".</p>
+    <p>A justificativa da última pela área é do professor (aparece na resolução da Questão 2).</p>
+  </aside>
+</section>
+
+<!-- 5. Exemplo: altura pelas projeções -->
+<section class="slide" data-nome="Exemplo: altura pelas projeções">
+  <div class="conteudo">
+    <p class="olho">Exemplo</p>
+    <h2 class="titulo">A altura pelas projeções</h2>
+    <p class="texto" style="position:absolute;left:0;width:760px;top:170px;margin:0">A altura relativa à hipotenusa divide a hipotenusa em pedaços de <b>4 cm</b> e <b>9 cm</b>. Quanto mede a altura?</p>
+    <svg class="fig" viewBox="0 0 520 260" width="520" height="260" style="position:absolute;left:0;top:316px" aria-hidden="true">
+      <polygon class="tri" points="20,230 436,230 148,38"/>
+      <line x1="148" y1="38" x2="148" y2="230" stroke="#C2384F" stroke-width="5"/>
+      <g font-size="28"><text x="70" y="258" fill="#6551D1">4</text><text x="280" y="258" fill="var(--d-forte)">9</text><text x="158" y="150" fill="#C2384F" font-style="italic">h</text></g>
+    </svg>
+    <div class="contas" style="position:absolute;left:900px;top:170px;font-size:54px;row-gap:20px">
+      <div class="eq" data-passo="1"><span>\(h^2\)</span><span>\(=\)</span><span>\(m \cdot n\)</span></div>
+      <div class="eq" data-passo="2"><span>\(h^2\)</span><span>\(=\)</span><span>\(9 \cdot 4\)</span></div>
+      <div class="eq" data-passo="3"><span>\(h^2\)</span><span>\(=\)</span><span>\(36\)</span></div>
+      <div class="eq final" data-passo="4"><span>\(h\)</span><span>\(=\)</span><span>\(6\ \text{cm}\)</span></div>
+    </div>
+  </div>
+  <aside class="notas">
+    <p>Exemplo da apostila. Figura em escala (32 px por cm): projeções 4 e 9, altura 6. Conferido: 6² = 36 = 4 · 9.</p>
+  </aside>
+</section>
+
+<!-- 6. Exemplo: altura pelos catetos -->
+<section class="slide" data-nome="Exemplo: altura pelos catetos">
+  <div class="conteudo">
+    <p class="olho">Exemplo</p>
+    <h2 class="titulo">Catetos de 6 cm e 8 cm</h2>
+    <div style="position:absolute;left:0;width:800px;top:160px">
+      <p class="texto" style="margin:0 0 16px;font-size:32px"><b>Hipotenusa</b>, por Pitágoras:</p>
+      <div class="contas" style="font-size:48px;row-gap:14px">
+        <div class="eq" data-passo="1"><span>\(a^2\)</span><span>\(=\)</span><span>\(b^2 + c^2\)</span></div>
+        <div class="eq" data-passo="2"><span>\(a^2\)</span><span>\(=\)</span><span>\(8^2 + 6^2\)</span></div>
+        <div class="eq" data-passo="3"><span>\(a^2\)</span><span>\(=\)</span><span>\(100\)</span></div>
+        <div class="eq final" data-passo="4"><span>\(a\)</span><span>\(=\)</span><span>\(10\ \text{cm}\)</span></div>
+      </div>
+    </div>
+    <div style="position:absolute;left:940px;right:0;top:160px">
+      <p class="texto" style="margin:0 0 16px;font-size:32px"><b>Altura</b>, pela última relação:</p>
+      <div class="contas" style="font-size:48px;row-gap:14px">
+        <div class="eq" data-passo="5"><span>\(b \cdot c\)</span><span>\(=\)</span><span>\(a \cdot h\)</span></div>
+        <div class="eq" data-passo="6"><span>\(8 \cdot 6\)</span><span>\(=\)</span><span>\(10 \cdot h\)</span></div>
+        <div class="eq" data-passo="7"><span>\(48\)</span><span>\(=\)</span><span>\(10h\)</span></div>
+        <div class="eq final" data-passo="8"><span>\(h\)</span><span>\(=\)</span><span>\(4{,}8\ \text{cm}\)</span></div>
+      </div>
+    </div>
+  </div>
+  <aside class="notas">
+    <p>Exemplo da apostila. Primeiro a hipotenusa (10 cm), depois b · c = a · h. Conferido: 64 + 36 = 100; 48/10 = 4,8. A altura é menor que os dois catetos, como tem de ser.</p>
+  </aside>
+</section>
+
+<!-- 7. Questão 1 -->
+<section class="slide questao" data-nome="Questão 1">
+  <div class="conteudo">
+    <div class="area-resolucao"></div>
+    <span class="pilula pilula-pausa" data-em="1:some">Pause o vídeo e tente</span>
+    <div class="painel-questao">
+      <p class="olho">Questão 1 · Modelo IF</p>
+      <p class="enunciado">No triângulo ABC da figura, retângulo em A, os catetos medem AB = 15 cm e AC = 20 cm. O segmento AH é a altura relativa à hipotenusa.</p>
+      <svg class="fig" viewBox="0 0 500 300" width="500" height="300" aria-hidden="true">
+        <polygon points="20,250 460,250 178.4,38.8" fill="var(--d-clara)" stroke="var(--carvao)" stroke-width="4" stroke-linejoin="round"/>
+        <line x1="178.4" y1="38.8" x2="178.4" y2="250" stroke="var(--d)" stroke-width="4" stroke-dasharray="10 8"/>
+        <path d="M178.4 226 H202.4 V250" fill="none" stroke="var(--carvao)" stroke-width="2.5"/>
+        <path d="M166.4 54.8 L182.4 66.8 L194.4 50.8" fill="none" stroke="var(--carvao)" stroke-width="2.5"/>
+        <g font-size="24" fill="var(--carvao)"><text x="0" y="272">B</text><text x="466" y="272">C</text><text x="170" y="28">A</text><text x="170" y="282">H</text><text x="30" y="150">15 cm</text><text x="330" y="130">20 cm</text></g>
+      </svg>
+      <p class="enunciado" style="margin:0">Quanto mede o segmento HC?</p>
+      <ol class="alternativas curtas">
+        <li data-em="2:apaga"><b>A</b><span>5 cm</span></li>
+        <li data-em="2:apaga"><b>B</b><span>9 cm</span></li>
+        <li data-em="2:apaga"><b>C</b><span>12 cm</span></li>
+        <li data-em="2:certo"><b>D</b><span>16 cm</span></li>
+        <li data-em="2:apaga"><b>E</b><span>12,5 cm</span></li>
+      </ol>
+      <p class="fonte">Questão Modelo IF (lote if-matematica-teorema-de-pitagoras, m009)</p>
+    </div>
+  </div>
+  <aside class="resolucao">
+    <p class="dados"><b>Dados:</b> catetos 15 cm e 20 cm; HC é a projeção de AC.</p>
+    <ol class="passos">
+      <li><b>Hipotenusa</b> \(a^2 = 15^2 + 20^2 = 225 + 400 = 625\)</li>
+      <li><b>Raiz</b> \(a = 25\ \text{cm}\)</li>
+      <li><b>Cateto e a sua projeção</b> \(20^2 = 25 \cdot HC\)</li>
+      <li><b>Divida</b> \(HC = \dfrac{400}{25} = 16\ \text{cm}\)</li>
+      <li><b>Confira</b> \(BH = 25 - 16 = 9\) e \(15^2 = 25 \cdot 9\)</li>
+    </ol>
+    <p class="resposta"><b>Resposta:</b> HC = 16 cm. <b>Gabarito D.</b></p>
+    <p class="atencao"><b>Destaque no quadro:</b> A projeção de AC fica do lado de C.</p>
+    <ul class="erros">
+      <li><b>A</b> Faz 25 − 20.</li>
+      <li><b>B</b> 9 cm é BH, a projeção do outro cateto.</li>
+      <li><b>C</b> 12 cm é a altura AH.</li>
+      <li><b>E</b> Supõe que H é o meio da hipotenusa.</li>
+    </ul>
+  </aside>
+  <aside class="notas">
+    <p>Clique 1 tira o aviso de pausa: resolva na área (D liga a caneta; E esconde o enunciado). Clique 2: gabarito D.</p>
+    <p>Modelo IF, lote if-matematica-teorema-de-pitagoras, m009, MAT-0879 (nível 4). Figura em escala (17,6 px por cm). Conferido: 400/25 = 16; 225/25 = 9; altura 15 · 20/25 = 12.</p>
+  </aside>
+</section>
+
+<!-- 8. Questão 2 -->
+<section class="slide questao" data-nome="Questão 2">
+  <div class="conteudo">
+    <div class="area-resolucao"></div>
+    <span class="pilula pilula-pausa" data-em="1:some">Pause o vídeo e tente</span>
+    <div class="painel-questao">
+      <p class="olho">Questão 2 · IF Sudeste MG 2020</p>
+      <p class="enunciado">Calcule a altura h do triângulo retângulo ABC na figura.</p>
+      <svg class="fig" viewBox="0 0 440 320" width="420" height="305" style="align-self:center" aria-hidden="true">
+        <polygon points="60,280 380,280 60,40" fill="var(--d-clara)" stroke="var(--carvao)" stroke-width="4" stroke-linejoin="round"/>
+        <line x1="60" y1="280" x2="175.2" y2="126.4" stroke="var(--carvao)" stroke-width="4"/>
+        <path d="M60 256 H84 V280" fill="none" stroke="var(--carvao)" stroke-width="2.5"/>
+        <path d="M160.8 115.6 L150 130 L164.4 140.8" fill="none" stroke="var(--carvao)" stroke-width="2.5"/>
+        <g font-size="24" fill="var(--carvao)"><text x="34" y="300">A</text><text x="386" y="300">B</text><text x="40" y="36">C</text><text x="180" y="118">D</text><text x="52" y="168" text-anchor="end">12 cm</text><text x="190" y="312">16 cm</text><text x="100" y="196" font-style="italic" font-size="28">h</text></g>
+      </svg>
+      <ol class="alternativas curtas">
+        <li data-em="2:apaga"><b>A</b><span>9 cm</span></li>
+        <li data-em="2:certo"><b>B</b><span>9,6 cm</span></li>
+        <li data-em="2:apaga"><b>C</b><span>10,5 cm</span></li>
+        <li data-em="2:apaga"><b>D</b><span>15 cm</span></li>
+        <li data-em="2:apaga"><b>E</b><span>20 cm</span></li>
+      </ol>
+      <p class="fonte">IF Sudeste MG, prova de 2020 (1º semestre), questão 17</p>
+    </div>
+  </div>
+  <aside class="resolucao">
+    <p class="dados"><b>Dados:</b> catetos \(AC = 12\) cm e \(AB = 16\) cm; \(h = AD\).</p>
+    <ol class="passos">
+      <li><b>Hipotenusa</b> \(a^2 = 12^2 + 16^2 = 144 + 256 = 400\)</li>
+      <li><b>Raiz</b> \(a = 20\ \text{cm}\)</li>
+      <li><b>Catetos e altura</b> \(a \cdot h = b \cdot c\)</li>
+      <li><b>Substitua</b> \(20h = 12 \cdot 16 = 192\)</li>
+      <li><b>Divida</b> \(h = \dfrac{192}{20} = 9{,}6\ \text{cm}\)</li>
+    </ol>
+    <p class="resposta"><b>Resposta:</b> \(h = 9{,}6\) cm. <b>Gabarito B.</b></p>
+    <p class="atencao"><b>Destaque no quadro:</b> A altura relativa à hipotenusa é menor que os dois catetos.</p>
+    <ul class="erros">
+      <li><b>A</b> Faz 12 · 12/16: mistura as relações.</li>
+      <li><b>C</b> Não sai de nenhuma relação.</li>
+      <li><b>D</b> Inverte: 12 · 20/16.</li>
+      <li><b>E</b> 20 cm é a hipotenusa.</li>
+    </ul>
+  </aside>
+  <aside class="notas">
+    <p>Clique 1 tira o aviso de pausa: resolva na área (D liga a caneta; E esconde o enunciado). Clique 2: gabarito B.</p>
+    <p>Questão oficial do IF Sudeste MG 2020-1, q17, MAT-0527 (sobra do subcapítulo; gabarito do Quarks, conferido). Figura refeita em escala (20 px por cm). Conferido: 12 · 16 = 192; 192/20 = 9,6.</p>
+  </aside>
+</section>
+
+<!-- 9. Questão 3 -->
+<section class="slide questao" data-nome="Questão 3">
+  <div class="conteudo">
+    <div class="area-resolucao"></div>
+    <span class="pilula pilula-pausa" data-em="1:some">Pause o vídeo e tente</span>
+    <div class="painel-questao">
+      <p class="olho">Questão 3 · IF Sudeste MG 2013</p>
+      <p class="enunciado">O valor de x indicado abaixo é:</p>
+      <svg class="fig" viewBox="0 0 480 360" width="460" height="345" style="align-self:center" aria-hidden="true">
+        <polygon points="60,300 420,300 60,30" fill="var(--d-clara)" stroke="var(--carvao)" stroke-width="4" stroke-linejoin="round"/>
+        <line x1="60" y1="255" x2="168" y2="111" stroke="var(--carvao)" stroke-width="4"/>
+        <path d="M60 276 H84 V300" fill="none" stroke="var(--carvao)" stroke-width="2.5"/>
+        <path d="M157.2 125.4 L171.6 136.2 L182.4 121.8" fill="none" stroke="var(--carvao)" stroke-width="2.5"/>
+        <g stroke="var(--carvao)" stroke-width="2.5" fill="var(--carvao)">
+          <line x1="30" y1="42" x2="30" y2="288"/><path d="M30 30 l-7 14 h14 z M30 300 l-7 -14 h14 z"/>
+          <line x1="72" y1="330" x2="408" y2="330"/><path d="M60 330 l14 -7 v14 z M420 330 l-14 -7 v14 z"/>
+          <line x1="182.4" y1="91.8" x2="434.4" y2="280.8"/><path d="M182.4 91.8 L190 105 L197.2 95.4 Z M434.4 280.8 L419.6 277.2 L426.8 267.6 Z"/>
+        </g>
+        <g font-size="24" fill="var(--carvao)"><text x="-30" y="172">6 cm</text><text x="210" y="356">8 cm</text><text x="114" y="216">4 cm</text><text x="322" y="170" font-style="italic" font-size="28">x</text></g>
+      </svg>
+      <ol class="alternativas curtas">
+        <li data-em="2:apaga"><b>A</b><span>6 cm</span></li>
+        <li data-em="2:certo"><b>B</b><span>7 cm</span></li>
+        <li data-em="2:apaga"><b>C</b><span>8 cm</span></li>
+        <li data-em="2:apaga"><b>D</b><span>9 cm</span></li>
+        <li data-em="2:apaga"><b>E</b><span>10 cm</span></li>
+      </ol>
+      <p class="fonte">IF Sudeste MG, prova de 2013 (1º semestre), questão 19</p>
+    </div>
+  </div>
+  <aside class="resolucao">
+    <p class="dados"><b>Dados:</b> catetos 6 cm e 8 cm; segmento de 4 cm perpendicular à hipotenusa; \(x\) é o pedaço de baixo da hipotenusa.</p>
+    <ol class="passos">
+      <li><b>Hipotenusa</b> \(a^2 = 6^2 + 8^2 = 100 \Rightarrow a = 10\)</li>
+      <li><b>Triângulo pequeno ~ grande (ângulo de cima comum)</b></li>
+      <li><b>Proporção</b> \(\dfrac{AP}{6} = \dfrac{4}{8}\)</li>
+      <li><b>Pedaço de cima</b> \(AP = 3\)</li>
+      <li><b>O resto</b> \(x = 10 - 3 = 7\ \text{cm}\)</li>
+    </ol>
+    <p class="resposta"><b>Resposta:</b> \(x = 7\) cm. <b>Gabarito B.</b></p>
+    <p class="atencao"><b>Destaque no quadro:</b> No triângulo pequeno, o lado de 4 cm fica de frente para o mesmo ângulo que o lado de 8 cm.</p>
+    <ul class="erros">
+      <li><b>A</b> 6 cm é o cateto vertical.</li>
+      <li><b>C</b> 8 cm é o cateto horizontal.</li>
+      <li><b>D</b> Não sai da semelhança (AP = 3, não 1).</li>
+      <li><b>E</b> 10 cm é a hipotenusa inteira.</li>
+    </ul>
+  </aside>
+  <aside class="notas">
+    <p>Clique 1 tira o aviso de pausa: resolva na área (D liga a caneta; E esconde o enunciado). Clique 2: gabarito B.</p>
+    <p>Questão oficial do IF Sudeste MG 2013-1, q19, MAT-0370 (no banco está em Semelhança e Teorema de Tales; entrou aqui porque precisa de Pitágoras). Chame de A o vértice de cima, P o pé do segmento de 4 cm na hipotenusa. Figura refeita em escala (45 px por cm): o segmento de 4 cm parte do cateto a 5 cm de A. Conferido: 3-4-5 e 6-8-10 são semelhantes (k = 2); 10 − 3 = 7.</p>
+  </aside>
+</section>
+
+<!-- 10. Triângulo qualquer -->
+<section class="slide" data-nome="Triângulo qualquer">
+  <div class="conteudo">
+    <p class="olho">Além do triângulo retângulo</p>
+    <h2 class="titulo">Abra o ângulo reto um pouco mais</h2>
+    <div data-anima="tipo-triangulo" data-anima-passo="1" style="position:absolute;left:0;top:130px;width:760px;height:470px"></div>
+    <div style="position:absolute;left:880px;right:0;top:170px;display:flex;flex-direction:column;gap:22px">
+      <p class="texto" style="margin:0">Pitágoras vale só no triângulo retângulo. Mas a comparação diz o <b>tipo</b> de qualquer triângulo.</p>
+      <div data-passo="1" style="display:flex;flex-direction:column;gap:14px">
+        <span class="placa">\(a^2\) = <span data-a2>25</span> <span data-sinal>=</span> 25 = \(b^2 + c^2\)</span>
+        <span class="placa" style="color:#C2384F" data-tipo>retângulo</span>
+      </div>
+      <p class="texto" data-passo="2" style="margin:0;font-size:32px">Abre o ângulo: o lado oposto <b>cresce</b>. Fecha: o lado <b>diminui</b>.</p>
+    </div>
+  </div>
+  <aside class="notas">
+    <p>Clique 1: os lados 4 e 3 ficam fixos e o ângulo entre eles vai de 90° para 65°, volta a 90° e abre até 120°. O lado vermelho (a, oposto ao ângulo) muda, e a placa compara a² com b² + c² = 25 o tempo todo: menor, acutângulo; igual, retângulo; maior, obtusângulo.</p>
+    <p>Os valores de a² da placa são calculados na hora (lei dos cossenos, que não entra no IF; não precisa citar).</p>
+  </aside>
+</section>
+
+<!-- 11. A regra -->
+<section class="slide" data-nome="Tipo pelo maior lado">
+  <div class="conteudo">
+    <p class="olho">Definição</p>
+    <h2 class="titulo">O tipo pelo maior lado</h2>
+    <p class="texto" style="position:absolute;left:0;right:0;top:150px;margin:0">Seja \(a\) o <b>maior lado</b> e \(b\) e \(c\) os outros dois:</p>
+    <div class="rel" style="position:absolute;left:0;right:0;top:240px;grid-template-columns:repeat(3,1fr)">
+      <div data-passo="1">\(a^2 &lt; b^2 + c^2\)<span>acutângulo</span></div>
+      <div data-passo="2">\(a^2 = b^2 + c^2\)<span>retângulo</span></div>
+      <div data-passo="3">\(a^2 &gt; b^2 + c^2\)<span>obtusângulo</span></div>
+    </div>
+    <div style="position:absolute;left:0;right:0;top:420px;display:grid;grid-template-columns:repeat(3,1fr);gap:20px;justify-items:center">
+      <svg class="fig" data-passo="1" viewBox="0 0 260 180" width="260" height="180" aria-hidden="true"><polygon class="tri" points="30,160 230,160 110,20"/><line x1="30" y1="160" x2="230" y2="160" stroke="#C2384F" stroke-width="7"/><text x="122" y="152" font-size="28" fill="#C2384F" font-style="italic">a</text></svg>
+      <svg class="fig" data-passo="2" viewBox="0 0 260 180" width="260" height="180" aria-hidden="true"><polygon class="tri" points="30,160 230,160 30,20"/><path d="M30 136 H54 V160" fill="none" stroke="var(--carvao)" stroke-width="3"/><line x1="30" y1="20" x2="230" y2="160" stroke="#C2384F" stroke-width="7"/><text x="140" y="80" font-size="28" fill="#C2384F" font-style="italic">a</text></svg>
+      <svg class="fig" data-passo="3" viewBox="0 0 260 180" width="260" height="180" aria-hidden="true"><polygon class="tri" points="20,160 240,160 70,90"/><line x1="20" y1="160" x2="240" y2="160" stroke="#C2384F" stroke-width="7"/><text x="140" y="152" font-size="28" fill="#C2384F" font-style="italic">a</text></svg>
+    </div>
+  </div>
+  <aside class="notas">
+    <p>A regra da apostila. Um caso por clique.</p>
+  </aside>
+</section>
+
+<!-- 12. Exemplo -->
+<section class="slide" data-nome="Exemplo: classificar pelos lados">
+  <div class="conteudo">
+    <p class="olho">Exemplo</p>
+    <h2 class="titulo">Lados 5, 6, 7 e lados 4, 5, 7</h2>
+    <div style="position:absolute;left:0;width:800px;top:160px">
+      <div class="contas" style="font-size:48px;row-gap:14px">
+        <div class="eq" data-passo="1"><span>\(a^2\)</span><span>\(=\)</span><span>\(7^2 = 49\)</span></div>
+        <div class="eq" data-passo="2"><span>\(b^2 + c^2\)</span><span>\(=\)</span><span>\(25 + 36 = 61\)</span></div>
+        <div class="eq final" data-passo="3"><span>\(49\)</span><span>\(&lt;\)</span><span>\(61\)</span></div>
+      </div>
+      <span class="pilula pilula-resposta" data-passo="3" style="margin-top:24px">acutângulo</span>
+    </div>
+    <div style="position:absolute;left:940px;right:0;top:160px">
+      <div class="contas" style="font-size:48px;row-gap:14px">
+        <div class="eq" data-passo="4"><span>\(a^2\)</span><span>\(=\)</span><span>\(7^2 = 49\)</span></div>
+        <div class="eq" data-passo="5"><span>\(b^2 + c^2\)</span><span>\(=\)</span><span>\(16 + 25 = 41\)</span></div>
+        <div class="eq final" data-passo="6"><span>\(49\)</span><span>\(&gt;\)</span><span>\(41\)</span></div>
+      </div>
+      <span class="pilula pilula-resposta" data-passo="6" style="margin-top:24px">obtusângulo</span>
+    </div>
+  </div>
+  <aside class="notas">
+    <p>Exemplo da apostila. Antes, os dois trios existem: 7 &lt; 5 + 6 e 7 &lt; 4 + 5. Conferido: 25 + 36 = 61 e 16 + 25 = 41.</p>
+  </aside>
+</section>
+
+<!-- 13. Atenção -->
+<section class="slide" data-nome="Atenção: use o maior lado">
+  <div class="conteudo">
+    <p class="olho">Atenção</p>
+    <h2 class="titulo">Use o maior lado</h2>
+    <div class="caixa caixa-atencao" style="position:absolute;left:0;width:820px;top:170px">
+      <div class="texto">A comparação só funciona com o <b>maior</b> lado no papel de \(a\). Antes, confira se os três lados formam mesmo um triângulo.</div>
+    </div>
+    <div style="position:absolute;left:940px;right:0;top:170px;display:flex;flex-direction:column;gap:18px">
+      <p class="texto" data-passo="1" style="margin:0">Lados 4, 5, 7 com \(a = 4\) (errado):</p>
+      <div class="contas" data-passo="1" style="font-size:44px"><div class="eq"><span>\(16\)</span><span>\(&lt;\)</span><span>\(25 + 49\)</span></div></div>
+      <p class="texto" data-passo="2" style="margin:0">daria <span class="riscado">acutângulo</span>, mas ele é obtusângulo.</p>
+    </div>
+  </div>
+  <aside class="notas">
+    <p>O contraexemplo da direita é do professor: usando o lado menor como a, o teste sempre "dá" acutângulo, e o triângulo 4, 5, 7 é obtusângulo (slide anterior).</p>
+  </aside>
+</section>
+
+<!-- 14. Resumo -->
+<section class="slide" data-nome="Resumo">
+  <div class="conteudo">
+    <p class="olho">Resumo</p>
+    <h2 class="titulo">O essencial do subcapítulo</h2>
+    <div class="resumo" style="position:absolute;left:0;right:0;top:150px">
+      <div><b>Pitágoras:</b> \(a^2 = b^2 + c^2\), com \(a\) a hipotenusa (o maior lado, oposto ao ângulo reto).</div>
+      <div><b>Diagonal do quadrado:</b> \(\ell\sqrt{2}\). <b>Altura do equilátero:</b> \(\dfrac{\ell\sqrt{3}}{2}\).</div>
+      <div><b>Relações métricas:</b> \(h^2 = mn\), \(b^2 = am\), \(c^2 = an\), \(bc = ah\).</div>
+      <div><b>Por quê:</b> a altura divide o triângulo retângulo em dois triângulos semelhantes a ele.</div>
+      <div><b>Qualquer triângulo:</b> compare o quadrado do maior lado com a soma dos quadrados dos outros dois.</div>
+      <div>\(&lt;\) acutângulo · \(=\) retângulo · \(&gt;\) obtusângulo.</div>
+    </div>
+  </div>
+  <aside class="notas"><p>Peça para tirarem um print desta tela. Resumo do subcapítulo inteiro (as duas partes), como na apostila.</p></aside>
+</section>
+
+<!-- 15. A seguir -->
+<section class="slide capa" data-nome="A seguir">
+  <div class="estrelas"></div>
+  <div class="texto-capa" style="top:200px">
+    <span class="selo">Matemática · IF</span>
+    <p class="aula" style="font-size:26px">A seguir · Geometria plana</p>
+    <h1 style="font-size:130px">Polígonos regulares</h1>
+    <p class="sub">Diagonais, ângulos, lado e apótema</p>
+  </div>
+  <svg class="emblema" viewBox="0 0 640 640" aria-hidden="true">
+    <polygon points="320,80 528,200 528,440 320,560 112,440 112,200" fill="none" stroke="#fff" stroke-opacity=".9" stroke-width="9" stroke-linejoin="round"/>
+    <circle cx="320" cy="320" r="240" fill="none" stroke="#FFD10C" stroke-width="5" stroke-dasharray="14 12"/>
+    <line x1="320" y1="320" x2="528" y2="320" stroke="#FFD10C" stroke-width="7" stroke-linecap="round"/>
+    <circle cx="320" cy="320" r="10" fill="#FFD10C"/>
+  </svg>
+  <img class="logo-capa" src="{{LOGO_BRANCO}}" alt="Quarks">
+  <aside class="notas"><p>Próximo subcapítulo: Polígonos regulares (diagonais e soma dos ângulos, polígonos inscritos, lado e apótema). O apótema usa Pitágoras.</p></aside>
+</section>

@@ -1,0 +1,29 @@
+#!/bin/bash
+# Trava antes do push (auditoria A49, 13/11/2026): nada chega ao main sem passar pela verificação.
+# O git chama este arquivo antes de todo push. Em outras branches ele não faz nada.
+# Ligada por: git config core.hooksPath scripts/ganchos (o scripts/verificar_tudo.py e o início da sessão fazem isso sozinhos).
+# Pular a trava (git push --no-verify) só com ordem expressa do dono.
+PROTEGIDA="refs/heads/main"
+raiz="$(git rev-parse --show-toplevel)" || exit 1
+zero="0000000000000000000000000000000000000000"
+while read -r ref_local sha_local ref_remoto sha_remoto; do
+  [ "$ref_remoto" = "$PROTEGIDA" ] || continue
+  echo "Trava do Quarks: conferindo antes de enviar para o main..." >&2
+  if [ "$sha_local" = "$zero" ]; then
+    echo "RECUSADO: este push apagaria o main." >&2; exit 1
+  fi
+  if [ "$sha_local" != "$(git rev-parse HEAD)" ]; then
+    echo "RECUSADO: o que está sendo enviado não é o que está aberto na pasta. Entre no main (git checkout main), junte a branch e envie de lá." >&2; exit 1
+  fi
+  if [ -n "$(git status --porcelain --untracked-files=no)" ]; then
+    echo "RECUSADO: há mudança solta (sem commit) em arquivo do repositório; a verificação olharia outra coisa. Faça o commit ou desfaça antes." >&2
+    git status --short --untracked-files=no >&2; exit 1
+  fi
+  if ! (cd "$raiz" && QK_PUBLICAR_BASE="$sha_remoto" python3 scripts/verificar_tudo.py --publicar) >&2; then
+    echo "" >&2
+    echo "RECUSADO: a verificação falhou e NADA foi enviado para o main. Corrija o que está marcado como FALHA e tente de novo." >&2
+    exit 1
+  fi
+  echo "Trava do Quarks: verificação passou, enviando." >&2
+done
+exit 0

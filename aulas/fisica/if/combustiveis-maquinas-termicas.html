@@ -1,0 +1,498 @@
+<!--aula
+{"disciplina": "fisica", "curso": "IF", "assunto": "Termologia", "parte": "Parte única", "titulo": "Combustíveis e máquinas térmicas", "scripts": ["animacoes-termologia.js"]}
+-->
+<!-- Fonte: apostila IF, Física, cap. 3 Termologia, 3.3 Combustíveis e máquinas térmicas (teorias "Combustíveis ao longo da história e seus impactos", com a tabela das épocas, a definição de renovável e não renovável e o exemplo "Vantagem e problema", e "Máquinas térmicas: do vapor ao motor", com a figura da máquina térmica, o exemplo "Fonte quente e fria no carro", a atenção "Motor quente não é defeito" e o resumo). Questões Modelo IF da apostila (lote if-fisica-termodinamica): m006 FIS-1682, m009 FIS-1685 e m011 FIS-8751. A m007 (FIS-1683) fica reservada para o bloco do fim do capítulo. A oficial 2017-1 q31 (FIS-0525), classificada neste subcapítulo, foi anulada pela banca e cobra a primeira lei da termodinâmica, que está fora da teoria do IF: não entrou. -->
+<style>
+  .caixa, .painel, .linha-ex { box-sizing: border-box; }
+  .linha-ex { background: var(--branco); border: 2px solid var(--lilas-2); border-radius: 24px; padding: 14px 26px; font-size: 30px; line-height: 1.3; }
+  .linha-ex b { color: var(--roxo-titulo); }
+  .painel { background: var(--branco); border: 2px solid var(--lilas-2); border-radius: 30px; padding: 18px 26px; }
+  .painel h3 { margin: 0 0 6px; font: 800 34px var(--fonte-titulo); letter-spacing: -.02em; color: var(--roxo-titulo); }
+  .painel p { margin: 8px 0 0; font-size: 26px; line-height: 1.3; }
+  .rot-fig { font-family: Figtree, "Segoe UI", sans-serif; font-weight: 700; font-size: 24px; fill: #5E5A70; }
+  .rot-forte { font-family: Figtree, "Segoe UI", sans-serif; font-weight: 800; font-size: 26px; fill: #3F2FA0; }
+  .linha-tempo > div { font-size: 26px; }
+  .linha-tempo .ano { font-size: 34px; }
+  .linha-tempo .uso { display: block; color: var(--cinza); font-size: 23px; margin-top: 4px; }
+  .chips { display: flex; flex-wrap: wrap; gap: 12px; margin-top: 12px; }
+  .chip { display: inline-flex; align-items: center; padding: 8px 20px; border-radius: 999px; font-weight: 700; font-size: 26px; background: var(--lilas); color: var(--roxo-titulo); }
+  .chip.v { background: var(--certo-claro); color: var(--certo); }
+  .chip.n { background: #FFE9DF; color: #A8431B; }
+  .tag { display: inline-block; padding: 5px 20px; border-radius: 999px; font-weight: 800; font-size: 24px; white-space: nowrap; }
+  .tag-v { background: var(--certo-claro); color: var(--certo); }
+  .tag-x { background: var(--erro-claro); color: var(--erro); }
+  /* setas de energia correndo no esquema da máquina */
+  @keyframes flui { to { stroke-dashoffset: -64; } }
+  .fluxo { stroke-dasharray: 22 10; }
+  .slide.ativo .mostra .fluxo, .slide.ativo .fluxo.sempre { animation: flui 1.8s linear infinite; }
+  @keyframes gira { to { transform: rotate(360deg); } }
+  .engrenagem { transform-box: fill-box; transform-origin: center; }
+  .slide.ativo .mostra .engrenagem { animation: gira 8s linear infinite; }
+  /* gás carbônico saindo do carro e indo para a cana */
+  @keyframes co2 { 0% { transform: translate(0, 0); opacity: 0; } 12% { opacity: 1; } 80% { opacity: 1; } 100% { transform: translate(420px, -20px); opacity: 0; } }
+  .co2 g { opacity: 0; }
+  .slide.ativo .mostra .co2 g { animation: co2 6s ease-in-out infinite; }
+  .co2 g:nth-child(2) { animation-delay: -2s !important; } .co2 g:nth-child(3) { animation-delay: -4s !important; }
+  @keyframes balanca { 0%, 100% { transform: rotate(-2deg); } 50% { transform: rotate(2deg); } }
+  .cana { transform-box: fill-box; transform-origin: 50% 100%; }
+  .slide.ativo .mostra .cana { animation: balanca 5s ease-in-out infinite; }
+  .cana:nth-of-type(2) { animation-delay: -1.7s !important; } .cana:nth-of-type(3) { animation-delay: -3.3s !important; }
+  @keyframes chama { 0%,100% { transform: scaleY(1) scaleX(1); } 50% { transform: scaleY(.9) scaleX(1.04); } }
+  .chama { transform-box: fill-box; transform-origin: 50% 100%; }
+  .slide.ativo .chama { animation: chama 1.6s ease-in-out infinite; }
+  .divisa { display: grid; grid-template-columns: 1fr 1fr; gap: 40px; }
+</style>
+
+<svg width="0" height="0" style="position:absolute" aria-hidden="true">
+  <defs>
+    <linearGradient id="c1Chama" x1="0" y1="1" x2="0" y2="0"><stop offset="0" stop-color="#FF8A3D"/><stop offset=".6" stop-color="#FFD10C"/><stop offset="1" stop-color="#FFF4C2"/></linearGradient>
+    <marker id="c1PtaQ" viewBox="0 0 10 10" refX="7" refY="5" markerWidth="2.6" markerHeight="2.6" orient="auto"><path d="M0 0 L10 5 L0 10 z" fill="#E8590C"/></marker>
+    <marker id="c1PtaT" viewBox="0 0 10 10" refX="7" refY="5" markerWidth="2.6" markerHeight="2.6" orient="auto"><path d="M0 0 L10 5 L0 10 z" fill="#0F8B8D"/></marker>
+    <marker id="c1PtaF" viewBox="0 0 10 10" refX="7" refY="5" markerWidth="2.6" markerHeight="2.6" orient="auto"><path d="M0 0 L10 5 L0 10 z" fill="#4A90E2"/></marker>
+    <symbol id="c1Carro" viewBox="-100 -80 104 80">
+      <rect x="-96" y="-52" width="96" height="34" rx="14" fill="currentColor"/>
+      <path d="M-78 -52 Q-70 -76 -48 -76 L-34 -76 Q-18 -76 -12 -52 Z" fill="currentColor"/>
+      <path d="M-68 -54 Q-63 -70 -50 -70 L-44 -70 L-44 -54 Z M-38 -54 L-38 -70 L-34 -70 Q-24 -70 -20 -54 Z" fill="#fff" opacity=".85"/>
+      <circle cx="-74" cy="-16" r="12" fill="#292B2C"/><circle cx="-22" cy="-16" r="12" fill="#292B2C"/>
+    </symbol>
+  </defs>
+</svg>
+
+<!-- 1. Capa -->
+<section class="slide capa" data-nome="Capa">
+  <div class="estrelas"></div>
+  <div class="texto-capa">
+    <span class="selo">Física · IF</span>
+    <p class="aula">Termologia</p>
+    <h1 style="font-size:124px">Combustíveis e máquinas térmicas</h1>
+    <p class="sub">Do vapor ao motor</p>
+  </div>
+  <svg class="emblema" viewBox="0 0 640 640" aria-hidden="true">
+    <g class="gira-lento"><ellipse cx="320" cy="320" rx="300" ry="128" fill="none" stroke="#fff" stroke-opacity=".38" stroke-width="2" transform="rotate(-10 320 320)"/></g>
+    <g class="gira"><ellipse cx="320" cy="320" rx="236" ry="196" fill="none" stroke="#FFD10C" stroke-opacity=".75" stroke-width="2.5" stroke-dasharray="3 14" stroke-linecap="round" transform="rotate(-8 320 320)"/>
+      <circle cx="84" cy="300" r="13" fill="var(--d)" stroke="#fff" stroke-width="3"/></g>
+    <circle cx="320" cy="320" r="132" fill="#FFD10C"/>
+    <image href="{{SYM_ROXO}}" x="238" y="238" width="164" height="164"/>
+  </svg>
+  <img class="logo-capa" src="{{LOGO_BRANCO}}" alt="Quarks">
+  <aside class="notas"><p>Última parte de Termologia: os combustíveis ao longo da história, como funciona uma máquina térmica e os impactos dos combustíveis. Depois vem o bloco de questões do IF do capítulo.</p></aside>
+</section>
+
+<!-- 2. Combustíveis na história -->
+<section class="slide" data-nome="Combustíveis na história">
+  <div class="conteudo">
+    <p class="olho">História dos combustíveis</p>
+    <h2 class="titulo">Da lenha ao etanol</h2>
+    <div class="linha-tempo" style="position:absolute;left:0;right:0;top:170px">
+      <div data-passo="1"><span class="ano">Antiguidade em diante</span><b>Lenha e carvão vegetal</b><span class="uso">fogo doméstico, metais</span></div>
+      <div data-passo="2"><span class="ano">Séculos XVIII e XIX</span><b>Carvão mineral</b><span class="uso">máquinas a vapor, trens</span></div>
+      <div data-passo="3"><span class="ano">Século XX</span><b>Petróleo</b> (gasolina, diesel)<span class="uso">motores, transporte</span></div>
+      <div data-passo="4"><span class="ano">Séculos XX e XXI</span><b>Gás natural, etanol, biodiesel</b><span class="uso">indústria, carros, ônibus</span></div>
+    </div>
+    <div class="caixa caixa-fundamental" data-passo="5" style="position:absolute;left:580px;right:0;top:540px;padding:22px 32px">
+      <div class="texto" style="font-size:31px">A <b>lenha</b> foi a primeira fonte de energia térmica: para cozinhar, aquecer e trabalhar metais. Cada nova máquina pediu um combustível <b>mais concentrado</b> e <b>mais fácil de transportar</b>.</div>
+    </div>
+  </div>
+  <aside class="notas">
+    <p>A tabela da apostila em forma de linha do tempo, uma época por clique. Clique 5: a ideia que costura a história.</p>
+  </aside>
+</section>
+
+<!-- 3. Antes das máquinas -->
+<section class="slide" data-nome="Antes das máquinas">
+  <div class="conteudo">
+    <p class="olho">História das máquinas térmicas</p>
+    <h2 class="titulo">Quem fazia o trabalho pesado?</h2>
+    <div style="position:absolute;left:0;right:0;top:160px;display:grid;grid-template-columns:repeat(4,1fr);gap:24px">
+      <div class="painel" style="text-align:center"><svg viewBox="0 0 120 100" style="width:120px;height:100px" aria-hidden="true"><circle cx="60" cy="24" r="16" fill="#F2C7A5"/><path d="M36 96 v-34 q0 -18 24 -18 q24 0 24 18 v34" fill="#8C7BEA"/></svg><h3>Pessoas</h3></div>
+      <div class="painel" style="text-align:center"><svg viewBox="0 0 120 100" style="width:120px;height:100px" aria-hidden="true"><path d="M20 70 q0 -30 40 -30 h30 l14 -18 l8 6 l-6 22 v20 h-10 v-14 h-46 v14 h-10 z" fill="#A8743F"/><rect x="26" y="70" width="8" height="24" fill="#A8743F"/><rect x="40" y="70" width="8" height="24" fill="#A8743F"/><rect x="74" y="70" width="8" height="24" fill="#A8743F"/></svg><h3>Animais</h3></div>
+      <div class="painel" style="text-align:center"><svg viewBox="0 0 120 100" style="width:120px;height:100px" aria-hidden="true"><rect x="56" y="40" width="8" height="58" fill="#8E8AA0"/><g class="engrenagem" transform="translate(60 40)"><path d="M0 0 L-6 -36 L6 -36 Z M0 0 L34 14 L28 24 Z M0 0 L-28 24 L-34 14 Z" fill="#6551D1"/></g></svg><h3>Vento</h3></div>
+      <div class="painel" style="text-align:center"><svg viewBox="0 0 120 100" style="width:120px;height:100px" aria-hidden="true"><path d="M10 20 h40 v70 h-40 z" fill="#9CCBF2"/><circle cx="74" cy="60" r="28" fill="none" stroke="#8E8AA0" stroke-width="6"/><g stroke="#8E8AA0" stroke-width="5"><line x1="46" y1="60" x2="102" y2="60"/><line x1="74" y1="32" x2="74" y2="88"/></g></svg><h3>Quedas d'água</h3></div>
+    </div>
+    <div class="caixa caixa-fundamental" data-passo="1" style="position:absolute;left:580px;right:0;top:460px;padding:22px 32px">
+      <span class="rotulo">Século XVIII, Inglaterra</span>
+      <div class="texto" style="font-size:31px">A <b>máquina a vapor</b> usou o calor da queima de <b>carvão</b> para produzir movimento. Isso mudou tudo.</div>
+    </div>
+  </div>
+  <aside class="notas">
+    <p>Por milhares de anos, o trabalho pesado foi feito por pessoas, animais, pelo vento e pelas quedas d'água. Clique 1: a invenção que mudou isso.</p>
+  </aside>
+</section>
+
+<!-- 4. A máquina a vapor -->
+<section class="slide" data-nome="A máquina a vapor">
+  <div class="conteudo">
+    <p class="olho">Como funciona</p>
+    <h2 class="titulo">A máquina a vapor</h2>
+    <div data-anima="termo-motor" data-anima-passo="0" data-w="960" data-h="420" style="position:absolute;left:0;top:160px;width:960px;height:420px"></div>
+    <div style="position:absolute;left:1020px;right:0;top:160px;display:flex;flex-direction:column;gap:14px">
+      <div class="linha-ex" data-passo="1" style="font-size:27px"><b>1.</b> O carvão queima e <b>ferve a água</b> de uma caldeira.</div>
+      <div class="linha-ex" data-passo="2" style="font-size:27px"><b>2.</b> O <b>vapor empurra um pistão</b>.</div>
+      <div class="linha-ex" data-passo="3" style="font-size:27px"><b>3.</b> O pistão faz <b>girar uma roda</b>.</div>
+      <div class="linha-ex" data-passo="4" style="font-size:27px"><b>4.</b> Depois, o vapor é <b>resfriado</b> e volta a ser água.</div>
+    </div>
+  </div>
+  <aside class="notas">
+    <p>A máquina já está andando quando o slide abre: o fogo ferve a água da caldeira, o vapor vai pelo cano até o cilindro, empurra o pistão, e a biela (a barra roxa) faz a roda girar. O vapor usado sai pelo cano de baixo para ser resfriado. Um passo por clique, apontando na figura.</p>
+  </aside>
+</section>
+
+<!-- 5. Máquina térmica -->
+<section class="slide" data-nome="Máquina térmica">
+  <div class="conteudo">
+    <p class="olho">O que toda máquina térmica tem</p>
+    <h2 class="titulo">Fonte quente e fonte fria</h2>
+    <svg viewBox="0 0 900 470" style="position:absolute;left:0;top:140px;width:860px;height:449px" aria-hidden="true">
+      <rect x="90" y="10" width="600" height="90" rx="28" fill="#FFE9DF" stroke="#E8590C" stroke-width="5"/>
+      <text x="390" y="66" text-anchor="middle" class="rot-forte" style="fill:#A8431B;font-size:28px">fonte quente (queima do combustível)</text>
+      <g data-passo="1"><path class="fluxo" d="M390 108 V170" stroke="#E8590C" stroke-width="16" stroke-linecap="round" marker-end="url(#c1PtaQ)"/><text x="420" y="150" class="rot-forte" style="fill:#A8431B">calor</text></g>
+      <circle cx="390" cy="250" r="70" fill="#E0F4F4" stroke="#052E30" stroke-width="5"/>
+      <g class="engrenagem" data-passo="0"><path d="M390 212 l8 0 l4 10 l10 4 l10 -6 l6 6 l-6 10 l4 10 l10 4 v8 l-10 4 l-4 10 l6 10 l-6 6 l-10 -6 l-10 4 l-4 10 h-8 l-4 -10 l-10 -4 l-10 6 l-6 -6 l6 -10 l-4 -10 l-10 -4 v-8 l10 -4 l4 -10 l-6 -10 l6 -6 l10 6 l10 -4 z" fill="#0F8B8D" opacity=".25"/></g>
+      <text x="390" y="260" text-anchor="middle" class="rot-forte" style="fill:#052E30">máquina</text>
+      <g data-passo="2"><path class="fluxo" d="M466 250 H660" stroke="#0F8B8D" stroke-width="12" stroke-linecap="round" marker-end="url(#c1PtaT)"/><text x="700" y="245" class="rot-forte" style="fill:#0B6B6D">movimento</text><text x="700" y="278" class="rot-forte" style="fill:#0B6B6D">(trabalho)</text></g>
+      <g data-passo="3"><path class="fluxo" d="M390 328 V378" stroke="#4A90E2" stroke-width="10" stroke-linecap="round" marker-end="url(#c1PtaF)"/><text x="420" y="362" class="rot-forte" style="fill:#1F5F99">calor que sobra</text></g>
+      <rect x="90" y="390" width="600" height="76" rx="28" fill="#E3F0FB" stroke="#4A90E2" stroke-width="5"/>
+      <text x="390" y="437" text-anchor="middle" class="rot-forte" style="fill:#1F5F99;font-size:27px">fonte fria (ar ou água do ambiente)</text>
+    </svg>
+    <div style="position:absolute;left:920px;right:0;top:160px;display:flex;flex-direction:column;gap:16px">
+      <p class="texto" style="margin:0;font-size:31px"><b>Máquina térmica:</b> transforma <b>parte do calor</b> em movimento, que os físicos chamam de <b>trabalho</b>.</p>
+      <div class="caixa caixa-fundamental" data-passo="4" style="padding:18px 26px">
+        <span class="rotulo">Fonte quente e fonte fria</span>
+        <div class="texto" style="font-size:27px">Recebe calor da <b>fonte quente</b>, transforma uma parte em trabalho e entrega o resto à <b>fonte fria</b>. <b>Nenhuma</b> máquina térmica transforma todo o calor em trabalho.</div>
+      </div>
+    </div>
+  </div>
+  <aside class="notas">
+    <p>A figura da apostila. Clique 1: o calor que entra. Clique 2: a parte que vira movimento (trabalho). Clique 3: o calor que sobra, entregue ao ambiente. Clique 4: a regra. A seta de entrada é a mais grossa: o que entra é o trabalho mais o que sobra.</p>
+  </aside>
+</section>
+
+<!-- 6. Sem diferença, para -->
+<section class="slide" data-nome="Sem diferença de temperatura, para">
+  <div class="conteudo">
+    <p class="olho">A máquina precisa da diferença</p>
+    <h2 class="titulo">Sem diferença de temperatura, ela para</h2>
+    <div style="position:absolute;left:0;right:0;top:160px;display:grid;grid-template-columns:1fr 1fr;gap:40px">
+      <div class="painel" data-passo="1">
+        <h3>Equilíbrio térmico = parada</h3>
+        <p>Se a fonte quente e a fonte fria entrassem em <b>equilíbrio térmico</b>, o calor deixaria de passar e a máquina <b>pararia</b>.</p>
+      </div>
+      <div class="painel" data-passo="2" style="display:grid;grid-template-columns:200px 1fr;gap:16px;align-items:center">
+        <svg viewBox="0 0 200 170" style="width:200px;height:170px" aria-hidden="true"><rect x="20" y="20" width="160" height="130" rx="14" fill="#ECEAF4" stroke="#4B4760" stroke-width="5"/><g stroke="#8E8AA0" stroke-width="5"><line x1="40" y1="40" x2="40" y2="130"/><line x1="64" y1="40" x2="64" y2="130"/><line x1="88" y1="40" x2="88" y2="130"/><line x1="112" y1="40" x2="112" y2="130"/><line x1="136" y1="40" x2="136" y2="130"/><line x1="160" y1="40" x2="160" y2="130"/></g><g fill="none" stroke="#E8590C" stroke-width="5" stroke-linecap="round"><path class="fluxo" d="M60 10 q8 -8 0 -16" transform="translate(0 6)"/><path class="fluxo" d="M140 10 q8 -8 0 -16" transform="translate(0 6)"/></g></svg>
+        <div><h3>Radiador</h3><p>Joga para o ar o calor que <b>sobra</b> no motor do carro.</p></div>
+      </div>
+    </div>
+    <div class="caixa caixa-atencao" data-passo="3" style="position:absolute;left:580px;right:0;top:500px;padding:22px 32px">
+      <span class="rotulo">Motor quente não é defeito</span>
+      <div class="texto" style="font-size:31px">O motor esquenta porque uma parte do calor <b>sempre sobra</b>. Não é falha de fabricação: é uma regra de <b>toda</b> máquina térmica.</div>
+    </div>
+  </div>
+  <aside class="notas">
+    <p>Clique 1: a máquina só funciona porque há diferença de temperatura. Clique 2: por isso o carro tem radiador. Clique 3: a atenção da apostila.</p>
+  </aside>
+</section>
+
+<!-- 7. Do vapor ao motor -->
+<section class="slide" data-nome="Do vapor ao motor">
+  <div class="conteudo">
+    <p class="olho">Máquinas térmicas na história</p>
+    <h2 class="titulo">Do vapor ao motor</h2>
+    <div style="position:absolute;left:0;right:0;top:160px;display:grid;grid-template-columns:repeat(3,1fr);gap:28px">
+      <div class="painel" data-passo="1">
+        <svg viewBox="0 0 300 140" style="width:100%;height:140px" aria-hidden="true"><rect x="40" y="50" width="160" height="60" rx="14" fill="#4B4760"/><rect x="200" y="30" width="70" height="80" rx="10" fill="#6551D1"/><rect x="70" y="18" width="26" height="34" fill="#4B4760"/><circle cx="80" cy="118" r="18" fill="#292B2C"/><circle cx="150" cy="118" r="18" fill="#292B2C"/><circle cx="240" cy="118" r="18" fill="#292B2C"/><g fill="#DCD6F3"><circle cx="86" cy="8" r="10" opacity=".8"/><circle cx="106" cy="-2" r="8" opacity=".5"/></g></svg>
+        <h3>Máquinas a vapor</h3>
+        <p>Moveram as fábricas, os trens e os navios da <b>Revolução Industrial</b>.</p>
+      </div>
+      <div class="painel" data-passo="2">
+        <svg viewBox="0 0 300 140" style="width:100%;height:140px" aria-hidden="true"><use href="#c1Carro" x="60" y="20" width="180" height="138" style="color:var(--d)"/></svg>
+        <h3>Combustão interna</h3>
+        <p>No carro e na moto, o combustível <b>queima dentro do próprio motor</b>.</p>
+      </div>
+      <div class="painel" data-passo="3">
+        <svg viewBox="0 0 300 140" style="width:100%;height:140px" aria-hidden="true"><rect x="40" y="60" width="140" height="70" rx="8" fill="#B9B4CC"/><rect x="200" y="20" width="34" height="110" rx="6" fill="#8E8AA0"/><g class="engrenagem" transform="translate(110 95)"><circle r="26" fill="#FFD10C"/><g stroke="#4B4760" stroke-width="5"><line x1="-24" y1="0" x2="24" y2="0"/><line x1="0" y1="-24" x2="0" y2="24"/></g></g><path d="M250 50 l-14 22 h12 l-10 22" fill="none" stroke="#FFD10C" stroke-width="6" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        <h3>Termelétricas</h3>
+        <p>O vapor gira uma <b>turbina</b> que gera eletricidade.</p>
+      </div>
+    </div>
+  </div>
+  <aside class="notas">
+    <p>Um cartão por clique. Todas são máquinas térmicas: recebem calor de uma queima, transformam parte em movimento e entregam o resto ao ambiente. A diferença do motor do carro é onde a queima acontece (dentro do motor; na locomotiva a vapor, fora, na fornalha).</p>
+  </aside>
+</section>
+
+<!-- 8. Exemplo: o carro -->
+<section class="slide" data-nome="Exemplo: o carro">
+  <div class="conteudo">
+    <p class="olho">Exemplo</p>
+    <h2 class="titulo">Fonte quente e fria no carro</h2>
+    <p class="texto" style="position:absolute;left:0;right:0;top:150px;margin:0">No motor de um carro, qual é a fonte quente, qual é a fonte fria e o que é o trabalho?</p>
+    <div style="position:absolute;left:0;width:1300px;top:260px;display:flex;flex-direction:column;gap:18px">
+      <div class="linha-ex" style="display:grid;grid-template-columns:280px 1fr;align-items:center"><b style="color:#A8431B">Fonte quente</b><span data-passo="1">a queima da gasolina ou do etanol dentro do motor</span></div>
+      <div class="linha-ex" style="display:grid;grid-template-columns:280px 1fr;align-items:center"><b style="color:var(--d-forte)">Trabalho</b><span data-passo="2">o movimento dos pistões, que faz as rodas girarem</span></div>
+      <div class="linha-ex" style="display:grid;grid-template-columns:280px 1fr;align-items:center"><b style="color:#1F5F99">Fonte fria</b><span data-passo="3">o ar do ambiente, que recebe o calor pelo escapamento e pelo radiador</span></div>
+    </div>
+  </div>
+  <aside class="notas">
+    <p>Exemplo da apostila. Peça a resposta antes de cada clique.</p>
+  </aside>
+</section>
+
+<!-- 9. Avanços e problemas -->
+<section class="slide" data-nome="Impactos dos combustíveis">
+  <div class="conteudo">
+    <p class="olho">Impactos socioambientais</p>
+    <h2 class="titulo">Avanços e problemas</h2>
+    <div class="divisa" style="position:absolute;left:0;right:0;top:160px">
+      <div class="painel" data-passo="1">
+        <h3><span class="tag tag-v">avanços</span></h3>
+        <p>Mais <b>produção</b>.</p><p><b>Viagens</b> mais rápidas.</p><p><b>Cidades</b> maiores.</p>
+      </div>
+      <div class="painel" data-passo="2">
+        <h3><span class="tag tag-x">problemas</span></h3>
+        <p>Extração de carvão e de petróleo <b>cara e perigosa</b>; petróleo derramado <b>contamina</b> mares e rios.</p>
+        <p data-passo="3">Na queima: <b>gás carbônico</b>, que intensifica o efeito estufa, e outros gases que <b>poluem o ar</b> das cidades.</p>
+        <p data-passo="4">Lenha em excesso: <b>desmatamento</b>.</p>
+      </div>
+    </div>
+  </div>
+  <aside class="notas">
+    <p>Da apostila: cada combustível trouxe avanços e problemas. Clique 3 liga com o efeito estufa de Propagação do calor.</p>
+  </aside>
+</section>
+
+<!-- 10. Renovável e não renovável -->
+<section class="slide" data-nome="Renovável e não renovável">
+  <div class="conteudo">
+    <p class="olho">Dois tipos de combustível</p>
+    <h2 class="titulo">Renovável e não renovável</h2>
+    <div class="divisa" style="position:absolute;left:0;right:0;top:160px">
+      <div class="painel" data-passo="1">
+        <h3>Renovável</h3>
+        <p>A natureza <b>repõe em pouco tempo</b>.</p>
+        <div class="chips"><span class="chip v" data-passo="3">etanol da cana-de-açúcar</span><span class="chip v" data-passo="3">lenha de florestas plantadas</span></div>
+      </div>
+      <div class="painel" data-passo="2">
+        <h3>Não renovável</h3>
+        <p>Levou <b>milhões de anos</b> para se formar e <b>vai acabar</b>: os <b>combustíveis fósseis</b>.</p>
+        <div class="chips"><span class="chip n" data-passo="4">carvão mineral</span><span class="chip n" data-passo="4">petróleo</span><span class="chip n" data-passo="4">gás natural</span></div>
+      </div>
+    </div>
+    <div class="caixa caixa-atencao" data-passo="5" style="position:absolute;left:580px;right:0;top:560px;padding:20px 30px">
+      <div class="texto" style="font-size:30px">O nome engana: o <b>gás natural</b> é fóssil, como o petróleo. Não é renovável.</div>
+    </div>
+  </div>
+  <aside class="notas">
+    <p>A definição da apostila. Cliques 1 e 2: os dois tipos. Cliques 3 e 4: os exemplos. Clique 5: pegadinha comum das alternativas ("natural" não quer dizer renovável).</p>
+  </aside>
+</section>
+
+<!-- 11. Etanol -->
+<section class="slide" data-nome="O etanol no Brasil">
+  <div class="conteudo">
+    <p class="olho">Um combustível brasileiro</p>
+    <h2 class="titulo">O etanol da cana</h2>
+    <svg viewBox="0 0 900 420" style="position:absolute;left:0;top:150px;width:900px;height:420px" aria-hidden="true" data-passo="1">
+      <rect x="0" y="330" width="900" height="16" rx="8" fill="#E4DEFB"/>
+      <use href="#c1Carro" x="40" y="200" width="200" height="154" style="color:var(--d)"/>
+      <g class="co2" font-family="Figtree,'Segoe UI',sans-serif" font-weight="800" font-size="24" text-anchor="middle">
+        <g><circle cx="270" cy="250" r="34" fill="#ECEAF4"/><text x="270" y="259" fill="#5E5A70">CO₂</text></g>
+        <g><circle cx="270" cy="250" r="34" fill="#ECEAF4"/><text x="270" y="259" fill="#5E5A70">CO₂</text></g>
+        <g><circle cx="270" cy="250" r="34" fill="#ECEAF4"/><text x="270" y="259" fill="#5E5A70">CO₂</text></g>
+      </g>
+      <g fill="#5DAE7A" stroke="#2E7A4A" stroke-width="2">
+        <g class="cana"><rect x="700" y="120" width="12" height="212" rx="6"/><path d="M706 160 q-50 -10 -70 30 q40 -6 70 -16z M706 220 q50 -10 70 30 q-40 -6 -70 -16z M706 130 q30 -40 60 -40 q-20 30 -60 52z"/></g>
+        <g class="cana"><rect x="770" y="140" width="12" height="192" rx="6"/><path d="M776 190 q-50 -10 -70 30 q40 -6 70 -16z M776 250 q50 -10 70 30 q-40 -6 -70 -16z"/></g>
+        <g class="cana"><rect x="840" y="110" width="12" height="222" rx="6"/><path d="M846 170 q-50 -10 -70 30 q40 -6 70 -16z M846 140 q30 -40 50 -40 q-16 30 -50 52z"/></g>
+      </g>
+      <text x="10" y="390" class="rot-fig">a queima libera gás carbônico</text>
+      <text x="895" y="390" text-anchor="end" class="rot-fig">a cana absorve enquanto cresce</text>
+    </svg>
+    <div style="position:absolute;left:960px;right:0;top:160px;display:flex;flex-direction:column;gap:16px">
+      <p class="texto" style="margin:0;font-size:31px">O uso do <b>etanol</b> da cana nos carros se ampliou no Brasil a partir da <b>década de 1970</b>.</p>
+      <div class="linha-ex" data-passo="1" style="font-size:27px">A cana <b>absorve gás carbônico</b> enquanto cresce, o que <b>compensa parte</b> do gás liberado na queima.</div>
+      <div class="linha-ex" data-passo="2" style="font-size:27px">Custos: exige <b>grandes áreas</b> de plantação e <b>muita água</b>.</div>
+    </div>
+  </div>
+  <aside class="notas">
+    <p>Clique 1: o gás carbônico sai do escapamento e é absorvido pela cana que cresce. Destaque o "parte": não compensa tudo. Clique 2: os custos do etanol.</p>
+  </aside>
+</section>
+
+<!-- 12. Exemplo: vantagem e problema -->
+<section class="slide" data-nome="Exemplo: vantagem e problema">
+  <div class="conteudo">
+    <p class="olho">Exemplo</p>
+    <h2 class="titulo">Vantagem e problema</h2>
+    <p class="texto" style="position:absolute;left:0;right:0;top:150px;margin:0">Cite uma vantagem e um problema da troca da gasolina pelo etanol nos carros.</p>
+    <div class="divisa" style="position:absolute;left:0;right:0;top:260px">
+      <div class="painel" data-passo="1"><h3><span class="tag tag-v">vantagem</span></h3><p>O etanol é <b>renovável</b> e a cana reabsorve parte do gás carbônico liberado.</p></div>
+      <div class="painel" data-passo="2"><h3><span class="tag tag-x">problema</span></h3><p>A plantação ocupa <b>grandes áreas</b>, que poderiam ser floresta ou produzir alimentos.</p></div>
+    </div>
+  </div>
+  <aside class="notas">
+    <p>Exemplo da apostila. Peça as respostas antes de clicar; outras respostas certas: o problema da muita água usada pela cana.</p>
+  </aside>
+</section>
+
+<!-- 13. Questão 1 -->
+<section class="slide questao" data-nome="Questão 1">
+  <div class="conteudo">
+    <div class="area-resolucao"></div>
+    <span class="pilula pilula-pausa" data-em="1:some">Pause o vídeo e tente</span>
+    <div class="painel-questao">
+      <p class="olho">Questão 1 · Modelo IF</p>
+      <p class="enunciado" style="font-size:20.5px">O passeio de trem entre São João del-Rei e Tiradentes, em Minas Gerais, é feito pela Maria Fumaça, puxada por uma locomotiva a vapor. Nela, o combustível queima numa fornalha e ferve a água da caldeira; o vapor empurra os pistões que movem as rodas. Já num carro, a gasolina ou o etanol queimam dentro do próprio motor e empurram os pistões.</p>
+      <p class="enunciado" style="font-size:20.5px">Comparando a locomotiva e o motor do carro, é correto afirmar que</p>
+      <ol class="alternativas" style="gap:7px">
+        <li data-em="2:certo" style="font-size:18px;padding:5px 12px"><b>A</b><span>as duas são máquinas térmicas, mas na locomotiva o combustível queima fora dos pistões, para ferver a água, e no carro a queima acontece dentro do motor.</span></li>
+        <li data-em="2:apaga" style="font-size:18px;padding:5px 12px"><b>B</b><span>só o carro é uma máquina térmica, porque a locomotiva é movida a vapor de água, e não por um combustível.</span></li>
+        <li data-em="2:apaga" style="font-size:18px;padding:5px 12px"><b>C</b><span>só a locomotiva é uma máquina térmica, porque no carro o movimento vem da gasolina, e não do calor.</span></li>
+        <li data-em="2:apaga" style="font-size:18px;padding:5px 12px"><b>D</b><span>as duas transformam todo o calor da queima em movimento; a única diferença é o tipo de combustível.</span></li>
+        <li data-em="2:apaga" style="font-size:18px;padding:5px 12px"><b>E</b><span>as duas queimam o combustível dentro dos pistões, mas a locomotiva não precisa de fonte fria, porque o vapor sai pela chaminé.</span></li>
+      </ol>
+    </div>
+  </div>
+  <aside class="resolucao">
+    <p class="dados"><b>Dados:</b> locomotiva a vapor × motor do carro.</p>
+    <ol class="passos">
+      <li>As duas transformam calor em movimento: máquinas térmicas.</li>
+      <li>Locomotiva: queima fora, na fornalha; o vapor empurra.</li>
+      <li>Carro: queima dentro do motor (combustão interna).</li>
+    </ol>
+    <p class="resposta"><b>Resposta:</b> duas máquinas térmicas; a queima é fora num caso e dentro no outro. <b>Gabarito A.</b></p>
+    <p class="atencao"><b>Destaque no quadro:</b> Nenhuma máquina térmica usa todo o calor.</p>
+    <ul class="erros">
+      <li><b>B</b> O vapor só existe porque o combustível queimou.</li>
+      <li><b>C</b> A gasolina move o carro pelo calor da queima.</li>
+      <li><b>D</b> Sempre sobra calor para a fonte fria.</li>
+      <li><b>E</b> Na locomotiva a queima é fora; e ela tem fonte fria (o ar).</li>
+    </ul>
+  </aside>
+  <aside class="notas">
+    <p>Clique 1 tira o aviso de pausa: resolva na área (D liga a caneta; E esconde o enunciado). Clique 2: gabarito A.</p>
+    <p>Questão Modelo IF da apostila: lote if-fisica-termodinamica, m006, FIS-1682.</p>
+  </aside>
+</section>
+
+<!-- 14. Questão 2 -->
+<section class="slide questao" data-nome="Questão 2">
+  <div class="conteudo">
+    <div class="area-resolucao"></div>
+    <span class="pilula pilula-pausa" data-em="1:some">Pause o vídeo e tente</span>
+    <div class="painel-questao">
+      <p class="olho">Questão 2 · Modelo IF</p>
+      <p class="enunciado" style="font-size:21px">No radiador de um carro, uma ventoinha sopra ar para ajudar a tirar o calor da água que passa pelo motor. Num dia de trânsito parado no centro de Juiz de Fora, a ventoinha do carro de Paulo quebrou. Pouco depois, o ponteiro de temperatura do painel subiu até perto do vermelho.</p>
+      <p class="enunciado" style="font-size:21px">Qual é a melhor explicação para o motor ter esquentado?</p>
+      <ol class="alternativas" style="gap:7px">
+        <li data-em="2:apaga" style="font-size:18.5px;padding:5px 12px"><b>A</b><span>Sem a ventoinha, o motor passou a transformar todo o calor da queima em movimento, e esse movimento a mais aqueceu as peças.</span></li>
+        <li data-em="2:apaga" style="font-size:18.5px;padding:5px 12px"><b>B</b><span>Sem a ventoinha, o frio do ar deixou de entrar no motor, e por isso ele esquentou.</span></li>
+        <li data-em="2:apaga" style="font-size:18.5px;padding:5px 12px"><b>C</b><span>Com a ventoinha parada, o radiador passou a levar o calor do ar para dentro do motor.</span></li>
+        <li data-em="2:certo" style="font-size:18.5px;padding:5px 12px"><b>D</b><span>O calor que sobra da queima passou a ser mal entregue à fonte fria, o ar, e foi se acumulando no motor.</span></li>
+        <li data-em="2:apaga" style="font-size:18.5px;padding:5px 12px"><b>E</b><span>O motor esquentou porque tinha defeito de fabricação, já que um motor sem defeito não esquenta.</span></li>
+      </ol>
+    </div>
+  </div>
+  <aside class="resolucao">
+    <p class="dados"><b>Dados:</b> carro parado; ventoinha quebrada.</p>
+    <ol class="passos">
+      <li>Motor: máquina térmica; sempre sobra calor.</li>
+      <li>O resto vai para a fonte fria (o ar) pelo radiador.</li>
+      <li>Sem vento e sem ventoinha, o calor sai devagar.</li>
+      <li>O calor se acumula: a temperatura sobe.</li>
+    </ol>
+    <p class="resposta"><b>Resposta:</b> o calor que sobra foi mal entregue à fonte fria. <b>Gabarito D.</b></p>
+    <p class="atencao"><b>Destaque no quadro:</b> O radiador entrega o calor que sobra à fonte fria.</p>
+    <ul class="erros">
+      <li><b>A</b> Nenhuma máquina transforma todo o calor em movimento.</li>
+      <li><b>B</b> "Frio" não entra: o calor é que sai.</li>
+      <li><b>C</b> O calor vai do motor (quente) para o ar (frio).</li>
+      <li><b>E</b> Todo motor esquenta: não é defeito.</li>
+    </ul>
+  </aside>
+  <aside class="notas">
+    <p>Clique 1 tira o aviso de pausa. Clique 2: gabarito D.</p>
+    <p>Questão Modelo IF da apostila: lote if-fisica-termodinamica, m009, FIS-1685.</p>
+  </aside>
+</section>
+
+<!-- 15. Questão 3 -->
+<section class="slide questao" data-nome="Questão 3">
+  <div class="conteudo">
+    <div class="area-resolucao"></div>
+    <span class="pilula pilula-pausa" data-em="1:some">Pause o vídeo e tente</span>
+    <div class="painel-questao">
+      <p class="olho">Questão 3 · Modelo IF</p>
+      <p class="enunciado" style="font-size:20.5px">No século XX, os derivados do petróleo, como a gasolina e o óleo diesel, passaram a mover carros, caminhões e navios no mundo todo. Esse combustível trouxe viagens mais rápidas e cidades maiores, mas também problemas. Em 2019, por exemplo, manchas de petróleo cru chegaram às praias de todos os estados do Nordeste brasileiro, sujando a areia e prejudicando peixes, tartarugas e pescadores.</p>
+      <p class="enunciado" style="font-size:20.5px">Sobre os combustíveis e os seus impactos, é <b>CORRETO</b> afirmar que</p>
+      <ol class="alternativas" style="gap:7px">
+        <li data-em="2:apaga" style="font-size:18.5px;padding:5px 12px"><b>A</b><span>o petróleo é renovável, porque a natureza forma petróleo novo a cada ano no fundo do mar.</span></li>
+        <li data-em="2:certo" style="font-size:18.5px;padding:5px 12px"><b>B</b><span>a queima da gasolina e do diesel libera gás carbônico, que intensifica o efeito estufa, além de outros gases que poluem o ar das cidades.</span></li>
+        <li data-em="2:apaga" style="font-size:18.5px;padding:5px 12px"><b>C</b><span>os problemas do petróleo estão só na extração e no transporte: na queima, ele não polui.</span></li>
+        <li data-em="2:apaga" style="font-size:18.5px;padding:5px 12px"><b>D</b><span>a lenha não causa impacto ambiental, porque é um combustível natural.</span></li>
+        <li data-em="2:apaga" style="font-size:18.5px;padding:5px 12px"><b>E</b><span>o gás natural é renovável e não causa impactos, por isso substituiu o petróleo nos carros.</span></li>
+      </ol>
+    </div>
+  </div>
+  <aside class="resolucao">
+    <p class="dados"><b>Dados:</b> petróleo: avanços e impactos.</p>
+    <ol class="passos">
+      <li>Petróleo: fóssil, não renovável.</li>
+      <li>Extração e transporte: derramamentos.</li>
+      <li>Queima: gás carbônico e gases poluentes.</li>
+    </ol>
+    <p class="resposta"><b>Resposta:</b> a queima libera gás carbônico e gases que poluem. <b>Gabarito B.</b></p>
+    <p class="atencao"><b>Destaque no quadro:</b> "Natural" não quer dizer renovável nem sem impacto.</p>
+    <ul class="erros">
+      <li><b>A</b> Levou milhões de anos para se formar.</li>
+      <li><b>C</b> A queima também polui.</li>
+      <li><b>D</b> Lenha solta gás carbônico; em excesso, desmata.</li>
+      <li><b>E</b> Gás natural é fóssil e também solta gás carbônico.</li>
+    </ul>
+  </aside>
+  <aside class="notas">
+    <p>Clique 1 tira o aviso de pausa. Clique 2: gabarito B.</p>
+    <p>Questão Modelo IF da apostila: lote if-fisica-termodinamica, m011, FIS-8751.</p>
+  </aside>
+</section>
+
+<!-- 16. Resumo -->
+<section class="slide" data-nome="Resumo">
+  <div class="conteudo">
+    <p class="olho">Resumo</p>
+    <h2 class="titulo">O essencial</h2>
+    <div class="resumo" style="position:absolute;left:0;right:0;top:150px">
+      <div>Lenha, carvão, petróleo, gás natural e etanol marcaram épocas e trouxeram <b>avanços e impactos</b>.</div>
+      <div><b>Fósseis</b> (carvão, petróleo, gás natural) não são renováveis; <b>etanol</b> e lenha plantada são renováveis.</div>
+      <div><b>Máquina térmica</b> transforma parte do calor em trabalho: recebe calor da fonte quente e entrega o resto à fonte fria.</div>
+      <div>Sem diferença de temperatura, a máquina <b>para</b>; nenhuma máquina térmica aproveita todo o calor.</div>
+      <div>Máquina a vapor (Revolução Industrial), <b>combustão interna</b> (carro, moto) e termelétricas.</div>
+      <div><b>Etanol:</b> a cana reabsorve parte do gás carbônico, mas pede grandes áreas e muita água.</div>
+    </div>
+  </div>
+  <aside class="notas"><p>Peça para tirarem um print desta tela.</p></aside>
+</section>
+
+<!-- 17. A seguir -->
+<section class="slide capa" data-nome="A seguir">
+  <div class="estrelas"></div>
+  <div class="texto-capa" style="top:170px">
+    <span class="selo">Física · IF</span>
+    <p class="aula" style="font-size:26px">A seguir · Termologia · Questões do IF Sudeste</p>
+    <h1>Questões do IF Sudeste</h1>
+    <p class="sub">Termologia</p>
+  </div>
+  <svg class="emblema" viewBox="0 0 640 640" aria-hidden="true">
+    <rect x="150" y="80" width="340" height="460" rx="36" fill="#fff" opacity=".95"/>
+    <rect x="200" y="140" width="240" height="18" rx="9" fill="#C9C0F0"/><rect x="200" y="180" width="200" height="18" rx="9" fill="#C9C0F0"/>
+    <g font-family="Figtree,'Segoe UI',sans-serif" font-size="30" font-weight="800" text-anchor="middle">
+      <circle cx="225" cy="260" r="24" fill="#F1EEFD"/><text x="225" y="271" fill="#3F2FA0">A</text><rect x="265" y="252" width="160" height="16" rx="8" fill="#E4DEFB"/>
+      <circle cx="225" cy="320" r="24" fill="#F1EEFD"/><text x="225" y="331" fill="#3F2FA0">B</text><rect x="265" y="312" width="130" height="16" rx="8" fill="#E4DEFB"/>
+      <circle cx="225" cy="380" r="24" fill="#FFD10C"/><text x="225" y="391" fill="#292B2C">C</text><rect x="265" y="372" width="150" height="16" rx="8" fill="#E4DEFB"/>
+      <circle cx="225" cy="440" r="24" fill="#F1EEFD"/><text x="225" y="451" fill="#3F2FA0">D</text><rect x="265" y="432" width="110" height="16" rx="8" fill="#E4DEFB"/>
+    </g>
+    <circle cx="470" cy="470" r="86" fill="var(--d)" stroke="#fff" stroke-width="6"/>
+    <text x="470" y="490" text-anchor="middle" font-family="'Bricolage Grotesque',Figtree,sans-serif" font-size="58" font-weight="800" fill="#fff">IF</text>
+  </svg>
+  <img class="logo-capa" src="{{LOGO_BRANCO}}" alt="Quarks">
+  <aside class="notas"><p>Fim do capítulo Termologia. A seguir, o bloco só com as questões do IF Sudeste do capítulo (cinco oficiais e uma Modelo).</p></aside>
+</section>

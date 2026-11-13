@@ -1,0 +1,439 @@
+<!--aula
+{"disciplina": "matematica", "curso": "IF", "assunto": "Contagem e probabilidade", "parte": "Parte 1 de 2", "titulo": "Árvore e princípio multiplicativo"}
+-->
+<!-- Fonte: apostila IF, Matemática, cap. 7 (7.2 Contagem e probabilidade: blocos "Árvore de possibilidades" e "Princípio multiplicativo").
+     Questões (todas da apostila, nenhuma reservada para o bloco do fim do capítulo): IF Sudeste MG 2016-2 q23 (MAT-0489);
+     Modelo IF if-matematica-principio-fundamental-da-contagem m004 (MAT-3386) e m003 (MAT-3385). -->
+<style>
+  .caixa, .cartao { box-sizing: border-box; }
+  .fig { position: absolute; overflow: visible; font-family: Figtree, 'Segoe UI', sans-serif; }
+  .rot { font-family: Figtree, 'Segoe UI', sans-serif; font-weight: 700; font-size: 28px; fill: #5E5A70; }
+  .rot-forte { font-family: Figtree, 'Segoe UI', sans-serif; font-weight: 800; font-size: 30px; fill: #3F2FA0; }
+  .cartao { background: var(--branco); border: 2px solid var(--lilas-2); border-radius: 28px; padding: 20px 26px; }
+  .cartao h3 { margin: 0 0 6px; font: 800 36px var(--fonte-titulo); letter-spacing: -.02em; color: var(--roxo-titulo); }
+  .cartao p { margin: 0; font-size: 28px; line-height: 1.3; }
+  .etapas { display: flex; gap: 22px; align-items: flex-end; }
+  .etapas > div { text-align: center; }
+  .etapas .vaga { width: 150px; height: 120px; border-radius: 24px; background: var(--branco); border: 3px solid var(--lilas-2); display: grid; place-items: center; font: 800 64px var(--fonte-titulo); color: var(--roxo-titulo); }
+  .etapas .nome { margin-top: 10px; font-size: 26px; font-weight: 700; color: var(--cinza); }
+  .etapas .vezes { font: 800 54px var(--fonte-titulo); color: var(--d); padding-bottom: 46px; }
+  .no { font-family: Figtree, 'Segoe UI', sans-serif; font-weight: 800; font-size: 26px; }
+  /* galhos da árvore que se desenham da raiz para as pontas */
+  .galho { stroke-dasharray: var(--L, 300); stroke-dashoffset: var(--L, 300); }
+  .slide.ativo .mostra .galho { animation: traca 1.1s ease-out forwards; }
+  .mostra .galho.g2 { animation-delay: .9s !important; }
+  @keyframes traca { to { stroke-dashoffset: 0; } }
+  .ponta { opacity: 0; }
+  .slide.ativo .mostra .ponta { animation: aparece .5s ease-out forwards; animation-delay: 1.8s; }
+  @keyframes aparece { to { opacity: 1; } }
+  @media (prefers-reduced-motion: reduce) { .galho { stroke-dashoffset: 0; } .ponta { opacity: 1; } }
+  /* cadeado: as rodas giram devagar pelos algarismos de 0 a 9 */
+  .roda { transform-box: view-box; }
+  @keyframes roda { from { transform: translateY(0); } to { transform: translateY(-600px); } }
+  .slide.ativo .mostra .roda { animation: roda 12s linear infinite; }
+  .slide.ativo .mostra .roda.r2 { animation-duration: 17s; animation-direction: reverse; }
+  .slide.ativo .mostra .roda.r3 { animation-duration: 22s; }
+</style>
+
+<!-- 1. Capa -->
+<section class="slide capa" data-nome="Capa">
+  <div class="estrelas"></div>
+  <div class="texto-capa" style="top:150px">
+    <span class="selo">Matemática · IF</span>
+    <p class="aula">Contagem e probabilidade · Parte 1 de 2</p>
+    <h1 style="font-size:104px">Árvore e princípio multiplicativo</h1>
+    <p class="sub">Contar sem esquecer nem repetir</p>
+  </div>
+  <svg class="emblema" viewBox="0 0 640 640" aria-hidden="true">
+    <g class="gira-lento"><ellipse cx="320" cy="320" rx="300" ry="128" fill="none" stroke="#fff" stroke-opacity=".38" stroke-width="2" transform="rotate(-10 320 320)"/></g>
+    <circle cx="140" cy="320" r="22" fill="#FFD10C"/>
+    <g stroke="#fff" stroke-width="5" stroke-linecap="round" fill="none"><path d="M160 310 L300 200 M160 330 L300 440"/><path d="M320 200 L470 130 M320 200 L470 200 M320 200 L470 270 M320 440 L470 370 M320 440 L470 440 M320 440 L470 510"/></g>
+    <g fill="#fff"><circle cx="310" cy="200" r="16"/><circle cx="310" cy="440" r="16"/></g>
+    <g fill="#FFD10C"><circle cx="485" cy="130" r="13"/><circle cx="485" cy="200" r="13"/><circle cx="485" cy="270" r="13"/><circle cx="485" cy="370" r="13"/><circle cx="485" cy="440" r="13"/><circle cx="485" cy="510" r="13"/></g>
+  </svg>
+  <img class="logo-capa" src="{{LOGO_BRANCO}}" alt="Quarks">
+  <aside class="notas">
+    <p>Hoje: contar possibilidades com a árvore e, quando a árvore fica grande demais, com o princípio multiplicativo. Também: quando as opções diminuem (sem repetir) e quando se soma em vez de multiplicar.</p>
+  </aside>
+</section>
+
+<!-- 2. Gancho: o lanche -->
+<section class="slide" data-nome="Quantos lanches">
+  <div class="conteudo">
+    <p class="olho">Para começar</p>
+    <h2 class="titulo">Pão e recheio: quantos lanches?</h2>
+    <svg class="fig" viewBox="0 0 1000 560" width="1000" height="560" style="left:640px;top:120px" aria-hidden="true">
+      <circle cx="40" cy="280" r="20" fill="var(--d)"/>
+      <g data-passo="1">
+        <path class="galho" style="--L:200" d="M60 270 L250 150" stroke="var(--d)" stroke-width="5" fill="none" stroke-linecap="round"/>
+        <path class="galho" style="--L:200" d="M60 290 L250 410" stroke="var(--d)" stroke-width="5" fill="none" stroke-linecap="round"/>
+        <rect x="250" y="122" width="170" height="56" rx="28" fill="var(--d-clara)"/><text x="335" y="160" text-anchor="middle" class="no" fill="var(--d-forte)">francês</text>
+        <rect x="250" y="382" width="170" height="56" rx="28" fill="var(--d-clara)"/><text x="335" y="420" text-anchor="middle" class="no" fill="var(--d-forte)">integral</text>
+      </g>
+      <g data-passo="2">
+        <g stroke="#E0A800" stroke-width="5" fill="none" stroke-linecap="round">
+          <path class="galho g2" style="--L:190" d="M420 150 L590 60"/><path class="galho g2" style="--L:190" d="M420 150 L590 150"/><path class="galho g2" style="--L:190" d="M420 150 L590 240"/>
+          <path class="galho g2" style="--L:190" d="M420 410 L590 320"/><path class="galho g2" style="--L:190" d="M420 410 L590 410"/><path class="galho g2" style="--L:190" d="M420 410 L590 500"/>
+        </g>
+        <g class="ponta">
+          <g class="no" fill="#8A6A00"><text x="600" y="69">queijo</text><text x="600" y="159">presunto</text><text x="600" y="249">frango</text><text x="600" y="329">queijo</text><text x="600" y="419">presunto</text><text x="600" y="509">frango</text></g>
+          <g class="rot" style="font-size:24px"><text x="760" y="69">francês e queijo</text><text x="760" y="159">francês e presunto</text><text x="760" y="249">francês e frango</text><text x="760" y="329">integral e queijo</text><text x="760" y="419">integral e presunto</text><text x="760" y="509">integral e frango</text></g>
+        </g>
+      </g>
+    </svg>
+    <div style="position:absolute;left:0;width:540px;top:180px;display:flex;flex-direction:column;gap:22px">
+      <div class="cartao"><h3>Pão</h3><p>francês ou integral</p></div>
+      <div class="cartao"><h3>Recheio</h3><p>queijo, presunto ou frango</p></div>
+    </div>
+    <span class="pilula pilula-resposta" data-passo="3" style="position:absolute;right:0;top:720px">Cada caminho é um lanche: 6 lanches</span>
+  </div>
+  <aside class="notas">
+    <p>A situação da apostila. Clique 1: a primeira etapa, o pão. Clique 2: cada pão se abre nos 3 recheios, e as pontas aparecem com o lanche de cada caminho.</p>
+    <p>Clique 3: contando as pontas, 6 lanches, sem esquecer nenhum nem repetir. Isso é uma árvore de possibilidades.</p>
+  </aside>
+</section>
+
+<!-- 3. Por que multiplica -->
+<section class="slide" data-nome="Por que multiplica">
+  <div class="conteudo">
+    <p class="olho">Árvore de possibilidades</p>
+    <h2 class="titulo">Por que a conta é uma multiplicação</h2>
+    <div style="position:absolute;left:600px;right:0;top:170px;display:grid;grid-template-columns:1fr 1fr;gap:30px">
+      <div class="cartao" data-passo="1"><h3>Pão francês</h3><p>queijo · presunto · frango</p><p style="margin-top:10px;font:800 44px var(--fonte-titulo);color:var(--d-forte)">3 lanches</p></div>
+      <div class="cartao" data-passo="2"><h3>Pão integral</h3><p>queijo · presunto · frango</p><p style="margin-top:10px;font:800 44px var(--fonte-titulo);color:var(--d-forte)">3 lanches</p></div>
+    </div>
+    <div class="contas" style="position:absolute;left:640px;top:480px;font-size:56px">
+      <div class="eq final" data-passo="3"><span>\(2\ \text{grupos de}\ 3\)</span><span>\(=\)</span><span>\(2 \cdot 3 = 6\)</span></div>
+    </div>
+    <div class="caixa caixa-fundamental" style="position:absolute;left:0;width:520px;top:170px">
+      <div class="texto" style="font-size:32px">Para <b>cada</b> um dos 2 pães, há os <b>mesmos</b> 3 recheios.</div>
+    </div>
+  </div>
+  <aside class="notas">
+    <p>A árvore mostra o porquê: 3 lanches com pão francês e 3 com pão integral. Dois grupos de 3: multiplicação.</p>
+  </aside>
+</section>
+
+<!-- 4. Exemplo: uniforme -->
+<section class="slide" data-nome="Exemplo: uniforme">
+  <div class="conteudo">
+    <p class="olho">Exemplo</p>
+    <h2 class="titulo">Uniformes do time</h2>
+    <p class="texto" style="position:absolute;left:0;top:150px;margin:0;width:540px">2 camisas (azul, branca) e 2 calções (preto, azul).</p>
+    <svg class="fig" viewBox="0 0 1000 440" width="1000" height="440" style="left:640px;top:150px" aria-hidden="true">
+      <circle cx="40" cy="220" r="18" fill="var(--d)"/>
+      <g data-passo="1"><path class="galho" style="--L:200" d="M58 210 L240 110" stroke="var(--d)" stroke-width="5" fill="none"/><path class="galho" style="--L:200" d="M58 230 L240 330" stroke="var(--d)" stroke-width="5" fill="none"/>
+        <path d="M250 80 l20 -14 q14 10 28 0 l20 14 l10 22 -14 6 -4 -8 v46 h-56 v-46 l-4 8 -14 -6 z" fill="#2F6BFF"/>
+        <path d="M250 300 l20 -14 q14 10 28 0 l20 14 l10 22 -14 6 -4 -8 v46 h-56 v-46 l-4 8 -14 -6 z" fill="#fff" stroke="#9C93C4" stroke-width="3"/></g>
+      <g data-passo="2">
+        <g stroke="#E0A800" stroke-width="5" fill="none"><path class="galho g2" style="--L:190" d="M340 110 L520 50"/><path class="galho g2" style="--L:190" d="M340 110 L520 170"/><path class="galho g2" style="--L:190" d="M340 330 L520 270"/><path class="galho g2" style="--L:190" d="M340 330 L520 390"/></g>
+        <g class="ponta">
+          <path d="M530 30 h50 v14 l-6 32 h-14 l-5 -24 l-5 24 h-14 l-6 -32 z" fill="#292B2C"/><path d="M530 150 h50 v14 l-6 32 h-14 l-5 -24 l-5 24 h-14 l-6 -32 z" fill="#2F6BFF"/>
+          <path d="M530 250 h50 v14 l-6 32 h-14 l-5 -24 l-5 24 h-14 l-6 -32 z" fill="#292B2C"/><path d="M530 370 h50 v14 l-6 32 h-14 l-5 -24 l-5 24 h-14 l-6 -32 z" fill="#2F6BFF"/>
+          <g class="rot" style="font-size:28px"><text x="610" y="62">azul e preto</text><text x="610" y="182">azul e azul</text><text x="610" y="282">branca e preto</text><text x="610" y="402">branca e azul</text></g>
+        </g>
+      </g>
+    </svg>
+    <div class="contas" style="position:absolute;left:0;top:300px;font-size:54px">
+      <div class="eq final" data-passo="3"><span>\(2 \cdot 2\)</span><span>\(=\)</span><span>\(4\)</span></div>
+    </div>
+    <div class="caixa caixa-atencao" data-passo="4" style="position:absolute;left:640px;right:0;top:640px;padding:18px 30px">
+      <div class="texto" style="font-size:30px">Árvore: ótima para <b>poucos casos</b> e para <b>listar</b>. Com números grandes, não dá para desenhar.</div>
+    </div>
+  </div>
+  <aside class="notas">
+    <p>Apostila, exemplo "Uniforme do time". Cliques 1 e 2: a árvore, camisa e depois calção. Resposta: 4 uniformes (azul e preto, azul e azul, branca e preto, branca e azul).</p>
+    <p>Clique 4: a ponte para o próximo slide.</p>
+  </aside>
+</section>
+
+<!-- 5. Cadeado -->
+<section class="slide" data-nome="Senha do cadeado">
+  <div class="conteudo">
+    <p class="olho">Quando a árvore não cabe</p>
+    <h2 class="titulo">Senha de 3 algarismos</h2>
+    <svg class="fig" viewBox="0 0 520 460" width="520" height="460" style="left:0;top:140px" aria-hidden="true">
+      <defs><clipPath id="janela-cad"><rect x="90" y="230" width="340" height="110" rx="14"/></clipPath></defs>
+      <path d="M160 200 V130 a100 100 0 0 1 200 0 V200" fill="none" stroke="#9C93C4" stroke-width="30" stroke-linecap="round"/>
+      <rect x="50" y="190" width="420" height="250" rx="40" fill="var(--d)"/>
+      <rect x="90" y="230" width="340" height="110" rx="14" fill="#fff"/>
+      <g clip-path="url(#janela-cad)" data-passo="1" font-family="'Bricolage Grotesque',Figtree,sans-serif" font-size="70" font-weight="800" fill="#3F2FA0" text-anchor="middle">
+        <g class="roda"><text x="150" y="310">0</text><text x="150" y="370">1</text><text x="150" y="430">2</text><text x="150" y="490">3</text><text x="150" y="550">4</text><text x="150" y="610">5</text><text x="150" y="670">6</text><text x="150" y="730">7</text><text x="150" y="790">8</text><text x="150" y="850">9</text><text x="150" y="910">0</text><text x="150" y="970">1</text></g>
+        <g class="roda r2"><text x="260" y="310">0</text><text x="260" y="370">1</text><text x="260" y="430">2</text><text x="260" y="490">3</text><text x="260" y="550">4</text><text x="260" y="610">5</text><text x="260" y="670">6</text><text x="260" y="730">7</text><text x="260" y="790">8</text><text x="260" y="850">9</text><text x="260" y="910">0</text><text x="260" y="970">1</text></g>
+        <g class="roda r3"><text x="370" y="310">0</text><text x="370" y="370">1</text><text x="370" y="430">2</text><text x="370" y="490">3</text><text x="370" y="550">4</text><text x="370" y="610">5</text><text x="370" y="670">6</text><text x="370" y="730">7</text><text x="370" y="790">8</text><text x="370" y="850">9</text><text x="370" y="910">0</text><text x="370" y="970">1</text></g>
+      </g>
+      <g stroke="#E4DEFB" stroke-width="3"><line x1="205" y1="236" x2="205" y2="334"/><line x1="315" y1="236" x2="315" y2="334"/></g>
+    </svg>
+    <div class="etapas" style="position:absolute;left:640px;top:170px">
+      <div data-passo="2"><div class="vaga">10</div><div class="nome">1º</div></div>
+      <div class="vezes" data-passo="3">·</div>
+      <div data-passo="3"><div class="vaga">10</div><div class="nome">2º</div></div>
+      <div class="vezes" data-passo="4">·</div>
+      <div data-passo="4"><div class="vaga">10</div><div class="nome">3º</div></div>
+    </div>
+    <div class="contas" style="position:absolute;left:660px;top:430px;font-size:52px">
+      <div class="eq" data-passo="5"><span>\(\text{senhas}\)</span><span>\(=\)</span><span>\(10 \cdot 10 \cdot 10\)</span></div>
+      <div class="eq final" data-passo="6"><span>\(\text{senhas}\)</span><span>\(=\)</span><span>\(1000\)</span></div>
+    </div>
+  </div>
+  <aside class="notas">
+    <p>Clique 1: as rodas do cadeado giram pelos algarismos de 0 a 9 (cada uma é uma etapa). Cliques 2 a 4: 10 escolhas para cada algarismo, e para cada escolha, as mesmas 10 na roda seguinte.</p>
+    <p>A árvore teria mil pontas: impossível de desenhar. Cliques 5 e 6: o princípio multiplicativo resolve numa linha.</p>
+  </aside>
+</section>
+
+<!-- 6. Princípio multiplicativo -->
+<section class="slide" data-nome="Princípio multiplicativo">
+  <div class="conteudo">
+    <p class="olho">Fórmula</p>
+    <h2 class="titulo">Princípio multiplicativo</h2>
+    <div class="caixa caixa-fundamental" style="position:absolute;left:0;right:0;top:160px;text-align:center">
+      <div class="texto">Escolha em <b>etapas sucessivas</b>: \(n_1\) opções na 1ª, \(n_2\) na 2ª, \(n_3\) na 3ª…</div>
+      <div style="font-size:84px;margin-top:20px">\(\text{total} = n_1 \cdot n_2 \cdot n_3 \cdot \ldots\)</div>
+    </div>
+    <div style="position:absolute;left:600px;right:0;top:520px;display:grid;grid-template-columns:1fr 1fr;gap:26px">
+      <div class="cartao" data-passo="1"><h3>Lanche</h3><p>\(2 \cdot 3 = 6\)</p></div>
+      <div class="cartao" data-passo="2"><h3>Cadeado</h3><p>\(10 \cdot 10 \cdot 10 = 1000\)</p></div>
+    </div>
+  </div>
+  <aside class="notas">
+    <p>A regra geral da apostila. Cliques 1 e 2: os dois casos já vistos cabem nela.</p>
+  </aside>
+</section>
+
+<!-- 7. Pódio -->
+<section class="slide" data-nome="Exemplo: o pódio">
+  <div class="conteudo">
+    <p class="olho">Sem repetir</p>
+    <h2 class="titulo">5 atletas, 3 lugares no pódio</h2>
+    <svg class="fig" viewBox="0 0 520 440" width="520" height="440" style="left:0;top:150px" aria-hidden="true">
+      <rect x="180" y="190" width="160" height="230" rx="12" fill="#FFD10C"/><rect x="20" y="270" width="160" height="150" rx="12" fill="#C9C0F0"/><rect x="340" y="320" width="160" height="100" rx="12" fill="#E8B48A"/>
+      <g font-family="'Bricolage Grotesque',Figtree,sans-serif" font-size="70" font-weight="800" text-anchor="middle" fill="#fff"><text x="260" y="300">1</text><text x="100" y="370">2</text><text x="420" y="400">3</text></g>
+      <g data-passo="1"><text x="260" y="170" text-anchor="middle" class="rot-forte" style="font-size:40px">5 opções</text></g>
+      <g data-passo="2"><text x="100" y="250" text-anchor="middle" class="rot-forte" style="font-size:40px">4</text></g>
+      <g data-passo="3"><text x="420" y="300" text-anchor="middle" class="rot-forte" style="font-size:40px">3</text></g>
+    </svg>
+    <div class="caixa" style="position:absolute;left:640px;right:0;top:160px;padding:18px 30px">
+      <div class="texto" style="font-size:32px">Quem chegou em 1º <b>não pode</b> chegar em 2º: as opções <b>diminuem</b>.</div>
+    </div>
+    <div class="contas" style="position:absolute;left:680px;top:370px;font-size:52px;row-gap:18px">
+      <div class="eq" data-passo="4"><span>\(\text{pódios}\)</span><span>\(=\)</span><span>\(n_1 \cdot n_2 \cdot n_3\)</span></div>
+      <div class="eq" data-passo="5"><span>\(\text{pódios}\)</span><span>\(=\)</span><span>\(5 \cdot 4 \cdot 3\)</span></div>
+      <div class="eq final" data-passo="6"><span>\(\text{pódios}\)</span><span>\(=\)</span><span>\(60\)</span></div>
+    </div>
+  </div>
+  <aside class="notas">
+    <p>Apostila, exemplo "O pódio". Cliques 1 a 3: 5 podem chegar em 1º; sobram 4 para o 2º; sobram 3 para o 3º.</p>
+    <p>Cliques 4 a 6: 5 · 4 · 3 = 60 pódios diferentes.</p>
+  </aside>
+</section>
+
+<!-- 8. Senha sem repetir -->
+<section class="slide" data-nome="Exemplo: senha sem repetir">
+  <div class="conteudo">
+    <p class="olho">Sem repetir</p>
+    <h2 class="titulo">Senha de 4 algarismos distintos</h2>
+    <div class="etapas" style="position:absolute;left:640px;top:160px">
+      <div data-passo="1"><div class="vaga">10</div><div class="nome">1º</div></div>
+      <div class="vezes" data-passo="2">·</div>
+      <div data-passo="2"><div class="vaga">9</div><div class="nome">2º</div></div>
+      <div class="vezes" data-passo="3">·</div>
+      <div data-passo="3"><div class="vaga">8</div><div class="nome">3º</div></div>
+      <div class="vezes" data-passo="4">·</div>
+      <div data-passo="4"><div class="vaga">7</div><div class="nome">4º</div></div>
+    </div>
+    <div class="contas" style="position:absolute;left:660px;top:420px;font-size:50px;row-gap:16px">
+      <div class="eq" data-passo="5"><span>\(\text{senhas}\)</span><span>\(=\)</span><span>\(10 \cdot 9 \cdot 8 \cdot 7\)</span></div>
+      <div class="eq" data-passo="6"><span>\(\text{senhas}\)</span><span>\(=\)</span><span>\(90 \cdot 56\)</span></div>
+      <div class="eq final" data-passo="7"><span>\(\text{senhas}\)</span><span>\(=\)</span><span>\(5040\)</span></div>
+    </div>
+    <div class="caixa caixa-fundamental" style="position:absolute;left:0;width:520px;top:170px">
+      <div class="texto" style="font-size:32px">"Distintos": o algarismo usado <b>sai da lista</b>.</div>
+    </div>
+  </div>
+  <aside class="notas">
+    <p>Apostila, exemplo "Senha sem repetir". Cada vaga tem uma opção a menos que a anterior.</p>
+    <p>Clique 6: agrupar ajuda a conta de cabeça (10 · 9 = 90 e 8 · 7 = 56; 90 · 56 = 5040). Compare com 10 · 10 · 10 · 10 = 10 000 com repetição.</p>
+  </aside>
+</section>
+
+<!-- 9. E ou OU -->
+<section class="slide" data-nome="Atenção: e multiplica, ou soma">
+  <div class="conteudo">
+    <p class="olho">Atenção</p>
+    <h2 class="titulo">“E” multiplica, “ou” soma</h2>
+    <p class="texto" style="position:absolute;left:0;top:150px;margin:0">3 camisetas e 2 bermudas.</p>
+    <div class="cartao" data-passo="1" style="position:absolute;left:600px;width:540px;top:250px">
+      <h3>Uma camiseta <u>e</u> uma bermuda</h3>
+      <p style="font-size:44px;margin-top:10px">\(3 \cdot 2 = 6\) combinações</p>
+    </div>
+    <div class="cartao" data-passo="2" style="position:absolute;left:1180px;right:0;top:250px">
+      <h3>Uma camiseta <u>ou</u> uma bermuda</h3>
+      <p style="font-size:44px;margin-top:10px">\(3 + 2 = 5\) peças</p>
+    </div>
+    <div class="caixa caixa-atencao" data-passo="3" style="position:absolute;left:600px;right:0;top:530px">
+      <div class="texto">Montar com várias etapas: <b>multiplique</b>. Escolher <b>uma só</b> coisa entre grupos: <b>some</b>.</div>
+    </div>
+  </div>
+  <aside class="notas">
+    <p>O atenção da apostila. Clique 1: duas escolhas, uma depois da outra: 6 combinações. Clique 2: só uma peça, de um grupo ou do outro: 5 escolhas.</p>
+  </aside>
+</section>
+
+<!-- 10. Questão 1 -->
+<section class="slide questao" data-nome="Questão 1">
+  <div class="conteudo">
+    <div class="area-resolucao"></div>
+    <span class="pilula pilula-pausa" data-em="1:some">Pause o vídeo e tente</span>
+    <div class="painel-questao">
+      <p class="olho">Questão 1 · IF Sudeste MG 2016</p>
+      <p class="enunciado" style="font-size:25px">Em uma sorveteria, os sorvetes são montados sempre escolhendo um sabor, uma cobertura e um acompanhamento. O dono da sorveteria, preocupado com a variedade de escolhas, resolveu contabilizar a quantidade de cada item e concluiu o seguinte:</p>
+      <p class="enunciado" style="font-size:25px">i) Existem 25 sabores distintos.<br>ii) Existem 10 coberturas distintas.<br>iii) Existem 5 acompanhamentos distintos.</p>
+      <p class="enunciado" style="font-size:25px">Com essas informações, quantas são as combinações possíveis que um cliente pode ter para escolher?</p>
+      <ol class="alternativas curtas">
+        <li data-em="2:apaga"><b>A</b><span>25</span></li>
+        <li data-em="2:apaga"><b>B</b><span>40</span></li>
+        <li data-em="2:apaga"><b>C</b><span>500</span></li>
+        <li data-em="2:certo"><b>D</b><span>1250</span></li>
+        <li data-em="2:apaga"><b>E</b><span>1500</span></li>
+      </ol>
+      <p class="fonte">IF Sudeste MG 2016 (2ª prova do ano) · questão 23 · MAT-0489</p>
+    </div>
+  </div>
+  <aside class="resolucao">
+    <p class="dados"><b>Dados:</b> 25 sabores; 10 coberturas; 5 acompanhamentos.</p>
+    <ol class="passos">
+      <li><b>Três etapas</b> (sabor e cobertura e acompanhamento): multiplique</li>
+      <li>\(N = 25 \cdot 10 \cdot 5\)</li>
+      <li>\(N = 250 \cdot 5 = 1250\)</li>
+    </ol>
+    <p class="resposta"><b>Resposta:</b> 1250 combinações. <b>Gabarito D.</b></p>
+    <p class="atencao"><b>Destaque no quadro:</b> O sorvete tem os três itens: "e" multiplica.</p>
+    <ul class="erros">
+      <li><b>A</b> Conta só os sabores.</li>
+      <li><b>B</b> Soma as opções: 25 + 10 + 5.</li>
+      <li><b>C</b> Erra o produto (seria 25 · 10 · 2).</li>
+      <li><b>E</b> Soma ao produto os 250 pares sabor e cobertura.</li>
+    </ul>
+  </aside>
+  <aside class="notas">
+    <p>Clique 1 tira o aviso de pausa: resolva na área (D liga a caneta; E esconde o enunciado). Clique 2: gabarito D.</p>
+    <p>Questão oficial do IF Sudeste MG 2016-2, q23, MAT-0489.</p>
+  </aside>
+</section>
+
+<!-- 11. Questão 2 -->
+<section class="slide questao" data-nome="Questão 2">
+  <div class="conteudo">
+    <div class="area-resolucao"></div>
+    <span class="pilula pilula-pausa" data-em="1:some">Pause o vídeo e tente</span>
+    <div class="painel-questao">
+      <p class="olho">Questão 2 · Modelo IF</p>
+      <p class="enunciado">Sete alunos se candidataram à diretoria do grêmio estudantil. Entre eles, serão escolhidos um presidente e um vice-presidente, e a mesma pessoa não pode ocupar os dois cargos. De quantas maneiras diferentes a diretoria pode ser formada?</p>
+      <ol class="alternativas curtas">
+        <li data-em="2:apaga"><b>A</b><span>13</span></li>
+        <li data-em="2:apaga"><b>B</b><span>14</span></li>
+        <li data-em="2:apaga"><b>C</b><span>21</span></li>
+        <li data-em="2:certo"><b>D</b><span>42</span></li>
+        <li data-em="2:apaga"><b>E</b><span>49</span></li>
+      </ol>
+      <p class="fonte">Modelo IF · MAT-3386</p>
+    </div>
+  </div>
+  <aside class="resolucao">
+    <p class="dados"><b>Dados:</b> 7 candidatos; presidente e vice, pessoas diferentes.</p>
+    <ol class="passos">
+      <li><b>Presidente:</b> 7 opções</li>
+      <li><b>Vice:</b> sobram 6 opções</li>
+      <li>\(7 \cdot 6 = 42\)</li>
+    </ol>
+    <p class="resposta"><b>Resposta:</b> 42 maneiras. <b>Gabarito D.</b></p>
+    <p class="atencao"><b>Destaque no quadro:</b> Cargos diferentes: Ana presidente e Davi vice ≠ Davi presidente e Ana vice.</p>
+    <ul class="erros">
+      <li><b>A</b> Soma 7 + 6.</li>
+      <li><b>B</b> Soma 7 + 7.</li>
+      <li><b>C</b> Divide por 2, como se os cargos fossem iguais.</li>
+      <li><b>E</b> 7 · 7: deixa a mesma pessoa nos dois cargos.</li>
+    </ul>
+  </aside>
+  <aside class="notas">
+    <p>Clique 1 tira o aviso de pausa. Clique 2: gabarito D.</p>
+    <p>Modelo IF, lote if-matematica-principio-fundamental-da-contagem, m004, MAT-3386. É o pódio com 2 lugares.</p>
+  </aside>
+</section>
+
+<!-- 12. Questão 3 -->
+<section class="slide questao" data-nome="Questão 3">
+  <div class="conteudo">
+    <div class="area-resolucao"></div>
+    <span class="pilula pilula-pausa" data-em="1:some">Pause o vídeo e tente</span>
+    <div class="painel-questao">
+      <p class="olho">Questão 3 · Modelo IF</p>
+      <p class="enunciado">Na biblioteca da escola, Lucas pode levar <b>um único</b> livro para casa no fim de semana. Na estante indicada pela professora há 5 romances, 3 livros de poesia e 4 histórias em quadrinhos, todos diferentes. De quantas maneiras Lucas pode escolher o livro que vai levar?</p>
+      <ol class="alternativas curtas">
+        <li data-em="2:certo"><b>A</b><span>12</span></li>
+        <li data-em="2:apaga"><b>B</b><span>15</span></li>
+        <li data-em="2:apaga"><b>C</b><span>17</span></li>
+        <li data-em="2:apaga"><b>D</b><span>20</span></li>
+        <li data-em="2:apaga"><b>E</b><span>60</span></li>
+      </ol>
+      <p class="fonte">Modelo IF · MAT-3385</p>
+    </div>
+  </div>
+  <aside class="resolucao">
+    <p class="dados"><b>Dados:</b> 5 romances; 3 de poesia; 4 quadrinhos; leva <b>um</b>.</p>
+    <ol class="passos">
+      <li><b>Um só livro:</b> romance ou poesia ou quadrinhos → some</li>
+      <li>\(5 + 3 + 4 = 12\)</li>
+    </ol>
+    <p class="resposta"><b>Resposta:</b> 12 maneiras. <b>Gabarito A.</b></p>
+    <p class="atencao"><b>Destaque no quadro:</b> Uma escolha só, entre grupos: "ou" soma.</p>
+    <ul class="erros">
+      <li><b>B</b> 5 · 3: como se levasse dois livros.</li>
+      <li><b>C</b> 5 + 3 · 4: mistura as duas regras.</li>
+      <li><b>D</b> 5 · 4: como se levasse dois livros.</li>
+      <li><b>E</b> 5 · 3 · 4: trios de livros.</li>
+    </ul>
+  </aside>
+  <aside class="notas">
+    <p>Clique 1 tira o aviso de pausa. Clique 2: gabarito A.</p>
+    <p>Modelo IF, lote if-matematica-principio-fundamental-da-contagem, m003, MAT-3385. O contraponto do "e multiplica".</p>
+  </aside>
+</section>
+
+<!-- 13. Resumo -->
+<section class="slide" data-nome="Resumo">
+  <div class="conteudo">
+    <p class="olho">Resumo</p>
+    <h2 class="titulo">O essencial</h2>
+    <div class="resumo" style="position:absolute;left:0;right:0;top:150px">
+      <div><b>Árvore de possibilidades:</b> lista os casos etapa por etapa; cada caminho é um caso.</div>
+      <div><b>Princípio multiplicativo:</b> \(n_1 \cdot n_2 \cdot n_3 \cdot \ldots\)</div>
+      <div><b>Sem repetição:</b> as opções diminuem (5 · 4 · 3).</div>
+      <div><b>Com repetição:</b> as opções se mantêm (10 · 10 · 10).</div>
+      <div><b>“E”</b> (várias etapas): multiplique.</div>
+      <div><b>“Ou”</b> (uma escolha só): some.</div>
+    </div>
+  </div>
+  <aside class="notas">
+    <p>Peça um print desta tela.</p>
+  </aside>
+</section>
+
+<!-- 14. A seguir -->
+<section class="slide capa" data-nome="A seguir">
+  <div class="estrelas"></div>
+  <div class="texto-capa" style="top:200px">
+    <span class="selo">Matemática · IF</span>
+    <p class="aula" style="font-size:28px">A seguir · Contagem e probabilidade · Parte 2 de 2</p>
+    <h1>Probabilidade</h1>
+    <p class="sub">Casos favoráveis sobre casos possíveis</p>
+  </div>
+  <svg class="emblema" viewBox="0 0 640 640" aria-hidden="true">
+    <rect x="150" y="200" width="240" height="240" rx="44" fill="#fff" transform="rotate(-12 270 320)"/>
+    <g fill="var(--d)" transform="rotate(-12 270 320)"><circle cx="210" cy="260" r="22"/><circle cx="330" cy="260" r="22"/><circle cx="270" cy="320" r="22"/><circle cx="210" cy="380" r="22"/><circle cx="330" cy="380" r="22"/></g>
+    <circle cx="470" cy="200" r="80" fill="#FFD10C"/><circle cx="470" cy="200" r="58" fill="none" stroke="#E0A800" stroke-width="6"/>
+  </svg>
+  <img class="logo-capa" src="{{LOGO_BRANCO}}" alt="Quarks">
+  <aside class="notas"><p>Próxima parte: espaço amostral, eventos e probabilidade como razão, com a probabilidade da união.</p></aside>
+</section>

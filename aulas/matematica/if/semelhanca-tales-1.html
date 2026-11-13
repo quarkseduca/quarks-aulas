@@ -1,0 +1,391 @@
+<!--aula
+{"disciplina": "matematica", "curso": "IF", "assunto": "Semelhança e Teorema de Tales", "parte": "Parte 1 de 2", "titulo": "Teorema de Tales", "scripts": ["animacoes-geometria-a.js"]}
+-->
+<!-- Fonte: apostila IF, Matemática, cap. 5 (5.3 Semelhança e Teorema de Tales > Teorema de Tales, com o exemplo "O segmento que falta" e a atenção "Monte a proporção na mesma ordem"). Questões: Modelo if-matematica-semelhanca-e-teorema-de-tales m003 (MAT-1003); oficiais IF Sudeste 2015-1-extra q15 (MAT-0413) e 2019-1 q21 (MAT-0442), sobras do subcapítulo. As oficiais 2026-1 q18 (MAT-0550) e 2025-1 q17 (MAT-0538) ficam reservadas para o bloco do fim do capítulo. -->
+<style>
+  .cartao { box-sizing: border-box; background: var(--branco); border: 2px solid var(--lilas-2); border-radius: 28px; padding: 18px 26px; }
+  .cartao h3 { margin: 0 0 4px; font: 800 36px var(--fonte-titulo); letter-spacing: -.02em; color: var(--roxo-titulo); }
+  .cartao p { margin: 0; font-size: 28px; line-height: 1.3; }
+  .fig { overflow: visible; font-family: Figtree, "Segoe UI", sans-serif; }
+  .fig text { font-weight: 800; }
+  .rot { font-size: 30px; fill: var(--roxo-titulo); }
+  .rot-i { font-size: 34px; font-style: italic; fill: var(--carvao); }
+  .traca { stroke-dasharray: 100; stroke-dashoffset: 100; transition: stroke-dashoffset 1.4s ease; }
+  .mostra .traca, .traca.mostra { stroke-dashoffset: 0; }
+  .seg-1 { stroke: var(--d); } .seg-2 { stroke: #C99A00; }
+  .placa { display: inline-flex; gap: 18px; align-items: center; background: var(--branco); border: 2px solid var(--lilas-2); border-radius: 22px; padding: 12px 26px; font: 800 38px var(--fonte-titulo); color: var(--roxo-titulo); font-variant-numeric: tabular-nums; }
+  /* carrinhos que andam nas avenidas: o trecho entre as ruas se percorre em tempos na mesma razão */
+  @keyframes anda-1 { 0% { offset-distance: 0%; } 100% { offset-distance: 100%; } }
+  .carro-av { offset-rotate: 0deg; opacity: 0; }
+  .slide.ativo .mostra .carro-av { opacity: 1; animation: anda-1 7s linear infinite; }
+</style>
+
+<!-- 1. Capa -->
+<section class="slide capa" data-nome="Capa">
+  <div class="estrelas"></div>
+  <div class="texto-capa" style="top:200px">
+    <span class="selo">Matemática · IF</span>
+    <p class="aula">Semelhança e Teorema de Tales · Parte 1 de 2</p>
+    <h1 style="font-size:140px">Teorema de Tales</h1>
+    <p class="sub">Feixe de paralelas e segmentos proporcionais</p>
+  </div>
+  <svg class="emblema" viewBox="0 0 640 640" aria-hidden="true">
+    <g class="gira-lento"><ellipse cx="320" cy="320" rx="300" ry="128" fill="none" stroke="#fff" stroke-opacity=".38" stroke-width="2" transform="rotate(-10 320 320)"/></g>
+    <g class="gira"><ellipse cx="320" cy="320" rx="236" ry="196" fill="none" stroke="#FFD10C" stroke-opacity=".75" stroke-width="2.5" stroke-dasharray="3 14" stroke-linecap="round" transform="rotate(-8 320 320)"/>
+      <circle cx="84" cy="300" r="13" fill="var(--d)" stroke="#fff" stroke-width="3"/></g>
+    <circle cx="320" cy="320" r="132" fill="#FFD10C"/>
+    <image href="{{SYM_ROXO}}" x="238" y="238" width="164" height="164"/>
+  </svg>
+  <img class="logo-capa" src="{{LOGO_BRANCO}}" alt="Quarks">
+  <aside class="notas">
+    <p>Primeira parte de Semelhança e Teorema de Tales: o feixe de paralelas e o teorema. Tudo aqui é proporção: lembre a turma da multiplicação cruzada (Matemática comercial).</p>
+  </aside>
+</section>
+
+<!-- 2. Ruas e avenidas -->
+<section class="slide" data-nome="Ruas e avenidas">
+  <div class="conteudo">
+    <p class="olho">Para começar</p>
+    <h2 class="titulo">Três ruas paralelas, duas avenidas</h2>
+    <svg class="fig" viewBox="0 0 860 460" width="860" height="460" style="position:absolute;left:0;top:140px" aria-hidden="true">
+      <g stroke="#DCD6F3" stroke-width="34" stroke-linecap="round"><line x1="20" y1="60" x2="840" y2="60"/><line x1="20" y1="190" x2="840" y2="190"/><line x1="20" y1="450" x2="840" y2="450"/></g>
+      <g stroke="#fff" stroke-width="3" stroke-dasharray="18 14"><line x1="20" y1="60" x2="840" y2="60"/><line x1="20" y1="190" x2="840" y2="190"/><line x1="20" y1="450" x2="840" y2="450"/></g>
+      <g stroke="#C9C0F0" stroke-width="40" stroke-linecap="round"><line x1="200" y1="10" x2="250" y2="460"/><line x1="420" y1="10" x2="790" y2="460"/></g>
+      <path id="av1" d="M205.6 60 L248.9 450" fill="none"/>
+      <path id="av2" d="M461.1 60 L781.8 450" fill="none"/>
+      <g data-passo="1">
+        <line x1="205.6" y1="60" x2="220" y2="190" stroke="var(--d)" stroke-width="8"/><line x1="220" y1="190" x2="248.9" y2="450" stroke="var(--d)" stroke-width="8"/>
+        <text x="160" y="140" font-size="34" fill="var(--d-forte)" font-style="italic">x</text><text x="150" y="330" font-size="34" fill="var(--d-forte)" font-style="italic">2x</text>
+        <rect class="carro-av" width="26" height="26" rx="8" x="-13" y="-13" fill="var(--d)" style="offset-path:path('M205.6 60 L248.9 450')"/>
+      </g>
+      <g data-passo="2">
+        <line x1="461.1" y1="60" x2="568" y2="190" stroke="#C99A00" stroke-width="8"/><line x1="568" y1="190" x2="781.8" y2="450" stroke="#C99A00" stroke-width="8"/>
+        <text x="540" y="116" font-size="34" fill="#8A6A00" font-style="italic">y</text><text x="700" y="300" font-size="34" fill="#8A6A00" font-style="italic">2y</text>
+        <rect class="carro-av" width="26" height="26" rx="8" x="-13" y="-13" fill="#C99A00" style="offset-path:path('M461.1 60 L781.8 450')"/>
+      </g>
+    </svg>
+    <div style="position:absolute;left:960px;right:0;top:180px;display:flex;flex-direction:column;gap:24px">
+      <p class="texto" data-passo="1" style="margin:0">Numa avenida, um quarteirão mede o <b>dobro</b> do outro.</p>
+      <p class="texto" data-passo="2" style="margin:0">Na outra avenida, o mesmo: <b>dobro</b>.</p>
+      <div class="caixa caixa-fundamental" data-passo="3"><div class="texto">As paralelas <b>transportam a proporção</b> de uma transversal para a outra.</div></div>
+    </div>
+  </div>
+  <aside class="notas">
+    <p>Cliques 1 e 2: os trechos das duas avenidas entre as ruas. Os comprimentos são diferentes (y é maior que x), mas a razão é a mesma: o segundo trecho é o dobro do primeiro nas duas.</p>
+    <p>Os dois carrinhos saem juntos e passam pela rua do meio ao mesmo tempo, porque cada um gasta 1/3 do caminho no primeiro trecho.</p>
+  </aside>
+</section>
+
+<!-- 3. Feixe de paralelas -->
+<section class="slide" data-nome="Feixe de paralelas">
+  <div class="conteudo">
+    <p class="olho">Os nomes</p>
+    <h2 class="titulo">Feixe de paralelas e transversais</h2>
+    <svg class="fig" viewBox="0 0 860 470" width="860" height="470" style="position:absolute;left:0;top:140px" aria-hidden="true">
+      <g stroke="var(--carvao)" stroke-width="6" stroke-linecap="round"><line x1="20" y1="60" x2="780" y2="60"/><line x1="20" y1="200" x2="780" y2="200"/><line x1="20" y1="410" x2="780" y2="410"/></g>
+      <g class="rot-i"><text x="796" y="72">a</text><text x="796" y="212">b</text><text x="796" y="422">c</text></g>
+      <g data-passo="1">
+        <line class="traca" pathLength="100" x1="170" y1="10" x2="250" y2="460" stroke="var(--d)" stroke-width="6" stroke-linecap="round"/>
+        <line class="traca" pathLength="100" x1="420" y1="10" x2="690" y2="460" stroke="#C99A00" stroke-width="6" stroke-linecap="round"/>
+      </g>
+      <g data-passo="2" fill="var(--carvao)">
+        <circle cx="178.9" cy="60" r="9"/><circle cx="203.8" cy="200" r="9"/><circle cx="241.1" cy="410" r="9"/>
+        <circle cx="450" cy="60" r="9"/><circle cx="534" cy="200" r="9"/><circle cx="660" cy="410" r="9"/>
+      </g>
+      <g data-passo="2" class="rot"><text x="138" y="46">A</text><text x="162" y="190">B</text><text x="200" y="400">C</text><text x="470" y="46">D</text><text x="554" y="190">E</text><text x="680" y="400">F</text></g>
+    </svg>
+    <div style="position:absolute;left:960px;right:0;top:180px;display:flex;flex-direction:column;gap:22px">
+      <div class="cartao"><h3>Feixe de paralelas</h3><p>retas paralelas \(a\), \(b\), \(c\) de um plano</p></div>
+      <div class="cartao" data-passo="1"><h3>Transversais</h3><p>retas que cortam o feixe</p></div>
+      <div class="cartao" data-passo="2"><h3>Segmentos</h3><p>\(AB\) e \(BC\) numa; \(DE\) e \(EF\) na outra</p></div>
+    </div>
+  </div>
+  <aside class="notas">
+    <p>Clique 1: as duas transversais se desenham. Clique 2: os pontos de corte e os segmentos que o teorema compara.</p>
+  </aside>
+</section>
+
+<!-- 4. O teorema -->
+<section class="slide" data-nome="O Teorema de Tales">
+  <div class="conteudo">
+    <p class="olho">Fundamental</p>
+    <h2 class="titulo">Teorema de Tales</h2>
+    <div data-anima="tales-feixe" data-anima-passo="2" style="position:absolute;left:0;top:130px;width:900px;height:440px"></div>
+    <div style="position:absolute;left:1000px;right:0;top:160px;display:flex;flex-direction:column;gap:22px">
+      <div class="caixa caixa-fundamental">
+        <div class="texto" style="font-size:32px">Um feixe de paralelas cortado por duas transversais determina segmentos <b>proporcionais</b>.</div>
+      </div>
+      <div data-passo="1" style="font-size:72px;text-align:center">\(\dfrac{AB}{BC} = \dfrac{DE}{EF}\)</div>
+      <div data-passo="2" style="display:flex;flex-direction:column;gap:12px">
+        <span class="placa">AB ÷ BC = 4 ÷ 6 = 0,67</span>
+        <span class="placa" style="color:#8A6A00">DE ÷ EF = <span data-razao>…</span></span>
+      </div>
+      <p class="texto" data-passo="3" style="margin:0;font-size:31px">Os segmentos mudam; a <b>razão</b> não.</p>
+    </div>
+  </div>
+  <aside class="notas">
+    <p>Clique 1: a proporção. Clique 2: a segunda transversal inclina devagar. DE e EF mudam de tamanho, mas DE ÷ EF fica sempre 0,67, igual a AB ÷ BC = 4 ÷ 6. (Medidas na escala da figura.)</p>
+    <p>Clique 3: os segmentos de uma transversal não precisam ter o mesmo tamanho dos da outra: o que se mantém é a razão.</p>
+  </aside>
+</section>
+
+<!-- 5. Exemplo -->
+<section class="slide" data-nome="Exemplo: o segmento que falta">
+  <div class="conteudo">
+    <p class="olho">Exemplo</p>
+    <h2 class="titulo">O segmento que falta</h2>
+    <svg class="fig" viewBox="0 0 760 460" width="760" height="460" style="position:absolute;left:0;top:140px" aria-hidden="true">
+      <g stroke="var(--carvao)" stroke-width="5" stroke-linecap="round"><line x1="20" y1="50" x2="720" y2="50"/><line x1="20" y1="190" x2="720" y2="190"/><line x1="20" y1="400" x2="720" y2="400"/></g>
+      <line x1="150" y1="10" x2="150" y2="440" stroke="var(--d)" stroke-width="6" stroke-linecap="round"/>
+      <line x1="380" y1="10" x2="640" y2="440" stroke="#C99A00" stroke-width="6" stroke-linecap="round"/>
+      <g fill="var(--carvao)"><circle cx="150" cy="50" r="8"/><circle cx="150" cy="190" r="8"/><circle cx="150" cy="400" r="8"/><circle cx="404.2" cy="50" r="8"/><circle cx="488.8" cy="190" r="8"/><circle cx="615.8" cy="400" r="8"/></g>
+      <g class="rot"><text x="112" y="38">A</text><text x="112" y="180">B</text><text x="112" y="390">C</text><text x="424" y="38">D</text><text x="508" y="180">E</text><text x="636" y="390">F</text></g>
+      <g font-size="36" fill="var(--d-forte)"><text x="170" y="132">4</text><text x="170" y="306">6</text></g>
+      <g font-size="36" fill="#8A6A00"><text x="460" y="128">6</text><text x="574" y="306" font-style="italic">x</text></g>
+    </svg>
+    <div style="position:absolute;left:900px;top:150px">
+      <div class="contas" style="font-size:52px;row-gap:28px">
+        <div class="eq" data-passo="1"><span>\(\dfrac{AB}{BC}\)</span><span>\(=\)</span><span>\(\dfrac{DE}{EF}\)</span></div>
+        <div class="eq" data-passo="2"><span>\(\dfrac{4}{6}\)</span><span>\(=\)</span><span>\(\dfrac{6}{x}\)</span></div>
+        <div class="eq" data-passo="3"><span>\(4x\)</span><span>\(=\)</span><span>\(36\)</span></div>
+        <div class="eq final" data-passo="4"><span>\(x\)</span><span>\(=\)</span><span>\(9\)</span></div>
+      </div>
+    </div>
+  </div>
+  <aside class="notas">
+    <p>Exemplo da apostila: AB = 4, BC = 6, DE = 6, EF = x. Clique 3: multiplicação cruzada, 4x = 6 · 6 = 36. Clique 4: x = 9. Conferido: 6/9 = 4/6 = 2/3.</p>
+    <p>Na figura, as medidas estão em escala (35 px por unidade na vertical).</p>
+  </aside>
+</section>
+
+<!-- 6. Atenção: mesma ordem -->
+<section class="slide" data-nome="Atenção: mesma ordem">
+  <div class="conteudo">
+    <p class="olho">Atenção</p>
+    <h2 class="titulo">Monte a proporção na mesma ordem</h2>
+    <svg class="fig" viewBox="0 0 760 460" width="760" height="460" style="position:absolute;left:0;top:140px" aria-hidden="true">
+      <g stroke="var(--carvao)" stroke-width="5" stroke-linecap="round"><line x1="20" y1="50" x2="720" y2="50"/><line x1="20" y1="190" x2="720" y2="190"/><line x1="20" y1="400" x2="720" y2="400"/></g>
+      <line x1="150" y1="50" x2="150" y2="190" stroke="var(--d)" stroke-width="12" stroke-linecap="round"/>
+      <line x1="404.2" y1="50" x2="488.8" y2="190" stroke="var(--d)" stroke-width="12" stroke-linecap="round"/>
+      <line data-passo="1" x1="150" y1="190" x2="150" y2="400" stroke="#C99A00" stroke-width="12" stroke-linecap="round"/>
+      <line data-passo="1" x1="488.8" y1="190" x2="615.8" y2="400" stroke="#C99A00" stroke-width="12" stroke-linecap="round"/>
+      <g class="rot"><text x="112" y="38">A</text><text x="112" y="180">B</text><text x="112" y="390">C</text><text x="424" y="38">D</text><text x="508" y="180">E</text><text x="636" y="390">F</text></g>
+    </svg>
+    <div style="position:absolute;left:900px;right:0;top:170px;display:flex;flex-direction:column;gap:24px">
+      <div class="caixa caixa-atencao"><div class="texto">Os segmentos correspondentes ficam entre as <b>mesmas paralelas</b>: \(AB\) com \(DE\), \(BC\) com \(EF\).</div></div>
+      <div data-passo="2" style="font-size:56px">\(\dfrac{4}{6} = \dfrac{x}{6}\)<span class="riscado" style="font-size:40px;margin-left:24px">trocou a ordem</span></div>
+      <p class="texto" data-passo="2" style="margin:0;font-size:32px">Trocar a ordem de um lado só gera uma resposta errada (aqui, \(x = 4\)).</p>
+    </div>
+  </div>
+  <aside class="notas">
+    <p>Pinte os pares: azul (entre a e b) com azul, amarelo (entre b e c) com amarelo. Clique 2: o erro clássico de inverter só um lado; com os números do exemplo, daria x = 4 em vez de 9.</p>
+  </aside>
+</section>
+
+<!-- 7. Transversais que se cruzam -->
+<section class="slide" data-nome="Transversais que se cruzam">
+  <div class="conteudo">
+    <p class="olho">Vale também assim</p>
+    <h2 class="titulo">E se as transversais se cruzam?</h2>
+    <svg class="fig" viewBox="0 0 760 460" width="760" height="460" style="position:absolute;left:0;top:140px" aria-hidden="true">
+      <g stroke="var(--carvao)" stroke-width="5" stroke-linecap="round"><line x1="20" y1="180" x2="720" y2="180"/><line x1="20" y1="400" x2="720" y2="400"/></g>
+      <line x1="160" y1="450" x2="328.3" y2="36.5" stroke="var(--d)" stroke-width="6" stroke-linecap="round"/>
+      <line x1="660" y1="450" x2="328.3" y2="36.5" stroke="#C99A00" stroke-width="6" stroke-linecap="round"/>
+      <circle cx="328.3" cy="36.5" r="10" fill="#FFD10C" stroke="var(--carvao)" stroke-width="3"/>
+      <g fill="var(--carvao)"><circle cx="269.9" cy="180" r="8"/><circle cx="180.3" cy="400" r="8"/><circle cx="443.4" cy="180" r="8"/><circle cx="619.9" cy="400" r="8"/></g>
+      <text x="740" y="190" class="rot-i">r</text><text x="740" y="410" class="rot-i">s</text>
+    </svg>
+    <div style="position:absolute;left:900px;right:0;top:170px;display:flex;flex-direction:column;gap:24px">
+      <p class="texto" style="margin:0">Se as transversais se encontram fora do feixe, as paralelas \(r\) e \(s\) ainda cortam <b>segmentos proporcionais</b>.</p>
+      <p class="texto" data-passo="1" style="margin:0">É o mesmo teorema: imagine uma terceira paralela passando pelo ponto de encontro.</p>
+    </div>
+  </div>
+  <aside class="notas">
+    <p>Complemento do professor (não está escrito assim na apostila), necessário para a Questão 3: com duas paralelas e as transversais se encontrando num ponto, a proporção continua valendo, porque se pode imaginar uma terceira reta do feixe passando pelo ponto de encontro. A Parte 2 mostra a mesma figura como semelhança de triângulos.</p>
+  </aside>
+</section>
+
+<!-- 8. Questão 1 -->
+<section class="slide questao" data-nome="Questão 1">
+  <div class="conteudo">
+    <div class="area-resolucao"></div>
+    <span class="pilula pilula-pausa" data-em="1:some">Pause o vídeo e tente</span>
+    <div class="painel-questao">
+      <p class="olho">Questão 1 · Modelo IF</p>
+      <p class="enunciado">Na figura, as retas <i>a</i>, <i>b</i> e <i>c</i> são paralelas. As medidas estão em centímetros.</p>
+      <svg class="fig" viewBox="0 0 520 300" width="520" height="300" aria-hidden="true">
+        <g stroke="var(--carvao)" stroke-width="4" stroke-linecap="round"><line x1="20" y1="40" x2="470" y2="40"/><line x1="20" y1="100" x2="470" y2="100"/><line x1="20" y1="250" x2="470" y2="250"/></g>
+        <line x1="96" y1="16" x2="174" y2="290" stroke="var(--d)" stroke-width="4" stroke-linecap="round"/>
+        <line x1="262" y1="16" x2="458" y2="290" stroke="var(--d)" stroke-width="4" stroke-linecap="round"/>
+        <g fill="var(--carvao)"><circle cx="102.8" cy="40" r="6"/><circle cx="119.9" cy="100" r="6"/><circle cx="162.6" cy="250" r="6"/><circle cx="279.2" cy="40" r="6"/><circle cx="322.1" cy="100" r="6"/><circle cx="429.4" cy="250" r="6"/></g>
+        <g font-size="24" fill="var(--carvao)"><text x="112" y="30">A</text><text x="130" y="92">B</text><text x="174" y="242">C</text><text x="290" y="30">D</text><text x="334" y="92">E</text><text x="440" y="242">F</text></g>
+        <g font-size="26" fill="var(--d-forte)"><text x="70" y="78">4</text><text x="100" y="185">10</text><text x="306" y="66">6</text><text x="390" y="185" font-style="italic">x</text></g>
+        <g font-size="26" font-style="italic" fill="var(--carvao)"><text x="480" y="48">a</text><text x="480" y="108">b</text><text x="480" y="258">c</text></g>
+      </svg>
+      <p class="enunciado" style="margin:0">O valor de \(x\) é:</p>
+      <ol class="alternativas curtas">
+        <li data-em="2:apaga"><b>A</b><span>2,4</span></li>
+        <li data-em="2:apaga"><b>B</b><span>10</span></li>
+        <li data-em="2:apaga"><b>C</b><span>12</span></li>
+        <li data-em="2:certo"><b>D</b><span>15</span></li>
+        <li data-em="2:apaga"><b>E</b><span>60</span></li>
+      </ol>
+      <p class="fonte">Questão Modelo IF (lote if-matematica-semelhanca-e-teorema-de-tales, m003)</p>
+    </div>
+  </div>
+  <aside class="resolucao">
+    <p class="dados"><b>Dados:</b> \(AB = 4\), \(BC = 10\), \(DE = 6\), \(EF = x\).</p>
+    <ol class="passos">
+      <li><b>Tales, na mesma ordem</b> \(\dfrac{AB}{BC} = \dfrac{DE}{EF}\)</li>
+      <li><b>Substitua</b> \(\dfrac{4}{10} = \dfrac{6}{x}\)</li>
+      <li><b>Multiplique cruzado</b> \(4x = 60\)</li>
+      <li><b>Divida</b> \(x = 15\)</li>
+    </ol>
+    <p class="resposta"><b>Resposta:</b> \(x = 15\) cm. <b>Gabarito D.</b></p>
+    <p class="atencao"><b>Destaque no quadro:</b> AB com DE, BC com EF: os pares ficam entre as mesmas paralelas.</p>
+    <ul class="erros">
+      <li><b>A</b> Inverte um lado: 4/10 = x/6.</li>
+      <li><b>B</b> Copia BC.</li>
+      <li><b>C</b> Pensa em diferença (6 + 6).</li>
+      <li><b>E</b> Esquece de dividir por 4.</li>
+    </ul>
+  </aside>
+  <aside class="notas">
+    <p>Clique 1 tira o aviso de pausa: resolva na área (D liga a caneta; E esconde o enunciado). Clique 2: gabarito D.</p>
+    <p>Modelo IF, lote if-matematica-semelhanca-e-teorema-de-tales, m003, MAT-1003 (nível 2). Figura refeita com as posições da figura do lote. Conferido: 6/15 = 0,4 = 4/10.</p>
+  </aside>
+</section>
+
+<!-- 9. Questão 2 -->
+<section class="slide questao" data-nome="Questão 2">
+  <div class="conteudo">
+    <div class="area-resolucao"></div>
+    <span class="pilula pilula-pausa" data-em="1:some">Pause o vídeo e tente</span>
+    <div class="painel-questao">
+      <p class="olho">Questão 2 · IF Sudeste MG 2015</p>
+      <p class="enunciado" style="font-size:25px">Como mostra a figura abaixo, três terrenos que estão entre as Ruas A e B foram divididos. As divisões laterais são perpendiculares a Rua A. Qual a medida da frente para a Rua B do Lote 1?</p>
+      <svg class="fig" viewBox="0 0 520 320" width="520" height="320" aria-hidden="true">
+        <line x1="10" y1="280" x2="510" y2="280" stroke="var(--carvao)" stroke-width="4"/>
+        <line x1="40" y1="135" x2="510" y2="10" stroke="var(--carvao)" stroke-width="4"/>
+        <g stroke="var(--carvao)" stroke-width="3"><line x1="80" y1="280" x2="80" y2="124.4"/><line x1="250" y1="280" x2="250" y2="79.1"/><line x1="380" y1="280" x2="380" y2="44.6"/><line x1="470" y1="280" x2="470" y2="20.6"/></g>
+        <line x1="256" y1="58" x2="376" y2="26" stroke="var(--carvao)" stroke-width="3" stroke-dasharray="10 8"/>
+        <path d="M250 53 l12 10 M262 53 l-12 10 M370 21 l12 10 M382 21 l-12 10" stroke="var(--carvao)" stroke-width="3"/>
+        <g font-size="22" fill="var(--carvao)" text-anchor="middle"><text x="312" y="34">75</text><text x="165" y="210">Lote 1</text><text x="315" y="210">Lote 2</text><text x="425" y="210">Lote 3</text><text x="165" y="306">40</text><text x="315" y="306">30</text><text x="425" y="306">20</text></g>
+        <g font-size="20" fill="var(--cinza)"><text x="10" y="120">Rua B</text><text x="10" y="306">Rua A</text></g>
+      </svg>
+      <ol class="alternativas curtas">
+        <li data-em="2:apaga"><b>A</b><span>70</span></li>
+        <li data-em="2:apaga"><b>B</b><span>80</span></li>
+        <li data-em="2:apaga"><b>C</b><span>90</span></li>
+        <li data-em="2:certo"><b>D</b><span>100</span></li>
+        <li data-em="2:apaga"><b>E</b><span>110</span></li>
+      </ol>
+      <p class="fonte">IF Sudeste MG, prova de 2015 (1º semestre, edição extra), questão 15</p>
+    </div>
+  </div>
+  <aside class="resolucao">
+    <p class="dados"><b>Dados:</b> Rua A: 40, 30, 20; Lote 2 na Rua B: 75; Lote 1 na Rua B: \(x\).</p>
+    <ol class="passos">
+      <li><b>Divisões ⊥ à Rua A: são paralelas</b> feixe cortado pelas duas ruas</li>
+      <li><b>Tales</b> \(\dfrac{x}{40} = \dfrac{75}{30}\)</li>
+      <li><b>Multiplique cruzado</b> \(30x = 40 \cdot 75 = 3\,000\)</li>
+      <li><b>Divida</b> \(x = 100\)</li>
+    </ol>
+    <p class="resposta"><b>Resposta:</b> a frente do Lote 1 para a Rua B mede 100. <b>Gabarito D.</b></p>
+    <p class="atencao"><b>Destaque no quadro:</b> Duas retas perpendiculares à mesma reta são paralelas entre si.</p>
+    <ul class="erros">
+      <li><b>A</b> Soma 40 + 30 da Rua A.</li>
+      <li><b>B</b> 80/40 = 2, não 2,5.</li>
+      <li><b>C</b> 90/40 = 2,25, não 2,5.</li>
+      <li><b>E</b> 110/40 = 2,75, não 2,5.</li>
+    </ul>
+  </aside>
+  <aside class="notas">
+    <p>Clique 1 tira o aviso de pausa: resolva na área (D liga a caneta; E esconde o enunciado). Clique 2: gabarito D.</p>
+    <p>Questão oficial do IF Sudeste MG 2015-1 extra, q15, MAT-0413 (sobra do subcapítulo). A figura foi redesenhada como a da prova, fora de escala (a Rua B não está na inclinação real). O "perpendiculares a Rua A" é do original. Conferido: 40 · 75 = 3000; 3000/30 = 100; razão 2,5 nos dois lotes.</p>
+  </aside>
+</section>
+
+<!-- 10. Questão 3 -->
+<section class="slide questao" data-nome="Questão 3">
+  <div class="conteudo">
+    <div class="area-resolucao"></div>
+    <span class="pilula pilula-pausa" data-em="1:some">Pause o vídeo e tente</span>
+    <div class="painel-questao">
+      <p class="olho">Questão 3 · IF Sudeste MG 2019</p>
+      <p class="enunciado" style="font-size:22px">Ana e Vitória saíram, respectivamente, dos pontos A e B, no mesmo instante, e marcaram de encontrar-se no <i>shopping</i>, localizado no ponto E, conforme mostra a figura a seguir. Ana gastou 16 minutos para chegar ao ponto C e 24 minutos para chegar ao <i>shopping</i>. Já Vitória chegou ao ponto D, após 20 minutos. Considerando que r // s e que as duas mantiveram a mesma velocidade durante todo o percurso, por quantos minutos Ana esperará Vitória chegar?</p>
+      <svg class="fig" viewBox="0 0 520 300" width="440" height="254" style="align-self:center" aria-hidden="true">
+        <g stroke="var(--carvao)" stroke-width="4"><line x1="10" y1="103.3" x2="510" y2="103.3"/><line x1="10" y1="270" x2="510" y2="270"/></g>
+        <line x1="88" y1="295" x2="180" y2="20" stroke="var(--carvao)" stroke-width="4"/>
+        <line x1="180" y1="20" x2="470" y2="295" stroke="var(--carvao)" stroke-width="4"/>
+        <g fill="var(--d)"><circle cx="180" cy="20" r="7"/><circle cx="152.1" cy="103.3" r="7"/><circle cx="96.2" cy="270" r="7"/><circle cx="267.8" cy="103.3" r="7"/><circle cx="443.6" cy="270" r="7"/></g>
+        <g font-size="22" fill="var(--carvao)"><text x="192" y="22">E</text><text x="160" y="132">C</text><text x="106" y="296">A</text><text x="280" y="132">D</text><text x="440" y="296">B</text><text x="494" y="94">r</text><text x="494" y="260">s</text></g>
+        <g font-size="22" fill="var(--d-forte)"><text x="20" y="206">16 min</text><text x="390" y="206">20 min</text></g>
+      </svg>
+      <ol class="alternativas curtas">
+        <li data-em="2:certo"><b>A</b><span>6</span></li>
+        <li data-em="2:apaga"><b>B</b><span>8</span></li>
+        <li data-em="2:apaga"><b>C</b><span>10</span></li>
+        <li data-em="2:apaga"><b>D</b><span>16</span></li>
+        <li data-em="2:apaga"><b>E</b><span>20</span></li>
+      </ol>
+      <p class="fonte">IF Sudeste MG, prova de 2019 (1º semestre), questão 21</p>
+    </div>
+  </div>
+  <aside class="resolucao">
+    <p class="dados"><b>Dados:</b> Ana: A→C 16 min, A→E 24 min; Vitória: B→D 20 min; \(r \parallel s\).</p>
+    <ol class="passos">
+      <li><b>Ana de C até E</b> \(24 - 16 = 8\) min</li>
+      <li><b>Velocidade constante: tempo proporcional ao trecho; Tales</b> \(\dfrac{16}{8} = \dfrac{20}{t}\)</li>
+      <li><b>Resolva</b> \(16t = 160 \Rightarrow t = 10\) min (D até E)</li>
+      <li><b>Vitória chega em</b> \(20 + 10 = 30\) min</li>
+      <li><b>Espera de Ana</b> \(30 - 24 = 6\) min</li>
+    </ol>
+    <p class="resposta"><b>Resposta:</b> Ana espera 6 minutos. <b>Gabarito A.</b></p>
+    <p class="atencao"><b>Destaque no quadro:</b> Com velocidade constante, a proporção dos trechos vale para os tempos.</p>
+    <ul class="erros">
+      <li><b>B</b> 8 min é Ana de C até E.</li>
+      <li><b>C</b> 10 min é Vitória de D até E.</li>
+      <li><b>D</b> 16 min é Ana de A até C.</li>
+      <li><b>E</b> 20 min é Vitória de B até D.</li>
+    </ul>
+  </aside>
+  <aside class="notas">
+    <p>Clique 1 tira o aviso de pausa: resolva na área (D liga a caneta; E esconde o enunciado). Clique 2: gabarito A.</p>
+    <p>Questão oficial do IF Sudeste MG 2019-1, q21, MAT-0442 (sobra do subcapítulo). Usa o slide "E se as transversais se cruzam?". Figura redesenhada em escala (AC:CE = 2:1). Conferido: 16/8 = 2 = 20/10; 30 − 24 = 6.</p>
+  </aside>
+</section>
+
+<!-- 11. Resumo -->
+<section class="slide" data-nome="Resumo">
+  <div class="conteudo">
+    <p class="olho">Resumo</p>
+    <h2 class="titulo">O essencial</h2>
+    <div class="resumo" style="position:absolute;left:0;right:0;top:150px">
+      <div><b>Feixe de paralelas:</b> retas paralelas de um plano; as retas que o cortam são <b>transversais</b>.</div>
+      <div><b>Tales:</b> o feixe determina nas transversais segmentos <b>proporcionais</b>: \(\dfrac{AB}{BC} = \dfrac{DE}{EF}\).</div>
+      <div><b>O que se mantém é a razão</b>, não o tamanho dos segmentos.</div>
+      <div><b>Mesma ordem:</b> correspondentes ficam entre as mesmas paralelas.</div>
+      <div><b>Perpendiculares à mesma reta</b> são paralelas entre si: formam um feixe.</div>
+      <div><b>Velocidade constante:</b> tempos na mesma razão dos trechos.</div>
+    </div>
+  </div>
+  <aside class="notas"><p>Peça para tirarem um print desta tela.</p></aside>
+</section>
+
+<!-- 12. A seguir -->
+<section class="slide capa" data-nome="A seguir">
+  <div class="estrelas"></div>
+  <div class="texto-capa" style="top:200px">
+    <span class="selo">Matemática · IF</span>
+    <p class="aula" style="font-size:26px">A seguir · Semelhança e Teorema de Tales · Parte 2 de 2</p>
+    <h1 style="font-size:120px">Semelhança de triângulos</h1>
+    <p class="sub">Mesma forma, outro tamanho</p>
+  </div>
+  <svg class="emblema" viewBox="0 0 640 640" aria-hidden="true">
+    <polygon points="70,540 250,540 70,405" fill="#FFD10C" stroke="#fff" stroke-width="6" stroke-linejoin="round"/>
+    <polygon points="250,540 610,540 250,270" fill="none" stroke="#fff" stroke-opacity=".9" stroke-width="9" stroke-linejoin="round"/>
+  </svg>
+  <img class="logo-capa" src="{{LOGO_BRANCO}}" alt="Quarks">
+  <aside class="notas"><p>Próxima parte: figuras semelhantes, o caso ângulo-ângulo, as sombras e a razão de semelhança (perímetros com k, áreas com k²).</p></aside>
+</section>

@@ -1,0 +1,557 @@
+<!--aula
+{"disciplina": "quimica", "curso": "IF", "assunto": "Óxidos", "parte": "Parte 1 de 2", "titulo": "Classificação e nomenclatura", "scripts": ["animacoes-oxidos.js"]}
+-->
+<!-- Fonte: slides da professora (Química IF 2026, aula 12: óxidos iônicos e moleculares, ácidos, básicos, anfóteros, neutros, tabela-resumo, nomenclatura, peróxidos e superóxidos; tabela de Nox dos metais da aula 11), completados com a apostila IF, Química, 4.4 Óxidos. Questões: IF Sudeste MG 2014 (prova extra) e IF Sudeste MG 2017 (oficiais). -->
+<style>
+  .caixa, .grupo, .cartao, .linha-ex { box-sizing: border-box; }
+  .est { font-size: .6em; font-weight: 600; color: var(--cinza); letter-spacing: 0; }
+  .eq { font: 700 36px var(--fonte-titulo); color: var(--carvao); letter-spacing: -.01em; white-space: nowrap; }
+  .eq .s { color: var(--d); margin: 0 10px; }
+  .grupo { background: var(--branco); border: 2px solid var(--lilas-2); border-radius: 30px; padding: 24px 30px; }
+  .grupo h3 { margin: 0 0 6px; font: 800 42px var(--fonte-titulo); letter-spacing: -.02em; color: var(--roxo-titulo); }
+  .grupo p { margin: 0; font-size: 29px; line-height: 1.3; color: var(--carvao); }
+  .grupo p b { color: var(--roxo-titulo); }
+  .cartao { background: var(--branco); border: 2px solid var(--lilas-2); border-radius: 26px; padding: 18px 26px; font-size: 28px; line-height: 1.32; }
+  .cartao .f { font: 800 46px var(--fonte-titulo); color: var(--roxo-titulo); }
+  .cartao b { color: var(--roxo-titulo); }
+  .linha-ex { display: grid; align-items: center; gap: 20px; background: var(--branco); border: 2px solid var(--lilas-2); border-radius: 22px; padding: 10px 26px; font-size: 29px; line-height: 1.25; }
+  .linha-ex .f { font: 800 40px var(--fonte-titulo); color: var(--roxo-titulo); }
+  .linha-ex b { color: var(--roxo-titulo); }
+  .tag { justify-self: end; padding: 6px 18px; border-radius: 999px; font-weight: 800; font-size: 25px; background: var(--d-clara); color: var(--d-forte); white-space: nowrap; }
+  .tag.ac { background: #FDE3E0; color: #A8321F; } .tag.ba { background: #E0ECFB; color: #1F5FA8; } .tag.ne { background: #EEEDF2; color: #4A4757; } .tag.an { background: #FFF4C2; color: #8A6A00; } .tag.pe { background: #E3F6EC; color: #1C7A4D; }
+  .selo-x { display: inline-block; padding: 5px 20px; border-radius: 999px; background: var(--d-clara); color: var(--d-forte); font-size: 26px; font-weight: 800; }
+  .tabela.chem td, .tabela.chem th { padding: 10px 30px; }
+  /* reação: os reagentes se encontram e some cada um; o produto aparece no meio (ciclo de 7 s) */
+  @keyframes vem-d { 0%, 12% { transform: translateX(0); opacity: 1; } 46% { transform: translateX(var(--dx)); opacity: 1; } 54%, 100% { transform: translateX(var(--dx)); opacity: 0; } }
+  @keyframes vem-e { 0%, 12% { transform: translateX(0); opacity: 1; } 46% { transform: translateX(calc(-1 * var(--dx))); opacity: 1; } 54%, 100% { transform: translateX(calc(-1 * var(--dx))); opacity: 0; } }
+  @keyframes nasce { 0%, 46% { opacity: 0; transform: scale(.7); } 58%, 90% { opacity: 1; transform: scale(1); } 100% { opacity: 0; transform: scale(1); } }
+  .reage { position: relative; }
+  .reage .r1, .reage .r2, .reage .p { position: absolute; top: 0; display: flex; flex-direction: column; align-items: center; gap: 2px; font: 800 32px var(--fonte-titulo); color: var(--roxo-titulo); }
+  .reage .p { opacity: 0; }
+  .reage svg { width: 170px; height: 130px; }
+  .reage .mais { position: absolute; top: 46px; font: 800 44px var(--fonte-titulo); color: var(--d); }
+  .slide.ativo .mostra .reage .r1, .slide.ativo .mostra.reage .r1 { animation: vem-d 7s ease-in-out infinite; }
+  .slide.ativo .mostra .reage .r2, .slide.ativo .mostra.reage .r2 { animation: vem-e 7s ease-in-out infinite; }
+  .slide.ativo .mostra .reage .p, .slide.ativo .mostra.reage .p { animation: nasce 7s ease-in-out infinite; }
+  @keyframes some-mais { 0%, 12% { opacity: 1; } 28%, 100% { opacity: 0; } }
+  .slide.ativo .mostra .reage .mais, .slide.ativo .mostra.reage .mais { animation: some-mais 7s ease-in-out infinite; }
+  /* átomos que vibram de leve */
+  @keyframes vib-a { 0%,100% { transform: translate(0,0); } 25% { transform: translate(1.6px,-1.2px); } 50% { transform: translate(-.8px,1.4px); } 75% { transform: translate(-1.4px,-.6px); } }
+  @keyframes vib-b { 0%,100% { transform: translate(0,0); } 25% { transform: translate(-1.4px,1px); } 50% { transform: translate(1.2px,-1.4px); } 75% { transform: translate(.6px,1.2px); } }
+  .slide.ativo .mostra svg.vibra .vib-a, .slide.ativo svg.vibra.sempre .vib-a { animation: vib-a 1.6s ease-in-out infinite; }
+  .slide.ativo .mostra svg.vibra .vib-b, .slide.ativo svg.vibra.sempre .vib-b { animation: vib-b 1.6s ease-in-out infinite; }
+  /* bolhas de gás que sobem */
+  @keyframes bolha { 0% { transform: translateY(0); opacity: 0; } 15% { opacity: 1; } 85% { opacity: 1; } 100% { transform: translateY(var(--sobe, -110px)); opacity: 0; } }
+  .bolhas circle { opacity: 0; }
+  .slide.ativo .mostra .bolhas circle { animation: bolha 3.6s linear infinite; }
+  .bolhas circle:nth-child(2) { animation-delay: -.6s !important; } .bolhas circle:nth-child(3) { animation-delay: -1.3s !important; } .bolhas circle:nth-child(4) { animation-delay: -2s !important; } .bolhas circle:nth-child(5) { animation-delay: -2.6s !important; } .bolhas circle:nth-child(6) { animation-delay: -3.1s !important; } .bolhas circle:nth-child(7) { animation-delay: -1.7s !important; } .bolhas circle:nth-child(8) { animation-delay: -.3s !important; }
+  /* vapor (calor) que sobe */
+  @keyframes fumaca { 0% { transform: translateY(0); opacity: 0; } 20% { opacity: .85; } 100% { transform: translateY(-50px); opacity: 0; } }
+  .vapor path { opacity: 0; }
+  .slide.ativo .mostra .vapor path { animation: fumaca 3s ease-out infinite; }
+  .vapor path:nth-child(2) { animation-delay: -1s !important; } .vapor path:nth-child(3) { animation-delay: -2s !important; } .vapor path:nth-child(4) { animation-delay: -.5s !important; }
+  /* chama que tremula */
+  @keyframes chama { 0%,100% { transform: scaleY(1) skewX(0); } 35% { transform: scaleY(.9) skewX(2deg); } 70% { transform: scaleY(1.04) skewX(-2deg); } }
+  .chama { transform-box: fill-box; transform-origin: 50% 100%; }
+  .slide.ativo .mostra .chama { animation: chama 1.6s ease-in-out infinite; }
+  .mol { display: flex; flex-direction: column; align-items: center; gap: 0; font: 800 32px var(--fonte-titulo); color: var(--roxo-titulo); }
+  .eqs { display: flex; flex-direction: column; gap: 16px; }
+  .eqs .rot { font-size: 24px; font-weight: 800; letter-spacing: .08em; text-transform: uppercase; color: var(--d-forte); margin: 6px 0 -6px; }
+  .rede-ion circle { stroke-width: 2; }
+  /* água oxigenada no machucado: espuma de O2 */
+  .espuma circle { fill: #fff; stroke: #B9B0E6; stroke-width: 2; }
+</style>
+
+<svg width="0" height="0" style="position:absolute" aria-hidden="true">
+  <defs>
+    <radialGradient id="gO" cx=".35" cy=".3" r=".8"><stop offset="0" stop-color="#FF8A7A"/><stop offset="1" stop-color="#C8301F"/></radialGradient>
+    <radialGradient id="gH" cx=".35" cy=".3" r=".8"><stop offset="0" stop-color="#FFFFFF"/><stop offset="1" stop-color="#C9C4DC"/></radialGradient>
+    <radialGradient id="gC" cx=".35" cy=".3" r=".8"><stop offset="0" stop-color="#8A8A96"/><stop offset="1" stop-color="#2E2E36"/></radialGradient>
+    <radialGradient id="gS" cx=".35" cy=".3" r=".8"><stop offset="0" stop-color="#FFE680"/><stop offset="1" stop-color="#D9A900"/></radialGradient>
+    <radialGradient id="gCa" cx=".35" cy=".3" r=".8"><stop offset="0" stop-color="#B7F0C8"/><stop offset="1" stop-color="#2E9E5B"/></radialGradient>
+    <radialGradient id="gN" cx=".35" cy=".3" r=".8"><stop offset="0" stop-color="#7FA8FF"/><stop offset="1" stop-color="#2A5BD0"/></radialGradient>
+    <radialGradient id="gNa" cx=".35" cy=".3" r=".8"><stop offset="0" stop-color="#D7CCFF"/><stop offset="1" stop-color="#6551D1"/></radialGradient>
+    <linearGradient id="gAgua" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#CFE6FA"/><stop offset="1" stop-color="#9CCBF2"/></linearGradient>
+  </defs>
+  <symbol id="m-co2" viewBox="0 0 170 130"><circle class="vib-a" cx="45" cy="65" r="24" fill="url(#gO)" stroke="#8E2115" stroke-width="2"/><circle class="vib-b" cx="125" cy="65" r="24" fill="url(#gO)" stroke="#8E2115" stroke-width="2"/><circle class="vib-a" cx="85" cy="65" r="27" fill="url(#gC)" stroke="#1C1C22" stroke-width="2"/></symbol>
+  <symbol id="m-so2" viewBox="0 0 170 130"><circle class="vib-a" cx="50" cy="82" r="23" fill="url(#gO)" stroke="#8E2115" stroke-width="2"/><circle class="vib-b" cx="120" cy="82" r="23" fill="url(#gO)" stroke="#8E2115" stroke-width="2"/><circle class="vib-a" cx="85" cy="52" r="30" fill="url(#gS)" stroke="#8A6A00" stroke-width="2"/></symbol>
+  <symbol id="m-h2o" viewBox="0 0 170 130"><circle class="vib-a" cx="48" cy="84" r="18" fill="url(#gH)" stroke="#8C84B8" stroke-width="2"/><circle class="vib-b" cx="122" cy="84" r="18" fill="url(#gH)" stroke="#8C84B8" stroke-width="2"/><circle class="vib-a" cx="85" cy="60" r="28" fill="url(#gO)" stroke="#8E2115" stroke-width="2"/></symbol>
+  <symbol id="m-so3" viewBox="0 0 170 130"><circle class="vib-a" cx="85" cy="22" r="19" fill="url(#gO)" stroke="#8E2115" stroke-width="2"/><circle class="vib-b" cx="40" cy="92" r="19" fill="url(#gO)" stroke="#8E2115" stroke-width="2"/><circle class="vib-a" cx="130" cy="92" r="19" fill="url(#gO)" stroke="#8E2115" stroke-width="2"/><circle class="vib-b" cx="85" cy="66" r="28" fill="url(#gS)" stroke="#8A6A00" stroke-width="2"/></symbol>
+  <symbol id="m-h2so4" viewBox="0 0 170 130"><circle class="vib-a" cx="85" cy="18" r="17" fill="url(#gO)" stroke="#8E2115" stroke-width="2"/><circle class="vib-b" cx="85" cy="112" r="17" fill="url(#gO)" stroke="#8E2115" stroke-width="2"/><circle class="vib-a" cx="36" cy="65" r="17" fill="url(#gO)" stroke="#8E2115" stroke-width="2"/><circle class="vib-b" cx="134" cy="65" r="17" fill="url(#gO)" stroke="#8E2115" stroke-width="2"/><circle class="vib-a" cx="14" cy="50" r="11" fill="url(#gH)" stroke="#8C84B8" stroke-width="2"/><circle class="vib-b" cx="156" cy="80" r="11" fill="url(#gH)" stroke="#8C84B8" stroke-width="2"/><circle class="vib-a" cx="85" cy="65" r="25" fill="url(#gS)" stroke="#8A6A00" stroke-width="2"/></symbol>
+  <symbol id="m-cao" viewBox="0 0 170 130"><circle class="vib-a" cx="62" cy="65" r="30" fill="url(#gCa)" stroke="#1D6B3C" stroke-width="2"/><circle class="vib-b" cx="118" cy="65" r="24" fill="url(#gO)" stroke="#8E2115" stroke-width="2"/></symbol>
+  <symbol id="m-caoh2" viewBox="0 0 170 130"><circle class="vib-a" cx="85" cy="65" r="30" fill="url(#gCa)" stroke="#1D6B3C" stroke-width="2"/><circle class="vib-b" cx="35" cy="65" r="20" fill="url(#gO)" stroke="#8E2115" stroke-width="2"/><circle class="vib-a" cx="135" cy="65" r="20" fill="url(#gO)" stroke="#8E2115" stroke-width="2"/><circle class="vib-b" cx="14" cy="50" r="11" fill="url(#gH)" stroke="#8C84B8" stroke-width="2"/><circle class="vib-a" cx="156" cy="80" r="11" fill="url(#gH)" stroke="#8C84B8" stroke-width="2"/></symbol>
+  <symbol id="m-co" viewBox="0 0 170 130"><circle class="vib-a" cx="62" cy="65" r="27" fill="url(#gC)" stroke="#1C1C22" stroke-width="2"/><circle class="vib-b" cx="110" cy="65" r="24" fill="url(#gO)" stroke="#8E2115" stroke-width="2"/></symbol>
+  <symbol id="m-no" viewBox="0 0 170 130"><circle class="vib-a" cx="62" cy="65" r="26" fill="url(#gN)" stroke="#1B3E94" stroke-width="2"/><circle class="vib-b" cx="110" cy="65" r="24" fill="url(#gO)" stroke="#8E2115" stroke-width="2"/></symbol>
+  <symbol id="m-n2o" viewBox="0 0 170 130"><circle class="vib-a" cx="38" cy="65" r="22" fill="url(#gN)" stroke="#1B3E94" stroke-width="2"/><circle class="vib-b" cx="82" cy="65" r="22" fill="url(#gN)" stroke="#1B3E94" stroke-width="2"/><circle class="vib-a" cx="128" cy="65" r="22" fill="url(#gO)" stroke="#8E2115" stroke-width="2"/></symbol>
+  <symbol id="m-h2o2" viewBox="0 0 170 130"><circle class="vib-a" cx="60" cy="70" r="24" fill="url(#gO)" stroke="#8E2115" stroke-width="2"/><circle class="vib-b" cx="110" cy="60" r="24" fill="url(#gO)" stroke="#8E2115" stroke-width="2"/><circle class="vib-a" cx="30" cy="98" r="14" fill="url(#gH)" stroke="#8C84B8" stroke-width="2"/><circle class="vib-b" cx="140" cy="32" r="14" fill="url(#gH)" stroke="#8C84B8" stroke-width="2"/></symbol>
+</svg>
+
+<!-- Capa -->
+<section class="slide capa" data-nome="Capa">
+  <div class="estrelas"></div>
+  <div class="texto-capa" style="top:150px">
+    <span class="selo">Química · IF</span>
+    <p class="aula">Óxidos · Parte 1 de 2</p>
+    <h1 style="font-size:110px">Classificação e nomenclatura</h1>
+    <p class="sub">Ácidos, básicos, anfóteros, neutros e peróxidos</p>
+  </div>
+  <svg class="emblema" viewBox="0 0 640 640" aria-hidden="true">
+    <g class="gira-lento"><ellipse cx="320" cy="320" rx="300" ry="128" fill="none" stroke="#fff" stroke-opacity=".38" stroke-width="2" transform="rotate(-10 320 320)"/></g>
+    <g class="gira"><ellipse cx="320" cy="320" rx="236" ry="196" fill="none" stroke="#FFD10C" stroke-opacity=".75" stroke-width="2.5" stroke-dasharray="3 14" stroke-linecap="round" transform="rotate(-8 320 320)"/>
+      <circle cx="84" cy="300" r="13" fill="#FFD10C" stroke="#fff" stroke-width="3"/></g>
+    <circle cx="200" cy="320" r="70" fill="#fff" fill-opacity=".9"/><circle cx="440" cy="320" r="70" fill="#fff" fill-opacity=".9"/>
+    <circle cx="320" cy="320" r="92" fill="#FFD10C"/>
+    <g font-family="Bricolage Grotesque, sans-serif" font-weight="800" text-anchor="middle"><text x="200" y="342" font-size="64" fill="#4B39B3">O</text><text x="440" y="342" font-size="64" fill="#4B39B3">O</text><text x="320" y="348" font-size="76" fill="#292B2C">C</text></g>
+  </svg>
+  <img class="logo-capa" src="{{LOGO_BRANCO}}" alt="Quarks">
+  <aside class="notas"><p>Hoje: o que é um óxido, como cada tipo reage (com água, ácido e base) e como dar nome aos óxidos. Na próxima parte: os óxidos do dia a dia, a chuva ácida e o efeito estufa.</p></aside>
+</section>
+
+<!-- O que é um óxido -->
+<section class="slide" data-nome="O que é um óxido">
+  <div class="conteudo">
+    <p class="olho">Óxidos</p>
+    <h2 class="titulo">O que é um óxido?</h2>
+    <div class="caixa caixa-fundamental" style="position:absolute;left:0;right:0;top:146px;padding:18px 32px">
+      <span class="rotulo">Óxido</span>
+      <div class="texto" style="font-size:31px">Composto <b>binário</b> (dois elementos) em que o <b>oxigênio</b> é o elemento <b>mais eletronegativo</b>. Exemplos: H<sub>2</sub>O, CO<sub>2</sub>, Fe<sub>2</sub>O<sub>3</sub>, SO<sub>2</sub>, P<sub>2</sub>O<sub>5</sub>, CaO.</div>
+    </div>
+    <div style="position:absolute;left:0;right:0;top:316px;display:grid;grid-template-columns:1fr 1fr;gap:36px">
+      <div class="grupo" data-passo="1" style="height:280px">
+        <h3>Óxidos iônicos</h3>
+        <p><b>Metal + oxigênio</b>: Na<sub>2</sub>O, CaO, FeO, Fe<sub>2</sub>O<sub>3</sub></p>
+        <div style="display:flex;gap:26px;margin-top:8px"><div class="mol"><svg class="vibra" viewBox="0 0 170 130" style="width:130px;height:96px" aria-hidden="true"><use href="#m-cao"/></svg><span>CaO</span></div><p style="align-self:center;font-size:26px;color:var(--cinza)">cal virgem: sólido formado por íons Ca<sup>2+</sup> e O<sup>2−</sup></p></div>
+      </div>
+      <div class="grupo" data-passo="2" style="height:280px">
+        <h3>Óxidos moleculares</h3>
+        <p><b>Ametal + oxigênio</b>: CO, CO<sub>2</sub>, SO<sub>2</sub>, SO<sub>3</sub></p>
+        <div style="display:flex;gap:10px;margin-top:8px;justify-content:space-around"><div class="mol"><svg class="vibra" viewBox="0 0 170 130" style="width:130px;height:96px" aria-hidden="true"><use href="#m-co2"/></svg><span>CO<sub>2</sub></span></div><div class="mol"><svg class="vibra" viewBox="0 0 170 130" style="width:130px;height:96px" aria-hidden="true"><use href="#m-so2"/></svg><span>SO<sub>2</sub></span></div><div class="mol"><svg class="vibra" viewBox="0 0 170 130" style="width:130px;height:96px" aria-hidden="true"><use href="#m-h2o"/></svg><span>H<sub>2</sub>O</span></div></div>
+      </div>
+    </div>
+    <div class="caixa caixa-atencao" data-passo="3" style="position:absolute;left:580px;right:0;top:630px;padding:22px 32px">
+      <span class="rotulo">Não são óxidos</span>
+      <div class="texto" style="font-size:29px">H<sub>2</sub>SO<sub>4</sub> e CaCO<sub>3</sub>: têm <b>três</b> elementos. OF<sub>2</sub>: o <b>flúor</b> é mais eletronegativo que o oxigênio (é um fluoreto).</div>
+    </div>
+  </div>
+  <aside class="notas">
+    <p>Clique 1: óxidos iônicos (metal com oxigênio), sólidos formados por íons. Clique 2: óxidos moleculares (ametal com oxigênio), formados por moléculas. Clique 3: o que parece óxido e não é.</p>
+    <p>Pergunte antes do clique 3: o H₂SO₄ tem oxigênio; é óxido? Não: tem três elementos. Pela definição, a água também é um óxido (do hidrogênio).</p>
+    <p>Material da professora: óxidos iônicos (Na₂O, CaO, FeO, Fe₂O₃) e moleculares (CO, CO₂, SO₂, SO₃).</p>
+  </aside>
+</section>
+
+<!-- Óxidos ácidos -->
+<section class="slide" data-nome="Óxidos ácidos">
+  <div class="conteudo">
+    <p class="olho">Classificação dos óxidos</p>
+    <h2 class="titulo">Óxidos ácidos</h2>
+    <div class="reage" data-passo="1" style="position:absolute;left:0;top:170px;width:740px;height:200px">
+      <div class="r1" style="left:20px;--dx:200px"><svg class="vibra" viewBox="0 0 170 130" aria-hidden="true"><use href="#m-so3"/></svg><span>SO<sub>3</sub></span></div>
+      <span class="mais" style="left:232px">+</span>
+      <div class="r2" style="left:330px;--dx:110px"><svg class="vibra" viewBox="0 0 170 130" aria-hidden="true"><use href="#m-h2o"/></svg><span>H<sub>2</sub>O</span></div>
+      <div class="p" style="left:200px"><svg class="vibra" viewBox="0 0 170 130" aria-hidden="true" style="width:210px;height:160px"><use href="#m-h2so4"/></svg><span>H<sub>2</sub>SO<sub>4</sub></span></div>
+    </div>
+    <div class="eqs" style="position:absolute;left:820px;right:0;top:160px">
+      <p class="rot" data-passo="1">Com água: forma ácido</p>
+      <div class="eq" data-passo="1">SO<sub>3</sub><span class="est">(g)</span> <span class="s" style="margin:0 4px">+</span> H<sub>2</sub>O<span class="est">(l)</span> <span class="s">→</span> H<sub>2</sub>SO<sub>4</sub><span class="est">(aq)</span></div>
+      <div class="eq" data-passo="2">CO<sub>2</sub><span class="est">(g)</span> <span class="s" style="margin:0 4px">+</span> H<sub>2</sub>O<span class="est">(l)</span> <span class="s">→</span> H<sub>2</sub>CO<sub>3</sub><span class="est">(aq)</span></div>
+      <p class="rot" data-passo="3">Com base: forma sal e água</p>
+      <div class="eq" data-passo="3" style="font-size:32px">SO<sub>3</sub><span class="est">(g)</span> <span class="s" style="margin:0 4px">+</span> 2 NaOH<span class="est">(aq)</span> <span class="s">→</span> Na<sub>2</sub>SO<sub>4</sub><span class="est">(aq)</span> <span class="s" style="margin:0 4px">+</span> H<sub>2</sub>O<span class="est">(l)</span></div>
+    </div>
+    <div class="caixa caixa-fundamental" data-passo="4" style="position:absolute;left:0;width:740px;top:390px;padding:18px 28px">
+      <span class="rotulo">Óxidos ácidos ou anidridos</span>
+      <div class="texto" style="font-size:28px">Em geral, óxidos de <b>ametal</b> (moleculares). <b>Anidrido</b> quer dizer "sem água": é o ácido que perdeu a água.</div>
+    </div>
+    <div class="caixa caixa-atencao" data-passo="4" style="position:absolute;left:820px;right:0;top:470px;padding:20px 30px">
+      <div class="texto" style="font-size:28px">O CO<sub>2</sub> é óxido, <b>não</b> ácido: ele só forma ácido depois de reagir com a água.</div>
+    </div>
+  </div>
+  <aside class="notas">
+    <p>Clique 1: o SO₃ encontra a água e forma o ácido sulfúrico (a animação mostra os átomos se reorganizando). Clique 2: o gás carbônico com água forma ácido carbônico (é o gosto da água com gás). Clique 3: com base, o óxido ácido forma sal e água, como um ácido faria. Clique 4: a regra e a pegadinha.</p>
+    <p>Correção do material: na equação com NaOH havia um parêntese a mais em Na₂SO₄ (aq). Sobre o estado: o SO₃ puro é líquido a 25 °C (ferve a 45 °C); escrevemos (g) porque é assim que ele aparece misturado ao ar, como na chuva ácida.</p>
+    <p>Confira o balanceamento do clique 3: 2 Na, 1 S, 2 H e 5 O de cada lado.</p>
+  </aside>
+</section>
+
+<!-- Óxidos básicos -->
+<section class="slide" data-nome="Óxidos básicos">
+  <div class="conteudo">
+    <p class="olho">Classificação dos óxidos</p>
+    <h2 class="titulo">Óxidos básicos</h2>
+    <div class="reage" data-passo="1" style="position:absolute;left:0;top:170px;width:740px;height:200px">
+      <div class="r1" style="left:20px;--dx:200px"><svg class="vibra" viewBox="0 0 170 130" aria-hidden="true"><use href="#m-cao"/></svg><span>CaO</span></div>
+      <span class="mais" style="left:232px">+</span>
+      <div class="r2" style="left:330px;--dx:110px"><svg class="vibra" viewBox="0 0 170 130" aria-hidden="true"><use href="#m-h2o"/></svg><span>H<sub>2</sub>O</span></div>
+      <div class="p" style="left:200px"><svg class="vibra" viewBox="0 0 170 130" aria-hidden="true" style="width:210px;height:160px"><use href="#m-caoh2"/></svg><span>Ca(OH)<sub>2</sub></span></div>
+    </div>
+    <div class="eqs" style="position:absolute;left:820px;right:0;top:160px">
+      <p class="rot" data-passo="1">Com água: forma base</p>
+      <div class="eq" data-passo="1">CaO<span class="est">(s)</span> <span class="s" style="margin:0 4px">+</span> H<sub>2</sub>O<span class="est">(l)</span> <span class="s">→</span> Ca(OH)<sub>2</sub><span class="est">(s)</span></div>
+      <div class="eq" data-passo="2">Na<sub>2</sub>O<span class="est">(s)</span> <span class="s" style="margin:0 4px">+</span> H<sub>2</sub>O<span class="est">(l)</span> <span class="s">→</span> 2 NaOH<span class="est">(aq)</span></div>
+      <p class="rot" data-passo="3">Com ácido: forma sal e água</p>
+      <div class="eq" data-passo="3" style="font-size:32px">Na<sub>2</sub>O<span class="est">(s)</span> <span class="s" style="margin:0 4px">+</span> 2 HCl<span class="est">(aq)</span> <span class="s">→</span> 2 NaCl<span class="est">(aq)</span> <span class="s" style="margin:0 4px">+</span> H<sub>2</sub>O<span class="est">(l)</span></div>
+    </div>
+    <div class="caixa caixa-fundamental" data-passo="4" style="position:absolute;left:0;width:740px;top:390px;padding:18px 28px">
+      <span class="rotulo">Óxidos básicos</span>
+      <div class="texto" style="font-size:28px">Óxidos de <b>metais alcalinos</b> (grupo 1) e <b>alcalinoterrosos</b> (grupo 2), <b>iônicos</b>: Na<sub>2</sub>O, K<sub>2</sub>O, MgO, CaO, BaO.</div>
+    </div>
+    <div class="caixa caixa-atencao" data-passo="4" style="position:absolute;left:820px;right:0;top:470px;padding:20px 30px">
+      <div class="texto" style="font-size:28px">Na obra: <b>cal virgem</b> (CaO) + água = <b>cal hidratada</b> (Ca(OH)<sub>2</sub>), usada na argamassa.</div>
+    </div>
+  </div>
+  <aside class="notas">
+    <p>Clique 1: a cal virgem encontra a água e vira hidróxido de cálcio (cal hidratada). Clique 2: o óxido de sódio com água forma soda cáustica. Clique 3: com ácido, o óxido básico forma sal e água, como uma base faria. Clique 4: quem são os óxidos básicos.</p>
+    <p>Grafia atual: alcalinoterroso, sem hífen (o material escrevia alcalino-terroso).</p>
+    <p>Balanceamento do clique 3: 2 Na, 2 H, 2 Cl e 1 O de cada lado.</p>
+  </aside>
+</section>
+
+<!-- Anfóteros e neutros -->
+<section class="slide" data-nome="Anfóteros e neutros">
+  <div class="conteudo">
+    <p class="olho">Classificação dos óxidos</p>
+    <h2 class="titulo">Anfóteros e neutros</h2>
+    <div style="position:absolute;left:0;right:0;top:150px;display:grid;grid-template-columns:1.25fr 1fr;gap:36px">
+      <div class="grupo" data-passo="1" style="height:440px">
+        <h3>Óxidos anfóteros</h3>
+        <p>Reagem com <b>ácido forte</b> e com <b>base forte</b>. Ex.: ZnO, Al<sub>2</sub>O<sub>3</sub>.</p>
+        <div class="eqs" style="margin-top:22px;gap:14px">
+          <p class="rot">Com ácido</p>
+          <div class="eq" style="font-size:30px">ZnO<span class="est">(s)</span> <span class="s" style="margin:0 4px">+</span> H<sub>2</sub>SO<sub>4</sub><span class="est">(aq)</span> <span class="s">→</span> ZnSO<sub>4</sub><span class="est">(aq)</span> <span class="s" style="margin:0 4px">+</span> H<sub>2</sub>O<span class="est">(l)</span></div>
+          <p class="rot" data-passo="2">Com base</p>
+          <div class="eq" data-passo="2" style="font-size:28px">ZnO<span class="est">(s)</span> <span class="s" style="margin:0 4px">+</span> 2 NaOH<span class="est">(aq)</span> <span class="s" style="margin:0 4px">+</span> H<sub>2</sub>O<span class="est">(l)</span> <span class="s">→</span> Na<sub>2</sub>[Zn(OH)<sub>4</sub>]<span class="est">(aq)</span></div>
+          <p data-passo="2" style="font-size:24px;color:var(--cinza)">Na<sub>2</sub>[Zn(OH)<sub>4</sub>]: tetra-hidroxizincato de sódio, um sal.</p>
+        </div>
+      </div>
+      <div class="grupo" data-passo="3" style="height:440px">
+        <h3>Óxidos neutros</h3>
+        <p><b>Não reagem</b> com água, com ácido nem com base.</p>
+        <div style="display:flex;justify-content:space-around;margin-top:30px"><div class="mol"><svg class="vibra" viewBox="0 0 170 130" style="width:140px;height:106px" aria-hidden="true"><use href="#m-co"/></svg><span>CO</span></div><div class="mol"><svg class="vibra" viewBox="0 0 170 130" style="width:140px;height:106px" aria-hidden="true"><use href="#m-no"/></svg><span>NO</span></div><div class="mol"><svg class="vibra" viewBox="0 0 170 130" style="width:140px;height:106px" aria-hidden="true"><use href="#m-n2o"/></svg><span>N<sub>2</sub>O</span></div></div>
+      </div>
+    </div>
+    <div class="caixa caixa-atencao" data-passo="4" style="position:absolute;left:580px;right:0;top:640px;padding:22px 32px">
+      <div class="texto" style="font-size:29px"><b>Neutro</b> não quer dizer inofensivo: o CO é um óxido neutro e é <b>extremamente tóxico</b>.</div>
+    </div>
+  </div>
+  <aside class="notas">
+    <p>Clique 1: o óxido de zinco reage com o ácido sulfúrico (comporta-se como óxido básico). Clique 2: e também com a soda cáustica (comporta-se como óxido ácido): por isso é anfótero ("dos dois lados"). Clique 3: os neutros, que não reagem com água, ácido nem base. Clique 4: a pegadinha.</p>
+    <p>Confira o clique 2: 1 Zn, 2 Na, 4 O e 4 H de cada lado. O Al₂O₃ foi acrescentado como segundo exemplo de anfótero (está nos livros; não estava no material).</p>
+  </aside>
+</section>
+
+<!-- Peróxidos e superóxidos -->
+<section class="slide" data-nome="Peróxidos e superóxidos">
+  <div class="conteudo">
+    <p class="olho">Classificação dos óxidos</p>
+    <h2 class="titulo">Peróxidos e superóxidos</h2>
+    <div data-passo="3" style="position:absolute;left:0;top:150px;width:520px;height:440px">
+      <svg viewBox="0 0 520 440" style="width:520px;height:440px" aria-hidden="true">
+        <rect x="40" y="60" width="150" height="250" rx="26" fill="#EFEBFF" stroke="#8C7BEA" stroke-width="5"/>
+        <rect x="80" y="20" width="70" height="46" rx="10" fill="#8C7BEA"/>
+        <rect x="58" y="150" width="114" height="80" rx="12" fill="#fff" stroke="#C9C1F2" stroke-width="2"/>
+        <text x="115" y="198" text-anchor="middle" font-family="Figtree,sans-serif" font-weight="800" font-size="26" fill="#3F2FA0">H₂O₂</text>
+        <path d="M230 360 q140 -40 270 0 v60 h-270 z" fill="#F6C9B4" stroke="#C98B6E" stroke-width="3"/>
+        <path d="M300 352 q60 -14 120 0" fill="none" stroke="#C2384F" stroke-width="7" stroke-linecap="round"/>
+        <g class="espuma"><circle cx="318" cy="340" r="14"/><circle cx="342" cy="332" r="17"/><circle cx="370" cy="330" r="15"/><circle cx="396" cy="334" r="16"/><circle cx="356" cy="314" r="12"/><circle cx="384" cy="312" r="11"/></g>
+        <g class="bolhas" style="--sobe:-140px"><circle cx="330" cy="320" r="7" fill="#fff" stroke="#8C7BEA" stroke-width="2"/><circle cx="352" cy="318" r="5" fill="#fff" stroke="#8C7BEA" stroke-width="2"/><circle cx="372" cy="316" r="8" fill="#fff" stroke="#8C7BEA" stroke-width="2"/><circle cx="392" cy="320" r="6" fill="#fff" stroke="#8C7BEA" stroke-width="2"/><circle cx="410" cy="322" r="5" fill="#fff" stroke="#8C7BEA" stroke-width="2"/><circle cx="342" cy="322" r="6" fill="#fff" stroke="#8C7BEA" stroke-width="2"/></g>
+        <text x="460" y="250" text-anchor="middle" font-family="Figtree,sans-serif" font-weight="800" font-size="30" fill="#3F2FA0">O₂</text>
+      </svg>
+    </div>
+    <div style="position:absolute;left:580px;right:0;top:150px;display:flex;flex-direction:column;gap:18px">
+      <div class="caixa caixa-fundamental" data-passo="1" style="padding:20px 30px">
+        <span class="rotulo">Peróxidos: oxigênio com Nox −1</span>
+        <div class="texto" style="font-size:30px">Têm o grupo O<sub>2</sub><sup>2−</sup> (dois oxigênios ligados). Ex.: H<sub>2</sub>O<sub>2</sub>, Na<sub>2</sub>O<sub>2</sub>, K<sub>2</sub>O<sub>2</sub>, Li<sub>2</sub>O<sub>2</sub>.</div>
+      </div>
+      <div class="linha-ex" data-passo="1" style="grid-template-columns:200px 1fr"><span class="f">H<sub>2</sub>O<sub>2</sub></span><span>2·(+1) + 2·x = 0 → <b>x = −1</b></span></div>
+      <div class="caixa" data-passo="2" style="padding:20px 30px">
+        <span class="rotulo">Superóxidos: oxigênio com Nox −½</span>
+        <div class="texto" style="font-size:30px">Têm o grupo O<sub>2</sub><sup>−</sup>. Ex.: KO<sub>2</sub>: +1 + 2·x = 0 → <b>x = −½</b>.</div>
+      </div>
+      <div class="caixa caixa-atencao" data-passo="3" style="padding:20px 30px">
+        <div class="texto" style="font-size:29px">A <b>água oxigenada</b> é o H<sub>2</sub>O<sub>2</sub>, <b>peróxido de hidrogênio</b>. No machucado ela espuma: <span style="white-space:nowrap">2 H<sub>2</sub>O<sub>2</sub><span class="est">(aq)</span> → 2 H<sub>2</sub>O<span class="est">(l)</span> + O<sub>2</sub><span class="est">(g)</span></span>.</div>
+      </div>
+    </div>
+  </div>
+  <aside class="notas">
+    <p>No óxido comum, o oxigênio tem Nox −2. Clique 1: no peróxido ele tem Nox −1 (conta no H₂O₂). Clique 2: no superóxido, −½. Clique 3: a água oxigenada no machucado: as bolhas são de gás oxigênio, liberado quando ela se decompõe.</p>
+    <p>O material escreve os superóxidos como Li₂O₄, Cs₂O₄ e BaO₄ (fórmulas dobradas). A forma usual é KO₂, CsO₂ e Ba(O₂)₂; aqui usamos o KO₂, o mais conhecido (usado para regenerar o ar em submarinos e naves).</p>
+    <p>A espuma da água oxigenada no machucado vem de uma enzima do sangue (catalase), que acelera a decomposição.</p>
+  </aside>
+</section>
+
+<!-- Resumindo os tipos -->
+<section class="slide" data-nome="Resumindo os tipos">
+  <div class="conteudo">
+    <p class="olho">Classificação dos óxidos</p>
+    <h2 class="titulo">Resumindo os tipos</h2>
+    <table class="tabela chem" style="position:absolute;left:0;right:0;top:150px;font-size:27px;width:1760px">
+      <tr><th style="text-align:left">Óxido</th><th style="text-align:left">Formado por</th><th>Ligação</th><th style="text-align:left">Exemplos</th><th style="text-align:left">Comportamento</th></tr>
+      <tr data-passo="1"><td style="text-align:left"><b>Ácido</b></td><td style="text-align:left">ametal + oxigênio</td><td>molecular</td><td style="text-align:left">CO<sub>2</sub>, SO<sub>2</sub>, SO<sub>3</sub>, N<sub>2</sub>O<sub>5</sub></td><td style="text-align:left">reage com água → ácido</td></tr>
+      <tr data-passo="2"><td style="text-align:left"><b>Básico</b></td><td style="text-align:left">metal alcalino ou alcalinoterroso + O</td><td>iônico</td><td style="text-align:left">Na<sub>2</sub>O, K<sub>2</sub>O, MgO, CaO, BaO</td><td style="text-align:left">reage com água → base</td></tr>
+      <tr data-passo="3"><td style="text-align:left"><b>Anfótero</b></td><td style="text-align:left">zinco, alumínio + O</td><td>—</td><td style="text-align:left">ZnO, Al<sub>2</sub>O<sub>3</sub></td><td style="text-align:left">reage com ácido e com base</td></tr>
+      <tr data-passo="4"><td style="text-align:left"><b>Neutro</b></td><td style="text-align:left">ametal + oxigênio</td><td>molecular</td><td style="text-align:left">CO, NO, N<sub>2</sub>O</td><td style="text-align:left">não reage</td></tr>
+      <tr data-passo="5"><td style="text-align:left"><b>Peróxido</b></td><td style="text-align:left">oxigênio com Nox −1</td><td>—</td><td style="text-align:left">H<sub>2</sub>O<sub>2</sub>, Na<sub>2</sub>O<sub>2</sub></td><td style="text-align:left">grupo O<sub>2</sub><sup>2−</sup></td></tr>
+    </table>
+    <div class="caixa caixa-fundamental" data-passo="6" style="position:absolute;left:580px;right:0;top:620px;padding:22px 32px">
+      <div class="texto" style="font-size:29px">Para classificar: olhe o <b>outro elemento</b> (metal ou ametal) e, se for preciso, o <b>Nox do oxigênio</b>.</div>
+    </div>
+  </div>
+  <aside class="notas">
+    <p>Tabela-resumo do material da professora, com as linhas de anfóteros e peróxidos acrescentadas. Um clique por linha; peça um exemplo antes de mostrar.</p>
+    <p>Iônico ou molecular dos anfóteros e peróxidos ficou com traço porque varia (o H₂O₂ é molecular; o Na₂O₂ é iônico).</p>
+  </aside>
+</section>
+
+<!-- Exemplo: classificando -->
+<section class="slide" data-nome="Exemplo: classificando">
+  <div class="conteudo">
+    <p class="olho">Exemplo</p>
+    <h2 class="titulo">Que tipo de óxido é?</h2>
+    <p class="texto" style="position:absolute;left:0;right:0;top:146px;margin:0;font-size:31px">Classifique cada óxido: SO<sub>2</sub>, K<sub>2</sub>O, CO, ZnO e Na<sub>2</sub>O<sub>2</sub>.</p>
+    <div style="position:absolute;left:0;right:0;top:204px;display:flex;flex-direction:column;gap:10px">
+      <div class="linha-ex" data-passo="1" style="grid-template-columns:190px 1fr 210px;padding:5px 26px"><span class="f" style="font-size:36px">SO<sub>2</sub></span><span>ametal + O; com água forma ácido</span><span class="tag ac">ácido</span></div>
+      <div class="linha-ex" data-passo="2" style="grid-template-columns:190px 1fr 210px;padding:5px 26px"><span class="f" style="font-size:36px">K<sub>2</sub>O</span><span>metal alcalino + O; com água forma base</span><span class="tag ba">básico</span></div>
+      <div class="linha-ex" data-passo="3" style="grid-template-columns:190px 1fr 210px;padding:5px 26px"><span class="f" style="font-size:36px">CO</span><span>não reage com água, ácido nem base</span><span class="tag ne">neutro</span></div>
+      <div class="linha-ex" data-passo="4" style="grid-template-columns:190px 1fr 210px;padding:5px 26px"><span class="f" style="font-size:36px">ZnO</span><span>reage com ácido e com base</span><span class="tag an">anfótero</span></div>
+      <div class="linha-ex" data-passo="5" style="grid-template-columns:190px 1fr 210px;padding:5px 26px"><span class="f" style="font-size:36px">Na<sub>2</sub>O<sub>2</sub></span><span>Na é +1: 2·(+1) + 2x = 0 → x = −1</span><span class="tag pe">peróxido</span></div>
+    </div>
+    <div class="caixa caixa-atencao" data-passo="5" style="position:absolute;left:580px;right:0;top:680px;padding:18px 30px">
+      <div class="texto" style="font-size:28px">No Na<sub>2</sub>O<sub>2</sub> o oxigênio não tem Nox −2: confira sempre a conta.</div>
+    </div>
+  </div>
+  <aside class="notas">
+    <p>Peça a resposta antes de cada clique. Um clique por óxido.</p>
+    <p>SO₂ + H₂O → H₂SO₃ (ácido sulfuroso); K₂O + H₂O → 2 KOH.</p>
+  </aside>
+</section>
+
+<!-- Nomes: óxidos de metal -->
+<section class="slide" data-nome="Nomes: óxidos de metal">
+  <div class="conteudo">
+    <p class="olho">Nomenclatura dos óxidos</p>
+    <h2 class="titulo">Dando nome aos óxidos de metal</h2>
+    <div class="grupo" data-passo="1" style="position:absolute;left:0;top:150px;width:700px;height:430px">
+      <h3>Metal com Nox fixo</h3>
+      <p style="font:800 32px var(--fonte-titulo);color:var(--d-forte);margin:6px 0 18px">óxido de + nome do metal</p>
+      <div style="display:flex;flex-direction:column;gap:12px;font-size:31px">
+        <span><b style="font:800 38px var(--fonte-titulo)">Na<sub>2</sub>O</b> óxido de sódio</span>
+        <span><b style="font:800 38px var(--fonte-titulo)">CaO</b> óxido de cálcio</span>
+        <span><b style="font:800 38px var(--fonte-titulo)">Al<sub>2</sub>O<sub>3</sub></b> óxido de alumínio</span>
+      </div>
+    </div>
+    <div class="grupo" data-passo="2" style="position:absolute;left:760px;right:0;top:150px;height:430px">
+      <h3>Metal com Nox variável</h3>
+      <p style="font:800 30px var(--fonte-titulo);color:var(--d-forte);margin:6px 0 14px">óxido + metal + <span style="color:#A8321F">ico</span> (maior Nox) ou <span style="color:#1F5FA8">oso</span> (menor)</p>
+      <table class="tabela chem" style="font-size:27px;width:100%">
+        <tr><th>Fórmula</th><th>Nox</th><th style="text-align:left">ico / oso</th><th style="text-align:left">com algarismo romano</th></tr>
+        <tr data-passo="3"><td><b>Fe<sub>2</sub>O<sub>3</sub></b></td><td>+3</td><td style="text-align:left">óxido férrico</td><td style="text-align:left">óxido de ferro (III)</td></tr>
+        <tr data-passo="3"><td><b>FeO</b></td><td>+2</td><td style="text-align:left">óxido ferroso</td><td style="text-align:left">óxido de ferro (II)</td></tr>
+        <tr data-passo="4"><td><b>CuO</b></td><td>+2</td><td style="text-align:left">óxido cúprico</td><td style="text-align:left">óxido de cobre (II)</td></tr>
+        <tr data-passo="4"><td><b>Cu<sub>2</sub>O</b></td><td>+1</td><td style="text-align:left">óxido cuproso</td><td style="text-align:left">óxido de cobre (I)</td></tr>
+      </table>
+    </div>
+    <div class="caixa caixa-fundamental" data-passo="5" style="position:absolute;left:580px;right:0;top:640px;padding:20px 30px">
+      <span class="rotulo">Achando o Nox do metal</span>
+      <div class="texto" style="font-size:29px">A soma dos Nox é <b>zero</b> e o oxigênio vale <b>−2</b>. Nox variáveis comuns: Fe (+2, +3), Cu (+1, +2), Sn e Pb (+2, +4).</div>
+    </div>
+  </div>
+  <aside class="notas">
+    <p>Clique 1: metal de Nox fixo (grupos 1 e 2, alumínio, zinco, prata): óxido de + nome. Clique 2: metal de Nox variável: terminação ico para o maior Nox e oso para o menor, ou o Nox em algarismo romano. Cliques 3 e 4: ferro e cobre. Clique 5: como achar o Nox.</p>
+    <p>Os Nox dos metais são os da tabela da aula anterior (bases): Fe +2/+3, Cu +1/+2, Sn e Pb +2/+4.</p>
+  </aside>
+</section>
+
+<!-- Nomes: óxidos moleculares -->
+<section class="slide" data-nome="Nomes: óxidos moleculares">
+  <div class="conteudo">
+    <p class="olho">Nomenclatura dos óxidos</p>
+    <h2 class="titulo">Dando nome aos óxidos moleculares</h2>
+    <div class="caixa caixa-fundamental" data-passo="1" style="position:absolute;left:0;width:700px;top:150px;padding:22px 30px">
+      <span class="rotulo">Óxidos moleculares (de ametal)</span>
+      <div class="texto" style="font-size:31px"><b>prefixo</b> + óxido de + <b>prefixo</b> + nome do elemento</div>
+      <p style="margin:16px 0 0;font-size:30px;line-height:1.5">mono (1) · di (2) · tri (3) · tetra (4) · pent(a) (5) · hex(a) (6) · hept(a) (7)</p>
+    </div>
+    <div class="caixa caixa-atencao" data-passo="4" style="position:absolute;left:0;width:700px;top:445px;padding:18px 30px">
+      <div class="texto" style="font-size:28px">O <b>mono</b> antes do nome do elemento costuma ser omitido: NO<sub>2</sub> é dióxido de nitrogênio (ou de mononitrogênio).</div>
+    </div>
+    <table class="tabela chem" style="position:absolute;left:780px;right:0;top:150px;font-size:31px">
+      <tr><th>Fórmula</th><th style="text-align:left">Nome</th></tr>
+        <tr data-passo="2"><td><b>CO</b></td><td style="text-align:left">monóxido de carbono</td></tr>
+        <tr data-passo="2"><td><b>CO<sub>2</sub></b></td><td style="text-align:left">dióxido de carbono</td></tr>
+        <tr data-passo="3"><td><b>SO<sub>3</sub></b></td><td style="text-align:left">trióxido de enxofre</td></tr>
+        <tr data-passo="3"><td><b>N<sub>2</sub>O</b></td><td style="text-align:left">monóxido de dinitrogênio</td></tr>
+        <tr data-passo="4"><td><b>NO<sub>2</sub></b></td><td style="text-align:left">dióxido de nitrogênio</td></tr>
+        <tr data-passo="4"><td><b>N<sub>2</sub>O<sub>5</sub></b></td><td style="text-align:left">pentóxido de dinitrogênio</td></tr>
+    </table>
+  </div>
+  <aside class="notas">
+    <p>Clique 1: a regra dos prefixos (contam os átomos). Cliques 2 e 3: os carbonos e o enxofre. O N₂O e o NO₂ entram com o clique 3. Clique 4: o mono do elemento.</p>
+    <p>Exemplos do material da professora. Ela escreve monóxido de mononitrogênio (NO) e dióxido de mononitrogênio (NO₂): está certo, só é a forma mais longa.</p>
+    <p>O N₂O é o gás hilariante (anestésico) e também um gás de efeito estufa.</p>
+  </aside>
+</section>
+
+<!-- Nomes: anidridos -->
+<section class="slide" data-nome="Nomes: anidridos">
+  <div class="conteudo">
+    <p class="olho">Nomenclatura dos óxidos</p>
+    <h2 class="titulo">Óxidos ácidos: os anidridos</h2>
+    <p class="texto" style="position:absolute;left:0;right:0;top:146px;margin:0;font-size:32px">Nos óxidos ácidos: <b>anidrido</b> + nome do elemento + <b style="color:#A8321F">ico</b> (maior Nox) ou <b style="color:#1F5FA8">oso</b> (menor Nox).</p>
+    <table class="tabela chem" style="position:absolute;left:0;right:0;top:220px;font-size:29px">
+      <tr><th>Óxido</th><th>Nox</th><th style="text-align:left">Nome</th><th style="text-align:left">Ácido que forma</th></tr>
+      <tr data-passo="1"><td><b>SO<sub>3</sub></b></td><td>+6</td><td style="text-align:left">anidrido sulfúrico</td><td style="text-align:left">+ água → H<sub>2</sub>SO<sub>4</sub>, ácido sulfúrico</td></tr>
+      <tr data-passo="1"><td><b>SO<sub>2</sub></b></td><td>+4</td><td style="text-align:left">anidrido sulfuroso</td><td style="text-align:left">+ água → H<sub>2</sub>SO<sub>3</sub>, ácido sulfuroso</td></tr>
+      <tr data-passo="2"><td><b>N<sub>2</sub>O<sub>5</sub></b></td><td>+5</td><td style="text-align:left">anidrido nítrico</td><td style="text-align:left">+ água → HNO<sub>3</sub>, ácido nítrico</td></tr>
+      <tr data-passo="2"><td><b>N<sub>2</sub>O<sub>3</sub></b></td><td>+3</td><td style="text-align:left">anidrido nitroso</td><td style="text-align:left">+ água → HNO<sub>2</sub>, ácido nitroso</td></tr>
+      <tr data-passo="3"><td><b>CO<sub>2</sub></b></td><td>+4</td><td style="text-align:left">anidrido carbônico</td><td style="text-align:left">+ água → H<sub>2</sub>CO<sub>3</sub>, ácido carbônico</td></tr>
+    </table>
+    <div class="caixa caixa-fundamental" data-passo="4" style="position:absolute;left:580px;right:0;top:660px;padding:20px 30px">
+      <div class="texto" style="font-size:29px">O anidrido tem o <b>mesmo nome do ácido</b> que ele forma com a água.</div>
+    </div>
+  </div>
+  <aside class="notas">
+    <p>Clique 1: os óxidos do enxofre (SO₃, Nox +6, maior: ico; SO₂, Nox +4, menor: oso). Clique 2: os do nitrogênio. Clique 3: o gás carbônico. Clique 4: o truque para lembrar.</p>
+    <p>Contas de Nox: SO₃: x − 6 = 0, x = +6. SO₂: x − 4 = 0, x = +4. N₂O₅: 2x − 10 = 0, x = +5. N₂O₃: 2x − 6 = 0, x = +3. CO₂: x − 4 = 0, x = +4 (o carbono só forma o anidrido carbônico).</p>
+    <p>SO₂ + H₂O → H₂SO₃; N₂O₅ + H₂O → 2 HNO₃; N₂O₃ + H₂O → 2 HNO₂.</p>
+  </aside>
+</section>
+
+<!-- Exemplo: nomeando -->
+<section class="slide" data-nome="Exemplo: nomeando">
+  <div class="conteudo">
+    <p class="olho">Exemplo</p>
+    <h2 class="titulo">Qual é o nome?</h2>
+    <p class="texto" style="position:absolute;left:0;right:0;top:146px;margin:0;font-size:31px">Dê o nome de Fe<sub>2</sub>O<sub>3</sub> (a ferrugem), Cu<sub>2</sub>O e N<sub>2</sub>O<sub>5</sub>. Primeiro o Nox, depois o nome.</p>
+    <div style="position:absolute;left:0;right:0;top:220px;display:flex;flex-direction:column;gap:16px">
+      <div class="linha-ex" data-passo="1" style="grid-template-columns:150px 470px 1fr;padding:14px 26px"><span class="f" style="font-size:38px">Fe<sub>2</sub>O<sub>3</sub></span><span>2x + 3·(−2) = 0 → x = +3 (maior)</span><span data-passo="2">óxido <b>férrico</b> ou de ferro (III)</span></div>
+      <div class="linha-ex" data-passo="3" style="grid-template-columns:150px 470px 1fr;padding:14px 26px"><span class="f" style="font-size:38px">Cu<sub>2</sub>O</span><span>2x + (−2) = 0 → x = +1 (menor)</span><span data-passo="4">óxido <b>cuproso</b> ou de cobre (I)</span></div>
+      <div class="linha-ex" data-passo="5" style="grid-template-columns:150px 470px 1fr;padding:14px 26px"><span class="f" style="font-size:38px">N<sub>2</sub>O<sub>5</sub></span><span>2x − 10 = 0 → x = +5 (maior)</span><span data-passo="6"><b>pentóxido de dinitrogênio</b> ou <b>anidrido nítrico</b></span></div>
+    </div>
+    <div class="caixa caixa-atencao" data-passo="6" style="position:absolute;left:580px;right:0;top:560px;padding:18px 30px">
+      <div class="texto" style="font-size:28px">O nome com algarismo romano (ferro (III), cobre (I)) vale para qualquer metal de Nox variável; o ico/oso só serve quando há dois Nox.</div>
+    </div>
+  </div>
+  <aside class="notas">
+    <p>Seis cliques: em cada óxido, primeiro a conta do Nox (oxigênio −2, soma zero), depois o nome. Peça o nome antes de mostrar.</p>
+    <p>O N₂O₅ tem dois nomes certos: pentóxido de dinitrogênio (prefixos) e anidrido nítrico (forma o HNO₃ com a água).</p>
+  </aside>
+</section>
+
+<!-- Questão 1 -->
+<section class="slide questao" data-nome="Questão 1">
+  <div class="conteudo">
+    <div class="area-resolucao"></div>
+    <span class="pilula pilula-pausa" data-em="1:some">Pause o vídeo e tente</span>
+    <div class="painel-questao">
+      <p class="olho">Questão 1 · IF Sudeste MG 2014</p>
+      <p class="enunciado" style="font-size:20px">A chuva ácida é um dos grandes problemas ambientais da atualidade. Esse fenômeno é muito comum nos centros urbanos e industrializados, onde ocorre a poluição atmosférica decorrente da liberação de monóxido de nitrogênio <b>(NO)</b> e dióxido de enxofre <b>(SO<sub>2</sub>)</b>, oriundos de veículos automotores, indústrias etc. O monóxido de nitrogênio e o dióxido de enxofre reagem com as partículas de água presentes nas nuvens, sendo que o resultado desse processo é a formação do ácido nítrico <b>(HNO<sub>3</sub>)</b> e do ácido sulfúrico <b>(H<sub>2</sub>SO<sub>4</sub>)</b>. Ao se precipitarem em forma de chuva, neve ou neblina, ocorre o fenômeno conhecido como chuva ácida.</p>
+      <p class="enunciado" style="font-size:20px">As substâncias químicas supracitadas podem ser classificadas, respectivamente, como:</p>
+      <ol class="alternativas" style="gap:8px">
+        <li data-em="2:apaga" style="font-size:20px;padding:6px 14px"><b>A</b><span>peróxido, óxido básico, hidrácido e diácido.</span></li>
+        <li data-em="2:certo" style="font-size:20px;padding:6px 14px"><b>B</b><span>óxido neutro, óxido ácido, monoácido e diácido.</span></li>
+        <li data-em="2:apaga" style="font-size:20px;padding:6px 14px"><b>C</b><span>óxido anfótero, óxido neutro, diácido e monoácido.</span></li>
+        <li data-em="2:apaga" style="font-size:20px;padding:6px 14px"><b>D</b><span>óxido ácido, peróxido, hidrácido e diácido.</span></li>
+        <li data-em="2:apaga" style="font-size:20px;padding:6px 14px"><b>E</b><span>óxido básico, óxido anfótero, monoácido e diácido.</span></li>
+      </ol>
+    </div>
+  </div>
+  <aside class="resolucao">
+    <p class="dados"><b>Dados:</b> NO, SO<sub>2</sub>, HNO<sub>3</sub>, H<sub>2</sub>SO<sub>4</sub>, nessa ordem.</p>
+    <ol class="passos">
+      <li><b>NO:</b> não reage com água, ácido nem base: neutro.</li>
+      <li><b>SO<sub>2</sub>:</b> ametal + O; com água dá ácido: óxido ácido.</li>
+      <li><b>HNO<sub>3</sub>:</b> 1 H ionizável: monoácido.</li>
+      <li><b>H<sub>2</sub>SO<sub>4</sub>:</b> 2 H ionizáveis: diácido.</li>
+    </ol>
+    <p class="resposta"><b>Resposta:</b> óxido neutro, óxido ácido, monoácido e diácido. <b>Gabarito B.</b></p>
+    <p class="atencao"><b>Destaque no quadro:</b> Óxidos neutros: CO, NO e N<sub>2</sub>O.</p>
+    <ul class="erros">
+      <li><b>A</b> NO não é peróxido (o O tem Nox −2); SO<sub>2</sub> é ácido, não básico; HNO<sub>3</sub> tem O: não é hidrácido.</li>
+      <li><b>C</b> NO é neutro, não anfótero; SO<sub>2</sub> é ácido; e mono/diácido estão trocados.</li>
+      <li><b>D</b> NO é neutro, não ácido; SO<sub>2</sub> não é peróxido; HNO<sub>3</sub> não é hidrácido.</li>
+      <li><b>E</b> Óxido básico é de metal; o NO é de ametal (neutro); SO<sub>2</sub> é ácido, não anfótero.</li>
+    </ul>
+  </aside>
+  <aside class="notas">
+    <p>Clique 1 tira o aviso de pausa: resolva na área (D liga a caneta; E esconde o enunciado). Clique 2: gabarito B.</p>
+    <p>Questão oficial do IF Sudeste MG (2014, prova extra). A parte dos ácidos (monoácido, diácido) é revisão da aula de ácidos.</p>
+  </aside>
+</section>
+
+<!-- Questão 2 -->
+<section class="slide questao" data-nome="Questão 2">
+  <div class="conteudo">
+    <div class="area-resolucao"></div>
+    <span class="pilula pilula-pausa" data-em="1:some">Pause o vídeo e tente</span>
+    <div class="painel-questao">
+      <p class="olho">Questão 2 · IF Sudeste MG 2017</p>
+      <p class="enunciado" style="font-size:23px">A quantidade de gás carbônico (CO<sub>2</sub>) na nossa atmosfera tem aumentado constantemente, devido ao uso intensivo de combustíveis derivados do petróleo, do carvão, do gás natural. Ele é removido da atmosfera nos processos de fotossíntese, principalmente pelas algas e pela vegetação que compõe as floretas. Com a devastação das floretas, a quantidade desse gás removido da atmosfera diminui.</p>
+<p class="fonte" style="margin:0">USBERCO, J.; SALVADOR, E. <i>Química:</i> química geral. 12ª ed., v. 1. São Paulo: Saraiva, 2016. p. 319.</p>
+      <p class="enunciado" style="font-size:23px">A substância citada no texto pertence à função inorgânica:</p>
+      <ol class="alternativas curtas">
+        <li data-em="2:apaga"><b>A</b><span>ácido.</span></li>
+        <li data-em="2:apaga"><b>B</b><span>base.</span></li>
+        <li data-em="2:apaga"><b>C</b><span>hidreto.</span></li>
+        <li data-em="2:certo"><b>D</b><span>óxido.</span></li>
+        <li data-em="2:apaga"><b>E</b><span>sal.</span></li>
+      </ol>
+    </div>
+  </div>
+  <aside class="resolucao">
+    <p class="dados"><b>Dados:</b> CO<sub>2</sub>: carbono e oxigênio.</p>
+    <ol class="passos">
+      <li><b>Elementos:</b> só dois, C e O.</li>
+      <li><b>O</b> é o mais eletronegativo: <b>óxido</b>.</li>
+      <li><b>Tipo:</b> óxido ácido (CO<sub>2</sub> + H<sub>2</sub>O → H<sub>2</sub>CO<sub>3</sub>).</li>
+    </ol>
+    <p class="resposta"><b>Resposta:</b> óxido. <b>Gabarito D.</b></p>
+    <p class="atencao"><b>Destaque no quadro:</b> O CO<sub>2</sub> forma ácido com a água, mas ele mesmo é óxido.</p>
+    <ul class="erros">
+      <li><b>A</b> Ácido de Arrhenius tem H e libera H<sup>+</sup> em água; o CO<sub>2</sub> não tem H.</li>
+      <li><b>B</b> Base libera OH<sup>−</sup>; o CO<sub>2</sub> não tem OH.</li>
+      <li><b>C</b> Hidreto é composto de hidrogênio com outro elemento (NaH); não há H no CO<sub>2</sub>.</li>
+      <li><b>E</b> Sal tem cátion diferente de H<sup>+</sup> e ânion diferente de OH<sup>−</sup>; o CO<sub>2</sub> é molécula de dois elementos.</li>
+    </ul>
+  </aside>
+  <aside class="notas">
+    <p>Clique 1 tira o aviso de pausa: resolva na área (D liga a caneta; E esconde o enunciado). Clique 2: gabarito D.</p>
+    <p>Questão oficial do IF Sudeste MG (2017, 2º semestre). "Floretas" está assim na prova (é florestas).</p>
+  </aside>
+</section>
+
+<!-- Resumo -->
+<section class="slide" data-nome="Resumo">
+  <div class="conteudo">
+    <p class="olho">Resumo</p>
+    <h2 class="titulo">O essencial</h2>
+    <div class="resumo" style="position:absolute;left:0;right:0;top:150px">
+      <div><b>Óxido:</b> dois elementos, e o <b>oxigênio</b> é o mais eletronegativo.</div>
+      <div><b>Ácido</b> (ametal): + água → ácido; + base → sal + água.</div>
+      <div><b>Básico</b> (metal dos grupos 1 e 2): + água → base; + ácido → sal + água.</div>
+      <div><b>Anfótero</b> (ZnO, Al<sub>2</sub>O<sub>3</sub>): reage com ácido e com base. <b>Neutro</b> (CO, NO, N<sub>2</sub>O): não reage.</div>
+      <div><b>Peróxido:</b> O com Nox −1 (H<sub>2</sub>O<sub>2</sub>). <b>Superóxido:</b> −½ (KO<sub>2</sub>).</div>
+      <div><b>Nomes:</b> óxido de ferro (III) ou férrico; dióxido de carbono; anidrido sulfúrico.</div>
+    </div>
+    <div class="caixa caixa-atencao" style="position:absolute;left:580px;right:0;top:660px">
+      <div class="texto" style="font-size:30px">Óxido ácido <b>não é ácido</b>: o CO<sub>2</sub> só forma ácido depois de reagir com a água.</div>
+    </div>
+  </div>
+  <aside class="notas"><p>Peça para tirarem um print desta tela.</p></aside>
+</section>
+
+<!-- A seguir -->
+<section class="slide capa" data-nome="A seguir">
+  <div class="estrelas"></div>
+  <div class="texto-capa" style="top:170px">
+    <span class="selo">Química · IF</span>
+    <p class="aula" style="font-size:26px">A seguir · Óxidos · Parte 2 de 2</p>
+    <h1 style="font-size:110px">Óxidos no cotidiano e no ambiente</h1>
+    <p class="sub">Principais óxidos, chuva ácida e efeito estufa</p>
+  </div>
+  <svg class="emblema" viewBox="0 0 640 640" aria-hidden="true">
+    <g fill="#fff" fill-opacity=".9"><circle cx="250" cy="230" r="80"/><circle cx="350" cy="190" r="100"/><circle cx="440" cy="240" r="74"/><rect x="190" y="230" width="320" height="80" rx="40"/></g>
+    <g fill="#FFD10C"><path d="M250 360 q16 24 16 36 a16 16 0 0 1 -32 0 q0 -12 16 -36 z"/><path d="M340 400 q16 24 16 36 a16 16 0 0 1 -32 0 q0 -12 16 -36 z"/><path d="M430 360 q16 24 16 36 a16 16 0 0 1 -32 0 q0 -12 16 -36 z"/><path d="M300 480 q16 24 16 36 a16 16 0 0 1 -32 0 q0 -12 16 -36 z"/><path d="M390 500 q16 24 16 36 a16 16 0 0 1 -32 0 q0 -12 16 -36 z"/></g>
+  </svg>
+  <img class="logo-capa" src="{{LOGO_BRANCO}}" alt="Quarks">
+  <aside class="notas"><p>Próxima: gás carbônico, monóxido de carbono, cal e os óxidos que poluem o ar: chuva ácida e efeito estufa.</p></aside>
+</section>

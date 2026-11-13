@@ -1,0 +1,304 @@
+<!--aula
+{"disciplina": "matematica", "curso": "IF", "assunto": "Números e operações", "parte": "Questões do IF Sudeste · Parte 1 de 2", "titulo": "Questões do IF Sudeste · Parte 1 de 2"}
+-->
+<!-- Fonte: bloco 1 de "Questões do IF Sudeste" de Números e operações em planejamento/questoes-if.md e no campo "questoes" do cronograma (if/matematica, capítulo 1):
+     Conjuntos: 2019-1 q17 (MAT-0438) e 2016-1-extra q19 (MAT-0406); Conjuntos numéricos: 2025-1 q19 (MAT-0540) e 2024-1 q20 (MAT-0304);
+     Múltiplos e divisores: 2019-2 q16 (MAT-0515) e 2017-1 q18 (MAT-0336). Questões de apostilas/questoes/oficiais/if no cérebro. Nenhuma delas pode aparecer nas partes do capítulo. -->
+<style>
+  .caixa { box-sizing: border-box; }
+  .painel-questao .olho { font-size: 22px; }
+  .painel-questao .enunciado.menor { font-size: 23px; }
+  .painel-questao .enunciado.medio { font-size: 25px; }
+</style>
+
+<!-- Capa -->
+<section class="slide capa" data-nome="Capa">
+  <div class="estrelas"></div>
+  <div class="texto-capa" style="top:170px">
+    <span class="selo">Matemática · IF</span>
+    <p class="aula">Números e operações · Parte 1 de 2</p>
+    <h1 style="font-size:130px">Questões do IF Sudeste</h1>
+    <p class="sub">Conjuntos, conjuntos numéricos, múltiplos e divisores</p>
+  </div>
+  <svg class="emblema" viewBox="0 0 640 640" aria-hidden="true">
+    <rect x="150" y="110" width="340" height="430" rx="34" fill="#fff" fill-opacity=".12" stroke="#fff" stroke-opacity=".6" stroke-width="4"/>
+    <g fill="#fff" fill-opacity=".7"><rect x="200" y="170" width="240" height="18" rx="9"/><rect x="200" y="210" width="200" height="18" rx="9"/><rect x="200" y="250" width="220" height="18" rx="9"/></g>
+    <g fill="none" stroke="#fff" stroke-opacity=".75" stroke-width="4"><circle cx="216" cy="330" r="16"/><circle cx="216" cy="390" r="16"/><circle cx="216" cy="450" r="16"/></g>
+    <circle cx="216" cy="390" r="16" fill="#FFD10C"/>
+    <g fill="#fff" fill-opacity=".55"><rect x="250" y="321" width="150" height="16" rx="8"/><rect x="250" y="381" width="170" height="16" rx="8"/><rect x="250" y="441" width="130" height="16" rx="8"/></g>
+    <circle cx="470" cy="130" r="54" fill="#FFD10C"/>
+    <path d="M446 132 L464 150 L496 112" fill="none" stroke="#292B2C" stroke-width="10" stroke-linecap="round" stroke-linejoin="round"/>
+  </svg>
+  <img class="logo-capa" src="{{LOGO_BRANCO}}" alt="Quarks">
+  <aside class="notas"><p>Fechamento de Números e operações, primeiro bloco: só questões que caíram no IF Sudeste MG, duas de cada subcapítulo (Conjuntos, Conjuntos numéricos, Múltiplos e divisores). Em cada uma, pause, tente e depois confira a resolução.</p></aside>
+</section>
+
+<!-- IF 2019-1 q17 · operações com conjuntos -->
+<section class="slide questao" data-nome="IF 2019 · operações com conjuntos">
+  <div class="conteudo">
+    <div class="area-resolucao"></div>
+    <span class="pilula pilula-pausa" data-em="1:some">Pause o vídeo e tente</span>
+    <div class="painel-questao">
+      <p class="olho">IF Sudeste MG 2019 · Questão 17</p>
+      <p class="enunciado medio">Sejam os conjuntos:</p>
+      <p class="enunciado" style="font-size:22px;line-height:1.6">\(A = \{a \in \mathbb{N}\ /\ a \text{ é divisor de } 16\}\)<br>\(B = \{b \in \mathbb{N}\ /\ b \text{ é múltiplo de 2 e menor que } 20\}\)<br>\(C = \{c \in \mathbb{N}\ /\ c \text{ é um primo menor que } 24\}\)</p>
+      <p class="enunciado medio">Considerando as operações seguintes entre os conjuntos \(A\), \(B\) e \(C\), assinale a alternativa <b>CORRETA</b>.</p>
+      <ol class="alternativas">
+        <li data-em="2:apaga"><b>A</b><span>\((A \cup B) \cap C = \{1, 2, 4, 8, 16\}\)</span></li>
+        <li data-em="2:apaga"><b>B</b><span>\((A \cap B) \cap C = \{2, 4, 8, 16\}\)</span></li>
+        <li data-em="2:apaga"><b>C</b><span>\((A \cap B) \cap C = \{2, 3, 5, 7, 11, 13\}\)</span></li>
+        <li data-em="2:certo"><b>D</b><span>\((A \cup B) \cap C = \{2\}\)</span></li>
+        <li data-em="2:apaga"><b>E</b><span>\((A \cap B) \cup C = \{2\}\)</span></li>
+      </ol>
+      <p class="fonte">IF Sudeste MG, prova de 2019 (1º semestre), questão 17</p>
+    </div>
+  </div>
+  <aside class="resolucao">
+    <p class="dados"><b>Dados:</b> \(\cup\) junta tudo; \(\cap\) fica só com os comuns.</p>
+    <ol class="passos">
+      <li><b>A (divisores de 16)</b> \(\{1, 2, 4, 8, 16\}\)</li>
+      <li><b>B (pares menores que 20)</b> \(\{0, 2, 4, \ldots, 18\}\)</li>
+      <li><b>C (primos menores que 24)</b> \(\{2, 3, 5, 7, 11, 13, 17, 19, 23\}\)</li>
+      <li><b>\(A \cup B\) só tem o 0, o 1 e pares</b> \(\{0, 1, 2, 4, 6, \ldots, 18\}\)</li>
+      <li><b>O único primo par é o 2</b> \((A \cup B) \cap C = \{2\}\)</li>
+    </ol>
+    <p class="resposta"><b>Resposta:</b> \((A \cup B) \cap C = \{2\}\). <b>Gabarito D.</b></p>
+    <p class="atencao"><b>Destaque no quadro:</b> Liste os elementos antes de operar.</p>
+    <ul class="erros">
+      <li><b>A</b> É o próprio A; desses, só o 2 é primo.</li>
+      <li><b>B</b> É \(A \cap B\); falta cruzar com C.</li>
+      <li><b>C</b> Os primos ímpares não estão em \(A \cap B\).</li>
+      <li><b>E</b> Troca \(\cap\) por \(\cup\): daria um conjunto bem maior.</li>
+    </ul>
+  </aside>
+  <aside class="notas">
+    <p>Clique 1 tira o aviso de pausa: resolva na área (D liga a caneta; E esconde o enunciado). Clique 2: gabarito D.</p>
+    <p>Questão oficial do IF Sudeste MG 2019-1, q17, MAT-0438 (Conjuntos). O 0 entra em B porque é natural e múltiplo de 2; não muda a resposta.</p>
+  </aside>
+</section>
+
+<!-- IF 2016-1 extra q19 · três esportes -->
+<section class="slide questao" data-nome="IF 2016 · três esportes">
+  <div class="conteudo">
+    <div class="area-resolucao"></div>
+    <span class="pilula pilula-pausa" data-em="1:some">Pause o vídeo e tente</span>
+    <div class="painel-questao" style="gap:12px">
+      <p class="olho">IF Sudeste MG 2016 · Questão 19</p>
+      <p class="enunciado menor">A atividade física é muito importante para manter o corpo e a mente saudáveis. Pensando nisso, uma escola resolveu fazer uma pesquisa para saber qual é o esporte mais praticado pelos alunos e constatou que, dos 200 alunos consultados, 13 praticam apenas natação, 20 praticam apenas vôlei, 45 praticam apenas futebol, 45 praticam natação e vôlei, 50 praticam vôlei e futebol, 25 praticam natação e futebol e 10 praticam as três modalidades (natação, vôlei e futebol). Então, o número de alunos que não pratica nenhuma das três modalidades de esporte é:</p>
+      <ol class="alternativas curtas">
+        <li data-em="2:apaga"><b>A</b><span>13</span></li>
+        <li data-em="2:apaga"><b>B</b><span>20</span></li>
+        <li data-em="2:certo"><b>C</b><span>22</span></li>
+        <li data-em="2:apaga"><b>D</b><span>45</span></li>
+        <li data-em="2:apaga"><b>E</b><span>50</span></li>
+      </ol>
+      <p class="fonte">IF Sudeste MG, prova de 2016 (1º semestre, edição extra), questão 19</p>
+    </div>
+  </div>
+  <aside class="resolucao">
+    <p class="dados"><b>Dados:</b> 200 alunos; Venn com natação, vôlei e futebol; preencha de dentro para fora.</p>
+    <ol class="passos">
+      <li><b>Centro (os três)</b> 10</li>
+      <li><b>Só natação e vôlei</b> \(45 - 10 = 35\)</li>
+      <li><b>Só vôlei e futebol</b> \(50 - 10 = 40\)</li>
+      <li><b>Só natação e futebol</b> \(25 - 10 = 15\)</li>
+      <li><b>Pelo menos um esporte</b> \(13 + 20 + 45 + 35 + 40 + 15 + 10 = 178\)</li>
+      <li><b>Nenhum</b> \(200 - 178 = 22\)</li>
+    </ol>
+    <p class="resposta"><b>Resposta:</b> 22 alunos. <b>Gabarito C.</b></p>
+    <p class="atencao"><b>Destaque no quadro:</b> "Natação e vôlei" inclui os 10 do centro: tire antes de somar.</p>
+    <ul class="erros">
+      <li><b>A</b> É o "apenas natação".</li>
+      <li><b>B</b> É o "apenas vôlei".</li>
+      <li><b>D</b> É o "apenas futebol".</li>
+      <li><b>E</b> É o "vôlei e futebol"; somar sem tirar o centro passa de 200.</li>
+    </ul>
+  </aside>
+  <aside class="notas">
+    <p>Clique 1 tira o aviso de pausa. Clique 2: gabarito C. Desenhe os três círculos na área e preencha do centro para fora.</p>
+    <p>Questão oficial do IF Sudeste MG 2016-1-extra, q19, MAT-0406 (Conjuntos). Conferido: 13 + 20 + 45 = 78; 35 + 40 + 15 = 90; 78 + 90 + 10 = 178; 200 − 178 = 22.</p>
+  </aside>
+</section>
+
+<!-- IF 2025-1 q19 · 25,013 -->
+<section class="slide questao" data-nome="IF 2025 · o número 25,013">
+  <div class="conteudo">
+    <div class="area-resolucao"></div>
+    <span class="pilula pilula-pausa" data-em="1:some">Pause o vídeo e tente</span>
+    <div class="painel-questao">
+      <p class="olho">IF Sudeste MG 2025 · Questão 19</p>
+      <p class="enunciado">Considere as proposições a respeito do número 25,013.</p>
+      <p class="enunciado" style="line-height:1.7">I. \(25{,}013 = 25{,}13\)<br>II. \(25{,}013 = 25013/1000\)<br>III. \(25{,}013 = 25 + 1/100 + 3/1000\)</p>
+      <p class="enunciado">Assinale a alternativa <b>CORRETA</b>.</p>
+      <ol class="alternativas">
+        <li data-em="2:apaga"><b>A</b><span>Somente I é verdadeira.</span></li>
+        <li data-em="2:apaga"><b>B</b><span>Somente I e II são verdadeiras.</span></li>
+        <li data-em="2:apaga"><b>C</b><span>Somente I e III são verdadeiras.</span></li>
+        <li data-em="2:certo"><b>D</b><span>Somente II e III são verdadeiras.</span></li>
+        <li data-em="2:apaga"><b>E</b><span>Todas as afirmativas são verdadeiras.</span></li>
+      </ol>
+      <p class="fonte">IF Sudeste MG, prova de 2025 (1º semestre), questão 19</p>
+    </div>
+  </div>
+  <aside class="resolucao">
+    <p class="dados"><b>Dados:</b> 25,013: 0 décimo, 1 centésimo, 3 milésimos.</p>
+    <ol class="passos">
+      <li><b>I: o zero dos décimos não some</b> \(25{,}13 \neq 25{,}013\): falsa</li>
+      <li><b>II: três casas, divide por 1 000</b> \(\dfrac{25013}{1000} = 25{,}013\): verdadeira</li>
+      <li><b>III: decompondo</b> \(25 + 0{,}01 + 0{,}003 = 25{,}013\): verdadeira</li>
+    </ol>
+    <p class="resposta"><b>Resposta:</b> somente II e III. <b>Gabarito D.</b></p>
+    <p class="atencao"><b>Destaque no quadro:</b> O zero logo depois da vírgula ocupa a casa dos décimos.</p>
+    <ul class="erros">
+      <li><b>A</b> Aceita a I e recusa II e III.</li>
+      <li><b>B</b> Aceita a I, que é falsa.</li>
+      <li><b>C</b> Aceita a I e recusa a II.</li>
+      <li><b>E</b> A I é falsa.</li>
+    </ul>
+  </aside>
+  <aside class="notas">
+    <p>Clique 1 tira o aviso de pausa. Clique 2: gabarito D.</p>
+    <p>Questão oficial do IF Sudeste MG 2025-1, q19, MAT-0540 (Conjuntos numéricos). 25,13 é maior que 25,013.</p>
+  </aside>
+</section>
+
+<!-- IF 2024-1 q20 · chocolate -->
+<section class="slide questao" data-nome="IF 2024 · o chocolate">
+  <div class="conteudo">
+    <div class="area-resolucao"></div>
+    <span class="pilula pilula-pausa" data-em="1:some">Pause o vídeo e tente</span>
+    <div class="painel-questao">
+      <p class="olho">IF Sudeste MG 2024 · Questão 20</p>
+      <p class="enunciado" style="font-size:22px">Breno, Gabriel e Roger são três amigos que estão no 7ª ano do ensino fundamental. Houve um dia em que, no intervalo para o recreio, eles perceberam que cada um havia levado de sua casa um chocolate de uma mesma marca. Breno levou para a escola metade da barra de chocolate da marca em questão. Já Gabriel levou a terça parte da barra de chocolate, e Roger apenas 25% da barra. Apesar das diferentes quantidades que cada um havia levado, os três amigos decidiram dividir igualmente entre eles todo o chocolate que tinham. Desse modo, cada um dos colegas ficou com:</p>
+      <ol class="alternativas" style="gap:8px">
+        <li data-em="2:apaga"><b>A</b><span>30% de uma barra de chocolate.</span></li>
+        <li data-em="2:apaga"><b>B</b><span>\(\dfrac{10}{33}\) de uma barra de chocolate.</span></li>
+        <li data-em="2:apaga"><b>C</b><span>\(\dfrac{1}{3}\) de uma barra de chocolate.</span></li>
+        <li data-em="2:certo"><b>D</b><span>\(\dfrac{13}{36}\) de uma barra de chocolate.</span></li>
+        <li data-em="2:apaga"><b>E</b><span>\(\dfrac{13}{33}\) de uma barra de chocolate.</span></li>
+      </ol>
+      <p class="fonte">IF Sudeste MG, prova de 2024 (1º semestre), questão 20</p>
+    </div>
+  </div>
+  <aside class="resolucao">
+    <p class="dados"><b>Dados:</b> metade, terça parte e 25% de uma barra; divididos por 3.</p>
+    <ol class="passos">
+      <li><b>25% em fração</b> \(\dfrac{25}{100} = \dfrac{1}{4}\)</li>
+      <li><b>Total (denominador 12)</b> \(\dfrac{6}{12} + \dfrac{4}{12} + \dfrac{3}{12} = \dfrac{13}{12}\)</li>
+      <li><b>Divide por 3</b> \(\dfrac{13}{12} \cdot \dfrac{1}{3} = \dfrac{13}{36}\)</li>
+    </ol>
+    <p class="resposta"><b>Resposta:</b> \(\dfrac{13}{36}\) de barra. <b>Gabarito D.</b></p>
+    <p class="atencao"><b>Destaque no quadro:</b> Dividir por 3 multiplica o denominador por 3.</p>
+    <ul class="erros">
+      <li><b>A</b> \(\frac{13}{36}\) é cerca de 36%, não 30%.</li>
+      <li><b>B</b> Não sai de conta certa.</li>
+      <li><b>C</b> Divide uma barra só; eles tinham \(\frac{13}{12}\).</li>
+      <li><b>E</b> Erra o denominador: \(12 \cdot 3 = 36\).</li>
+    </ul>
+  </aside>
+  <aside class="notas">
+    <p>Clique 1 tira o aviso de pausa. Clique 2: gabarito D.</p>
+    <p>Questão oficial do IF Sudeste MG 2024-1, q20, MAT-0304 (Conjuntos numéricos). O "7ª ano" está assim na prova. Conferido: MMC(2, 3, 4) = 12; 6 + 4 + 3 = 13; 12 · 3 = 36.</p>
+  </aside>
+</section>
+
+<!-- IF 2019-2 q16 · A, B e C -->
+<section class="slide questao" data-nome="IF 2019 · quantos elementos">
+  <div class="conteudo">
+    <div class="area-resolucao"></div>
+    <span class="pilula pilula-pausa" data-em="1:some">Pause o vídeo e tente</span>
+    <div class="painel-questao">
+      <p class="olho">IF Sudeste MG 2019 · Questão 16</p>
+      <p class="enunciado medio">Sejam <b>A</b>, <b>B</b> e <b>C</b> subconjuntos dos números naturais, formados pelos números:</p>
+      <p class="enunciado medio" style="line-height:1.55"><b>A</b>: múltiplos de 3 e menores que 35.<br><b>B</b>: divisores de 90.<br><b>C</b>: primos menores que 40.</p>
+      <p class="enunciado medio">Considerando \(n_a\), \(n_b\) e \(n_c\) a quantidade de elementos, respectivamente, nos conjuntos <b>A</b>, <b>B</b> e <b>C</b>, pode-se afirmar que:</p>
+      <ol class="alternativas">
+        <li data-em="2:certo"><b>A</b><span>\(n_a = n_b = n_c\)</span></li>
+        <li data-em="2:apaga"><b>B</b><span>\(n_a \lt n_b = n_c\)</span></li>
+        <li data-em="2:apaga"><b>C</b><span>\(n_c \lt n_b = n_a\)</span></li>
+        <li data-em="2:apaga"><b>D</b><span>\(n_b \gt n_a = n_c\)</span></li>
+        <li data-em="2:apaga"><b>E</b><span>\(n_a \gt n_b \gt n_c\)</span></li>
+      </ol>
+      <p class="fonte">IF Sudeste MG, prova de 2019 (2º semestre), questão 16</p>
+    </div>
+  </div>
+  <aside class="resolucao">
+    <p class="dados"><b>Dados:</b> liste e conte; o 0 é natural e múltiplo de 3.</p>
+    <ol class="passos">
+      <li><b>A</b> \(\{0, 3, 6, \ldots, 33\}\): \(n_a = 12\)</li>
+      <li><b>B: \(90 = 2 \cdot 3^2 \cdot 5\)</b> \(n_b = 2 \cdot 3 \cdot 2 = 12\)</li>
+      <li><b>C</b> \(\{2, 3, 5, 7, 11, 13, 17, 19, 23, 29, 31, 37\}\): \(n_c = 12\)</li>
+    </ol>
+    <p class="resposta"><b>Resposta:</b> \(n_a = n_b = n_c = 12\). <b>Gabarito A.</b></p>
+    <p class="atencao"><b>Destaque no quadro:</b> O zero é múltiplo de todo número.</p>
+    <ul class="erros">
+      <li><b>B</b> Esquece o zero em A (conta 11).</li>
+      <li><b>C</b> Conta primos de menos (esquece o 2 ou o 37).</li>
+      <li><b>D</b> Acha que 90 tem mais divisores.</li>
+      <li><b>E</b> Não há desigualdade: são 12, 12 e 12.</li>
+    </ul>
+  </aside>
+  <aside class="notas">
+    <p>Clique 1 tira o aviso de pausa. Clique 2: gabarito A.</p>
+    <p>Questão oficial do IF Sudeste MG 2019-2, q16, MAT-0515 (Múltiplos e divisores). Divisores de 90: 1, 2, 3, 5, 6, 9, 10, 15, 18, 30, 45, 90. Pela fatoração: (1 + 1)(2 + 1)(1 + 1) = 12.</p>
+  </aside>
+</section>
+
+<!-- IF 2017-1 q18 · ônibus -->
+<section class="slide questao" data-nome="IF 2017 · os ônibus">
+  <div class="conteudo">
+    <div class="area-resolucao"></div>
+    <span class="pilula pilula-pausa" data-em="1:some">Pause o vídeo e tente</span>
+    <div class="painel-questao">
+      <p class="olho">IF Sudeste MG 2017 · Questão 18</p>
+      <p class="enunciado">Uma empresa de transporte coletivo possui três linhas de ônibus (H43, H53 e H63) que passam pelo ponto A com uma determinada frequência. H43 passa a cada 30 minutos, H53 a cada 45 minutos e H63 a cada hora. Sabe-se que esses ônibus passaram juntos em A às 8h. Que horas, ainda pela manhã, eles passarão juntos novamente em A?</p>
+      <ol class="alternativas">
+        <li data-em="2:apaga"><b>A</b><span>13h</span></li>
+        <li data-em="2:apaga"><b>B</b><span>12h30min</span></li>
+        <li data-em="2:apaga"><b>C</b><span>12h</span></li>
+        <li data-em="2:apaga"><b>D</b><span>11h30min</span></li>
+        <li data-em="2:certo"><b>E</b><span>11h</span></li>
+      </ol>
+      <p class="fonte">IF Sudeste MG, prova de 2017 (1º semestre), questão 18</p>
+    </div>
+  </div>
+  <aside class="resolucao">
+    <p class="dados"><b>Dados:</b> intervalos de 30, 45 e 60 min; juntos às 8h.</p>
+    <ol class="passos">
+      <li><b>Encontrar de novo: MMC</b> \(30 = 2 \cdot 3 \cdot 5\); \(45 = 3^2 \cdot 5\); \(60 = 2^2 \cdot 3 \cdot 5\)</li>
+      <li><b>Maiores expoentes</b> \(2^2 \cdot 3^2 \cdot 5 = 180\ \text{min}\)</li>
+      <li><b>Em horas</b> \(180\ \text{min} = 3\ \text{h}\)</li>
+      <li><b>Horário</b> \(8\ \text{h} + 3\ \text{h} = 11\ \text{h}\)</li>
+    </ol>
+    <p class="resposta"><b>Resposta:</b> às 11h. <b>Gabarito E.</b></p>
+    <p class="atencao"><b>Destaque no quadro:</b> "Passam juntos de novo": MMC.</p>
+    <ul class="erros">
+      <li><b>A</b> 5 h depois: 300 não é múltiplo de 45.</li>
+      <li><b>B</b> 270 min não é múltiplo de 60.</li>
+      <li><b>C</b> 240 min não é múltiplo de 45.</li>
+      <li><b>D</b> 210 min não é múltiplo de 45 nem de 60.</li>
+    </ul>
+  </aside>
+  <aside class="notas">
+    <p>Clique 1 tira o aviso de pausa. Clique 2: gabarito E.</p>
+    <p>Questão oficial do IF Sudeste MG 2017-1, q18, MAT-0336 (Múltiplos e divisores). O encontro seguinte seria às 14h, já à tarde.</p>
+  </aside>
+</section>
+
+<!-- A seguir -->
+<section class="slide capa" data-nome="A seguir">
+  <div class="estrelas"></div>
+  <div class="texto-capa" style="top:200px">
+    <span class="selo">Matemática · IF</span>
+    <p class="aula" style="font-size:26px">A seguir · Números e operações · Parte 2 de 2</p>
+    <h1 style="font-size:124px">Questões do IF Sudeste</h1>
+    <p class="sub">Potências e radicais, unidades de medida</p>
+  </div>
+  <svg class="emblema" viewBox="0 0 640 640" aria-hidden="true">
+    <rect x="150" y="110" width="340" height="430" rx="34" fill="#fff" fill-opacity=".12" stroke="#fff" stroke-opacity=".6" stroke-width="4"/>
+    <g fill="#fff" fill-opacity=".7"><rect x="200" y="170" width="240" height="18" rx="9"/><rect x="200" y="210" width="200" height="18" rx="9"/></g>
+    <text x="320" y="400" text-anchor="middle" font-family="'Bricolage Grotesque',Figtree,sans-serif" font-size="120" font-weight="800" fill="#FFD10C">2/2</text>
+  </svg>
+  <img class="logo-capa" src="{{LOGO_BRANCO}}" alt="Quarks">
+  <aside class="notas"><p>A seguir, o segundo bloco de questões do IF Sudeste do capítulo: Potências e radicais e Unidades de medida.</p></aside>
+</section>

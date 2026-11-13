@@ -1,0 +1,594 @@
+<!--aula
+{"disciplina": "quimica", "curso": "IF", "assunto": "Matéria e transformações", "parte": "Parte única", "titulo": "Substâncias e misturas", "scripts": ["animacoes-materia.js"]}
+-->
+<!-- Fonte: slides do professor (Química IF 2026, Materiais e suas propriedades), completados com a apostila IF, Química, cap. 1 (1.2 Substâncias e misturas). Questões: FUVEST, Ufes e EsPCEx, do material do professor. -->
+
+<style>
+  .mol { display: flex; flex-direction: column; align-items: center; gap: 4px; font: 800 34px var(--fonte-titulo); color: var(--roxo-titulo); }
+  .mol svg { width: 150px; height: 110px; }
+  .grupo, .mapa .no, .caixa { box-sizing: border-box; }
+  .grupo { background: var(--branco); border: 2px solid var(--lilas-2); border-radius: 30px; padding: 26px 30px; }
+  .grupo h3 { margin: 0 0 4px; font: 800 44px var(--fonte-titulo); letter-spacing: -.02em; color: var(--roxo-titulo); }
+  .grupo .def { margin: 0 0 18px; font-size: 30px; color: var(--cinza); }
+  .grupo .mols { display: flex; justify-content: space-around; }
+  .rede { display: flex; flex-direction: column; align-items: center; gap: 6px; font-size: 30px; font-weight: 700; color: var(--carvao); }
+  .rede svg { width: 300px; height: 300px; }
+  .rede small { font-size: 22px; font-weight: 600; color: var(--cinza); }
+  .copo { display: flex; flex-direction: column; align-items: center; gap: 10px; font-size: 28px; font-weight: 700; color: var(--carvao); text-align: center; line-height: 1.25; }
+  .copo svg { width: 190px; height: 210px; }
+  .selo-fase { display: inline-block; margin-top: 4px; padding: 4px 16px; border-radius: 999px; background: var(--d-clara); color: var(--d-forte); font-size: 22px; font-weight: 800; letter-spacing: .04em; }
+  .linha-ex { display: grid; grid-template-columns: 300px 1fr 230px; align-items: center; gap: 22px; background: var(--branco); border: 2px solid var(--lilas-2); border-radius: 24px; padding: 14px 28px; font-size: 32px; }
+  .linha-ex .f { font: 800 44px var(--fonte-titulo); color: var(--roxo-titulo); }
+  .linha-ex .tag { justify-self: end; padding: 6px 20px; border-radius: 999px; font-weight: 800; font-size: 26px; }
+  .tag-s { background: var(--d-clara); color: var(--d-forte); }
+  .tag-c { background: #FFF4C2; color: #8A6A00; }
+  .mapa { position: absolute; inset: 0; }
+  .mapa .no { position: absolute; display: grid; place-items: center; text-align: center; background: var(--branco); border: 2px solid var(--lilas-2); border-radius: 26px; padding: 12px 20px; font-size: 28px; line-height: 1.2; }
+  .mapa .no b { font: 800 34px var(--fonte-titulo); color: var(--roxo-titulo); }
+  .mapa .no small { display: block; font-size: 21px; color: var(--cinza); margin-top: 2px; }
+  .mapa .no.raiz { background: var(--d); border-color: var(--d); }
+  .mapa .no.raiz b { color: #fff; }
+  .mapa .no.meio { background: var(--d-clara); }
+  .mapa svg.fios { position: absolute; inset: 0; overflow: visible; }
+  .mapa svg.fios path { fill: none; stroke: var(--roxo-claro); stroke-width: 4; stroke-linecap: round; }
+  .rotulo-agua { position: absolute; font-size: 26px; font-weight: 700; color: var(--carvao); }
+  /* ---------- Animações (só na tela aberta e depois que a figura aparece) ---------- */
+  @keyframes vib-a { 0%,100% { transform: translate(0,0); } 25% { transform: translate(1.6px,-1.2px); } 50% { transform: translate(-.8px,1.4px); } 75% { transform: translate(-1.4px,-.6px); } }
+  @keyframes vib-b { 0%,100% { transform: translate(0,0); } 25% { transform: translate(-1.4px,1px); } 50% { transform: translate(1.2px,-1.4px); } 75% { transform: translate(.6px,1.2px); } }
+  .slide.ativo .mostra svg.vibra .vib-a, .slide.ativo svg.vibra.sempre .vib-a { animation: vib-a 1.6s ease-in-out infinite; }
+  .slide.ativo .mostra svg.vibra .vib-b, .slide.ativo svg.vibra.sempre .vib-b { animation: vib-b 1.6s ease-in-out infinite; }
+  .rede div[data-anima], .rede > div { width: 300px; height: 300px; }
+  .rede [data-anima] svg { width: 300px; height: 300px; }
+  /* ferro que enferruja */
+  .ferrugem .camada { opacity: 0; transition: opacity 5s ease-in-out; }
+  .ferrugem .mancha { transform: scale(0); transform-box: fill-box; transform-origin: center; transition: transform 3s ease-out; }
+  .ferrugem.mostra .camada { opacity: 1; }
+  .ferrugem.mostra .mancha { transform: scale(1); }
+  .ferrugem.mostra .mancha:nth-of-type(2) { transition-delay: 1s; } .ferrugem.mostra .mancha:nth-of-type(3) { transition-delay: 2s; }
+  /* açúcar que cai e some na água; gotas de óleo que sobem e formam a camada */
+  @keyframes cai-dissolve { 0% { transform: translateY(0); opacity: 0; } 8% { opacity: 1; } 45% { transform: translateY(80px); opacity: 1; } 75% { transform: translateY(105px) scale(.4); opacity: 0; } 100% { transform: translateY(105px); opacity: 0; } }
+  .graos rect { opacity: 0; transform-box: fill-box; transform-origin: center; }
+  .slide.ativo .mostra .graos rect { animation: cai-dissolve 4.8s ease-in infinite; }
+  .graos rect:nth-child(2) { animation-delay: -1.2s !important; } .graos rect:nth-child(3) { animation-delay: -2.4s !important; } .graos rect:nth-child(4) { animation-delay: -3.6s !important; }
+  @keyframes sobe-gota { 0% { transform: translateY(0); opacity: 0; } 10% { opacity: 1; } 80% { transform: translateY(-62px); opacity: 1; } 100% { transform: translateY(-70px); opacity: 0; } }
+  .gotas circle { opacity: 0; }
+  .slide.ativo .mostra .gotas circle { animation: sobe-gota 5.5s ease-in-out infinite; }
+  .gotas circle:nth-child(2) { animation-delay: -1.8s !important; } .gotas circle:nth-child(3) { animation-delay: -3.7s !important; }
+  /* gelo que boia; bolhas de gás que sobem */
+  @keyframes boia { 0%,100% { transform: translateY(0); } 50% { transform: translateY(3px); } }
+  .slide.ativo .mostra .boia, .slide.ativo .boia.sempre { animation: boia 3.2s ease-in-out infinite; }
+  @keyframes bolha { 0% { transform: translateY(0); opacity: 0; } 15% { opacity: 1; } 85% { opacity: 1; } 100% { transform: translateY(-110px); opacity: 0; } }
+  .slide.ativo .bolhas circle { animation: bolha 4s linear infinite; }
+  .bolhas circle:nth-child(2) { animation-delay: -.7s !important; } .bolhas circle:nth-child(3) { animation-delay: -1.5s !important; } .bolhas circle:nth-child(4) { animation-delay: -2.2s !important; } .bolhas circle:nth-child(5) { animation-delay: -2.9s !important; } .bolhas circle:nth-child(6) { animation-delay: -3.5s !important; }
+  /* fios do mapa que se desenham */
+  .mapa svg.fios path { stroke-dasharray: 400; stroke-dashoffset: 400; transition: stroke-dashoffset 1.4s ease-in-out, opacity .45s; }
+  .mapa svg.fios path.mostra { stroke-dashoffset: 0; }
+</style>
+
+<svg width="0" height="0" style="position:absolute" aria-hidden="true">
+  <defs>
+    <radialGradient id="gO" cx=".35" cy=".3" r=".8"><stop offset="0" stop-color="#FF8A7A"/><stop offset="1" stop-color="#C8301F"/></radialGradient>
+    <radialGradient id="gH" cx=".35" cy=".3" r=".8"><stop offset="0" stop-color="#FFFFFF"/><stop offset="1" stop-color="#C9C4DC"/></radialGradient>
+    <radialGradient id="gN" cx=".35" cy=".3" r=".8"><stop offset="0" stop-color="#7FA8FF"/><stop offset="1" stop-color="#2A5BD0"/></radialGradient>
+    <radialGradient id="gC" cx=".35" cy=".3" r=".8"><stop offset="0" stop-color="#8A8A96"/><stop offset="1" stop-color="#2E2E36"/></radialGradient>
+    <linearGradient id="gAgua" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#CFE6FA"/><stop offset="1" stop-color="#9CCBF2"/></linearGradient>
+    <linearGradient id="gOleo" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#FFE680"/><stop offset="1" stop-color="#F2C400"/></linearGradient>
+  </defs>
+  <symbol id="m-o2" viewBox="0 0 150 110"><g stroke="#8E2115" stroke-width="2"><circle cx="56" cy="55" r="30" fill="url(#gO)"/><circle cx="94" cy="55" r="30" fill="url(#gO)"/></g></symbol>
+  <symbol id="m-o3" viewBox="0 0 150 110"><g stroke="#8E2115" stroke-width="2"><circle cx="40" cy="70" r="27" fill="url(#gO)"/><circle cx="110" cy="70" r="27" fill="url(#gO)"/><circle cx="75" cy="42" r="27" fill="url(#gO)"/></g></symbol>
+  <symbol id="m-n2" viewBox="0 0 150 110"><g stroke="#1B3E94" stroke-width="2"><circle cx="56" cy="55" r="30" fill="url(#gN)"/><circle cx="94" cy="55" r="30" fill="url(#gN)"/></g></symbol>
+  <symbol id="m-h2o" viewBox="0 0 150 110"><g stroke-width="2"><circle cx="38" cy="74" r="20" fill="url(#gH)" stroke="#8C84B8"/><circle cx="112" cy="74" r="20" fill="url(#gH)" stroke="#8C84B8"/><circle cx="75" cy="50" r="32" fill="url(#gO)" stroke="#8E2115"/></g></symbol>
+  <symbol id="m-nh3" viewBox="0 0 150 110"><g stroke-width="2"><circle cx="34" cy="78" r="19" fill="url(#gH)" stroke="#8C84B8"/><circle cx="116" cy="78" r="19" fill="url(#gH)" stroke="#8C84B8"/><circle cx="75" cy="48" r="31" fill="url(#gN)" stroke="#1B3E94"/><circle cx="75" cy="88" r="19" fill="url(#gH)" stroke="#8C84B8"/></g></symbol>
+  <symbol id="m-co2" viewBox="0 0 150 110"><g stroke-width="2"><circle cx="30" cy="55" r="26" fill="url(#gO)" stroke="#8E2115"/><circle cx="120" cy="55" r="26" fill="url(#gO)" stroke="#8E2115"/><circle cx="75" cy="55" r="28" fill="url(#gC)" stroke="#1E1E24"/></g></symbol>
+  <symbol id="becher" viewBox="0 0 190 210"><path d="M22 14 h146 M30 14 v168 a18 18 0 0 0 18 18 h94 a18 18 0 0 0 18 -18 v-168" fill="none" stroke="#7F7A99" stroke-width="5" stroke-linecap="round"/></symbol>
+  <symbol id="gelo" viewBox="0 0 40 40"><rect x="3" y="3" width="34" height="34" rx="8" fill="#F4FBFF" stroke="#8FB9DA" stroke-width="3"/><path d="M10 12 l8 0" stroke="#fff" stroke-width="4" stroke-linecap="round"/></symbol>
+</svg>
+
+<!-- 1. Capa -->
+<section class="slide capa" data-nome="Capa">
+  <div class="estrelas"></div>
+  <div class="texto-capa">
+    <span class="selo">Química · IF</span>
+    <p class="aula">Matéria e transformações</p>
+    <h1>Substâncias e misturas</h1>
+    <p class="sub">Materiais e suas propriedades</p>
+  </div>
+  <svg class="emblema" viewBox="0 0 640 640" aria-hidden="true">
+    <g class="gira-lento"><ellipse cx="320" cy="320" rx="300" ry="128" fill="none" stroke="#fff" stroke-opacity=".38" stroke-width="2" transform="rotate(-10 320 320)"/></g>
+    <g class="gira"><ellipse cx="320" cy="320" rx="236" ry="196" fill="none" stroke="#FFD10C" stroke-opacity=".75" stroke-width="2.5" stroke-dasharray="3 14" stroke-linecap="round" transform="rotate(-8 320 320)"/>
+      <circle cx="84" cy="300" r="13" fill="#FFD10C" stroke="#fff" stroke-width="3"/></g>
+    <circle cx="320" cy="320" r="132" fill="#FFD10C"/>
+    <image href="{{SYM_ROXO}}" x="238" y="238" width="164" height="164"/>
+  </svg>
+  <img class="logo-capa" src="{{LOGO_BRANCO}}" alt="Quarks">
+  <aside class="notas">
+    <p>Hoje: do que as coisas são feitas. Substância simples e composta, alotropia, misturas e fases.</p>
+  </aside>
+</section>
+
+<!-- 2. O que é Química -->
+<section class="slide" data-nome="O que é Química">
+  <div class="conteudo">
+    <p class="olho">Para começar</p>
+    <h2 class="titulo">O que a Química estuda?</h2>
+    <p class="texto" style="position:absolute;left:0;right:0;top:150px;margin:0">É a ciência que estuda a <b>matéria</b>, as suas <b>transformações</b> e a <b>energia</b> envolvida nessas transformações.</p>
+    <div style="position:absolute;left:560px;right:0;top:300px;display:grid;grid-template-columns:1fr 1fr;gap:28px">
+      <div class="caixa caixa-fundamental" data-passo="1" style="min-height:330px">
+        <span class="rotulo">Matéria</span>
+        <div class="texto">Tudo o que tem <b>massa</b> e <b>ocupa lugar</b> no espaço.</div>
+        <p class="texto" style="margin:18px 0 0;font-size:30px;color:var(--cinza)">A água, o ar, o ferro do portão, você.</p>
+      </div>
+      <div class="caixa caixa-fundamental" data-passo="2" style="min-height:330px">
+        <span class="rotulo">Transformação</span>
+        <div class="texto">As <b>reações químicas</b>: formam materiais novos.</div>
+        <p data-passo="3" style="margin:22px 0 0;font:800 40px var(--fonte-titulo);color:var(--roxo-titulo)">4 Fe + 3 O<sub>2</sub> → 2 Fe<sub>2</sub>O<sub>3</sub></p>
+        <p data-passo="3" style="margin:4px 0 0;font-size:26px;color:var(--cinza)">ferro + gás oxigênio → ferrugem</p>
+      </div>
+    </div>
+    <svg viewBox="0 0 420 300" aria-hidden="true" style="position:absolute;left:30px;top:290px;width:440px;height:300px">
+      <rect x="40" y="200" width="340" height="26" rx="13" fill="#E4DEFB"/>
+      <rect x="70" y="60" width="120" height="140" rx="22" fill="#B8B3C9"/>
+      <rect x="70" y="60" width="120" height="140" rx="22" fill="none" stroke="#7F7A99" stroke-width="4"/>
+      <rect x="230" y="60" width="120" height="140" rx="22" fill="#B8B3C9" stroke="#7F7A99" stroke-width="4"/>
+      <g class="ferrugem" data-passo="3"><rect class="camada" x="230" y="60" width="120" height="140" rx="22" fill="#B4532A"/><circle class="mancha" cx="262" cy="96" r="12" fill="#8A3A1A"/><circle class="mancha" cx="310" cy="150" r="16" fill="#8A3A1A"/><circle class="mancha" cx="280" cy="176" r="8" fill="#D8794A"/></g>
+      <path d="M198 130 h22" stroke="#6551D1" stroke-width="6" stroke-linecap="round"/><path d="M214 120 l10 10 -10 10" fill="none" stroke="#6551D1" stroke-width="6" stroke-linecap="round" stroke-linejoin="round"/>
+      <text x="130" y="262" text-anchor="middle" font-family="Figtree,sans-serif" font-weight="700" font-size="24" fill="#5E5A70">hoje</text>
+      <text x="290" y="262" text-anchor="middle" font-family="Figtree,sans-serif" font-weight="700" font-size="24" fill="#5E5A70">meses depois</text>
+    </svg>
+  </div>
+  <aside class="notas">
+    <p>Clique 1: matéria. Clique 2: transformação. Clique 3: a ferrugem como exemplo de reação.</p>
+    <p>Correção do material antigo: "Fe + O₂ → FeO₂" não existe. A ferrugem é, em resumo, 4 Fe + 3 O₂ → 2 Fe₂O₃ (na prática, hidratada).</p>
+  </aside>
+</section>
+
+<!-- 3. Átomo, elemento e fórmula -->
+<section class="slide" data-nome="Átomo, elemento e fórmula">
+  <div class="conteudo">
+    <p class="olho">Do que é feita uma substância</p>
+    <h2 class="titulo">Átomos, elementos e fórmulas</h2>
+    <div style="position:absolute;left:0;right:0;top:160px;display:grid;grid-template-columns:repeat(3,1fr);gap:26px">
+      <div class="caixa" data-passo="1" style="min-height:200px">
+        <span class="rotulo">Substância pura</span>
+        <div class="texto" style="font-size:33px">Um tipo só de partícula. Tem PF, PE e densidade <b>fixos</b>.</div>
+      </div>
+      <div class="caixa" data-passo="2" style="min-height:200px">
+        <span class="rotulo">Átomo</span>
+        <div class="texto" style="font-size:33px">As partículas das substâncias são feitas de <b>átomos</b>.</div>
+      </div>
+      <div class="caixa" data-passo="3" style="min-height:200px">
+        <span class="rotulo">Elemento químico</span>
+        <div class="texto" style="font-size:33px">Cada <b>tipo</b> de átomo, com um símbolo: H, O, C, Na, Cl.</div>
+      </div>
+    </div>
+    <div class="caixa caixa-fundamental" data-passo="4" style="position:absolute;left:560px;right:0;top:450px;display:grid;grid-template-columns:auto 1fr;gap:40px;align-items:center">
+      <div style="display:flex;align-items:center;gap:18px">
+        <svg class="vibra" viewBox="0 0 150 110" style="width:170px;height:125px" aria-hidden="true"><use href="#m-h2o"/></svg>
+        <span style="font:800 96px var(--fonte-titulo);color:var(--roxo-titulo)">H<sub style="font-size:.55em">2</sub>O</span>
+      </div>
+      <div>
+        <span class="rotulo">Fórmula</span>
+        <div class="texto" style="font-size:33px">Mostra os elementos e quantos átomos de cada um: o <b>2</b> diz 2 átomos de H; o O, sem número, vale <b>1</b>.</div>
+      </div>
+    </div>
+  </div>
+  <aside class="notas">
+    <p>Clique 1: substância pura (um tipo só de partícula). Cliques 2 e 3: átomo e elemento. Clique 4: como ler uma fórmula.</p>
+    <p>Existem pouco mais de cem elementos. Pergunte: quantos átomos tem uma molécula de H₂O? (3: dois H e um O.)</p>
+  </aside>
+</section>
+
+<!-- 4. Simples e composta -->
+<section class="slide" data-nome="Simples e composta">
+  <div class="conteudo">
+    <p class="olho">Substâncias puras</p>
+    <h2 class="titulo">Simples ou composta?</h2>
+    <div style="position:absolute;left:0;right:0;top:160px;display:grid;grid-template-columns:1fr 1fr;gap:30px">
+      <div class="grupo" data-passo="1">
+        <h3>Substância simples</h3>
+        <p class="def">Formada por <b>um único elemento</b>.</p>
+        <div class="mols">
+          <div class="mol"><svg class="vibra" aria-hidden="true"><use href="#m-o2"/></svg><span>O<sub>2</sub></span></div>
+          <div class="mol"><svg class="vibra" aria-hidden="true"><use href="#m-o3"/></svg><span>O<sub>3</sub></span></div>
+          <div class="mol"><svg class="vibra" aria-hidden="true"><use href="#m-n2"/></svg><span>N<sub>2</sub></span></div>
+        </div>
+      </div>
+      <div class="grupo" data-passo="2">
+        <h3>Substância composta</h3>
+        <p class="def">Formada por <b>dois ou mais elementos</b>.</p>
+        <div class="mols">
+          <div class="mol"><svg class="vibra" aria-hidden="true"><use href="#m-h2o"/></svg><span>H<sub>2</sub>O</span></div>
+          <div class="mol"><svg class="vibra" aria-hidden="true"><use href="#m-nh3"/></svg><span>NH<sub>3</sub></span></div>
+          <div class="mol"><svg class="vibra" aria-hidden="true"><use href="#m-co2"/></svg><span>CO<sub>2</sub></span></div>
+        </div>
+      </div>
+    </div>
+    <div style="position:absolute;left:560px;right:0;top:575px;display:flex;gap:26px;align-items:center;font-size:26px;color:var(--cinza)" data-passo="2">
+      <span><svg viewBox="0 0 20 20" width="26" height="26" style="vertical-align:-5px"><circle cx="10" cy="10" r="9" fill="url(#gO)"/></svg> oxigênio</span>
+      <span><svg viewBox="0 0 20 20" width="26" height="26" style="vertical-align:-5px"><circle cx="10" cy="10" r="9" fill="url(#gN)"/></svg> nitrogênio</span>
+      <span><svg viewBox="0 0 20 20" width="26" height="26" style="vertical-align:-5px"><circle cx="10" cy="10" r="9" fill="url(#gH)" stroke="#8C84B8"/></svg> hidrogênio</span>
+      <span><svg viewBox="0 0 20 20" width="26" height="26" style="vertical-align:-5px"><circle cx="10" cy="10" r="9" fill="url(#gC)"/></svg> carbono</span>
+    </div>
+    <div class="caixa caixa-atencao" data-passo="3" style="position:absolute;left:560px;right:0;top:655px">
+      <span class="rotulo">Atenção</span>
+      <div class="texto" style="font-size:31px">O que decide é o número de <b>elementos diferentes</b>, não o de átomos. O<sub>3</sub> tem 3 átomos e é <b>simples</b>.</div>
+    </div>
+  </div>
+  <aside class="notas">
+    <p>Clique 1: simples (um elemento). Clique 2: composta (dois ou mais) e a legenda das cores. Clique 3: o O₃ engana, mas é simples.</p>
+    <p>Mostre que cada cor é um elemento: conte as cores, não as bolinhas.</p>
+  </aside>
+</section>
+
+<!-- 5. Exemplo: classificando -->
+<section class="slide" data-nome="Exemplo: classificando">
+  <div class="conteudo">
+    <p class="olho">Exemplo</p>
+    <h2 class="titulo">Classificando pelas fórmulas</h2>
+    <p class="texto" style="position:absolute;left:0;top:150px;margin:0">Conte quantos <b>elementos diferentes</b> aparecem.</p>
+    <div style="position:absolute;left:0;right:0;top:240px;display:flex;flex-direction:column;gap:16px">
+      <div class="linha-ex" data-passo="1"><span class="f">N<sub>2</sub></span><span>só nitrogênio</span><span class="tag tag-s">Simples</span></div>
+      <div class="linha-ex" data-passo="2"><span class="f">CH<sub>4</sub></span><span>carbono e hidrogênio</span><span class="tag tag-c">Composta</span></div>
+      <div class="linha-ex" data-passo="3"><span class="f">O<sub>3</sub></span><span>só oxigênio, com 3 átomos</span><span class="tag tag-s">Simples</span></div>
+      <div class="linha-ex" data-passo="4" style="margin-left:560px"><span class="f">NaCl</span><span>sódio e cloro</span><span class="tag tag-c">Composta</span></div>
+    </div>
+  </div>
+  <aside class="notas">
+    <p>Peça a resposta antes de cada clique (um clique por linha).</p>
+    <p>A última linha fica deslocada para a direita por causa do canto da câmera.</p>
+  </aside>
+</section>
+
+<!-- 6. Alotropia -->
+<section class="slide" data-nome="Alotropia">
+  <div class="conteudo">
+    <p class="olho">Substâncias simples</p>
+    <h2 class="titulo">Alotropia</h2>
+    <div class="caixa caixa-fundamental" style="position:absolute;left:0;right:0;top:140px;padding:20px 34px">
+      <div class="texto" style="font-size:34px">Substâncias simples <b>diferentes</b>, formadas pelo <b>mesmo elemento</b>. Cada uma é um <b>alótropo</b>.</div>
+    </div>
+    <div class="grupo" data-passo="1" style="position:absolute;left:0;width:520px;top:290px;bottom:330px;display:flex;flex-direction:column">
+      <h3 style="font-size:36px">Do oxigênio</h3>
+      <div class="mols" style="flex:1;align-items:center">
+        <div class="mol"><svg class="vibra" aria-hidden="true"><use href="#m-o2"/></svg><span>O<sub>2</sub></span><small style="font:600 22px var(--fonte-texto);color:var(--cinza)">o que respiramos</small></div>
+        <div class="mol"><svg class="vibra" aria-hidden="true"><use href="#m-o3"/></svg><span>O<sub>3</sub></span><small style="font:600 22px var(--fonte-texto);color:var(--cinza)">ozônio</small></div>
+      </div>
+    </div>
+    <div class="grupo" data-passo="2" style="position:absolute;left:560px;right:0;top:290px;bottom:0">
+      <h3 style="font-size:36px">Do carbono</h3>
+      <div style="display:flex;justify-content:space-around;margin-top:6px">
+        <div class="rede"><div data-anima="rede-3d" data-rede="grafite" data-anima-passo="2"></div>Grafite<small>camadas que deslizam</small></div>
+        <div class="rede" data-passo="3"><div data-anima="rede-3d" data-rede="diamante" data-anima-passo="3"></div>Diamante<small>rede rígida: muito duro</small></div>
+        <div class="rede" data-passo="4"><div data-anima="rede-3d" data-rede="fulereno" data-anima-passo="4"></div>Fulereno<small>C<sub>60</sub>, forma de bola</small></div>
+      </div>
+    </div>
+  </div>
+  <aside class="notas">
+    <p>Clique 1: alótropos do oxigênio (O₂ e O₃). Cliques 2 a 4: grafite, diamante e fulereno, todos só de carbono.</p>
+    <p>Mesmo elemento, arrumação diferente, propriedades diferentes: o grafite risca o papel (ponta do lápis); o diamante é o material natural mais duro.</p>
+  </aside>
+</section>
+
+<!-- 7. Misturas -->
+<section class="slide" data-nome="Misturas">
+  <div class="conteudo">
+    <p class="olho">Misturas</p>
+    <h2 class="titulo">Homogênea ou heterogênea?</h2>
+    <p class="texto" style="position:absolute;left:0;right:0;top:150px;margin:0">Dois ou mais materiais juntos, <b>sem virar um material novo</b>. Não têm PF e PE fixos.</p>
+    <div style="position:absolute;left:0;right:0;top:250px;display:grid;grid-template-columns:1fr 1fr;gap:30px">
+      <div class="grupo" data-passo="1" style="display:grid;grid-template-columns:1fr 200px;gap:10px;align-items:center">
+        <div>
+          <h3>Homogênea</h3>
+          <p class="def" style="margin:0">Mesmo aspecto em todos os pontos: <b>uma fase</b>. Também se chama <b>solução</b>.</p>
+        </div>
+        <div class="copo"><svg aria-hidden="true" viewBox="0 0 190 210" style="overflow:visible"><rect x="34" y="70" width="122" height="126" rx="14" fill="url(#gAgua)"/><g class="graos" fill="#FFFFFF" stroke="#6F6A8A" stroke-width="2"><rect x="74" y="-10" width="11" height="11" rx="2"/><rect x="100" y="-18" width="10" height="10" rx="2"/><rect x="88" y="-6" width="11" height="11" rx="2"/><rect x="114" y="-12" width="9" height="9" rx="2"/></g><use href="#becher"/></svg>água + açúcar</div>
+      </div>
+      <div class="grupo" data-passo="2" style="display:grid;grid-template-columns:1fr 200px;gap:10px;align-items:center">
+        <div>
+          <h3>Heterogênea</h3>
+          <p class="def" style="margin:0">Mostra partes diferentes: <b>duas ou mais fases</b>.</p>
+        </div>
+        <div class="copo"><svg aria-hidden="true" viewBox="0 0 190 210"><rect x="34" y="120" width="122" height="76" rx="14" fill="url(#gAgua)"/><rect x="34" y="80" width="122" height="44" fill="url(#gOleo)"/><g class="gotas" fill="#FFE066" stroke="#E0B400" stroke-width="1.5"><circle cx="70" cy="186" r="6"/><circle cx="112" cy="184" r="7"/><circle cx="92" cy="188" r="5"/></g><use href="#becher"/></svg>água + óleo</div>
+      </div>
+    </div>
+    <div class="caixa" data-passo="3" style="position:absolute;left:560px;right:0;top:640px;display:flex;gap:30px;align-items:center">
+      <span class="rotulo" style="margin:0">Na mistura homogênea</span>
+      <div class="texto" style="font-size:31px">o que se dissolve é o <b>soluto</b> (o açúcar); o que dissolve é o <b>solvente</b> (a água).</div>
+    </div>
+  </div>
+  <aside class="notas">
+    <p>Clique 1: homogênea (água com açúcar, ar filtrado, álcool com água). Clique 2: heterogênea (água e óleo, água e areia, granito). Clique 3: soluto e solvente.</p>
+    <p>Pegadinha: o leite e o sangue parecem homogêneos, mas ao microscópio são heterogêneos.</p>
+  </aside>
+</section>
+
+<!-- 8. Sistema, fase e componente -->
+<section class="slide" data-nome="Sistema, fase e componente">
+  <div class="conteudo">
+    <p class="olho">Contando partes</p>
+    <h2 class="titulo">Sistema, fase e componente</h2>
+    <div style="position:absolute;left:0;right:0;top:160px;display:grid;grid-template-columns:repeat(3,1fr);gap:24px">
+      <div class="caixa" data-passo="1"><span class="rotulo">Sistema</span><div class="texto" style="font-size:31px">A parte que você escolhe estudar, como o conteúdo do copo.</div></div>
+      <div class="caixa" data-passo="2"><span class="rotulo">Fase</span><div class="texto" style="font-size:31px">Cada porção com o <b>mesmo aspecto</b> em todos os pontos.</div></div>
+      <div class="caixa" data-passo="3"><span class="rotulo">Componente</span><div class="texto" style="font-size:31px">Cada <b>substância</b> presente no sistema.</div></div>
+    </div>
+    <div style="position:absolute;left:560px;right:0;top:420px;display:grid;grid-template-columns:repeat(3,1fr);gap:20px" data-passo="4">
+      <div class="copo"><svg aria-hidden="true"><rect x="34" y="70" width="122" height="126" rx="14" fill="url(#gAgua)"/><use href="#becher"/></svg>água com sal<span class="selo-fase">1 fase · monofásico</span></div>
+      <div class="copo"><svg aria-hidden="true"><rect x="34" y="120" width="122" height="76" rx="14" fill="url(#gAgua)"/><rect x="34" y="80" width="122" height="44" fill="url(#gOleo)"/><use href="#becher"/></svg>água e óleo<span class="selo-fase">2 fases · bifásico</span></div>
+      <div class="copo"><svg aria-hidden="true"><rect x="34" y="120" width="122" height="76" rx="14" fill="url(#gAgua)"/><rect x="34" y="80" width="122" height="44" fill="url(#gOleo)"/><use class="boia" href="#gelo" x="76" y="104" width="38" height="38"/><use href="#becher"/></svg>gelo, água e óleo<span class="selo-fase">3 fases · trifásico</span></div>
+    </div>
+    <div class="caixa caixa-fundamental" data-passo="5" style="position:absolute;left:0;width:520px;top:420px;padding:24px 28px">
+      <span class="rotulo">Regra</span>
+      <div class="texto" style="font-size:29px">1 fase: sistema <b>homogêneo</b>. 2 ou mais: <b>heterogêneo</b>.</div>
+    </div>
+  </div>
+  <aside class="notas">
+    <p>Cliques 1 a 3: as três palavras. Clique 4: os três copos (mono, bi e trifásico). Clique 5: a regra.</p>
+    <p>O gelo flutua na água e fica embaixo do óleo, que é ainda menos denso.</p>
+  </aside>
+</section>
+
+<!-- 9. Exemplo: contando fases -->
+<section class="slide" data-nome="Exemplo: contando fases">
+  <div class="conteudo">
+    <p class="olho">Exemplo</p>
+    <h2 class="titulo">Quantas fases e quantos componentes?</h2>
+    <div style="position:absolute;left:0;right:0;top:180px;display:flex;flex-direction:column;gap:18px">
+      <div class="linha-ex" style="grid-template-columns:520px 1fr 330px" data-passo="1"><span class="f" style="font-size:36px">Água, sal e areia</span><span>água com sal é uma fase; a areia, outra</span><span class="tag tag-s">2 fases · 3 comp.</span></div>
+      <div class="linha-ex" style="grid-template-columns:520px 1fr 330px" data-passo="2"><span class="f" style="font-size:36px">Água líquida e gelo</span><span>aspectos diferentes, mas tudo é água</span><span class="tag tag-s">2 fases · 1 comp.</span></div>
+      <div class="linha-ex" style="grid-template-columns:520px 1fr 330px" data-passo="3"><span class="f" style="font-size:36px">Água, óleo e gelo</span><span>gelo na água; óleo por cima</span><span class="tag tag-s">3 fases · 2 comp.</span></div>
+    </div>
+    <div class="caixa caixa-atencao" data-passo="4" style="position:absolute;left:560px;right:0;top:600px">
+      <span class="rotulo">Atenção</span>
+      <div class="texto" style="font-size:31px">Gelo na água é sistema <b>heterogêneo</b> com <b>uma substância só</b>: não é mistura.</div>
+    </div>
+  </div>
+  <aside class="notas">
+    <p>Um clique por sistema; peça a resposta antes. Clique 4: o caso do gelo, que mais cai em prova.</p>
+  </aside>
+</section>
+
+<!-- 10. Mapa da matéria -->
+<section class="slide" data-nome="Mapa da matéria">
+  <div class="conteudo">
+    <p class="olho">Juntando tudo</p>
+    <h2 class="titulo">O mapa da matéria</h2>
+    <div class="mapa" style="top:150px">
+      <svg class="fios" viewBox="0 0 1760 750" aria-hidden="true">
+        <path d="M770 300 C 830 300, 830 140, 900 140" data-passo="1"/>
+        <path d="M770 300 C 830 300, 830 460, 900 460" data-passo="1"/>
+        <path d="M1250 140 C 1300 140, 1300 60, 1350 60" data-passo="2"/>
+        <path d="M1250 140 C 1300 140, 1300 220, 1350 220" data-passo="2"/>
+        <path d="M1250 460 C 1300 460, 1300 380, 1350 380" data-passo="3"/>
+        <path d="M1250 460 C 1300 460, 1300 540, 1350 540" data-passo="3"/>
+      </svg>
+      <div class="no raiz" style="left:560px;top:255px;width:210px;height:90px"><b>Matéria</b></div>
+      <div class="no meio" data-passo="1" style="left:900px;top:80px;width:350px;height:120px"><span><b>Sistema homogêneo</b><small>uma fase</small></span></div>
+      <div class="no meio" data-passo="1" style="left:900px;top:400px;width:350px;height:120px"><span><b>Sistema heterogêneo</b><small>duas ou mais fases</small></span></div>
+      <div class="no" data-passo="2" style="left:1350px;top:15px;width:410px;height:90px"><span><b style="font-size:30px">Substância pura</b><small>água destilada</small></span></div>
+      <div class="no" data-passo="2" style="left:1350px;top:175px;width:410px;height:90px"><span><b style="font-size:30px">Mistura homogênea</b><small>água com açúcar</small></span></div>
+      <div class="no" data-passo="3" style="left:1350px;top:335px;width:410px;height:90px"><span><b style="font-size:30px">Substância pura</b><small>em estados diferentes: gelo e água</small></span></div>
+      <div class="no" data-passo="3" style="left:1350px;top:495px;width:410px;height:90px"><span><b style="font-size:30px">Mistura heterogênea</b><small>água e óleo</small></span></div>
+    </div>
+  </div>
+  <aside class="notas">
+    <p>Clique 1: os dois tipos de sistema. Clique 2: o homogêneo pode ser substância pura ou mistura homogênea. Clique 3: o heterogêneo pode ser substância pura em estados diferentes ou mistura heterogênea.</p>
+    <p>Este é o slide para tirarem print.</p>
+  </aside>
+</section>
+
+<!-- 11. Água mineral -->
+<section class="slide" data-nome="Água mineral">
+  <div class="conteudo">
+    <p class="olho">No dia a dia</p>
+    <h2 class="titulo">A água mineral é "pura"?</h2>
+    <table class="tabela compacta" style="position:absolute;left:0;top:160px;font-size:24px">
+      <tr><th style="padding:8px 30px" colspan="2">Composição química (mg/L)</th></tr>
+      <tr><td style="padding:2px 30px;text-align:left">Bicarbonato de cálcio</td><td style="padding:2px 30px">59,86</td></tr>
+      <tr><td style="padding:2px 30px;text-align:left">Bicarbonato de magnésio</td><td style="padding:2px 30px">34,66</td></tr>
+      <tr><td style="padding:2px 30px;text-align:left">Bicarbonato de sódio</td><td style="padding:2px 30px">9,73</td></tr>
+      <tr><td style="padding:2px 30px;text-align:left">Cloreto de sódio</td><td style="padding:2px 30px">6,53</td></tr>
+      <tr><td style="padding:2px 30px;text-align:left">Nitrato de sódio</td><td style="padding:2px 30px">6,51</td></tr>
+      <tr><td style="padding:2px 30px;text-align:left">Bicarbonato de potássio</td><td style="padding:2px 30px">5,63</td></tr>
+      <tr><td style="padding:2px 30px;text-align:left">Sulfato de cálcio</td><td style="padding:2px 30px">2,53</td></tr>
+      <tr><td style="padding:2px 30px;text-align:left">Sulfato de bário</td><td style="padding:2px 30px">0,51</td></tr>
+      <tr><td style="padding:2px 30px;text-align:left">Sulfato de estrôncio</td><td style="padding:2px 30px">0,21</td></tr>
+    </table>
+    <div style="position:absolute;left:760px;right:0;top:170px;display:flex;flex-direction:column;gap:24px">
+      <p class="texto" style="margin:0">O rótulo lista vários <b>sais dissolvidos</b>.</p>
+      <div class="caixa caixa-fundamental" data-passo="1">
+        <span class="rotulo">Para a Química</span>
+        <div class="texto" style="font-size:34px">A água mineral é uma <b>mistura homogênea</b>: água (solvente) com sais (solutos).</div>
+      </div>
+      <div class="caixa caixa-atencao" data-passo="2">
+        <span class="rotulo">Atenção</span>
+        <div class="texto" style="font-size:32px">"Pura" no rótulo quer dizer limpa, própria para beber. Água como <b>substância pura</b> é a água <b>destilada</b>.</div>
+      </div>
+    </div>
+  </div>
+  <aside class="notas">
+    <p>Valores do rótulo usado no material do professor, em ordem decrescente. Pergunte: quantos componentes tem essa água? (pelo menos 10: a água e 9 sais.)</p>
+    <p>Clique 1: é mistura homogênea. Clique 2: "pura" do dia a dia × substância pura.</p>
+  </aside>
+</section>
+
+<!-- 12. Questão 1 -->
+<section class="slide questao" data-nome="Questão 1">
+  <div class="conteudo">
+    <div class="area-resolucao"></div>
+    <span class="pilula pilula-pausa" data-em="1:some">Pause o vídeo e tente</span>
+    <div class="painel-questao" style="gap:10px">
+      <p class="olho">Questão 1 · FUVEST</p>
+      <p class="enunciado" style="font-size:22px">No esquema abaixo, estão representados cinco sistemas (I a V), formados por moléculas constituídas por três tipos de átomo, representados pelas bolinhas de cores vermelha, verde e azul.</p>
+      <svg viewBox="0 0 1250 290" width="530" height="123" aria-hidden="true" style="flex:none"><g transform="translate(0 0)"><rect x="2" y="2" width="232" height="240" rx="14" fill="#fff" stroke="#292B2C" stroke-width="3"/><circle cx="57" cy="47" r="19" fill="#E8483A"/><circle cx="78" cy="80" r="19" fill="#14A863"/><circle cx="158" cy="74" r="19" fill="#E8483A"/><circle cx="193" cy="54" r="19" fill="#14A863"/><circle cx="134" cy="142" r="19" fill="#E8483A"/><circle cx="173" cy="142" r="19" fill="#14A863"/><circle cx="73" cy="172" r="19" fill="#E8483A"/><circle cx="73" cy="208" r="19" fill="#14A863"/><text x="118" y="280" text-anchor="middle" font-family="Figtree,sans-serif" font-weight="800" font-size="34" fill="#292B2C">I</text></g><g transform="translate(254 0)"><rect x="2" y="2" width="232" height="240" rx="14" fill="#fff" stroke="#292B2C" stroke-width="3"/><circle cx="57" cy="58" r="19" fill="#E8483A"/><circle cx="94" cy="50" r="19" fill="#E8483A"/><circle cx="140" cy="95" r="19" fill="#E8483A"/><circle cx="179" cy="95" r="19" fill="#E8483A"/><circle cx="83" cy="175" r="19" fill="#E8483A"/><circle cx="56" cy="202" r="19" fill="#E8483A"/><circle cx="157" cy="165" r="19" fill="#E8483A"/><circle cx="157" cy="202" r="19" fill="#E8483A"/><text x="118" y="280" text-anchor="middle" font-family="Figtree,sans-serif" font-weight="800" font-size="34" fill="#292B2C">II</text></g><g transform="translate(508 0)"><rect x="2" y="2" width="232" height="240" rx="14" fill="#fff" stroke="#292B2C" stroke-width="3"/><circle cx="24" cy="28" r="19" fill="#E8483A"/><circle cx="84" cy="25" r="19" fill="#E8483A"/><circle cx="54" cy="47" r="19" fill="#14A863"/><circle cx="166" cy="35" r="19" fill="#E8483A"/><circle cx="206" cy="35" r="19" fill="#E8483A"/><circle cx="54" cy="85" r="19" fill="#E8483A"/><circle cx="146" cy="95" r="19" fill="#E8483A"/><circle cx="186" cy="95" r="19" fill="#14A863"/><circle cx="26" cy="150" r="19" fill="#E8483A"/><circle cx="63" cy="140" r="19" fill="#E8483A"/><circle cx="146" cy="155" r="19" fill="#E8483A"/><circle cx="206" cy="150" r="19" fill="#E8483A"/><circle cx="178" cy="172" r="19" fill="#14A863"/><circle cx="32" cy="208" r="19" fill="#E8483A"/><circle cx="71" cy="208" r="19" fill="#14A863"/><circle cx="178" cy="210" r="19" fill="#E8483A"/><text x="118" y="280" text-anchor="middle" font-family="Figtree,sans-serif" font-weight="800" font-size="34" fill="#292B2C">III</text></g><g transform="translate(762 0)"><rect x="2" y="2" width="232" height="240" rx="14" fill="#fff" stroke="#292B2C" stroke-width="3"/><circle cx="35" cy="47" r="19" fill="#E8483A"/><circle cx="72" cy="37" r="19" fill="#E8483A"/><circle cx="173" cy="32" r="19" fill="#E8483A"/><circle cx="153" cy="66" r="19" fill="#E8483A"/><circle cx="193" cy="66" r="19" fill="#E8483A"/><circle cx="32" cy="114" r="19" fill="#1677C9"/><circle cx="70" cy="114" r="19" fill="#1677C9"/><circle cx="143" cy="133" r="19" fill="#E8483A"/><circle cx="182" cy="133" r="19" fill="#E8483A"/><circle cx="60" cy="173" r="19" fill="#E8483A"/><circle cx="40" cy="207" r="19" fill="#E8483A"/><circle cx="80" cy="207" r="19" fill="#E8483A"/><circle cx="146" cy="200" r="19" fill="#1677C9"/><circle cx="185" cy="200" r="19" fill="#1677C9"/><text x="118" y="280" text-anchor="middle" font-family="Figtree,sans-serif" font-weight="800" font-size="34" fill="#292B2C">IV</text></g><g transform="translate(1016 0)"><rect x="2" y="2" width="232" height="240" rx="14" fill="#fff" stroke="#292B2C" stroke-width="3"/><circle cx="147" cy="65" r="19" fill="#E8483A"/><circle cx="187" cy="65" r="19" fill="#1677C9"/><circle cx="48" cy="120" r="19" fill="#14A863"/><circle cx="87" cy="120" r="19" fill="#14A863"/><circle cx="152" cy="162" r="19" fill="#14A863"/><circle cx="192" cy="162" r="19" fill="#14A863"/><circle cx="53" cy="200" r="19" fill="#E8483A"/><circle cx="93" cy="200" r="19" fill="#1677C9"/><text x="118" y="280" text-anchor="middle" font-family="Figtree,sans-serif" font-weight="800" font-size="34" fill="#292B2C">V</text></g></svg>
+      <p class="enunciado" style="font-size:22px">Estes sistemas podem ser corretamente associados a</p>
+      <ol class="alternativas" style="gap:6px">
+        <li data-em="2:apaga" style="font-size:21px;padding:5px 14px"><b>A</b><span>misturas de gases em todos os casos.</span></li>
+        <li data-em="2:apaga" style="font-size:21px;padding:5px 14px"><b>B</b><span>substâncias compostas em todos os casos.</span></li>
+        <li data-em="2:apaga" style="font-size:21px;padding:5px 14px"><b>C</b><span>substâncias puras no estado gasoso, em todos os casos.</span></li>
+        <li data-em="2:apaga" style="font-size:21px;padding:5px 14px"><b>D</b><span>uma substância pura e quatro misturas, em que o número de elementos químicos que entram em suas composições é 2, 1, 2, 2 e 3, respectivamente.</span></li>
+        <li data-em="2:certo" style="font-size:21px;padding:5px 14px"><b>E</b><span>duas substâncias puras e três misturas, em que o número de elementos químicos que entram em suas composições é 2, 1, 2, 2 e 3, respectivamente.</span></li>
+      </ol>
+    </div>
+  </div>
+  <aside class="resolucao">
+    <p class="dados"><b>Dados:</b> cada cor é um elemento; molécula igual = substância pura.</p>
+    <ol class="passos">
+      <li><b>I:</b> só moléculas vermelho-verde. Pura; 2 elementos.</li>
+      <li><b>II:</b> só moléculas vermelho-vermelho. Pura; 1 elemento.</li>
+      <li><b>III:</b> moléculas diferentes. Mistura; 2 elementos.</li>
+      <li><b>IV:</b> moléculas diferentes. Mistura; 2 elementos.</li>
+      <li><b>V:</b> moléculas diferentes. Mistura; 3 elementos.</li>
+      <li><b>Total:</b> 2 puras e 3 misturas; 2, 1, 2, 2 e 3.</li>
+    </ol>
+    <p class="resposta"><b>Resposta:</b> duas puras e três misturas. <b>Gabarito E.</b></p>
+    <p class="atencao"><b>Destaque no quadro:</b> Conte tipos de molécula (pura ou mistura) e cores (elementos).</p>
+    <ul class="erros">
+      <li><b>A</b> I e II são substâncias puras, não misturas.</li>
+      <li><b>B</b> II é substância simples (um elemento).</li>
+      <li><b>C</b> III, IV e V são misturas.</li>
+      <li><b>D</b> São duas puras (I e II), não uma.</li>
+    </ul>
+  </aside>
+  <aside class="notas">
+    <p>Clique 1 tira o aviso de pausa: resolva na área (D liga a caneta; E esconde o enunciado). Clique 2: gabarito E.</p>
+    <p>Sistema a sistema: tipos de molécula diferentes = mistura; cores diferentes = elementos.</p>
+  </aside>
+</section>
+
+<!-- 13. Questão 2 -->
+<section class="slide questao" data-nome="Questão 2">
+  <div class="conteudo">
+    <div class="area-resolucao"></div>
+    <span class="pilula pilula-pausa" data-em="1:some">Pause o vídeo e tente</span>
+    <div class="painel-questao" style="gap:12px">
+      <p class="olho">Questão 2 · Ufes</p>
+      <p class="enunciado" style="font-size:25px">Observe a representação dos sistemas I, II e III e seus componentes. O número de fases em cada um é, respectivamente:</p>
+      <svg viewBox="0 0 570 250" width="530" height="232" aria-hidden="true" style="flex:none">
+        <g font-family="Figtree,sans-serif" font-weight="800" font-size="24" fill="#292B2C" text-anchor="middle"><text x="95" y="20">I</text><text x="285" y="20">II</text><text x="475" y="20">III</text></g>
+        <g transform="translate(0 30)">
+          <rect x="34" y="120" width="122" height="76" rx="14" fill="url(#gAgua)"/><rect x="34" y="80" width="122" height="44" fill="url(#gOleo)"/><use class="boia sempre" href="#gelo" x="76" y="102" width="38" height="38"/><use href="#becher" width="190" height="210"/>
+        </g>
+        <g transform="translate(190 30)">
+          <rect x="34" y="70" width="122" height="126" rx="14" fill="url(#gAgua)"/><use class="boia sempre" href="#gelo" x="74" y="56" width="40" height="40"/>
+          <g class="bolhas" fill="#fff" stroke="#7FB4E0" stroke-width="2"><circle cx="58" cy="190" r="5"/><circle cx="80" cy="190" r="4"/><circle cx="120" cy="190" r="6"/><circle cx="135" cy="190" r="4"/><circle cx="66" cy="190" r="4"/><circle cx="100" cy="190" r="4"/></g>
+          <use href="#becher" width="190" height="210"/>
+        </g>
+        <g transform="translate(380 30)">
+          <rect x="34" y="120" width="122" height="76" rx="14" fill="url(#gAgua)"/><rect x="34" y="80" width="122" height="44" fill="url(#gOleo)"/><use class="boia sempre" href="#gelo" x="96" y="102" width="38" height="38"/>
+          <path d="M50 196 q4 -26 30 -30 q22 -2 30 14 q4 10 -2 16 z" fill="#A8A2B8"/><g fill="#5E5A70"><circle cx="66" cy="186" r="3"/><circle cx="84" cy="176" r="3"/><circle cx="96" cy="190" r="3"/></g><g fill="#F3D6C8"><circle cx="76" cy="190" r="3"/><circle cx="92" cy="182" r="2.5"/></g>
+          <use href="#becher" width="190" height="210"/>
+        </g>
+      </svg>
+      <p class="enunciado" style="font-size:21px;color:var(--cinza)">I. Óleo, água e gelo. II. Água gaseificada e gelo. III. Água salgada, gelo, óleo e granito.</p>
+      <ol class="alternativas curtas">
+        <li data-em="2:apaga"><b>A</b><span>3, 2 e 4</span></li>
+        <li data-em="2:apaga"><b>B</b><span>3, 3 e 4</span></li>
+        <li data-em="2:apaga"><b>C</b><span>2, 2 e 4</span></li>
+        <li data-em="2:apaga"><b>D</b><span>3, 2 e 5</span></li>
+        <li data-em="2:certo"><b>E</b><span>3, 3 e 6</span></li>
+      </ol>
+    </div>
+  </div>
+  <aside class="resolucao">
+    <p class="dados"><b>Dados:</b> cada porção com aspecto diferente é uma fase.</p>
+    <ol class="passos">
+      <li><b>I:</b> óleo + água + gelo = 3 fases.</li>
+      <li><b>II:</b> água + gás (bolhas) + gelo = 3 fases.</li>
+      <li><b>Granito:</b> quartzo + feldspato + mica = 3 fases.</li>
+      <li><b>III:</b> água salgada + gelo + óleo + 3 = 6 fases.</li>
+    </ol>
+    <p class="resposta"><b>Resposta:</b> 3, 3 e 6. <b>Gabarito E.</b></p>
+    <p class="atencao"><b>Destaque no quadro:</b> O gás da água gaseificada é uma fase; o granito conta 3.</p>
+    <ul class="erros">
+      <li><b>A</b> Esquece as bolhas e conta o granito como 1.</li>
+      <li><b>B</b> Conta o granito como 1 fase.</li>
+      <li><b>C</b> Não separa o gelo da água em I e II.</li>
+      <li><b>D</b> Esquece as bolhas e conta o granito como 2.</li>
+    </ul>
+  </aside>
+  <aside class="notas">
+    <p>Clique 1 tira o aviso de pausa. Clique 2: gabarito E.</p>
+    <p>Sal dissolvido não é fase (a água salgada é uma fase só). O granito tem três minerais visíveis: quartzo, feldspato e mica.</p>
+  </aside>
+</section>
+
+<!-- 14. Questão 3 -->
+<section class="slide questao" data-nome="Questão 3">
+  <div class="conteudo">
+    <div class="area-resolucao"></div>
+    <span class="pilula pilula-pausa" data-em="1:some">Pause o vídeo e tente</span>
+    <div class="painel-questao">
+      <p class="olho">Questão 3 · EsPCEx</p>
+      <p class="enunciado" style="font-size:25px">O critério utilizado pelos químicos para classificar as substâncias é baseado no tipo de átomo que as constitui. Assim, uma substância formada por um único tipo de átomo é dita simples e a formada por mais de um tipo de átomo é dita composta.</p>
+      <p class="enunciado" style="font-size:25px">Baseado neste critério, a alternativa que contém apenas representações de substâncias simples é:</p>
+      <ol class="alternativas curtas">
+        <li data-em="2:apaga"><b>A</b><span>HCl, CaO e MgS.</span></li>
+        <li data-em="2:apaga"><b>B</b><span>Cl<sub>2</sub>, CO<sub>2</sub> e O<sub>3</sub>.</span></li>
+        <li data-em="2:certo"><b>C</b><span>O<sub>2</sub>, H<sub>2</sub> e I<sub>2</sub>.</span></li>
+        <li data-em="2:apaga"><b>D</b><span>CH<sub>4</sub>, C<sub>6</sub>H<sub>6</sub> e H<sub>2</sub>O.</span></li>
+        <li data-em="2:apaga"><b>E</b><span>NH<sub>3</sub>, NaCl e P<sub>4</sub>.</span></li>
+      </ol>
+    </div>
+  </div>
+  <aside class="resolucao">
+    <p class="dados"><b>Dados:</b> simples = um único elemento na fórmula.</p>
+    <ol class="passos">
+      <li><b>Procure fórmula com um símbolo só</b></li>
+      <li><b>O<sub>2</sub>:</b> só O. <b>H<sub>2</sub>:</b> só H. <b>I<sub>2</sub>:</b> só I.</li>
+      <li><b>As três são simples</b></li>
+    </ol>
+    <p class="resposta"><b>Resposta:</b> O<sub>2</sub>, H<sub>2</sub> e I<sub>2</sub>. <b>Gabarito C.</b></p>
+    <p class="atencao"><b>Destaque no quadro:</b> Conte os símbolos diferentes, não o número embaixo.</p>
+    <ul class="erros">
+      <li><b>A</b> Todas compostas (dois elementos cada).</li>
+      <li><b>B</b> CO<sub>2</sub> é composta.</li>
+      <li><b>D</b> Todas compostas.</li>
+      <li><b>E</b> NH<sub>3</sub> e NaCl são compostas; só P<sub>4</sub> é simples.</li>
+    </ul>
+  </aside>
+  <aside class="notas">
+    <p>Clique 1 tira o aviso de pausa. Clique 2: gabarito C.</p>
+    <p>Em B, Cl₂ e O₃ são simples, mas o CO₂ estraga a alternativa. Em E, o P₄ é simples, mas NH₃ e NaCl não.</p>
+  </aside>
+</section>
+
+<!-- 15. Resumo -->
+<section class="slide" data-nome="Resumo">
+  <div class="conteudo">
+    <p class="olho">Resumo</p>
+    <h2 class="titulo">O essencial</h2>
+    <div class="resumo" style="position:absolute;left:0;right:0;top:150px">
+      <div><b>Química</b> estuda a matéria, as suas transformações e a energia envolvida.</div>
+      <div><b>Substância pura:</b> um tipo só de partícula; PF, PE e densidade fixos.</div>
+      <div><b>Simples:</b> um elemento (O<sub>2</sub>, O<sub>3</sub>). <b>Composta:</b> dois ou mais (H<sub>2</sub>O).</div>
+      <div><b>Alotropia:</b> simples diferentes do mesmo elemento (grafite, diamante, fulereno).</div>
+      <div><b>Mistura homogênea</b> (solução): 1 fase. <b>Heterogênea:</b> 2 ou mais.</div>
+      <div><b>Fase</b> é cada porção com o mesmo aspecto; <b>componente</b>, cada substância.</div>
+    </div>
+    <div class="caixa caixa-atencao" style="position:absolute;left:560px;right:0;top:650px">
+      <div class="texto" style="font-size:30px">Gelo e água: sistema <b>heterogêneo</b> de <b>um componente</b> só.</div>
+    </div>
+  </div>
+  <aside class="notas">
+    <p>Peça para tirarem um print desta tela.</p>
+  </aside>
+</section>
+
+<!-- 16. A seguir -->
+<section class="slide capa" data-nome="A seguir">
+  <div class="estrelas"></div>
+  <div class="texto-capa" style="top:170px">
+    <span class="selo">Química · IF</span>
+    <p class="aula" style="font-size:26px">A seguir · Separação de misturas · Parte 1 de 2</p>
+    <h1>Separação de misturas</h1>
+    <p class="sub">Catação, decantação, filtração e centrifugação</p>
+  </div>
+  <svg class="emblema" viewBox="0 0 640 640" aria-hidden="true">
+    <path d="M200 150 h240 l-90 150 v150 h-60 v-150 z" fill="none" stroke="#fff" stroke-opacity=".7" stroke-width="8" stroke-linejoin="round"/>
+    <path d="M232 200 h176 l-60 100 h-56 z" fill="#FFD10C" opacity=".9"/>
+    <circle cx="320" cy="500" r="16" fill="#FFD10C"/><circle cx="320" cy="560" r="10" fill="#fff" opacity=".8"/>
+  </svg>
+  <img class="logo-capa" src="{{LOGO_BRANCO}}" alt="Quarks">
+  <aside class="notas"><p>Próxima: como separar os componentes de uma mistura.</p></aside>
+</section>

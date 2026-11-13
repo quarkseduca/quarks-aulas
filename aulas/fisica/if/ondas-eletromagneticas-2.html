@@ -1,0 +1,415 @@
+<!--aula
+{"disciplina": "fisica", "curso": "IF", "assunto": "Ondas eletromagnéticas", "parte": "Parte 2 de 2", "titulo": "Telecomunicações", "scripts": ["animacoes-ondas.js"]}
+-->
+<!-- Fonte: apostila IF, Física, cap. 5 Ondas (5.2 Ondas eletromagnéticas: "Telecomunicações: rádio, TV e celular", os usos do espectro de "O espectro eletromagnético e seus usos" e o resumo de 5.2). Questões da apostila: Modelo IF if-fisica-ondas m028 (FIS-0829), m007 (FIS-0808) e m030 (FIS-0831). -->
+<style>
+  .caixa, .painel, .linha-ex, .est { box-sizing: border-box; }
+  .linha-ex { background: var(--branco); border: 2px solid var(--lilas-2); border-radius: 24px; padding: 14px 26px; font-size: 30px; line-height: 1.3; }
+  .linha-ex b { color: var(--roxo-titulo); }
+  .tag { display: inline-block; padding: 5px 18px; border-radius: 999px; font-weight: 800; font-size: 23px; white-space: nowrap; }
+  .tag-m { background: var(--d-clara); color: var(--d-forte); }
+  .tag-e { background: #FFF1C2; color: #8A6A00; }
+  .tag-s { background: var(--lilas); color: var(--roxo-titulo); }
+  .rot { font-family: Figtree, 'Segoe UI', sans-serif; font-weight: 800; }
+  .painel { background: var(--branco); border: 2px solid var(--lilas-2); border-radius: 30px; padding: 20px 28px; }
+  .painel h3 { margin: 0 0 6px; font: 800 40px var(--fonte-titulo); letter-spacing: -.02em; color: var(--roxo-titulo); }
+  .painel p { margin: 8px 0 0; font-size: 27px; line-height: 1.33; }
+  .painel b { color: var(--roxo-titulo); }
+  .est { display: flex; flex-direction: column; align-items: center; gap: 6px; text-align: center; }
+  .est > svg { width: 170px; height: 150px; }
+  .est > b { font: 800 30px var(--fonte-titulo); color: var(--roxo-titulo); letter-spacing: -.01em; }
+  .est > span { font-size: 24px; color: var(--cinza); line-height: 1.25; }
+  .tab-ap { border-collapse: separate; border-spacing: 0; background: var(--branco); border: 2px solid var(--lilas-2); border-radius: 26px; overflow: hidden; width: 1760px; font-size: 30px; }
+  .tab-ap th { background: var(--d-clara); color: var(--d-forte); font-weight: 800; padding: 14px 26px; text-align: left; }
+  .tab-ap td { padding: 12px 26px; border-top: 2px solid var(--lilas); }
+  .tab-ap td:first-child { font-weight: 800; color: var(--roxo-titulo); }
+  /* ondas de rádio saindo da antena */
+  @keyframes sai { 0% { transform: scale(.3); opacity: 0; } 15% { opacity: 1; } 100% { transform: scale(1.6); opacity: 0; } }
+  .arco { transform-box: fill-box; transform-origin: 0% 50%; opacity: 0; }
+  .slide.ativo .mostra .arco { animation: sai 4.5s ease-out infinite; }
+  .arco:nth-child(2) { animation-delay: -1.5s !important; } .arco:nth-child(3) { animation-delay: -3s !important; }
+  /* sinal que corre pelo caminho (pontos que andam) */
+  @keyframes corre { from { stroke-dashoffset: 0; } to { stroke-dashoffset: -64; } }
+  .corre { stroke-dasharray: 10 22; }
+  .slide.ativo .mostra .corre { animation: corre 1.6s linear infinite; }
+  /* pulsos de luz na fibra óptica */
+  @keyframes pulso-fibra { from { transform: translateX(0); } to { transform: translateX(240px); } }
+  .slide.ativo .mostra .pulsos { animation: pulso-fibra 4s linear infinite; }
+  /* celular: micro-ondas até a antena da cidade */
+  @keyframes vai-volta { 0%, 100% { opacity: .2; } 50% { opacity: 1; } }
+  .slide.ativo .mostra .pisca { animation: vai-volta 4s ease-in-out infinite; }
+  .pisca:nth-child(2) { animation-delay: -1.3s !important; } .pisca:nth-child(3) { animation-delay: -2.6s !important; }
+</style>
+
+<svg width="0" height="0" style="position:absolute" aria-hidden="true">
+  <defs>
+    <symbol id="tc-antena" viewBox="0 0 100 160"><path d="M50 30 L20 156 M50 30 L80 156 M30 115 h40 M38 75 h24" stroke="#4B39B3" stroke-width="7" stroke-linecap="round" fill="none"/><circle cx="50" cy="26" r="10" fill="#FFD10C" stroke="#4B39B3" stroke-width="4"/></symbol>
+    <symbol id="tc-mic" viewBox="0 0 100 140"><rect x="30" y="8" width="40" height="70" rx="20" fill="#4B39B3"/><path d="M20 60 q0 36 30 36 q30 0 30 -36" fill="none" stroke="#4B39B3" stroke-width="6"/><path d="M50 96 v30 M30 128 h40" stroke="#4B39B3" stroke-width="6" stroke-linecap="round"/></symbol>
+    <symbol id="tc-falante" viewBox="0 0 120 140"><rect x="10" y="10" width="100" height="120" rx="18" fill="#4B39B3"/><circle cx="60" cy="82" r="32" fill="#8C7BEA"/><circle cx="60" cy="82" r="12" fill="#3F2FA0"/><circle cx="60" cy="34" r="12" fill="#8C7BEA"/></symbol>
+    <symbol id="tc-cel" viewBox="0 0 70 120"><rect x="5" y="5" width="60" height="110" rx="12" fill="#292B2C"/><rect x="11" y="16" width="48" height="84" rx="4" fill="#8C7BEA"/></symbol>
+  </defs>
+</svg>
+
+<!-- 1. Capa -->
+<section class="slide capa" data-nome="Capa">
+  <div class="estrelas"></div>
+  <div class="texto-capa">
+    <span class="selo">Física · IF</span>
+    <p class="aula">Ondas eletromagnéticas · Parte 2 de 2</p>
+    <h1>Telecomunicações</h1>
+    <p class="sub">Rádio, TV, celular e fibra óptica</p>
+  </div>
+  <svg class="emblema" viewBox="0 0 640 640" aria-hidden="true">
+    <g class="gira-lento"><ellipse cx="320" cy="320" rx="300" ry="128" fill="none" stroke="#fff" stroke-opacity=".38" stroke-width="2" transform="rotate(-10 320 320)"/></g>
+    <circle cx="320" cy="320" r="132" fill="#FFD10C"/>
+    <image href="{{SYM_ROXO}}" x="238" y="238" width="164" height="164"/>
+    <g fill="none" stroke="#fff" stroke-width="8" stroke-linecap="round"><path d="M250 150 q70 -60 140 0" opacity=".9"/><path d="M210 110 q110 -90 220 0" opacity=".6"/><path d="M170 70 q150 -120 300 0" opacity=".35"/></g>
+  </svg>
+  <img class="logo-capa" src="{{LOGO_BRANCO}}" alt="Quarks">
+  <aside class="notas"><p>Segunda parte de Ondas eletromagnéticas: como som e imagem viajam até o outro lado do mundo (rádio, TV, celular, fibra óptica e satélites) e os aparelhos do dia a dia que usam ondas eletromagnéticas.</p></aside>
+</section>
+
+<!-- 2. Gancho -->
+<section class="slide" data-nome="Antes e hoje">
+  <div class="conteudo">
+    <p class="olho">Para começar</p>
+    <h2 class="titulo">Uma notícia, dois séculos</h2>
+    <div style="position:absolute;left:0;right:0;top:160px;display:grid;grid-template-columns:1fr 1fr;gap:40px">
+      <div class="painel">
+        <h3>Há duzentos anos</h3>
+        <svg viewBox="0 0 760 170" width="760" height="170" style="display:block" aria-hidden="true">
+          <path d="M0 150 H760" stroke="#DCD6F3" stroke-width="8" stroke-linecap="round"/>
+          <g transform="translate(110 40)"><rect x="0" y="0" width="190" height="120" rx="12" fill="#FFF8D6" stroke="#B88B54" stroke-width="5"/><path d="M0 4 L95 70 L190 4" fill="none" stroke="#B88B54" stroke-width="5" stroke-linejoin="round"/><circle cx="95" cy="70" r="16" fill="#C2384F"/></g><text x="205" y="30" text-anchor="middle" class="rot" font-size="24" fill="#5E5A70">carta</text>
+          <path d="M470 120 h220 l-30 30 h-170 z" fill="#4B39B3"/><path d="M570 30 v90 M570 34 l60 70 h-60" fill="#E4DEFB" stroke="#4B39B3" stroke-width="5"/>
+        </svg>
+        <p>Uma notícia levava <b>dias ou semanas</b> para atravessar um país, a cavalo ou de navio.</p>
+      </div>
+      <div class="painel" data-passo="1">
+        <h3>Hoje</h3>
+        <svg viewBox="0 0 760 170" width="760" height="170" style="display:block" aria-hidden="true">
+          <svg x="40" y="20" width="80" height="140"><use href="#tc-cel"/></svg>
+          <svg x="640" y="20" width="80" height="140"><use href="#tc-cel"/></svg>
+          <path class="corre" d="M130 90 Q380 -10 630 90" fill="none" stroke="#0F8B8D" stroke-width="7" stroke-linecap="round"/>
+          <text x="380" y="140" text-anchor="middle" class="rot" font-size="26" fill="#0B6B6D">Juiz de Fora ↔ Japão: na hora</text>
+        </svg>
+        <p>Uma <b>chamada de vídeo</b> liga Juiz de Fora ao Japão <b>na hora</b>.</p>
+      </div>
+    </div>
+    <div class="caixa caixa-fundamental" data-passo="2" style="position:absolute;left:580px;right:0;top:620px;padding:20px 30px">
+      <div class="texto" style="font-size:31px">A diferença: transformar som e imagem em <b>sinais que viajam muito rápido</b>.</div>
+    </div>
+  </div>
+  <aside class="notas"><p>Abertura da apostila de "Telecomunicações: rádio, TV e celular".</p></aside>
+</section>
+
+<!-- 3. A ideia da transmissão -->
+<section class="slide" data-nome="A ideia da transmissão">
+  <div class="conteudo">
+    <p class="olho">Definição</p>
+    <h2 class="titulo">A ideia da transmissão</h2>
+    <svg viewBox="0 0 1760 260" width="1760" height="260" style="position:absolute;left:0;top:160px;overflow:visible" aria-hidden="true">
+      <g class="rot" text-anchor="middle">
+        <rect x="0" y="60" width="270" height="120" rx="30" fill="var(--lilas)" stroke="#8C7BEA" stroke-width="3"/><text x="135" y="112" font-size="30" fill="#3F2FA0">som</text><text x="135" y="150" font-size="30" fill="#3F2FA0">e imagem</text>
+        <g data-passo="1"><path class="corre" d="M280 120 H420" stroke="#4B39B3" stroke-width="6" fill="none"/>
+        <rect x="430" y="60" width="270" height="120" rx="30" fill="#fff" stroke="#4B39B3" stroke-width="3"/><text x="565" y="112" font-size="30" fill="#3F2FA0">sinal</text><text x="565" y="150" font-size="30" fill="#3F2FA0">elétrico</text></g>
+        <g data-passo="2"><path class="corre" d="M710 120 H850" stroke="#E0A800" stroke-width="6" fill="none"/>
+        <rect x="860" y="40" width="300" height="160" rx="30" fill="#FFF1C2" stroke="#E0A800" stroke-width="3"/><text x="1010" y="100" font-size="28" fill="#8A6A00">onda</text><text x="1010" y="136" font-size="28" fill="#8A6A00">eletromagnética</text><text x="1010" y="172" font-size="22" fill="#8A6A00">(ou pulsos de luz)</text></g>
+        <g data-passo="3"><path class="corre" d="M1170 120 H1310" stroke="#4B39B3" stroke-width="6" fill="none"/>
+        <rect x="1320" y="60" width="200" height="120" rx="30" fill="#fff" stroke="#4B39B3" stroke-width="3"/><text x="1420" y="112" font-size="28" fill="#3F2FA0">sinal</text><text x="1420" y="150" font-size="28" fill="#3F2FA0">elétrico</text>
+        <path class="corre" d="M1530 120 H1580" stroke="#4B39B3" stroke-width="6" fill="none"/>
+        <rect x="1590" y="60" width="170" height="120" rx="30" fill="var(--lilas)" stroke="#8C7BEA" stroke-width="3"/><text x="1675" y="112" font-size="28" fill="#3F2FA0">som e</text><text x="1675" y="150" font-size="28" fill="#3F2FA0">imagem</text></g>
+        <text x="350" y="230" font-size="22" fill="#5E5A70">aparelho de origem</text><text x="1490" y="230" font-size="22" fill="#5E5A70" data-passo="3">no destino, o caminho de volta</text>
+      </g>
+    </svg>
+    <div class="caixa caixa-fundamental" data-passo="4" style="position:absolute;left:580px;right:0;top:520px">
+      <div class="texto" style="font-size:31px">Para transmitir som e imagem, o aparelho os transforma em <b>sinais elétricos</b>, e os sinais elétricos em <b>ondas eletromagnéticas</b> (ou em pulsos de luz). No destino, outro aparelho faz o <b>caminho de volta</b>.</div>
+    </div>
+  </div>
+  <aside class="notas"><p>Definição da apostila em forma de esquema. Os pontinhos que correm mostram o sentido do sinal. Um clique por etapa.</p></aside>
+</section>
+
+<!-- 4. O caminho do som numa rádio -->
+<section class="slide" data-nome="O caminho do som numa rádio">
+  <div class="conteudo">
+    <p class="olho">Rádio</p>
+    <h2 class="titulo">O caminho do som numa rádio</h2>
+    <div style="position:absolute;left:0;right:0;top:150px;display:grid;grid-template-columns:repeat(4,1fr);gap:20px">
+      <div class="est" data-passo="1"><svg viewBox="0 0 100 140" aria-hidden="true"><use href="#tc-mic"/></svg><b>1. Microfone</b><span>transforma o som da voz em <b>sinal elétrico</b></span></div>
+      <div class="est" data-passo="2"><svg viewBox="0 0 170 150" aria-hidden="true"><svg x="0" y="0" width="94" height="150"><use href="#tc-antena"/></svg><g transform="translate(74 30)"><path class="arco" d="M0 -26 q24 26 0 52" fill="none" stroke="#0F8B8D" stroke-width="5" stroke-linecap="round"/><path class="arco" d="M0 -26 q24 26 0 52" fill="none" stroke="#0F8B8D" stroke-width="6" stroke-linecap="round"/><path class="arco" d="M0 -26 q24 26 0 52" fill="none" stroke="#0F8B8D" stroke-width="6" stroke-linecap="round"/></g></svg><b>2. Transmissor e antena</b><span>da emissora: o sinal vira <b>ondas de rádio</b>, que se espalham à velocidade da luz</span></div>
+      <div class="est" data-passo="3"><svg viewBox="0 0 170 150" aria-hidden="true"><svg x="38" y="0" width="94" height="150"><use href="#tc-antena"/></svg></svg><b>3. Antena do seu rádio</b><span>capta as ondas e as transforma de volta em <b>sinal elétrico</b></span></div>
+      <div class="est" data-passo="4"><svg viewBox="0 0 120 140" aria-hidden="true"><use href="#tc-falante"/></svg><b>4. Alto-falante</b><span>transforma o sinal elétrico em <b>som</b></span></div>
+    </div>
+    <div data-passo="5" style="position:absolute;left:580px;right:0;top:560px">
+      <div class="caixa" style="padding:18px 28px">
+        <span class="rotulo">Que onda viaja em cada trecho?</span>
+        <div style="display:flex;flex-wrap:wrap;gap:12px;margin-top:6px">
+          <span class="tag tag-m">boca → microfone: som (mecânica)</span>
+          <span class="tag tag-e">antena → antena: rádio (eletromagnética)</span>
+          <span class="tag tag-m">alto-falante → ouvido: som (mecânica)</span>
+        </div>
+      </div>
+    </div>
+  </div>
+  <aside class="notas">
+    <p>As quatro etapas da apostila, uma por clique. Clique 5: a pergunta que cai em questão (é a Questão 2 desta parte): o som só viaja no ar perto do microfone e perto do alto-falante; entre as antenas, quem viaja é a onda de rádio. Dentro dos aparelhos e fios, o que circula é sinal elétrico.</p>
+  </aside>
+</section>
+
+<!-- 5. TV e celular -->
+<section class="slide" data-nome="TV e celular">
+  <div class="conteudo">
+    <p class="olho">Imagem e telefone</p>
+    <h2 class="titulo">TV e celular</h2>
+    <div class="painel" style="position:absolute;left:0;width:820px;top:160px">
+      <h3>Na TV</h3>
+      <svg viewBox="0 0 760 150" width="760" height="150" style="display:block" aria-hidden="true">
+        <rect x="20" y="40" width="110" height="74" rx="14" fill="#4B39B3"/><circle cx="75" cy="77" r="24" fill="#8C7BEA"/><circle cx="75" cy="77" r="10" fill="#1C1433"/><rect x="130" y="56" width="30" height="42" fill="#4B39B3"/>
+        <path class="corre" d="M180 77 H560" stroke="#0F8B8D" stroke-width="7" fill="none" stroke-linecap="round"/>
+        <rect x="580" y="20" width="170" height="110" rx="12" fill="#292B2C"/><rect x="592" y="32" width="146" height="86" rx="6" fill="#8C7BEA"/><path d="M640 130 l-16 18 h82 l-16 -18" fill="#292B2C"/>
+      </svg>
+      <p>A <b>câmera</b> faz com a imagem o que o <b>microfone</b> faz com o som: transforma em sinal elétrico.</p>
+    </div>
+    <div class="painel" data-passo="1" style="position:absolute;left:880px;right:0;top:160px">
+      <h3>No celular</h3>
+      <svg viewBox="0 0 800 150" width="800" height="150" style="display:block" aria-hidden="true">
+        <svg x="20" y="20" width="64" height="110"><use href="#tc-cel"/></svg>
+        <g><path class="pisca" d="M100 60 q14 15 0 30" fill="none" stroke="#0F8B8D" stroke-width="5" stroke-linecap="round"/><path class="pisca" d="M116 50 q22 25 0 50" fill="none" stroke="#0F8B8D" stroke-width="5" stroke-linecap="round"/><path class="pisca" d="M132 40 q30 35 0 70" fill="none" stroke="#0F8B8D" stroke-width="5" stroke-linecap="round"/></g>
+        <svg x="240" y="0" width="90" height="150"><use href="#tc-antena"/></svg>
+        <svg x="440" y="0" width="90" height="150"><use href="#tc-antena"/></svg>
+        <path class="corre" d="M330 120 H440 M530 120 H640" stroke="#4B39B3" stroke-width="6" fill="none"/>
+        <rect x="650" y="40" width="130" height="90" rx="16" fill="var(--lilas)" stroke="#8C7BEA" stroke-width="3"/><text x="715" y="82" text-anchor="middle" class="rot" font-size="20" fill="#3F2FA0">telefonia</text><text x="715" y="108" text-anchor="middle" class="rot" font-size="20" fill="#3F2FA0">e internet</text>
+      </svg>
+      <p>Usa <b>micro-ondas</b> para falar com <b>antenas espalhadas pela cidade</b>, que o ligam à rede de telefonia e à internet.</p>
+    </div>
+  </div>
+  <aside class="notas"><p>Da apostila. Clique 1: o celular; as micro-ondas vão e voltam entre o aparelho e a antena mais próxima.</p></aside>
+</section>
+
+<!-- 6. Fibra óptica e satélites -->
+<section class="slide" data-nome="Fibra e satélite">
+  <div class="conteudo">
+    <p class="olho">Entre cidades e países</p>
+    <h2 class="titulo">Fibra óptica e satélites</h2>
+    <div class="painel" style="position:absolute;left:0;width:820px;top:160px">
+      <h3>Fibra óptica</h3>
+      <svg viewBox="0 0 760 140" width="760" height="140" style="display:block" aria-hidden="true">
+        <defs><clipPath id="fibra-c"><rect x="20" y="40" width="720" height="60" rx="30"/></clipPath></defs>
+        <rect x="20" y="40" width="720" height="60" rx="30" fill="#E8F3FC" stroke="#7FB4E0" stroke-width="4"/>
+        <g clip-path="url(#fibra-c)"><g class="pulsos" fill="#FFD10C"><rect x="-460" y="60" width="70" height="20" rx="10"/><rect x="-220" y="60" width="70" height="20" rx="10"/><rect x="20" y="60" width="70" height="20" rx="10"/><rect x="260" y="60" width="70" height="20" rx="10"/><rect x="500" y="60" width="70" height="20" rx="10"/><rect x="740" y="60" width="70" height="20" rx="10"/></g></g>
+        <text x="380" y="132" text-anchor="middle" class="rot" font-size="22" fill="#5E5A70">fio finíssimo de vidro</text>
+      </svg>
+      <p>Muitos sinais viajam como <b>pulsos de luz</b> dentro de <b>fibras ópticas</b>, fios finíssimos de vidro.</p>
+    </div>
+    <div class="painel" data-passo="1" style="position:absolute;left:880px;right:0;top:160px">
+      <h3>Satélites</h3>
+      <svg viewBox="0 0 800 210" width="800" height="210" style="display:block" aria-hidden="true">
+        <path d="M0 210 Q400 120 800 210 Z" fill="#5AA9E6"/><path d="M200 180 q40 -16 90 -4 l-10 20 z M520 170 q50 -10 80 6 l-20 16 z" fill="#3FA34D"/>
+        <g transform="translate(400 40)"><rect x="-20" y="-16" width="40" height="32" rx="6" fill="#8E8AA0"/><rect x="-90" y="-10" width="64" height="20" fill="#2F6BFF"/><rect x="26" y="-10" width="64" height="20" fill="#2F6BFF"/></g>
+        <path class="corre" d="M150 168 L380 62" stroke="#0F8B8D" stroke-width="6" fill="none" stroke-linecap="round"/>
+        <path class="corre" d="M420 62 L650 168" stroke="#0F8B8D" stroke-width="6" fill="none" stroke-linecap="round"/>
+      </svg>
+      <p>Ou passam por <b>satélites</b>, que recebem o sinal de um ponto da Terra e o reenviam para outro.</p>
+    </div>
+  </div>
+  <aside class="notas"><p>Da apostila: entre cidades e países, os sinais viajam por fibras ópticas ou passam por satélites. A apostila não explica como a luz fica presa na fibra; não é cobrado.</p></aside>
+</section>
+
+<!-- 7. Aparelhos do dia a dia -->
+<section class="slide" data-nome="Aparelhos e faixas">
+  <div class="conteudo">
+    <p class="olho">Rádio, TV, celular, micro-ondas e controle remoto</p>
+    <h2 class="titulo">Cada aparelho, uma faixa</h2>
+    <table class="tab-ap" style="position:absolute;left:0;top:160px">
+      <tr><th>Aparelho</th><th>Faixa do espectro</th><th>O que faz</th></tr>
+      <tr data-passo="1"><td>Rádio e TV</td><td><span class="tag tag-e">ondas de rádio</span></td><td>levam som e imagem da emissora até a casa</td></tr>
+      <tr data-passo="2"><td>Celular e wi-fi</td><td><span class="tag tag-e">micro-ondas</span></td><td>ligam o aparelho às antenas e à internet</td></tr>
+      <tr data-passo="3"><td>Forno de micro-ondas</td><td><span class="tag tag-e">micro-ondas</span></td><td>agitam a água do alimento, que esquenta</td></tr>
+      <tr data-passo="4"><td>Controle remoto</td><td><span class="tag tag-e">infravermelho</span></td><td>manda os comandos para a TV</td></tr>
+    </table>
+    <div class="caixa caixa-fundamental" data-passo="5" style="position:absolute;left:580px;right:0;top:640px;padding:18px 30px">
+      <div class="texto" style="font-size:30px">Todas são <b>eletromagnéticas</b>: viajam pelo ar (e no vácuo) à velocidade da luz.</div>
+    </div>
+  </div>
+  <aside class="notas"><p>Reúne os aparelhos do tópico do cronograma com as faixas da apostila (O espectro eletromagnético e seus usos).</p></aside>
+</section>
+
+<!-- 8. Exemplo: o caminho de uma chamada -->
+<section class="slide" data-nome="Exemplo: uma chamada">
+  <div class="conteudo">
+    <p class="olho">Exemplo</p>
+    <h2 class="titulo">O caminho de uma chamada</h2>
+    <p class="texto" style="position:absolute;left:0;right:0;top:140px;margin:0;font-size:32px">Diga as transformações principais quando você fala ao celular com uma amiga.</p>
+    <div style="position:absolute;left:0;right:0;top:220px;display:flex;flex-direction:column;gap:18px">
+      <div class="linha-ex" data-passo="1"><b>No seu celular:</b> o microfone transforma a voz em <b>sinal elétrico</b>, e o aparelho o envia como <b>micro-ondas</b> para uma antena.</div>
+      <div class="linha-ex" data-passo="2"><b>Na rede:</b> o sinal viaja pela rede de <b>antenas, cabos e fibras ópticas</b>.</div>
+      <div class="linha-ex" data-passo="3"><b>No celular dela:</b> o sinal chega como micro-ondas, vira sinal elétrico, e o <b>alto-falante</b> o transforma em <b>som</b>.</div>
+    </div>
+    <svg data-passo="3" viewBox="0 0 1180 120" width="1180" height="120" style="position:absolute;left:580px;top:640px;overflow:visible" aria-hidden="true">
+      <g class="rot" font-size="22" text-anchor="middle">
+        <rect x="0" y="30" width="150" height="60" rx="30" fill="var(--lilas)"/><text x="75" y="68" fill="#3F2FA0">voz</text>
+        <rect x="200" y="30" width="190" height="60" rx="30" fill="#fff" stroke="#4B39B3" stroke-width="2"/><text x="295" y="68" fill="#3F2FA0">sinal elétrico</text>
+        <rect x="440" y="30" width="190" height="60" rx="30" fill="#FFF1C2"/><text x="535" y="68" fill="#8A6A00">micro-ondas</text>
+        <rect x="680" y="30" width="190" height="60" rx="30" fill="#fff" stroke="#4B39B3" stroke-width="2"/><text x="775" y="68" fill="#3F2FA0">sinal elétrico</text>
+        <rect x="920" y="30" width="150" height="60" rx="30" fill="var(--lilas)"/><text x="995" y="68" fill="#3F2FA0">som</text>
+        <path class="corre" d="M152 60 H198 M392 60 H438 M632 60 H678 M872 60 H918" stroke="#0F8B8D" stroke-width="5" fill="none"/>
+      </g>
+    </svg>
+  </div>
+  <aside class="notas"><p>Exemplo da apostila, um trecho por clique. No meio do caminho (na rede), parte do trajeto pode ser feita por pulsos de luz nas fibras ópticas.</p></aside>
+</section>
+
+<!-- 9. Questão 1 -->
+<section class="slide questao" data-nome="Questão 1">
+  <div class="conteudo">
+    <div class="area-resolucao"></div>
+    <span class="pilula pilula-pausa" data-em="1:some">Pause o vídeo e tente</span>
+    <div class="painel-questao">
+      <p class="olho">Questão 1 · Modelo IF</p>
+      <p class="enunciado" style="font-size:23px">Numa rádio, a voz do locutor percorre um caminho até sair pelo rádio de um ouvinte em outra cidade. Esse caminho passa por quatro aparelhos:</p>
+      <p class="enunciado" style="font-size:23px">• antena da emissora;<br>• alto-falante do rádio do ouvinte;<br>• microfone do estúdio;<br>• antena do rádio do ouvinte.</p>
+      <p class="enunciado" style="font-size:23px">A ordem <b>CORRETA</b> do caminho da voz e o que viaja pelo ar entre as duas antenas são:</p>
+      <ol class="alternativas" style="gap:6px">
+        <li data-em="2:apaga" style="font-size:20px;padding:5px 14px"><b>A</b><span>antena da emissora, microfone, antena do rádio, alto-falante; ondas de rádio.</span></li>
+        <li data-em="2:certo" style="font-size:20px;padding:5px 14px"><b>B</b><span>microfone, antena da emissora, antena do rádio, alto-falante; ondas de rádio.</span></li>
+        <li data-em="2:apaga" style="font-size:20px;padding:5px 14px"><b>C</b><span>alto-falante, microfone, antena da emissora, antena do rádio; ondas sonoras.</span></li>
+        <li data-em="2:apaga" style="font-size:20px;padding:5px 14px"><b>D</b><span>microfone, antena da emissora, antena do rádio, alto-falante; ondas sonoras.</span></li>
+        <li data-em="2:apaga" style="font-size:20px;padding:5px 14px"><b>E</b><span>microfone, alto-falante, antena da emissora, antena do rádio; a própria voz do locutor, sem transformação.</span></li>
+      </ol>
+    </div>
+  </div>
+  <aside class="resolucao">
+    <p class="dados"><b>Dados:</b> microfone, duas antenas, alto-falante.</p>
+    <ol class="passos">
+      <li>Começa no microfone (voz → sinal elétrico).</li>
+      <li>Antena da emissora → antena do rádio.</li>
+      <li>Termina no alto-falante (sinal → som).</li>
+      <li>Entre as antenas: ondas de rádio.</li>
+    </ol>
+    <p class="resposta"><b>Resposta:</b> microfone, antena da emissora, antena do rádio, alto-falante; ondas de rádio. <b>Gabarito B.</b></p>
+    <p class="atencao"><b>Destaque no quadro:</b> O som não viaja de uma cidade à outra: viaja a onda de rádio.</p>
+    <ul class="erros">
+      <li><b>A</b> A voz entra primeiro no microfone.</li>
+      <li><b>C</b> O alto-falante é o fim; e entre antenas não há som.</li>
+      <li><b>D</b> Ordem certa, mas o som não vai de antena a antena.</li>
+      <li><b>E</b> Ordem errada e sem transformação nenhuma.</li>
+    </ul>
+  </aside>
+  <aside class="notas">
+    <p>Clique 1 tira o aviso de pausa: resolva na área (D liga a caneta; E esconde o enunciado). Clique 2: gabarito B.</p>
+    <p>Modelo IF, lote if-fisica-ondas, m028, FIS-0829 (questão da apostila, 5.2).</p>
+  </aside>
+</section>
+
+<!-- 10. Questão 2 -->
+<section class="slide questao" data-nome="Questão 2">
+  <div class="conteudo">
+    <div class="area-resolucao"></div>
+    <span class="pilula pilula-pausa" data-em="1:some">Pause o vídeo e tente</span>
+    <div class="painel-questao">
+      <p class="olho">Questão 2 · Modelo IF</p>
+      <p class="enunciado" style="font-size:23px">Uma rádio de Juiz de Fora transmite ao vivo um jogo de futebol. Considere três trechos do caminho da voz do narrador até o ouvido de um torcedor que escuta o jogo em casa:</p>
+      <p class="enunciado" style="font-size:23px">(1) da boca do narrador até o microfone, no estádio;<br>(2) da antena da emissora até a antena do rádio do torcedor;<br>(3) do alto-falante do rádio até o ouvido do torcedor.</p>
+      <p class="enunciado" style="font-size:23px">Em cada trecho, a informação viaja como uma onda. É <b>CORRETO</b> afirmar que, nos trechos (1), (2) e (3), as ondas são, respectivamente,</p>
+      <ol class="alternativas" style="gap:6px">
+        <li data-em="2:apaga" style="font-size:20px;padding:5px 14px"><b>A</b><span>eletromagnética, eletromagnética e eletromagnética.</span></li>
+        <li data-em="2:apaga" style="font-size:20px;padding:5px 14px"><b>B</b><span>mecânica, mecânica e mecânica.</span></li>
+        <li data-em="2:apaga" style="font-size:20px;padding:5px 14px"><b>C</b><span>eletromagnética, mecânica e eletromagnética.</span></li>
+        <li data-em="2:apaga" style="font-size:20px;padding:5px 14px"><b>D</b><span>mecânica, mecânica e eletromagnética.</span></li>
+        <li data-em="2:certo" style="font-size:20px;padding:5px 14px"><b>E</b><span>mecânica, eletromagnética e mecânica.</span></li>
+      </ol>
+    </div>
+  </div>
+  <aside class="resolucao">
+    <p class="dados"><b>Dados:</b> três trechos: boca–microfone, antena–antena, alto-falante–ouvido.</p>
+    <ol class="passos">
+      <li>(1) Voz no ar: som, mecânica.</li>
+      <li>(2) Entre antenas: ondas de rádio, eletromagnética.</li>
+      <li>(3) Alto-falante ao ouvido: som, mecânica.</li>
+    </ol>
+    <p class="resposta"><b>Resposta:</b> mecânica, eletromagnética e mecânica. <b>Gabarito E.</b></p>
+    <p class="atencao"><b>Destaque no quadro:</b> Som no ar é mecânico; de antena a antena, eletromagnético.</p>
+    <ul class="erros">
+      <li><b>A</b> A voz no ar não é eletromagnética.</li>
+      <li><b>B</b> Entre as antenas não viaja som.</li>
+      <li><b>C</b> Inverte tudo.</li>
+      <li><b>D</b> Troca os trechos (2) e (3).</li>
+    </ul>
+  </aside>
+  <aside class="notas">
+    <p>Clique 1 tira o aviso de pausa: resolva na área (D liga a caneta; E esconde o enunciado). Clique 2: gabarito E.</p>
+    <p>Modelo IF, lote if-fisica-ondas, m007, FIS-0808 (questão da apostila, 5.2).</p>
+  </aside>
+</section>
+
+<!-- 11. Questão 3 -->
+<section class="slide questao" data-nome="Questão 3">
+  <div class="conteudo">
+    <div class="area-resolucao"></div>
+    <span class="pilula pilula-pausa" data-em="1:some">Pause o vídeo e tente</span>
+    <div class="painel-questao">
+      <p class="olho">Questão 3 · Modelo IF</p>
+      <p class="enunciado" style="font-size:23px">Os fornos de micro-ondas de uso doméstico funcionam com ondas de frequência próxima de 2 500 000 000 Hz. Considere que essas ondas se propagam a 300 000 000 m/s.</p>
+      <p class="enunciado" style="font-size:23px">Uma pessoa pergunta se o alimento aquecido no forno fica radioativo. O comprimento de onda das micro-ondas do forno e a resposta correta à pergunta são, respectivamente:</p>
+      <ol class="alternativas" style="gap:6px">
+        <li data-em="2:apaga" style="font-size:20px;padding:5px 14px"><b>A</b><span>12 cm; sim, porque as micro-ondas ficam guardadas no alimento depois que o forno desliga.</span></li>
+        <li data-em="2:apaga" style="font-size:20px;padding:5px 14px"><b>B</b><span>8,3 m; não, porque as micro-ondas só agitam as moléculas de água.</span></li>
+        <li data-em="2:certo" style="font-size:20px;padding:5px 14px"><b>C</b><span>12 cm; não, porque as micro-ondas só agitam as moléculas de água e acabam quando o forno desliga.</span></li>
+        <li data-em="2:apaga" style="font-size:20px;padding:5px 14px"><b>D</b><span>1,2 cm; não, porque as micro-ondas só agitam as moléculas de água e acabam quando o forno desliga.</span></li>
+        <li data-em="2:apaga" style="font-size:20px;padding:5px 14px"><b>E</b><span>12 cm; não, porque as micro-ondas são ondas mecânicas e não atravessam o alimento.</span></li>
+      </ol>
+    </div>
+  </div>
+  <aside class="resolucao">
+    <p class="dados"><b>Dados:</b> \(f = 2\,500\,000\,000\ \text{Hz}\); \(v = 300\,000\,000\ \text{m/s}\).</p>
+    <ol class="passos">
+      <li>\(\lambda = \dfrac{v}{f} = \dfrac{300\,000\,000}{2\,500\,000\,000}\)</li>
+      <li>Corte os zeros: \(\lambda = \dfrac{3}{25} = 0{,}12\ \text{m}\)</li>
+      <li>\(\lambda = 12\ \text{cm}\)</li>
+      <li>Forno desligado: as ondas acabam; nada fica.</li>
+    </ol>
+    <p class="resposta"><b>Resposta:</b> 12 cm; não fica radioativo. <b>Gabarito C.</b></p>
+    <p class="atencao"><b>Destaque no quadro:</b> Micro-ondas só agitam a água; não deixam radiação no alimento.</p>
+    <ul class="erros">
+      <li><b>A</b> As micro-ondas não ficam guardadas no alimento.</li>
+      <li><b>B</b> 8,3 vem da conta invertida, \(f \div v\).</li>
+      <li><b>D</b> Erra um zero: 0,12 m = 12 cm.</li>
+      <li><b>E</b> Micro-ondas são eletromagnéticas.</li>
+    </ul>
+  </aside>
+  <aside class="notas">
+    <p>Clique 1 tira o aviso de pausa: resolva na área (D liga a caneta; E esconde o enunciado). Clique 2: gabarito C.</p>
+    <p>Modelo IF, lote if-fisica-ondas, m030, FIS-0831 (questão da apostila, 5.2). Conta conferida: 300 000 000 ÷ 2 500 000 000 = 0,12 m = 12 cm. O 8,3 da alternativa B vem de 2 500 000 000 ÷ 300 000 000 ≈ 8,3.</p>
+  </aside>
+</section>
+
+<!-- 12. Resumo -->
+<section class="slide" data-nome="Resumo">
+  <div class="conteudo">
+    <p class="olho">Resumo</p>
+    <h2 class="titulo">O essencial de Ondas eletromagnéticas</h2>
+    <div class="resumo" style="position:absolute;left:0;right:0;top:150px">
+      <div><b>Espectro:</b> rádio, micro-ondas, infravermelho, visível, ultravioleta, raios X e gama; mais frequência, mais energia.</div>
+      <div><b>Todas</b> se propagam no vácuo, à velocidade da luz.</div>
+      <div><b>Telecomunicações:</b> som e imagem viram sinais elétricos e ondas eletromagnéticas, e voltam a ser som e imagem no destino.</div>
+      <div><b>Rádio e TV:</b> ondas de rádio. <b>Celular e wi-fi:</b> micro-ondas. <b>Entre cidades:</b> fibra óptica e satélites.</div>
+    </div>
+  </div>
+  <aside class="notas"><p>Resumo da apostila de 5.2 (as duas partes). Peça para tirarem um print desta tela.</p></aside>
+</section>
+
+<!-- 13. A seguir -->
+<section class="slide capa" data-nome="A seguir">
+  <div class="estrelas"></div>
+  <div class="texto-capa" style="top:240px">
+    <span class="selo">Física · IF</span>
+    <p class="aula">A seguir · Ondas</p>
+    <h1>Radiações e saúde</h1>
+    <p class="sub">Raio X, ultrassom e o que protege</p>
+  </div>
+  <svg class="emblema" viewBox="0 0 640 640" aria-hidden="true">
+    <circle cx="320" cy="320" r="200" fill="#fff" fill-opacity=".12" stroke="#fff" stroke-opacity=".5" stroke-width="4"/>
+    <path d="M320 200 v240 M200 320 h240" stroke="#FFD10C" stroke-width="56" stroke-linecap="round"/>
+  </svg>
+  <img class="logo-capa" src="{{LOGO_BRANCO}}" alt="Quarks">
+  <aside class="notas"><p>Próxima: Radiações e saúde, parte única do subcapítulo e última de Ondas, antes do bloco de questões do IF.</p></aside>
+</section>

@@ -1,0 +1,511 @@
+<!--aula
+{"disciplina": "fisica", "curso": "IF", "assunto": "Propagação do calor", "parte": "Parte 1 de 2", "titulo": "Condução, convecção e irradiação", "scripts": ["animacoes-termologia.js"]}
+-->
+<!-- Fonte: apostila IF, Física, cap. 3 Termologia, 3.2 Propagação do calor (teorias "Condução: condutores e isolantes", "Convecção" e "Irradiação: o Sol como fonte de luz e calor", com a figura das três formas de propagação, a atenção "Metal não é mais frio" e o exemplo "Onde pôr o aparelho?"). As superfícies ao Sol, a garrafa térmica, o coletor solar e o efeito estufa ficam para a Parte 2. Questões: oficial IF Sudeste MG 2023-1 q30 (FIS-0576, sobra do capítulo) e Modelo IF da apostila (lote if-fisica-propagacao-do-calor): m007 FIS-0978 e m002 FIS-0973. -->
+<style>
+  .caixa, .painel, .linha-ex { box-sizing: border-box; }
+  .linha-ex { background: var(--branco); border: 2px solid var(--lilas-2); border-radius: 24px; padding: 14px 26px; font-size: 30px; line-height: 1.3; }
+  .linha-ex b { color: var(--roxo-titulo); }
+  .painel { background: var(--branco); border: 2px solid var(--lilas-2); border-radius: 30px; padding: 18px 26px; }
+  .painel h3 { margin: 0 0 6px; font: 800 36px var(--fonte-titulo); letter-spacing: -.02em; color: var(--roxo-titulo); }
+  .painel p { margin: 8px 0 0; font-size: 26px; line-height: 1.3; }
+  .rot-fig { font-family: Figtree, "Segoe UI", sans-serif; font-weight: 700; font-size: 24px; fill: #5E5A70; }
+  .rot-forte { font-family: Figtree, "Segoe UI", sans-serif; font-weight: 800; font-size: 26px; fill: #3F2FA0; }
+  .chips { display: flex; flex-wrap: wrap; gap: 12px; margin-top: 12px; }
+  .chip { display: inline-flex; align-items: center; gap: 10px; padding: 8px 20px; border-radius: 999px; font-weight: 700; font-size: 27px; background: var(--lilas); color: var(--roxo-titulo); }
+  .chip.q { background: #FFE9DF; color: #A8431B; }
+  .chip.f { background: #E3F0FB; color: #1F5F99; }
+  .tag { display: inline-block; padding: 5px 20px; border-radius: 999px; font-weight: 800; font-size: 24px; white-space: nowrap; }
+  .tag-q { background: #FFE9DF; color: #A8431B; }
+  .tag-f { background: #E3F0FB; color: #1F5F99; }
+  /* colher de metal esquentando, pedaço por pedaço, do fundo até o cabo */
+  .seg { transition: fill 1.2s ease; }
+  .mostra .seg { fill: #E8590C; }
+  .mostra .seg:nth-of-type(1) { transition-delay: 0s; } .mostra .seg:nth-of-type(2) { transition-delay: 1s; } .mostra .seg:nth-of-type(3) { transition-delay: 2s; }
+  .mostra .seg:nth-of-type(4) { transition-delay: 3s; fill: #F08C2E; } .mostra .seg:nth-of-type(5) { transition-delay: 4s; fill: #F5A65B; }
+  .ai { opacity: 0; transition: opacity .6s ease 5s; }
+  .mostra .ai { opacity: 1; }
+  @keyframes chama { 0%,100% { transform: scaleY(1) scaleX(1); } 50% { transform: scaleY(.9) scaleX(1.04); } }
+  .chama { transform-box: fill-box; transform-origin: 50% 100%; }
+  .slide.ativo .chama { animation: chama 1.6s ease-in-out infinite; }
+  .chama:nth-of-type(2) { animation-delay: -.5s !important; } .chama:nth-of-type(3) { animation-delay: -1s !important; }
+  /* correntes de ar no quarto */
+  @keyframes flui { to { stroke-dashoffset: -64; } }
+  .corrente { stroke-dasharray: 22 10; }
+  .slide.ativo .mostra .corrente { animation: flui 2.6s linear infinite; }
+  /* ondas do Sol até a Terra */
+  @keyframes onda { to { stroke-dashoffset: -120; } }
+  .onda { stroke-dasharray: 60 60; }
+  .slide.ativo .mostra .onda { animation: onda 2.4s linear infinite; }
+  .onda:nth-of-type(2) { animation-delay: -.8s !important; } .onda:nth-of-type(3) { animation-delay: -1.6s !important; }
+  @keyframes brilho { 0%, 100% { opacity: .35; } 50% { opacity: .6; } }
+  .slide.ativo .brilho { animation: brilho 5s ease-in-out infinite; }
+</style>
+
+<svg width="0" height="0" style="position:absolute" aria-hidden="true">
+  <defs>
+    <linearGradient id="p1Chama" x1="0" y1="1" x2="0" y2="0"><stop offset="0" stop-color="#FF8A3D"/><stop offset=".6" stop-color="#FFD10C"/><stop offset="1" stop-color="#FFF4C2"/></linearGradient>
+    <linearGradient id="p1Brig" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#8A5434"/><stop offset="1" stop-color="#5C3420"/></linearGradient>
+    <radialGradient id="p1Sol" cx=".5" cy=".5" r=".5"><stop offset="0" stop-color="#FFF4C2"/><stop offset=".55" stop-color="#FFD10C"/><stop offset="1" stop-color="#FFB627"/></radialGradient>
+    <radialGradient id="p1Terra" cx=".35" cy=".3" r=".8"><stop offset="0" stop-color="#9CCBF2"/><stop offset="1" stop-color="#3C7BC4"/></radialGradient>
+  </defs>
+</svg>
+
+<!-- 1. Capa -->
+<section class="slide capa" data-nome="Capa">
+  <div class="estrelas"></div>
+  <div class="texto-capa">
+    <span class="selo">Física · IF</span>
+    <p class="aula">Propagação do calor · Parte 1 de 2</p>
+    <h1 style="font-size:120px">Condução, convecção e irradiação</h1>
+    <p class="sub">Os três caminhos do calor</p>
+  </div>
+  <svg class="emblema" viewBox="0 0 640 640" aria-hidden="true">
+    <g class="gira-lento"><ellipse cx="320" cy="320" rx="300" ry="128" fill="none" stroke="#fff" stroke-opacity=".38" stroke-width="2" transform="rotate(-10 320 320)"/></g>
+    <g class="gira"><ellipse cx="320" cy="320" rx="236" ry="196" fill="none" stroke="#FFD10C" stroke-opacity=".75" stroke-width="2.5" stroke-dasharray="3 14" stroke-linecap="round" transform="rotate(-8 320 320)"/>
+      <circle cx="84" cy="300" r="13" fill="var(--d)" stroke="#fff" stroke-width="3"/></g>
+    <circle cx="320" cy="320" r="132" fill="#FFD10C"/>
+    <image href="{{SYM_ROXO}}" x="238" y="238" width="164" height="164"/>
+  </svg>
+  <img class="logo-capa" src="{{LOGO_BRANCO}}" alt="Quarks">
+  <aside class="notas"><p>Nesta parte: as três formas de o calor se propagar (condução, convecção e irradiação) e os materiais condutores e isolantes. Na Parte 2: superfícies ao Sol, garrafa térmica, coletor solar e o efeito estufa.</p></aside>
+</section>
+
+<!-- 2. O brigadeiro -->
+<section class="slide" data-nome="A colher do brigadeiro">
+  <div class="conteudo">
+    <p class="olho">Para começar</p>
+    <h2 class="titulo">A colher do brigadeiro</h2>
+    <svg viewBox="0 0 900 470" style="position:absolute;left:0;top:130px;width:900px;height:470px" aria-hidden="true">
+      <!-- colher de metal -->
+      <g data-passo="1">
+        <rect class="seg" x="300" y="268" width="18" height="44" rx="4" fill="#B9B4CC" transform="rotate(-24 309 290)"/>
+        <rect class="seg" x="300" y="224" width="18" height="46" rx="4" fill="#B9B4CC" transform="rotate(-24 309 290)"/>
+        <rect class="seg" x="300" y="178" width="18" height="48" rx="4" fill="#B9B4CC" transform="rotate(-24 309 290)"/>
+        <rect class="seg" x="300" y="130" width="18" height="50" rx="4" fill="#B9B4CC" transform="rotate(-24 309 290)"/>
+        <rect class="seg" x="296" y="70" width="26" height="62" rx="12" fill="#B9B4CC" transform="rotate(-24 309 290)"/>
+        <g class="ai"><circle cx="180" cy="80" r="44" fill="#FFE9DF"/><text x="180" y="93" text-anchor="middle" font-family="'Bricolage Grotesque',Figtree,sans-serif" font-weight="800" font-size="38" fill="#C2384F">ai!</text></g>
+      </g>
+      <!-- colher de pau -->
+      <g data-passo="2">
+        <rect x="560" y="70" width="22" height="250" rx="10" fill="#C9935F" stroke="#8A5A2C" stroke-width="3" transform="rotate(22 571 300)"/>
+        <text x="740" y="40" text-anchor="middle" class="rot-forte" style="fill:#1F5F99">cabo frio</text>
+      </g>
+      <!-- panela -->
+      <path d="M190 300 h460 v90 a30 30 0 0 1 -30 30 h-400 a30 30 0 0 1 -30 -30 z" fill="#8E8AA0"/>
+      <path d="M200 300 h440 v20 h-440 z" fill="url(#p1Brig)"/>
+      <rect x="640" y="316" width="140" height="20" rx="10" fill="#3A3640"/>
+      <rect x="170" y="290" width="500" height="16" rx="8" fill="#6E6A80"/>
+      <path class="chama" d="M330 470 q-30 -28 -6 -58 q8 18 18 20 q8 -18 4 -32 q30 32 8 70 z" fill="url(#p1Chama)"/>
+      <path class="chama" d="M420 470 q-30 -28 -6 -58 q8 18 18 20 q8 -18 4 -32 q30 32 8 70 z" fill="url(#p1Chama)"/>
+      <path class="chama" d="M510 470 q-30 -28 -6 -58 q8 18 18 20 q8 -18 4 -32 q30 32 8 70 z" fill="url(#p1Chama)"/>
+    </svg>
+    <div style="position:absolute;left:980px;right:0;top:170px;display:flex;flex-direction:column;gap:20px">
+      <p class="texto" data-passo="1" style="margin:0">Com uma colher de <b>metal</b>, depois de um tempo, o cabo <b>esquenta</b> na mão.</p>
+      <p class="texto" data-passo="2" style="margin:0">Com uma colher de <b>pau</b>, isso não acontece.</p>
+    </div>
+    <span class="pilula pilula-pausa" data-passo="3" style="position:absolute;left:980px;top:600px">O calor viajou pelo metal. Como?</span>
+  </div>
+  <aside class="notas">
+    <p>Gancho da apostila. Clique 1: a colher de metal vai esquentando do fundo da panela até o cabo (o "ai!" aparece no fim). Clique 2: a colher de pau, com o cabo frio. Clique 3: a pergunta. A resposta é a condução, no próximo slide.</p>
+  </aside>
+</section>
+
+<!-- 3. Condução -->
+<section class="slide" data-nome="Condução">
+  <div class="conteudo">
+    <p class="olho">Condução</p>
+    <h2 class="titulo">De partícula em partícula</h2>
+    <div data-anima="termo-conducao" data-anima-passo="1" data-w="1100" data-h="300" style="position:absolute;left:0;top:170px;width:1100px;height:300px"></div>
+    <div style="position:absolute;left:1180px;right:0;top:160px;display:flex;flex-direction:column;gap:18px">
+      <p class="texto" style="margin:0;font-size:32px">As partículas perto do fogo ficam <b>mais agitadas</b>.</p>
+      <p class="texto" data-passo="2" style="margin:0;font-size:32px">Elas esbarram nas vizinhas, que também se agitam, e assim por diante.</p>
+    </div>
+    <div class="caixa caixa-fundamental" data-passo="3" style="position:absolute;left:580px;right:0;top:560px;padding:22px 32px">
+      <span class="rotulo">Condução</span>
+      <div class="texto" style="font-size:31px">A agitação passa <b>de partícula em partícula</b>, sem que o material <b>saia do lugar</b>.</div>
+    </div>
+  </div>
+  <aside class="notas">
+    <p>Clique 1: uma ponta da barra de metal no fogo. A agitação (e a cor) vai andando pela barra até a outra ponta, que também esquenta; as partículas só tremem no lugar, ninguém viaja. Clique 2: o esbarrão entre vizinhas. Clique 3: a definição.</p>
+  </aside>
+</section>
+
+<!-- 4. Condutores e isolantes -->
+<section class="slide" data-nome="Condutores e isolantes">
+  <div class="conteudo">
+    <p class="olho">Nem todo material conduz igual</p>
+    <h2 class="titulo">Condutores e isolantes térmicos</h2>
+    <div style="position:absolute;left:0;right:0;top:160px;display:grid;grid-template-columns:1fr 1fr;gap:40px">
+      <div class="painel" data-passo="1">
+        <h3>Condutores <span class="tag tag-q">o calor passa fácil</span></h3>
+        <div class="chips"><span class="chip q">cobre</span><span class="chip q">alumínio</span><span class="chip q">ferro</span></div>
+        <p>Os <b>metais</b>.</p>
+      </div>
+      <div class="painel" data-passo="2">
+        <h3>Isolantes <span class="tag tag-f">dificultam a passagem</span></h3>
+        <div class="chips"><span class="chip f">madeira</span><span class="chip f">plástico</span><span class="chip f">borracha</span><span class="chip f">isopor</span><span class="chip f">lã</span><span class="chip f">cortiça</span><span class="chip f">ar parado</span></div>
+      </div>
+    </div>
+    <div class="caixa caixa-fundamental" data-passo="3" style="position:absolute;left:580px;right:0;top:520px;padding:22px 32px">
+      <span class="rotulo">Por isso a colher</span>
+      <div class="texto" style="font-size:31px">O metal leva o calor da panela até a mão. A madeira, isolante, quase não deixa o calor passar.</div>
+    </div>
+  </div>
+  <aside class="notas">
+    <p>A definição da apostila. Clique 1: condutores térmicos (os metais). Clique 2: isolantes térmicos. Destaque o "ar parado": ele aparece em quase todo isolante do dia a dia. Clique 3: a resposta do gancho.</p>
+  </aside>
+</section>
+
+<!-- 5. No dia a dia -->
+<section class="slide" data-nome="Condução no dia a dia">
+  <div class="conteudo">
+    <p class="olho">Escolher o material certo</p>
+    <h2 class="titulo">Condução no dia a dia</h2>
+    <div style="position:absolute;left:0;right:0;top:160px;display:grid;grid-template-columns:repeat(3,1fr);gap:28px">
+      <div class="painel" data-passo="1">
+        <svg viewBox="0 0 300 170" style="width:100%;height:170px" aria-hidden="true"><path d="M30 60 h180 v60 a24 24 0 0 1 -24 24 h-132 a24 24 0 0 1 -24 -24 z" fill="#8E8AA0"/><rect x="20" y="52" width="200" height="14" rx="7" fill="#6E6A80"/><rect x="210" y="74" width="80" height="22" rx="11" fill="#3A3640"/><path class="chama" d="M90 168 q-16 -14 -2 -30 q4 8 10 10 q4 -10 2 -16 q16 16 4 36 z" fill="url(#p1Chama)"/><path class="chama" d="M140 168 q-16 -14 -2 -30 q4 8 10 10 q4 -10 2 -16 q16 16 4 36 z" fill="url(#p1Chama)"/></svg>
+        <h3>Panela</h3>
+        <p>De <b>metal</b>, para o calor chegar rápido ao alimento. O <b>cabo</b> é de plástico ou madeira, para não queimar a mão.</p>
+      </div>
+      <div class="painel" data-passo="2">
+        <svg viewBox="0 0 300 170" style="width:100%;height:170px" aria-hidden="true"><rect x="40" y="40" width="220" height="120" rx="16" fill="#fff" stroke="#C9C1F2" stroke-width="5"/><rect x="30" y="26" width="240" height="26" rx="10" fill="#F1EEFD" stroke="#C9C1F2" stroke-width="5"/><g fill="#E4DEFB"><circle cx="70" cy="80" r="9"/><circle cx="110" cy="110" r="7"/><circle cx="150" cy="76" r="10"/><circle cx="190" cy="118" r="8"/><circle cx="230" cy="86" r="9"/><circle cx="90" cy="136" r="6"/><circle cx="170" cy="140" r="7"/></g></svg>
+        <h3>Caixa de isopor</h3>
+        <p>Mantém o gelo por horas: o isopor é cheio de <b>bolhas de ar parado</b>.</p>
+      </div>
+      <div class="painel" data-passo="3">
+        <svg viewBox="0 0 300 170" style="width:100%;height:170px" aria-hidden="true"><path d="M90 30 l-50 30 l20 34 l20 -10 v70 h140 v-70 l20 10 l20 -34 l-50 -30 q-30 20 -60 0 z" fill="#8C7BEA"/><g stroke="#B3A0EA" stroke-width="4" fill="none"><path d="M100 70 q10 8 20 0 q10 -8 20 0 q10 8 20 0 q10 -8 20 0"/><path d="M100 100 q10 8 20 0 q10 -8 20 0 q10 8 20 0 q10 -8 20 0"/><path d="M100 130 q10 8 20 0 q10 -8 20 0 q10 8 20 0 q10 -8 20 0"/></g></svg>
+        <h3>Agasalho de lã</h3>
+        <p>Prende <b>ar entre os fios</b>, e esse ar segura o calor do corpo.</p>
+      </div>
+    </div>
+  </div>
+  <aside class="notas">
+    <p>Os três exemplos da apostila, um por clique. No isopor e na lã, quem isola de verdade é o ar parado preso dentro deles.</p>
+  </aside>
+</section>
+
+<!-- 6. Metal não é mais frio -->
+<section class="slide" data-nome="Metal não é mais frio">
+  <div class="conteudo">
+    <p class="olho">Atenção</p>
+    <h2 class="titulo">Metal não é mais frio</h2>
+    <svg viewBox="0 0 440 460" style="position:absolute;left:60px;top:140px;width:420px;height:440px" aria-hidden="true">
+      <rect x="60" y="20" width="300" height="430" rx="14" fill="#C9935F" stroke="#8A5A2C" stroke-width="5"/>
+      <rect x="95" y="60" width="230" height="150" rx="10" fill="none" stroke="#A8743F" stroke-width="5"/>
+      <rect x="95" y="250" width="230" height="160" rx="10" fill="none" stroke="#A8743F" stroke-width="5"/>
+      <rect x="300" y="220" width="26" height="46" rx="8" fill="#8E8AA0" stroke="#4B4760" stroke-width="3"/>
+      <rect x="250" y="232" width="70" height="20" rx="10" fill="#B9B4CC" stroke="#4B4760" stroke-width="3"/>
+    </svg>
+    <div style="position:absolute;left:580px;right:0;top:170px;display:flex;flex-direction:column;gap:20px">
+      <div class="linha-ex" data-passo="1">Numa sala, a <b>maçaneta de metal</b> e a <b>porta de madeira</b> estão na <b>mesma temperatura</b>.</div>
+      <div class="linha-ex" data-passo="2">A maçaneta só <b>parece</b> mais fria: ela <b>conduz melhor</b> e rouba calor da mão mais depressa.</div>
+    </div>
+    <div class="caixa caixa-atencao" data-passo="3" style="position:absolute;left:580px;right:0;top:520px;padding:22px 32px">
+      <div class="texto" style="font-size:31px">É a <b>sensação térmica</b> da Parte 1 de Temperatura e calor, agora com o nome certo: o metal é <b>bom condutor</b>.</div>
+    </div>
+  </div>
+  <aside class="notas">
+    <p>A atenção da apostila. Liga o piso de cerâmica e o corrimão (Temperatura e calor) com a condução: o material que conduz melhor tira calor da mão mais depressa e parece mais frio, mesmo estando na mesma temperatura.</p>
+  </aside>
+</section>
+
+<!-- 7. Convecção -->
+<section class="slide" data-nome="Convecção">
+  <div class="conteudo">
+    <p class="olho">Convecção</p>
+    <h2 class="titulo">A água que sobe e desce</h2>
+    <div data-anima="termo-conveccao" data-anima-passo="1" data-w="760" data-h="470" style="position:absolute;left:0;top:130px;width:760px;height:470px"></div>
+    <div style="position:absolute;left:840px;right:0;top:160px;display:flex;flex-direction:column;gap:16px">
+      <p class="texto" style="margin:0;font-size:31px">O fogo só toca o <b>fundo</b>, mas em pouco tempo a água toda está quente.</p>
+      <div class="linha-ex" data-passo="2" style="font-size:28px">A água do fundo esquenta, se expande e fica <b>menos densa</b>: ela <b>sobe</b>.</div>
+      <div class="linha-ex" data-passo="3" style="font-size:28px">A água fria de cima, <b>mais densa</b>, <b>desce</b> e ocupa o lugar.</div>
+    </div>
+    <div class="caixa caixa-fundamental" data-passo="4" style="position:absolute;left:840px;right:0;top:560px;padding:20px 30px">
+      <span class="rotulo">Convecção</span>
+      <div class="texto" style="font-size:29px">O calor é levado pelo <b>movimento do próprio material</b>: o quente sobe, o frio desce. Só em <b>líquidos e gases</b>.</div>
+    </div>
+  </div>
+  <aside class="notas">
+    <p>Clique 1: a água circula na panela, subindo quente (laranja) pelo meio e descendo fria (azul) pelos lados. Essa corrente, que dura enquanto houver aquecimento, é a corrente de convecção. Cliques 2 e 3: por que ela sobe e desce (menos densa = mais "leve" para o mesmo volume). Clique 4: a definição.</p>
+    <p>Sólido não escoa: por isso não há convecção em sólidos.</p>
+  </aside>
+</section>
+
+<!-- 8. Convecção em casa -->
+<section class="slide" data-nome="Convecção em casa">
+  <div class="conteudo">
+    <p class="olho">Convecção em casa</p>
+    <h2 class="titulo">Ar-condicionado no alto, aquecedor embaixo</h2>
+    <div style="position:absolute;left:0;right:0;top:170px;display:grid;grid-template-columns:1fr 1fr;gap:40px">
+      <div class="painel" data-passo="1">
+        <svg viewBox="0 0 800 300" style="width:100%;height:300px" aria-hidden="true">
+          <rect x="10" y="10" width="780" height="280" rx="20" fill="#F7F5FE" stroke="#C9C1F2" stroke-width="4"/>
+          <rect x="40" y="30" width="190" height="56" rx="14" fill="#fff" stroke="#4B4760" stroke-width="4"/><g stroke="#4A90E2" stroke-width="3"><line x1="60" y1="74" x2="210" y2="74"/></g>
+          <g fill="none" stroke-width="6" stroke-linecap="round">
+            <path class="corrente" d="M135 96 V250 Q135 270 160 270 H620 Q650 270 650 240 V80 Q650 50 620 50 H260" stroke="#4A90E2"/>
+            <path class="corrente" d="M180 96 Q200 190 330 200 H480 Q560 200 560 140 Q560 110 520 110 H280" stroke="#8C9FE0"/>
+          </g>
+          <text x="420" y="246" text-anchor="middle" class="rot-forte" style="fill:#1F5F99">o ar frio, mais denso, desce</text>
+        </svg>
+        <p>O ar frio sai no alto, <b>desce</b> e espalha o frescor pelo cômodo.</p>
+      </div>
+      <div class="painel" data-passo="2">
+        <svg viewBox="0 0 800 300" style="width:100%;height:300px" aria-hidden="true">
+          <rect x="10" y="10" width="780" height="280" rx="20" fill="#F7F5FE" stroke="#C9C1F2" stroke-width="4"/>
+          <rect x="40" y="200" width="160" height="76" rx="12" fill="#fff" stroke="#4B4760" stroke-width="4"/><g stroke="#E8590C" stroke-width="5"><line x1="66" y1="220" x2="66" y2="262"/><line x1="96" y1="220" x2="96" y2="262"/><line x1="126" y1="220" x2="126" y2="262"/><line x1="156" y1="220" x2="156" y2="262"/></g>
+          <g fill="none" stroke-width="6" stroke-linecap="round">
+            <path class="corrente" d="M120 190 V60 Q120 36 150 36 H620 Q650 36 650 66 V230 Q650 260 620 260 H230" stroke="#E8590C"/>
+            <path class="corrente" d="M160 190 Q190 110 320 100 H470 Q540 100 540 150 Q540 190 490 190 H240" stroke="#F5A65B"/>
+          </g>
+          <text x="400" y="74" text-anchor="middle" class="rot-forte" style="fill:#A8431B">o ar quente sobe</text>
+        </svg>
+        <p>O ar quente sai embaixo, <b>sobe</b> e circula pelo cômodo.</p>
+      </div>
+    </div>
+  </div>
+  <aside class="notas">
+    <p>As duas escolhas da apostila. Clique 1: o ar frio do aparelho desce e volta a subir até ele, formando a corrente. Clique 2: o ar quente do aquecedor sobe e depois desce pelo outro lado.</p>
+  </aside>
+</section>
+
+<!-- 9. Exemplo: onde pôr o aparelho? -->
+<section class="slide" data-nome="Exemplo: onde pôr o aparelho?">
+  <div class="conteudo">
+    <p class="olho">Exemplo</p>
+    <h2 class="titulo">Onde pôr o aparelho?</h2>
+    <p class="texto" style="position:absolute;left:0;right:0;top:150px;margin:0">Davi vai instalar um ar-condicionado no quarto. É melhor <b>perto do teto</b> ou <b>perto do chão</b>? Justifique.</p>
+    <div style="position:absolute;left:0;width:1100px;top:300px;display:flex;flex-direction:column;gap:18px">
+      <div class="linha-ex" data-passo="1"><b>Raciocínio:</b> o ar resfriado fica <b>mais denso</b> e tende a <b>descer</b>.</div>
+      <div class="linha-ex" data-passo="2">Se ele sair no alto, desce e se mistura com o ar do quarto todo.</div>
+    </div>
+    <span class="pilula pilula-resposta" data-passo="3" style="position:absolute;left:580px;top:560px">Perto do teto</span>
+    <div class="caixa caixa-atencao" data-passo="4" style="position:absolute;left:580px;right:0;top:660px;padding:18px 30px">
+      <div class="texto" style="font-size:29px">Perto do chão, o ar frio ficaria <b>parado embaixo</b>, e a parte de cima do quarto continuaria quente.</div>
+    </div>
+  </div>
+  <aside class="notas">
+    <p>Exemplo da apostila. Peça a resposta antes do clique 3. O mesmo raciocínio vale para o congelador da geladeira, que fica em cima (questão do fim desta parte).</p>
+  </aside>
+</section>
+
+<!-- 10. Irradiação -->
+<section class="slide" data-nome="Irradiação">
+  <div class="conteudo">
+    <p class="olho">Irradiação</p>
+    <h2 class="titulo">O calor que atravessa o vazio</h2>
+    <svg viewBox="0 0 1760 300" style="position:absolute;left:0;top:150px;width:1760px;height:300px" aria-hidden="true">
+      <circle class="brilho" cx="150" cy="150" r="140" fill="#FFD10C" opacity=".4"/>
+      <circle cx="150" cy="150" r="110" fill="url(#p1Sol)"/>
+      <text x="150" y="160" text-anchor="middle" class="rot-forte" style="fill:#8A6A00;font-size:30px">Sol</text>
+      <g data-passo="1" fill="none" stroke="#E8590C" stroke-width="6" stroke-linecap="round">
+        <path class="onda" d="M290 110 q30 -30 60 0 t60 0 t60 0 t60 0 t60 0 t60 0 t60 0 t60 0 t60 0 t60 0 t60 0 t60 0 t60 0 t60 0 t60 0 t60 0 t60 0 t60 0 t60 0 t60 0 t60 0 t60 0"/>
+        <path class="onda" d="M290 150 q30 -30 60 0 t60 0 t60 0 t60 0 t60 0 t60 0 t60 0 t60 0 t60 0 t60 0 t60 0 t60 0 t60 0 t60 0 t60 0 t60 0 t60 0 t60 0 t60 0 t60 0 t60 0 t60 0"/>
+        <path class="onda" d="M290 190 q30 -30 60 0 t60 0 t60 0 t60 0 t60 0 t60 0 t60 0 t60 0 t60 0 t60 0 t60 0 t60 0 t60 0 t60 0 t60 0 t60 0 t60 0 t60 0 t60 0 t60 0 t60 0 t60 0"/>
+      </g>
+      <rect x="700" y="230" width="360" height="54" rx="27" fill="#F1EEFD"/>
+      <text x="880" y="266" text-anchor="middle" class="rot-fig">espaço quase vazio: sem ar, sem água</text>
+      <circle cx="1650" cy="150" r="96" fill="url(#p1Terra)"/>
+      <path d="M1600 110 q30 -20 50 10 q20 30 -10 50 q-30 10 -40 -20 z M1680 170 q20 -10 30 10 q-10 30 -30 20 z" fill="#5DAE7A"/>
+      <text x="1650" y="290" text-anchor="middle" class="rot-forte" style="fill:#1F5F99">Terra</text>
+    </svg>
+    <div style="position:absolute;left:580px;right:0;top:470px;display:flex;flex-direction:column;gap:14px">
+      <div class="linha-ex" data-passo="2" style="font-size:28px">O calor viaja como <b>onda eletromagnética</b>, o mesmo tipo de onda da luz.</div>
+      <div class="linha-ex" data-passo="3" style="font-size:28px">A parte que mais aquece é a <b>radiação infravermelha</b>, que os olhos não enxergam. Toda fonte quente irradia, <b>até o nosso corpo</b>.</div>
+      <div class="caixa caixa-fundamental" data-passo="4" style="padding:16px 28px">
+        <div class="texto" style="font-size:28px"><b>Irradiação:</b> não precisa de nenhum material. É a <b>única</b> forma de propagação que funciona <b>no vácuo</b>.</div>
+      </div>
+    </div>
+  </div>
+  <aside class="notas">
+    <p>Gancho da apostila: entre o Sol e a Terra há milhões de quilômetros de espaço quase vazio, sem ar nem água para conduzir ou carregar o calor, e mesmo assim você sente o calor do Sol no rosto. Clique 1: as ondas saindo do Sol. Cliques 2 e 3: o que é a irradiação. Clique 4: a definição.</p>
+  </aside>
+</section>
+
+<!-- 11. As três juntas -->
+<section class="slide" data-nome="As três formas">
+  <div class="conteudo">
+    <p class="olho">Comparando</p>
+    <h2 class="titulo">As três formas de propagação</h2>
+    <div class="modelos3" style="position:absolute;left:0;right:0;top:150px">
+      <div data-passo="1">
+        <h3><svg viewBox="0 0 96 96" aria-hidden="true"><rect x="8" y="38" width="80" height="20" rx="6" fill="#ECEAF4"/><rect x="8" y="38" width="20" height="20" fill="#D63A1F"/><rect x="28" y="38" width="20" height="20" fill="#F08C2E"/><rect x="48" y="38" width="20" height="20" fill="#8C6ED6"/><rect x="68" y="38" width="20" height="20" rx="4" fill="#4A90E2"/><path d="M12 90 q-8 -8 0 -20 q6 8 8 4 q4 8 -8 16z" fill="#FF8A3D"/></svg>Condução</h3>
+        <dl><dt>Como</dt><dd>De partícula em partícula; o material fica parado.</dd><dt>Onde</dt><dd>Principalmente nos sólidos. Metais conduzem bem.</dd></dl>
+      </div>
+      <div data-passo="2">
+        <h3><svg viewBox="0 0 96 96" aria-hidden="true"><rect x="10" y="16" width="76" height="64" rx="8" fill="#E3F0FB"/><path d="M48 70 V26" stroke="#E8590C" stroke-width="6" stroke-linecap="round"/><path d="M40 34 L48 24 L56 34" fill="none" stroke="#E8590C" stroke-width="6" stroke-linecap="round"/><path d="M20 28 V68 M76 28 V68" stroke="#4A90E2" stroke-width="6" stroke-linecap="round"/></svg>Convecção</h3>
+        <dl><dt>Como</dt><dd>O próprio material circula: o quente sobe, o frio desce.</dd><dt>Onde</dt><dd>Só em líquidos e gases.</dd></dl>
+      </div>
+      <div data-passo="3">
+        <h3><svg viewBox="0 0 96 96" aria-hidden="true"><circle cx="26" cy="30" r="18" fill="#FFD10C"/><path d="M44 50 q8 -8 16 0 t16 0" fill="none" stroke="#E8590C" stroke-width="5" stroke-linecap="round"/><path d="M38 68 q8 -8 16 0 t16 0" fill="none" stroke="#E8590C" stroke-width="5" stroke-linecap="round"/></svg>Irradiação</h3>
+        <dl><dt>Como</dt><dd>Por ondas eletromagnéticas (infravermelho).</dd><dt>Onde</dt><dd>Em qualquer lugar, também no vácuo.</dd></dl>
+      </div>
+    </div>
+    <div class="caixa caixa-atencao" data-passo="4" style="position:absolute;left:580px;right:0;top:620px;padding:20px 30px">
+      <div class="texto" style="font-size:29px">Condução e convecção <b>precisam de matéria</b>. Só a irradiação passa pelo vácuo.</div>
+    </div>
+  </div>
+  <aside class="notas">
+    <p>O quadro das três formas (a figura da apostila tem os três painéis: barra no fogo, água circulando e Sol aquecendo o chão). Um cartão por clique. Clique 4: a frase que separa as três e que vai ser usada na garrafa térmica, na Parte 2.</p>
+  </aside>
+</section>
+
+<!-- 12. Questão 1 -->
+<section class="slide questao" data-nome="Questão 1">
+  <div class="conteudo">
+    <div class="area-resolucao"></div>
+    <span class="pilula pilula-pausa" data-em="1:some">Pause o vídeo e tente</span>
+    <div class="painel-questao">
+      <p class="olho">Questão 1 · IF Sudeste MG 2023</p>
+      <p class="enunciado" style="font-size:24px">A porta de uma sala foi construída em madeira com a maçaneta feita de metal. Uma pessoa, ao colocar a mão na maçaneta para abrir essa porta, percebe que ela está mais fria que a madeira.</p>
+      <svg viewBox="0 0 300 150" style="width:300px;height:140px;flex:none;align-self:center" aria-hidden="true"><rect x="20" y="10" width="200" height="140" rx="8" fill="#C9935F" stroke="#8A5A2C" stroke-width="4"/><rect x="170" y="60" width="18" height="34" rx="6" fill="#8E8AA0" stroke="#4B4760" stroke-width="3"/><rect x="128" y="70" width="56" height="16" rx="8" fill="#B9B4CC" stroke="#4B4760" stroke-width="3"/><path d="M232 74 q20 -8 40 4 q12 10 4 22 q-24 8 -42 -6 z" fill="#F2C7A5" stroke="#B9835F" stroke-width="3"/></svg>
+      <p class="enunciado" style="font-size:24px">Essa sensação se deve:</p>
+      <ol class="alternativas" style="gap:8px">
+        <li data-em="2:apaga" style="font-size:22px;padding:6px 14px"><b>A</b><span>às características psicológicas da pessoa.</span></li>
+        <li data-em="2:apaga" style="font-size:22px;padding:6px 14px"><b>B</b><span>ao fato de a maçaneta estar em menor temperatura.</span></li>
+        <li data-em="2:apaga" style="font-size:22px;padding:6px 14px"><b>C</b><span>à maior condutividade da madeira.</span></li>
+        <li data-em="2:certo" style="font-size:22px;padding:6px 14px"><b>D</b><span>à maior condutividade do metal.</span></li>
+        <li data-em="2:apaga" style="font-size:22px;padding:6px 14px"><b>E</b><span>ao fato de o calor do metal ser menor que o da madeira.</span></li>
+      </ol>
+      <p class="fonte">Figura refeita; original: Brasil Escola.</p>
+    </div>
+  </div>
+  <aside class="resolucao">
+    <p class="dados"><b>Dados:</b> porta e maçaneta na mesma sala.</p>
+    <ol class="passos">
+      <li>Mesma sala: mesma temperatura (equilíbrio).</li>
+      <li>O calor sai da mão por condução.</li>
+      <li>Metal: bom condutor, tira calor depressa.</li>
+      <li>Madeira: isolante, tira calor devagar.</li>
+    </ol>
+    <p class="resposta"><b>Resposta:</b> maior condutividade do metal. <b>Gabarito D.</b></p>
+    <p class="atencao"><b>Destaque no quadro:</b> Parecer frio não é ter temperatura menor.</p>
+    <ul class="erros">
+      <li><b>A</b> A causa é física: qualquer pessoa sente o mesmo.</li>
+      <li><b>B</b> As duas estão na mesma temperatura.</li>
+      <li><b>C</b> A madeira é isolante.</li>
+      <li><b>E</b> Corpo não "tem" calor.</li>
+    </ul>
+  </aside>
+  <aside class="notas">
+    <p>Clique 1 tira o aviso de pausa: resolva na área (D liga a caneta; E esconde o enunciado). Clique 2: gabarito D.</p>
+    <p>Questão oficial do IF Sudeste MG 2023-1, q30, FIS-0576 (sobra do capítulo para as partes). A figura da prova (uma porta com maçaneta, do site Brasil Escola) foi redesenhada.</p>
+  </aside>
+</section>
+
+<!-- 13. Questão 2 -->
+<section class="slide questao" data-nome="Questão 2">
+  <div class="conteudo">
+    <div class="area-resolucao"></div>
+    <span class="pilula pilula-pausa" data-em="1:some">Pause o vídeo e tente</span>
+    <div class="painel-questao">
+      <p class="olho">Questão 2 · Modelo IF</p>
+      <p class="enunciado" style="font-size:24px">Em países de inverno muito frio, muitas casas têm janelas de vidro duplo: duas placas de vidro separadas por uma fina camada de ar parado, bem vedada.</p>
+      <p class="enunciado" style="font-size:24px">Esse tipo de janela ajuda a manter a casa aquecida no inverno porque</p>
+      <ol class="alternativas" style="gap:8px">
+        <li data-em="2:certo" style="font-size:21px;padding:6px 14px"><b>A</b><span>o ar parado entre os vidros é um isolante térmico e dificulta a saída do calor de dentro da casa por condução.</span></li>
+        <li data-em="2:apaga" style="font-size:21px;padding:6px 14px"><b>B</b><span>o ar entre os vidros é um bom condutor de calor e leva o calor de fora para dentro da casa.</span></li>
+        <li data-em="2:apaga" style="font-size:21px;padding:6px 14px"><b>C</b><span>a camada de ar impede que o frio de fora da casa entre pela janela.</span></li>
+        <li data-em="2:apaga" style="font-size:21px;padding:6px 14px"><b>D</b><span>o ar entre os vidros forma fortes correntes de convecção, que trazem calor de fora para dentro da casa.</span></li>
+        <li data-em="2:apaga" style="font-size:21px;padding:6px 14px"><b>E</b><span>duas placas de vidro formam uma janela mais grossa, que conduz o calor melhor que uma placa só.</span></li>
+      </ol>
+    </div>
+  </div>
+  <aside class="resolucao">
+    <p class="dados"><b>Dados:</b> inverno; ar parado entre dois vidros.</p>
+    <ol class="passos">
+      <li>Casa mais quente que a rua: o calor quer sair.</li>
+      <li>Ar parado: isolante térmico.</li>
+      <li>O calor atravessa a janela mais devagar.</li>
+    </ol>
+    <p class="resposta"><b>Resposta:</b> o ar parado dificulta a saída do calor por condução. <b>Gabarito A.</b></p>
+    <p class="atencao"><b>Destaque no quadro:</b> Ar parado isola (isopor, lã, vidro duplo).</p>
+    <ul class="erros">
+      <li><b>B</b> Ar parado é isolante; e o calor vai de dentro para fora.</li>
+      <li><b>C</b> "Frio" não entra: o calor é que sai.</li>
+      <li><b>D</b> O ar fica parado; e fora é mais frio.</li>
+      <li><b>E</b> Mais grossa não conduz melhor; quem isola é o ar.</li>
+    </ul>
+  </aside>
+  <aside class="notas">
+    <p>Clique 1 tira o aviso de pausa. Clique 2: gabarito A.</p>
+    <p>Questão Modelo IF da apostila: lote if-fisica-propagacao-do-calor, m007, FIS-0978.</p>
+  </aside>
+</section>
+
+<!-- 14. Questão 3 -->
+<section class="slide questao" data-nome="Questão 3">
+  <div class="conteudo">
+    <div class="area-resolucao"></div>
+    <span class="pilula pilula-pausa" data-em="1:some">Pause o vídeo e tente</span>
+    <div class="painel-questao">
+      <p class="olho">Questão 3 · Modelo IF</p>
+      <p class="enunciado" style="font-size:24px">Em muitas geladeiras de uma porta, o congelador fica na parte de cima, e as prateleiras de baixo também ficam frias, mesmo longe dele.</p>
+      <p class="enunciado" style="font-size:24px">Essa posição do congelador ajuda a resfriar a geladeira inteira porque</p>
+      <ol class="alternativas" style="gap:8px">
+        <li data-em="2:apaga" style="font-size:21px;padding:6px 14px"><b>A</b><span>o frio sai do congelador e sobe, ocupando primeiro a parte de cima e depois a de baixo.</span></li>
+        <li data-em="2:apaga" style="font-size:21px;padding:6px 14px"><b>B</b><span>o ar frio é menos denso que o ar quente e, por isso, fica preso perto do congelador.</span></li>
+        <li data-em="2:apaga" style="font-size:21px;padding:6px 14px"><b>C</b><span>o congelador resfria os alimentos por irradiação, que só se propaga de cima para baixo.</span></li>
+        <li data-em="2:apaga" style="font-size:21px;padding:6px 14px"><b>D</b><span>as prateleiras de metal conduzem o frio do congelador até a parte de baixo.</span></li>
+        <li data-em="2:certo" style="font-size:21px;padding:6px 14px"><b>E</b><span>o ar resfriado perto do congelador fica mais denso e desce, e o ar mais quente de baixo sobe até ele, formando correntes de convecção.</span></li>
+      </ol>
+    </div>
+  </div>
+  <aside class="resolucao">
+    <p class="dados"><b>Dados:</b> congelador em cima; prateleiras de baixo frias.</p>
+    <ol class="passos">
+      <li>Ar perto do congelador esfria: mais denso.</li>
+      <li>O ar frio desce e resfria embaixo.</li>
+      <li>O ar quente de baixo sobe até o congelador.</li>
+      <li>Corrente de convecção, como no ar-condicionado.</li>
+    </ol>
+    <p class="resposta"><b>Resposta:</b> correntes de convecção. <b>Gabarito E.</b></p>
+    <p class="atencao"><b>Destaque no quadro:</b> Frio em cima, quente embaixo: a convecção faz o resto.</p>
+    <ul class="erros">
+      <li><b>A</b> "Frio" não se transfere; e o ar frio desce.</li>
+      <li><b>B</b> Inverte: o ar frio é mais denso.</li>
+      <li><b>C</b> Quem leva o resfriamento é o ar que circula.</li>
+      <li><b>D</b> Não existe "frio" conduzido.</li>
+    </ul>
+  </aside>
+  <aside class="notas">
+    <p>Clique 1 tira o aviso de pausa. Clique 2: gabarito E.</p>
+    <p>Questão Modelo IF da apostila: lote if-fisica-propagacao-do-calor, m002, FIS-0973. É o exemplo do ar-condicionado com outro aparelho.</p>
+  </aside>
+</section>
+
+<!-- 15. Resumo -->
+<section class="slide" data-nome="Resumo">
+  <div class="conteudo">
+    <p class="olho">Resumo</p>
+    <h2 class="titulo">O essencial</h2>
+    <div class="resumo" style="position:absolute;left:0;right:0;top:150px">
+      <div><b>Condução:</b> o calor passa de partícula em partícula; o material não sai do lugar.</div>
+      <div><b>Condutores:</b> metais. <b>Isolantes:</b> madeira, plástico, borracha, isopor, lã, cortiça e ar parado.</div>
+      <div>O metal só <b>parece</b> mais frio: conduz melhor e tira calor da mão mais depressa.</div>
+      <div><b>Convecção:</b> só em líquidos e gases; o quente, menos denso, sobe, e o frio desce.</div>
+      <div>Ar-condicionado <b>no alto</b>; aquecedor <b>perto do chão</b>.</div>
+      <div><b>Irradiação:</b> ondas eletromagnéticas (infravermelho); a única que passa pelo vácuo.</div>
+    </div>
+  </div>
+  <aside class="notas"><p>Peça para tirarem um print desta tela.</p></aside>
+</section>
+
+<!-- 16. A seguir -->
+<section class="slide capa" data-nome="A seguir">
+  <div class="estrelas"></div>
+  <div class="texto-capa" style="top:200px">
+    <span class="selo">Física · IF</span>
+    <p class="aula">A seguir · Propagação do calor · Parte 2 de 2</p>
+    <h1 style="font-size:120px">Garrafa térmica, Sol e efeito estufa</h1>
+    <p class="sub">O calor no dia a dia e no planeta</p>
+  </div>
+  <svg class="emblema" viewBox="0 0 640 640" aria-hidden="true">
+    <rect x="220" y="120" width="200" height="380" rx="60" fill="#fff" fill-opacity=".15" stroke="#fff" stroke-width="6"/>
+    <rect x="250" y="160" width="140" height="310" rx="44" fill="none" stroke="#FFD10C" stroke-width="6"/>
+    <rect x="250" y="80" width="140" height="56" rx="18" fill="#FFD10C"/>
+    <g fill="none" stroke="#FFD10C" stroke-width="5" stroke-linecap="round"><path d="M300 260 q10 -10 20 0 t20 0"/><path d="M300 320 q10 -10 20 0 t20 0"/></g>
+  </svg>
+  <img class="logo-capa" src="{{LOGO_BRANCO}}" alt="Quarks">
+  <aside class="notas"><p>Próxima parte: superfícies diferentes ao Sol, a garrafa térmica, o coletor solar, o equilíbrio térmico da Terra e o efeito estufa.</p></aside>
+</section>

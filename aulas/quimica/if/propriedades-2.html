@@ -1,0 +1,497 @@
+<!--aula
+{"disciplina": "quimica", "curso": "IF", "assunto": "Propriedades da matéria", "parte": "Parte 2 de 2", "titulo": "Solubilidade e outras propriedades", "scripts": ["animacoes-propriedades.js"]}
+-->
+<!-- Fonte: slides da professora (Química IF 2026, aula 02: maleabilidade, ductilidade, dureza, propriedades funcionais), completados com a apostila IF, Química, cap. 1 (solubilidade; condutibilidade, magnetismo, dureza e elasticidade) para os descritores CN50 e CN52. Questões: IF Sudeste MG 2017 e 2016 (oficiais). -->
+<style>
+  .caixa, .cartao, .linha-ex { box-sizing: border-box; }
+  .linha-ex { background: var(--branco); border: 2px solid var(--lilas-2); border-radius: 24px; padding: 14px 26px; font-size: 30px; line-height: 1.3; }
+  .linha-ex b { color: var(--roxo-titulo); }
+  .linha-tag { display: grid; grid-template-columns: 1fr auto; align-items: center; gap: 18px; }
+  .tag { display: inline-block; padding: 5px 20px; border-radius: 999px; font-weight: 800; font-size: 25px; white-space: nowrap; }
+  .tag-f { background: #E3F0FB; color: #1F5F99; }
+  .tag-q { background: #FFE9DF; color: #A8431B; }
+  .tag-v { background: var(--certo-claro); color: var(--certo); }
+  .tag-x { background: var(--erro-claro); color: var(--erro); }
+  .tag-p { background: var(--d-clara); color: var(--d-forte); }
+  .cartao { background: var(--branco); border: 2px solid var(--lilas-2); border-radius: 28px; padding: 20px 24px; }
+  .cartao h3 { margin: 0 0 4px; font: 800 36px var(--fonte-titulo); letter-spacing: -.02em; color: var(--roxo-titulo); }
+  .cartao p { margin: 0; font-size: 25px; line-height: 1.3; color: var(--carvao); }
+  .cartao-ico { display: grid; grid-template-columns: 150px 1fr; gap: 18px; align-items: center; }
+  .cartao-ico svg { width: 150px; height: 150px; display: block; }
+  .rot-fig { font-family: Figtree, sans-serif; font-weight: 700; font-size: 22px; fill: #5E5A70; }
+  .tabela.marca-lin tr.marca td { background: #FFF4C2; font-weight: 800; }
+  .placar { display: flex; gap: 18px; align-items: center; flex-wrap: wrap; }
+  .placar .num { display: inline-flex; align-items: baseline; gap: 10px; background: var(--branco); border: 2px solid var(--lilas-2); border-radius: 22px; padding: 10px 22px; font-size: 27px; }
+  .placar .num b { font: 800 44px var(--fonte-titulo); color: var(--roxo-titulo); min-width: 54px; text-align: right; }
+  [data-saturada] { opacity: .25; transition: opacity .5s; }
+  [data-saturada].on { opacity: 1; }
+  .painel { box-sizing: border-box; background: var(--branco); border: 2px solid var(--lilas-2); border-radius: 30px; padding: 18px 26px; }
+  .painel h3 { margin: 0 0 6px; font: 800 38px var(--fonte-titulo); letter-spacing: -.02em; color: var(--roxo-titulo); }
+  .painel p { margin: 8px 0 0; font-size: 26px; line-height: 1.3; }
+  /* calor que se espalha pelo metal da panela */
+  @keyframes esquenta { 0% { transform: scaleX(.08); opacity: 0; } 15% { opacity: .9; } 55%,85% { transform: scaleX(1); opacity: .9; } 100% { transform: scaleX(1); opacity: 0; } }
+  .calor { transform-box: fill-box; transform-origin: 50% 50%; opacity: 0; }
+  .slide.ativo .mostra .calor { animation: esquenta 6s ease-in-out infinite; }
+  @keyframes chama2 { 0%,100% { transform: scaleY(1); } 50% { transform: scaleY(.84); } }
+  .chama { transform-box: fill-box; transform-origin: 50% 100%; }
+  .slide.ativo .mostra .chama { animation: chama2 1.6s ease-in-out infinite; }
+  .chama:nth-child(2) { animation-delay: -.5s !important; } .chama:nth-child(3) { animation-delay: -1.1s !important; }
+  /* elétrons andando no fio de cobre */
+  @keyframes corre { to { stroke-dashoffset: -56; } }
+  .eletrons { stroke-dasharray: .1 28; }
+  .slide.ativo .mostra .eletrons { animation: corre 1.2s linear infinite; }
+  .luz { opacity: 0; transition: opacity 1s .6s; }
+  .mostra .luz { opacity: 1; }
+  /* ímã que puxa só as latas de aço */
+  .lata-aco { transition: transform 1.8s cubic-bezier(.55,0,.7,1) .5s; }
+  .mostra .lata-aco { transform: translateY(-150px); }
+  .mostra .lata-aco.l2 { transition-delay: 1s; }
+  @keyframes balanca-lata { 0%,100% { transform: rotate(0); } 50% { transform: rotate(1.5deg); } }
+  /* lápis que risca o papel: quem se gasta é o grafite */
+  @keyframes risca { 0% { transform: translateX(0); } 70%,100% { transform: translateX(330px); } }
+  @keyframes traco { 0% { stroke-dashoffset: 330; } 70%,100% { stroke-dashoffset: 0; } }
+  .lapis { transform-box: view-box; }
+  .slide.ativo .mostra .lapis { animation: risca 5s ease-in-out infinite; }
+  .traco { stroke-dasharray: 330; stroke-dashoffset: 330; }
+  .slide.ativo .mostra .traco { animation: traco 5s ease-in-out infinite; }
+  /* mola que estica e volta; massinha que fica amassada */
+  @keyframes mola { 0%,100% { transform: scaleY(1); } 35%,50% { transform: scaleY(1.45); } 70% { transform: scaleY(.93); } 82% { transform: scaleY(1.03); } }
+  @keyframes peso { 0%,100% { transform: translateY(0); } 35%,50% { transform: translateY(54px); } 70% { transform: translateY(-9px); } 82% { transform: translateY(4px); } }
+  .mola-i { transform-box: fill-box; transform-origin: 50% 0; }
+  .peso-i { transform-box: fill-box; }
+  .slide.ativo .mostra .mola-i { animation: mola 4.5s ease-in-out infinite; }
+  .slide.ativo .mostra .peso-i { animation: peso 4.5s ease-in-out infinite; }
+  /* laminação (lâminas) e trefilação (fios) */
+  @keyframes rola { to { transform: rotate(360deg); } }
+  .rolo { transform-box: fill-box; transform-origin: center; }
+  .slide.ativo .mostra .rolo { animation: rola 3s linear infinite; }
+  .slide.ativo .mostra .rolo.inv { animation-direction: reverse; }
+  @keyframes sai { 0%,8% { transform: scaleX(0); } 75%,100% { transform: scaleX(1); } }
+  @keyframes entra { 0%,8% { transform: scaleX(1); } 75%,100% { transform: scaleX(.18); } }
+  .sai { transform-box: fill-box; transform-origin: 0 50%; transform: scaleX(0); }
+  .entra { transform-box: fill-box; transform-origin: 100% 50%; }
+  .slide.ativo .mostra .sai { animation: sai 6s ease-in-out infinite; }
+  .slide.ativo .mostra .entra { animation: entra 6s ease-in-out infinite; }
+  .func { display: flex; flex-direction: column; align-items: center; text-align: center; gap: 8px; }
+  .func svg { width: 150px; height: 150px; }
+  .func h3 { margin: 0; font: 800 40px var(--fonte-titulo); color: var(--roxo-titulo); }
+  .func p { margin: 0; font-size: 26px; line-height: 1.3; }
+  .func small { display: block; margin-top: 8px; font-size: 23px; color: var(--cinza); }
+  @keyframes pinga { 0% { transform: translateY(0); opacity: 0; } 15% { opacity: 1; } 80% { transform: translateY(46px); opacity: 1; } 100% { transform: translateY(52px); opacity: 0; } }
+  .gota-l { opacity: 0; }
+  .slide.ativo .mostra .gota-l { animation: pinga 2.6s ease-in infinite; }
+</style>
+
+<svg width="0" height="0" style="position:absolute" aria-hidden="true">
+  <defs>
+    <linearGradient id="gAgua" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#CFE6FA"/><stop offset="1" stop-color="#9CCBF2"/></linearGradient>
+    <linearGradient id="gMetal" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#D9D6E3"/><stop offset="1" stop-color="#8E8AA0"/></linearGradient>
+    <linearGradient id="gCalor" x1="0" y1="0" x2="1" y2="0"><stop offset="0" stop-color="#FF8A3D" stop-opacity=".2"/><stop offset=".5" stop-color="#E5533D"/><stop offset="1" stop-color="#FF8A3D" stop-opacity=".2"/></linearGradient>
+    <linearGradient id="gCobre" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#F0A26A"/><stop offset="1" stop-color="#B8622C"/></linearGradient>
+    <linearGradient id="gFerro" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#B8B3C9"/><stop offset="1" stop-color="#6E6A80"/></linearGradient>
+  </defs>
+</svg>
+
+<!-- 1. Capa -->
+<section class="slide capa" data-nome="Capa">
+  <div class="estrelas"></div>
+  <div class="texto-capa" style="top:150px">
+    <span class="selo">Química · IF</span>
+    <p class="aula">Propriedades da matéria · Parte 2 de 2</p>
+    <h1 style="font-size:110px">Solubilidade e outras propriedades</h1>
+    <p class="sub">Condutibilidade, dureza, maleabilidade e funções</p>
+  </div>
+  <svg class="emblema" viewBox="0 0 640 640" aria-hidden="true">
+    <g class="gira-lento"><ellipse cx="320" cy="320" rx="300" ry="128" fill="none" stroke="#fff" stroke-opacity=".38" stroke-width="2" transform="rotate(-10 320 320)"/></g>
+    <g class="gira"><ellipse cx="320" cy="320" rx="236" ry="196" fill="none" stroke="#FFD10C" stroke-opacity=".75" stroke-width="2.5" stroke-dasharray="3 14" stroke-linecap="round" transform="rotate(-8 320 320)"/>
+      <circle cx="84" cy="300" r="13" fill="#FFD10C" stroke="#fff" stroke-width="3"/></g>
+    <circle cx="320" cy="320" r="132" fill="#FFD10C"/>
+    <image href="{{SYM_ROXO}}" x="238" y="238" width="164" height="164"/>
+  </svg>
+  <img class="logo-capa" src="{{LOGO_BRANCO}}" alt="Quarks">
+  <aside class="notas"><p>Hoje: solubilidade (quanto se dissolve), condutibilidade térmica e elétrica, magnetismo, dureza e elasticidade, maleabilidade e ductilidade e as propriedades funcionais (acidez, basicidade e salinidade).</p><p>São as propriedades que explicam a escolha dos materiais no dia a dia (descritores CN50 e CN52 do IF).</p></aside>
+</section>
+
+<!-- 2. Solubilidade -->
+<section class="slide" data-nome="Solubilidade">
+  <div class="conteudo">
+    <p class="olho">Quanto se dissolve?</p>
+    <h2 class="titulo">Solubilidade</h2>
+    <div data-passo="1" style="position:absolute;left:0;top:130px;width:520px;height:470px">
+      <svg viewBox="0 0 520 470" style="position:absolute;inset:0;width:520px;height:470px" aria-hidden="true">
+        <rect x="113" y="150" width="294" height="284" rx="14" fill="url(#gAgua)"/>
+        <path d="M100 100 h320 M108 100 v318 a20 20 0 0 0 20 20 h264 a20 20 0 0 0 20 -20 v-318" fill="none" stroke="#7F7A99" stroke-width="6" stroke-linecap="round"/>
+        <text x="260" y="26" text-anchor="middle" class="rot-fig" style="font-size:22px">cada grão: 4 g de sal</text>
+        <text x="260" y="466" text-anchor="middle" class="rot-fig" style="font-size:22px">100 g de água a 20 °C</text>
+      </svg>
+      <div data-anima="solubilidade" data-anima-passo="1" data-topo="40" data-sup="150" data-chao="434" data-cx="260" style="position:absolute;inset:0">
+        <svg class="graos-sal" viewBox="0 0 520 470" style="position:absolute;inset:0;width:520px;height:470px;overflow:visible" aria-hidden="true"></svg>
+      </div>
+    </div>
+    <div style="position:absolute;left:600px;right:0;top:150px;display:flex;flex-direction:column;gap:20px">
+      <div class="caixa caixa-fundamental" style="padding:20px 30px">
+        <span class="rotulo">Solubilidade</span>
+        <div class="texto" style="font-size:30px">Quantidade <b>máxima</b> de um material que se dissolve numa quantidade de água, numa <b>certa temperatura</b>.</div>
+      </div>
+      <div class="placar" data-passo="1">
+        <span class="num"><b data-dissolvido>0</b> g dissolvidos</span>
+        <span class="num"><b data-fundo>0</b> g no fundo</span>
+        <span class="tag tag-p" data-saturada style="font-size:27px">solução saturada</span>
+      </div>
+      <div class="linha-ex" data-passo="2"><b>Sal de cozinha:</b> cerca de <b>36 g</b> em 100 g de água a 20 °C. Passou disso, o excesso fica no fundo (<b>corpo de fundo</b>).</div>
+      <div class="linha-ex" data-passo="3">Cada material tem a sua: o sal dissolve muito; a <b>areia</b>, quase nada.</div>
+    </div>
+    <div class="caixa caixa-atencao" data-passo="4" style="position:absolute;left:600px;right:0;top:690px;padding:20px 30px">
+      <div class="texto" style="font-size:29px">Depende da <b>temperatura</b>: em geral, a água quente dissolve mais (o açúcar some mais fácil no chá quente).</div>
+    </div>
+  </div>
+  <aside class="notas">
+    <p>Clique 1: o sal cai na água, 4 g por grão. Os primeiros somem (dissolvem); ao chegar a 36 g a solução fica <b>saturada</b> e os grãos seguintes ficam no fundo. Clique 2: o número da apostila. Clique 3: cada material tem a sua solubilidade (é propriedade específica). Clique 4: a temperatura.</p>
+    <p>Saturada: dissolveu o máximo possível naquela temperatura. A curva de solubilidade (gráfico da solubilidade contra a temperatura) não está no material da professora nem na apostila do IF; fica para o PISM II.</p>
+  </aside>
+</section>
+
+<!-- 3. Exemplo de solubilidade -->
+<section class="slide" data-nome="Exemplo: quanto fica no fundo?">
+  <div class="conteudo">
+    <p class="olho">Exemplo</p>
+    <h2 class="titulo">Quanto sal fica no fundo?</h2>
+    <p class="texto" style="position:absolute;left:0;right:0;top:150px;margin:0;font-size:31px">A 20 °C, 100 g de água dissolvem no máximo <b>36 g</b> de sal. Colocamos <b>50 g</b> de sal.</p>
+    <div style="position:absolute;left:0;width:800px;top:250px">
+      <p class="texto" style="margin:0 0 14px;font-size:30px"><b>a)</b> Em <b>100 g</b> de água:</p>
+      <div class="contas" style="font-size:40px">
+        <div class="eq" data-passo="1"><span>\(\text{dissolve}\)</span><span>\(=\)</span><span>\(36\ \text{g}\)</span></div>
+        <div class="eq" data-passo="2"><span>\(\text{fundo}\)</span><span>\(=\)</span><span>\(50 - 36\)</span></div>
+        <div class="eq final" data-passo="3"><span>\(\text{fundo}\)</span><span>\(=\)</span><span>\(14\ \text{g}\)</span></div>
+      </div>
+    </div>
+    <div style="position:absolute;left:900px;right:0;top:250px">
+      <p class="texto" style="margin:0 0 14px;font-size:30px"><b>b)</b> Em <b>200 g</b> de água:</p>
+      <div class="contas" style="font-size:40px">
+        <div class="eq" data-passo="4"><span>\(\text{máximo}\)</span><span>\(=\)</span><span>\(2 \cdot 36\)</span></div>
+        <div class="eq final" data-passo="5"><span>\(\text{máximo}\)</span><span>\(=\)</span><span>\(72\ \text{g}\)</span></div>
+      </div>
+      <p class="texto" data-passo="6" style="margin:18px 0 0;font-size:30px">50 g é menos que 72 g: <b>dissolve tudo</b>.</p>
+    </div>
+    <div class="caixa caixa-fundamental" data-passo="7" style="position:absolute;left:580px;right:0;top:690px;padding:20px 30px">
+      <div class="texto" style="font-size:30px"><b>Resposta:</b> a) <b>14 g</b> no fundo; b) <b>nada</b> no fundo.</div>
+    </div>
+  </div>
+  <aside class="notas">
+    <p>Peça a resposta antes de cada clique. O dobro de água dissolve o dobro de sal (na mesma temperatura).</p>
+    <p>Contas: 50 − 36 = 14 g; 2 × 36 = 72 g, e 50 &lt; 72. Valor de 36 g da apostila.</p>
+  </aside>
+</section>
+
+<!-- 4. Condutibilidade -->
+<section class="slide" data-nome="Condutibilidade">
+  <div class="conteudo">
+    <p class="olho">Calor e corrente elétrica</p>
+    <h2 class="titulo">Por que a panela é de metal e o cabo, de plástico?</h2>
+    <div style="position:absolute;left:0;right:0;top:160px;display:grid;grid-template-columns:1fr 1fr;gap:40px">
+      <div class="painel" data-passo="1">
+        <h3>Condutibilidade térmica</h3>
+        <svg viewBox="0 0 800 230" style="display:block;width:100%;height:230px" aria-hidden="true">
+          <path d="M150 70 h320 v76 a26 26 0 0 1 -26 26 h-268 a26 26 0 0 1 -26 -26 z" fill="url(#gMetal)" stroke="#6E6A80" stroke-width="4"/>
+          <rect class="calor" x="152" y="72" width="316" height="98" rx="22" fill="url(#gCalor)"/>
+          <rect x="470" y="88" width="230" height="30" rx="15" fill="#3A3640"/>
+          <g fill="#FF8A3D"><path class="chama" d="M260 226 q-16 -22 0 -42 q16 20 0 42 z"/><path class="chama" d="M310 226 q-18 -26 0 -50 q18 24 0 50 z" fill="#FFB23D"/><path class="chama" d="M360 226 q-16 -22 0 -42 q16 20 0 42 z"/></g>
+          <text x="310" y="52" text-anchor="middle" class="rot-fig" style="font-size:24px">metal: esquenta rápido</text>
+          <text x="585" y="152" text-anchor="middle" class="rot-fig" style="font-size:24px">plástico: fica frio</text>
+        </svg>
+        <p>Metais <b>conduzem bem</b> o calor. Plástico, madeira e isopor conduzem mal: são <b>isolantes térmicos</b>.</p>
+      </div>
+      <div class="painel" data-passo="2">
+        <h3>Condutibilidade elétrica</h3>
+        <svg viewBox="0 0 800 230" style="display:block;width:100%;height:230px" aria-hidden="true">
+          <rect x="40" y="96" width="90" height="56" rx="10" fill="#4B39B3"/><rect x="130" y="112" width="12" height="24" rx="3" fill="#4B39B3"/>
+          <text x="85" y="132" text-anchor="middle" font-family="Figtree,sans-serif" font-weight="800" font-size="22" fill="#fff">pilha</text>
+          <path d="M142 124 H560" stroke="#3A3640" stroke-width="30" stroke-linecap="round"/>
+          <path d="M142 124 H560" stroke="url(#gCobre)" stroke-width="14" stroke-linecap="round"/>
+          <path class="eletrons" d="M150 124 H556" stroke="#FFD10C" stroke-width="9" stroke-linecap="round"/>
+          <circle class="luz" cx="640" cy="110" r="70" fill="#FFE680" opacity=".6"/>
+          <path d="M610 150 q-30 -30 -30 -56 a60 60 0 0 1 120 0 q0 26 -30 56 z" fill="#FFF4C2" stroke="#C99A00" stroke-width="4"/>
+          <rect x="612" y="152" width="56" height="34" rx="6" fill="#B9B0E6"/>
+          <text x="330" y="80" text-anchor="middle" class="rot-fig" style="font-size:24px">fio de cobre com capa de plástico</text>
+        </svg>
+        <p>O fio de <b>cobre</b> conduz a corrente; a capa de <b>plástico</b> isola e protege quem pega no fio.</p>
+      </div>
+    </div>
+    <div class="caixa caixa-atencao" data-passo="3" style="position:absolute;left:580px;right:0;top:660px">
+      <div class="texto" style="font-size:30px">Metais conduzem bem <b>calor e eletricidade</b>. Plástico, borracha, madeira e isopor são <b>isolantes</b>.</div>
+    </div>
+  </div>
+  <aside class="notas">
+    <p>Clique 1: o calor da chama se espalha pelo metal da panela; o cabo de plástico continua frio. Clique 2: os elétrons (pontos amarelos) andam pelo cobre e a lâmpada acende; a capa de plástico não deixa a corrente sair. Clique 3: a regra.</p>
+    <p>Da apostila. Pergunte: por que a luva de cozinha é de tecido grosso? (isolante térmico).</p>
+  </aside>
+</section>
+
+<!-- 5. Magnetismo -->
+<section class="slide" data-nome="Magnetismo">
+  <div class="conteudo">
+    <p class="olho">Resposta a ímãs</p>
+    <h2 class="titulo">Magnetismo</h2>
+    <svg viewBox="0 0 760 450" style="position:absolute;left:0;top:140px;width:760px;height:450px" aria-hidden="true">
+      <rect x="40" y="10" width="680" height="16" rx="8" fill="#C9C1F2"/>
+      <path d="M380 26 v40" stroke="#8C7BEA" stroke-width="6"/>
+      <path d="M200 66 h360 v90 h-100 v-40 h-160 v40 h-100 z" fill="#E5533D" stroke="#A8301F" stroke-width="4" stroke-linejoin="round"/>
+      <rect x="200" y="132" width="100" height="24" fill="#D9D6E3"/><rect x="460" y="132" width="100" height="24" fill="#D9D6E3"/>
+      <text x="380" y="98" text-anchor="middle" font-family="Figtree,sans-serif" font-weight="800" font-size="26" fill="#fff">ímã</text>
+      <rect x="20" y="410" width="720" height="16" rx="8" fill="#B9B0E6"/>
+      <g data-passo="1">
+        <g class="lata-aco"><rect x="215" y="320" width="70" height="90" rx="12" fill="url(#gFerro)" stroke="#4E4A5E" stroke-width="3"/><text x="250" y="372" text-anchor="middle" font-family="Figtree,sans-serif" font-weight="800" font-size="22" fill="#fff">aço</text></g>
+        <g class="lata-aco l2"><rect x="475" y="320" width="70" height="90" rx="12" fill="url(#gFerro)" stroke="#4E4A5E" stroke-width="3"/><text x="510" y="372" text-anchor="middle" font-family="Figtree,sans-serif" font-weight="800" font-size="22" fill="#fff">aço</text></g>
+        <rect x="345" y="320" width="70" height="90" rx="12" fill="#EEF0F6" stroke="#9A95AD" stroke-width="3"/><text x="380" y="368" text-anchor="middle" class="rot-fig" style="font-size:15px">alumínio</text>
+        <rect x="85" y="320" width="70" height="90" rx="12" fill="#EEF0F6" stroke="#9A95AD" stroke-width="3"/><text x="120" y="368" text-anchor="middle" class="rot-fig" style="font-size:15px">alumínio</text>
+        <rect x="605" y="320" width="70" height="90" rx="12" fill="#EEF0F6" stroke="#9A95AD" stroke-width="3"/><text x="640" y="368" text-anchor="middle" class="rot-fig" style="font-size:15px">alumínio</text>
+      </g>
+    </svg>
+    <div style="position:absolute;left:840px;right:0;top:170px;display:flex;flex-direction:column;gap:20px">
+      <div class="linha-ex" data-passo="1"><b>Ferro e aço</b> são atraídos pelo ímã (o níquel e o cobalto também).</div>
+      <div class="linha-ex" data-passo="2"><b>Alumínio, cobre e plástico</b> não são atraídos.</div>
+      <div class="linha-ex" data-passo="3">Na <b>reciclagem</b>, um ímã grande separa as latas de aço das latas de alumínio.</div>
+    </div>
+    <div class="caixa caixa-atencao" data-passo="4" style="position:absolute;left:840px;right:0;top:620px">
+      <div class="texto" style="font-size:29px">Nem todo metal é atraído por ímã: a lata de <b>alumínio</b> fica para trás.</div>
+    </div>
+  </div>
+  <aside class="notas">
+    <p>Clique 1: o ímã puxa só as latas de aço; as de alumínio ficam na esteira. Cliques 2 e 3: o que não é atraído e o uso na reciclagem (a separação magnética volta na unidade de Separação de misturas). Clique 4: o erro comum, achar que todo metal gruda no ímã.</p>
+  </aside>
+</section>
+
+<!-- 6. Dureza e elasticidade -->
+<section class="slide" data-nome="Dureza e elasticidade">
+  <div class="conteudo">
+    <p class="olho">Respostas a forças</p>
+    <h2 class="titulo">Dureza e elasticidade</h2>
+    <div style="position:absolute;left:0;width:860px;top:150px">
+      <div class="painel" data-passo="1" style="padding:16px 26px">
+        <h3>Dureza: resistência a ser riscado</h3>
+        <svg viewBox="0 0 800 150" style="display:block;width:100%;height:130px" aria-hidden="true">
+          <rect x="40" y="96" width="720" height="40" rx="8" fill="#FFFFFF" stroke="#D6D1EA" stroke-width="3"/>
+          <path class="traco" d="M150 112 h330" stroke="#5E5A70" stroke-width="5" stroke-linecap="round"/>
+          <g class="lapis"><g transform="translate(150 112) rotate(-40)"><path d="M0 0 l14 -10 v-120 h22 v120 z" transform="translate(-10 0)" fill="none"/><polygon points="0,0 -10,-24 10,-24" fill="#3A3640"/><polygon points="-10,-24 10,-24 14,-44 -14,-44" fill="#F2DDB8"/><rect x="-14" y="-170" width="28" height="126" fill="#FFD10C" stroke="#C99A00" stroke-width="2"/></g></g>
+          <text x="510" y="70" class="rot-fig" style="font-size:22px">o grafite se gasta no papel</text>
+        </svg>
+      </div>
+      <div style="display:flex;flex-direction:column;gap:12px;margin-top:14px">
+        <div class="linha-ex" data-passo="2" style="font-size:27px">Quem risca é o <b>mais duro</b>: diamante risca vidro; vidro risca cobre.</div>
+        <div class="linha-ex" data-passo="3" style="font-size:27px">No lápis, o <b>grafite</b> se gasta: é mais mole que o papel.</div>
+      </div>
+    </div>
+    <div class="painel" data-passo="4" style="position:absolute;left:920px;right:0;top:150px;display:grid;grid-template-columns:200px 1fr;gap:20px;align-items:center">
+      <svg viewBox="0 0 200 300" style="width:200px;height:300px" aria-hidden="true">
+        <rect x="30" y="8" width="140" height="14" rx="7" fill="#8C7BEA"/>
+        <g class="mola-i"><path d="M100 22 l-34 10 l68 14 l-68 14 l68 14 l-68 14 l68 14 l-68 14 l34 10" fill="none" stroke="#6551D1" stroke-width="6" stroke-linejoin="round"/></g>
+        <g class="peso-i"><rect x="66" y="128" width="68" height="50" rx="10" fill="url(#gFerro)" stroke="#4E4A5E" stroke-width="3"/></g>
+      </svg>
+      <div><h3>Elasticidade</h3><p>Capacidade de <b>voltar à forma</b> depois de esticado ou apertado: a mola, o elástico de borracha.</p><p style="color:var(--cinza)">A massinha de modelar, não: fica amassada.</p></div>
+    </div>
+    <div class="caixa caixa-atencao" data-passo="5" style="position:absolute;left:920px;right:0;top:600px;padding:20px 30px">
+      <span class="rotulo">Duro não é resistente</span>
+      <div class="texto" style="font-size:28px">O vidro é duro (risca o cobre), mas quebra fácil com uma pancada: é <b>frágil</b>.</div>
+    </div>
+  </div>
+  <aside class="notas">
+    <p>Clique 1: o lápis risca o papel; o traço é o grafite que ficou no papel (palavras da professora: quem sofre o desgaste é o grafite, que é mais mole que o papel). Clique 2: quem risca é mais duro. Clique 4: a mola estica com o peso e volta. Clique 5: o erro comum da apostila.</p>
+    <p><b>Correção:</b> o slide da professora diz que o diamante "é a substância mais dura que existe". Melhor dizer que é o material <b>natural</b> mais duro: há materiais sintéticos tão duros quanto ou mais.</p>
+  </aside>
+</section>
+
+<!-- 7. Maleabilidade e ductilidade -->
+<section class="slide" data-nome="Maleabilidade e ductilidade">
+  <div class="conteudo">
+    <p class="olho">Típicas dos metais</p>
+    <h2 class="titulo">Lâminas e fios</h2>
+    <div style="position:absolute;left:0;right:0;top:150px;display:grid;grid-template-columns:1fr 1fr;gap:40px">
+      <div class="painel" data-passo="1">
+        <h3>Maleabilidade</h3>
+        <svg viewBox="0 0 800 200" style="display:block;width:100%;height:200px" aria-hidden="true">
+          <rect class="entra" x="60" y="80" width="230" height="56" rx="8" fill="url(#gMetal)" stroke="#6E6A80" stroke-width="3"/>
+          <circle class="rolo" cx="340" cy="50" r="44" fill="#C9C1F2" stroke="#8C7BEA" stroke-width="4"/><path class="rolo" d="M340 14 v72" stroke="#8C7BEA" stroke-width="4"/>
+          <circle class="rolo inv" cx="340" cy="150" r="44" fill="#C9C1F2" stroke="#8C7BEA" stroke-width="4"/>
+          <rect class="sai" x="384" y="101" width="380" height="12" rx="4" fill="url(#gMetal)" stroke="#6E6A80" stroke-width="2"/>
+          <text x="580" y="80" text-anchor="middle" class="rot-fig" style="font-size:22px">lâmina</text>
+        </svg>
+        <p>Capacidade de virar <b>lâminas</b> (chapas finas): papel-alumínio, ouro em folha.</p>
+        <p style="color:var(--cinza)">Muito maleáveis: ouro, prata, alumínio, cobre, ferro.</p>
+      </div>
+      <div class="painel" data-passo="2">
+        <h3>Ductilidade</h3>
+        <svg viewBox="0 0 800 200" style="display:block;width:100%;height:200px" aria-hidden="true">
+          <rect class="entra" x="60" y="76" width="250" height="48" rx="24" fill="url(#gCobre)" stroke="#8A4A1E" stroke-width="3"/>
+          <path d="M310 40 h56 v44 l-40 12 v8 l40 12 v44 h-56 z" fill="#B9B0E6" stroke="#8C7BEA" stroke-width="4" stroke-linejoin="round"/>
+          <rect class="sai" x="366" y="96" width="400" height="8" rx="4" fill="url(#gCobre)"/>
+          <text x="580" y="76" text-anchor="middle" class="rot-fig" style="font-size:22px">fio</text>
+        </svg>
+        <p>Capacidade de virar <b>fios</b>: os fios elétricos de cobre e de alumínio.</p>
+        <p style="color:var(--cinza)">Muito dúcteis: cobre, alumínio, ouro, prata.</p>
+      </div>
+    </div>
+    <div class="caixa caixa-atencao" data-passo="3" style="position:absolute;left:580px;right:0;top:680px;padding:20px 30px">
+      <div class="texto" style="font-size:29px">Escreve-se <b>ductilidade</b> (de dúctil), e não "ductibilidade".</div>
+    </div>
+  </div>
+  <aside class="notas">
+    <p>Clique 1: o metal passa entre os rolos e sai como lâmina (laminação). Clique 2: o metal é puxado por um furo cada vez menor e sai como fio (trefilação). São propriedades típicas dos metais; o vidro e o giz quebram em vez de virar lâmina.</p>
+    <p><b>Correções:</b> o slide da professora escreve "ductibilidade"; o certo é ductilidade. Ela cita o zinco entre os muito maleáveis, mas o zinco é quebradiço na temperatura ambiente (só fica maleável aquecido, entre 100 e 150 °C); troquei por alumínio e cobre. Ouro e prata são, ao mesmo tempo, os mais maleáveis e muito dúcteis.</p>
+  </aside>
+</section>
+
+<!-- 8. Propriedades funcionais -->
+<section class="slide" data-nome="Propriedades funcionais">
+  <div class="conteudo">
+    <p class="olho">Comuns a um grupo de substâncias</p>
+    <h2 class="titulo">Propriedades funcionais</h2>
+    <div style="position:absolute;left:0;right:0;top:160px;display:grid;grid-template-columns:repeat(3,1fr);gap:30px">
+      <div class="cartao func" data-passo="1"><svg viewBox="0 0 150 150" aria-hidden="true"><circle cx="75" cy="66" r="50" fill="#FFF4C2" stroke="#E0B800" stroke-width="5"/><g stroke="#E0B800" stroke-width="3"><path d="M75 20 v92 M31 44 l88 44 M31 88 l88 -44"/></g><circle cx="75" cy="66" r="11" fill="#fff"/><path class="gota-l" d="M75 116 q-7 10 0 16 q7 -6 0 -16 z" fill="#E0B800"/></svg><h3>Acidez</h3><p>dos <b>ácidos</b><small>ácido cítrico (limão, laranja) e ácido ascórbico (vitamina C)</small></p></div>
+      <div class="cartao func" data-passo="2"><svg viewBox="0 0 150 150" aria-hidden="true"><rect x="40" y="40" width="70" height="96" rx="14" fill="#EFEBFF" stroke="#8C7BEA" stroke-width="4"/><rect x="58" y="22" width="34" height="20" rx="5" fill="#8C7BEA"/><path d="M75 62 l20 34 h-40 z" fill="#FFD10C" stroke="#292B2C" stroke-width="3" stroke-linejoin="round"/><path d="M75 74 v12 M75 90 v2" stroke="#292B2C" stroke-width="4" stroke-linecap="round"/><text x="75" y="124" text-anchor="middle" font-family="Figtree,sans-serif" font-weight="800" font-size="16" fill="#4B39B3">NaOH</text></svg><h3>Basicidade</h3><p>das <b>bases</b><small>hidróxido de sódio, NaOH (soda cáustica)</small></p></div>
+      <div class="cartao func" data-passo="3"><svg viewBox="0 0 150 150" aria-hidden="true"><path d="M48 54 h54 l8 82 h-70 z" fill="#FFFFFF" stroke="#8C7BEA" stroke-width="4" stroke-linejoin="round"/><path d="M50 54 q25 -34 50 0" fill="#C9C1F2" stroke="#8C7BEA" stroke-width="4"/><g fill="#8C7BEA"><circle cx="66" cy="42" r="3"/><circle cx="75" cy="38" r="3"/><circle cx="84" cy="42" r="3"/></g><text x="75" y="108" text-anchor="middle" font-family="Figtree,sans-serif" font-weight="800" font-size="18" fill="#4B39B3">NaCl</text></svg><h3>Salinidade</h3><p>dos <b>sais</b><small>cloreto de sódio, NaCl (sal de cozinha)</small></p></div>
+    </div>
+    <div class="caixa caixa-fundamental" data-passo="4" style="position:absolute;left:580px;right:0;top:640px;padding:20px 30px">
+      <span class="rotulo">Funções químicas</span>
+      <div class="texto" style="font-size:29px">Grupos de substâncias com propriedades parecidas. Voltam no capítulo <b>Funções inorgânicas</b>.</div>
+    </div>
+  </div>
+  <aside class="notas">
+    <p>Do material da professora: características comuns a um grupo de substâncias, as funções químicas. Acidez: ácidos (ácido cítrico e ácido ascórbico). Basicidade: bases (hidróxido de sódio). Salinidade: sais (cloreto de sódio).</p>
+    <p>A soda cáustica é corrosiva (o sinal de perigo no frasco): nunca manuseie sem luva. Ácidos, bases, sais e óxidos são o capítulo 5.</p>
+  </aside>
+</section>
+
+<!-- 9. Qual propriedade explica? -->
+<section class="slide" data-nome="Qual propriedade explica?">
+  <div class="conteudo">
+    <p class="olho">Exemplo</p>
+    <h2 class="titulo">Qual propriedade explica?</h2>
+    <div style="position:absolute;left:0;right:0;top:160px;display:grid;grid-template-columns:1fr 1fr;grid-auto-rows:130px;gap:18px 30px">
+      <div class="linha-ex" style="font-size:29px;padding:14px 24px;display:flex;flex-direction:column;justify-content:space-between;gap:10px"><span>O fio elétrico é de <b>cobre</b>, puxado bem fino.</span><span class="tag tag-p" data-passo="1" style="align-self:flex-start">condutibilidade elétrica e ductilidade</span></div>
+      <div class="linha-ex" style="font-size:29px;padding:14px 24px;display:flex;flex-direction:column;justify-content:space-between;gap:10px"><span>O cabo da panela é de <b>plástico</b>.</span><span class="tag tag-p" data-passo="2" style="align-self:flex-start">isolante térmico</span></div>
+      <div class="linha-ex" style="font-size:29px;padding:14px 24px;display:flex;flex-direction:column;justify-content:space-between;gap:10px"><span>O <b>papel-alumínio</b> é uma folha finíssima de metal.</span><span class="tag tag-p" data-passo="3" style="align-self:flex-start">maleabilidade</span></div>
+      <div class="linha-ex" style="font-size:29px;padding:14px 24px;display:flex;flex-direction:column;justify-content:space-between;gap:10px"><span>Um ímã separa as latas de <b>aço</b> das de alumínio.</span><span class="tag tag-p" data-passo="4" style="align-self:flex-start">magnetismo</span></div>
+      <div class="linha-ex" style="font-size:29px;padding:14px 24px;display:flex;flex-direction:column;justify-content:space-between;gap:10px"><span>Ponta de <b>diamante</b> para cortar vidro.</span><span class="tag tag-p" data-passo="5" style="align-self:flex-start">dureza</span></div>
+      <div class="linha-ex" style="font-size:29px;padding:14px 24px;display:flex;flex-direction:column;justify-content:space-between;gap:10px"><span>O <b>elástico</b> estica e volta.</span><span class="tag tag-p" data-passo="6" style="align-self:flex-start">elasticidade</span></div>
+    </div>
+  </div>
+  <aside class="notas">
+    <p>Peça a resposta antes de cada clique. Situações do dia a dia (CN50 e CN51 da matriz do IF).</p>
+  </aside>
+</section>
+
+<!-- Questão 1 -->
+<section class="slide questao" data-nome="Questão 1">
+  <div class="conteudo">
+    <div class="area-resolucao"></div>
+    <span class="pilula pilula-pausa" data-em="1:some">Pause o vídeo e tente</span>
+    <div class="painel-questao">
+      <p class="olho">Questão 1 · IF Sudeste MG 2017</p>
+      <p class="enunciado" style="font-size:27px">Existem propriedades que nos permitem distinguir uma substância de outra e, consequentemente, identificá-las. Todas as alternativas abaixo apresentam propriedades úteis à identificação de uma substância, <b>EXCETO</b>:</p>
+      <ol class="alternativas curtas">
+        <li data-em="2:certo"><b>A</b><span>massa.</span></li>
+        <li data-em="2:apaga"><b>B</b><span>densidade.</span></li>
+        <li data-em="2:apaga"><b>C</b><span>solubilidade em água.</span></li>
+        <li data-em="2:apaga"><b>D</b><span>temperatura de ebulição.</span></li>
+        <li data-em="2:apaga"><b>E</b><span>temperatura de fusão.</span></li>
+      </ol>
+    </div>
+  </div>
+  <aside class="resolucao">
+    <p class="dados"><b>Dados:</b> identificar = propriedade específica.</p>
+    <ol class="passos">
+      <li><b>Gerais:</b> massa e volume (dependem da quantidade).</li>
+      <li><b>Específicas:</b> densidade, solubilidade, PF, PE.</li>
+      <li>Só a massa não identifica.</li>
+    </ol>
+    <p class="resposta"><b>Resposta:</b> massa. <b>Gabarito A.</b></p>
+    <p class="atencao"><b>Destaque no quadro:</b> A questão pede a exceção: a propriedade geral.</p>
+    <ul class="erros">
+      <li><b>B</b> Densidade é específica: água 1 g/cm³, álcool 0,8.</li>
+      <li><b>C</b> Solubilidade é específica: o sal dissolve, a areia não.</li>
+      <li><b>D</b> PE é específico: água 100 °C, álcool 78 °C.</li>
+      <li><b>E</b> PF é específico: o gelo funde a 0 °C.</li>
+    </ul>
+  </aside>
+  <aside class="notas">
+    <p>Clique 1 tira o aviso de pausa: resolva na área (D liga a caneta; E esconde o enunciado). Clique 2: gabarito A.</p>
+    <p>Questão oficial do IF Sudeste MG (2017, edição extra).</p>
+  </aside>
+</section>
+
+<!-- Questão 2 -->
+<section class="slide questao" data-nome="Questão 2">
+  <div class="conteudo">
+    <div class="area-resolucao"></div>
+    <span class="pilula pilula-pausa" data-em="1:some">Pause o vídeo e tente</span>
+    <div class="painel-questao">
+      <p class="olho">Questão 2 · IF Sudeste MG 2016</p>
+      <p class="enunciado" style="font-size:26px">O petróleo é constituído por uma mistura de hidrocarbonetos. Durante o refinamento do petróleo, é realizada a destilação para a decomposição em diferentes produtos, como a gasolina e o óleo combustível. Esse processo é baseado em uma das propriedades citadas abaixo.</p>
+      <p class="enunciado" style="font-size:26px">Assinale a alternativa <b>CORRETA</b> que contém essa propriedade.</p>
+      <ol class="alternativas curtas">
+        <li data-em="2:apaga"><b>A</b><span>Ponto de Fusão</span></li>
+        <li data-em="2:certo"><b>B</b><span>Ponto de Ebulição</span></li>
+        <li data-em="2:apaga"><b>C</b><span>Densidade</span></li>
+        <li data-em="2:apaga"><b>D</b><span>Solubilidade</span></li>
+        <li data-em="2:apaga"><b>E</b><span>Permeabilidade</span></li>
+      </ol>
+    </div>
+  </div>
+  <aside class="resolucao">
+    <p class="dados"><b>Dados:</b> destilação do petróleo.</p>
+    <ol class="passos">
+      <li>Aquece-se o petróleo.</li>
+      <li>Cada fração vira vapor numa temperatura.</li>
+      <li>Separa pela temperatura de ebulição.</li>
+    </ol>
+    <p class="resposta"><b>Resposta:</b> ponto de ebulição. <b>Gabarito B.</b></p>
+    <p class="atencao"><b>Destaque no quadro:</b> Cada separação usa uma propriedade em que os componentes são diferentes.</p>
+    <ul class="erros">
+      <li><b>A</b> PF é sólido → líquido; a destilação ferve os líquidos.</li>
+      <li><b>C</b> Densidade é a base da decantação, não da destilação.</li>
+      <li><b>D</b> Solubilidade é a base da dissolução fracionada.</li>
+      <li><b>E</b> Permeabilidade não é a base de nenhum desses processos.</li>
+    </ul>
+  </aside>
+  <aside class="notas">
+    <p>Clique 1 tira o aviso de pausa: resolva na área (D liga a caneta; E esconde o enunciado). Clique 2: gabarito B.</p>
+    <p>Questão oficial do IF Sudeste MG (2016), da lista da professora. Ponte para a unidade de Separação de misturas (CN52: propriedades específicas nos processos de separação). Se perguntarem: a palavra "decomposição" do enunciado quer dizer separação; não há reação química.</p>
+  </aside>
+</section>
+
+<!-- Resumo -->
+<section class="slide" data-nome="Resumo">
+  <div class="conteudo">
+    <p class="olho">Resumo</p>
+    <h2 class="titulo">O essencial</h2>
+    <div class="resumo" style="position:absolute;left:0;right:0;top:150px">
+      <div><b>Solubilidade:</b> o máximo que se dissolve (sal: cerca de 36 g em 100 g de água a 20 °C). Depende da temperatura.</div>
+      <div><b>Saturada:</b> dissolveu o máximo; o excesso fica no fundo.</div>
+      <div><b>Condutibilidade:</b> metais conduzem calor e eletricidade; plástico, madeira e borracha isolam.</div>
+      <div><b>Magnetismo:</b> ferro e aço são atraídos por ímã; alumínio e cobre, não.</div>
+      <div><b>Dureza:</b> quem risca é mais duro. <b>Elasticidade:</b> volta à forma.</div>
+      <div><b>Maleabilidade:</b> lâminas. <b>Ductilidade:</b> fios. <b>Funcionais:</b> acidez, basicidade, salinidade.</div>
+    </div>
+    <div class="caixa caixa-atencao" style="position:absolute;left:580px;right:0;top:660px">
+      <div class="texto" style="font-size:30px"><b>Duro</b> não é o mesmo que <b>resistente</b>: o vidro é duro e frágil.</div>
+    </div>
+  </div>
+  <aside class="notas"><p>Peça para tirarem um print desta tela.</p></aside>
+</section>
+
+<!-- A seguir -->
+<section class="slide capa" data-nome="A seguir">
+  <div class="estrelas"></div>
+  <div class="texto-capa" style="top:170px">
+    <span class="selo">Química · IF</span>
+    <p class="aula" style="font-size:26px">A seguir · Matéria e transformações · Parte única</p>
+    <h1>Substâncias e misturas</h1>
+    <p class="sub">Substância simples e composta, alotropia, misturas e fases</p>
+  </div>
+  <svg class="emblema" viewBox="0 0 640 640" aria-hidden="true">
+    <g fill="#fff" stroke="#fff" stroke-opacity=".6" stroke-width="3"><circle cx="230" cy="260" r="46" fill="#FF8A7A"/><circle cx="296" cy="260" r="46" fill="#FF8A7A"/></g>
+    <g stroke-width="3"><circle cx="420" cy="380" r="56" fill="#FFD10C" stroke="#fff"/><circle cx="360" cy="420" r="30" fill="#fff"/><circle cx="480" cy="420" r="30" fill="#fff"/></g>
+  </svg>
+  <img class="logo-capa" src="{{LOGO_BRANCO}}" alt="Quarks">
+  <aside class="notas"><p>Próxima: do que as coisas são feitas. Substância simples e composta, alotropia, misturas homogêneas e heterogêneas, sistemas e fases.</p></aside>
+</section>

@@ -1,0 +1,455 @@
+<!--aula
+{"disciplina": "matematica", "curso": "IF", "assunto": "Conceito de função", "parte": "Parte 2 de 2", "titulo": "O gráfico de uma função", "scripts": ["animacoes-funcoes.js"]}
+-->
+<!-- Fonte: apostila IF, Matemática, cap. 4 (4.1 Conceito de função: Construir e ler o gráfico de uma função; Quando um gráfico é de uma função; Domínio, contradomínio e imagem; resumo). Questões da apostila: Modelo IF if-matematica-conceito-de-funcao m009 e m006; oficial 2014-2 q24 (sobra do capítulo em planejamento/questoes-if.md). -->
+<style>
+  .caixa { box-sizing: border-box; }
+  .passos-lista { margin: 0; padding-left: 1.2em; font-size: 32px; line-height: 1.4; }
+  .tabela-justa td { padding: 7px 44px; } .tabela-justa th { padding: 10px 44px; }
+  .passos-lista li::marker { font-weight: 800; color: var(--d-forte); }
+  .proib { display: grid; grid-template-columns: 1fr 1fr; gap: 28px; }
+  .proib .caixa { text-align: center; }
+  .proib .grande { font-size: 64px; margin: 6px 0 4px; }
+</style>
+
+<!-- 1. Capa -->
+<section class="slide capa" data-nome="Capa">
+  <div class="estrelas"></div>
+  <div class="texto-capa">
+    <span class="selo">Matemática · IF</span>
+    <p class="aula">Conceito de função · Parte 2 de 2</p>
+    <h1>O gráfico de uma função</h1>
+    <p class="sub">Construir, ler, testar e o domínio</p>
+  </div>
+  <svg class="emblema" viewBox="0 0 640 640" aria-hidden="true">
+    <path d="M90 560 V80 M90 560 H590" stroke="#fff" stroke-opacity=".8" stroke-width="5" stroke-linecap="round" fill="none"/>
+    <g class="gira-lento"><ellipse cx="330" cy="320" rx="280" ry="120" fill="none" stroke="#fff" stroke-opacity=".3" stroke-width="2" transform="rotate(-12 330 320)"/></g>
+    <path d="M110 520 C220 140 330 140 400 330 S520 470 580 160" fill="none" stroke="#FFD10C" stroke-width="9" stroke-linecap="round"/>
+    <line x1="300" y1="70" x2="300" y2="580" stroke="#fff" stroke-width="4" stroke-dasharray="14 12" stroke-opacity=".8"/>
+    <circle cx="300" cy="196" r="15" fill="#fff"/>
+  </svg>
+  <img class="logo-capa" src="{{LOGO_BRANCO}}" alt="Quarks">
+  <aside class="notas">
+    <p>Nesta parte: construir e ler o gráfico de uma função, o teste da reta vertical, domínio, contradomínio e imagem.</p>
+  </aside>
+</section>
+
+<!-- 2. Construir o gráfico -->
+<section class="slide" data-nome="Construir o gráfico">
+  <div class="conteudo">
+    <p class="olho">Gráfico de uma função</p>
+    <h2 class="titulo">Construir o gráfico de \(y = 2x - 1\)</h2>
+    <p class="texto" style="position:absolute;left:0;width:860px;top:150px;margin:0;font-size:32px">O gráfico é o conjunto dos pontos \((x;\ y)\) com \(y\) = valor da função em \(x\).</p>
+    <table class="tabela tabela-justa" style="position:absolute;left:0;top:240px;font-size:31px">
+      <tr><th>\(x\)</th><th>\(y = 2x - 1\)</th></tr>
+      <tr data-passo="1"><td>−1</td><td>\(2 \cdot (-1) - 1 = -3\)</td></tr>
+      <tr data-passo="2"><td>0</td><td>\(2 \cdot 0 - 1 = -1\)</td></tr>
+      <tr data-passo="3"><td>1</td><td>\(1\)</td></tr>
+      <tr data-passo="4"><td>2</td><td>\(3\)</td></tr>
+      <tr data-passo="5"><td>3</td><td>\(5\)</td></tr>
+    </table>
+    <div data-anima="fn-tabela" data-anima-passo="6" style="position:absolute;left:960px;top:110px;width:800px;height:740px"></div>
+  </div>
+  <aside class="notas">
+    <p>Os 4 passos: escolha valores de x (inteiros pequenos, negativos e positivos), calcule y pela lei, marque os pares e ligue os pontos (se a função vale para todos os números entre eles).</p>
+    <p>Cliques 1 a 5: a tabela. Clique 6: os pontos aparecem, a reta se desenha e a leitura f(2) = 3 aparece. Os pontos ficam alinhados: em Função afim a turma vai ver que y = ax + b sempre dá reta.</p>
+  </aside>
+</section>
+
+<!-- 3. Ler o gráfico -->
+<section class="slide" data-nome="Ler o gráfico">
+  <div class="conteudo">
+    <p class="olho">Ler é o caminho inverso</p>
+    <h2 class="titulo">O que o gráfico responde</h2>
+    <div data-anima="fn-figura" style="position:absolute;left:960px;top:110px;width:800px;height:740px"
+      data-fig='{"xmin":-2,"xmax":4,"ymin":-4,"ymax":6,"pl":50,"pr":40,"pt":40,"pb":20,"curvas":[{"f":"2*x-1","de":-1.5,"ate":3.5}],"segs":[{"x1":2,"y1":0,"x2":2,"y2":3,"tr":true,"passo":1},{"x1":2,"y1":3,"x2":0,"y2":3,"tr":true,"passo":1},{"x1":0,"y1":5,"x2":3,"y2":5,"tr":true,"passo":4,"cor":"#8C7BEA"},{"x1":3,"y1":5,"x2":3,"y2":0,"tr":true,"passo":4,"cor":"#8C7BEA"}],"pontos":[{"x":2,"y":3,"t":"(2; 3)","passo":2,"cor":"#FFD10C"},{"x":3,"y":5,"t":"(3; 5)","passo":5,"anc":"end","dx":-16,"cor":"#8C7BEA"}]}'></div>
+    <div style="position:absolute;left:0;width:860px;top:160px;display:flex;flex-direction:column;gap:30px">
+      <div class="caixa" data-passo="1">
+        <span class="rotulo">Quanto vale \(f(2)\)?</span>
+        <div class="texto" style="font-size:32px">Parta do 2 no eixo x, suba até a reta e olhe a altura.</div>
+        <span class="pilula pilula-resposta" data-passo="2" style="margin-top:12px">\(f(2) = 3\)</span>
+      </div>
+      <div class="caixa" data-passo="3">
+        <span class="rotulo">Para que \(x\) a função vale 5?</span>
+        <div class="texto" style="font-size:32px">Parta do 5 no eixo y, ande até a reta e desça.</div>
+        <span class="pilula pilula-resposta" data-passo="5" style="margin-top:12px">\(x = 3\)</span>
+      </div>
+    </div>
+  </div>
+  <aside class="notas">
+    <p>Cliques 1 e 2: do x para o y (f(2) = 3). Cliques 3 a 5: do y para o x (vale 5 em x = 3).</p>
+  </aside>
+</section>
+
+<!-- 4. Como cai no IF -->
+<section class="slide" data-nome="Gráficos do dia a dia">
+  <div class="conteudo">
+    <p class="olho">Como cai no IF</p>
+    <h2 class="titulo">Gráficos de situações reais</h2>
+    <div data-anima="fn-figura" data-anima-passo="0" style="position:absolute;left:600px;right:0;top:130px;height:560px"
+      data-fig='{"anima":true,"xmin":0,"xmax":24,"ymin":0,"ymax":30,"dx":2,"dy":5,"numeros":false,"pl":70,"pr":90,"pt":40,"pb":54,"rx":"hora","ry":"°C","curvas":[{"f":"18+9*Math.exp(-Math.pow((x-14)/5,2))-3*Math.exp(-Math.pow((x-5)/3,2))","de":0,"ate":24}]}'></div>
+    <div style="position:absolute;left:0;width:520px;top:160px;display:flex;flex-direction:column;gap:20px">
+      <p class="texto" style="margin:0;font-size:34px" data-passo="1">Perguntam <b>valores</b>,</p>
+      <p class="texto" style="margin:0;font-size:34px" data-passo="2">quando a grandeza foi <b>maior</b>,</p>
+      <p class="texto" style="margin:0;font-size:34px" data-passo="3">em que trecho ela <b>cresceu</b>.</p>
+    </div>
+    <div class="caixa caixa-atencao" data-passo="4" style="position:absolute;left:600px;right:0;top:720px;padding:18px 30px">
+      <div class="texto" style="font-size:32px">Leia sempre os <b>nomes</b> e as <b>unidades</b> dos eixos antes de responder.</div>
+    </div>
+  </div>
+  <aside class="notas">
+    <p>Curva só ilustrativa (temperatura ao longo do dia), sem números de propósito: não é dado real. Temperatura, gasto de água e distância percorrida são os temas mais comuns.</p>
+  </aside>
+</section>
+
+<!-- 5. Questão 1 -->
+<section class="slide questao" data-nome="Questão 1">
+  <div class="conteudo">
+    <div class="area-resolucao"></div>
+    <span class="pilula pilula-pausa" data-em="1:some">Pause o vídeo e tente</span>
+    <div class="painel-questao">
+      <p class="olho">Questão 1 · Modelo IF</p>
+      <p class="enunciado">O gráfico mostra a altitude, em metros, de um grupo de caminhantes numa trilha, em função da distância percorrida, em quilômetros.</p>
+      <div data-anima="fn-figura" style="width:530px;height:330px"
+        data-fig='{"xmin":0,"xmax":8,"ymin":700,"ymax":1300,"dx":1,"lx":1,"dy":100,"ly":100,"pl":70,"pr":50,"pt":30,"pb":40,"fs":17,"rx":"d (km)","ry":"altitude (m)","curvas":[{"f":"x<=2?800+100*x:(x<=3?1000:(x<=5?1000-50*(x-3):(x<=7?900+150*(x-5):1200-100*(x-7))))","de":0,"ate":8,"n":400,"w":5}]}'></div>
+      <p class="enunciado">Em qual trecho a altitude <b>só aumentou</b>?</p>
+      <ol class="alternativas" style="gap:8px">
+        <li data-em="2:apaga"><b>A</b><span>Do km 2 ao km 3.</span></li>
+        <li data-em="2:apaga"><b>B</b><span>Do km 3 ao km 5.</span></li>
+        <li data-em="2:apaga"><b>C</b><span>Do km 1 ao km 3.</span></li>
+        <li data-em="2:certo"><b>D</b><span>Do km 5 ao km 7.</span></li>
+        <li data-em="2:apaga"><b>E</b><span>Do km 7 ao km 8.</span></li>
+      </ol>
+      <p class="fonte">Questão Modelo IF (lote if-matematica-conceito-de-funcao, m009)</p>
+    </div>
+  </div>
+  <aside class="resolucao">
+    <p class="dados"><b>Dados:</b> altitude (m) × distância (km).</p>
+    <ol class="passos">
+      <li>Só aumenta: a linha sobe o trecho inteiro</li>
+      <li>km 2 a 3: reta (1000 m); km 3 a 5: desce</li>
+      <li>km 5 a 7: sobe de 900 m a 1200 m</li>
+    </ol>
+    <p class="resposta"><b>Resposta:</b> do km 5 ao km 7. <b>Gabarito D.</b></p>
+    <p class="atencao"><b>Destaque no quadro:</b> Leia da esquerda para a direita: subir é crescer.</p>
+    <ul class="erros">
+      <li><b>A</b> Trecho constante: a altitude fica em 1000 m.</li>
+      <li><b>B</b> A altitude desce de 1000 m para 900 m.</li>
+      <li><b>C</b> Inclui o trecho constante do km 2 ao 3.</li>
+      <li><b>E</b> A altitude desce de 1200 m para 1100 m.</li>
+    </ul>
+  </aside>
+  <aside class="notas">
+    <p>Clique 1 tira o aviso de pausa: resolva na área (D liga a caneta; E esconde o enunciado). Clique 2: gabarito D.</p>
+    <p>Modelo IF, lote if-matematica-conceito-de-funcao, m009, MAT-1224. Gráfico refeito em SVG com os mesmos pontos (0; 800), (2; 1000), (3; 1000), (5; 900), (7; 1200), (8; 1100).</p>
+  </aside>
+</section>
+
+<!-- 6. Teste da reta vertical -->
+<section class="slide" data-nome="Teste da reta vertical">
+  <div class="conteudo">
+    <p class="olho">Quando um gráfico é de uma função</p>
+    <h2 class="titulo">O teste da reta vertical</h2>
+    <div data-anima="fn-vertical" data-anima-passo="0" style="position:absolute;left:0;right:0;top:130px;height:460px"></div>
+    <div class="caixa caixa-fundamental" data-passo="1" style="position:absolute;left:560px;right:0;top:620px">
+      <div class="texto" style="font-size:34px">É função quando <b>toda reta vertical</b> corta o gráfico <b>no máximo uma vez</b>. Cortou duas? Aquele \(x\) teria dois \(y\).</div>
+    </div>
+  </div>
+  <aside class="notas">
+    <p>Pela definição, cada x tem um único y. A reta tracejada varre o plano: na curva da esquerda sempre corta uma vez; na circunferência corta duas vezes (para |x| &lt; 3).</p>
+  </aside>
+</section>
+
+<!-- 7. Sobe e desce; reta horizontal -->
+<section class="slide" data-nome="Atenção: reta horizontal">
+  <div class="conteudo">
+    <p class="olho">Atenção</p>
+    <h2 class="titulo">Sobe e desce pode; voltar não</h2>
+    <div data-anima="fn-figura" style="position:absolute;left:0;width:820px;top:140px;height:440px"
+      data-fig='{"xmin":-4.5,"xmax":4.5,"ymin":-3,"ymax":3,"numeros":false,"pl":20,"pr":34,"pt":30,"pb":14,"curvas":[{"f":"1.6*Math.sin(1.4*x)"}],"segs":[{"x1":-4.5,"y1":0.9,"x2":4.5,"y2":0.9,"passo":1,"cor":"#C2384F","tr":true}],"pontos":[{"x":0.4588,"y":0.9,"r":10,"cor":"#C2384F","passo":1},{"x":1.7852,"y":0.9,"r":10,"cor":"#C2384F","passo":1},{"x":-4.0291,"y":0.9,"r":10,"cor":"#C2384F","passo":1},{"x":-2.7027,"y":0.9,"r":10,"cor":"#C2384F","passo":1}]}'></div>
+    <p class="texto" style="position:absolute;left:900px;right:0;top:160px;margin:0">A curva sobe e desce, mas <b>não volta para trás</b>: é função.</p>
+    <div class="caixa caixa-atencao" data-passo="2" style="position:absolute;left:900px;right:0;top:340px">
+      <span class="rotulo">Reta horizontal não serve de teste</span>
+      <div class="texto" style="font-size:32px">Cortar várias vezes na horizontal só diz que \(x\) diferentes têm o <b>mesmo</b> \(y\). Isso é permitido.</div>
+    </div>
+    <span class="pilula pilula-resposta" data-passo="3" style="position:absolute;left:900px;top:690px">O teste é sempre com retas verticais</span>
+  </div>
+  <aside class="notas">
+    <p>Clique 1: uma reta horizontal corta a curva 4 vezes, e mesmo assim é função. Clique 2: por quê. Clique 3: a regra.</p>
+  </aside>
+</section>
+
+<!-- 8. Questão 2 -->
+<section class="slide questao" data-nome="Questão 2">
+  <div class="conteudo">
+    <div class="area-resolucao"></div>
+    <span class="pilula pilula-pausa" data-em="1:some">Pause o vídeo e tente</span>
+    <div class="painel-questao">
+      <p class="olho">Questão 2 · Modelo IF</p>
+      <p class="enunciado">Observe as cinco curvas desenhadas no plano cartesiano.</p>
+      <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:4px 6px;font:700 18px var(--fonte-texto);color:var(--cinza);text-align:center">
+        <div>Figura 1<div data-anima="fn-figura" style="width:172px;height:140px" data-fig='{"xmin":-3,"xmax":3,"ymin":-2.5,"ymax":2.5,"numeros":false,"grade":false,"pl":6,"pr":20,"pt":34,"pb":6,"fs":14,"curvas":[{"f":"1.6","w":5}]}'></div></div>
+        <div>Figura 2<div data-anima="fn-figura" style="width:172px;height:140px" data-fig='{"xmin":-3,"xmax":3,"ymin":-2.5,"ymax":2.5,"numeros":false,"grade":false,"pl":6,"pr":20,"pt":34,"pb":6,"fs":14,"curvas":[{"f":"1.5*Math.sin(1.5*x)","w":5,"de":-2.6,"ate":2.6}]}'></div></div>
+        <div>Figura 3<div data-anima="fn-figura" style="width:172px;height:140px" data-fig='{"xmin":-3,"xmax":3,"ymin":-2.5,"ymax":2.5,"numeros":false,"grade":false,"pl":6,"pr":20,"pt":34,"pb":6,"fs":14,"curvas":[{"f":"x*x/1.5-1.6","inv":true,"w":5,"de":-2.2,"ate":2.2}]}'></div></div>
+        <div>Figura 4<div data-anima="fn-figura" style="width:172px;height:140px" data-fig='{"xmin":-3,"xmax":3,"ymin":-2.5,"ymax":2.5,"numeros":false,"grade":false,"pl":6,"pr":20,"pt":34,"pb":6,"fs":14,"curvas":[{"f":"Math.abs(x)-0.8","w":5,"de":-2.6,"ate":2.6}]}'></div></div>
+        <div>Figura 5<div data-anima="fn-figura" style="width:172px;height:140px" data-fig='{"xmin":-3,"xmax":3,"ymin":-2.5,"ymax":2.5,"numeros":false,"grade":false,"pl":6,"pr":20,"pt":34,"pb":6,"fs":14,"curvas":[{"f":"x*x*x/6","w":5,"de":-2.4,"ate":2.4}]}'></div></div>
+      </div>
+      <p class="enunciado">A única curva que <b>não</b> pode ser o gráfico de uma função de \(x\) é a da:</p>
+      <ol class="alternativas curtas">
+        <li data-em="2:apaga"><b>A</b><span>Fig. 1.</span></li>
+        <li data-em="2:apaga"><b>B</b><span>Fig. 2.</span></li>
+        <li data-em="2:certo"><b>C</b><span>Fig. 3.</span></li>
+        <li data-em="2:apaga"><b>D</b><span>Fig. 4.</span></li>
+        <li data-em="2:apaga"><b>E</b><span>Fig. 5.</span></li>
+      </ol>
+      <p class="fonte">Questão Modelo IF (lote if-matematica-conceito-de-funcao, m006)</p>
+    </div>
+  </div>
+  <aside class="resolucao">
+    <p class="dados"><b>Dados:</b> cinco curvas; procure a que falha no teste.</p>
+    <ol class="passos">
+      <li>Passe retas verticais em cada figura</li>
+      <li>Figuras 1, 2, 4 e 5: corta no máximo uma vez</li>
+      <li>Figura 3 (parábola deitada): corta duas vezes</li>
+    </ol>
+    <p class="resposta"><b>Resposta:</b> Figura 3. <b>Gabarito C.</b></p>
+    <p class="atencao"><b>Destaque no quadro:</b> Volta para trás: não é função.</p>
+    <ul class="erros">
+      <li><b>A</b> Reta horizontal: função constante, é função.</li>
+      <li><b>B</b> Sobe e desce, mas não volta: é função.</li>
+      <li><b>D</b> O "bico" não atrapalha: cada x tem um y.</li>
+      <li><b>E</b> Parte quase vertical, mas toda vertical corta uma vez.</li>
+    </ul>
+  </aside>
+  <aside class="notas">
+    <p>Clique 1 tira o aviso de pausa: resolva na área (D liga a caneta; E esconde o enunciado). Clique 2: gabarito C.</p>
+    <p>Modelo IF, lote if-matematica-conceito-de-funcao, m006, MAT-1221. Curvas refeitas em SVG; alternativas abreviadas ("Fig." = "Figura").</p>
+  </aside>
+</section>
+
+<!-- 9. Domínio: nem todo x pode entrar -->
+<section class="slide" data-nome="Nem todo x pode entrar">
+  <div class="conteudo">
+    <p class="olho">Domínio, contradomínio e imagem</p>
+    <h2 class="titulo">Nem todo \(x\) pode entrar</h2>
+    <div class="proib" style="position:absolute;left:0;right:0;top:160px">
+      <div class="caixa" data-passo="1">
+        <span class="rotulo">\(\dfrac{1}{x - 2}\) com \(x = 2\)</span>
+        <div class="grande">\(\dfrac{1}{0}\) <span style="color:var(--erro)">✗</span></div>
+        <div class="texto" style="font-size:30px">divisão que não existe</div>
+      </div>
+      <div class="caixa" data-passo="2">
+        <span class="rotulo">\(\sqrt{x}\) com \(x = -4\)</span>
+        <div class="grande">\(\sqrt{-4}\) <span style="color:var(--erro)">✗</span></div>
+        <div class="texto" style="font-size:30px">nenhum real ao quadrado dá −4</div>
+      </div>
+    </div>
+    <div class="caixa caixa-fundamental" data-passo="3" style="position:absolute;left:560px;right:0;top:500px;padding:22px 32px">
+      <div class="texto" style="font-size:31px;line-height:1.45"><b>Domínio</b> \(D(f)\): os \(x\) que podem entrar.<br><b>Imagem</b> \(\text{Im}(f)\): os \(y\) que a função de fato assume.<br><b>Contradomínio</b>: onde os \(y\) podem cair (a imagem fica dentro).</div>
+    </div>
+  </div>
+  <aside class="notas">
+    <p>Domínio: valores de x para os quais a lei faz sentido (ou que o problema permite).</p>
+  </aside>
+</section>
+
+<!-- 10. Duas proibições -->
+<section class="slide" data-nome="Duas proibições">
+  <div class="conteudo">
+    <p class="olho">Achar o domínio</p>
+    <h2 class="titulo">Duas proibições nos reais</h2>
+    <div style="position:absolute;left:0;width:820px;top:160px;display:flex;flex-direction:column;gap:22px">
+      <div class="caixa caixa-fundamental" data-passo="1"><span class="rotulo">1 · Denominador</span><div class="texto">não pode ser <b>zero</b>: \(\neq 0\)</div></div>
+      <div class="caixa caixa-fundamental" data-passo="2"><span class="rotulo">2 · Raiz de índice par</span><div class="texto">radicando <b>maior ou igual a zero</b>: \(\geq 0\)</div></div>
+      <p class="texto" data-passo="2" style="margin:0;font-size:30px">Raiz cúbica aceita negativo.</p>
+    </div>
+    <div class="caixa" style="position:absolute;left:900px;right:0;top:160px;display:flex;align-items:center;gap:26px;padding:16px 28px">
+      <span style="font-size:50px">\(f\colon \mathbb{R} \to \mathbb{R}\)</span>
+      <span class="texto" style="font-size:26px">domínio → contradomínio<br>"f de reais em reais"</span>
+    </div>
+    <div class="caixa" data-passo="3" style="position:absolute;left:900px;right:0;top:320px">
+      <span class="rotulo">Passo a passo</span>
+      <ol class="passos-lista">
+        <li>Procure denominadores e raízes de índice par.</li>
+        <li>Escreva cada condição: \(\neq 0\) ou \(\geq 0\).</li>
+        <li>Resolva como equação do 1º grau. Multiplicou ou dividiu por <b>negativo</b>? <b>Inverta</b> o sinal.</li>
+        <li>Junte tudo com <b>"e"</b>.</li>
+      </ol>
+    </div>
+  </div>
+  <aside class="notas">
+    <p>Só a lei dada: o domínio é o maior conjunto de reais em que ela pode ser calculada. Junto do clique 2: a raiz cúbica não tem essa proibição.</p>
+  </aside>
+</section>
+
+<!-- 11. Exemplo: raiz e fração -->
+<section class="slide" data-nome="Exemplo: raiz e fração">
+  <div class="conteudo">
+    <p class="olho">Exemplo</p>
+    <h2 class="titulo">Raiz e fração juntas</h2>
+    <p style="position:absolute;left:0;top:140px;margin:0;font-size:64px">\(f(x) = \dfrac{\sqrt{x - 3}}{x - 7}\)</p>
+    <div style="position:absolute;left:0;width:760px;top:300px">
+      <p class="texto" style="margin:0 0 12px"><b>Raiz:</b> radicando \(\geq 0\)</p>
+      <div class="contas" style="font-size:50px">
+        <div class="eq" data-passo="1"><span>\(x - 3\)</span><span>\(\geq\)</span><span>\(0\)</span></div>
+        <div class="eq final" data-passo="2"><span>\(x\)</span><span>\(\geq\)</span><span>\(3\)</span></div>
+      </div>
+    </div>
+    <div style="position:absolute;left:900px;right:0;top:300px">
+      <p class="texto" style="margin:0 0 12px" data-passo="3"><b>Denominador:</b> \(\neq 0\)</p>
+      <div class="contas" style="font-size:50px">
+        <div class="eq" data-passo="3"><span>\(x - 7\)</span><span>\(\neq\)</span><span>\(0\)</span></div>
+        <div class="eq final" data-passo="4"><span>\(x\)</span><span>\(\neq\)</span><span>\(7\)</span></div>
+      </div>
+    </div>
+    <div class="caixa caixa-fundamental" data-passo="5" style="position:absolute;left:560px;right:0;top:580px;text-align:center;font-size:52px;padding:20px">\(D(f) = \{x \in \mathbb{R} \mid x \geq 3 \text{ e } x \neq 7\}\)</div>
+    <p class="texto" data-passo="6" style="position:absolute;left:560px;right:0;top:740px;margin:0;font-size:32px">O 3 entra: \(\sqrt{0} = 0\).</p>
+  </div>
+  <aside class="notas">
+    <p>Uma condição de cada lado; clique 5 junta com "e". Clique 6: o 3 é permitido.</p>
+  </aside>
+</section>
+
+<!-- 12. Exemplo: coeficiente negativo -->
+<section class="slide" data-nome="Exemplo: coeficiente negativo">
+  <div class="conteudo">
+    <p class="olho">Exemplo</p>
+    <h2 class="titulo">Domínio de \(g(x) = \sqrt{6 - 2x}\)</h2>
+    <div class="contas" style="position:absolute;left:0;top:190px;font-size:56px">
+      <div class="eq" data-passo="1"><span>\(6 - 2x\)</span><span>\(\geq\)</span><span>\(0\)</span></div>
+      <div class="eq" data-passo="2"><span>\(-2x\)</span><span>\(\geq\)</span><span>\(-6\)</span></div>
+      <div class="eq final" data-passo="4"><span>\(x\)</span><span>\(\color{#C2384F}{\leq}\)</span><span>\(3\)</span></div>
+    </div>
+    <div class="caixa caixa-atencao" data-passo="3" style="position:absolute;left:900px;right:0;top:190px">
+      <span class="rotulo">Dividiu por −2</span>
+      <div class="texto">O sinal da desigualdade <b>se inverte</b>: \(\geq\) vira \(\leq\).</div>
+    </div>
+    <div class="caixa caixa-fundamental" data-passo="5" style="position:absolute;left:900px;right:0;top:420px;text-align:center;font-size:52px;padding:20px">\(D(g) = \{x \in \mathbb{R} \mid x \leq 3\}\)</div>
+    <div class="caixa" data-passo="6" style="position:absolute;left:900px;right:0;top:590px;padding:18px 30px">
+      <span class="rotulo">Teste</span>
+      <div class="texto" style="font-size:32px">\(x = 4\): \(\sqrt{6 - 8} = \sqrt{-2}\) ✗ (o 4 está fora mesmo)</div>
+    </div>
+  </div>
+  <aside class="notas">
+    <p>Clique 3 antes do 4: mostre a inversão do sinal antes de escrever x ≤ 3. Clique 6: o teste com x = 4 confirma.</p>
+  </aside>
+</section>
+
+<!-- 13. Raiz no denominador; "e" e não "ou" -->
+<section class="slide" data-nome="Raiz no denominador">
+  <div class="conteudo">
+    <p class="olho">As duas juntas</p>
+    <h2 class="titulo">Raiz no denominador</h2>
+    <div style="position:absolute;left:0;width:820px;top:170px">
+      <p style="margin:0;font-size:80px">\(\dfrac{1}{\sqrt{x + 1}}\)</p>
+      <p class="texto" data-passo="1" style="margin:20px 0 0">Radicando: nem negativo <b>nem zero</b>.</p>
+      <div class="contas" data-passo="2" style="margin-top:20px;font-size:52px">
+        <div class="eq final"><span>\(x + 1\)</span><span>\(\color{#C2384F}{>}\)</span><span>\(0\)</span></div>
+      </div>
+      <p class="texto" data-passo="2" style="margin:14px 0 0;font-size:30px">sinal <b>estrito</b> (sem o "igual"), ou seja, \(x > -1\)</p>
+    </div>
+    <div class="caixa caixa-atencao" data-passo="3" style="position:absolute;left:900px;right:0;top:170px">
+      <span class="rotulo">É "e", não "ou"</span>
+      <div class="texto" style="font-size:32px">Em \(\dfrac{\sqrt{x - 3}}{x - 7}\): \(x \geq 3\) <b>e</b> \(x \neq 7\). Com "ou", quase todo número passaria, até o 7, que zera o denominador.</div>
+    </div>
+    <span class="pilula pilula-resposta" data-passo="4" style="position:absolute;left:900px;top:560px">É a alternativa errada mais comum</span>
+  </div>
+  <aside class="notas">
+    <p>Raiz no denominador: as duas proibições valem juntas. x + 1 &gt; 0 dá x &gt; −1 (a apostila deixa a condição; a conta final é imediata).</p>
+  </aside>
+</section>
+
+<!-- 14. Imagem no gráfico -->
+<section class="slide" data-nome="A imagem no gráfico">
+  <div class="conteudo">
+    <p class="olho">Imagem</p>
+    <h2 class="titulo">As alturas que a curva alcança</h2>
+    <div data-anima="fn-figura" data-anima-passo="0" style="position:absolute;left:900px;top:110px;width:860px;height:740px"
+      data-fig='{"anima":true,"xmin":-3,"xmax":5,"ymin":-5,"ymax":6,"pl":44,"pr":40,"pt":36,"pb":16,"curvas":[{"f":"x*x-2*x-3","de":-2.3,"ate":4.3}],"areas":[{"x1":-3,"x2":-2.75,"y1":-4,"y2":6,"cor":"#FFD10C","op":0.9,"passo":2}],"pontos":[{"x":1,"y":-4,"t":"(1; −4)","cor":"#FFD10C","dx":18,"dy":10}],"segs":[{"x1":1,"y1":-4,"x2":0,"y2":-4,"tr":true,"cor":"#8C7BEA","passo":1}]}'></div>
+    <div style="position:absolute;left:0;width:800px;top:160px;display:flex;flex-direction:column;gap:22px">
+      <p class="texto" style="margin:0">Curva em U com ponto mais baixo \((1;\ {-4})\).</p>
+      <p class="texto" style="margin:0" data-passo="1">Olhe as alturas no <b>eixo y</b>: de −4 para cima.</p>
+      <div class="caixa caixa-fundamental" data-passo="2" style="text-align:center;font-size:50px;padding:20px">\(\text{Im}(f) = \{y \in \mathbb{R} \mid y \geq -4\}\)</div>
+    </div>
+  </div>
+  <aside class="notas">
+    <p>A curva é a parábola de y = x² − 2x − 3, que a turma vai estudar em Função quadrática. Clique 2: a faixa amarela na borda esquerda marca as alturas alcançadas (de −4 para cima).</p>
+  </aside>
+</section>
+
+<!-- 15. Questão 3 -->
+<section class="slide questao" data-nome="Questão 3">
+  <div class="conteudo">
+    <div class="area-resolucao"></div>
+    <span class="pilula pilula-pausa" data-em="1:some">Pause o vídeo e tente</span>
+    <div class="painel-questao">
+      <p class="olho">Questão 3 · IF Sudeste MG 2014</p>
+      <p class="enunciado">O domínio da função \(f(x) = \dfrac{\sqrt{x + 2}}{x - 2}\) é o conjunto:</p>
+      <ol class="alternativas">
+        <li data-em="2:apaga"><b>A</b><span>\(D(f) = \{x \in \mathbb{R} \mid x \neq 2\}\)</span></li>
+        <li data-em="2:apaga"><b>B</b><span>\(D(f) = \{x \in \mathbb{R} \mid x \geq -2 \text{ ou } x \neq 2\}\)</span></li>
+        <li data-em="2:apaga"><b>C</b><span>\(D(f) = \{x \in \mathbb{R} \mid x > -2\}\)</span></li>
+        <li data-em="2:certo"><b>D</b><span>\(D(f) = \{x \in \mathbb{R} \mid x \geq -2 \text{ e } x \neq 2\}\)</span></li>
+        <li data-em="2:apaga"><b>E</b><span>\(D(f) = \{x \in \mathbb{R} \mid -2 &lt; x &lt; 2\}\)</span></li>
+      </ol>
+      <p class="fonte">IF Sudeste MG, prova de 2014 (2º semestre), questão 24</p>
+    </div>
+  </div>
+  <aside class="resolucao">
+    <p class="dados"><b>Dados:</b> \(f(x) = \dfrac{\sqrt{x + 2}}{x - 2}\).</p>
+    <ol class="passos">
+      <li>Raiz: \(x + 2 \geq 0 \Rightarrow x \geq -2\)</li>
+      <li>Denominador: \(x - 2 \neq 0 \Rightarrow x \neq 2\)</li>
+      <li>Junte com "e"</li>
+    </ol>
+    <p class="resposta"><b>Resposta:</b> \(x \geq -2\) e \(x \neq 2\). <b>Gabarito D.</b></p>
+    <p class="atencao"><b>Destaque no quadro:</b> Condições ao mesmo tempo: "e".</p>
+    <ul class="erros">
+      <li><b>A</b> Esquece a raiz: \(x = -3\) daria \(\sqrt{-1}\).</li>
+      <li><b>B</b> "Ou" deixa passar todo real, até o 2.</li>
+      <li><b>C</b> Exclui o −2 (permitido) e inclui o 2.</li>
+      <li><b>E</b> Corta \(x > 2\) sem motivo (\(f(7) = \frac{3}{5}\)) e exclui o −2.</li>
+    </ul>
+  </aside>
+  <aside class="notas">
+    <p>Clique 1 tira o aviso de pausa: resolva na área (D liga a caneta; E esconde o enunciado). Clique 2: gabarito D.</p>
+    <p>Questão oficial do IF Sudeste MG 2014-2, q24, MAT-0329. Na prova os reais aparecem com o símbolo ℜ; aqui, ℝ.</p>
+  </aside>
+</section>
+
+<!-- 16. Resumo -->
+<section class="slide" data-nome="Resumo">
+  <div class="conteudo">
+    <p class="olho">Resumo · Conceito de função</p>
+    <h2 class="titulo">O essencial</h2>
+    <div class="resumo" style="position:absolute;left:0;right:0;top:150px">
+      <div><b>Ponto:</b> par \((x;\ y)\), primeiro o eixo horizontal; quadrantes pelos sinais.</div>
+      <div><b>Função:</b> a cada \(x\), um único \(y\). \(f(x)\) é o valor em \(x\).</div>
+      <div><b>Sequência:</b> \(a_n = k \cdot n + \text{ajuste}\) quando aumenta sempre \(k\); confira em dois termos.</div>
+      <div><b>Gráfico:</b> tabela, pontos, curva. É função se toda <b>vertical</b> corta no máximo uma vez.</div>
+      <div><b>Domínio:</b> denominador \(\neq 0\) <b>e</b> radicando de raiz par \(\geq 0\).</div>
+      <div><b>Imagem:</b> os valores de \(y\) que a função assume.</div>
+    </div>
+  </div>
+  <aside class="notas">
+    <p>Resumo do subcapítulo inteiro (as duas partes). Peça para tirarem um print desta tela.</p>
+  </aside>
+</section>
+
+<!-- 17. A seguir -->
+<section class="slide capa" data-nome="A seguir">
+  <div class="estrelas"></div>
+  <div class="texto-capa" style="top:200px">
+    <span class="selo">Matemática · IF</span>
+    <p class="aula" style="font-size:26px">A seguir · Função afim · Parte 1 de 2</p>
+    <h1>Coeficientes, gráfico e zero</h1>
+    <p class="sub">A reta de \(y = ax + b\)</p>
+  </div>
+  <svg class="emblema" viewBox="0 0 640 640" aria-hidden="true">
+    <path d="M90 560 V80 M90 560 H590" stroke="#fff" stroke-opacity=".8" stroke-width="5" stroke-linecap="round" fill="none"/>
+    <line x1="110" y1="500" x2="560" y2="140" stroke="#FFD10C" stroke-width="9" stroke-linecap="round"/>
+    <circle cx="140" cy="476" r="16" fill="#fff"/>
+  </svg>
+  <img class="logo-capa" src="{{LOGO_BRANCO}}" alt="Quarks">
+  <aside class="notas"><p>Próximo subcapítulo: Função afim. Primeiro os coeficientes a e b, a reta e o zero.</p></aside>
+</section>

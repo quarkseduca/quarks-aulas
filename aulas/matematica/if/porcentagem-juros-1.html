@@ -1,0 +1,632 @@
+<!--aula
+{"disciplina": "matematica", "curso": "IF", "assunto": "Porcentagem e juros simples", "parte": "Parte 1 de 2", "titulo": "Porcentagem, aumentos e médias", "scripts": ["animacoes-comercial.js"]}
+-->
+<!-- Fonte: apostila IF, Matemática, cap. 2 (2.2 Porcentagem e juros simples: Cálculo de porcentagem; Aumentos e descontos; Aumentos e descontos sucessivos; Lucro e prejuízo; Média aritmética; Média ponderada). Questões: oficiais IF Sudeste MG 2024-1 q15 (MAT-0299), 2013-2 q17 (MAT-0391), 2014-2 q19 (MAT-0324) e 2024-1 q21 (MAT-0305), todas sobras do bloco. -->
+<style>
+  .caixa, .co-card { box-sizing: border-box; }
+  .co-card { background: var(--branco); border: 2px solid var(--lilas-2); border-radius: 26px; padding: 18px 26px; font-size: 30px; line-height: 1.32; }
+  .co-card b { color: var(--roxo-titulo); }
+  .co-card.d { background: var(--d-clara); border-color: color-mix(in srgb, var(--d) 35%, transparent); }
+  .co-tag { display: inline-block; padding: 6px 20px; border-radius: 999px; font-weight: 800; font-size: 26px; white-space: nowrap; background: var(--d-clara); color: var(--d-forte); }
+  .co-tag.am { background: #FFF4C2; color: #8A6A00; }
+  .tabela.co-t { font-size: 34px; }
+  .tabela.co-t th { padding: 10px 30px; }
+  .tabela.co-t td { padding: 8px 30px; }
+  .resumo.co-res > div { font-size: 28px; padding: 16px 24px; }
+  .co-atalhos { display: grid; grid-template-columns: repeat(5, 1fr); gap: 18px; }
+  .co-atalhos > div { background: var(--branco); border: 2px solid var(--lilas-2); border-radius: 24px; padding: 16px 12px; text-align: center; font-size: 27px; line-height: 1.25; }
+  .co-atalhos > div b { display: block; font: 800 50px var(--fonte-titulo); color: var(--d-forte); letter-spacing: -.02em; }
+  /* questões longas: coluna do enunciado mais larga (E continua ampliando a área) */
+  .questao[data-largo="1"] .area-resolucao { width: 1070px; } .questao[data-largo="1"] .painel-questao { left: 1110px; } .questao[data-largo="1"] .pilula-pausa { left: 535px; }
+  .questao[data-largo].amplia .area-resolucao { width: 1760px; } .questao[data-largo].amplia .pilula-pausa { left: 880px; }
+  /* ---------- Animações (só na tela aberta) ---------- */
+  /* 25 de cada 100: os quadradinhos se pintam um a um */
+  .co-pct { display: grid; grid-template-columns: repeat(10, 36px); gap: 5px; }
+  .co-pct span { width: 36px; height: 36px; border-radius: 9px; background: #E4DEFB; }
+  .co-pct span.on { background: var(--d); }
+  .slide.ativo .co-pct span.on { animation: co-pinta .35s ease-out both; animation-delay: calc(var(--i) * 70ms + .5s); }
+  @keyframes co-pinta { from { background: #E4DEFB; transform: scale(.6); } to { background: var(--d); transform: none; } }
+  /* a etiqueta de preço: o pedaço do desconto se solta e vai embora */
+  .co-desc { transition: transform 1.6s ease-in-out, opacity 1.6s ease-in-out; }
+  .co-preco.corta .co-desc { transform: translate(150px, -10px) rotate(6deg); opacity: .3; }
+  .co-paga { opacity: 0; transition: opacity .8s ease 1.2s; }
+  .co-preco.corta .co-paga { opacity: 1; }
+  /* barras que crescem de baixo para cima quando aparecem */
+  .co-cresce { transform: scaleY(0); transform-box: fill-box; transform-origin: center bottom; transition: transform 1.6s ease-out; }
+  .mostra .co-cresce, .mostra.co-cresce { transform: none; }
+  @media (prefers-reduced-motion: reduce) { .co-cresce { transform: none; } .co-desc, .co-paga { transition: none; } }
+</style>
+
+<!-- 1. Capa -->
+<section class="slide capa" data-nome="Capa">
+  <div class="estrelas"></div>
+  <div class="texto-capa" style="top:170px">
+    <span class="selo">Matemática · IF</span>
+    <p class="aula">Porcentagem e juros simples · Parte 1 de 2</p>
+    <h1 style="font-size:124px">Porcentagem, aumentos e médias</h1>
+    <p class="sub">Por cem</p>
+  </div>
+  <svg class="emblema" viewBox="0 0 640 640" aria-hidden="true">
+    <g class="gira-lento"><ellipse cx="320" cy="320" rx="300" ry="128" fill="none" stroke="#fff" stroke-opacity=".38" stroke-width="2" transform="rotate(-10 320 320)"/></g>
+    <g class="gira"><ellipse cx="320" cy="320" rx="236" ry="196" fill="none" stroke="#FFD10C" stroke-opacity=".75" stroke-width="2.5" stroke-dasharray="3 14" stroke-linecap="round" transform="rotate(-8 320 320)"/>
+      <circle cx="84" cy="300" r="13" fill="var(--d)" stroke="#fff" stroke-width="3"/></g>
+    <circle cx="320" cy="320" r="150" fill="#FFD10C"/>
+    <text x="320" y="372" text-anchor="middle" font-family="Bricolage Grotesque, Trebuchet MS, sans-serif" font-weight="800" font-size="150" fill="#4B258D">%</text>
+  </svg>
+  <img class="logo-capa" src="{{LOGO_BRANCO}}" alt="Quarks">
+  <aside class="notas">
+    <p>Hoje: calcular porcentagem, aumentos e descontos (inclusive seguidos), lucro e prejuízo e as médias aritmética e ponderada. A Parte 2 é só de juros simples.</p>
+  </aside>
+</section>
+
+<!-- 2. Por cem -->
+<section class="slide" data-nome="Por cem">
+  <div class="conteudo">
+    <p class="olho">Porcentagem</p>
+    <h2 class="titulo">25% de desconto</h2>
+    <div class="co-pct" style="position:absolute;left:0;top:160px"><span class="on" style="--i:0"></span><span class="on" style="--i:1"></span><span class="on" style="--i:2"></span><span class="on" style="--i:3"></span><span class="on" style="--i:4"></span><span class="on" style="--i:5"></span><span class="on" style="--i:6"></span><span class="on" style="--i:7"></span><span class="on" style="--i:8"></span><span class="on" style="--i:9"></span><span class="on" style="--i:10"></span><span class="on" style="--i:11"></span><span class="on" style="--i:12"></span><span class="on" style="--i:13"></span><span class="on" style="--i:14"></span><span class="on" style="--i:15"></span><span class="on" style="--i:16"></span><span class="on" style="--i:17"></span><span class="on" style="--i:18"></span><span class="on" style="--i:19"></span><span class="on" style="--i:20"></span><span class="on" style="--i:21"></span><span class="on" style="--i:22"></span><span class="on" style="--i:23"></span><span class="on" style="--i:24"></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></div>
+    <div style="position:absolute;left:640px;right:0;top:170px">
+      <p class="texto" style="margin:0"><b>%</b> quer dizer <b>"por cem"</b>: 25 partes de cada 100.</p>
+      <div class="contas" style="margin-top:36px;font-size:60px">
+        <div class="eq" data-passo="1"><span>\(25\%\)</span><span>\(=\)</span><span>\(\dfrac{25}{100}\)</span></div>
+        <div class="eq final" data-passo="2"><span>\(25\%\)</span><span>\(=\)</span><span>\(0{,}25\)</span></div>
+      </div>
+      <div style="display:flex;gap:20px;margin-top:40px" data-passo="3">
+        <span class="co-tag">fração</span><span class="co-tag">decimal</span><span class="co-tag am">o mesmo número</span>
+      </div>
+    </div>
+  </div>
+  <aside class="notas">
+    <p>Uma loja anuncia "25% de desconto". Os 25 quadradinhos pintados de 100 são os 25%.</p>
+    <p>Cliques 1 e 2: como fração, 25/100; como decimal, 0,25. Clique 3: três jeitos de escrever o mesmo número.</p>
+  </aside>
+</section>
+
+<!-- 3. Definição e atalhos -->
+<section class="slide" data-nome="Porcentagem de um valor">
+  <div class="conteudo">
+    <p class="olho">Definição</p>
+    <h2 class="titulo">\(p\%\) de \(V\)</h2>
+    <div class="caixa caixa-fundamental" style="position:absolute;left:380px;right:380px;top:150px;text-align:center;font-size:80px;padding:16px">\(p\% \text{ de } V = \dfrac{p}{100} \cdot V\)</div>
+    <p class="texto" data-passo="1" style="position:absolute;left:0;top:400px;margin:0;font-size:32px"><b>Atalhos de cabeça</b></p>
+    <div class="co-atalhos" style="position:absolute;left:0;right:0;top:460px">
+      <div data-passo="1"><b>50%</b>metade</div>
+      <div data-passo="2"><b>25%</b>quarta parte</div>
+      <div data-passo="3"><b>10%</b>÷ 10</div>
+      <div data-passo="4"><b>5%</b>metade de 10%</div>
+      <div data-passo="5"><b>20%</b>dobro de 10%</div>
+    </div>
+  </div>
+  <aside class="notas">
+    <p>Para calcular p% de um valor, multiplique o valor por p/100.</p>
+    <p>Cliques 1 a 5: porcentagens que dá para fazer de cabeça. Ex.: 10% de 80 é 8; 5% é 4; 20% é 16.</p>
+  </aside>
+</section>
+
+<!-- 4. Exemplo: quanto é e quanto por cento -->
+<section class="slide" data-nome="Exemplo: quanto é, quanto por cento">
+  <div class="conteudo">
+    <p class="olho">Exemplo</p>
+    <h2 class="titulo">Quanto é? Quanto por cento?</h2>
+    <div style="position:absolute;left:0;width:760px;top:160px">
+      <p class="texto" style="margin:0 0 20px"><b>a)</b> 25% de 80</p>
+      <div class="contas">
+        <div class="eq" data-passo="1"><span>\(a\)</span><span>\(=\)</span><span>\(\dfrac{25}{100} \cdot 80\)</span></div>
+        <div class="eq" data-passo="2"><span>\(a\)</span><span>\(=\)</span><span>\(0{,}25 \cdot 80\)</span></div>
+        <div class="eq final" data-passo="3"><span>\(a\)</span><span>\(=\)</span><span>\(20\)</span></div>
+      </div>
+    </div>
+    <div style="position:absolute;left:900px;right:0;top:160px">
+      <p class="texto" style="margin:0 0 20px"><b>b)</b> 12 de 48 alunos usam óculos. Que %?</p>
+      <div class="contas">
+        <div class="eq" data-passo="4"><span>\(\dfrac{p}{100}\)</span><span>\(=\)</span><span>\(\dfrac{12}{48}\)</span></div>
+        <div class="eq" data-passo="5"><span>\(\dfrac{p}{100}\)</span><span>\(=\)</span><span>\(0{,}25\)</span></div>
+        <div class="eq final" data-passo="6"><span>\(p\)</span><span>\(=\)</span><span>\(25\)</span></div>
+      </div>
+      <span class="pilula pilula-resposta" data-passo="6" style="margin-top:28px">25% dos alunos</span>
+    </div>
+    <div class="caixa" data-passo="7" style="position:absolute;left:560px;right:0;top:690px;padding:18px 30px">
+      <div class="texto" style="font-size:32px">"Quanto por cento": <b>parte ÷ todo</b>, vezes 100.</div>
+    </div>
+  </div>
+  <aside class="notas">
+    <p>Cliques 1 a 3: 25% de 80 é 20. Cliques 4 a 6: 12 em 48 é 0,25, ou seja, 25%.</p>
+    <p>Clique 7: a porcentagem é só uma razão com consequente 100.</p>
+  </aside>
+</section>
+
+<!-- 5. Aumentos e descontos: o fator -->
+<section class="slide" data-nome="Fator de multiplicação">
+  <div class="conteudo">
+    <p class="olho">Aumentos e descontos</p>
+    <h2 class="titulo">Desconto de 20%: você paga 80%</h2>
+    <svg class="co-preco" data-em="1:corta" viewBox="0 0 1000 220" width="1000" height="220" style="position:absolute;left:0;top:160px;overflow:visible;font-family:Figtree,'Segoe UI',sans-serif" aria-hidden="true">
+      <text x="0" y="30" font-size="30" font-weight="800" fill="#5E5A70">tênis: R$ 150</text>
+      <rect x="0" y="50" width="800" height="90" rx="16" fill="var(--d)"/>
+      <text x="400" y="108" text-anchor="middle" font-size="36" font-weight="800" fill="#fff">80% = R$ 120</text>
+      <g class="co-desc"><rect x="806" y="50" width="194" height="90" rx="16" fill="#FFD10C"/><text x="903" y="108" text-anchor="middle" font-size="32" font-weight="800" fill="#4B258D">20%</text></g>
+      <text class="co-paga" x="0" y="200" font-size="32" font-weight="800" fill="var(--d-forte)">você paga 80% do preço</text>
+    </svg>
+    <div class="caixa caixa-fundamental" data-passo="2" style="position:absolute;left:560px;right:0;top:430px;padding:22px 34px">
+      <span class="rotulo">Fator de multiplicação</span>
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:20px;font-size:42px;margin-top:4px">
+        <div>Aumento: \(\times\left(1 + \dfrac{p}{100}\right)\)</div>
+        <div>Desconto: \(\times\left(1 - \dfrac{p}{100}\right)\)</div>
+      </div>
+    </div>
+    <div style="position:absolute;left:1120px;right:0;top:170px;display:flex;flex-direction:column;gap:22px">
+      <div class="co-card" data-passo="3" style="font-size:34px">+10% → <b>× 1,10</b></div>
+      <div class="co-card" data-passo="4" style="font-size:34px">−20% → <b>× 0,80</b></div>
+    </div>
+  </div>
+  <aside class="notas">
+    <p>Dá para calcular os 20% (R$ 30) e subtrair. Clique 1: o caminho rápido. O pedaço de 20% vai embora; você paga 80% do preço.</p>
+    <p>Clique 2: o fator. Cliques 3 e 4: 10% de aumento é multiplicar por 1,10; 20% de desconto, por 0,80.</p>
+  </aside>
+</section>
+
+<!-- 6. Exemplo: tênis e salário -->
+<section class="slide" data-nome="Exemplo: tênis e salário">
+  <div class="conteudo">
+    <p class="olho">Exemplo</p>
+    <h2 class="titulo">Tênis e salário</h2>
+    <div style="position:absolute;left:0;width:800px;top:160px">
+      <p class="texto" style="margin:0 0 20px">Tênis de <b>R$ 150</b>, <b>20%</b> de desconto</p>
+      <div class="contas">
+        <div class="eq" data-passo="1"><span>\(\text{tênis}\)</span><span>\(=\)</span><span>\(V \cdot (1 - 0{,}20)\)</span></div>
+        <div class="eq" data-passo="2"><span>\(\text{tênis}\)</span><span>\(=\)</span><span>\(150 \cdot 0{,}80\)</span></div>
+        <div class="eq final" data-passo="3"><span>\(\text{tênis}\)</span><span>\(=\)</span><span>\(120\)</span></div>
+      </div>
+    </div>
+    <div style="position:absolute;left:900px;right:0;top:160px">
+      <p class="texto" style="margin:0 0 20px">Salário de <b>R$ 1 500</b>, <b>8%</b> de aumento</p>
+      <div class="contas">
+        <div class="eq" data-passo="4"><span>\(\text{salário}\)</span><span>\(=\)</span><span>\(V \cdot (1 + 0{,}08)\)</span></div>
+        <div class="eq" data-passo="5"><span>\(\text{salário}\)</span><span>\(=\)</span><span>\(1\,500 \cdot 1{,}08\)</span></div>
+        <div class="eq final" data-passo="6"><span>\(\text{salário}\)</span><span>\(=\)</span><span>\(1\,620\)</span></div>
+      </div>
+    </div>
+    <span class="pilula pilula-resposta" data-passo="7" style="position:absolute;right:0;top:600px">R$ 120,00 e R$ 1 620,00</span>
+  </div>
+  <aside class="notas">
+    <p>Cliques 1 a 3: desconto de 20%, fator 0,80, R$ 120. Cliques 4 a 6: aumento de 8%, fator 1,08, R$ 1 620.</p>
+  </aside>
+</section>
+
+<!-- 7. O caminho contrário -->
+<section class="slide" data-nome="O caminho contrário">
+  <div class="conteudo">
+    <p class="olho">O caminho contrário</p>
+    <h2 class="titulo">Qual era o preço original?</h2>
+    <div class="co-card d" style="position:absolute;left:0;width:760px;top:170px;font-size:36px;padding:24px 32px">Depois de <b>20% de desconto</b>, o produto custou <b>R$ 120</b>.</div>
+    <div class="contas" style="position:absolute;left:900px;top:160px;font-size:52px">
+      <div class="eq" data-passo="1"><span>\(V \cdot 0{,}8\)</span><span>\(=\)</span><span>\(120\)</span></div>
+      <div class="eq" data-passo="2"><span>\(V\)</span><span>\(=\)</span><span>\(\dfrac{120}{0{,}8}\)</span></div>
+      <div class="eq final" data-passo="3"><span>\(V\)</span><span>\(=\)</span><span>\(150\)</span></div>
+    </div>
+    <div class="caixa caixa-atencao" data-passo="4" style="position:absolute;left:0;width:760px;top:380px">
+      <div class="texto" style="font-size:32px">Divida pelo fator. <span class="riscado">120 + 20% de 120 = 144</span> está errado.</div>
+    </div>
+  </div>
+  <aside class="notas">
+    <p>O preço original vezes 0,8 deu 120. Então o preço era 120 dividido por 0,8: R$ 150. Uma linha por clique.</p>
+    <p>Clique 4: o erro clássico é somar 20% do valor final; o desconto foi de 20% do preço antigo, que é maior. Esse "144" é ilustração do erro, não está na apostila.</p>
+  </aside>
+</section>
+
+<!-- 8. Sucessivos -->
+<section class="slide" data-nome="Aumentos e descontos sucessivos">
+  <div class="conteudo">
+    <p class="olho">Aumentos e descontos sucessivos</p>
+    <h2 class="titulo">Subiu 10%, baixou 10%</h2>
+    <svg viewBox="0 0 820 440" width="820" height="440" style="position:absolute;left:0;top:150px;overflow:visible;font-family:Figtree,'Segoe UI',sans-serif" aria-hidden="true">
+      <line x1="0" y1="430" x2="820" y2="430" stroke="#9C93C4" stroke-width="4" stroke-linecap="round"/>
+      <line x1="0" y1="110" x2="820" y2="110" stroke="#C9C0F0" stroke-width="3" stroke-dasharray="10 8"/>
+      <g><rect x="40" y="110" width="160" height="320" rx="14" fill="var(--d)"/><text x="120" y="96" text-anchor="middle" font-size="34" font-weight="800" fill="#3F2FA0">200</text></g>
+      <g data-passo="1"><rect class="co-cresce" x="330" y="78" width="160" height="352" rx="14" fill="var(--d)"/><text x="410" y="64" text-anchor="middle" font-size="34" font-weight="800" fill="#3F2FA0">220</text><text x="265" y="250" text-anchor="middle" font-size="30" font-weight="800" fill="var(--d-forte)">× 1,10</text></g>
+      <g data-passo="2"><rect class="co-cresce" x="620" y="113.2" width="160" height="316.8" rx="14" fill="#FFD10C"/><text x="700" y="99" text-anchor="middle" font-size="34" font-weight="800" fill="#8A6A00">198</text><text x="555" y="250" text-anchor="middle" font-size="30" font-weight="800" fill="#8A6A00">× 0,90</text></g>
+    </svg>
+    <div style="position:absolute;left:940px;right:0;top:160px">
+      <p class="texto" data-passo="3" style="margin:0 0 22px;font-size:32px">Cada % incide sobre o <b>valor novo</b>: os fatores se <b>multiplicam</b>.</p>
+      <div class="contas">
+        <div class="eq" data-passo="4"><span>\(\text{final}\)</span><span>\(=\)</span><span>\(V \cdot 1{,}10 \cdot 0{,}90\)</span></div>
+        <div class="eq" data-passo="5"><span>\(\text{final}\)</span><span>\(=\)</span><span>\(200 \cdot 0{,}99\)</span></div>
+        <div class="eq final" data-passo="6"><span>\(\text{final}\)</span><span>\(=\)</span><span>\(198\)</span></div>
+      </div>
+      <span class="pilula pilula-resposta" data-passo="7" style="margin-top:30px">1% a menos que o inicial</span>
+    </div>
+  </div>
+  <aside class="notas">
+    <p>Um produto de R$ 200 subiu 10% e, no mês seguinte, baixou 10%. Clique 1: subiu 10% de 200, foi a 220. Clique 2: desceu 10% de 220, que é mais que 10% de 200: foi a 198. A linha tracejada é o preço de antes.</p>
+    <p>Cliques 3 a 6: os fatores se multiplicam, 1,10 · 0,90 = 0,99. Clique 7: o preço final é 1% menor que o inicial.</p>
+  </aside>
+</section>
+
+<!-- 9. Exemplo: dois descontos -->
+<section class="slide" data-nome="Exemplo: dois descontos">
+  <div class="conteudo">
+    <p class="olho">Exemplo</p>
+    <h2 class="titulo">20% e mais 10% no caixa</h2>
+    <p class="texto" style="position:absolute;left:0;width:780px;top:160px;margin:0">Uma loja dá <b>20%</b> de desconto e, no caixa, mais <b>10%</b> sobre o novo preço. Qual é o desconto total?</p>
+    <div class="contas" style="position:absolute;left:0;top:380px">
+      <div class="eq" data-passo="1"><span>\(\text{fator}\)</span><span>\(=\)</span><span>\(0{,}80 \cdot 0{,}90\)</span></div>
+      <div class="eq final" data-passo="2"><span>\(\text{fator}\)</span><span>\(=\)</span><span>\(0{,}72\)</span></div>
+    </div>
+    <div style="position:absolute;left:900px;right:0;top:170px">
+      <p class="texto" data-passo="3" style="margin:0">Paga <b>72%</b> do preço.</p>
+      <div style="font:800 110px var(--fonte-titulo);color:var(--roxo-titulo);letter-spacing:-.03em;margin-top:10px" data-passo="4">28% <span class="riscado" style="font-size:70px">30%</span></div>
+    </div>
+    <div class="caixa caixa-atencao" data-passo="5" style="position:absolute;left:600px;right:0;top:560px">
+      <span class="rotulo">Porcentagens seguidas não se somam</span>
+      <div class="texto" style="font-size:32px">20% + 10% de desconto dão <b>28%</b>. 10% de aumento e 10% de desconto não dão zero. Use o <b>produto dos fatores</b>.</div>
+    </div>
+  </div>
+  <aside class="notas">
+    <p>Raciocínio: multiplique os fatores e compare com 1. Cliques 1 e 2: 0,80 · 0,90 = 0,72.</p>
+    <p>Cliques 3 e 4: paga 72%, então o desconto total é 28%, e não 30%. Clique 5: a atenção da apostila.</p>
+  </aside>
+</section>
+
+<!-- 10. Lucro e prejuízo -->
+<section class="slide" data-nome="Lucro e prejuízo">
+  <div class="conteudo">
+    <p class="olho">Lucro e prejuízo</p>
+    <h2 class="titulo">Lucro de 30 reais: quantos %?</h2>
+    <div style="position:absolute;left:0;width:800px;top:160px;display:flex;flex-direction:column;gap:18px">
+      <div class="co-card" style="font-size:32px"><b>Custo</b> \(C\): o que o comerciante pagou. <b>Venda</b> \(V\): o que recebeu.</div>
+      <div class="caixa caixa-fundamental" style="padding:20px 30px">
+        <span class="rotulo">Lucro em porcentagem</span>
+        <div style="font-size:42px">\(L = V - C\)</div>
+        <div style="font-size:42px;margin-top:6px">\(p_{\text{custo}} = \dfrac{L}{C} \qquad p_{\text{venda}} = \dfrac{L}{V}\)</div>
+      </div>
+      <p class="texto" style="margin:0;font-size:28px;color:var(--cinza)">Se \(V &lt; C\), a diferença \(C - V\) é o <b>prejuízo</b>.</p>
+    </div>
+    <div style="position:absolute;left:920px;right:0;top:160px">
+      <p class="texto" style="margin:0 0 16px;font-size:32px">Tênis: <b>C = 120</b>, <b>V = 150</b>, <b>L = 30</b></p>
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:20px">
+        <div class="contas" style="font-size:42px">
+          <div class="eq" data-passo="1"><span>\(p_{\text{custo}}\)</span><span>\(=\)</span><span>\(\dfrac{30}{120}\)</span></div>
+          <div class="eq" data-passo="2"><span>\(p_{\text{custo}}\)</span><span>\(=\)</span><span>\(0{,}25\)</span></div>
+          <div class="eq final" data-passo="3"><span>\(p_{\text{custo}}\)</span><span>\(=\)</span><span>\(25\%\)</span></div>
+        </div>
+        <div class="contas" style="font-size:42px">
+          <div class="eq" data-passo="4"><span>\(p_{\text{venda}}\)</span><span>\(=\)</span><span>\(\dfrac{30}{150}\)</span></div>
+          <div class="eq" data-passo="5"><span>\(p_{\text{venda}}\)</span><span>\(=\)</span><span>\(0{,}20\)</span></div>
+          <div class="eq final" data-passo="6"><span>\(p_{\text{venda}}\)</span><span>\(=\)</span><span>\(20\%\)</span></div>
+        </div>
+      </div>
+      <span class="pilula pilula-resposta" data-passo="7" style="margin-top:30px">Mesmo lucro, duas porcentagens</span>
+    </div>
+  </div>
+  <aside class="notas">
+    <p>Uma loja compra um tênis por R$ 120 e vende por R$ 150: ganhou R$ 30. Isso é quantos por cento? Depende de quê: do custo ou da venda.</p>
+    <p>Cliques 1 a 6: 25% do custo e 20% da venda. Multiplique por 100 para ter a porcentagem. Quando o enunciado não diz a base, em geral ela é o custo.</p>
+  </aside>
+</section>
+
+<!-- 11. Exemplos: bicicleta e celular -->
+<section class="slide" data-nome="Exemplos: lucro e prejuízo">
+  <div class="conteudo">
+    <p class="olho">Exemplos</p>
+    <h2 class="titulo">Bicicleta e celular</h2>
+    <div style="position:absolute;left:0;width:800px;top:160px">
+      <p class="texto" style="margin:0 0 18px;font-size:32px">Bicicleta: custou <b>R$ 800</b>; quer lucrar <b>35%</b> sobre o custo.</p>
+      <div class="contas" style="font-size:44px">
+        <div class="eq" data-passo="1"><span>\(V\)</span><span>\(=\)</span><span>\(C \cdot 1{,}35\)</span></div>
+        <div class="eq" data-passo="2"><span>\(V\)</span><span>\(=\)</span><span>\(800 \cdot 1{,}35\)</span></div>
+        <div class="eq final" data-passo="3"><span>\(V\)</span><span>\(=\)</span><span>\(1\,080\)</span></div>
+      </div>
+    </div>
+    <div style="position:absolute;left:900px;right:0;top:160px">
+      <p class="texto" style="margin:0 0 18px;font-size:32px">Celular: comprado por <b>R$ 1 500</b>, vendido por <b>R$ 1 200</b>.</p>
+      <div class="contas" style="font-size:42px">
+        <div class="eq" data-passo="4"><span>\(\text{prejuízo}\)</span><span>\(=\)</span><span>\(1\,500 - 1\,200 = 300\)</span></div>
+        <div class="eq" data-passo="5"><span>\(p\)</span><span>\(=\)</span><span>\(\dfrac{300}{1\,500}\)</span></div>
+        <div class="eq final" data-passo="6"><span>\(p\)</span><span>\(=\)</span><span>\(0{,}20 = 20\%\)</span></div>
+      </div>
+    </div>
+    <div class="caixa caixa-atencao" data-passo="7" style="position:absolute;left:600px;right:0;top:620px;padding:20px 30px">
+      <span class="rotulo">A base decide a resposta</span>
+      <div class="texto" style="font-size:30px">"Em relação ao custo": divida pelo custo. "À venda": pela venda. A outra conta quase sempre está nas alternativas.</div>
+    </div>
+  </div>
+  <aside class="notas">
+    <p>Cliques 1 a 3: lucro de 35% sobre o custo é um aumento de 35% sobre C, fator 1,35: R$ 1 080.</p>
+    <p>Cliques 4 a 6: prejuízo de R$ 300, ou seja, 20% do custo. Clique 7: a atenção da apostila.</p>
+  </aside>
+</section>
+
+<!-- 12. Média aritmética -->
+<section class="slide" data-nome="Média aritmética">
+  <div class="conteudo">
+    <p class="olho">Média aritmética</p>
+    <h2 class="titulo">As notas de Ana</h2>
+    <div data-anima="com-media" data-valores="6,7,8,9" data-anima-passo="1" style="position:absolute;left:0;top:130px;width:760px;height:470px"></div>
+    <div style="position:absolute;left:900px;right:0;top:150px">
+      <div class="caixa caixa-fundamental" style="padding:18px 30px">
+        <span class="rotulo">Média aritmética</span>
+        <div style="font-size:52px">\(\bar{x} = \dfrac{x_1 + x_2 + \dots + x_n}{n}\)</div>
+      </div>
+      <div class="contas" style="margin-top:28px;font-size:46px">
+        <div class="eq" data-passo="2"><span>\(\bar{x}\)</span><span>\(=\)</span><span>\(\dfrac{6 + 7 + 8 + 9}{4}\)</span></div>
+        <div class="eq" data-passo="3"><span>\(\bar{x}\)</span><span>\(=\)</span><span>\(\dfrac{30}{4}\)</span></div>
+        <div class="eq final" data-passo="4"><span>\(\bar{x}\)</span><span>\(=\)</span><span>\(7{,}5\)</span></div>
+      </div>
+    </div>
+    <span class="co-tag am" data-passo="5" style="position:absolute;left:600px;top:700px">nenhuma prova teve nota 7,5</span>
+  </div>
+  <aside class="notas">
+    <p>Ana tirou 6, 7, 8 e 9. A média é o único valor que, repetido nas quatro provas, daria o mesmo total. Clique 1: as barras trocam pontos até ficarem iguais, em 7,5; o total, 30, não muda.</p>
+    <p>Cliques 2 a 4: a conta. Clique 5: a média não precisa ser um dos valores da lista.</p>
+  </aside>
+</section>
+
+<!-- 13. A nota que falta -->
+<section class="slide" data-nome="Exemplo: a nota que falta">
+  <div class="conteudo">
+    <p class="olho">Exemplo</p>
+    <h2 class="titulo">A nota que falta</h2>
+    <p class="texto" style="position:absolute;left:0;width:800px;top:160px;margin:0">Davi tirou <b>6, 7 e 8</b>. Quanto precisa na 4ª prova para ter média <b>7</b>?</p>
+    <div class="contas" style="position:absolute;left:900px;top:150px;font-size:50px">
+      <div class="eq" data-passo="1"><span>\(\dfrac{6 + 7 + 8 + x}{4}\)</span><span>\(=\)</span><span>\(7\)</span></div>
+      <div class="eq" data-passo="2"><span>\(6 + 7 + 8 + x\)</span><span>\(=\)</span><span>\(7 \cdot 4\)</span></div>
+      <div class="eq" data-passo="3"><span>\(21 + x\)</span><span>\(=\)</span><span>\(28\)</span></div>
+      <div class="eq final" data-passo="4"><span>\(x\)</span><span>\(=\)</span><span>\(7\)</span></div>
+    </div>
+    <span class="co-tag" data-passo="2" style="position:absolute;left:0;top:330px">volte para a soma: média × quantidade</span>
+    <div class="caixa caixa-atencao" data-passo="5" style="position:absolute;left:600px;right:0;top:600px;padding:20px 30px">
+      <span class="rotulo">Um valor extremo puxa a média</span>
+      <div class="texto" style="font-size:30px">Salários de 2, 2, 3 e 13 mil reais: média de <b>5 mil</b>, mas três das quatro pessoas ganham bem menos.</div>
+    </div>
+  </div>
+  <aside class="notas">
+    <p>Quando a questão dá a média e pede um valor que falta, volte para a soma: média vezes quantidade dá o total. Cliques 1 a 4: as quatro notas somam 28, ele já tem 21, precisa de 7.</p>
+    <p>Clique 5: (2 + 2 + 3 + 13) ÷ 4 = 20 ÷ 4 = 5. Um valor muito diferente desloca a média.</p>
+  </aside>
+</section>
+
+<!-- 14. Média ponderada -->
+<section class="slide" data-nome="Média ponderada">
+  <div class="conteudo">
+    <p class="olho">Média ponderada</p>
+    <h2 class="titulo">A prova vale mais</h2>
+    <div style="position:absolute;left:0;width:800px;top:160px;display:flex;flex-direction:column;gap:20px">
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:20px">
+        <div class="co-card" style="text-align:center"><b>prova</b><div style="font:800 56px var(--fonte-titulo);color:var(--roxo-titulo)">8</div><span class="co-tag">peso 3</span></div>
+        <div class="co-card" style="text-align:center"><b>trabalho</b><div style="font:800 56px var(--fonte-titulo);color:var(--roxo-titulo)">6</div><span class="co-tag">peso 2</span></div>
+      </div>
+      <div class="caixa caixa-fundamental" style="padding:16px 28px">
+        <span class="rotulo">Média ponderada</span>
+        <div style="font-size:40px">\(\bar{x} = \dfrac{x_1 \cdot p_1 + \dots + x_n \cdot p_n}{p_1 + \dots + p_n}\)</div>
+      </div>
+    </div>
+    <div class="contas" style="position:absolute;left:900px;top:150px;font-size:48px;row-gap:16px">
+      <div class="eq" data-passo="1"><span>\(\bar{x}\)</span><span>\(=\)</span><span>\(\dfrac{8 \cdot 3 + 6 \cdot 2}{3 + 2}\)</span></div>
+      <div class="eq" data-passo="2"><span>\(\bar{x}\)</span><span>\(=\)</span><span>\(\dfrac{24 + 12}{5}\)</span></div>
+      <div class="eq" data-passo="3"><span>\(\bar{x}\)</span><span>\(=\)</span><span>\(\dfrac{36}{5}\)</span></div>
+      <div class="eq final" data-passo="4"><span>\(\bar{x}\)</span><span>\(=\)</span><span>\(7{,}2\)</span></div>
+    </div>
+    <span class="pilula pilula-resposta" data-passo="5" style="position:absolute;right:0;top:640px">Mais perto de 8, a nota de maior peso</span>
+  </div>
+  <aside class="notas">
+    <p>Kauã tirou 8 na prova (peso 3) e 6 no trabalho (peso 2). A média não é a simples, 7, porque a prova conta mais.</p>
+    <p>Cliques 1 a 4: cada valor vezes o seu peso, dividido pela soma dos pesos. Clique 5: 7,2 fica mais perto de 8.</p>
+  </aside>
+</section>
+
+<!-- 15. Idade média: frequência -->
+<section class="slide" data-nome="Exemplo: idade média da turma">
+  <div class="conteudo">
+    <p class="olho">Exemplo · frequência é peso</p>
+    <h2 class="titulo">Idade média da turma</h2>
+    <table class="tabela co-t" style="position:absolute;left:0;top:160px">
+      <tr><th>idade</th><th>alunos</th></tr>
+      <tr><td>14</td><td>5</td></tr>
+      <tr><td>15</td><td>10</td></tr>
+      <tr><td>16</td><td>5</td></tr>
+    </table>
+    <span class="co-tag" style="position:absolute;left:0;top:470px">cada idade pesa a sua frequência</span>
+    <div class="contas" style="position:absolute;left:700px;top:150px;font-size:48px;row-gap:16px">
+      <div class="eq" data-passo="1"><span>\(\bar{x}\)</span><span>\(=\)</span><span>\(\dfrac{14 \cdot 5 + 15 \cdot 10 + 16 \cdot 5}{5 + 10 + 5}\)</span></div>
+      <div class="eq" data-passo="2"><span>\(\bar{x}\)</span><span>\(=\)</span><span>\(\dfrac{70 + 150 + 80}{20}\)</span></div>
+      <div class="eq" data-passo="3"><span>\(\bar{x}\)</span><span>\(=\)</span><span>\(\dfrac{300}{20}\)</span></div>
+      <div class="eq final" data-passo="4"><span>\(\bar{x}\)</span><span>\(=\)</span><span>\(15\ \text{anos}\)</span></div>
+    </div>
+  </div>
+  <aside class="notas">
+    <p>Quando a tabela diz quantas vezes cada valor aparece (a frequência), a média também é ponderada: cada valor pesa a sua frequência. Turma de 20 alunos.</p>
+    <p>Uma linha por clique: 300 ÷ 20 = 15 anos.</p>
+  </aside>
+</section>
+
+<!-- 16. Questão 1 -->
+<section class="slide questao" data-nome="Questão 1">
+  <div class="conteudo">
+    <div class="area-resolucao"></div>
+    <span class="pilula pilula-pausa" data-em="1:some">Pause o vídeo e tente</span>
+    <div class="painel-questao">
+      <p class="olho">Questão 1 · IF Sudeste MG 2024</p>
+      <p class="enunciado" style="font-size:25px">Em um tratamento odontológico, feito em duas seções, Iago fez o pagamento de R$ 294,00, equivalente a 30% do valor orçado pela dentista. Ao chegar à segunda sessão e terminar o tratamento, fez o pagamento do restante que faltava, porém a dentista não encontrou a anotação em que o orçamento foi registrado. O valor que resta a Iago pagar é:</p>
+      <ol class="alternativas">
+        <li data-em="2:apaga"><b>A</b><span>R$ 88,20</span></li>
+        <li data-em="2:apaga"><b>B</b><span>R$ 126,00</span></li>
+        <li data-em="2:certo"><b>C</b><span>R$ 686,00</span></li>
+        <li data-em="2:apaga"><b>D</b><span>R$ 980,00</span></li>
+        <li data-em="2:apaga"><b>E</b><span>R$ 1274,00</span></li>
+      </ol>
+    </div>
+  </div>
+  <aside class="resolucao">
+    <p class="dados"><b>Dados:</b> 30% do orçamento \(T\) = R$ 294.</p>
+    <ol class="passos">
+      <li>\(0{,}3 \cdot T = 294\)</li>
+      <li>\(T = \dfrac{294}{0{,}3} = 980\)</li>
+      <li>Resta \(980 - 294 = 686\)</li>
+    </ol>
+    <p class="resposta"><b>Resposta:</b> faltam R$ 686,00. <b>Gabarito C.</b></p>
+    <p class="atencao"><b>Destaque no quadro:</b> 294 já são os 30%: o que falta são 70%.</p>
+    <ul class="erros">
+      <li><b>A</b> Calcula 30% de 294.</li>
+      <li><b>B</b> Trata 294 como 70% e acha os 30% restantes.</li>
+      <li><b>D</b> É o orçamento inteiro: esquece o que já pagou.</li>
+      <li><b>E</b> Soma o pago ao total.</li>
+    </ul>
+  </aside>
+  <aside class="notas">
+    <p>Clique 1 tira o aviso de pausa: resolva na área (D liga a caneta; E esconde o enunciado). Clique 2: gabarito C.</p>
+    <p>Questão oficial do IF Sudeste MG 2024-1, q15, MAT-0299 (sobra do bloco). Outro caminho: 70% de 980 = 686. O texto da prova traz "seções" onde deveria ser "sessões"; mantido como na prova.</p>
+  </aside>
+</section>
+
+<!-- 17. Questão 2 -->
+<section class="slide questao" data-nome="Questão 2">
+  <div class="conteudo">
+    <div class="area-resolucao"></div>
+    <span class="pilula pilula-pausa" data-em="1:some">Pause o vídeo e tente</span>
+    <div class="painel-questao">
+      <p class="olho">Questão 2 · IF Sudeste MG 2013</p>
+      <p class="enunciado">Dois aumentos de 5% correspondem a um único aumento de:</p>
+      <ol class="alternativas">
+        <li data-em="2:apaga"><b>A</b><span>10%</span></li>
+        <li data-em="2:certo"><b>B</b><span>10,25%</span></li>
+        <li data-em="2:apaga"><b>C</b><span>10,5%</span></li>
+        <li data-em="2:apaga"><b>D</b><span>10,75%</span></li>
+        <li data-em="2:apaga"><b>E</b><span>11%</span></li>
+      </ol>
+    </div>
+  </div>
+  <aside class="resolucao">
+    <p class="dados"><b>Dados:</b> dois aumentos seguidos de 5%.</p>
+    <ol class="passos">
+      <li>Fator de cada aumento: \(1{,}05\)</li>
+      <li>\(1{,}05 \cdot 1{,}05 = 1{,}1025\)</li>
+      <li>\(1{,}1025 \to\) aumento de \(10{,}25\%\)</li>
+    </ol>
+    <p class="resposta"><b>Resposta:</b> um aumento único de 10,25%. <b>Gabarito B.</b></p>
+    <p class="atencao"><b>Destaque no quadro:</b> Aumentos seguidos não se somam: multiplique os fatores.</p>
+    <ul class="erros">
+      <li><b>A</b> Soma 5% + 5%.</li>
+      <li><b>C</b> Exagera o "a mais": é só 5% de 5% = 0,25%.</li>
+      <li><b>D</b> Não sai de nenhuma conta com os dados.</li>
+      <li><b>E</b> Não sai de nenhuma conta com os dados.</li>
+    </ul>
+  </aside>
+  <aside class="notas">
+    <p>Clique 1 tira o aviso de pausa: resolva na área (D liga a caneta; E esconde o enunciado). Clique 2: gabarito B.</p>
+    <p>Questão oficial do IF Sudeste MG 2013-2, q17, MAT-0391 (sobra do bloco). Teste com R$ 100: 105 e depois 110,25.</p>
+  </aside>
+</section>
+
+<!-- 18. Questão 3 -->
+<section class="slide questao" data-nome="Questão 3">
+  <div class="conteudo">
+    <div class="area-resolucao"></div>
+    <span class="pilula pilula-pausa" data-em="1:some">Pause o vídeo e tente</span>
+    <div class="painel-questao">
+      <p class="olho">Questão 3 · IF Sudeste MG 2014</p>
+      <p class="enunciado">Um objeto custa R$ 4.000,00 e será vendido por R$ 5.000,00. Qual a porcentagem de lucro em relação ao preço de custo?</p>
+      <ol class="alternativas curtas">
+        <li data-em="2:apaga"><b>A</b><span>20%</span></li>
+        <li data-em="2:apaga"><b>B</b><span>21%</span></li>
+        <li data-em="2:apaga"><b>C</b><span>22%</span></li>
+        <li data-em="2:apaga"><b>D</b><span>24%</span></li>
+        <li data-em="2:certo"><b>E</b><span>25%</span></li>
+      </ol>
+    </div>
+  </div>
+  <aside class="resolucao">
+    <p class="dados"><b>Dados:</b> \(C = 4\,000\); \(V = 5\,000\).</p>
+    <ol class="passos">
+      <li>\(L = 5\,000 - 4\,000 = 1\,000\)</li>
+      <li>\(p = \dfrac{1\,000}{4\,000}\)</li>
+      <li>\(p = 0{,}25 = 25\%\)</li>
+    </ol>
+    <p class="resposta"><b>Resposta:</b> lucro de 25% sobre o custo. <b>Gabarito E.</b></p>
+    <p class="atencao"><b>Destaque no quadro:</b> "Em relação ao custo": divida pelo custo.</p>
+    <ul class="erros">
+      <li><b>A</b> Divide pela venda: 1 000 ÷ 5 000.</li>
+      <li><b>B</b> Não sai de conta coerente com os dados.</li>
+      <li><b>C</b> Não sai de conta coerente com os dados.</li>
+      <li><b>D</b> 24% de 4 000 dá 960, não 1 000.</li>
+    </ul>
+  </aside>
+  <aside class="notas">
+    <p>Clique 1 tira o aviso de pausa: resolva na área (D liga a caneta; E esconde o enunciado). Clique 2: gabarito E.</p>
+    <p>Questão oficial do IF Sudeste MG 2014-2, q19, MAT-0324 (sobra do bloco). A armadilha é a alternativa A: a outra base.</p>
+  </aside>
+</section>
+
+<!-- 19. Questão 4 -->
+<section class="slide questao" data-nome="Questão 4">
+  <div class="conteudo">
+    <div class="area-resolucao"></div>
+    <span class="pilula pilula-pausa" data-em="1:some">Pause o vídeo e tente</span>
+    <div class="painel-questao">
+      <p class="olho">Questão 4 · IF Sudeste MG 2024</p>
+      <p class="enunciado" style="font-size:25px">Toninho está quase sendo reprovado em Matemática. Ele tirou 40 na primeira prova e 45 na segunda. A disciplina de Matemática consiste em três provas, todas valendo 100 pontos cada. Ao final do período, calcula-se a média aritmética das notas do aluno. Se a média for 60 ou mais, o aluno está aprovado. Qual a nota mínima que Toninho precisa obter na 3ª prova para conseguir aprovação na disciplina?</p>
+      <ol class="alternativas curtas" style="flex-wrap:wrap">
+        <li data-em="2:apaga"><b>A</b><span>90 pontos</span></li>
+        <li data-em="2:apaga"><b>B</b><span>92 pontos</span></li>
+        <li data-em="2:certo"><b>C</b><span>95 pontos</span></li>
+        <li data-em="2:apaga"><b>D</b><span>97 pontos</span></li>
+        <li data-em="2:apaga"><b>E</b><span>100 pontos</span></li>
+      </ol>
+    </div>
+  </div>
+  <aside class="resolucao">
+    <p class="dados"><b>Dados:</b> notas 40 e 45; média mínima 60 em 3 provas.</p>
+    <ol class="passos">
+      <li>\(\dfrac{40 + 45 + n}{3} = 60\)</li>
+      <li>\(85 + n = 180\)</li>
+      <li>\(n = 95\)</li>
+    </ol>
+    <p class="resposta"><b>Resposta:</b> 95 pontos. <b>Gabarito C.</b></p>
+    <p class="atencao"><b>Destaque no quadro:</b> Volte para a soma: média × quantidade = total.</p>
+    <ul class="erros">
+      <li><b>A</b> Soma 175: média de cerca de 58,3.</li>
+      <li><b>B</b> Soma 177: média 59, abaixo de 60.</li>
+      <li><b>D</b> Passa, mas não é a mínima.</li>
+      <li><b>E</b> Passa, mas não é a mínima.</li>
+    </ul>
+  </aside>
+  <aside class="notas">
+    <p>Clique 1 tira o aviso de pausa: resolva na área (D liga a caneta; E esconde o enunciado). Clique 2: gabarito C.</p>
+    <p>Questão oficial do IF Sudeste MG 2024-1, q21, MAT-0305 (sobra do bloco). Conferindo: (40 + 45 + 95) ÷ 3 = 180 ÷ 3 = 60.</p>
+  </aside>
+</section>
+
+<!-- 20. Resumo -->
+<section class="slide" data-nome="Resumo">
+  <div class="conteudo">
+    <p class="olho">Resumo</p>
+    <h2 class="titulo">O essencial</h2>
+    <div class="resumo co-res" style="position:absolute;left:0;right:0;top:150px">
+      <div>\(p\%\) de \(V\) = \(\dfrac{p}{100} \cdot V\). <b>Quanto por cento</b>: parte ÷ todo, vezes 100.</div>
+      <div><b>Aumento</b>: \(\times\left(1 + \dfrac{p}{100}\right)\). <b>Desconto</b>: \(\times\left(1 - \dfrac{p}{100}\right)\).</div>
+      <div><b>Sucessivos</b>: multiplique os fatores. Porcentagens seguidas <b>não se somam</b>.</div>
+      <div><b>Lucro</b> \(L = V - C\); em %, divida pela base pedida (o <b>custo</b>, se nada for dito).</div>
+      <div><b>Média aritmética</b>: soma ÷ quantidade. Valor que falta: volte para a soma.</div>
+      <div><b>Ponderada</b>: cada valor × peso, ÷ soma dos pesos. Frequência é peso.</div>
+    </div>
+  </div>
+  <aside class="notas"><p>Peça para tirarem um print desta tela.</p></aside>
+</section>
+
+<!-- 21. A seguir -->
+<section class="slide capa" data-nome="A seguir">
+  <div class="estrelas"></div>
+  <div class="texto-capa" style="top:200px">
+    <span class="selo">Matemática · IF</span>
+    <p class="aula" style="font-size:26px">A seguir · Porcentagem e juros simples · Parte 2 de 2</p>
+    <h1 style="font-size:130px">Juros simples</h1>
+    <p class="sub">O "aluguel" do dinheiro</p>
+  </div>
+  <svg class="emblema" viewBox="0 0 640 640" aria-hidden="true">
+    <g fill="#fff" fill-opacity=".85"><rect x="110" y="380" width="70" height="140" rx="10"/><rect x="210" y="350" width="70" height="170" rx="10"/><rect x="310" y="320" width="70" height="200" rx="10"/><rect x="410" y="290" width="70" height="230" rx="10"/></g>
+    <g fill="#FFD10C"><rect x="210" y="350" width="70" height="30" rx="6"/><rect x="310" y="320" width="70" height="60" rx="6"/><rect x="410" y="290" width="70" height="90" rx="6"/></g>
+    <path d="M145 370 L545 250" stroke="#FFD10C" stroke-width="8" stroke-linecap="round" stroke-dasharray="14 12"/>
+    <circle cx="545" cy="250" r="16" fill="#FFD10C"/>
+  </svg>
+  <img class="logo-capa" src="{{LOGO_BRANCO}}" alt="Quarks">
+  <aside class="notas"><p>Próxima parte: juros simples, capital, taxa, tempo e montante, e os problemas que pedem a taxa, o tempo ou o capital.</p></aside>
+</section>

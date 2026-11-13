@@ -1,0 +1,350 @@
+<!--aula
+{"disciplina": "matematica", "curso": "IF", "assunto": "Função quadrática", "parte": "Parte 1 de 2", "titulo": "A parábola e os coeficientes", "scripts": ["animacoes-funcoes.js"]}
+-->
+<!-- Fonte: apostila IF, Matemática, cap. 4 (4.3 Função quadrática: Definição e valor num ponto; Gráfico e concavidade). Questões da apostila: Modelo IF if-matematica-funcao-quadratica m001 e m007; oficial 2016-1-extra q13 (sobra do capítulo em planejamento/questoes-if.md). -->
+<style>
+  .caixa { box-sizing: border-box; }
+  .lado { display: grid; grid-template-columns: 1fr 1fr; column-gap: 60px; }
+  .tabela-justa td { padding: 6px 40px; } .tabela-justa th { padding: 10px 40px; }
+</style>
+
+<!-- 1. Capa -->
+<section class="slide capa" data-nome="Capa">
+  <div class="estrelas"></div>
+  <div class="texto-capa">
+    <span class="selo">Matemática · IF</span>
+    <p class="aula">Função quadrática · Parte 1 de 2</p>
+    <h1>A parábola e os coeficientes</h1>
+    <p class="sub">O que \(a\), \(b\) e \(c\) fazem com a curva</p>
+  </div>
+  <svg class="emblema" viewBox="0 0 640 640" aria-hidden="true">
+    <path d="M90 560 V80 M90 560 H590" stroke="#fff" stroke-opacity=".8" stroke-width="5" stroke-linecap="round" fill="none"/>
+    <g class="gira-lento"><ellipse cx="330" cy="320" rx="280" ry="120" fill="none" stroke="#fff" stroke-opacity=".3" stroke-width="2" transform="rotate(-12 330 320)"/></g>
+    <path d="M150 120 Q330 860 510 120" fill="none" stroke="#FFD10C" stroke-width="9" stroke-linecap="round"/>
+    <line x1="330" y1="90" x2="330" y2="560" stroke="#fff" stroke-width="4" stroke-dasharray="14 12" stroke-opacity=".7"/>
+    <circle cx="330" cy="490" r="16" fill="#fff"/>
+  </svg>
+  <img class="logo-capa" src="{{LOGO_BRANCO}}" alt="Quarks">
+  <aside class="notas">
+    <p>Começa Função quadrática: a definição, o valor num ponto, a parábola e o que cada coeficiente mostra no gráfico.</p>
+  </aside>
+</section>
+
+<!-- 2. Gancho: o canteiro -->
+<section class="slide" data-nome="20 m de tela">
+  <div class="conteudo">
+    <p class="olho">Para começar</p>
+    <h2 class="titulo">20 m de tela para um canteiro</h2>
+    <div data-anima="fn-canteiro" data-anima-passo="0" style="position:absolute;left:640px;right:0;top:120px;height:520px"></div>
+    <div style="position:absolute;left:0;width:560px;top:160px;display:flex;flex-direction:column;gap:18px">
+      <p class="texto" style="margin:0;font-size:32px">Um lado mede \(x\).</p>
+      <p class="texto" style="margin:0;font-size:32px" data-passo="1">O outro: \(10 - x\) (metade da tela para cada par de lados).</p>
+    </div>
+    <div class="contas" style="position:absolute;left:640px;top:670px;font-size:46px;grid-template-columns:auto auto auto auto auto auto auto">
+      <div class="eq" data-passo="2"><span>\(A\)</span><span>\(=\)</span><span>\(x(10 - x)\)</span><span>\(=\)</span><span data-passo="3" style="background:var(--d-clara);border-radius:16px;padding:0 14px">\(-x^2 + 10x\)</span></div>
+    </div>
+    <span class="pilula pilula-pausa" data-passo="4" style="position:absolute;left:640px;top:780px">Lei com \(x^2\): outro tipo de função</span>
+  </div>
+  <aside class="notas">
+    <p>O retângulo muda, sempre com 20 m de contorno, e o ponto anda na curva da área. Lado 3 m deixa o outro com 7 m: 21 m². Lado 5 m: 5 m por 5 m, 25 m².</p>
+    <p>Pergunte: 25 m² é o máximo? A resposta vem na Parte 2 (vértice).</p>
+  </aside>
+</section>
+
+<!-- 3. Definição -->
+<section class="slide" data-nome="Função quadrática">
+  <div class="conteudo">
+    <p class="olho">Definição</p>
+    <h2 class="titulo">Função quadrática (do 2º grau)</h2>
+    <div class="caixa caixa-fundamental" style="position:absolute;left:300px;right:300px;top:150px;text-align:center;font-size:92px;padding:14px">\(f(x) = ax^2 + bx + c\)</div>
+    <p class="texto" style="position:absolute;left:0;right:0;top:330px;margin:0;text-align:center">\(a\), \(b\) e \(c\) reais, com <b>\(a \neq 0\)</b></p>
+    <div class="caixa caixa-atencao" data-passo="1" style="position:absolute;left:560px;right:0;top:450px">
+      <span class="rotulo">Por que \(a \neq 0\)?</span>
+      <div class="texto">Sem o \(x^2\), sobra \(bx + c\): volta a ser <b>função afim</b>.</div>
+    </div>
+    <div class="caixa" data-passo="2" style="position:absolute;left:560px;right:0;top:640px;display:flex;gap:40px;align-items:center;padding:18px 30px">
+      <span class="rotulo" style="margin:0">Canteiro</span>
+      <span class="texto">\(-x^2 + 10x\): \(a = -1\), \(b = 10\), \(c = 0\)</span>
+    </div>
+  </div>
+  <aside class="notas">
+    <p>Clique 1: o motivo do a ≠ 0. Clique 2: os coeficientes da área do canteiro (c = 0 porque não há termo solto).</p>
+  </aside>
+</section>
+
+<!-- 4. Exemplo: dois valores -->
+<section class="slide" data-nome="Exemplo: f(−2) e f(3)">
+  <div class="conteudo">
+    <p class="olho">Exemplo · valor num ponto</p>
+    <h2 class="titulo">Dada \(f(x) = x^2 - 3x + 1\)</h2>
+    <div class="lado" style="position:absolute;left:0;right:0;top:170px">
+      <div class="contas" style="font-size:46px">
+        <div class="eq" data-passo="1"><span>\(f(-2)\)</span><span>\(=\)</span><span>\((-2)^2 - 3 \cdot (-2) + 1\)</span></div>
+        <div class="eq" data-passo="2"><span>\(f(-2)\)</span><span>\(=\)</span><span>\(4 + 6 + 1\)</span></div>
+        <div class="eq final" data-passo="3"><span>\(f(-2)\)</span><span>\(=\)</span><span>\(11\)</span></div>
+      </div>
+      <div class="contas" style="font-size:46px">
+        <div class="eq" data-passo="4"><span>\(f(3)\)</span><span>\(=\)</span><span>\(3^2 - 3 \cdot 3 + 1\)</span></div>
+        <div class="eq" data-passo="5"><span>\(f(3)\)</span><span>\(=\)</span><span>\(9 - 9 + 1\)</span></div>
+        <div class="eq final" data-passo="6"><span>\(f(3)\)</span><span>\(=\)</span><span>\(1\)</span></div>
+      </div>
+    </div>
+    <span class="pilula pilula-resposta" data-passo="7" style="position:absolute;right:0;top:560px">Negativo entre parênteses: \((-2)^2 = 4\)</span>
+  </div>
+  <aside class="notas">
+    <p>Igual ao que já foi feito em Conceito de função: troque x pelo número, com parênteses nos negativos.</p>
+  </aside>
+</section>
+
+<!-- 5. A tabela vira parábola -->
+<section class="slide" data-nome="A parábola">
+  <div class="conteudo">
+    <p class="olho">Gráfico</p>
+    <h2 class="titulo">Os pontos não ficam alinhados</h2>
+    <table class="tabela tabela-justa" style="position:absolute;left:0;top:150px;font-size:32px">
+      <tr><th>\(x\)</th><th>\(y = x^2 - 2x - 3\)</th></tr>
+      <tr data-passo="1"><td>−2</td><td>5</td></tr>
+      <tr data-passo="1"><td>−1</td><td>0</td></tr>
+      <tr data-passo="1"><td>0</td><td>−3</td></tr>
+      <tr data-passo="1"><td><b>1</b></td><td><b>−4</b></td></tr>
+      <tr data-passo="1"><td>2</td><td>−3</td></tr>
+      <tr data-passo="1"><td>3</td><td>0</td></tr>
+      <tr data-passo="1"><td>4</td><td>5</td></tr>
+    </table>
+    <div data-anima="fn-tabela-parabola" data-anima-passo="2" style="position:absolute;left:900px;top:110px;width:860px;height:740px"></div>
+    <div class="caixa caixa-fundamental" data-passo="3" style="position:absolute;left:560px;width:300px;top:620px;padding:18px 24px">
+      <div class="texto" style="font-size:28px">Curva em U: a <b>parábola</b>. Simetria em \(x = 1\).</div>
+    </div>
+  </div>
+  <aside class="notas">
+    <p>Clique 1: a tabela inteira. Clique 2: os pontos aparecem, a curva se desenha e o eixo de simetria x = 1 aparece, ligando os pares que têm o mesmo y (0 e 2; −1 e 3; −2 e 4).</p>
+    <p>O gráfico de toda função quadrática é uma parábola, com eixo de simetria vertical.</p>
+  </aside>
+</section>
+
+<!-- 6. Concavidade -->
+<section class="slide" data-nome="Concavidade e a">
+  <div class="conteudo">
+    <p class="olho">Concavidade</p>
+    <h2 class="titulo">O sinal de \(a\) abre a boca</h2>
+    <div data-anima="fn-parabola" data-modo="a" data-anima-passo="0" style="position:absolute;left:820px;top:100px;width:940px;height:780px"></div>
+    <div style="position:absolute;left:0;width:740px;top:160px;display:flex;flex-direction:column;gap:22px">
+      <div class="caixa caixa-fundamental" data-passo="1">
+        <div class="texto">\(a > 0\): concavidade <b>para cima</b> (U).</div>
+      </div>
+      <div class="caixa caixa-fundamental" data-passo="2">
+        <div class="texto">\(a < 0\): concavidade <b>para baixo</b> (∩).</div>
+      </div>
+      <p class="texto" data-passo="3" style="margin:0;font-size:32px">Com \(a = 0\), a curva vira reta: não é parábola.</p>
+    </div>
+  </div>
+  <aside class="notas">
+    <p>Na animação só o a muda (2; 0,5; −1; 1), com b = −2 e c = −3 fixos. Quando a passa por zero, a curva vira reta por um instante: é por isso que a ≠ 0.</p>
+    <p>Clique 3: quando a animação passa por a = 0, a curva fica reta por um instante (por isso a definição exige a ≠ 0).</p>
+  </aside>
+</section>
+
+<!-- 7. c e b -->
+<section class="slide" data-nome="Os coeficientes c e b">
+  <div class="conteudo">
+    <p class="olho">Os outros coeficientes</p>
+    <h2 class="titulo">O que \(c\) e \(b\) mostram</h2>
+    <div data-anima="fn-parabola" data-modo="cb" data-anima-passo="0" style="position:absolute;left:820px;top:100px;width:940px;height:780px"></div>
+    <div style="position:absolute;left:0;width:740px;top:160px;display:flex;flex-direction:column;gap:22px">
+      <div class="caixa" data-passo="1">
+        <span class="rotulo">\(c\): corte no eixo y</span>
+        <div class="texto" style="font-size:32px">Com \(x = 0\), sobra só \(c\): ponto \((0;\ c)\).</div>
+      </div>
+      <div class="caixa" data-passo="2">
+        <span class="rotulo">\(b\): como passa pelo eixo y</span>
+        <div class="texto" style="font-size:32px">\(b > 0\): <b>subindo</b>. \(b < 0\): <b>descendo</b>. \(b = 0\): vértice <b>sobre</b> o eixo y.</div>
+      </div>
+    </div>
+  </div>
+  <aside class="notas">
+    <p>Na animação: primeiro só o c muda (a curva sobe e desce inteira e o ponto amarelo é (0; c)); depois só o b (o traço amarelo mostra a curva subindo ou descendo ao cruzar o eixo y).</p>
+    <p>Em y = x² − 2x − 3, b &lt; 0: a curva passa por (0; −3) ainda descendo.</p>
+  </aside>
+</section>
+
+<!-- 8. Atenção -->
+<section class="slide" data-nome="Atenção: o sinal de a">
+  <div class="conteudo">
+    <p class="olho">Atenção</p>
+    <h2 class="titulo">O sinal de \(a\) manda na boca</h2>
+    <div data-anima="fn-figura" data-anima-passo="0" style="position:absolute;left:1000px;top:110px;width:760px;height:700px"
+      data-fig='{"anima":true,"xmin":-3.5,"xmax":3.5,"ymin":-3,"ymax":6,"pl":40,"pr":40,"pt":36,"pb":10,"curvas":[{"f":"-x*x+4"}],"pontos":[{"x":0,"y":4,"t":"c = 4 > 0","cor":"#FFD10C","dx":20,"dy":-10}]}'></div>
+    <div style="position:absolute;left:0;width:900px;top:170px">
+      <p style="margin:0;font-size:80px">\(y = -x^2 + 4\)</p>
+      <div class="caixa caixa-atencao" data-passo="1" style="margin-top:30px">
+        <div class="texto">\(c\) positivo, mas \(a = -1\): boca <b>para baixo</b>. Não olhe o \(c\) nem o \(b\) para a concavidade.</div>
+      </div>
+    </div>
+  </div>
+  <aside class="notas">
+    <p>É o sinal de a, e não o de c ou o de b, que decide se a parábola abre para cima ou para baixo.</p>
+  </aside>
+</section>
+
+<!-- 9. Questão 1 -->
+<section class="slide questao" data-nome="Questão 1">
+  <div class="conteudo">
+    <div class="area-resolucao"></div>
+    <span class="pilula pilula-pausa" data-em="1:some">Pause o vídeo e tente</span>
+    <div class="painel-questao">
+      <p class="olho">Questão 1 · Modelo IF</p>
+      <p class="enunciado">Numa lista de exercícios, Lucas precisa marcar a função cujo gráfico é uma parábola com a concavidade voltada <b>para baixo</b>. A função que ele deve marcar é:</p>
+      <ol class="alternativas">
+        <li data-em="2:apaga"><b>A</b><span>\(y = -3 + 2x + x^2\)</span></li>
+        <li data-em="2:apaga"><b>B</b><span>\(y = x^2 - 4x - 5\)</span></li>
+        <li data-em="2:apaga"><b>C</b><span>\(y = -2x + 1\)</span></li>
+        <li data-em="2:apaga"><b>D</b><span>\(y = 5x^2 - 3\)</span></li>
+        <li data-em="2:certo"><b>E</b><span>\(y = 4 + 3x - 2x^2\)</span></li>
+      </ol>
+      <p class="fonte">Questão Modelo IF (lote if-matematica-funcao-quadratica, m001)</p>
+    </div>
+  </div>
+  <aside class="resolucao">
+    <p class="dados"><b>Dados:</b> boca para baixo: \(a < 0\).</p>
+    <ol class="passos">
+      <li>Ache o número que multiplica \(x^2\), onde quer que esteja</li>
+      <li>A: \(a = 1\); B: \(a = 1\); D: \(a = 5\); C: sem \(x^2\)</li>
+      <li>E: \(a = -2 < 0\)</li>
+    </ol>
+    <p class="resposta"><b>Resposta:</b> \(y = 4 + 3x - 2x^2\). <b>Gabarito E.</b></p>
+    <p class="atencao"><b>Destaque no quadro:</b> \(a\) é o coeficiente de \(x^2\), não o primeiro número escrito.</p>
+    <ul class="erros">
+      <li><b>A</b> O −3 é o \(c\); \(a = 1 > 0\).</li>
+      <li><b>B</b> \(b\) e \(c\) negativos não viram a boca.</li>
+      <li><b>C</b> Sem \(x^2\): é uma reta.</li>
+      <li><b>D</b> \(c = -3\) não manda; \(a = 5 > 0\).</li>
+    </ul>
+  </aside>
+  <aside class="notas">
+    <p>Clique 1 tira o aviso de pausa: resolva na área (D liga a caneta; E esconde o enunciado). Clique 2: gabarito E.</p>
+    <p>Modelo IF, lote if-matematica-funcao-quadratica, m001, MAT-0666.</p>
+  </aside>
+</section>
+
+<!-- 10. Questão 2 -->
+<section class="slide questao" data-nome="Questão 2">
+  <div class="conteudo">
+    <div class="area-resolucao"></div>
+    <span class="pilula pilula-pausa" data-em="1:some">Pause o vídeo e tente</span>
+    <div class="painel-questao">
+      <p class="olho">Questão 2 · IF Sudeste MG 2016</p>
+      <p class="enunciado" style="font-size:25px">Considere \(g(x) = 8 - 3x^2\) a representação algébrica de uma função \(g\colon \mathbb{R} \to \mathbb{R}\).</p>
+      <p class="enunciado" style="font-size:25px">Com relação à representação gráfica de \(g(x)\) no plano cartesiano, assinale a alternativa <b>CORRETA</b>.</p>
+      <ol class="alternativas" style="gap:8px">
+        <li data-em="2:certo" style="font-size:22px"><b>A</b><span>É uma parábola, com a concavidade voltada para baixo, interceptando o eixo x em dois pontos distintos.</span></li>
+        <li data-em="2:apaga" style="font-size:22px"><b>B</b><span>É uma parábola, com a concavidade voltada para cima, interceptando o eixo x em dois pontos distintos.</span></li>
+        <li data-em="2:apaga" style="font-size:22px"><b>C</b><span>É uma reta interceptando o eixo x em um único ponto.</span></li>
+        <li data-em="2:apaga" style="font-size:22px"><b>D</b><span>É uma parábola, com a concavidade voltada para baixo, e interceptando o eixo x em um único ponto.</span></li>
+        <li data-em="2:apaga" style="font-size:22px"><b>E</b><span>É uma reta e não intercepta o eixo x.</span></li>
+      </ol>
+      <p class="fonte">IF Sudeste MG, prova de 2016 (1º semestre, edição extra), questão 13</p>
+    </div>
+  </div>
+  <aside class="resolucao">
+    <p class="dados"><b>Dados:</b> \(g(x) = -3x^2 + 8\): \(a = -3\), \(b = 0\), \(c = 8\).</p>
+    <ol class="passos">
+      <li>Tem \(x^2\): parábola</li>
+      <li>\(a = -3 < 0\): boca para baixo</li>
+      <li>Vértice em \((0;\ 8)\), acima do eixo x, boca para baixo</li>
+      <li>Então corta o eixo x em 2 pontos</li>
+    </ol>
+    <p class="resposta"><b>Resposta:</b> parábola para baixo, dois cortes no eixo x. <b>Gabarito A.</b></p>
+    <p class="atencao"><b>Destaque no quadro:</b> Topo acima do eixo e boca para baixo: dois cortes.</p>
+    <ul class="erros">
+      <li><b>B</b> \(a = -3\): a boca é para baixo.</li>
+      <li><b>C</b> Com \(x^2\), não é reta.</li>
+      <li><b>D</b> Um corte só exigiria o topo sobre o eixo x (\(\Delta = 96 > 0\)).</li>
+      <li><b>E</b> Não é reta, e corta o eixo x.</li>
+    </ul>
+  </aside>
+  <aside class="notas">
+    <p>Clique 1 tira o aviso de pausa: resolva na área (D liga a caneta; E esconde o enunciado). Clique 2: gabarito A.</p>
+    <p>Questão oficial do IF Sudeste MG 2016-1 (edição extra), q13, MAT-0400. Os cortes pelo Δ (Δ = 0 − 4 · (−3) · 8 = 96 &gt; 0) vêm na Parte 2; aqui dá para decidir pelo desenho: b = 0 põe o vértice sobre o eixo y, em (0; 8). Na prova, os reais aparecem como R.</p>
+  </aside>
+</section>
+
+<!-- 11. Questão 3 -->
+<section class="slide questao" data-nome="Questão 3">
+  <div class="conteudo">
+    <div class="area-resolucao"></div>
+    <span class="pilula pilula-pausa" data-em="1:some">Pause o vídeo e tente</span>
+    <div class="painel-questao">
+      <p class="olho">Questão 3 · Modelo IF</p>
+      <p class="enunciado">A figura mostra o gráfico da função quadrática \(y = ax^2 + bx + c\).</p>
+      <div data-anima="fn-figura" style="width:400px;height:330px;margin:0 auto"
+        data-fig='{"xmin":-2,"xmax":5.5,"ymin":-8,"ymax":3,"numeros":false,"grade":false,"pl":10,"pr":30,"pt":30,"pb":10,"curvas":[{"f":"x*x-4*x-3","w":5,"de":-1.8,"ate":5.8}]}'></div>
+      <p class="enunciado">Sobre os sinais dos coeficientes \(a\), \(b\) e \(c\), é correto afirmar que:</p>
+      <ol class="alternativas" style="gap:8px">
+        <li data-em="2:apaga"><b>A</b><span>\(a > 0\), \(b > 0\) e \(c > 0\)</span></li>
+        <li data-em="2:apaga"><b>B</b><span>\(a < 0\), \(b < 0\) e \(c < 0\)</span></li>
+        <li data-em="2:apaga"><b>C</b><span>\(a > 0\), \(b > 0\) e \(c < 0\)</span></li>
+        <li data-em="2:apaga"><b>D</b><span>\(a < 0\), \(b > 0\) e \(c < 0\)</span></li>
+        <li data-em="2:certo"><b>E</b><span>\(a > 0\), \(b < 0\) e \(c < 0\)</span></li>
+      </ol>
+      <p class="fonte">Questão Modelo IF (lote if-matematica-funcao-quadratica, m007)</p>
+    </div>
+  </div>
+  <aside class="resolucao">
+    <p class="dados"><b>Dados:</b> U, corte em y abaixo da origem, vértice à direita.</p>
+    <ol class="passos">
+      <li>U: \(a > 0\)</li>
+      <li>Corta y abaixo da origem: \(c < 0\)</li>
+      <li>Passa pelo eixo y descendo: \(b < 0\)</li>
+    </ol>
+    <p class="resposta"><b>Resposta:</b> \(a > 0\), \(b < 0\), \(c < 0\). <b>Gabarito E.</b></p>
+    <p class="atencao"><b>Destaque no quadro:</b> \(a\) pela boca, \(c\) pelo corte em y, \(b\) pelo jeito de cruzar o eixo y.</p>
+    <ul class="erros">
+      <li><b>A</b> Olha só o lado direito; \(c\) e \(b\) são negativos.</li>
+      <li><b>B</b> Vértice abaixo do eixo não muda a boca: U é \(a > 0\).</li>
+      <li><b>C</b> Vértice à direita não é \(b > 0\): com \(a > 0\), \(b\) é negativo.</li>
+      <li><b>D</b> Troca a concavidade e o sinal de \(b\).</li>
+    </ul>
+  </aside>
+  <aside class="notas">
+    <p>Clique 1 tira o aviso de pausa: resolva na área (D liga a caneta; E esconde o enunciado). Clique 2: gabarito E.</p>
+    <p>Modelo IF, lote if-matematica-funcao-quadratica, m007, MAT-0672. Gráfico refeito em SVG com a parábola do arquivo da questão (y = x² − 4x − 3), sem números nos eixos, como no original.</p>
+  </aside>
+</section>
+
+<!-- 12. Resumo -->
+<section class="slide" data-nome="Resumo">
+  <div class="conteudo">
+    <p class="olho">Resumo</p>
+    <h2 class="titulo">O essencial</h2>
+    <div class="resumo" style="position:absolute;left:0;right:0;top:150px">
+      <div><b>Função quadrática:</b> \(f(x) = ax^2 + bx + c\), com \(a \neq 0\).</div>
+      <div><b>Valor num ponto:</b> troque \(x\), com parênteses nos negativos.</div>
+      <div><b>Gráfico:</b> parábola, com eixo de simetria vertical.</div>
+      <div>\(a > 0\): boca <b>para cima</b>. \(a < 0\): <b>para baixo</b>.</div>
+      <div><b>\(c\):</b> corte no eixo y, \((0;\ c)\).</div>
+      <div><b>\(b\):</b> cruza o eixo y subindo (\(b > 0\)), descendo (\(b < 0\)) ou no vértice (\(b = 0\)).</div>
+    </div>
+  </div>
+  <aside class="notas">
+    <p>Peça para tirarem um print desta tela.</p>
+  </aside>
+</section>
+
+<!-- 13. A seguir -->
+<section class="slide capa" data-nome="A seguir">
+  <div class="estrelas"></div>
+  <div class="texto-capa" style="top:200px">
+    <span class="selo">Matemática · IF</span>
+    <p class="aula" style="font-size:26px">A seguir · Função quadrática · Parte 2 de 2</p>
+    <h1>Zeros, vértice e máximo</h1>
+    <p class="sub">Onde a parábola corta e até onde vai</p>
+  </div>
+  <svg class="emblema" viewBox="0 0 640 640" aria-hidden="true">
+    <path d="M90 470 H590 M330 80 V580" stroke="#fff" stroke-opacity=".8" stroke-width="5" stroke-linecap="round" fill="none"/>
+    <path d="M160 140 Q330 760 500 140" fill="none" stroke="#FFD10C" stroke-width="9" stroke-linecap="round"/>
+    <circle cx="216" cy="370" r="14" fill="#fff"/><circle cx="444" cy="370" r="14" fill="#fff"/>
+    <circle cx="330" cy="450" r="16" fill="#FFD10C" stroke="#fff" stroke-width="4"/>
+  </svg>
+  <img class="logo-capa" src="{{LOGO_BRANCO}}" alt="Quarks">
+  <aside class="notas"><p>Próxima parte: cortes com os eixos, o Δ, o vértice, máximo e mínimo, formas fatorada e canônica e o problema da bola.</p></aside>
+</section>

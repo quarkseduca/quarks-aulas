@@ -1,0 +1,417 @@
+<!--aula
+{"disciplina": "matematica", "curso": "IF", "assunto": "Função afim", "parte": "Parte 1 de 2", "titulo": "Coeficientes, gráfico e zero", "scripts": ["animacoes-funcoes.js"]}
+-->
+<!-- Fonte: apostila IF, Matemática, cap. 4 (4.2 Função afim: Função afim e coeficientes; Gráfico da função afim; Zero da função afim). Questões da apostila: Modelo IF if-matematica-funcao-afim m002 e m014; oficiais 2018-1 q23 e 2023-1 q15 (sobras do capítulo em planejamento/questoes-if.md). -->
+<style>
+  .caixa { box-sizing: border-box; }
+  .opcoes { display: flex; flex-direction: column; gap: 18px; }
+  .opcoes > div { display: flex; align-items: center; gap: 24px; background: var(--branco); border: 2px solid var(--lilas-2); border-radius: 24px; padding: 14px 28px; font-size: 46px; transition: background .4s, border-color .4s, opacity .4s; }
+  .opcoes > div.certo { background: var(--certo-claro); border-color: var(--certo); }
+  .opcoes > div.apaga { opacity: .45; }
+  .opcoes small { font: 700 26px var(--fonte-texto); color: var(--cinza); }
+</style>
+
+<!-- 1. Capa -->
+<section class="slide capa" data-nome="Capa">
+  <div class="estrelas"></div>
+  <div class="texto-capa">
+    <span class="selo">Matemática · IF</span>
+    <p class="aula">Função afim · Parte 1 de 2</p>
+    <h1>Coeficientes, gráfico e zero</h1>
+    <p class="sub">A reta de \(y = ax + b\)</p>
+  </div>
+  <svg class="emblema" viewBox="0 0 640 640" aria-hidden="true">
+    <path d="M90 560 V80 M90 560 H590" stroke="#fff" stroke-opacity=".8" stroke-width="5" stroke-linecap="round" fill="none"/>
+    <g class="gira-lento"><ellipse cx="330" cy="320" rx="280" ry="120" fill="none" stroke="#fff" stroke-opacity=".3" stroke-width="2" transform="rotate(-12 330 320)"/></g>
+    <line x1="110" y1="500" x2="560" y2="140" stroke="#FFD10C" stroke-width="9" stroke-linecap="round"/>
+    <path d="M335 320 H435 V240" fill="none" stroke="#fff" stroke-width="5" stroke-dasharray="10 9"/>
+    <circle cx="90" cy="516" r="16" fill="#fff"/>
+  </svg>
+  <img class="logo-capa" src="{{LOGO_BRANCO}}" alt="Quarks">
+  <aside class="notas">
+    <p>Começa Função afim: o que significam a e b, por que o gráfico é uma reta e como achar o zero.</p>
+  </aside>
+</section>
+
+<!-- 2. Gancho: o táxi -->
+<section class="slide" data-nome="A corrida de táxi">
+  <div class="conteudo">
+    <p class="olho">Para começar</p>
+    <h2 class="titulo">R$ 5,00 de bandeirada + R$ 3,00 por km</h2>
+    <table class="tabela" style="position:absolute;left:0;top:170px">
+      <tr><th>km</th><th>preço (R$)</th></tr>
+      <tr><td>0</td><td>5</td></tr>
+      <tr data-passo="1"><td>1</td><td>8</td></tr>
+      <tr data-passo="2"><td>2</td><td>11</td></tr>
+      <tr data-passo="3"><td>3</td><td>14</td></tr>
+    </table>
+    <div data-em="4:some" style="position:absolute;left:640px;right:0;top:220px;text-align:center;font-size:96px">\(y = 3x + 5\)</div>
+    <div data-passo="4" style="position:absolute;left:640px;right:0;top:190px;text-align:center;font-size:96px">\(y = \underbrace{\color{#1E4FD8}{3}x}_{\text{por km}} + \underbrace{\color{#1E4FD8}{5}}_{\text{fixo}}\)</div>
+    <div class="caixa" data-passo="5" style="position:absolute;left:640px;right:0;top:520px">
+      <div class="texto">O <b>5</b> se paga antes de rodar. O <b>3</b> é quanto o preço sobe a cada km.</div>
+    </div>
+  </div>
+  <aside class="notas">
+    <p>Cliques 1 a 3: a cada km, +3 reais. Clique 4: as duas partes da lei. Clique 5: o que cada número significa.</p>
+  </aside>
+</section>
+
+<!-- 3. Definição -->
+<section class="slide" data-nome="Função afim">
+  <div class="conteudo">
+    <p class="olho">Definição</p>
+    <h2 class="titulo">Função afim</h2>
+    <div class="caixa caixa-fundamental" style="position:absolute;left:360px;right:360px;top:150px;text-align:center;font-size:96px;padding:14px">\(f(x) = ax + b\)</div>
+    <p class="texto" style="position:absolute;left:0;right:0;top:330px;margin:0;text-align:center;font-size:32px">\(a\) e \(b\) números reais</p>
+    <div style="position:absolute;left:560px;right:0;top:420px;display:grid;grid-template-columns:1fr 1fr;gap:28px">
+      <div class="caixa" data-passo="1">
+        <span class="rotulo">\(a\): taxa de variação</span>
+        <div class="texto" style="font-size:32px">ou coeficiente <b>angular</b>: quanto \(y\) muda quando \(x\) aumenta 1.</div>
+      </div>
+      <div class="caixa" data-passo="2">
+        <span class="rotulo">\(b\): valor inicial</span>
+        <div class="texto" style="font-size:32px">ou coeficiente <b>linear</b>: o \(y\) quando \(x = 0\).</div>
+      </div>
+    </div>
+  </div>
+  <aside class="notas">
+    <p>No táxi: a = 3 (reais por km) e b = 5 (bandeirada).</p>
+  </aside>
+</section>
+
+<!-- 4. Lei por dois pontos -->
+<section class="slide" data-nome="Lei por dois pontos">
+  <div class="conteudo">
+    <p class="olho">Exemplo</p>
+    <h2 class="titulo">\(f(1) = 5\) e \(f(3) = 11\): qual é a lei?</h2>
+    <div style="position:absolute;left:0;width:800px;top:170px">
+      <p class="texto" style="margin:0 0 12px"><b>Taxa:</b> \(y\) foi de 5 a 11 quando \(x\) foi de 1 a 3.</p>
+      <div class="contas" style="font-size:50px">
+        <div class="eq" data-passo="1"><span>\(a\)</span><span>\(=\)</span><span>\(\dfrac{\Delta y}{\Delta x}\)</span></div>
+        <div class="eq" data-passo="2"><span>\(a\)</span><span>\(=\)</span><span>\(\dfrac{11 - 5}{3 - 1}\)</span></div>
+        <div class="eq final" data-passo="3"><span>\(a\)</span><span>\(=\)</span><span>\(3\)</span></div>
+      </div>
+    </div>
+    <div style="position:absolute;left:900px;right:0;top:170px">
+      <p class="texto" style="margin:0 0 12px" data-passo="4"><b>Valor inicial:</b> use \((1;\ 5)\).</p>
+      <div class="contas" style="font-size:50px">
+        <div class="eq" data-passo="4"><span>\(y\)</span><span>\(=\)</span><span>\(ax + b\)</span></div>
+        <div class="eq" data-passo="5"><span>\(5\)</span><span>\(=\)</span><span>\(3 \cdot 1 + b\)</span></div>
+        <div class="eq final" data-passo="6"><span>\(b\)</span><span>\(=\)</span><span>\(2\)</span></div>
+      </div>
+    </div>
+    <span class="pilula pilula-resposta" data-passo="7" style="position:absolute;right:0;top:700px;font-size:44px">\(f(x) = 3x + 2\)</span>
+  </div>
+  <aside class="notas">
+    <p>Primeiro a taxa a = Δy/Δx; depois o b sai de qualquer um dos pontos. Confira com o outro: 3 · 3 + 2 = 11 ✓.</p>
+  </aside>
+</section>
+
+<!-- 5. Questão 1 -->
+<section class="slide questao" data-nome="Questão 1">
+  <div class="conteudo">
+    <div class="area-resolucao"></div>
+    <span class="pilula pilula-pausa" data-em="1:some">Pause o vídeo e tente</span>
+    <div class="painel-questao">
+      <p class="olho">Questão 1 · Modelo IF</p>
+      <p class="enunciado">Numa cidade, a corrida de táxi custa R$ 6,00 de bandeirada (valor fixo) mais R$ 2,40 por quilômetro rodado. Quanto custa uma corrida de 12 km?</p>
+      <ol class="alternativas">
+        <li data-em="2:certo"><b>A</b><span>R$ 34,80</span></li>
+        <li data-em="2:apaga"><b>B</b><span>R$ 28,80</span></li>
+        <li data-em="2:apaga"><b>C</b><span>R$ 74,40</span></li>
+        <li data-em="2:apaga"><b>D</b><span>R$ 100,80</span></li>
+        <li data-em="2:apaga"><b>E</b><span>R$ 8,40</span></li>
+      </ol>
+      <p class="fonte">Questão Modelo IF (lote if-matematica-funcao-afim, m002)</p>
+    </div>
+  </div>
+  <aside class="resolucao">
+    <p class="dados"><b>Dados:</b> \(b = 6\); \(a = 2{,}40\); \(x = 12\).</p>
+    <ol class="passos">
+      <li>Lei: \(y = 2{,}40x + 6\)</li>
+      <li>\(y = 2{,}40 \cdot 12 + 6\)</li>
+      <li>\(y = 28{,}80 + 6 = 34{,}80\)</li>
+    </ol>
+    <p class="resposta"><b>Resposta:</b> R$ 34,80. <b>Gabarito A.</b></p>
+    <p class="atencao"><b>Destaque no quadro:</b> Fixo é o \(b\); por km é o \(a\).</p>
+    <ul class="erros">
+      <li><b>B</b> Esquece a bandeirada: só \(2{,}40 \cdot 12\).</li>
+      <li><b>C</b> Troca os papéis: \(6 \cdot 12 + 2{,}40\).</li>
+      <li><b>D</b> Bandeirada a cada km: \((6 + 2{,}40) \cdot 12\).</li>
+      <li><b>E</b> Soma sem multiplicar: \(6 + 2{,}40\).</li>
+    </ul>
+  </aside>
+  <aside class="notas">
+    <p>Clique 1 tira o aviso de pausa: resolva na área (D liga a caneta; E esconde o enunciado). Clique 2: gabarito A.</p>
+    <p>Modelo IF, lote if-matematica-funcao-afim, m002, MAT-0727.</p>
+  </aside>
+</section>
+
+<!-- 6. O gráfico é uma reta -->
+<section class="slide" data-nome="O gráfico é uma reta">
+  <div class="conteudo">
+    <p class="olho">Gráfico da função afim</p>
+    <h2 class="titulo">Sempre uma reta</h2>
+    <div style="position:absolute;left:0;width:800px;top:160px;display:flex;flex-direction:column;gap:20px">
+      <p class="texto" style="margin:0">Dois pontos bastam. Os mais práticos: os cortes com os eixos.</p>
+      <div class="caixa caixa-fundamental" data-passo="1" style="padding:22px 30px">
+        <span class="rotulo">O que \(a\) e \(b\) mostram</span>
+        <div class="texto" style="font-size:31px;line-height:1.45">\(a > 0\): <b>sobe</b> (crescente)<br>\(a < 0\): <b>desce</b> (decrescente)<br>\(a = 0\): horizontal (constante)<br>\(b\): corta o eixo y em \((0;\ b)\)</div>
+      </div>
+    </div>
+    <div data-anima="fn-reta-a" data-anima-passo="0" data-b="1" style="position:absolute;left:900px;top:110px;width:860px;height:740px"></div>
+  </div>
+  <aside class="notas">
+    <p>A reta de y = ax + 1 gira enquanto a muda (2, 1, 0,5, 0, −1, −2). O triângulo amarelo mostra a taxa: anda 1 para a direita e sobe (ou desce) a. O ponto amarelo (0; 1) não sai do lugar: é o b.</p>
+  </aside>
+</section>
+
+<!-- 7. Efeito de b e inclinação -->
+<section class="slide" data-nome="Mudar o b">
+  <div class="conteudo">
+    <p class="olho">Gráfico da função afim</p>
+    <h2 class="titulo">Mudar só o \(b\): retas paralelas</h2>
+    <div data-anima="fn-reta-b" data-anima-passo="0" style="position:absolute;left:900px;top:110px;width:860px;height:740px"></div>
+    <div style="position:absolute;left:0;width:800px;top:170px;display:flex;flex-direction:column;gap:24px">
+      <div class="caixa" data-passo="1"><div class="texto">Mudar o \(b\) <b>sobe ou desce</b> a reta sem mudar a inclinação.</div></div>
+      <div class="caixa" data-passo="2"><div class="texto">Quanto maior \(a\) (sem o sinal), <b>mais inclinada</b>.</div></div>
+    </div>
+  </div>
+  <aside class="notas">
+    <p>As três tracejadas são y = x + 2, y = x e y = x − 2 (a da apostila). A reta azul passeia entre elas: a = 1 o tempo todo.</p>
+    <p>Clique 2: compare com o slide anterior (a = 2 é mais inclinada que a = 0,5).</p>
+  </aside>
+</section>
+
+<!-- 8. Exemplo: ligar lei e gráfico -->
+<section class="slide" data-nome="Exemplo: lei e gráfico">
+  <div class="conteudo">
+    <p class="olho">Exemplo</p>
+    <h2 class="titulo">Desce e corta y abaixo da origem</h2>
+    <div data-anima="fn-figura" style="position:absolute;left:1100px;top:110px;width:660px;height:600px"
+      data-fig='{"xmin":-4,"xmax":3,"ymin":-6,"ymax":3,"numeros":false,"pl":20,"pr":40,"pt":36,"pb":10,"curvas":[{"f":"-2*x-3"}],"pontos":[{"x":0,"y":-3,"cor":"#FFD10C","t":"b < 0","dx":18,"dy":10}]}'></div>
+    <div class="opcoes" style="position:absolute;left:560px;width:500px;top:160px">
+      <div data-em="3:apaga">\(y = 2x - 3\)</div>
+      <div data-em="3:apaga">\(y = -2x + 3\)</div>
+      <div data-em="3:certo">\(y = -2x - 3\)</div>
+    </div>
+    <div style="position:absolute;left:0;width:500px;top:160px;display:flex;flex-direction:column;gap:22px">
+      <p class="texto" style="margin:0" data-passo="1">Desce: \(a < 0\)</p>
+      <p class="texto" style="margin:0" data-passo="2">Abaixo da origem: \(b < 0\)</p>
+    </div>
+    <span class="pilula pilula-resposta" data-passo="3" style="position:absolute;left:560px;top:520px">\(y = -2x - 3\)</span>
+  </div>
+  <aside class="notas">
+    <p>Sem conta nenhuma: os sinais de a e de b decidem. Clique 1 elimina a primeira (sobe); clique 2 elimina a segunda (corta acima); clique 3: a resposta.</p>
+  </aside>
+</section>
+
+<!-- 9. Questão 2 -->
+<section class="slide questao" data-nome="Questão 2">
+  <div class="conteudo">
+    <div class="area-resolucao"></div>
+    <span class="pilula pilula-pausa" data-em="1:some">Pause o vídeo e tente</span>
+    <div class="painel-questao">
+      <p class="olho">Questão 2 · IF Sudeste MG 2018</p>
+      <p class="enunciado" style="font-size:25px">Com relação à função \(f(x) = 8 - 2x\), tem-se as seguintes afirmações:</p>
+      <p class="enunciado" style="font-size:24px">I. A função é crescente, ou seja, para todo \(x_1 > x_2\), tem-se que \(f(x_1) > f(x_2)\).<br>II. O gráfico de \(f(x)\) intercepta o eixo \(y\) no ponto (0, −2).<br>III. O ponto (1, 6) pertence ao gráfico dessa função.</p>
+      <p class="enunciado" style="font-size:25px">Assinale a alternativa <b>CORRETA</b>.</p>
+      <ol class="alternativas" style="gap:8px">
+        <li data-em="2:certo"><b>A</b><span>Apenas a afirmativa III é verdadeira.</span></li>
+        <li data-em="2:apaga"><b>B</b><span>Apenas as afirmativas I e III são verdadeiras.</span></li>
+        <li data-em="2:apaga"><b>C</b><span>Apenas as afirmativas II e III são verdadeiras.</span></li>
+        <li data-em="2:apaga"><b>D</b><span>Apenas as afirmativas I e II são verdadeiras.</span></li>
+        <li data-em="2:apaga"><b>E</b><span>Todas as afirmativas são verdadeiras.</span></li>
+      </ol>
+      <p class="fonte">IF Sudeste MG, prova de 2018 (1º semestre), questão 23</p>
+    </div>
+  </div>
+  <aside class="resolucao">
+    <p class="dados"><b>Dados:</b> \(f(x) = 8 - 2x\): \(a = -2\), \(b = 8\).</p>
+    <ol class="passos">
+      <li>I: \(a = -2 < 0\), decrescente: falsa</li>
+      <li>II: corta y em \((0;\ 8)\), não em \((0;\ {-2})\): falsa</li>
+      <li>III: \(f(1) = 8 - 2 = 6\): verdadeira</li>
+    </ol>
+    <p class="resposta"><b>Resposta:</b> só a III. <b>Gabarito A.</b></p>
+    <p class="atencao"><b>Destaque no quadro:</b> \(a\) é o número que multiplica \(x\), mesmo escrito depois.</p>
+    <ul class="erros">
+      <li><b>B</b> A I é falsa: \(a = -2\), decrescente.</li>
+      <li><b>C</b> A II é falsa: o −2 é o \(a\), não o \(b\).</li>
+      <li><b>D</b> I e II são justamente as falsas.</li>
+      <li><b>E</b> I e II são falsas.</li>
+    </ul>
+  </aside>
+  <aside class="notas">
+    <p>Clique 1 tira o aviso de pausa: resolva na área (D liga a caneta; E esconde o enunciado). Clique 2: gabarito A.</p>
+    <p>Questão oficial do IF Sudeste MG 2018-1, q23, MAT-0364. A prova escreve os pontos com vírgula, (0, −2); a apostila usa ponto e vírgula.</p>
+  </aside>
+</section>
+
+<!-- 10. Questão 3 -->
+<section class="slide questao" data-nome="Questão 3">
+  <div class="conteudo">
+    <div class="area-resolucao"></div>
+    <span class="pilula pilula-pausa" data-em="1:some">Pause o vídeo e tente</span>
+    <div class="painel-questao">
+      <p class="olho">Questão 3 · IF Sudeste MG 2023</p>
+      <p class="enunciado">Observe o gráfico abaixo.</p>
+      <div data-anima="fn-figura" style="width:530px;height:300px"
+        data-fig='{"xmin":-5,"xmax":11,"ymin":-3,"ymax":5,"dx":1,"lx":1,"dy":1,"ly":1,"pl":10,"pr":40,"pt":30,"pb":10,"fs":15,"zero":false,"pulaX":[-1],"curvas":[{"f":"-x/2+3","w":5}],"textos":[{"x":10.2,"y":-1.6,"t":"f","fs":26}]}'></div>
+      <p class="enunciado">A lei de formação da função representada no gráfico acima é:</p>
+      <ol class="alternativas curtas">
+        <li data-em="2:apaga"><b>A</b><span>\(f(x) = x/2 + 3\)</span></li>
+        <li data-em="2:apaga"><b>B</b><span>\(f(x) = -x + 6\)</span></li>
+        <li data-em="2:certo"><b>C</b><span>\(f(x) = -x/2 + 3\)</span></li>
+        <li data-em="2:apaga"><b>D</b><span>\(f(x) = x + 6\)</span></li>
+        <li data-em="2:apaga"><b>E</b><span>\(f(x) = 6x + 3\)</span></li>
+      </ol>
+      <p class="fonte">IF Sudeste MG, prova de 2023 (1º semestre), questão 15</p>
+    </div>
+  </div>
+  <aside class="resolucao">
+    <p class="dados"><b>Dados:</b> a reta passa por \((0;\ 3)\) e \((6;\ 0)\).</p>
+    <ol class="passos">
+      <li>Corta y em 3: \(b = 3\)</li>
+      <li>\(a = \dfrac{0 - 3}{6 - 0} = -\dfrac{1}{2}\)</li>
+      <li>\(f(x) = -\dfrac{x}{2} + 3\)</li>
+    </ol>
+    <p class="resposta"><b>Resposta:</b> \(f(x) = -x/2 + 3\). <b>Gabarito C.</b></p>
+    <p class="atencao"><b>Destaque no quadro:</b> Desce: \(a\) negativo. Corte em y: \(b\).</p>
+    <ul class="erros">
+      <li><b>A</b> \(b\) certo, mas \(a\) positivo: subiria.</li>
+      <li><b>B</b> Usa o zero (6) como \(b\).</li>
+      <li><b>D</b> Crescente e corta y em 6.</li>
+      <li><b>E</b> Usa o 6 como \(a\): crescente e muito inclinada.</li>
+    </ul>
+  </aside>
+  <aside class="notas">
+    <p>Clique 1 tira o aviso de pausa: resolva na área (D liga a caneta; E esconde o enunciado). Clique 2: gabarito C.</p>
+    <p>Questão oficial do IF Sudeste MG 2023-1, q15, MAT-0447. Gráfico refeito em SVG: reta por (0; 3) e (6; 0), x de −5 a 11.</p>
+  </aside>
+</section>
+
+<!-- 11. Zero: o tanque -->
+<section class="slide" data-nome="Zero: o tanque">
+  <div class="conteudo">
+    <p class="olho">Zero da função</p>
+    <h2 class="titulo">Em quanto tempo o tanque esvazia?</h2>
+    <p class="texto" style="position:absolute;left:0;width:800px;top:150px;margin:0;font-size:32px">40 L no tanque, gasta 5 L por hora.</p>
+    <div class="contas" style="position:absolute;left:0;top:230px;font-size:50px">
+      <div class="eq"><span>\(V\)</span><span>\(=\)</span><span>\(40 - 5t\)</span></div>
+      <div class="eq" data-passo="1"><span>\(0\)</span><span>\(=\)</span><span>\(40 - 5t\)</span></div>
+      <div class="eq" data-passo="2"><span>\(5t\)</span><span>\(=\)</span><span>\(40\)</span></div>
+      <div class="eq final" data-passo="3"><span>\(t\)</span><span>\(=\)</span><span>\(8\ \text{h}\)</span></div>
+    </div>
+    <div data-anima="fn-tanque" data-anima-passo="0" style="position:absolute;left:820px;top:110px;width:940px;height:520px"></div>
+    <div class="caixa caixa-fundamental" data-passo="4" style="position:absolute;left:820px;right:0;top:660px;padding:20px 30px">
+      <span class="rotulo">Zero (ou raiz)</span>
+      <div class="texto" style="font-size:32px">O \(x\) que faz \(f(x) = 0\). No gráfico: onde a reta corta o <b>eixo x</b>.</div>
+    </div>
+  </div>
+  <aside class="notas">
+    <p>A reta desce enquanto o tanque esvazia; toca o eixo do tempo em (8; 0). Esvaziar é V = 0.</p>
+    <p>A apostila resolve −5t = −40; aqui foi passado o 5t para o outro lado (mesmo resultado).</p>
+  </aside>
+</section>
+
+<!-- 12. Zero de f(x) = 2x − 6 -->
+<section class="slide" data-nome="Zero de 2x − 6">
+  <div class="conteudo">
+    <p class="olho">Zero da função afim</p>
+    <h2 class="titulo">Zero de \(f(x) = 2x - 6\)</h2>
+    <div class="contas" style="position:absolute;left:0;top:180px;font-size:54px">
+      <div class="eq" data-passo="1"><span>\(f(x)\)</span><span>\(=\)</span><span>\(0\)</span></div>
+      <div class="eq" data-passo="2"><span>\(2x - 6\)</span><span>\(=\)</span><span>\(0\)</span></div>
+      <div class="eq" data-passo="3"><span>\(2x\)</span><span>\(=\)</span><span>\(6\)</span></div>
+      <div class="eq final" data-passo="4"><span>\(x\)</span><span>\(=\)</span><span>\(3\)</span></div>
+    </div>
+    <div data-anima="fn-figura" style="position:absolute;left:1100px;top:110px;width:660px;height:560px"
+      data-fig='{"xmin":-1,"xmax":5,"ymin":-7,"ymax":4,"dy":1,"ly":2,"pl":44,"pr":40,"pt":36,"pb":10,"curvas":[{"f":"2*x-6","de":-0.5,"ate":4.9}],"pontos":[{"x":3,"y":0,"t":"zero: (3; 0)","cor":"#FFD10C","dx":-16,"dy":-18,"anc":"end","passo":4},{"x":0,"y":-6,"t":"corte em y: (0; −6)","dx":18,"dy":10,"passo":5}]}'></div>
+    <div class="caixa caixa-atencao" data-passo="5" style="position:absolute;left:560px;width:500px;top:560px;padding:18px 26px">
+      <span class="rotulo">Zero não é o corte em y</span>
+      <div class="texto" style="font-size:28px">Corte em y: \(x = 0\) → \((0;\ b)\).<br>Zero: \(y = 0\) → corte em x.</div>
+    </div>
+  </div>
+  <aside class="notas">
+    <p>Com a ≠ 0, o zero sai de uma equação do 1º grau. Na lei 2x − 6, o corte em y é −6 e o zero é 3: não confundir.</p>
+  </aside>
+</section>
+
+<!-- 13. Questão 4 -->
+<section class="slide questao" data-nome="Questão 4">
+  <div class="conteudo">
+    <div class="area-resolucao"></div>
+    <span class="pilula pilula-pausa" data-em="1:some">Pause o vídeo e tente</span>
+    <div class="painel-questao">
+      <p class="olho">Questão 4 · Modelo IF</p>
+      <p class="enunciado">A carga \(B\) da bateria de um celular, em porcentagem, \(t\) horas depois de ser tirado da tomada com a carga completa, é dada por \(B = 100 - 8t\). A bateria descarrega por completo depois de:</p>
+      <ol class="alternativas">
+        <li data-em="2:apaga"><b>A</b><span>8 h</span></li>
+        <li data-em="2:certo"><b>B</b><span>12 h 30 min</span></li>
+        <li data-em="2:apaga"><b>C</b><span>12 h 50 min</span></li>
+        <li data-em="2:apaga"><b>D</b><span>92 h</span></li>
+        <li data-em="2:apaga"><b>E</b><span>12 h 05 min</span></li>
+      </ol>
+      <p class="fonte">Questão Modelo IF (lote if-matematica-funcao-afim, m014)</p>
+    </div>
+  </div>
+  <aside class="resolucao">
+    <p class="dados"><b>Dados:</b> \(B = 100 - 8t\); descarregada: \(B = 0\).</p>
+    <ol class="passos">
+      <li>\(0 = 100 - 8t\)</li>
+      <li>\(8t = 100 \Rightarrow t = 12{,}5\ \text{h}\)</li>
+      <li>\(0{,}5\ \text{h} = 30\ \text{min}\)</li>
+    </ol>
+    <p class="resposta"><b>Resposta:</b> 12 h 30 min. <b>Gabarito B.</b></p>
+    <p class="atencao"><b>Destaque no quadro:</b> 0,5 h é meia hora, não 50 min.</p>
+    <ul class="erros">
+      <li><b>A</b> Usa a taxa (8) como resposta.</li>
+      <li><b>C</b> Lê 12,5 h como 12 h 50 min.</li>
+      <li><b>D</b> Faz \(100 - 8\).</li>
+      <li><b>E</b> Lê 0,5 h como 5 min.</li>
+    </ul>
+  </aside>
+  <aside class="notas">
+    <p>Clique 1 tira o aviso de pausa: resolva na área (D liga a caneta; E esconde o enunciado). Clique 2: gabarito B.</p>
+    <p>Modelo IF, lote if-matematica-funcao-afim, m014, MAT-0739 (zero da função).</p>
+  </aside>
+</section>
+
+<!-- 14. Resumo -->
+<section class="slide" data-nome="Resumo">
+  <div class="conteudo">
+    <p class="olho">Resumo</p>
+    <h2 class="titulo">O essencial</h2>
+    <div class="resumo" style="position:absolute;left:0;right:0;top:150px">
+      <div><b>Função afim:</b> \(f(x) = ax + b\).</div>
+      <div><b>\(a\):</b> taxa de variação, \(a = \dfrac{\Delta y}{\Delta x}\). <b>\(b\):</b> valor inicial.</div>
+      <div><b>Gráfico:</b> reta. \(a > 0\) sobe; \(a < 0\) desce; \(a = 0\) horizontal.</div>
+      <div><b>Corte no eixo y:</b> \((0;\ b)\). Mudar \(b\) dá retas paralelas.</div>
+      <div><b>Zero:</b> o \(x\) que faz \(f(x) = 0\); corte no eixo x.</div>
+      <div><b>Dois pontos:</b> primeiro a taxa, depois o \(b\) por um dos pontos.</div>
+    </div>
+  </div>
+  <aside class="notas">
+    <p>Peça para tirarem um print desta tela.</p>
+  </aside>
+</section>
+
+<!-- 15. A seguir -->
+<section class="slide capa" data-nome="A seguir">
+  <div class="estrelas"></div>
+  <div class="texto-capa" style="top:200px">
+    <span class="selo">Matemática · IF</span>
+    <p class="aula" style="font-size:26px">A seguir · Função afim · Parte 2 de 2</p>
+    <h1>Proporcionalidade e problemas</h1>
+    <p class="sub">Função linear e qual plano compensa</p>
+  </div>
+  <svg class="emblema" viewBox="0 0 640 640" aria-hidden="true">
+    <path d="M90 560 V80 M90 560 H590" stroke="#fff" stroke-opacity=".8" stroke-width="5" stroke-linecap="round" fill="none"/>
+    <line x1="90" y1="460" x2="560" y2="180" stroke="#fff" stroke-width="8" stroke-linecap="round"/>
+    <line x1="90" y1="560" x2="560" y2="110" stroke="#FFD10C" stroke-width="8" stroke-linecap="round"/>
+    <circle cx="378" cy="288" r="16" fill="#FFD10C" stroke="#fff" stroke-width="4"/>
+  </svg>
+  <img class="logo-capa" src="{{LOGO_BRANCO}}" alt="Quarks">
+  <aside class="notas"><p>Próxima parte: função linear e identidade, proporcionalidade e problemas de comparar planos.</p></aside>
+</section>
